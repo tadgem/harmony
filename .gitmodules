@@ -1,0 +1,6 @@
+[submodule "submodules/daScript"]
+	path = submodules/daScript
+	url = https://github.com/tadgem/daScript.git
+[submodule "submodules/sdl"]
+	path = submodules/sdl
+	url = https://github.com/davidsiaw/SDL2.git
