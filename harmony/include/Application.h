@@ -14,10 +14,13 @@ namespace harmony
 	private:
 
 		void Init();
+		void Cleanup();
 
 		void InitSDL();
 		void InitBGFX();
 		void InitImGui();
+
+		void Run();
 
 		SDL_Window* p_Window;
 
@@ -25,5 +28,7 @@ namespace harmony
 
 		const uint32_t p_StartingWidth = 1280;
 		const uint32_t p_StartingHeight = 720;
+
+		bool p_Run;
 	};
 };

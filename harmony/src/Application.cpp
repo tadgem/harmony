@@ -4,11 +4,12 @@
 #include "imgui.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
-#include "src/dasBGFXImgui.h"
+#include "src/imgui/imgui_bgfx.h"
 #include "backends/imgui_impl_sdl.h"
 
 harmony::Application::Application(std::string name) : p_AppName(name)
 {
+	p_Run = true;
 	Init();
 }
 
@@ -16,12 +17,26 @@ void harmony::Application::Init()
 {
 	InitSDL();
 	InitBGFX();
+	InitImGui();
+	Run();
+}
+
+void harmony::Application::Cleanup()
+{
+	ImGui_ImplSDL2_Shutdown();
+	imguiDestroy();
+
+	ImGui::DestroyContext();
+	bgfx::shutdown();
+
+	SDL_DestroyWindow(p_Window);
+	SDL_Quit();
 }
 
 void harmony::Application::InitSDL()
 {
 	// init SDL window
-	Uint32 flags = SDL_INIT_VIDEO;
+	Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_EVENTS;
 	SDL_Init(flags);
 
 	p_Window = SDL_CreateWindow(
@@ -78,7 +93,7 @@ void harmony::Application::InitImGui()
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 
-	das::bgfx_imgui_create(255);
+	imguiCreate();
 
 //	ImGui_Implbgfx_Init(255);
 #if BX_PLATFORM_WINDOWS
@@ -89,4 +104,29 @@ void harmony::Application::InitImGui()
 	ImGui_ImplSDL2_InitForOpenGL(p_Window, nullptr);
 #endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX ? BX_PLATFORM_LINUX ?
 //	// BX_PLATFORM_EMSCRIPTEN
+}
+
+void harmony::Application::Run()
+{
+	while (p_Run)
+	{
+		bgfx::touch(0);
+		SDL_Event sdlEvent;
+		while (SDL_PollEvent(&sdlEvent))
+		{
+			ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
+			if (sdlEvent.type == SDL_QUIT)
+			{
+				p_Run = false;
+			}
+		}
+		imguiBeginFrame();
+		ImGui_ImplSDL2_NewFrame(p_Window);
+		ImGui::ShowDemoWindow(); // your drawing here
+		ImGui::Render();
+		imguiEndFrame();
+
+		bgfx::frame();
+	}
+	Cleanup();
 }
