@@ -1,8 +1,7 @@
 #include "SDL.h"
 #undef main
 #include <string>
-
-// class SDL_Window;
+#include "bx/allocator.h"
 
 namespace harmony
 {
@@ -28,6 +27,8 @@ namespace harmony
 
 		const uint32_t p_StartingWidth = 1280;
 		const uint32_t p_StartingHeight = 720;
+
+		bx::DefaultAllocator* p_ImGuiAllocator;
 
 		bool p_Run;
 	};

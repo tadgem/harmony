@@ -93,7 +93,9 @@ void harmony::Application::InitImGui()
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 
-	imguiCreate();
+	p_ImGuiAllocator = new bx::DefaultAllocator();
+	
+	imguiCreate(18.0f, p_ImGuiAllocator);
 
 //	ImGui_Implbgfx_Init(255);
 #if BX_PLATFORM_WINDOWS
