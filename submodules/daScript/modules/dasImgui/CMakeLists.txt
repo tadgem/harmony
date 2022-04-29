@@ -31,7 +31,7 @@ IF((NOT DAS_IMGUI_INCLUDED) AND ((NOT ${DAS_IMGUI_DISABLED}) OR (NOT DEFINED DAS
 	ENDIF()
 
 	# imgui
-	SET(imgui_INCLUDE_DIR ${DAS_IMGUI_DIR}/imgui)
+	SET(imgui_INCLUDE_DIR ${DAS_IMGUI_DIR}/imgui CACHE INTERNAL "")
 	SET(DAS_IMGUI_SRC
 		${imgui_INCLUDE_DIR}/imconfig.h
 		${imgui_INCLUDE_DIR}/imgui.cpp
@@ -47,7 +47,7 @@ IF((NOT DAS_IMGUI_INCLUDED) AND ((NOT ${DAS_IMGUI_DISABLED}) OR (NOT DEFINED DAS
 	)
 
 	# imnodes
-	SET(imnodes_INCLUDE_DIR ${DAS_IMGUI_DIR}/imnodes)
+	SET(imnodes_INCLUDE_DIR ${DAS_IMGUI_DIR}/imnodes CACHE INTERNAL "")
 	SET(DAS_IMNODES_SRC
 		${imnodes_INCLUDE_DIR}/imnodes.cpp
 		${imnodes_INCLUDE_DIR}/imnodes.h
