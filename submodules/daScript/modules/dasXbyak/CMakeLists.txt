@@ -8,9 +8,9 @@ IF (DAS_XBYAK_SUPPORTED AND (NOT DAS_XBYAK_INCLUDED) AND ((NOT ${DAS_XBYAK_DISAB
     SET(DAS_XBYAK_INCLUDED TRUE)
     MESSAGE(STATUS "dasXbyak module included.")
 
-	SET(DAS_XBYAK_DIR ${CMAKE_SOURCE_DIR}/modules/dasXbyak)
+	SET(DAS_XBYAK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/modules/dasXbyak)
 
-	SET(XBYAK_DIR ${CMAKE_SOURCE_DIR}/modules/dasXbyak/xbyak/xbyak)
+	SET(XBYAK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/modules/dasXbyak/xbyak/xbyak)
 
     LIST(APPEND CMAKE_MODULE_PATH ${DAS_XBYAK_DIR})
 
@@ -83,13 +83,13 @@ IF (DAS_XBYAK_SUPPORTED AND (NOT DAS_XBYAK_INCLUDED) AND ((NOT ${DAS_XBYAK_DISAB
 	ADD_MODULE_DAS(jit jit jit_x86_64_test)
 	ADD_MODULE_DAS(jit jit jit_x86_64)
 
-	SET(DAS_ZYCONFIG_DIR ${CMAKE_SOURCE_DIR}/modules/dasXbyak/zydis/msvc)
+	SET(DAS_ZYCONFIG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/modules/dasXbyak/zydis/msvc)
 
-	SET(DAS_ZYDIS_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/modules/dasXbyak/zydis/include)
-	SET(DAS_ZYDIS_SRC_DIR ${CMAKE_SOURCE_DIR}/modules/dasXbyak/zydis/src)
+	SET(DAS_ZYDIS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/modules/dasXbyak/zydis/include)
+	SET(DAS_ZYDIS_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/modules/dasXbyak/zydis/src)
 
-	SET(DAS_ZYCORE_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/modules/dasXbyak/zydis/dependencies/zycore/include)
-	SET(DAS_ZYCORE_SRC_DIR     ${CMAKE_SOURCE_DIR}/modules/dasXbyak/zydis/dependencies/zycore/src)
+	SET(DAS_ZYCORE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/modules/dasXbyak/zydis/dependencies/zycore/include)
+	SET(DAS_ZYCORE_SRC_DIR     ${CMAKE_CURRENT_SOURCE_DIR}/modules/dasXbyak/zydis/dependencies/zycore/src)
 
 	# libDasModuleZydis
 	SET(DAS_ZYDIS_MODULE_SRC
