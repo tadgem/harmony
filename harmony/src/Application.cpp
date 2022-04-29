@@ -6,6 +6,8 @@
 #include "bgfx/platform.h"
 #include "src/imgui/imgui_bgfx.h"
 #include "backends/imgui_impl_sdl.h"
+#include "daScript/daScript.h"
+
 
 harmony::Application::Application(std::string name) : p_AppName(name)
 {
