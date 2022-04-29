@@ -11,8 +11,6 @@ NATIVE_MODULE(glsl, glsl, dasGlsl, glsl_internal);
 NATIVE_MODULE(geometry, glsl, dasGlsl, geom_gen);
 NATIVE_MODULE(dashv, dashv, dasHV, dashv_boost);
 NATIVE_MODULE(imgui, daslib, dasImgui, imgui_boost);
-NATIVE_MODULE(imgui, daslib, dasImgui, imnodes_boost);
-NATIVE_MODULE(imgui, daslib, dasImgui, imgui_node_editor_boost);
 NATIVE_MODULE(opengl, opengl, dasOpenGL, opengl);
 NATIVE_MODULE(opengl, opengl, dasOpenGL, opengl_boost_internal);
 NATIVE_MODULE(opengl, opengl, dasOpenGL, opengl_boost);

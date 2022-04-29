@@ -9,17 +9,6 @@ set(HARMONY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
 set(IMGUI_BACKEND_SRC_FILES 
 ${imgui_INCLUDE_DIR}/backends/imgui_impl_sdl.h
 ${imgui_INCLUDE_DIR}/backends/imgui_impl_sdl.cpp
-${imgui_INCLUDE_DIR}/imconfig.h
-${imgui_INCLUDE_DIR}/imgui_demo.cpp
-${imgui_INCLUDE_DIR}/imgui_draw.cpp
-${imgui_INCLUDE_DIR}/imgui_internal.h
-${imgui_INCLUDE_DIR}/imgui_tables.cpp
-${imgui_INCLUDE_DIR}/imgui_widgets.cpp
-${imgui_INCLUDE_DIR}/imgui.cpp
-${imgui_INCLUDE_DIR}/imgui.h
-${imgui_INCLUDE_DIR}/imstb_rectpack.h
-${imgui_INCLUDE_DIR}/imstb_textedit.h
-${imgui_INCLUDE_DIR}/imstb_truetype.h
 CACHE INTERNAL "")
 
 
@@ -45,4 +34,4 @@ target_include_directories(harmony PRIVATE
 )
 
 target_compile_definitions(harmony PUBLIC SDL_SENSOR_DUMMY)
-target_link_libraries(harmony libDaScript libDasModuleBGFX libDasModuleBGFXImgui SDL2-static)
+target_link_libraries(harmony libDaScript libDasModuleBGFX libDasModuleBGFXImgui libDasModuleImGui SDL2-static)

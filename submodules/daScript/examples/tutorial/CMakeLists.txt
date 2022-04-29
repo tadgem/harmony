@@ -89,7 +89,7 @@ tutorial04module.das
 tutorial04module.das.inc
 )
 DAS_TUTORIAL(tutorial04 "${TUTORIAL_04_SRC}")
-target_include_directories(tutorial04 PUBLIC ${CMAKE_SOURCE_DIR}/src/builtin)   # we need RTTI to bind StructInfo and such
+target_include_directories(tutorial04 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/builtin)   # we need RTTI to bind StructInfo and such
 XXD(tutorial04module.das)
 
 ##########################

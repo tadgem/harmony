@@ -1,6 +1,6 @@
 // this file is generated via daScript automatic C++ binder
 // all user modifications will be lost after this file is re-generated
-
+using namespace std;
 #include "daScript/misc/platform.h"
 #include "daScript/ast/ast.h"
 #include "daScript/ast/ast_interop.h"

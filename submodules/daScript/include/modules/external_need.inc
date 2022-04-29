@@ -3,6 +3,8 @@ NEED_MODULE(Module_BGFXImgui);
 NEED_MODULE(Module_dasGLFW);
 NEED_MODULE(Module_HV);
 NEED_MODULE(Module_dasIMGUI);
+NEED_MODULE(Module_dasIMNODES);
+NEED_MODULE(Module_dasIMGUI_NODE_EDITOR);
 NEED_MODULE(Module_imgui_app);
 NEED_MODULE(Module_Minfft);
 NEED_MODULE(Module_dasSFML);

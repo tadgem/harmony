@@ -40,9 +40,9 @@ void Module_dasIMGUI::initFunctions_18() {
 	addCtorAndUsing<ImGuiTableColumnSortSpecs>(*this,lib,"ImGuiTableColumnSortSpecs","ImGuiTableColumnSortSpecs");
 	addCtorAndUsing<ImGuiTableSortSpecs>(*this,lib,"ImGuiTableSortSpecs","ImGuiTableSortSpecs");
 	addCtorAndUsing<ImGuiOnceUponAFrame>(*this,lib,"ImGuiOnceUponAFrame","ImGuiOnceUponAFrame");
-	addCtorAndUsing<ImGuiTextFilter,const char *>(*this,lib,"ImGuiTextFilter","ImGuiTextFilter")
+	/*addCtorAndUsing<ImGuiTextFilter,const char *>(*this,lib,"ImGuiTextFilter","ImGuiTextFilter")
 		->args({"default_filter"})
-		->arg_init(0,make_smart<ExprConstString>(""));
+		->arg_init(0,make_smart<ExprConstString>(""));*/
 	using _method_14 = das::das_call_member< bool (ImGuiTextFilter::*)(const char *,float),&ImGuiTextFilter::Draw >;
 	addExtern<DAS_CALL_METHOD(_method_14)>(*this,lib,"Draw",SideEffects::worstDefault,"das_call_member< bool (ImGuiTextFilter::*)(const char *,float) , &ImGuiTextFilter::Draw >::invoke")
 		->args({"self","label","width"})
@@ -58,8 +58,8 @@ void Module_dasIMGUI::initFunctions_18() {
 	addExtern<DAS_CALL_METHOD(_method_17)>(*this,lib,"IsActive",SideEffects::worstDefault,"das_call_member< bool (ImGuiTextFilter::*)() const , &ImGuiTextFilter::IsActive >::invoke")
 		->args({"self"});
 	addCtorAndUsing<ImGuiTextFilter::ImGuiTextRange>(*this,lib,"ImGuiTextRange","ImGuiTextFilter::ImGuiTextRange");
-	addCtorAndUsing<ImGuiTextFilter::ImGuiTextRange,const char *,const char *>(*this,lib,"ImGuiTextRange","ImGuiTextFilter::ImGuiTextRange")
-		->args({"_b","_e"});
+	/*addCtorAndUsing<ImGuiTextFilter::ImGuiTextRange,const char *,const char *>(*this,lib,"ImGuiTextRange","ImGuiTextFilter::ImGuiTextRange")
+		->args({"_b","_e"});*/
 	using _method_18 = das::das_call_member< bool (ImGuiTextFilter::ImGuiTextRange::*)() const,&ImGuiTextFilter::ImGuiTextRange::empty >;
 	addExtern<DAS_CALL_METHOD(_method_18)>(*this,lib,"empty",SideEffects::worstDefault,"das_call_member< bool (ImGuiTextFilter::ImGuiTextRange::*)() const , &ImGuiTextFilter::ImGuiTextRange::empty >::invoke")
 		->args({"self"});

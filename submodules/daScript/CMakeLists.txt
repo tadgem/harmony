@@ -571,7 +571,7 @@ SETUP_CPP11(libUriParser)
 target_compile_definitions(libUriParser PUBLIC URIPARSER_BUILD_CHAR)
 target_compile_definitions(libUriParser PUBLIC URI_STATIC_BUILD)
 target_include_directories(libUriParser PUBLIC
-  ${CMAKE_SOURCE_DIR}/3rdparty/uriparser/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/uriparser/include
 )
 
 # MODULE - uri parser
@@ -584,7 +584,7 @@ src/modules/uriparser/module_uriparser.cpp
 ADD_LIBRARY(libDasModuleUriparser ${MODULE_URIPARSE_MAIN_SRC})
 SETUP_CPP11(libDasModuleUriparser)
 target_include_directories(libDasModuleUriparser PUBLIC
-  ${CMAKE_SOURCE_DIR}/3rdparty/uriparser/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/uriparser/include
   include/modules/uriparser
 )
 ADD_DEPENDENCIES(libDasModuleUriparser libDaScript libUriParser)
@@ -614,7 +614,7 @@ if (NOT ${DAS_BUILD_TOOLS} MATCHES NO)
   #  set_target_properties(daScriptOsx PROPERTIES
   #      MACOSX_BUNDLE_SHORT_VERSION_STRING "0.3"
   #      MACOSX_BUNDLE_LONG_VERSION_STRING  "daScript 0.3"
-  #      MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/utils/daScript/MacOSXBundleInfo.plist.in)
+  #      MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/utils/daScript/MacOSXBundleInfo.plist.in)
   #ENDIF()
 
 endif()

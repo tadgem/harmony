@@ -68,8 +68,8 @@ void Module_dasIMGUI::initFunctions_20() {
 	using _method_50 = das::das_call_member< void (ImDrawListSplitter::*)(ImDrawList *,int),&ImDrawListSplitter::SetCurrentChannel >;
 	addExtern<DAS_CALL_METHOD(_method_50)>(*this,lib,"SetCurrentChannel",SideEffects::worstDefault,"das_call_member< void (ImDrawListSplitter::*)(ImDrawList *,int) , &ImDrawListSplitter::SetCurrentChannel >::invoke")
 		->args({"self","draw_list","channel_idx"});
-	addCtorAndUsing<ImDrawList,const ImDrawListSharedData *>(*this,lib,"ImDrawList","ImDrawList")
-		->args({"shared_data"});
+	/*addCtorAndUsing<ImDrawList,const ImDrawListSharedData *>(*this,lib,"ImDrawList","ImDrawList")
+		->args({"shared_data"});*/
 }
 }
 

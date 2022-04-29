@@ -40,12 +40,12 @@ void Module_dasIMGUI::initFunctions_19() {
 	using _method_27 = das::das_call_member< const char * (ImGuiTextBuffer::*)() const,&ImGuiTextBuffer::c_str >;
 	addExtern<DAS_CALL_METHOD(_method_27)>(*this,lib,"c_str",SideEffects::worstDefault,"das_call_member< const char * (ImGuiTextBuffer::*)() const , &ImGuiTextBuffer::c_str >::invoke")
 		->args({"self"});
-	addCtorAndUsing<ImGuiStorage::ImGuiStoragePair,unsigned int,int>(*this,lib,"ImGuiStoragePair","ImGuiStorage::ImGuiStoragePair")
+	/*addCtorAndUsing<ImGuiStorage::ImGuiStoragePair,unsigned int,int>(*this,lib,"ImGuiStoragePair","ImGuiStorage::ImGuiStoragePair")
 		->args({"_key","_val_i"});
 	addCtorAndUsing<ImGuiStorage::ImGuiStoragePair,unsigned int,float>(*this,lib,"ImGuiStoragePair","ImGuiStorage::ImGuiStoragePair")
 		->args({"_key","_val_f"});
 	addCtorAndUsing<ImGuiStorage::ImGuiStoragePair,unsigned int,void *>(*this,lib,"ImGuiStoragePair","ImGuiStorage::ImGuiStoragePair")
-		->args({"_key","_val_p"});
+		->args({"_key","_val_p"});*/
 	using _method_28 = das::das_call_member< void (ImGuiStorage::*)(),&ImGuiStorage::Clear >;
 	addExtern<DAS_CALL_METHOD(_method_28)>(*this,lib,"Clear",SideEffects::worstDefault,"das_call_member< void (ImGuiStorage::*)() , &ImGuiStorage::Clear >::invoke")
 		->args({"self"});
