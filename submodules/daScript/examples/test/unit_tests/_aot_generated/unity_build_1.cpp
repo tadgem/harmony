@@ -1,0 +1,11 @@
+// unity build batch 1
+#include "_module_b.das.cpp"
+#include "_typeinfo_macro_example.das.cpp"
+#include "abc.das.cpp"
+#include "access_private_from_lambda.das.cpp"
+#include "add_property_ext_const.das.cpp"
+#include "aka.das.cpp"
+#include "alias_on_let_init.das.cpp"
+#include "aonce.das.cpp"
+#include "aotAddConstFloat3.das.cpp"
+#include "aotModuleEnum.das.cpp"

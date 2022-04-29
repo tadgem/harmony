@@ -1,0 +1,11 @@
+// unity build batch 6
+#include "for_const_array.das.cpp"
+#include "for_continue.das.cpp"
+#include "fully_qualified_generic_name.das.cpp"
+#include "fun.das.cpp"
+#include "func_addr.das.cpp"
+#include "generators.das.cpp"
+#include "global.das.cpp"
+#include "global_func_shadow_check.das.cpp"
+#include "global_order.das.cpp"
+#include "handle.das.cpp"

@@ -1,0 +1,11 @@
+// unity build batch 8
+#include "invoke_cmres.das.cpp"
+#include "join.das.cpp"
+#include "label.das.cpp"
+#include "lambda.das.cpp"
+#include "lambda_capture_modes.das.cpp"
+#include "lambda_to_iter.das.cpp"
+#include "line_info.das.cpp"
+#include "local_reference.das.cpp"
+#include "lock_array.das.cpp"
+#include "lock_forever.das.cpp"

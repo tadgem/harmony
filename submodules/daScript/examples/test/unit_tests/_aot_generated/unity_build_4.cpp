@@ -1,0 +1,11 @@
+// unity build batch 4
+#include "clone_to_move.das.cpp"
+#include "copy_and_move_on_return.das.cpp"
+#include "cpp_layout.das.cpp"
+#include "ctor.das.cpp"
+#include "das_string.das.cpp"
+#include "deref_ptr_fun.das.cpp"
+#include "dim.das.cpp"
+#include "div_by_zero.das.cpp"
+#include "dummy.das.cpp"
+#include "dynamic_array.das.cpp"

@@ -1,0 +1,11 @@
+// unity build batch 3
+#include "block.das.cpp"
+#include "block_access_function_arg.das.cpp"
+#include "block_args_nested.das.cpp"
+#include "capture_as_ref.das.cpp"
+#include "cast.das.cpp"
+#include "check_defer.das.cpp"
+#include "check_eid.das.cpp"
+#include "check_type_info_macro.das.cpp"
+#include "clone.das.cpp"
+#include "clone_temp.das.cpp"
