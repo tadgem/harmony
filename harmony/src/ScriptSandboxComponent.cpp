@@ -1,9 +1,13 @@
 #include "ScriptSandboxComponent.h"
 #include "src/dasBGFX.h"
+#include "dasIMGUI.h"
 #include "daScript/STBImageModule.h"
 #include "Log.hpp"
 harmony::ScriptSandboxComponent::ScriptSandboxComponent()
 {
+    p_fInit = nullptr;
+    p_fUpdate = nullptr;
+    p_fCleanup = nullptr;
 }
 
 void harmony::ScriptSandboxComponent::Init()
@@ -15,7 +19,10 @@ void harmony::ScriptSandboxComponent::Init()
     NEED_MODULE(Module_dasStbImage)
     // request our custom module
     NEED_MODULE(Module_dasBGFX);
-    
+    // request our custom module
+    NEED_MODULE(Module_dasIMGUI);
+
+
     // Initialize modules
     das::Module::Initialize();
 
@@ -84,6 +91,16 @@ void harmony::ScriptSandboxComponent::Init()
 
 void harmony::ScriptSandboxComponent::Update()
 {
+    if (ImGui::Begin("Script Sandbox Settings"))
+    {
+        if(ImGui::Button("Reload Script"))
+        {
+            Cleanup();
+            Init();
+        }
+    }
+    ImGui::End();
+
     if (p_fUpdate == nullptr) return;
     p_Context->eval(p_fUpdate, nullptr);
     if (auto ex = p_Context->getException()) {
