@@ -15,6 +15,7 @@ SET(SDL_SENSOR OFF CACHE BOOL "Disable SDL Sensor API")
 
 add_subdirectory(submodules/daScript)
 add_subdirectory(submodules/sdl)
+add_subdirectory(submodules/spdlog)
 
 add_subdirectory(harmony)
 add_subdirectory(sandbox)

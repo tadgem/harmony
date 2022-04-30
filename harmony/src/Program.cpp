@@ -1,4 +1,4 @@
-
+#include <filesystem>
 #include "Program.h"
 #include "SDL_syswm.h"
 #include "imgui.h"
@@ -6,12 +6,15 @@
 #include "bgfx/platform.h"
 #include "src/imgui/imgui_bgfx.h"
 #include "backends/imgui_impl_sdl.h"
-#include "daScript/daScript.h"
-#include "src/dasBGFX.h"
+#include "Log.hpp"
 
 harmony::Program::Program(std::string name) : p_AppName(name)
 {
 	p_Run = true;
+	using std::filesystem::current_path;
+
+	std::filesystem::path path = std::filesystem::current_path();
+	harmony::log::info("Current Working Directory : {}", path.string());
 }
 
 harmony::Program::~Program()
@@ -118,7 +121,7 @@ void harmony::Program::InitImGui()
 //	// BX_PLATFORM_EMSCRIPTEN
 }
 
-void harmony::Program::Run()
+void harmony::Program::Run(harmony::Callback callback)
 {
 	while (p_Run)
 	{
@@ -140,7 +143,8 @@ void harmony::Program::Run()
 			p_ProgramComponents[i]->Update();
 		}
 
-		ImGui::ShowDemoWindow(); // your drawing here
+		callback();
+
 		ImGui::Render();
 		imguiEndFrame();
 

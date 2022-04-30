@@ -4,20 +4,24 @@
 #undef main
 #include <string>
 #include <vector>
+#include <functional>
 #include "bx/allocator.h"
 
 namespace harmony
 {
+	typedef std::function<void()> Callback;
+
 	/// <summary>
 	/// Top level container for program
 	/// </summary>
+	/// 
 	class Program
 	{
 	public:
 		Program(std::string name);
 		~Program();
 		void Init();
-		void Run();
+		void Run(Callback callback);
 	private:
 		void Cleanup();
 
