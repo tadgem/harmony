@@ -1,5 +1,5 @@
 
-#include "Application.h"
+#include "Program.h"
 #include "SDL_syswm.h"
 #include "imgui.h"
 #include "bgfx/bgfx.h"
@@ -7,15 +7,15 @@
 #include "src/imgui/imgui_bgfx.h"
 #include "backends/imgui_impl_sdl.h"
 #include "daScript/daScript.h"
+#include "src/dasBGFX.h"
 
-
-harmony::Application::Application(std::string name) : p_AppName(name)
+harmony::Program::Program(std::string name) : p_AppName(name)
 {
 	p_Run = true;
 	Init();
 }
 
-void harmony::Application::Init()
+void harmony::Program::Init()
 {
 	InitSDL();
 	InitBGFX();
@@ -23,7 +23,7 @@ void harmony::Application::Init()
 	Run();
 }
 
-void harmony::Application::Cleanup()
+void harmony::Program::Cleanup()
 {
 	ImGui_ImplSDL2_Shutdown();
 	imguiDestroy();
@@ -35,7 +35,7 @@ void harmony::Application::Cleanup()
 	SDL_Quit();
 }
 
-void harmony::Application::InitSDL()
+void harmony::Program::InitSDL()
 {
 	// init SDL window
 	Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_EVENTS;
@@ -51,7 +51,7 @@ void harmony::Application::InitSDL()
 	}
 }
 
-void harmony::Application::InitBGFX()
+void harmony::Program::InitBGFX()
 {
 #if !BX_PLATFORM_EMSCRIPTEN
 	SDL_SysWMinfo wmi;
@@ -90,7 +90,7 @@ void harmony::Application::InitBGFX()
 	bgfx::setViewRect(0, 0, 0, p_StartingWidth, p_StartingHeight);
 }
 
-void harmony::Application::InitImGui()
+void harmony::Program::InitImGui()
 {
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
@@ -110,7 +110,7 @@ void harmony::Application::InitImGui()
 //	// BX_PLATFORM_EMSCRIPTEN
 }
 
-void harmony::Application::Run()
+void harmony::Program::Run()
 {
 	while (p_Run)
 	{

@@ -1,0 +1,7 @@
+namespace harmony
+{
+    class ProgramComponent
+    {
+        
+    };
+};
