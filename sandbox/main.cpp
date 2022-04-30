@@ -1,8 +1,10 @@
 #include <iostream>
-#include "Application.h"
+#include "Program.h"
 
 int main()
 {
-	harmony::Application app("Harmony Test");
+	harmony::Program app("Harmony Test");
+	app.Init();
+	app.Run();
 	std::cout << "Hello World!\n";
 }

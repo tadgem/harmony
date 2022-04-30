@@ -12,7 +12,11 @@
 harmony::Program::Program(std::string name) : p_AppName(name)
 {
 	p_Run = true;
-	Init();
+}
+
+harmony::Program::~Program()
+{
+	Cleanup();
 }
 
 void harmony::Program::Init()
@@ -126,11 +130,16 @@ void harmony::Program::Run()
 		}
 		imguiBeginFrame();
 		ImGui_ImplSDL2_NewFrame(p_Window);
+
+		for (int i = 0; i < p_ProgramComponents.size(); i++)
+		{
+			p_ProgramComponents[i]->Update();
+		}
+
 		ImGui::ShowDemoWindow(); // your drawing here
 		ImGui::Render();
 		imguiEndFrame();
 
 		bgfx::frame();
 	}
-	Cleanup();
 }
