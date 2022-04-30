@@ -24,7 +24,11 @@ void harmony::Program::Init()
 	InitSDL();
 	InitBGFX();
 	InitImGui();
-	Run();
+
+	for (int i = 0; i < p_ProgramComponents.size(); i++)
+	{
+		p_ProgramComponents[i]->Init();
+	}
 }
 
 void harmony::Program::Cleanup()
@@ -139,6 +143,11 @@ void harmony::Program::Run()
 		ImGui::ShowDemoWindow(); // your drawing here
 		ImGui::Render();
 		imguiEndFrame();
+
+		for (int i = 0; i < p_ProgramComponents.size(); i++)
+		{
+			p_ProgramComponents[i]->Render();
+		}
 
 		bgfx::frame();
 	}
