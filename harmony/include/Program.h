@@ -45,8 +45,8 @@ namespace harmony
 		template<typename T, typename ... Args>
 		WeakRef<T> AddProgramComponent(Args&& ... args)
 		{
-			static_assert(std::is_base_of<ProgramComponent, T>("Not a program component"));
-			Ref<T> pc = CreateRef<T>(args);
+			static_assert(std::is_base_of<ProgramComponent, T>());
+			Ref<T> pc = CreateRef<T>(std::forward<Args>(args)...);
 			p_ProgramComponents.emplace_back(pc);
 			return GetWeakRef<T>(pc);
 		}

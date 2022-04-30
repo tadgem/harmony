@@ -34,6 +34,7 @@ ${DAS_BGFX_ASTC_CODEC_DIR}
 ${DAS_INCLUDE_DIR}
 "${CMAKE_CURRENT_SOURCE_DIR}/../submodules/sdl/include"
 ${imgui_INCLUDE_DIR} 
+${ROOT_DIR}/submodules/daScript/modules/dasStbImage/src
 ${ROOT_DIR}/submodules/spdlog/include
 ${DAS_BGFX_DIR}/src CACHE INTERNAL "")
 
@@ -42,4 +43,4 @@ target_include_directories(harmony PRIVATE
 )
 
 target_compile_definitions(harmony PUBLIC SDL_SENSOR_DUMMY)
-target_link_libraries(harmony libDaScript libDasModuleBGFX libDasModuleBGFXImgui libDasModuleImGui SDL2-static spdlog::spdlog)
+target_link_libraries(harmony libDaScript libDasModuleStbImage libDasModuleBGFX libDasModuleBGFXImgui libDasModuleImGui  SDL2-static spdlog::spdlog)
