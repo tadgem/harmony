@@ -1,9 +1,10 @@
 #include "ScriptSandboxComponent.h"
 #include "src/dasBGFX.h"
 #include "dasIMGUI.h"
+#include "ImGuiFileDialog.h"
 #include "daScript/STBImageModule.h"
 #include "Core/Log.hpp"
-harmony::ScriptSandboxComponent::ScriptSandboxComponent()
+harmony::ScriptSandboxComponent::ScriptSandboxComponent(AssetManager& assetManager) : p_AssetManager(assetManager)
 {
     p_fInit = nullptr;
     p_fUpdate = nullptr;
@@ -98,8 +99,29 @@ void harmony::ScriptSandboxComponent::Update()
             Cleanup();
             Init();
         }
+
+        // open Dialog Simple
+        if (ImGui::Button("Open File Dialog"))
+            ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".cpp,.h,.hpp", ".");
+
+        // display
+        if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey"))
+        {
+            // action if OK
+            if (ImGuiFileDialog::Instance()->IsOk())
+            {
+                std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+                std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+                // action
+            }
+
+            // close
+            ImGuiFileDialog::Instance()->Close();
+        }
     }
     ImGui::End();
+
+    p_AssetManager.OnImGui();
 
     if (p_fUpdate == nullptr) return;
     p_Context->eval(p_fUpdate, nullptr);

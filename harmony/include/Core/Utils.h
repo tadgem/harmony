@@ -4,6 +4,7 @@ namespace harmony
 {
     class Utils
     {
-        std::string LoadStringFromPath(const std::string& path);
+    public:
+        static std::string LoadStringFromPath(const std::string& path);
     };
 };

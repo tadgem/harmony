@@ -7,7 +7,7 @@ int main()
 {
 	harmony::Program app("Harmony Test");
 
-	app.AddProgramComponent<harmony::ScriptSandboxComponent>();
+	app.AddProgramComponent<harmony::ScriptSandboxComponent>(app.m_AssetManager);
 
 	app.Init();
 	app.Run([&]()

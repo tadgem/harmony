@@ -1,8 +1,69 @@
 #include "Assets/AssetManager.h"
+#include "Assets/ScriptAssetFactory.h"
 #include "Core/Profile.hpp"
 #include "Core/Log.hpp"
+#include "imgui.h"
+
 harmony::AssetManager::AssetManager()
 {
+    p_AssetFactories.emplace(typeid(ScriptAsset).hash_code(), CreateRef<ScriptAssetFactory>());
+}
+
+std::vector<harmony::WeakRef<harmony::Asset>> harmony::AssetManager::LoadAssetFromPath(std::string path, size_t typeHash)
+{
+    std::vector<WeakRef<Asset>> returnedAssets = std::vector<WeakRef<Asset>>();
+    if (p_AssetFactories.find(typeHash) == p_AssetFactories.end())
+    {
+        harmony::log::error("Asset Manager : Failed to load asset with type hash {}", typeHash);
+        return std::vector<WeakRef<Asset>>();
+    }
+
+    auto assets = p_AssetFactories[typeHash]->CreateFromFileUnsafe(path);
+
+    for (auto const& [key, val] : assets)
+    {
+        auto assetCollectionIt = p_Assets.find(key);
+        if (assetCollectionIt == p_Assets.end())
+        {
+            p_Assets.emplace(key, std::vector<Ref<Asset>>());
+        }
+
+        for (int i = 0; i < val.size(); i++)
+        {
+            p_Assets[key].push_back(val[i]);
+        }
+
+        auto typePathLookupIt = p_AssetLoadedPathsByType.find(key);
+        if (typePathLookupIt == p_AssetLoadedPathsByType.end())
+        {
+            p_AssetLoadedPathsByType.emplace(key, std::vector<std::string>());
+        }
+
+        for (int i = 0; i < val.size(); i++)
+        {
+            std::string pathToUse;
+            if (val[i]->m_AssetPath.size() == 0)
+            {
+                pathToUse = path;
+            }
+            else
+            {
+                pathToUse = val[i]->m_AssetPath;
+            }
+            p_AssetLoadedPathsByType[key].push_back(pathToUse);
+
+            auto pathLookupIt = p_LoadedPaths.find(pathToUse);
+            if (pathLookupIt == p_LoadedPaths.end())
+            {
+                p_LoadedPaths.emplace(pathToUse, std::vector<WeakRef<Asset>>());
+            }
+            p_LoadedPaths[pathToUse].push_back(val[i]);
+
+            returnedAssets.push_back(GetWeakRef<Asset>(val[i]));
+        }
+    }
+
+    return returnedAssets;
 }
 
 void harmony::AssetManager::UnloadAsset(WeakRef<Asset> asset)
@@ -107,12 +168,29 @@ bool harmony::AssetManager::IsAssetLoaded(std::string path)
 
 void harmony::AssetManager::OnImGui()
 {
+    if (ImGui::Begin("Asset Manager"))
+    {
+        for (auto& assetsAtPath : p_LoadedPaths)
+        {
+            ImGui::Text(assetsAtPath.first.c_str());
+            ImGui::Indent();
+            for (WeakRef<Asset> asset : assetsAtPath.second)
+            {
+                auto a = asset.lock();
+                ImGui::Text(" - %d : %s", a->m_TypeHash, a->m_AssetPath);
+            }
+            ImGui::Unindent();
+            ImGui::Separator();
+        }
+    }
+
+    ImGui::End();
 }
 
 size_t harmony::AssetManager::GetAssetTypeHash(WeakRef<Asset> asset)
 {
     HARMONY_PROFILE_FUNCTION()
-    for (auto const& [key, val] : p_Assets)
+    for (auto& [key, val] : p_Assets)
     {
         for (int i = 0; i < val.size(); i++)
         {

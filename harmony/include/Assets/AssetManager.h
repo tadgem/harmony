@@ -1,4 +1,4 @@
-#ifndef pragma once
+#pragma once
 #include "Core/Profile.hpp"
 #include "Core/Memory.h"
 #include "Assets/AssetFactory.h"
@@ -12,6 +12,8 @@ namespace harmony {
     public:
         AssetManager();
 
+        std::vector<WeakRef<Asset>> LoadAssetFromPath(std::string path, size_t typeHash);
+
         template<typename T>
         std::vector<WeakRef<T>> LoadAssetFromPath(std::string path)
         {
@@ -19,56 +21,8 @@ namespace harmony {
             static_assert(std::is_base_of<Asset, T>());
 
             size_t typeHash = typeid(T).hash_code();
-            auto factoryIt = p_AssetFactories.find(typeHash);
-            if (factoryIt == p_AssetFactories.end())
-            {
-                std::string typeName = HarmonyUtils::GetCleanTypeName(typeid(T).name());
-                p_AssetTypeNames.emplace(typeHash, typeName);
-                p_AssetFactories.emplace(typeHash, CreateRef<AssetFactory>(typeid(T).hash_code()));
-            }
-            auto assets = p_AssetFactories[typeHash]->CreateFromFile<T>(path);
-
-            for (auto const& [key, val] : assets)
-            {
-                auto assetCollectionIt = p_Assets.find(key);
-                if (assetCollectionIt == p_Assets.end())
-                {
-                    p_Assets.emplace(key, std::vector<Asset*>());
-                }
-
-                for (int i = 0; i < val.size(); i++)
-                {
-                    p_Assets[key].push_back(val[i]);
-                }
-
-                auto typePathLookupIt = p_AssetLoadedPathsByType.find(key);
-                if (typePathLookupIt == p_AssetLoadedPathsByType.end())
-                {
-                    p_AssetLoadedPathsByType.emplace(key, std::vector<std::string>());
-                }
-
-                for (int i = 0; i < val.size(); i++)
-                {
-                    std::string pathToUse;
-                    if (val[i]->m_AssetPath.size() == 0)
-                    {
-                        pathToUse = path;
-                    }
-                    else
-                    {
-                        pathToUse = val[i]->m_AssetPath;
-                    }
-                    p_AssetLoadedPathsByType[key].push_back(pathToUse);
-
-                    auto pathLookupIt = p_LoadedPaths.find(pathToUse);
-                    if (pathLookupIt == p_LoadedPaths.end())
-                    {
-                        p_LoadedPaths.emplace(pathToUse, std::vector<Asset*>());
-                    }
-                    p_LoadedPaths[pathToUse].push_back(val[i]);
-                }
-
-            }
+            
+            auto assets = LoadAssetFromPath(path, typeHash);
 
             std::vector<WeakRef<T>> derivedAssets;
 
@@ -87,7 +41,6 @@ namespace harmony {
             return derivedAssets;
         }
 
-
         virtual void UnloadAsset(WeakRef<Asset> asset);
         void UnloadAllAssetsAtPath(std::string path);
         void UnloadAllAssets();
@@ -105,4 +58,3 @@ namespace harmony {
         size_t GetAssetTypeHash(WeakRef<Asset> asset);
     };
 }
-#endif

@@ -16,6 +16,11 @@ namespace harmony {
 			return assets;
 		}
 
+		std::map<size_t, std::vector<Ref<Asset>>> CreateFromFileUnsafe(const std::string& path)
+		{
+			return CreateAssetData(path);
+		}
+
 	protected:
 		virtual std::map<size_t, std::vector<Ref<Asset>>> CreateAssetData(const std::string& path);
 		size_t p_TypeHash;
