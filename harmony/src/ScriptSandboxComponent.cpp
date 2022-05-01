@@ -124,4 +124,5 @@ void harmony::ScriptSandboxComponent::Cleanup()
         }
     }
     das::Module::Shutdown();
+    p_Context.reset();
 }
