@@ -3,8 +3,9 @@
 
 namespace harmony
 {
-    struct ScriptAsset : public Asset
+    class ScriptAsset : public Asset
     {
+    public:
         std::string m_ScriptContent;
     };
 };

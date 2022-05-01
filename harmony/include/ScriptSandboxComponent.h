@@ -10,15 +10,19 @@ namespace harmony
     {
     public:
         ScriptSandboxComponent(AssetManager& assetManager);
-        ~ScriptSandboxComponent() {}
+        virtual ~ScriptSandboxComponent() override;
         // Inherited via ProgramComponent
         virtual void Init() override;
         virtual void Update() override;
         virtual void Render() override;
         virtual void Cleanup() override;
 
+        void RefreshAvailableScripts();
+
         std::string m_ScriptPath = "testscript.das";
     private:
+        std::vector<std::string> p_AvailableScripts;
+        std::string p_SelectedScript;
         Ref<das::Context> p_Context;
         Ref<Project> p_Project;
         das::SimFunction* p_fInit;

@@ -41,6 +41,27 @@ namespace harmony {
             return derivedAssets;
         }
 
+        template<typename T>
+        std::vector<WeakRef<T>> GetAllAssetsOfType()
+        {
+            HARMONY_PROFILE_FUNCTION()
+            static_assert(std::is_base_of<Asset, T>());
+
+            size_t typeHash = typeid(T).hash_code();
+
+            std::vector<WeakRef<T>> derivedAssets;
+
+            if (p_Assets.find(typeHash) != p_Assets.end())
+            {
+                for (Ref<Asset> asset : p_Assets[typeHash])
+                {
+                    Ref<T> derived_asset = std::static_pointer_cast<T>(asset);
+                    derivedAssets.emplace_back(GetWeakRef<T>(derived_asset));
+                }
+            }
+            return derivedAssets;
+        }
+
         virtual void UnloadAsset(WeakRef<Asset> asset);
         void UnloadAllAssetsAtPath(std::string path);
         void UnloadAllAssets();

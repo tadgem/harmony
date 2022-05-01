@@ -4,29 +4,34 @@
 #include "ImGuiFileDialog.h"
 #include "daScript/STBImageModule.h"
 #include "Core/Log.hpp"
+#include "Assets/ScriptAsset.h"
 harmony::ScriptSandboxComponent::ScriptSandboxComponent(AssetManager& assetManager) : p_AssetManager(assetManager)
 {
     p_fInit = nullptr;
     p_fUpdate = nullptr;
     p_fCleanup = nullptr;
-}
 
-void harmony::ScriptSandboxComponent::Init()
-{
     // request all da-script built in modules
     NEED_ALL_DEFAULT_MODULES;
     using namespace das;
     // request stb image
     NEED_MODULE(Module_dasStbImage)
-    // request our custom module
-    NEED_MODULE(Module_dasBGFX);
+        // request our custom module
+        NEED_MODULE(Module_dasBGFX);
     // request our custom module
     NEED_MODULE(Module_dasIMGUI);
 
-
-    // Initialize modules
+        // Initialize modules
     das::Module::Initialize();
+}
 
+harmony::ScriptSandboxComponent::~ScriptSandboxComponent()
+{
+    das::Module::Shutdown();
+}
+
+void harmony::ScriptSandboxComponent::Init()
+{
     das::TextPrinter tout;                               // output stream for all compiler messages (stdout. for stringstream use TextWriter)
     das::ModuleGroup dummyLibGroup;                      // module group for compiled program
     auto fAccess = das::make_smart<das::FsFileAccess>();      // default file access
@@ -94,6 +99,19 @@ void harmony::ScriptSandboxComponent::Update()
 {
     if (ImGui::Begin("Script Sandbox Settings"))
     {
+        if (ImGui::BeginCombo("Choose Script", p_SelectedScript.c_str()))
+        {
+            for (std::string option : p_AvailableScripts)
+            {
+                if (ImGui::Selectable(option.c_str()))
+                {
+                    p_SelectedScript = option;
+                }
+            }
+            ImGui::EndCombo();
+        }
+        
+
         if(ImGui::Button("Reload Script"))
         {
             Cleanup();
@@ -102,10 +120,13 @@ void harmony::ScriptSandboxComponent::Update()
 
         // open Dialog Simple
         if (ImGui::Button("Open File Dialog"))
-            ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".cpp,.h,.hpp", ".");
+            ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenProject", "Choose File", ".harmonyproj", ".");
+
+        if (ImGui::Button("Save Harmony Project"))
+            ImGuiFileDialog::Instance()->OpenDialog("HarmonySaveProject", "Save As", ".harmonyproj", ".");
 
         // display
-        if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey"))
+        if (ImGuiFileDialog::Instance()->Display("HarmonyOpenProject"))
         {
             // action if OK
             if (ImGuiFileDialog::Instance()->IsOk())
@@ -145,6 +166,16 @@ void harmony::ScriptSandboxComponent::Cleanup()
             return;
         }
     }
-    das::Module::Shutdown();
     p_Context.reset();
+}
+
+void harmony::ScriptSandboxComponent::RefreshAvailableScripts()
+{
+    p_AvailableScripts.clear();
+    auto scripts = p_AssetManager.GetAllAssetsOfType<ScriptAsset>();
+    for (auto& wr : scripts)
+    {
+        auto script = wr.lock();
+        p_AvailableScripts.emplace_back(script->m_AssetPath);
+    }
 }
