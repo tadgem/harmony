@@ -1,5 +1,5 @@
-#include "ProgramComponent.h"
-#include "Memory.h"
+#include "Core/ProgramComponent.h"
+#include "Core/Memory.h"
 #include "daScript/daScript.h"
 #include <string>
 namespace harmony

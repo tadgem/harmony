@@ -1,12 +1,12 @@
 #include <filesystem>
-#include "Program.h"
+#include "Core/Program.h"
 #include "SDL_syswm.h"
 #include "imgui.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
 #include "src/imgui/imgui_bgfx.h"
 #include "backends/imgui_impl_sdl.h"
-#include "Log.hpp"
+#include "Core/Log.hpp"
 
 harmony::Program::Program(std::string name) : p_AppName(name)
 {

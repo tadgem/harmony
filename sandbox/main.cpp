@@ -1,8 +1,8 @@
 #include <iostream>
-#include "Program.h"
+#include "Core/Program.h"
 #include "ScriptSandboxComponent.h"
 
-#include "Log.hpp"
+#include "Core/Log.hpp"
 int main()
 {
 	harmony::Program app("Harmony Test");

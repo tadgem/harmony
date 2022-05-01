@@ -1,6 +1,7 @@
 #include "SDL.h"
 #include "Memory.h"
-#include "ProgramComponent.h"
+#include "Core/ProgramComponent.h"
+#include "Assets/AssetManager.h"
 #undef main
 #include <string>
 #include <vector>
@@ -37,9 +38,8 @@ namespace harmony
 		const uint32_t p_StartingWidth = 1280;
 		const uint32_t p_StartingHeight = 720;
 
-		bx::DefaultAllocator* p_ImGuiAllocator;
 		SDL_Window* p_Window;
-
+		bx::DefaultAllocator* p_ImGuiAllocator;
 	public:
 
 		template<typename T, typename ... Args>
@@ -73,6 +73,7 @@ namespace harmony
 				return GetWeakRef<T>(nullptr);
 			}
 		}
-		
+
+		AssetManager m_AssetManager;
 	};
 };

@@ -2,7 +2,7 @@
 #include "src/dasBGFX.h"
 #include "dasIMGUI.h"
 #include "daScript/STBImageModule.h"
-#include "Log.hpp"
+#include "Core/Log.hpp"
 harmony::ScriptSandboxComponent::ScriptSandboxComponent()
 {
     p_fInit = nullptr;
