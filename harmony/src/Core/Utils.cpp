@@ -19,3 +19,24 @@ std::string harmony::Utils::LoadStringFromPath(const std::string& path)
 	inputFile.close();
 	return content;
 }
+
+nlohmann::json harmony::Utils::LoadJsonFromPath(const std::string& path)
+{
+	std::string str = LoadStringFromPath(path);
+	nlohmann::json json = str;
+	return str;
+}
+
+void harmony::Utils::SaveStringToPath(const std::string& str, const std::string& path)
+{
+	std::ofstream outputFile = std::ofstream(path);
+	outputFile << str;
+	outputFile.close();
+}
+
+void harmony::Utils::SaveJsonToPath(nlohmann::json& json, const std::string& path)
+{
+	std::string jsonContent = json.dump();
+	SaveStringToPath(jsonContent, path);
+
+}

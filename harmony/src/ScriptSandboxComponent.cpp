@@ -1,7 +1,6 @@
 #include "ScriptSandboxComponent.h"
 #include "src/dasBGFX.h"
 #include "dasIMGUI.h"
-#include "ImGuiFileDialog.h"
 #include "daScript/STBImageModule.h"
 #include "Core/Log.hpp"
 #include "Assets/ScriptAsset.h"
@@ -36,11 +35,11 @@ void harmony::ScriptSandboxComponent::Init()
     das::ModuleGroup dummyLibGroup;                      // module group for compiled program
     auto fAccess = das::make_smart<das::FsFileAccess>();      // default file access
     // compile program
-    auto program = compileDaScript(m_ScriptPath, fAccess, tout, dummyLibGroup);
+    auto program = compileDaScript(p_SelectedScript, fAccess, tout, dummyLibGroup);
 
     if (program->failed()) {
         // if compilation failed, report errors
-        log::error("daScript : Failed to compile script {} :", m_ScriptPath);
+        log::error("daScript : Failed to compile script {} :", p_SelectedScript);
         for (auto& err : program->errors) {
             log::error(" - {}", reportError(err.at, err.what, err.extra, err.fixme, err.cerr));
         }
@@ -51,7 +50,8 @@ void harmony::ScriptSandboxComponent::Init()
     p_Context = CreateRef<das::Context>(program->getContextStackSize());
     if (!program->simulate(*p_Context, tout)) {
         // if interpretation failed, report errors
-        log::error("daScript : Failed to simulate script {} :", m_ScriptPath);
+        log::error("daScript : Failed to simulate script {} :", p_SelectedScript);
+        log::error("daScript : Failed to simulate script {} :", p_SelectedScript);
         for (auto& err : program->errors) {
             log::error(" - {}", reportError(err.at, err.what, err.extra, err.fixme, err.cerr));
         }
@@ -116,28 +116,6 @@ void harmony::ScriptSandboxComponent::Update()
         {
             Cleanup();
             Init();
-        }
-
-        // open Dialog Simple
-        if (ImGui::Button("Open File Dialog"))
-            ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenProject", "Choose File", ".harmonyproj", ".");
-
-        if (ImGui::Button("Save Harmony Project"))
-            ImGuiFileDialog::Instance()->OpenDialog("HarmonySaveProject", "Save As", ".harmonyproj", ".");
-
-        // display
-        if (ImGuiFileDialog::Instance()->Display("HarmonyOpenProject"))
-        {
-            // action if OK
-            if (ImGuiFileDialog::Instance()->IsOk())
-            {
-                std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-                std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
-                // action
-            }
-
-            // close
-            ImGuiFileDialog::Instance()->Close();
         }
     }
     ImGui::End();

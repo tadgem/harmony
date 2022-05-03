@@ -19,7 +19,6 @@ namespace harmony
 
         void RefreshAvailableScripts();
 
-        std::string m_ScriptPath = "testscript.das";
     private:
         std::vector<std::string> p_AvailableScripts;
         std::string p_SelectedScript;
