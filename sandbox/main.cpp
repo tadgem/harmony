@@ -10,10 +10,6 @@ int main()
 	harmony::Program app("Harmony Test");
 
 	app.AddProgramComponent<harmony::ScriptSandboxComponent>(app.m_AssetManager);
-    harmony::Project p1;
-    harmony::Project p2{};
-    harmony::Project();
-    harmony::Project{};
 	app.Init();
 	app.Run([&]()
 	{

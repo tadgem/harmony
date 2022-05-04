@@ -23,8 +23,8 @@ std::string harmony::Utils::LoadStringFromPath(const std::string& path)
 nlohmann::json harmony::Utils::LoadJsonFromPath(const std::string& path)
 {
 	std::string str = LoadStringFromPath(path);
-	nlohmann::json json = str;
-	return str;
+	nlohmann::json json = nlohmann::json::parse(str);
+	return json;
 }
 
 void harmony::Utils::SaveStringToPath(const std::string& str, const std::string& path)
