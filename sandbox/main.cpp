@@ -16,6 +16,7 @@ int main()
 			if (ImGui::Begin("Project Debug"))
 			{
                 static char str0[128] = "Hello, world!";
+                ImGui::Text("Current Path: %s", std::filesystem::current_path().generic_string().c_str());
                 ImGui::InputText("Filename: %s", str0, 256);
                 ImGui::Separator();
                 // open Dialog Simple
