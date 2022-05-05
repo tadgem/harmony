@@ -4,6 +4,7 @@
 #include <map>
 #include <filesystem>
 #include "Assets/AssetManager.h"
+#include "Core/ProgramComponent.h"
 
 namespace harmony
 {
@@ -16,11 +17,18 @@ namespace harmony
         ~Project() {}
         std::string m_ProjectPath;
         std::string m_ProjectDirectory;
+        std::string m_ImGuiIniPath;
 
-        void Load(AssetManager& assetManager);
+        void Save();
+        void Load();
         void Unload(AssetManager& assetManager);
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Project, m_ProjectPath, m_ProjectDirectory)
+        std::map<size_t, nlohmann::json> p_ProgramComponentSerializationAttributes;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Project, m_ProjectPath, m_ProjectDirectory, m_ImGuiIniPath, p_ProgramComponentSerializationAttributes)
+    private:
+        void UpdateProjectComponentSerializationAttributes(std::vector<Ref<ProgramComponent>>& programComponents);
+        friend class Program;
 
     };
 };

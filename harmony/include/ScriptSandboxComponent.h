@@ -16,7 +16,9 @@ namespace harmony
         virtual void Update() override;
         virtual void Render() override;
         virtual void Cleanup() override;
-
+        virtual nlohmann::json ToJson() override;
+        virtual void FromJson(const nlohmann::json& json) override;
+        virtual void Refresh() override;
         void RefreshAvailableScripts();
 
     private:
@@ -27,6 +29,6 @@ namespace harmony
         das::SimFunction* p_fInit;
         das::SimFunction* p_fUpdate;
         das::SimFunction* p_fCleanup;
-        AssetManager& p_AssetManager;
+        AssetManager& p_AssetManager;        
     };
 };

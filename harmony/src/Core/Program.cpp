@@ -156,3 +156,27 @@ void harmony::Program::Run(harmony::Callback callback)
 		bgfx::frame();
 	}
 }
+
+void harmony::Program::SaveProject(Project& proj)
+{
+	proj.UpdateProjectComponentSerializationAttributes(p_ProgramComponents);
+	proj.Save();
+	nlohmann::json projectJson = proj;
+	Utils::SaveJsonToPath(projectJson, proj.m_ProjectPath);
+}
+
+void harmony::Program::LoadProject(Project& proj)
+{
+	proj.Load();
+	for (auto typeAssetPair : proj.p_ProgramComponentSerializationAttributes)
+	{
+		for (auto component : p_ProgramComponents)
+		{
+			if (component->m_TypeHash == typeAssetPair.first)
+			{
+				component->FromJson(typeAssetPair.second);
+				component->Refresh();
+			}
+		}
+	}
+}

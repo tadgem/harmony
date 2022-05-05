@@ -6,6 +6,7 @@
 #include "Assets/ScriptAsset.h"
 harmony::ScriptSandboxComponent::ScriptSandboxComponent(AssetManager& assetManager) : p_AssetManager(assetManager)
 {
+    m_TypeHash = typeid(ScriptSandboxComponent).hash_code();
     p_fInit = nullptr;
     p_fUpdate = nullptr;
     p_fCleanup = nullptr;
@@ -156,4 +157,31 @@ void harmony::ScriptSandboxComponent::RefreshAvailableScripts()
         auto script = wr.lock();
         p_AvailableScripts.emplace_back(script->m_AssetPath);
     }
+}
+
+nlohmann::json harmony::ScriptSandboxComponent::ToJson()
+{
+    nlohmann::json json = nlohmann::json();
+    std::string hash = std::to_string(m_TypeHash);
+    json[hash] = nlohmann::json(p_AvailableScripts);
+
+    return json;
+}
+
+void harmony::ScriptSandboxComponent::FromJson(const nlohmann::json& json)
+{
+    harmony::log::warn("attempting to deserialize script json");
+    std::string typeHash = std::to_string(m_TypeHash);
+    for (auto path : json[typeHash])
+    {
+        std::string pathStr = path.get<std::string>();
+        p_AssetManager.LoadAssetFromPath<ScriptAsset>(pathStr);
+    }
+}
+
+void harmony::ScriptSandboxComponent::Refresh()
+{
+    Cleanup();
+    RefreshAvailableScripts();
+    Init();
 }

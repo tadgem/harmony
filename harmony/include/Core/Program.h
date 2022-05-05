@@ -1,8 +1,9 @@
 #include "SDL.h"
+#undef main
 #include "Memory.h"
 #include "Core/ProgramComponent.h"
 #include "Assets/AssetManager.h"
-#undef main
+#include "Project.h"
 #include <string>
 #include <vector>
 #include <functional>
@@ -15,7 +16,6 @@ namespace harmony
 	/// <summary>
 	/// Top level container for program
 	/// </summary>
-	/// 
 	class Program
 	{
 	public:
@@ -23,6 +23,9 @@ namespace harmony
 		~Program();
 		void Init();
 		void Run(Callback callback);
+
+		void SaveProject(Project& proj);
+		void LoadProject(Project& proj);
 	private:
 		void Cleanup();
 

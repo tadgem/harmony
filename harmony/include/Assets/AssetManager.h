@@ -4,6 +4,7 @@
 #include "Assets/AssetFactory.h"
 #include <map>
 #include <vector>
+#include <memory>
 #include <string>
 #include "Core/Utils.h"
 namespace harmony {
@@ -18,7 +19,7 @@ namespace harmony {
         std::vector<WeakRef<T>> LoadAssetFromPath(std::string path)
         {
             HARMONY_PROFILE_FUNCTION()
-            static_assert(std::is_base_of<Asset, T>());
+            static_assert(std::is_base_of<Asset, T>(), "Provided type is not an asset");
 
             size_t typeHash = typeid(T).hash_code();
             
@@ -26,7 +27,9 @@ namespace harmony {
 
             std::vector<WeakRef<T>> derivedAssets;
 
-            for (Ref<Asset> asset : assets[typeHash])
+            if (assets.size() == 0) return derivedAssets;
+
+            for (auto asset : p_Assets[typeHash])
             {
                 if (asset->m_TypeHash != typeHash) continue;
 
@@ -34,7 +37,7 @@ namespace harmony {
                 {
                     asset->m_AssetPath = path;
                 }
-                Ref<T> derived_asset = static_cast<Ref<T>>(asset)
+                Ref<T> derived_asset = std::static_pointer_cast<T>(asset);
                 derivedAssets.emplace_back(GetWeakRef<T>(derived_asset));
             }
 
