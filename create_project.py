@@ -2,32 +2,53 @@
 from sdl2 import *
 import ctypes
 import OpenGL.GL as gl
+import shutil
+import os
 
 import imgui
 from imgui.integrations.sdl2 import SDL2Renderer
 
-def create_project_window():
+sample_project_path = "sandbox/projects/sample"
+
+def create_project_window(path_text_val, name_text_val):
     imgui.text("Create Project Tool")
-    path_text_val = 'Please, enter the desired path of the project.'
-    changed, path_text_val = imgui.input_text(
+    changed, path_text = imgui.input_text(
     'Path',
     path_text_val,
     256
     )
-    name_text_val = 'Please, enter the desired name of the project.'
-    changed, name_text_val = imgui.input_text(
+    changed, name_text = imgui.input_text(
     'Name',
     name_text_val,
     256
     )
+
     if imgui.button("Generate New Project"):
-        print("Maaake")
+        shutil.copytree(sample_project_path, path_text, symlinks=False, ignore=None, copy_function=shutil.copy2, ignore_dangling_symlinks=False, dirs_exist_ok=False)
+        project_file_path = path_text + "/" + "sample.harmonyproj"
+        project_text = ""
+        with open(project_file_path, "r") as file:
+            project_text = file.read()
+            project_text = project_text.replace("D:/repos/harmony/sandbox/projects/sample", path_text )
+            project_text = project_text.replace("sample", name_text)
+            file.close()
+        with open(project_file_path, "w") as file:
+            file.write(project_text)
+            file.close()
+        
+        os.rename(project_file_path, path_text + "/" + name_text + ".harmonyproj")
+        os.rename(project_file_path + ".ini", path_text + "/" + name_text + ".ini")
+        os.rename(path_text + "/" + "sample.das", path_text + "/" + name_text + ".das")
+    return (path_text, name_text)
 
 
 def main():
     window, gl_context = impl_pysdl2_init()
     imgui.create_context()
     impl = SDL2Renderer(window)
+
+    path_text_val = 'd:/harmony-proj/test'
+    name_text_val = 'test'
 
     running = True
     event = SDL_Event()
@@ -56,7 +77,10 @@ def main():
 
 
         imgui.begin("Create Project window", True)
-        create_project_window()
+        path_str, name_str = create_project_window(path_text_val, name_text_val)
+        
+        path_text_val = path_str
+        name_text_val = name_str
         imgui.end()
 
         gl.glClearColor(0., 0., 0., 1)
@@ -114,7 +138,6 @@ def impl_pysdl2_init():
         exit(1)
 
     return window, gl_context
-
 
 if __name__ == "__main__":
     main()
