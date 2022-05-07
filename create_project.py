@@ -37,7 +37,7 @@ def create_project_window(path_text_val, name_text_val):
             file.close()
         
         os.rename(project_file_path, path_text + "/" + name_text + ".harmonyproj")
-        os.rename(project_file_path + ".ini", path_text + "/" + name_text + ".ini")
+        os.rename(project_file_path + ".ini", path_text + "/" + name_text  + ".harmonyproj" + ".ini")
         os.rename(path_text + "/" + "sample.das", path_text + "/" + name_text + ".das")
     return (path_text, name_text)
 
