@@ -8,13 +8,18 @@ from imgui.integrations.sdl2 import SDL2Renderer
 
 def create_project_window():
     imgui.text("Create Project Tool")
-    text_val = 'Please, enter the desired path of the project.'
-    changed, text_val = imgui.input_text(
+    path_text_val = 'Please, enter the desired path of the project.'
+    changed, path_text_val = imgui.input_text(
     'Path',
-    text_val,
+    path_text_val,
     256
     )
-
+    name_text_val = 'Please, enter the desired name of the project.'
+    changed, name_text_val = imgui.input_text(
+    'Name',
+    name_text_val,
+    256
+    )
     if imgui.button("Generate New Project"):
         print("Maaake")
 
@@ -50,7 +55,7 @@ def main():
             imgui.end_main_menu_bar()
 
 
-        imgui.begin("Custom window", True)
+        imgui.begin("Create Project window", True)
         create_project_window()
         imgui.end()
 

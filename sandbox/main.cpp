@@ -44,6 +44,16 @@ int main()
                         nlohmann::json json = harmony::Utils::LoadJsonFromPath(filepath);
                         harmony::Project project = json.get<harmony::Project>();
                         app.LoadProject(project);
+
+                        for (int i = 0; i < 128; i++)
+                        {
+                            if (i >= project.m_ProjectName.size())
+                            {
+                                str0[i] = ' ';
+                                continue;
+                            }
+                            str0[i] = project.m_ProjectName.at(i);
+                        }                        
                     }
                     // close
                     ImGuiFileDialog::Instance()->Close();
@@ -60,7 +70,7 @@ int main()
                         std::replace(fullPath.begin(), fullPath.end(), '\\', '/'); // replace all 'x' to 'y'
                         std::replace(directory.begin(), directory.end(), '\\', '/'); // replace all 'x' to 'y'
                         // action
-                        harmony::Project proj = harmony::Project(fullPath, directory);
+                        harmony::Project proj = harmony::Project(std::string(str0), fullPath, directory);
                         app.SaveProject(proj);
                     }
                     // close

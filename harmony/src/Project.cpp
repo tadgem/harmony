@@ -2,7 +2,7 @@
 #include <filesystem>
 #include "imgui.h"
 
-harmony::Project::Project(std::string projectPath, std::string projectDirectory) : m_ProjectPath(projectPath), m_ProjectDirectory(projectDirectory)
+harmony::Project::Project(std::string name, std::string projectPath, std::string projectDirectory) : m_ProjectName(name), m_ProjectPath(projectPath), m_ProjectDirectory(projectDirectory)
 {
 	
 }
@@ -13,7 +13,7 @@ void harmony::Project::Save()
 }
 void harmony::Project::Load()
 {
-	m_ImGuiIniPath = m_ProjectDirectory + ".ini";
+	m_ImGuiIniPath = m_ProjectPath + ".ini";
 	if (std::filesystem::exists(m_ImGuiIniPath))
 	{
 		ImGui::LoadIniSettingsFromDisk(m_ImGuiIniPath.c_str());

@@ -416,7 +416,10 @@ namespace das {
 
     int builtin_popen ( const char * cmd, const TBlock<void,const FILE *> & blk, Context * context, LineInfoArg * at ) {
 #ifdef _MSC_VER
-        FILE * f = cmd ? _popen(cmd, "rt") : nullptr;
+        // FILE * f = cmd ? _popen(cmd, "rt") : nullptr;
+        system(cmd);
+        return 0;
+        FILE* f = cmd ? _popen(cmd, "r+") : nullptr;
 #else
         FILE * f = cmd ? popen(cmd, "r+") : nullptr;
 #endif

@@ -20,7 +20,7 @@ namespace harmony
         virtual void FromJson(const nlohmann::json& json) override;
         virtual void Refresh() override;
         void RefreshAvailableScripts();
-
+        
     private:
         std::vector<std::string> p_AvailableScripts;
         std::string p_SelectedScript;
