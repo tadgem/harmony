@@ -237,10 +237,10 @@ def public bgfx_compile_shader_file ( fin, fout, ftype:string; rt : bgfx_rendere
     elif rt==bgfx_renderer_type VULKAN || rt==bgfx_renderer_type WEBGPU
         platform = "linux"
         profile = "spirv"
-    let shaderc = "modules/dasBGFX/bin/{BGFX_SHADERC_NAME}"
+    let shaderc = "{get_das_root()}/modules/dasBGFX/bin/{BGFX_SHADERC_NAME}"
     let incl = "{get_das_root()}/modules/dasBGFX/bgfx/bgfx/src"
     let prof = profile=="" ? "" : " --profile {profile}"
-    let sys = ""{shaderc}" -i {incl} -f {fin} -o {fout} --type {ftype} --platform {platform}{prof}"
+    let sys = "{shaderc} -i {incl} -f {fin} -o {fout} --type {ftype} --platform {platform}{prof}"
     if VERBOSE_COMPILER
         print("\nBGFX Compile Command : {sys}\n")
     unsafe
