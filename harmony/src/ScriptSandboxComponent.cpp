@@ -32,6 +32,8 @@ harmony::ScriptSandboxComponent::~ScriptSandboxComponent()
 
 void harmony::ScriptSandboxComponent::Init()
 {
+    std::string pathString = std::filesystem::current_path().string();
+    das::setDasRoot(pathString);
     das::TextPrinter tout;                               // output stream for all compiler messages (stdout. for stringstream use TextWriter)
     das::ModuleGroup dummyLibGroup;                      // module group for compiled program
     auto fAccess = das::make_smart<das::FsFileAccess>();      // default file access
