@@ -2,6 +2,7 @@
 #include "Core/Program.h"
 #include "das/ScriptSandboxComponent.h"
 #include "das/Assets/ScriptAsset.h"
+#include "das/Assets/ScriptAssetFactory.h"
 #include "Core/Log.hpp"
 #include "ImGui/ImGuiFileDialog.h"
 #include "ImGui/imgui.h"
@@ -10,6 +11,7 @@ int main()
 {
 	harmony::Program app("Harmony Test");
 
+    app.m_AssetManager.AddAssetFactory<harmony::ScriptAsset, harmony::ScriptAssetFactory>();
 	auto scriptComponent = app.AddProgramComponent<harmony::ScriptSandboxComponent>(app.m_AssetManager);
 	app.Init();
 	app.Run([&]()

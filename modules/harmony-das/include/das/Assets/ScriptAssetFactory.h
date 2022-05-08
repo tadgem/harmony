@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Assets/AssetFactory.h"
-#include "Assets/ScriptAsset.h"
+#include "das/Assets/ScriptAsset.h"
 #include "Core/Utils.h"
 namespace harmony {
     class ScriptAssetFactory : public AssetFactory

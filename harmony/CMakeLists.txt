@@ -16,7 +16,10 @@ set_property(TARGET harmony-core PROPERTY CXX_STANDARD 17)
 set(HARMONY_CORE_INCLUDES 
 ${CMAKE_CURRENT_SOURCE_DIR}/include 
 ${ROOT_DIR}/submodules/sdl/include
-${ROOT_DIR}/submodules/spdlog/include 
+${ROOT_DIR}/submodules/spdlog/include
+${ROOT_DIR}/submodules/bgfx/bgfx/include
+${ROOT_DIR}/submodules/bgfx/bx/include
+${ROOT_DIR}/submodules/bgfx/bimg/include
 CACHE INTERNAL "")
 
 target_include_directories(harmony-core PRIVATE 

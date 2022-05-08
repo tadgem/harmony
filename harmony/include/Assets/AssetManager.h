@@ -7,11 +7,45 @@
 #include <memory>
 #include <string>
 #include "Core/Utils.h"
+#include "Core/Memory.h"
+#include "Core/Log.hpp"
 namespace harmony {
     class AssetManager
     {
     public:
         AssetManager();
+
+        /// <summary>
+        /// Add a factory to create a type of asset T, using factory type F
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="F"></typeparam>
+        /// <typeparam name="...Args"></typeparam>
+        /// <param name="...args"></param>
+        /// <returns></returns>
+        template<typename T, typename F, typename ... Args>
+        WeakRef<F> AddAssetFactory(Args&& ... args)
+        {
+            static_assert(std::is_base_of<AssetFactory, F>());
+            size_t typeHash = typeid(T).hash_code();
+            Ref<F> assetFactory = CreateRef<F>(std::forward(args)...);
+            WeakRef<AssetFactory> afWr = AddAssetFactory(typeHash, assetFactory);
+            return GetWeakRef<F>(assetFactory);
+
+        }
+
+        WeakRef<AssetFactory> AddAssetFactory(size_t typeHash, Ref<AssetFactory> assetFactory)
+        {
+            if (p_AssetFactories.find(typeHash) != p_AssetFactories.end())
+            {
+                harmony::log::error("AssetManager already contains an asset factory for type with hash : {1}", typeHash);
+                return WeakRef<AssetFactory>();
+            }
+
+            p_AssetFactories.emplace(typeHash, assetFactory);
+
+            return GetWeakRef<AssetFactory>(assetFactory);
+        }
 
         std::vector<WeakRef<Asset>> LoadAssetFromPath(std::string path, size_t typeHash);
 

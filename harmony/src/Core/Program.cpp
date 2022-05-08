@@ -135,7 +135,7 @@ void harmony::Program::Run(harmony::Callback callback)
 				p_Run = false;
 			}
 		}
-		imguiBeginFrame(0,0,0,0,1280, 720);
+		ImGui::NewFrame();
 		ImGui_ImplSDL2_NewFrame(p_Window);
 
 		for (int i = 0; i < p_ProgramComponents.size(); i++)
