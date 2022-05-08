@@ -388,8 +388,8 @@ namespace das {
             ->arg_init(3, make_smart<ExprConstUInt>(uint32_t(0)));
         findUniqueFunction("BeginListBox")
             ->arg_init(1, make_smart<ExprCall>(LineInfo(), "ImVec2"));
-        findUniqueFunction("ColorButton")
-            ->arg_init(3, make_smart<ExprCall>(LineInfo(), "ImVec2"));
+        /*findUniqueFunction("ColorButton")
+            ->arg_init(3, make_smart<ExprCall>(LineInfo(), "ImVec2"));*/
         // time to fix-up const & ImVec2 and const & ImVec4
         for ( auto & pfn : this->functions.each() ) {
             bool anyString = false;

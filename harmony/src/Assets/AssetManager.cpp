@@ -1,12 +1,10 @@
 #include "Assets/AssetManager.h"
-#include "Assets/ScriptAssetFactory.h"
 #include "Core/Profile.hpp"
 #include "Core/Log.hpp"
-#include "imgui.h"
+#include "ImGui/imgui.h"
 
 harmony::AssetManager::AssetManager()
 {
-    p_AssetFactories.emplace(typeid(ScriptAsset).hash_code(), CreateRef<ScriptAssetFactory>());
 }
 
 std::vector<harmony::WeakRef<harmony::Asset>> harmony::AssetManager::LoadAssetFromPath(std::string path, size_t typeHash)

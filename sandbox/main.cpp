@@ -1,10 +1,10 @@
 #include <iostream>
 #include "Core/Program.h"
-#include "ScriptSandboxComponent.h"
-#include "Assets/ScriptAsset.h"
+#include "das/ScriptSandboxComponent.h"
+#include "das/Assets/ScriptAsset.h"
 #include "Core/Log.hpp"
-#include "ImGuiFileDialog.h"
-#include "imgui.h"
+#include "ImGui/ImGuiFileDialog.h"
+#include "ImGui/imgui.h"
 #include <algorithm>
 int main()
 {

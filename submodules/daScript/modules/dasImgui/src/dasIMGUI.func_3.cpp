@@ -47,7 +47,7 @@ void Module_dasIMGUI::initFunctions_3() {
 	addExtern< ImVec2 (*)() , ImGui::GetContentRegionMax >(*this,lib,"GetContentRegionMax",SideEffects::worstDefault,"ImGui::GetContentRegionMax");
 	addExtern< ImVec2 (*)() , ImGui::GetWindowContentRegionMin >(*this,lib,"GetWindowContentRegionMin",SideEffects::worstDefault,"ImGui::GetWindowContentRegionMin");
 	addExtern< ImVec2 (*)() , ImGui::GetWindowContentRegionMax >(*this,lib,"GetWindowContentRegionMax",SideEffects::worstDefault,"ImGui::GetWindowContentRegionMax");
-	addExtern< float (*)() , ImGui::GetWindowContentRegionWidth >(*this,lib,"GetWindowContentRegionWidth",SideEffects::worstDefault,"ImGui::GetWindowContentRegionWidth");
+	// addExtern< float (*)() , ImGui::GetWindowContentRegionWidth >(*this,lib,"GetWindowContentRegionWidth",SideEffects::worstDefault,"ImGui::GetWindowContentRegionWidth");
 	addExtern< float (*)() , ImGui::GetScrollX >(*this,lib,"GetScrollX",SideEffects::worstDefault,"ImGui::GetScrollX");
 	addExtern< float (*)() , ImGui::GetScrollY >(*this,lib,"GetScrollY",SideEffects::worstDefault,"ImGui::GetScrollY");
 	addExtern< void (*)(float) , ImGui::SetScrollX >(*this,lib,"SetScrollX",SideEffects::worstDefault,"ImGui::SetScrollX")

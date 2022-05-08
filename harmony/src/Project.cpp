@@ -1,6 +1,6 @@
 #include "Project.h"
 #include <filesystem>
-#include "imgui.h"
+#include "ImGui/imgui.h"
 
 harmony::Project::Project(std::string name, std::string projectPath, std::string projectDirectory) : m_ProjectName(name), m_ProjectPath(projectPath), m_ProjectDirectory(projectDirectory)
 {

@@ -1,9 +1,9 @@
-#include "ScriptSandboxComponent.h"
+#include "das/ScriptSandboxComponent.h"
 #include "src/dasBGFX.h"
 #include "dasIMGUI.h"
-#include "daScript/STBImageModule.h"
+#include "das/STBImageModule.h"
 #include "Core/Log.hpp"
-#include "Assets/ScriptAsset.h"
+#include "das/Assets/ScriptAsset.h"
 harmony::ScriptSandboxComponent::ScriptSandboxComponent(AssetManager& assetManager) : p_AssetManager(assetManager)
 {
     m_TypeHash = typeid(ScriptSandboxComponent).hash_code();
@@ -21,7 +21,7 @@ harmony::ScriptSandboxComponent::ScriptSandboxComponent(AssetManager& assetManag
     // request our custom module
     NEED_MODULE(Module_dasIMGUI);
 
-        // Initialize modules
+    // Initialize modules
     das::Module::Initialize();
 }
 

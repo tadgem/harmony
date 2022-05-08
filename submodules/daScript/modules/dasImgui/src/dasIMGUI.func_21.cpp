@@ -13,7 +13,7 @@ namespace das {
 #include "dasIMGUI.func.aot.decl.inc"
 void Module_dasIMGUI::initFunctions_21() {
 	using _method_51 = das::das_call_member< void (ImDrawList::*)(ImVec2,ImVec2,bool),&ImDrawList::PushClipRect >;
-	addExtern<DAS_CALL_METHOD(_method_51)>(*this,lib,"PushClipRect",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(ImVec2,ImVec2,bool) , &ImDrawList::PushClipRect >::invoke")
+	/*addExtern<DAS_CALL_METHOD(_method_51)>(*this,lib,"PushClipRect",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(ImVec2,ImVec2,bool) , &ImDrawList::PushClipRect >::invoke")
 		->args({"self","clip_rect_min","clip_rect_max","intersect_with_current_clip_rect"})
 		->arg_init(3,make_smart<ExprConstBool>(false));
 	using _method_52 = das::das_call_member< void (ImDrawList::*)(),&ImDrawList::PushClipRectFullScreen >;
@@ -21,7 +21,7 @@ void Module_dasIMGUI::initFunctions_21() {
 		->args({"self"});
 	using _method_53 = das::das_call_member< void (ImDrawList::*)(),&ImDrawList::PopClipRect >;
 	addExtern<DAS_CALL_METHOD(_method_53)>(*this,lib,"PopClipRect",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)() , &ImDrawList::PopClipRect >::invoke")
-		->args({"self"});
+		->args({"self"});*/
 	using _method_54 = das::das_call_member< void (ImDrawList::*)(void *),&ImDrawList::PushTextureID >;
 	addExtern<DAS_CALL_METHOD(_method_54)>(*this,lib,"PushTextureID",SideEffects::worstDefault,"das_call_member< void (ImDrawList::*)(void *) , &ImDrawList::PushTextureID >::invoke")
 		->args({"self","texture_id"});

@@ -1,11 +1,11 @@
 #include <filesystem>
 #include "Core/Program.h"
 #include "SDL_syswm.h"
-#include "imgui.h"
+#include "ImGui/imgui.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
-#include "src/imgui/imgui_bgfx.h"
-#include "backends/imgui_impl_sdl.h"
+#include "ImGui/backends/imgui_impl_sdl.h"
+#include "ImGui/imgui_bgfx.h"
 #include "Core/Log.hpp"
 
 harmony::Program::Program(std::string name) : p_AppName(name)
@@ -135,7 +135,7 @@ void harmony::Program::Run(harmony::Callback callback)
 				p_Run = false;
 			}
 		}
-		imguiBeginFrame();
+		imguiBeginFrame(0,0,0,0,1280, 720);
 		ImGui_ImplSDL2_NewFrame(p_Window);
 
 		for (int i = 0; i < p_ProgramComponents.size(); i++)

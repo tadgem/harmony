@@ -114,10 +114,10 @@ void Module_dasIMGUI::initFunctions_9() {
 		->arg_type(2,makeType<ImGuiColorEditFlags_>(lib))
 		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiColorEditFlags_>(lib)))
 		->arg_init(3,make_smart<ExprConstPtr>());
-	addExtern< bool (*)(const char *,const ImVec4 &,int,ImVec2) , ImGui::ColorButton >(*this,lib,"ColorButton",SideEffects::worstDefault,"ImGui::ColorButton")
+	/*addExtern< bool (*)(const char *,const ImVec4 &,int,ImVec2) , ImGui::ColorButton >(*this,lib,"ColorButton",SideEffects::worstDefault,"ImGui::ColorButton")
 		->args({"desc_id","col","flags","size"})
 		->arg_type(2,makeType<ImGuiColorEditFlags_>(lib))
-		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiColorEditFlags_>(lib)));
+		->arg_init(2,make_smart<ExprConstEnumeration>(0,makeType<ImGuiColorEditFlags_>(lib)));*/
 }
 }
 
