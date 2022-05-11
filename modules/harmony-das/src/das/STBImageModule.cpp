@@ -1,4 +1,4 @@
-#include "daScript/STBImageModule.h"
+#include "das/STBImageModule.h"
 #include "daScript/misc/platform.h"
 #include "daScript/ast/ast.h"
 #include "daScript/ast/ast_interop.h"

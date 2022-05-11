@@ -43,14 +43,14 @@ void Module_dasIMGUI::initFunctions_26() {
 	using _method_154 = das::das_call_member< const char * (ImFont::*)(float,const char *,const char *,float) const,&ImFont::CalcWordWrapPositionA >;
 	addExtern<DAS_CALL_METHOD(_method_154)>(*this,lib,"CalcWordWrapPositionA",SideEffects::worstDefault,"das_call_member< const char * (ImFont::*)(float,const char *,const char *,float) const , &ImFont::CalcWordWrapPositionA >::invoke")
 		->args({"self","scale","text","text_end","wrap_width"});
-	using _method_155 = das::das_call_member< void (ImFont::*)(ImDrawList *,float,ImVec2,unsigned int,unsigned short) const,&ImFont::RenderChar >;
-	addExtern<DAS_CALL_METHOD(_method_155)>(*this,lib,"RenderChar",SideEffects::worstDefault,"das_call_member< void (ImFont::*)(ImDrawList *,float,ImVec2,unsigned int,unsigned short) const , &ImFont::RenderChar >::invoke")
+	//using _method_155 = das::das_call_member< void (ImFont::*)(ImDrawList *,float,ImVec2,unsigned int,unsigned short) const,&ImFont::RenderChar >;
+	/*addExtern<DAS_CALL_METHOD(_method_155)>(*this,lib,"RenderChar",SideEffects::worstDefault,"das_call_member< void (ImFont::*)(ImDrawList *,float,ImVec2,unsigned int,unsigned short) const , &ImFont::RenderChar >::invoke")
 		->args({"self","draw_list","size","pos","col","c"});
 	using _method_156 = das::das_call_member< void (ImFont::*)(ImDrawList *,float,ImVec2,unsigned int,const ImVec4 &,const char *,const char *,float,bool) const,&ImFont::RenderText >;
 	addExtern<DAS_CALL_METHOD(_method_156)>(*this,lib,"RenderText",SideEffects::worstDefault,"das_call_member< void (ImFont::*)(ImDrawList *,float,ImVec2,unsigned int,const ImVec4 &,const char *,const char *,float,bool) const , &ImFont::RenderText >::invoke")
 		->args({"self","draw_list","size","pos","col","clip_rect","text_begin","text_end","wrap_width","cpu_fine_clip"})
 		->arg_init(8,make_smart<ExprConstFloat>(0.00000000000000000))
-		->arg_init(9,make_smart<ExprConstBool>(false));
+		->arg_init(9,make_smart<ExprConstBool>(false));*/
 	using _method_157 = das::das_call_member< void (ImFont::*)(),&ImFont::BuildLookupTable >;
 	addExtern<DAS_CALL_METHOD(_method_157)>(*this,lib,"BuildLookupTable",SideEffects::worstDefault,"das_call_member< void (ImFont::*)() , &ImFont::BuildLookupTable >::invoke")
 		->args({"self"});
@@ -70,9 +70,9 @@ void Module_dasIMGUI::initFunctions_26() {
 	using _method_162 = das::das_call_member< void (ImFont::*)(unsigned short,bool),&ImFont::SetGlyphVisible >;
 	addExtern<DAS_CALL_METHOD(_method_162)>(*this,lib,"SetGlyphVisible",SideEffects::worstDefault,"das_call_member< void (ImFont::*)(unsigned short,bool) , &ImFont::SetGlyphVisible >::invoke")
 		->args({"self","c","visible"});
-	using _method_163 = das::das_call_member< void (ImFont::*)(unsigned short),&ImFont::SetFallbackChar >;
+	/*using _method_163 = das::das_call_member< void (ImFont::*)(unsigned short),&ImFont::SetFallbackChar >;
 	addExtern<DAS_CALL_METHOD(_method_163)>(*this,lib,"SetFallbackChar",SideEffects::worstDefault,"das_call_member< void (ImFont::*)(unsigned short) , &ImFont::SetFallbackChar >::invoke")
-		->args({"self","c"});
+		->args({"self","c"});*/
 	using _method_164 = das::das_call_member< bool (ImFont::*)(unsigned int,unsigned int),&ImFont::IsGlyphRangeUnused >;
 	addExtern<DAS_CALL_METHOD(_method_164)>(*this,lib,"IsGlyphRangeUnused",SideEffects::worstDefault,"das_call_member< bool (ImFont::*)(unsigned int,unsigned int) , &ImFont::IsGlyphRangeUnused >::invoke")
 		->args({"self","c_begin","c_last"});

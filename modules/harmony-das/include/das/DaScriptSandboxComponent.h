@@ -6,11 +6,11 @@
 #include <string>
 namespace harmony
 {
-    class ScriptSandboxComponent : public ProgramComponent
+    class DaScriptSandboxComponent : public ProgramComponent
     {
     public:
-        ScriptSandboxComponent(AssetManager& assetManager);
-        virtual ~ScriptSandboxComponent() override;
+        DaScriptSandboxComponent(AssetManager& assetManager);
+        virtual ~DaScriptSandboxComponent() override;
         // Inherited via ProgramComponent
         virtual void Init() override;
         virtual void Update() override;
