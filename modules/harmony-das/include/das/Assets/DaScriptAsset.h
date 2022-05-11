@@ -3,7 +3,7 @@
 
 namespace harmony
 {
-    class ScriptAsset : public Asset
+    class DaScriptAsset : public Asset
     {
     public:
         std::string m_ScriptContent;

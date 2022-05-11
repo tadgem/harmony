@@ -1,12 +1,12 @@
-#include "das/ScriptSandboxComponent.h"
+#include "das/DaScriptSandboxComponent.h"
 #include "src/dasBGFX.h"
 #include "dasIMGUI.h"
 #include "das/STBImageModule.h"
 #include "Core/Log.hpp"
-#include "das/Assets/ScriptAsset.h"
-harmony::ScriptSandboxComponent::ScriptSandboxComponent(AssetManager& assetManager) : p_AssetManager(assetManager)
+#include "das/Assets/DaScriptAsset.h"
+harmony::DaScriptSandboxComponent::DaScriptSandboxComponent(AssetManager& assetManager) : p_AssetManager(assetManager)
 {
-    m_TypeHash = typeid(ScriptSandboxComponent).hash_code();
+    m_TypeHash = typeid(DaScriptSandboxComponent).hash_code();
     p_fInit = nullptr;
     p_fUpdate = nullptr;
     p_fCleanup = nullptr;
@@ -25,12 +25,12 @@ harmony::ScriptSandboxComponent::ScriptSandboxComponent(AssetManager& assetManag
     das::Module::Initialize();
 }
 
-harmony::ScriptSandboxComponent::~ScriptSandboxComponent()
+harmony::DaScriptSandboxComponent::~DaScriptSandboxComponent()
 {
     das::Module::Shutdown();
 }
 
-void harmony::ScriptSandboxComponent::Init()
+void harmony::DaScriptSandboxComponent::Init()
 {
     std::string pathString = std::filesystem::current_path().string();
     das::setDasRoot(pathString);
@@ -98,7 +98,7 @@ void harmony::ScriptSandboxComponent::Init()
     }
 }
 
-void harmony::ScriptSandboxComponent::Update()
+void harmony::DaScriptSandboxComponent::Update()
 {
     if (ImGui::Begin("Script Sandbox Settings"))
     {
@@ -133,11 +133,11 @@ void harmony::ScriptSandboxComponent::Update()
     }
 }
 
-void harmony::ScriptSandboxComponent::Render()
+void harmony::DaScriptSandboxComponent::Render()
 {
 }
 
-void harmony::ScriptSandboxComponent::Cleanup()
+void harmony::DaScriptSandboxComponent::Cleanup()
 {
     if (p_fCleanup != nullptr)
     {
@@ -150,10 +150,10 @@ void harmony::ScriptSandboxComponent::Cleanup()
     p_Context.reset();
 }
 
-void harmony::ScriptSandboxComponent::RefreshAvailableScripts()
+void harmony::DaScriptSandboxComponent::RefreshAvailableScripts()
 {
     p_AvailableScripts.clear();
-    auto scripts = p_AssetManager.GetAllAssetsOfType<ScriptAsset>();
+    auto scripts = p_AssetManager.GetAllAssetsOfType<DaScriptAsset>();
     for (auto& wr : scripts)
     {
         auto script = wr.lock();
@@ -161,7 +161,7 @@ void harmony::ScriptSandboxComponent::RefreshAvailableScripts()
     }
 }
 
-nlohmann::json harmony::ScriptSandboxComponent::ToJson()
+nlohmann::json harmony::DaScriptSandboxComponent::ToJson()
 {
     nlohmann::json json = nlohmann::json();
     std::string hash = std::to_string(m_TypeHash);
@@ -170,18 +170,18 @@ nlohmann::json harmony::ScriptSandboxComponent::ToJson()
     return json;
 }
 
-void harmony::ScriptSandboxComponent::FromJson(const nlohmann::json& json)
+void harmony::DaScriptSandboxComponent::FromJson(const nlohmann::json& json)
 {
     harmony::log::warn("attempting to deserialize script json");
     std::string typeHash = std::to_string(m_TypeHash);
     for (auto path : json[typeHash])
     {
         std::string pathStr = path.get<std::string>();
-        p_AssetManager.LoadAssetFromPath<ScriptAsset>(pathStr);
+        p_AssetManager.LoadAssetFromPath<DaScriptAsset>(pathStr);
     }
 }
 
-void harmony::ScriptSandboxComponent::Refresh()
+void harmony::DaScriptSandboxComponent::Refresh()
 {
     Cleanup();
     RefreshAvailableScripts();

@@ -1,8 +1,8 @@
 #include <iostream>
 #include "Core/Program.h"
-#include "das/ScriptSandboxComponent.h"
-#include "das/Assets/ScriptAsset.h"
-#include "das/Assets/ScriptAssetFactory.h"
+#include "das/DaScriptSandboxComponent.h"
+#include "das/Assets/DaScriptAsset.h"
+#include "das/Assets/DaScriptAssetFactory.h"
 #include "Core/Log.hpp"
 #include "ImGui/ImGuiFileDialog.h"
 #include "ImGui/imgui.h"
@@ -11,8 +11,8 @@ int main()
 {
 	harmony::Program app("Harmony Test");
 
-    app.m_AssetManager.AddAssetFactory<harmony::ScriptAsset, harmony::ScriptAssetFactory>();
-	auto scriptComponent = app.AddProgramComponent<harmony::ScriptSandboxComponent>(app.m_AssetManager);
+    app.m_AssetManager.AddAssetFactory<harmony::DaScriptAsset, harmony::DaScriptAssetFactory>();
+	auto scriptComponent = app.AddProgramComponent<harmony::DaScriptSandboxComponent>(app.m_AssetManager);
 	app.Init();
 	app.Run([&]()
 	{
@@ -25,7 +25,7 @@ int main()
                 ImGui::InputText("Script To Load: %s", script_path, 128);
                 if (ImGui::Button("Load Script"))
                 {
-                    app.m_AssetManager.LoadAssetFromPath<harmony::ScriptAsset>(std::string(script_path));
+                    app.m_AssetManager.LoadAssetFromPath<harmony::DaScriptAsset>(std::string(script_path));
                     scriptComponent.lock()->RefreshAvailableScripts();
                 }
                 ImGui::Separator();
