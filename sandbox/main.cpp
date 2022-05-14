@@ -11,7 +11,7 @@ int main()
 {
 	harmony::Program app("Harmony Test");
 
-    app.m_AssetManager.AddAssetFactory<harmony::DaScriptAsset, harmony::DaScriptAssetFactory>();
+    app.m_AssetManager.AddAssetFactory(typeid(harmony::DaScriptAsset).hash_code(), harmony::CreateRef<harmony::DaScriptAssetFactory>());
 	auto scriptComponent = app.AddProgramComponent<harmony::DaScriptSandboxComponent>(app.m_AssetManager);
 	app.Init();
 	app.Run([&]()
@@ -51,7 +51,7 @@ int main()
                         {
                             if (i >= project.m_ProjectName.size())
                             {
-                                str0[i] = ' ';
+                                str0[i] = NULL;
                                 continue;
                             }
                             str0[i] = project.m_ProjectName.at(i);
@@ -68,11 +68,13 @@ int main()
                     if (ImGuiFileDialog::Instance()->IsOk())
                     {
                         std::string directory = ImGuiFileDialog::Instance()->GetCurrentPath();
-                        std::string fullPath = directory + "/" + std::string(str0) + ".harmonyproj";
-                        std::replace(fullPath.begin(), fullPath.end(), '\\', '/'); // replace all 'x' to 'y'
+                        std::string projectName = std::string(str0);
+                        std::remove(projectName.begin(), projectName.end(), ' ');
+                        std::string fullPath = directory + "/" + projectName + ".harmonyproj";
+                        std::replace(fullPath.begin(), fullPath.end(), '\\', '/'); // replace all 'x' toprojectName 'y'
                         std::replace(directory.begin(), directory.end(), '\\', '/'); // replace all 'x' to 'y'
                         // action
-                        harmony::Project proj = harmony::Project(std::string(str0), fullPath, directory);
+                        harmony::Project proj = harmony::Project(projectName, fullPath, directory);
                         app.SaveProject(proj);
                     }
                     // close
