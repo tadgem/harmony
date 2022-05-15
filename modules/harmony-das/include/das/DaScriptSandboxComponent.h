@@ -28,6 +28,7 @@ namespace harmony
         Ref<Project> p_Project;
         das::SimFunction* p_fInit;
         das::SimFunction* p_fUpdate;
+        das::SimFunction* p_fRender;
         das::SimFunction* p_fCleanup;
         AssetManager& p_AssetManager;        
     };

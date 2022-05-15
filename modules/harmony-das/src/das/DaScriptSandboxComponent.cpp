@@ -10,7 +10,7 @@ harmony::DaScriptSandboxComponent::DaScriptSandboxComponent(AssetManager& assetM
     p_fInit = nullptr;
     p_fUpdate = nullptr;
     p_fCleanup = nullptr;
-
+    p_fRender = nullptr;
     // request all da-script built in modules
     NEED_ALL_DEFAULT_MODULES;
     using namespace das;
@@ -76,6 +76,13 @@ void harmony::DaScriptSandboxComponent::Init()
     }
 
     // find function 'init' in the context
+    p_fRender = p_Context->findFunction("render");
+    if (!p_fRender) {
+        log::error("function 'render' not found\n");
+        p_fRender = nullptr;
+    }
+
+    // find function 'init' in the context
     p_fCleanup = p_Context->findFunction("cleanup");
     if (!p_fCleanup) {
         log::error("function 'cleanup' not found\n");
@@ -135,6 +142,12 @@ void harmony::DaScriptSandboxComponent::Update()
 
 void harmony::DaScriptSandboxComponent::Render()
 {
+    if (p_fRender == nullptr) return;
+    p_Context->eval(p_fRender, nullptr);
+    if (auto ex = p_Context->getException()) {
+        log::error("daScript : render : exception: {}", ex);
+        return;
+    }
 }
 
 void harmony::DaScriptSandboxComponent::Cleanup()
