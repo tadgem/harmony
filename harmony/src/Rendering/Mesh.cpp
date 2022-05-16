@@ -4,11 +4,6 @@ harmony::Mesh::Mesh()
 {
 }
 
-harmony::Mesh::Mesh()
-{
-	m_TypeHash = typeid(Mesh).hash_code();
-}
-
 void harmony::Mesh::Release()
 {
 	m_Positions.clear();
