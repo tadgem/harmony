@@ -20,6 +20,7 @@ ${ROOT_DIR}/submodules/spdlog/include
 ${ROOT_DIR}/submodules/bgfx/bgfx/include
 ${ROOT_DIR}/submodules/bgfx/bx/include
 ${ROOT_DIR}/submodules/bgfx/bimg/include
+${ROOT_DIR}/submodules/glm/glm
 CACHE INTERNAL "")
 
 target_include_directories(harmony-core PRIVATE 
@@ -27,4 +28,4 @@ target_include_directories(harmony-core PRIVATE
 )
 
 target_compile_definitions(harmony-core PUBLIC SDL_SENSOR_DUMMY)
-target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bgfx)
+target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bgfx glm)

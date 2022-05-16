@@ -13,6 +13,7 @@ SET(DAS_BUILD_TUTORIAL OFF CACHE BOOL "enable bgfx")
 SET(SDL_SENSOR_ENABLED_BY_DEFAULT OFF CACHE BOOL "Disable SDL Sensor API")
 SET(SDL_SENSOR OFF CACHE BOOL "Disable SDL Sensor API")
 
+add_subdirectory(submodules/glm)
 add_subdirectory(submodules/bgfx)
 add_subdirectory(submodules/daScript)
 add_subdirectory(submodules/sdl)
