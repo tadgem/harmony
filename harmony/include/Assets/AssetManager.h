@@ -15,26 +15,7 @@ namespace harmony {
     public:
         AssetManager();
 
-        // not working properly atm
-        /// <summary>
-        /// Add a factory to create a type of asset T, using factory type F
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="F"></typeparam>
-        /// <typeparam name="...Args"></typeparam>
-        /// <param name="...args"></param>
-        /// <returns></returns>
-        /*template<typename T, typename F, typename ... Args>
-        WeakRef<F> AddAssetFactory(Args&& ... args)
-        {
-            static_assert(std::is_base_of<AssetFactory, F>());
-            size_t typeHash = typeid(T).hash_code();
-            Ref<F> assetFactory = CreateRef<F>(std::forward(args)...);
-            WeakRef<AssetFactory> afWr = AddAssetFactory(typeHash, assetFactory);
-            return GetWeakRef<F>(assetFactory);
-
-        }*/
-
+        
         WeakRef<AssetFactory> AddAssetFactory(size_t typeHash, Ref<AssetFactory> assetFactory)
         {
             if (p_AssetFactories.find(typeHash) != p_AssetFactories.end())
