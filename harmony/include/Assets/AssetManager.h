@@ -89,11 +89,11 @@ namespace harmony {
         std::vector<char> p_ImGuiPathInput;
         void OnImGui();
     protected:
-        std::map<size_t, Ref<AssetFactory>> p_AssetFactories;
-        std::map<size_t, std::vector<Ref<Asset>>> p_Assets;
-        std::map<size_t, std::string> p_AssetTypeNames;
-        std::map<size_t, std::vector<std::string>> p_AssetLoadedPathsByType;
-        std::map<std::string, std::vector<WeakRef<Asset>>> p_LoadedPaths;
+        std::unordered_map<size_t, Ref<AssetFactory>> p_AssetFactories;
+        std::unordered_map<size_t, std::vector<Ref<Asset>>> p_Assets;
+        std::unordered_map<size_t, std::string> p_AssetTypeNames;
+        std::unordered_map<size_t, std::vector<std::string>> p_AssetLoadedPathsByType;
+        std::unordered_map<std::string, std::vector<WeakRef<Asset>>> p_LoadedPaths;
 
         size_t GetAssetTypeHash(WeakRef<Asset> asset);
     };

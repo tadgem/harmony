@@ -1,15 +1,5 @@
 #include "Rendering/Renderer.h"
 
-bgfx::ProgramHandle harmony::Renderer::CreateShader(const std::string& vert, const std::string& frag)
-{
-    return bgfx::ProgramHandle();
-}
-
-bgfx::ProgramHandle harmony::Renderer::CreateShader(const std::string& compute)
-{
-    return bgfx::ProgramHandle();
-}
-
 harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(const Mesh& mesh)
 {
     BGFXMeshHandle m = BGFXMeshHandle();
