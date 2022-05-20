@@ -6,6 +6,8 @@ int main()
 {
 	harmony::Program app("Harmony Sample Base");
 	app.Init();
+
+	app.m_Renderer.LoadShader("sample surface", "sample.vert", "sample.frag");
 	app.Run([&]()
 	{
 		if (ImGui::Begin("Sample"))

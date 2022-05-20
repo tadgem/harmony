@@ -61,6 +61,11 @@ void harmony::ShaderStage::LoadShaderBinary()
 	std::string binaryPath = GetShaderRendererDirectory() + m_Name + ".bin";
 	std::vector<uint8_t> binary = Utils::LoadBinaryFromPath(binaryPath);
 	uint32_t binarySize = static_cast<uint32_t>(binary.size());
+	if (binarySize == 0)
+	{
+		harmony::log::error("Failed to load shader binary for : %s", m_Name);
+		return;
+	}
 
 	p_Memory = new bgfx::Memory{ binary.data(), binarySize};
 	bgfx::createShader(p_Memory);

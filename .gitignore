@@ -36,3 +36,4 @@ win32/
 __pycache__/create_project.cpython-310.pyc
 imgui.ini
 *.pdb
+*.pyc
