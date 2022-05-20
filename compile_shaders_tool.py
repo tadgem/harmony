@@ -20,17 +20,24 @@ class ShaderStage(Enum):
 
 shader_stages = ["Vertex", "Fragment", "Compute"]
 current_shader_stage_selection = 0
+current_platform_selection = 0
+platforms = ["android", "asm.js","ios","linux","orbis","osx","windows"]
 
-def shader_tool(shader_path, varying_def_path, output_path):
+def build_compile_command(shaderStage, sourcePath, includePath, outputFolder, platform):
+    command = shaderc_location + "-f " + sourcePath + " -i " + includePath + " -o " + outputFolder + " --plaform " + platforms[platform]
+    print("Build command : ", command)
+    return command
+
+def shader_tool(shader_path, include_path, output_path):
     imgui.separator()
     changed, shader_text = imgui.input_text(
     'Input Shader Path',
     shader_path,
     256
     )
-    changed, varying_def_text = imgui.input_text(
-    'Input Varying Def Path',
-    varying_def_path,
+    changed, include_path_text = imgui.input_text(
+    'Input Include Path',
+    include_path,
     256
     )
     changed, output_text = imgui.input_text(
@@ -46,8 +53,14 @@ def shader_tool(shader_path, varying_def_path, output_path):
     current_shader_stage_selection = current
     imgui.separator()
 
+    global current_platform_selection
+    clicked, current_platform = imgui.combo(
+    "Platform", current_platform_selection, platforms)
+    current_platform_selection = current_platform
+    imgui.separator()
+
     if imgui.button("Compile Shaders"):
-        print("Do the compiley oky and cry in the bin")
+        command = build_compile_command(current_shader_stage_selection, shader_path, include_path, output_path, current_platform_selection)
 
 
 def main():
@@ -56,7 +69,7 @@ def main():
     impl = SDL2Renderer(window)
 
     input_shader_path = "shaders/"
-    input_vd_path = "shaders/"
+    input_include_path = "shaders/"
     output_path = "."
 
     running = True
@@ -70,7 +83,7 @@ def main():
         impl.process_inputs()
         imgui.new_frame()
         imgui.begin("BGFX Shader Tool")
-        shader_tool(input_shader_path, input_vd_path, output_path)
+        shader_tool(input_shader_path, input_include_path, output_path)
         imgui.end()
         gl.glClearColor(0., 0., 0., 1)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT)
