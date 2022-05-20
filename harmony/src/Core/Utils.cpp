@@ -2,6 +2,7 @@
 #include <fstream>
 #include <filesystem>
 #include "Core/Profile.hpp"
+
 std::string harmony::Utils::LoadStringFromPath(const std::string& path)
 {
 	HARMONY_PROFILE_FUNCTION()
@@ -29,6 +30,15 @@ nlohmann::json harmony::Utils::LoadJsonFromPath(const std::string& path)
 	return json;
 }
 
+std::vector<uint8_t> harmony::Utils::LoadBinaryFromPath(const std::string& path)
+{
+	HARMONY_PROFILE_FUNCTION()
+
+	std::ifstream binary_input_stream = std::ifstream(path, std::ios::binary);
+	std::vector<uint8_t> data(std::istreambuf_iterator<char>(binary_input_stream), {});
+
+	return data;
+}
 void harmony::Utils::SaveStringToPath(const std::string& str, const std::string& path)
 {
 	HARMONY_PROFILE_FUNCTION()
