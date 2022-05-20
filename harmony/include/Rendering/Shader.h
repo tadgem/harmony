@@ -40,13 +40,13 @@ namespace harmony
 	public:
 		ShaderProgram(const std::string& name);
 
-		bool AddStage(ShaderStage::Type stageType, Ref<ShaderStage> shader);
+		bool AddStage(ShaderStage::Type stageType, ShaderStage shader);
 		bool RemoveStage(ShaderStage::Type stageType);
 		void Build();
 
 		const std::string m_Name;
 		
-		std::unordered_map<ShaderStage::Type, Ref<ShaderStage>> m_Stages;
+		std::unordered_map<ShaderStage::Type, ShaderStage> m_Stages;
 		bgfx::ProgramHandle m_Handle;
 	};
 };

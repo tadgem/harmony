@@ -1,13 +1,14 @@
+#include <string>
+#include <vector>
+#include <functional>
 #include "SDL.h"
 #undef main
 #include "Memory.h"
 #include "Core/ProgramComponent.h"
 #include "Core/Profile.hpp"
 #include "Assets/AssetManager.h"
+#include "Rendering/Renderer.h"
 #include "Project.h"
-#include <string>
-#include <vector>
-#include <functional>
 #include "bx/allocator.h"
 
 namespace harmony
@@ -44,6 +45,8 @@ namespace harmony
 
 		SDL_Window* p_Window;
 		bx::DefaultAllocator* p_ImGuiAllocator;
+
+		inline static Program* s_Instance = nullptr;
 	public:
 
 		template<typename T, typename ... Args>
@@ -81,5 +84,6 @@ namespace harmony
 		}
 
 		AssetManager m_AssetManager;
+		Renderer m_Renderer;
 	};
 };

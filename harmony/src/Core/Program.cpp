@@ -11,6 +11,12 @@
 harmony::Program::Program(std::string name) : p_AppName(name)
 {
 	HARMONY_PROFILE_FUNCTION()
+	if(s_Instance != nullptr)
+	{
+		harmony::log::error("Trying to create new application instance but an application already exists!");
+		return;
+	}
+	s_Instance = this;
 	p_Run = true;
 	using std::filesystem::current_path;
 

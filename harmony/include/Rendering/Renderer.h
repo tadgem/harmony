@@ -3,6 +3,7 @@
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
 #include "Rendering/Mesh.h"
+#include "Rendering/Shader.h"
 
 namespace harmony
 {
@@ -21,20 +22,22 @@ namespace harmony
     class Renderer
     {   
     public:
-        bgfx::ProgramHandle LoadShader(const std::string& vertName, const std::string& fragName);
-        bgfx::ProgramHandle LoadShader(const std::string& computeName);
+        Renderer();
+
+        WeakRef<ShaderProgram> LoadShader(const std::string& name, const std::string& vertName, const std::string& fragName);
+        WeakRef<ShaderProgram> LoadShader(const std::string& name, const std::string& computeName);
 #if HARMONY_DEBUG
-        bgfx::ProgramHandle CreateShader(const std::string vertSourcePath, const std::string fragSourcePath);
-        bgfx::ProgramHandle CreateShader(const std::string computePath);
+        WeakRef<ShaderProgram> CreateShader(const std::string vertSourcePath, const std::string fragSourcePath);
+        WeakRef<ShaderProgram> CreateShader(const std::string computePath);
 #endif
         BGFXMeshHandle SubmitMeshToGPU(const Mesh& mesh);
         void RenderMesh(const BGFXMeshHandle& meshHandle, const RenderState& renderState);
 
     private:
-        std::string GetShaderExtension();
         bgfx::VertexLayout BuildVertexLayout(const Mesh& mesh);
         // definitely need to improve this, need to support other vertex attribs other than floats.
         std::vector<float> BuildVertexBufferData(const Mesh& mesh);
 
+        std::vector<Ref<ShaderProgram>> p_Shaders;
     };
 };

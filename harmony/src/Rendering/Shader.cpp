@@ -7,7 +7,7 @@ harmony::ShaderProgram::ShaderProgram(const std::string& name) : m_Handle(BGFX_I
 {
 }
 
-bool harmony::ShaderProgram::AddStage(ShaderStage::Type stageType, Ref<ShaderStage> shader)
+bool harmony::ShaderProgram::AddStage(ShaderStage::Type stageType, ShaderStage shader)
 {
 	if (m_Stages.find(stageType) != m_Stages.end())
 	{
@@ -32,14 +32,14 @@ void harmony::ShaderProgram::Build()
 {
 	if (m_Stages.find(ShaderStage::Type::Compute) != m_Stages.end())
 	{
-		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Compute]->m_Handle, true);
+		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Compute].m_Handle, true);
 		return;
 	}
 
 	if (m_Stages.find(ShaderStage::Type::Vertex) != m_Stages.end() && 
 		m_Stages.find(ShaderStage::Type::Fragment) != m_Stages.end())
 	{
-		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Vertex]->m_Handle, m_Stages[ShaderStage::Type::Fragment]->m_Handle, true);
+		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Vertex].m_Handle, m_Stages[ShaderStage::Type::Fragment].m_Handle, true);
 		return;
 	}
 

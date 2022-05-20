@@ -8,10 +8,10 @@ int main()
 	app.Init();
 	app.Run([&]()
 	{
-			if (ImGui::Begin("Sample"))
-			{
+		if (ImGui::Begin("Sample"))
+		{
                     
-			}
-			ImGui::End();
+		}
+		ImGui::End();
 	});
 }

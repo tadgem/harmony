@@ -1,6 +1,41 @@
 #include "Rendering/Renderer.h"
 #include "Core/Profile.hpp"
 
+harmony::Renderer::Renderer()
+{
+    HARMONY_PROFILE_FUNCTION()
+}
+
+harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std::string& name, const std::string& vertName, const std::string& fragName)
+{
+    HARMONY_PROFILE_FUNCTION()
+    Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
+    ShaderStage vertStage = ShaderStage(vertName, ShaderStage::Type::Vertex);
+    vertStage.LoadShaderBinary();
+    ShaderStage fragStage = ShaderStage(fragName, ShaderStage::Type::Fragment);
+    fragStage.LoadShaderBinary();
+
+    prog->AddStage(ShaderStage::Type::Vertex, vertStage);
+    prog->AddStage(ShaderStage::Type::Vertex, fragStage);
+
+    prog->Build();
+    auto wr = GetWeakRef<ShaderProgram>(prog);
+    return wr;
+}
+
+harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std::string& name, const std::string& computeName)
+{
+    HARMONY_PROFILE_FUNCTION()
+    Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
+    ShaderStage compStage = ShaderStage(computeName, ShaderStage::Type::Compute);
+
+    prog->AddStage(ShaderStage::Type::Vertex, compStage);
+
+    prog->Build();
+    auto wr = GetWeakRef<ShaderProgram>(prog);
+    return wr;
+}
+
 harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(const Mesh& mesh)
 {
     HARMONY_PROFILE_FUNCTION()
