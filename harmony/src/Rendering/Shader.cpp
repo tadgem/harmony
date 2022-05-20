@@ -16,6 +16,7 @@ bool harmony::ShaderProgram::AddStage(ShaderStage::Type stageType, ShaderStage s
 	}
 
 	m_Stages.emplace(stageType, shader);
+	return true;
 }
 
 bool harmony::ShaderProgram::RemoveStage(ShaderStage::Type stageType)

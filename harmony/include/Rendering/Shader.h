@@ -16,7 +16,7 @@ namespace harmony
 			Fragment, 
 			Compute
 		};
-
+		ShaderStage() : m_Type(Type::Vertex) {}
 		ShaderStage(const std::string& name, const Type& shaderType);
 		~ShaderStage();
 
@@ -25,7 +25,7 @@ namespace harmony
 		static std::string GetShaderStageNameFromEnum(Type type);
 		static std::string GetShaderRendererDirectory();
 		
-		const Type m_Type;
+		Type m_Type;
 		const std::string m_Name;
 
 		std::vector<bgfx::UniformInfo> m_UniformInfos;

@@ -42,9 +42,9 @@ harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(const Mesh& mesh)
     BGFXMeshHandle m = BGFXMeshHandle();
     m.m_Layout = BuildVertexLayout(mesh);
     auto data = BuildVertexBufferData(mesh);
-
+    uint32_t dataSize = static_cast<uint32_t>(mesh.m_Indices.size());
     m.m_VBH = bgfx::createVertexBuffer(bgfx::makeRef(data.data(), mesh.m_NumVerts), m.m_Layout);
-    m.m_IBH = bgfx::createIndexBuffer(bgfx::makeRef(mesh.m_Indices.data(), mesh.m_Indices.size()));
+    m.m_IBH = bgfx::createIndexBuffer(bgfx::makeRef(mesh.m_Indices.data(), dataSize));
 
     return m;
 }
@@ -88,7 +88,7 @@ std::vector<float> harmony::Renderer::BuildVertexBufferData(const Mesh& mesh)
 {
     HARMONY_PROFILE_FUNCTION()
     auto floats = std::vector<float>();
-    for (int i = 0; i < mesh.m_NumVerts; i++)
+    for (unsigned int i = 0; i < mesh.m_NumVerts; i++)
     {
         floats.push_back(mesh.m_Positions[i].x);
         floats.push_back(mesh.m_Positions[i].y);
