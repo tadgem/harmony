@@ -1,7 +1,9 @@
 #include "Rendering/Renderer.h"
+#include "Core/Profile.hpp"
 
 harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(const Mesh& mesh)
 {
+    HARMONY_PROFILE_FUNCTION()
     BGFXMeshHandle m = BGFXMeshHandle();
     m.m_Layout = BuildVertexLayout(mesh);
     auto data = BuildVertexBufferData(mesh);
@@ -14,6 +16,7 @@ harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(const Mesh& mesh)
 
 bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(const Mesh& mesh)
 {
+    HARMONY_PROFILE_FUNCTION()
     bgfx::VertexLayout vl = bgfx::VertexLayout();
     vl.begin();
 
@@ -48,6 +51,7 @@ bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(const Mesh& mesh)
 
 std::vector<float> harmony::Renderer::BuildVertexBufferData(const Mesh& mesh)
 {
+    HARMONY_PROFILE_FUNCTION()
     auto floats = std::vector<float>();
     for (int i = 0; i < mesh.m_NumVerts; i++)
     {

@@ -9,6 +9,7 @@ harmony::AssetManager::AssetManager()
 
 std::vector<harmony::WeakRef<harmony::Asset>> harmony::AssetManager::LoadAssetFromPath(std::string path, size_t typeHash)
 {
+    HARMONY_PROFILE_FUNCTION()
     std::vector<WeakRef<Asset>> returnedAssets = std::vector<WeakRef<Asset>>();
     if (p_AssetFactories.find(typeHash) == p_AssetFactories.end())
     {
@@ -166,6 +167,7 @@ bool harmony::AssetManager::IsAssetLoaded(std::string path)
 
 void harmony::AssetManager::OnImGui()
 {
+    HARMONY_PROFILE_FUNCTION()
     if (ImGui::Begin("Asset Manager"))
     {
         for (auto& assetsAtPath : p_LoadedPaths)

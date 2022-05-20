@@ -2,6 +2,7 @@
 #undef main
 #include "Memory.h"
 #include "Core/ProgramComponent.h"
+#include "Core/Profile.hpp"
 #include "Assets/AssetManager.h"
 #include "Project.h"
 #include <string>
@@ -48,6 +49,7 @@ namespace harmony
 		template<typename T, typename ... Args>
 		WeakRef<T> AddProgramComponent(Args&& ... args)
 		{
+			HARMONY_PROFILE_FUNCTION()
 			static_assert(std::is_base_of<ProgramComponent, T>());
 			Ref<T> pc = CreateRef<T>(std::forward<Args>(args)...);
 			p_ProgramComponents.emplace_back(pc);
@@ -57,6 +59,7 @@ namespace harmony
 		template<typename T>
 		WeakRef<T> GetProgramComponent()
 		{
+			HARMONY_PROFILE_FUNCTION()
 			static_assert(std::is_base_of<ProgramComponent, T>("Not a program component"));
 			int index = -1;
 			for (int i = 0; i < p_ProgramComponents.size(); i++)

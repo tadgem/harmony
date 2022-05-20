@@ -10,6 +10,7 @@
 
 harmony::Program::Program(std::string name) : p_AppName(name)
 {
+	HARMONY_PROFILE_FUNCTION()
 	p_Run = true;
 	using std::filesystem::current_path;
 
@@ -19,11 +20,13 @@ harmony::Program::Program(std::string name) : p_AppName(name)
 
 harmony::Program::~Program()
 {
+	HARMONY_PROFILE_FUNCTION()
 	Cleanup();
 }
 
 void harmony::Program::Init()
 {
+	HARMONY_PROFILE_FUNCTION()
 	InitSDL();
 	InitBGFX();
 	InitImGui();
@@ -36,6 +39,7 @@ void harmony::Program::Init()
 
 void harmony::Program::Cleanup()
 {
+	HARMONY_PROFILE_FUNCTION()
 	ImGui_ImplSDL2_Shutdown();
 	imguiDestroy();
 
@@ -48,6 +52,7 @@ void harmony::Program::Cleanup()
 
 void harmony::Program::InitSDL()
 {
+	HARMONY_PROFILE_FUNCTION()
 	// init SDL window
 	Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_EVENTS;
 	SDL_Init(flags);
@@ -64,6 +69,7 @@ void harmony::Program::InitSDL()
 
 void harmony::Program::InitBGFX()
 {
+	HARMONY_PROFILE_FUNCTION()
 #if !BX_PLATFORM_EMSCRIPTEN
 	SDL_SysWMinfo wmi;
 	SDL_VERSION(&wmi.version);
@@ -103,6 +109,7 @@ void harmony::Program::InitBGFX()
 
 void harmony::Program::InitImGui()
 {
+	HARMONY_PROFILE_FUNCTION()
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 
@@ -123,6 +130,7 @@ void harmony::Program::InitImGui()
 
 void harmony::Program::Run(harmony::Callback callback)
 {
+	HARMONY_PROFILE_FUNCTION()
 	while (p_Run)
 	{
 		bgfx::touch(0);
@@ -159,6 +167,7 @@ void harmony::Program::Run(harmony::Callback callback)
 
 void harmony::Program::SaveProject(Project& proj)
 {
+	HARMONY_PROFILE_FUNCTION()
 	proj.UpdateProjectComponentSerializationAttributes(p_ProgramComponents);
 	proj.Save();
 	nlohmann::json projectJson = proj;
@@ -167,6 +176,7 @@ void harmony::Program::SaveProject(Project& proj)
 
 void harmony::Program::LoadProject(Project& proj)
 {
+	HARMONY_PROFILE_FUNCTION()
 	proj.Load();
 	for (auto typeAssetPair : proj.p_ProgramComponentSerializationAttributes)
 	{

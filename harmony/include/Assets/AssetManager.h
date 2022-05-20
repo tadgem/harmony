@@ -9,6 +9,7 @@
 #include "Core/Utils.h"
 #include "Core/Memory.h"
 #include "Core/Log.hpp"
+#include "Core/Profile.hpp"
 namespace harmony {
     class AssetManager
     {
@@ -18,6 +19,7 @@ namespace harmony {
         
         WeakRef<AssetFactory> AddAssetFactory(size_t typeHash, Ref<AssetFactory> assetFactory)
         {
+            HARMONY_PROFILE_FUNCTION()
             if (p_AssetFactories.find(typeHash) != p_AssetFactories.end())
             {
                 harmony::log::error("AssetManager already contains an asset factory for type with hash : {1}", typeHash);

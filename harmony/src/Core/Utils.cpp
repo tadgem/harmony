@@ -1,9 +1,10 @@
 #include "Core/Utils.h"
 #include <fstream>
 #include <filesystem>
-
+#include "Core/Profile.hpp"
 std::string harmony::Utils::LoadStringFromPath(const std::string& path)
 {
+	HARMONY_PROFILE_FUNCTION()
 	std::ifstream inputFile = std::ifstream(path, std::ios::in | std::ios::binary);
 
 	if (!inputFile.is_open())
@@ -22,6 +23,7 @@ std::string harmony::Utils::LoadStringFromPath(const std::string& path)
 
 nlohmann::json harmony::Utils::LoadJsonFromPath(const std::string& path)
 {
+	HARMONY_PROFILE_FUNCTION()
 	std::string str = LoadStringFromPath(path);
 	nlohmann::json json = nlohmann::json::parse(str);
 	return json;
@@ -29,6 +31,7 @@ nlohmann::json harmony::Utils::LoadJsonFromPath(const std::string& path)
 
 void harmony::Utils::SaveStringToPath(const std::string& str, const std::string& path)
 {
+	HARMONY_PROFILE_FUNCTION()
 	std::ofstream outputFile = std::ofstream(path);
 	outputFile << str;
 	outputFile.close();
@@ -36,6 +39,7 @@ void harmony::Utils::SaveStringToPath(const std::string& str, const std::string&
 
 void harmony::Utils::SaveJsonToPath(nlohmann::json& json, const std::string& path)
 {
+	HARMONY_PROFILE_FUNCTION()
 	std::string jsonContent = json.dump();
 	SaveStringToPath(jsonContent, path);
 

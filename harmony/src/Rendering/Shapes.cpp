@@ -1,7 +1,8 @@
 #include "Rendering/Shapes.h"
-
+#include "Core/Profile.hpp"
 harmony::Cube::Cube(float size)
 {
+	HARMONY_PROFILE_FUNCTION()
 	float side2 = size / 2.0f;
 
 	std::vector<glm::vec3> positions = {
