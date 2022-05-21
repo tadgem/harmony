@@ -3,8 +3,8 @@ from re import I
 from sdl2 import *
 import ctypes
 import OpenGL.GL as gl
-import shutil
 import os
+import subprocess
 from enum import Enum
 
 import imgui
@@ -19,33 +19,58 @@ class ShaderStage(Enum):
     Compute = 3
 
 shader_stages = ["Vertex", "Fragment", "Compute"]
+shader_types = ["v","f", "c"]
 current_shader_stage_selection = 0
 current_platform_selection = 0
+
+source_path = "shaders/vs_cubes.sc"
+include_path = "shaders/include"
+output_path = "shaders/bin/"
+
 platforms = ["android", "asm.js","ios","linux","orbis","osx","windows"]
 
-def build_compile_command(shaderStage, sourcePath, includePath, outputFolder, platform):
-    command = shaderc_location + "-f " + sourcePath + " -i " + includePath + " -o " + outputFolder + " --plaform " + platforms[platform]
+def build_output_path(platform):
+    base = output_path + platforms[platform] + "/"
+    directory = os.path.dirname(base)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    shader_name = source_path.rsplit('/', 1)[-1]
+    shader_name = shader_name[:-3]
+    return base + shader_name + ".bin"
+
+
+def build_compile_command(shaderStage, platform):
+    command = "\"" + shaderc_location + "\"" + " -f " + source_path + " -i " + include_path + " -o " + build_output_path(platform) + " --type " + shader_types[shaderStage] + " --plaform " + platforms[platform]
     print("Build command : ", command)
     return command
 
-def shader_tool(shader_path, include_path, output_path):
+def shader_tool():
+    global source_path
+    global include_path
+    global output_path
+    
     imgui.separator()
     changed, shader_text = imgui.input_text(
     'Input Shader Path',
-    shader_path,
+    source_path,
     256
     )
+    source_path = shader_text
+    
     changed, include_path_text = imgui.input_text(
     'Input Include Path',
     include_path,
     256
     )
+    include_path = include_path_text
+
     changed, output_text = imgui.input_text(
     'Output Path',
     output_path,
     256
     )
     imgui.separator()
+    output_path = output_text
 
     global current_shader_stage_selection
     clicked, current = imgui.combo(
@@ -60,17 +85,14 @@ def shader_tool(shader_path, include_path, output_path):
     imgui.separator()
 
     if imgui.button("Compile Shaders"):
-        command = build_compile_command(current_shader_stage_selection, shader_path, include_path, output_path, current_platform_selection)
+        command = build_compile_command(current_shader_stage_selection, current_platform_selection)
+        subprocess.call(command)
 
 
 def main():
     window, gl_context = impl_pysdl2_init()
     imgui.create_context()
     impl = SDL2Renderer(window)
-
-    input_shader_path = "shaders/"
-    input_include_path = "shaders/"
-    output_path = "."
 
     running = True
     event = SDL_Event()
@@ -83,7 +105,7 @@ def main():
         impl.process_inputs()
         imgui.new_frame()
         imgui.begin("BGFX Shader Tool")
-        shader_tool(input_shader_path, input_include_path, output_path)
+        shader_tool()
         imgui.end()
         gl.glClearColor(0., 0., 0., 1)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT)
