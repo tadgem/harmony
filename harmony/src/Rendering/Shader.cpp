@@ -2,6 +2,7 @@
 #include "Core/Profile.hpp"
 #include "Core/Log.hpp"
 #include "Core/Utils.h"
+#include "bgfx/platform.h"
 
 harmony::ShaderProgram::ShaderProgram(const std::string& name) : m_Handle(BGFX_INVALID_HANDLE)
 {
@@ -93,27 +94,9 @@ std::string harmony::ShaderStage::GetShaderStageNameFromEnum(Type type)
 
 std::string harmony::ShaderStage::GetShaderRendererDirectory()
 {
-	std::string shaderPath = "";
-
-	switch (bgfx::getRendererType())
-	{
-		case bgfx::RendererType::Noop:
-		case bgfx::RendererType::Direct3D9:  shaderPath = "shaders/dx9/";   break;
-		case bgfx::RendererType::Direct3D11:
-		case bgfx::RendererType::Direct3D12: shaderPath = "shaders/dx11/";  break;
-		case bgfx::RendererType::Agc:
-		case bgfx::RendererType::Gnm:        shaderPath = "shaders/pssl/";  break;
-		case bgfx::RendererType::Metal:      shaderPath = "shaders/metal/"; break;
-		case bgfx::RendererType::Nvn:        shaderPath = "shaders/nvn/";   break;
-		case bgfx::RendererType::OpenGL:     shaderPath = "shaders/glsl/";  break;
-		case bgfx::RendererType::OpenGLES:   shaderPath = "shaders/essl/";  break;
-		case bgfx::RendererType::Vulkan:     shaderPath = "shaders/spirv/"; break;
-		case bgfx::RendererType::WebGPU:     shaderPath = "shaders/spirv/"; break;
-
-		case bgfx::RendererType::Count:
-			harmony::log::error("Could not deduce BGFX renderer!");
-		break;
-	}
+	std::string shaderPath = "shaders/bin/";
+	
+	shaderPath += BX_PLATFORM_NAME + std::string("/");
 
 	return shaderPath;
 }

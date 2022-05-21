@@ -1,5 +1,6 @@
 #include "Rendering/Renderer.h"
 #include "Core/Profile.hpp"
+#include "bgfx/platform.h"
 
 harmony::Renderer::Renderer()
 {
