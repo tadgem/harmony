@@ -17,11 +17,11 @@ int main()
 		{
 		}
 		ImGui::End();
-
+		bgfx::setViewTransform(0, &glm::mat4(1.0)[0], &glm::mat4(1.0)[0]);
 		bgfx::setVertexBuffer(0, meshHandle.m_VBH);
 		bgfx::setIndexBuffer(meshHandle.m_IBH);
 		bgfx::submit(0, handle.lock()->m_Handle);
 
-		harmony::log::info("Finished frame");
+		// bgfx::dbgTextPrintf(0, 0, 0x0f, "Hello I am Some Text");
 	});
 }

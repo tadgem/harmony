@@ -76,6 +76,7 @@ void harmony::Program::InitSDL()
 void harmony::Program::InitBGFX()
 {
 	HARMONY_PROFILE_FUNCTION()
+
 #if !BX_PLATFORM_EMSCRIPTEN
 	SDL_SysWMinfo wmi;
 	SDL_VERSION(&wmi.version);
@@ -85,9 +86,10 @@ void harmony::Program::InitBGFX()
 			SDL_GetError());
 	}
 	bgfx::renderFrame(); // single threaded mode
-#endif // !BX_PLATFORM_EMSCRIPTEN
+#endif
 
 	bgfx::PlatformData pd{};
+
 #if BX_PLATFORM_WINDOWS
 	pd.nwh = wmi.info.win.window;
 #elif BX_PLATFORM_OSX
@@ -97,8 +99,7 @@ void harmony::Program::InitBGFX()
 	pd.nwh = (void*)(uintptr_t)wmi.info.x11.window;
 #elif BX_PLATFORM_EMSCRIPTEN
 	pd.nwh = (void*)"#canvas";
-#endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX ? BX_PLATFORM_LINUX ?
-	// BX_PLATFORM_EMSCRIPTEN
+#endif
 
 	bgfx::Init bgfx_init;
 	bgfx_init.type = bgfx::RendererType::Count; // auto choose renderer
@@ -111,7 +112,17 @@ void harmony::Program::InitBGFX()
 	bgfx::setViewClear(
 		0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x6495EDFF, 1.0f, 0);
 	bgfx::setViewRect(0, 0, 0, p_StartingWidth, p_StartingHeight);
-	bgfx::setDebug(BGFX_DEBUG_TEXT | BGFX_DEBUG_STATS | BGFX_DEBUG_PROFILER);
+
+	uint32_t bgfxDebugFlags = 0;
+#ifdef HARMONY_DEBUG && 
+	bgfxDebugFlags |= BGFX_DEBUG_TEXT;
+#endif
+#ifdef HARMONY_PROFILE
+	bgfxDebugFlags |= BGFX_DEBUG_STATS;
+	bgfxDebugFlags |= BGFX_DEBUG_PROFILER;
+#endif
+
+	bgfx::setDebug(bgfxDebugFlags);
 }
 
 void harmony::Program::InitImGui()
@@ -119,20 +130,17 @@ void harmony::Program::InitImGui()
 	HARMONY_PROFILE_FUNCTION()
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
-
 	p_ImGuiAllocator = new bx::DefaultAllocator();
 	
 	imguiCreate(18.0f, p_ImGuiAllocator);
 
-//	ImGui_Implbgfx_Init(255);
 #if BX_PLATFORM_WINDOWS
 	ImGui_ImplSDL2_InitForD3D(p_Window);
 #elif BX_PLATFORM_OSX
 	ImGui_ImplSDL2_InitForMetal(p_Window);
 #elif BX_PLATFORM_LINUX || BX_PLATFORM_EMSCRIPTEN
 	ImGui_ImplSDL2_InitForOpenGL(p_Window, nullptr);
-#endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX ? BX_PLATFORM_LINUX ?
-//	// BX_PLATFORM_EMSCRIPTEN
+#endif
 }
 
 void harmony::Program::Run(harmony::Callback callback)
