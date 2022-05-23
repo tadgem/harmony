@@ -55,6 +55,21 @@ harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(Mesh& mesh)
     return m;
 }
 
+void harmony::Renderer::RenderMesh(const BGFXMeshHandle& meshHandle, const RenderState& renderState)
+{
+    bgfx::setIndexBuffer(meshHandle.m_IBH);
+    bgfx::setVertexBuffer(renderState.m_View, meshHandle.m_VBH);
+    bgfx::submit(renderState.m_View, renderState.m_Program);
+}
+
+void harmony::Renderer::RenderScene(Ref<Scene> scene)
+{
+    // set all uniforms? 
+    // foreach mesh drawable in scene.m_Registry...
+    // CreateRenderState
+    // RenderMesh(thatMesh, thatState);
+}
+
 bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(const Mesh& mesh)
 {
     HARMONY_PROFILE_FUNCTION()

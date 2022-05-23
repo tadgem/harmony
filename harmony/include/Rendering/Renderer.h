@@ -2,6 +2,7 @@
 #include <string>
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
+#include "Core/Scene.h"
 #include "Rendering/Mesh.h"
 #include "Rendering/Shader.h"
 
@@ -16,7 +17,9 @@ namespace harmony
 
     struct RenderState
     {
+        bgfx::ViewId m_View;
         uint64_t m_State = BGFX_STATE_PT_TRISTRIP;
+        bgfx::ProgramHandle m_Program;
     };
 
     class Renderer
@@ -32,6 +35,7 @@ namespace harmony
 #endif
         BGFXMeshHandle SubmitMeshToGPU(Mesh& mesh);
         void RenderMesh(const BGFXMeshHandle& meshHandle, const RenderState& renderState);
+        void RenderScene(Ref<Scene> scene);
 
     private:
         bgfx::VertexLayout BuildVertexLayout(const Mesh& mesh);

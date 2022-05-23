@@ -1,8 +1,9 @@
 #include "Core/Program.h"
 #include "Core/Log.hpp"
+#include "Rendering/Shapes.h"
 #include "ImGui/ImGuiFileDialog.h"
 #include "ImGui/imgui.h"
-#include "Rendering/Shapes.h"
+
 int main()
 {
 	harmony::Program app("Harmony Sample Base");
