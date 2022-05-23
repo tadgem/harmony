@@ -8,13 +8,6 @@
 
 namespace harmony
 {
-    struct BGFXMeshHandle
-    {
-        bgfx::VertexBufferHandle m_VBH;
-        bgfx::IndexBufferHandle m_IBH;
-        bgfx::VertexLayout m_Layout;
-    };
-
     struct RenderState
     {
         bgfx::ViewId m_View;

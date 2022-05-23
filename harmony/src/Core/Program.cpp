@@ -73,6 +73,8 @@ void harmony::Program::InitSDL()
 	}
 }
 
+
+
 void harmony::Program::InitBGFX()
 {
 	HARMONY_PROFILE_FUNCTION()
@@ -107,6 +109,8 @@ void harmony::Program::InitBGFX()
 	bgfx_init.resolution.height = p_StartingHeight;
 	bgfx_init.resolution.reset = BGFX_RESET_VSYNC;
 	bgfx_init.platformData = pd;
+	bgfx_init.debug = true;
+	bgfx_init.callback = &p_DebugCallback;
 	bgfx::init(bgfx_init);
 
 	bgfx::setViewClear(
@@ -178,6 +182,41 @@ void harmony::Program::Run(harmony::Callback callback)
 
 		bgfx::frame();
 	}
+}
+
+void harmony::Program::Run()
+{
+	HARMONY_PROFILE_FUNCTION()
+		while (p_Run)
+		{
+			bgfx::touch(0);
+			SDL_Event sdlEvent;
+			while (SDL_PollEvent(&sdlEvent))
+			{
+				ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
+				if (sdlEvent.type == SDL_QUIT)
+				{
+					p_Run = false;
+				}
+			}
+			ImGui::NewFrame();
+			ImGui_ImplSDL2_NewFrame(p_Window);
+
+			for (int i = 0; i < p_ProgramComponents.size(); i++)
+			{
+				p_ProgramComponents[i]->Update();
+			}
+
+			ImGui::Render();
+			imguiEndFrame();
+
+			for (int i = 0; i < p_ProgramComponents.size(); i++)
+			{
+				p_ProgramComponents[i]->Render();
+			}
+
+			bgfx::frame();
+		}
 }
 
 void harmony::Program::SaveProject(Project& proj)

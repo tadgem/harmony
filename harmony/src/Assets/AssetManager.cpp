@@ -5,6 +5,7 @@
 
 harmony::AssetManager::AssetManager()
 {
+    HARMONY_PROFILE_FUNCTION()
 }
 
 std::vector<harmony::WeakRef<harmony::Asset>> harmony::AssetManager::LoadAssetFromPath(std::string path, size_t typeHash)

@@ -2,6 +2,7 @@
 #include "Core/Profile.hpp"
 harmony::Mesh::Mesh()
 {
+	HARMONY_PROFILE_FUNCTION()
 }
 
 void harmony::Mesh::Release()
