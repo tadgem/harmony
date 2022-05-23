@@ -25,6 +25,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 	m_HasTangents = false;
 	m_HasBitangents = false;
 	m_IsSkeletal = false;
+	m_NumVerts = positions.size();
 }
 
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices, std::vector<glm::vec3> normals)
@@ -38,6 +39,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 	m_HasTangents = false;
 	m_HasBitangents = false;
 	m_IsSkeletal = false;
+	m_NumVerts = positions.size();
 }
 
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices, std::vector<glm::vec3> normals, std::vector<glm::vec2> uvs)
@@ -52,6 +54,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 	m_HasTangents = false;
 	m_HasBitangents = false;
 	m_IsSkeletal = false;
+	m_NumVerts = positions.size();
 }
 
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices, std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents, std::vector<glm::vec2> uvs)
@@ -67,6 +70,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 	m_HasTangents = true;
 	m_HasBitangents = false;
 	m_IsSkeletal = false;
+	m_NumVerts = positions.size();
 }
 
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices, std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents, std::vector<glm::vec3> bitangents, std::vector<glm::vec2> uvs)
@@ -83,4 +87,50 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 	m_HasTangents = true;
 	m_HasBitangents = true;
 	m_IsSkeletal = false;
+	m_NumVerts = positions.size();
+}
+
+void harmony::Mesh::BuildBGFXData()
+{
+	HARMONY_PROFILE_FUNCTION()
+	m_BGFXData.clear();
+	for (unsigned int i = 0; i < m_NumVerts; i++)
+	{
+		m_BGFXData.push_back(m_Positions[i].x);
+		m_BGFXData.push_back(m_Positions[i].y);
+		m_BGFXData.push_back(m_Positions[i].z);
+		if (m_HasNormals)
+		{
+			m_BGFXData.push_back(m_Normals[i].x);
+			m_BGFXData.push_back(m_Normals[i].y);
+			m_BGFXData.push_back(m_Normals[i].z);
+		}
+
+		if (m_HasUVs)
+		{
+			m_BGFXData.push_back(m_UVs[i].x);
+			m_BGFXData.push_back(m_UVs[i].y);
+		}
+
+		if (m_HasTangents)
+		{
+			m_BGFXData.push_back(m_Tangents[i].x);
+			m_BGFXData.push_back(m_Tangents[i].y);
+			m_BGFXData.push_back(m_Tangents[i].z);
+		}
+
+		if (m_HasBitangents)
+		{
+			m_BGFXData.push_back(m_Bitangents[i].x);
+			m_BGFXData.push_back(m_Bitangents[i].y);
+			m_BGFXData.push_back(m_Bitangents[i].z);
+			m_BGFXData.push_back(m_Bitangents[i].z);
+		}
+	}
+
+	m_Positions.clear();
+	m_Normals.clear();
+	m_UVs.clear();
+	m_Tangents.clear();
+	m_Bitangents.clear();
 }

@@ -11,15 +11,18 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std
 {
     HARMONY_PROFILE_FUNCTION()
     Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
-    ShaderStage vertStage = ShaderStage(vertName, ShaderStage::Type::Vertex);
-    vertStage.LoadShaderBinary();
-    ShaderStage fragStage = ShaderStage(fragName, ShaderStage::Type::Fragment);
-    fragStage.LoadShaderBinary();
-
-    prog->AddStage(ShaderStage::Type::Vertex, vertStage);
-    prog->AddStage(ShaderStage::Type::Vertex, fragStage);
+    Ref<ShaderStage> vertStage = CreateRef<ShaderStage>(vertName, ShaderStage::Type::Vertex);
+    vertStage->LoadShaderBinary();
+    p_ShaderStages.emplace_back(vertStage);
+    Ref<ShaderStage> fragStage = CreateRef<ShaderStage>(fragName, ShaderStage::Type::Fragment);
+    fragStage->LoadShaderBinary();
+    p_ShaderStages.emplace_back(fragStage);
+    prog->AddStage(ShaderStage::Type::Vertex, GetWeakRef<ShaderStage>(vertStage));
+    prog->AddStage(ShaderStage::Type::Fragment, GetWeakRef<ShaderStage>(fragStage));
 
     prog->Build();
+    p_Shaders.emplace_back(prog);
+
     auto wr = GetWeakRef<ShaderProgram>(prog);
     return wr;
 }
@@ -28,23 +31,25 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std
 {
     HARMONY_PROFILE_FUNCTION()
     Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
-    ShaderStage compStage = ShaderStage(computeName, ShaderStage::Type::Compute);
+    Ref<ShaderStage> compStage = CreateRef<ShaderStage>(computeName, ShaderStage::Type::Compute);
 
-    prog->AddStage(ShaderStage::Type::Vertex, compStage);
+    prog->AddStage(ShaderStage::Type::Compute, GetWeakRef<ShaderStage>(compStage));
 
     prog->Build();
+    p_Shaders.emplace_back(prog);
+
     auto wr = GetWeakRef<ShaderProgram>(prog);
     return wr;
 }
 
-harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(const Mesh& mesh)
+harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(Mesh& mesh)
 {
     HARMONY_PROFILE_FUNCTION()
     BGFXMeshHandle m = BGFXMeshHandle();
     m.m_Layout = BuildVertexLayout(mesh);
-    auto data = BuildVertexBufferData(mesh);
+    mesh.BuildBGFXData();
     uint32_t dataSize = static_cast<uint32_t>(mesh.m_Indices.size());
-    m.m_VBH = bgfx::createVertexBuffer(bgfx::makeRef(data.data(), mesh.m_NumVerts), m.m_Layout);
+    m.m_VBH = bgfx::createVertexBuffer(bgfx::makeRef(mesh.m_BGFXData.data(), mesh.m_NumVerts), m.m_Layout);
     m.m_IBH = bgfx::createIndexBuffer(bgfx::makeRef(mesh.m_Indices.data(), dataSize));
 
     return m;

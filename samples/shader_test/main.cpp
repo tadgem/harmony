@@ -2,18 +2,26 @@
 #include "Core/Log.hpp"
 #include "ImGui/ImGuiFileDialog.h"
 #include "ImGui/imgui.h"
+#include "Rendering/Shapes.h"
 int main()
 {
 	harmony::Program app("Harmony Sample Base");
 	app.Init();
 
-	app.m_Renderer.LoadShader("sample surface", "sample.vert", "sample.frag");
+	auto handle = app.m_Renderer.LoadShader("sample surface", "vs_cubes", "fs_cubes");
+	harmony::Cube cube(1.0f);
+	auto meshHandle = app.m_Renderer.SubmitMeshToGPU(cube);
 	app.Run([&]()
 	{
 		if (ImGui::Begin("Sample"))
 		{
-                    
 		}
 		ImGui::End();
+
+		bgfx::setVertexBuffer(0, meshHandle.m_VBH);
+		bgfx::setIndexBuffer(meshHandle.m_IBH);
+		bgfx::submit(0, handle.lock()->m_Handle);
+
+		harmony::log::info("Finished frame");
 	});
 }

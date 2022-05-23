@@ -30,7 +30,7 @@ namespace harmony
         WeakRef<ShaderProgram> CreateShader(const std::string vertSourcePath, const std::string fragSourcePath);
         WeakRef<ShaderProgram> CreateShader(const std::string computePath);
 #endif
-        BGFXMeshHandle SubmitMeshToGPU(const Mesh& mesh);
+        BGFXMeshHandle SubmitMeshToGPU(Mesh& mesh);
         void RenderMesh(const BGFXMeshHandle& meshHandle, const RenderState& renderState);
 
     private:
@@ -39,5 +39,6 @@ namespace harmony
         std::vector<float> BuildVertexBufferData(const Mesh& mesh);
 
         std::vector<Ref<ShaderProgram>> p_Shaders;
+        std::vector<Ref<ShaderStage>> p_ShaderStages;
     };
 };

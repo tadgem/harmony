@@ -10,7 +10,7 @@ from enum import Enum
 import imgui
 from imgui.integrations.sdl2 import SDL2Renderer
 
-# TODO: Add support for oher platforms.
+# TODO: Add support for oher renderers.
 shaderc_location = "tools/bgfx-shaderc/bin/shaderc.exe"
 
 class ShaderStage(Enum):
@@ -20,17 +20,20 @@ class ShaderStage(Enum):
 
 shader_stages = ["Vertex", "Fragment", "Compute"]
 shader_types = ["v","f", "c"]
+dx_shader_types = ["v", "p", "c"]
 current_shader_stage_selection = 0
 current_platform_selection = 0
 
 source_path = "shaders/vs_cubes.sc"
 include_path = "shaders/include"
 output_path = "shaders/bin/"
+varying_def_path = "shaders/varying.def.sc"
 
-platforms = ["android", "asm.js","ios","linux","orbis","osx","windows"]
+renderers = ["dx9", "dx11","pssl","metal","glsl","essl", "spirv"]
+renderer_shader_profile = ["s_3_0", "s_5_0", "pssl", "metal", "430", "300_es", "spirv"]
 
 def build_output_path(platform):
-    base = output_path + platforms[platform] + "/"
+    base = output_path + renderers[platform] + "/"
     directory = os.path.dirname(base)
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -38,9 +41,14 @@ def build_output_path(platform):
     shader_name = shader_name[:-3]
     return base + shader_name + ".bin"
 
+def build_renderer_profile_name(shaderStage, platform):
+    ret = renderer_shader_profile[platform]
+    if(platform < 2):
+        return dx_shader_types[shaderStage] + ret
+    return ret
 
 def build_compile_command(shaderStage, platform):
-    command = "\"" + shaderc_location + "\"" + " -f " + source_path + " -i " + include_path + " -o " + build_output_path(platform) + " --type " + shader_types[shaderStage] + " --plaform " + platforms[platform]
+    command = "\"" + shaderc_location + "\"" + " -f " + source_path + " -i " + include_path + " -o " + build_output_path(platform) + " --type " + shader_types[shaderStage] + " --varyingdef " + varying_def_path + " -p " + build_renderer_profile_name(shaderStage, platform)
     print("Build command : ", command)
     return command
 
@@ -48,7 +56,8 @@ def shader_tool():
     global source_path
     global include_path
     global output_path
-    
+    global varying_def_path
+
     imgui.separator()
     changed, shader_text = imgui.input_text(
     'Input Shader Path',
@@ -63,6 +72,13 @@ def shader_tool():
     256
     )
     include_path = include_path_text
+
+    changed, varying_def_path_text = imgui.input_text(
+    'Varying Def Path',
+    varying_def_path,
+    256
+    )
+    varying_def_path = varying_def_path_text
 
     changed, output_text = imgui.input_text(
     'Output Path',
@@ -80,13 +96,18 @@ def shader_tool():
 
     global current_platform_selection
     clicked, current_platform = imgui.combo(
-    "Platform", current_platform_selection, platforms)
+    "Renderer", current_platform_selection, renderers)
     current_platform_selection = current_platform
     imgui.separator()
 
     if imgui.button("Compile Shaders"):
         command = build_compile_command(current_shader_stage_selection, current_platform_selection)
         subprocess.call(command)
+
+    if imgui.button("Compile Shaders (All Platforms)"):
+        for renderer in range(len(renderers)):
+            command = build_compile_command(current_shader_stage_selection, renderer)
+            subprocess.call(command)
 
 
 def main():

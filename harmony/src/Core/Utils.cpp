@@ -39,6 +39,16 @@ std::vector<uint8_t> harmony::Utils::LoadBinaryFromPath(const std::string& path)
 
 	return data;
 }
+std::vector<uint8_t>* harmony::Utils::LoadBinaryFromPathHeap(const std::string& path)
+{
+
+	HARMONY_PROFILE_FUNCTION()
+
+	std::ifstream binary_input_stream = std::ifstream(path, std::ios::binary);
+	auto data = new std::vector<uint8_t>(std::istreambuf_iterator<char>(binary_input_stream), {});
+
+	return data;
+}
 void harmony::Utils::SaveStringToPath(const std::string& str, const std::string& path)
 {
 	HARMONY_PROFILE_FUNCTION()

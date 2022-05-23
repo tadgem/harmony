@@ -23,6 +23,8 @@ namespace harmony {
 		void InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents, std::vector<glm::vec2> uvs);
 		void InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents,std::vector<glm::vec3> bitangents, std::vector<glm::vec2> uvs);
 
+		void BuildBGFXData();
+
 		void Release();
 
 		bool m_HasNormals;
@@ -38,6 +40,8 @@ namespace harmony {
 		std::vector<glm::vec3> m_Tangents;
 		std::vector<glm::vec3> m_Bitangents;
 		std::vector<glm::vec2> m_UVs;
+
+		std::vector<float> m_BGFXData;
 
     };
 };

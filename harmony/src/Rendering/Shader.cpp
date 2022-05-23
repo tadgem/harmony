@@ -3,12 +3,15 @@
 #include "Core/Log.hpp"
 #include "Core/Utils.h"
 #include "bgfx/platform.h"
+#include <bx/readerwriter.h>
+#include <bx/string.h>
+#include <bx/commandline.h>
 
-harmony::ShaderProgram::ShaderProgram(const std::string& name) : m_Handle(BGFX_INVALID_HANDLE)
+harmony::ShaderProgram::ShaderProgram(const std::string& name) : m_Name(name), m_Handle(BGFX_INVALID_HANDLE)
 {
 }
 
-bool harmony::ShaderProgram::AddStage(ShaderStage::Type stageType, ShaderStage shader)
+bool harmony::ShaderProgram::AddStage(ShaderStage::Type stageType, WeakRef<ShaderStage> shader)
 {
 	if (m_Stages.find(stageType) != m_Stages.end())
 	{
@@ -34,14 +37,14 @@ void harmony::ShaderProgram::Build()
 {
 	if (m_Stages.find(ShaderStage::Type::Compute) != m_Stages.end())
 	{
-		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Compute].m_Handle, true);
+		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Compute].lock()->m_Handle, false);
 		return;
 	}
 
 	if (m_Stages.find(ShaderStage::Type::Vertex) != m_Stages.end() && 
 		m_Stages.find(ShaderStage::Type::Fragment) != m_Stages.end())
 	{
-		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Vertex].m_Handle, m_Stages[ShaderStage::Type::Fragment].m_Handle, true);
+		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Vertex].lock()->m_Handle, m_Stages[ShaderStage::Type::Fragment].lock()->m_Handle, false);
 		return;
 	}
 
@@ -54,22 +57,25 @@ harmony::ShaderStage::ShaderStage(const std::string& name, const Type& shaderTyp
 
 harmony::ShaderStage::~ShaderStage()
 {
-	delete p_Memory;
 }
 
 void harmony::ShaderStage::LoadShaderBinary()
 {
 	std::string binaryPath = GetShaderRendererDirectory() + m_Name + ".bin";
-	std::vector<uint8_t> binary = Utils::LoadBinaryFromPath(binaryPath);
-	uint32_t binarySize = static_cast<uint32_t>(binary.size());
-	if (binarySize == 0)
-	{
-		harmony::log::error("Failed to load shader binary for : %s", m_Name);
-		return;
-	}
 
-	p_Memory = new bgfx::Memory{ binary.data(), binarySize};
-	bgfx::createShader(p_Memory);
+	if (bx::open(&_reader, binaryPath.c_str()))
+	{
+		uint32_t size = static_cast<uint32_t>(bx::getSize(&_reader));
+		const bgfx::Memory* mem = bgfx::alloc(size + 1);
+		bx::read(&_reader, mem->data, size, bx::ErrorAssert{});
+		bx::close(&_reader);
+		m_Handle = bgfx::createShader(mem);
+		bgfx::setName(m_Handle, m_Name.c_str());
+	}
+	else
+	{
+		harmony::log::error("Failed to load shader binary at path : ", binaryPath);
+	}
 }
 
 std::string harmony::ShaderStage::GetShaderStageNameFromEnum(Type type)
@@ -95,8 +101,25 @@ std::string harmony::ShaderStage::GetShaderStageNameFromEnum(Type type)
 std::string harmony::ShaderStage::GetShaderRendererDirectory()
 {
 	std::string shaderPath = "shaders/bin/";
-	
-	shaderPath += BX_PLATFORM_NAME + std::string("/");
+
+	switch (bgfx::getRendererType())
+	{
+	case bgfx::RendererType::Noop:
+	case bgfx::RendererType::Direct3D9:  shaderPath += "dx9/";   break;
+	case bgfx::RendererType::Direct3D11:
+	case bgfx::RendererType::Direct3D12: shaderPath += "dx11/";  break;
+	case bgfx::RendererType::Agc:
+	case bgfx::RendererType::Gnm:        shaderPath += "pssl/";  break;
+	case bgfx::RendererType::Metal:      shaderPath += "metal/"; break;
+	case bgfx::RendererType::OpenGL:     shaderPath += "glsl/";  break;
+	case bgfx::RendererType::OpenGLES:   shaderPath += "essl/";  break;
+	case bgfx::RendererType::Vulkan:     shaderPath += "spirv/"; break;
+	case bgfx::RendererType::WebGPU:     shaderPath += "spirv/"; break;
+
+	case bgfx::RendererType::Count:
+		harmony::log::error("You should not be here!");
+		break;
+	}
 
 	return shaderPath;
 }

@@ -3,6 +3,8 @@
 #include "bgfx/bgfx.h"
 #include "Assets/Asset.h"
 #include "Core/Memory.h"
+#include "bx/readerwriter.h"
+#include "bx/file.h"
 
 namespace harmony
 {
@@ -31,8 +33,9 @@ namespace harmony
 		std::vector<bgfx::UniformInfo> m_UniformInfos;
 		bgfx::ShaderHandle m_Handle;
 
+
 	private:
-		bgfx::Memory* p_Memory;
+		bx::FileReader _reader;
 	};
 
 	class ShaderProgram
@@ -40,13 +43,13 @@ namespace harmony
 	public:
 		ShaderProgram(const std::string& name);
 
-		bool AddStage(ShaderStage::Type stageType, ShaderStage shader);
+		bool AddStage(ShaderStage::Type stageType, WeakRef<ShaderStage> shader);
 		bool RemoveStage(ShaderStage::Type stageType);
 		void Build();
 
 		const std::string m_Name;
 		
-		std::unordered_map<ShaderStage::Type, ShaderStage> m_Stages;
+		std::unordered_map<ShaderStage::Type, WeakRef<ShaderStage>> m_Stages;
 		bgfx::ProgramHandle m_Handle;
 	};
 };

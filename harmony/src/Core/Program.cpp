@@ -111,6 +111,7 @@ void harmony::Program::InitBGFX()
 	bgfx::setViewClear(
 		0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x6495EDFF, 1.0f, 0);
 	bgfx::setViewRect(0, 0, 0, p_StartingWidth, p_StartingHeight);
+	bgfx::setDebug(BGFX_DEBUG_TEXT | BGFX_DEBUG_STATS | BGFX_DEBUG_PROFILER);
 }
 
 void harmony::Program::InitImGui()

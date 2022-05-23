@@ -6,6 +6,7 @@ namespace harmony
 {
 	class Cube : public Mesh
 	{
+	public:
 		Cube(float size);
 	};
 };
