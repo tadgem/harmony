@@ -6,7 +6,9 @@ $output v_color0
  * License: https://github.com/bkaradzic/bgfx/blob/master/LICENSE
  */
 
-#include "include/common.sh"
+#include "common.sh"
+
+uniform mat4 u_mtx;
 
 void main()
 {

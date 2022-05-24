@@ -120,9 +120,9 @@ void harmony::Program::InitBGFX()
 	uint32_t bgfxDebugFlags = 0;
 #ifdef HARMONY_DEBUG && 
 	bgfxDebugFlags |= BGFX_DEBUG_TEXT;
+	bgfxDebugFlags |= BGFX_DEBUG_STATS;
 #endif
 #ifdef HARMONY_PROFILE
-	bgfxDebugFlags |= BGFX_DEBUG_STATS;
 	bgfxDebugFlags |= BGFX_DEBUG_PROFILER;
 #endif
 
@@ -152,7 +152,6 @@ void harmony::Program::Run(harmony::Callback callback)
 	HARMONY_PROFILE_FUNCTION()
 	while (p_Run)
 	{
-		bgfx::touch(0);
 		SDL_Event sdlEvent;
 		while (SDL_PollEvent(&sdlEvent))
 		{
@@ -174,6 +173,8 @@ void harmony::Program::Run(harmony::Callback callback)
 
 		ImGui::Render();
 		imguiEndFrame();
+
+		bgfx::touch(0);
 
 		for (int i = 0; i < p_ProgramComponents.size(); i++)
 		{

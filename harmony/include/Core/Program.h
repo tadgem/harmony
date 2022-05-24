@@ -153,7 +153,7 @@ namespace harmony
 			}
 		}
 
-		Program* Get()
+		static Program* Get()
 		{
 			if (s_Instance)
 			{

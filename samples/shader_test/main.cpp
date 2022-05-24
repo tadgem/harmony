@@ -9,23 +9,73 @@
 
 #include <bx/timer.h>
 #include <bx/math.h>
+namespace harmony {
+	class CubeMeshProgramComponent : public ProgramComponent
+	{
+	public:
+		CubeMeshProgramComponent() : m_Cube(1.0f) {}
+		virtual void Init() override
+		{
+			Program* app = Program::Get();
+			m_Program = app->m_Renderer.LoadShader("sample surface", "vs_cubes", "fs_cubes");
+			auto prog = m_Program.lock();
+
+			m_Cube = Cube(1.0f);
+			m_MeshHandle = app->m_Renderer.SubmitMeshToGPU(m_Cube);
+
+			m_CameraPosition = glm::vec3(0, 0, -35);
+			m_Model = glm::mat4(1.0);
+			m_View = glm::lookAt(m_CameraPosition, glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+			m_Projection = glm::perspectiveFov(80.0f, 1280.0f, 720.0f, 0.1f, 300.0f);
+
+			m_MVPHandle = bgfx::createUniform("u_mtx", bgfx::UniformType::Mat4);
+
+
+		}
+		virtual void Update() override
+		{
+		}
+		virtual void Render() override
+		{
+			uint64_t state = BGFX_STATE_DEFAULT;
+			m_MVP = m_Projection * m_View * m_Model;
+
+			bgfx::setViewRect(0, 0, 0, uint16_t(1280), uint16_t(720));
+			bgfx::touch(0);
+			bgfx::setState(state, 0u);
+			bgfx::setViewTransform(0, glm::value_ptr(m_View), glm::value_ptr(m_Projection));
+			bgfx::setTransform(glm::value_ptr(m_Model));
+			bgfx::setVertexBuffer(0, m_MeshHandle.m_VBH);
+			bgfx::setIndexBuffer(m_MeshHandle.m_IBH);
+			bgfx::setUniform(m_MVPHandle, glm::value_ptr(m_MVP));
+			bgfx::submit(0, m_Program.lock()->m_Handle, 1, BGFX_DISCARD_NONE);
+		}
+		virtual void Cleanup() override
+		{
+		}
+		virtual nlohmann::json ToJson() override
+		{
+			return nlohmann::json();
+		}
+		virtual void FromJson(const nlohmann::json& json) override
+		{
+		}
+		glm::vec3 m_CameraPosition;
+		glm::mat4 m_Model;
+		glm::mat4 m_View;
+		glm::mat4 m_Projection;
+		glm::mat4 m_MVP;
+		bgfx::UniformHandle m_MVPHandle;
+		WeakRef<ShaderProgram> m_Program;
+		BGFXMeshHandle m_MeshHandle;
+		Cube m_Cube;
+	};
+};
 int main()
 {
 	harmony::Program app("Harmony Sample Base");
+	auto cubeComponent = app.AddProgramComponent<harmony::CubeMeshProgramComponent>();
 	app.Init();
-
-	auto handle = app.m_Renderer.LoadShader("sample surface", "vs_cubes", "fs_cubes");
-	harmony::Cube cube(1.0f);
-	auto meshHandle = app.m_Renderer.SubmitMeshToGPU(cube);
-
-	uint64_t state = 0
-		| (true ? BGFX_STATE_WRITE_R : 0)
-		| (true ? BGFX_STATE_WRITE_G : 0)
-		| (true ? BGFX_STATE_WRITE_B : 0)
-		| (true ? BGFX_STATE_WRITE_A : 0)
-		| BGFX_STATE_WRITE_Z
-		| BGFX_STATE_DEPTH_TEST_LESS
-		;
 
 	app.Run([&]()
 	{
@@ -34,48 +84,6 @@ int main()
 			//ImGui::SliderFloat3("Cam position", glm::value_ptr(cameraPosition), -100.0f, 100.0f);
 		}
 		ImGui::End();
-		float time = (float)((bx::getHPCounter()) / double(bx::getHPFrequency()));
-
-		const bx::Vec3 at = { 0.0f, 0.0f,   0.0f };
-		const bx::Vec3 eye = { 0.0f, 0.0f, -35.0f };
-
-		// Set view and projection matrix for view 0.
-		{
-			float view[16];
-			bx::mtxLookAt(view, eye, at);
-
-			float proj[16];
-			bx::mtxProj(proj, 60.0f, float(1280) / float(720), 0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
-			bgfx::setViewTransform(0, view, proj);
-
-			// Set view 0 default viewport.
-			bgfx::setViewRect(0, 0, 0, uint16_t(1280), uint16_t(720));
-		}
-
-		for (uint32_t yy = 0; yy < 11; ++yy)
-		{
-			for (uint32_t xx = 0; xx < 11; ++xx)
-			{
-				float mtx[16];
-				bx::mtxRotateXY(mtx, time + xx * 0.21f, time + yy * 0.37f);
-				mtx[12] = -15.0f + float(xx) * 3.0f;
-				mtx[13] = -15.0f + float(yy) * 3.0f;
-				mtx[14] = 0.0f;
-
-				// Set model matrix for rendering.
-				bgfx::setTransform(mtx);
-
-				// Set vertex and index buffer.
-				bgfx::setVertexBuffer(0, meshHandle.m_VBH);
-				bgfx::setIndexBuffer(meshHandle.m_IBH);
-
-				// Set render states.
-				bgfx::setState(state);
-
-				// Submit primitive for rendering to view 0.
-				bgfx::submit(0, handle.lock()->m_Handle);
-			}
-		}
-		// bgfx::dbgTextPrintf(0, 0, 0x0f, "Hello I am Some Text");
+		
 	});
 }
