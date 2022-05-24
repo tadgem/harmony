@@ -120,9 +120,9 @@ void harmony::Program::InitBGFX()
 	uint32_t bgfxDebugFlags = 0;
 #ifdef HARMONY_DEBUG && 
 	bgfxDebugFlags |= BGFX_DEBUG_TEXT;
-	bgfxDebugFlags |= BGFX_DEBUG_STATS;
 #endif
 #ifdef HARMONY_PROFILE
+	bgfxDebugFlags |= BGFX_DEBUG_STATS;
 	bgfxDebugFlags |= BGFX_DEBUG_PROFILER;
 #endif
 

@@ -23,10 +23,11 @@ namespace harmony {
 			m_Cube = Cube(1.0f);
 			m_MeshHandle = app->m_Renderer.SubmitMeshToGPU(m_Cube);
 
-			m_CameraPosition = glm::vec3(0, 0, -35);
+			m_CameraPosition = glm::vec3(0.0f, 0.0f, -35.0f);
 			m_Model = glm::mat4(1.0);
-			m_View = glm::lookAt(m_CameraPosition, glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-			m_Projection = glm::perspectiveFov(80.0f, 1280.0f, 720.0f, 0.1f, 300.0f);
+			m_View = glm::mat4(1.0);
+			m_View = glm::lookAt(m_CameraPosition, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			m_Projection = glm::perspectiveFov(glm::radians(80.0f), 1280.0f, 720.0f, 0.1f, 300.0f);
 
 			m_MVPHandle = bgfx::createUniform("u_mtx", bgfx::UniformType::Mat4);
 
@@ -34,12 +35,17 @@ namespace harmony {
 		}
 		virtual void Update() override
 		{
+			if (ImGui::Begin("CubeMeshComponent"))
+			{
+				ImGui::SliderFloat3("Camera Position", &m_CameraPosition[0], -35, 35);
+			}
+			ImGui::End();
 		}
 		virtual void Render() override
 		{
-			uint64_t state = BGFX_STATE_DEFAULT;
+			uint64_t state = BGFX_STATE_DEFAULT ;
 			m_MVP = m_Projection * m_View * m_Model;
-
+			m_View = glm::lookAt(m_CameraPosition, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			bgfx::setViewRect(0, 0, 0, uint16_t(1280), uint16_t(720));
 			bgfx::touch(0);
 			bgfx::setState(state, 0u);
@@ -79,11 +85,6 @@ int main()
 
 	app.Run([&]()
 	{
-		if (ImGui::Begin("Sample"))
-		{
-			//ImGui::SliderFloat3("Cam position", glm::value_ptr(cameraPosition), -100.0f, 100.0f);
-		}
-		ImGui::End();
 		
 	});
 }
