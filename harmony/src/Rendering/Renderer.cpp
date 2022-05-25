@@ -49,7 +49,7 @@ harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(Mesh& mesh)
     m.m_Layout = BuildVertexLayout(mesh);
     mesh.BuildBGFXData();
     uint32_t dataSize = static_cast<uint32_t>(mesh.m_Indices.size());
-    m.m_VBH = bgfx::createVertexBuffer(bgfx::makeRef(mesh.m_BGFXData.data(), mesh.m_NumVerts * 32), m.m_Layout);
+    m.m_VBH = bgfx::createVertexBuffer(bgfx::makeRef(mesh.m_BGFXData.data(), mesh.m_BGFXData.size() * sizeof(float)), m.m_Layout);
     m.m_IBH = bgfx::createIndexBuffer(bgfx::makeRef(mesh.m_Indices.data(), dataSize * sizeof(unsigned int)));
 
     return m;
