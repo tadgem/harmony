@@ -3,8 +3,7 @@
  * License: https://github.com/bkaradzic/bgfx/blob/master/LICENSE
  */
 
-#ifndef IMGUI_H_HEADER_GUARD
-#define IMGUI_H_HEADER_GUARD
+#pragma once
 
 #include <bgfx/bgfx.h>
 #include <ImGui/imgui.h>
@@ -127,5 +126,3 @@ namespace ImGui
 	void PopEnabled();
 
 } // namespace ImGui
-
-#endif // IMGUI_H_HEADER_GUARD

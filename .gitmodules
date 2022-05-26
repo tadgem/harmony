@@ -4,3 +4,6 @@
 [submodule "submodules/bgfx"]
 	path = submodules/bgfx
 	url = https://github.com/tadgem/bgfx.cmake.git
+[submodule "submodules/assimp"]
+	path = submodules/assimp
+	url = https://github.com/tadgem/assimp.git

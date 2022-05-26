@@ -55,7 +55,7 @@
 //
 //       INCLUDE SECTION
 //
-
+#pragma once
 #ifndef STB_INCLUDE_STB_RECT_PACK_H
 #define STB_INCLUDE_STB_RECT_PACK_H
 
