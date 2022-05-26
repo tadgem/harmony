@@ -39,7 +39,7 @@ namespace harmony {
 		bool m_HasTangents;
 		bool m_HasBitangents;
 		bool m_IsSkeletal;
-		unsigned int m_NumVerts = 0;
+		uint32_t m_NumVerts = 0;
 
 		std::vector<unsigned int> m_Indices;
 		std::vector<glm::vec3> m_Positions;
@@ -49,6 +49,8 @@ namespace harmony {
 		std::vector<glm::vec2> m_UVs;
 
 		std::vector<float> m_BGFXData;
+
+		uint64_t m_Id;
 
     };
 };
