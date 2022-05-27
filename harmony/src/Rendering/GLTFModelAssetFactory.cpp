@@ -26,7 +26,7 @@ std::unordered_map<size_t, std::vector<harmony::Ref<harmony::Asset>>> harmony::G
 
 	if (!res)
 	{
-		harmony::log::error("Failed to load model at path : ", path);
+		harmony::log::error("GLTFModelAssetFactory : Failed to load model at path : ", path);
 		return assets;
 	}
 	
