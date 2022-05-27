@@ -1,6 +1,7 @@
 #include "Core/Program.h"
 #include "Core/Log.hpp"
 #include "Rendering/Shapes.h"
+#include "AssimpModelAssetFactory.h"
 #include "ImGui/ImGuiFileDialog.h"
 #include "ImGui/imgui.h"
 #include "glm/gtc/quaternion.hpp"
@@ -9,6 +10,7 @@
 
 #include <bx/timer.h>
 #include <bx/math.h>
+
 namespace harmony {
 	class CubeMeshProgramComponent : public ProgramComponent
 	{
