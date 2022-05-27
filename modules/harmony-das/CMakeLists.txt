@@ -8,6 +8,8 @@ file(GLOB_RECURSE HEADERPP_FILES include/das/*.hpp)
 add_library(harmony-das ${HEADER_FILES} ${HEADERPP_FILES} ${SRC_FILES})
 set_property(TARGET harmony-das PROPERTY CXX_STANDARD 17)
 
+add_subdirectory(${ROOT_DIR}/submodules/daScript ${CMAKE_CURRENT_BINARY_DIR}/daScript)
+
 set(HARMONY_DAS_INCLUDES 
 ${CMAKE_CURRENT_SOURCE_DIR}/include 
 ${DAS_BX_INCLUDE_DIR} 	
