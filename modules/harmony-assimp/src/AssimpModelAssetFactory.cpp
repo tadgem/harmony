@@ -90,7 +90,7 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, c
 	bool hasIndices = mesh->HasFaces();
 	bool hasNormals = mesh->HasNormals();
 	bool hasUVs = mesh->HasTextureCoords(0);
-	bool hasTangentsAndBitangents = mesh->HasTangentsAndBitangents();
+	bool hasTangentsAndBitangents = false;
 
 	std::vector<glm::vec3> positions;
 	if (hasPositions)
@@ -138,7 +138,7 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, c
 		}
 	}
 
-	std::vector<glm::vec3> tangents;
+	/*std::vector<glm::vec3> tangents;
 	std::vector<glm::vec3> bitangents;
 
 	if (hasTangentsAndBitangents)
@@ -148,7 +148,7 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, c
 			tangents.emplace_back(AssimpToGLM(mesh->mTangents[i]));
 			bitangents.emplace_back(AssimpToGLM(mesh->mBitangents[i]));
 		}
-	}
+	}*/
 
 	if (hasPositions && hasIndices && !hasNormals && !hasUVs && !hasTangentsAndBitangents)
 	{
@@ -162,10 +162,10 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, c
 	{
 		meshAsset->InitializeMesh(positions, indices, normals, uvs);
 	}
-	else if (hasPositions && hasIndices && hasNormals && hasUVs && hasTangentsAndBitangents)
+	/*else if (hasPositions && hasIndices && hasNormals && hasUVs && hasTangentsAndBitangents)
 	{
 		meshAsset->InitializeMesh(positions, indices, normals, tangents, bitangents, uvs);
-	}
+	}*/
 	else
 	{
 		harmony::log::error("AssimpModelAssetFactory : Could not initialize mesh!");

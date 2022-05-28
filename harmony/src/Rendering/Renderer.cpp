@@ -51,7 +51,7 @@ harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(WeakRef<Mesh> mesh)
     meshRef->BuildBGFXData();
     uint32_t dataSize = static_cast<uint32_t>(meshRef->m_Indices.size());
     m.m_VBH = bgfx::createVertexBuffer(bgfx::makeRef(meshRef->m_BGFXData.data(), meshRef->m_BGFXData.size() * sizeof(float)), m.m_Layout);
-    m.m_IBH = bgfx::createIndexBuffer(bgfx::makeRef(meshRef->m_Indices.data(), dataSize * sizeof(unsigned int)));
+    m.m_IBH = bgfx::createIndexBuffer(bgfx::makeRef(meshRef->m_Indices.data(), (dataSize * sizeof(unsigned int))), BGFX_BUFFER_INDEX32);
 
     return m;
 }
@@ -93,15 +93,15 @@ bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRe
         vl.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float);
     }
 
-    if (mesh->m_HasTangents)
-    {
-        vl.add(bgfx::Attrib::Tangent, 3, bgfx::AttribType::Float);
-    }
+    //if (mesh->m_HasTangents)
+    //{
+    //    vl.add(bgfx::Attrib::Tangent, 3, bgfx::AttribType::Float);
+    //}
 
-    if (mesh->m_HasBitangents)
-    {
-        vl.add(bgfx::Attrib::Bitangent, 3, bgfx::AttribType::Float);
-    }
+    //if (mesh->m_HasBitangents)
+    //{
+    //    vl.add(bgfx::Attrib::Bitangent, 3, bgfx::AttribType::Float);
+    //}
 
     // TODO add support for skeletal meshes.
     vl.end();

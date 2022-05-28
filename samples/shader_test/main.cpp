@@ -117,7 +117,7 @@ namespace harmony {
 		{
 			if (ImGui::Begin("ModelComponent"))
 			{
-				ImGui::SliderFloat3("Camera Position", &m_CameraPosition[0], -35, 35);
+				ImGui::SliderFloat3("Camera Position", &m_CameraPosition[0], -100, 100);
 			}
 			ImGui::End();
 		}
@@ -126,7 +126,7 @@ namespace harmony {
 		{
 			uint64_t state = BGFX_STATE_DEFAULT;
 			m_MVP = m_Projection * m_View * m_Model;
-			m_View = glm::lookAt(m_CameraPosition, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			m_View = glm::lookAt(m_CameraPosition, m_CameraPosition + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0f, 1.0f, 0.0f));
 			bgfx::setViewRect(0, 0, 0, uint16_t(1280), uint16_t(720));
 			bgfx::touch(0);
 			bgfx::setState(state, 0u);
