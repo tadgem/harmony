@@ -171,8 +171,7 @@ void harmony::Program::Run(harmony::Callback callback)
 
 		callback();
 
-		ImGui::Render();
-		imguiEndFrame();
+		
 
 		bgfx::touch(0);
 
@@ -180,6 +179,11 @@ void harmony::Program::Run(harmony::Callback callback)
 		{
 			p_ProgramComponents[i]->Render();
 		}
+
+		bgfx::touch(1);
+
+		ImGui::Render();
+		imguiEndFrame();
 
 		bgfx::frame();
 	}
