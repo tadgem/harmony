@@ -14,6 +14,7 @@ namespace harmony
     public:
         std::string m_AssetPath;
         size_t m_TypeHash;
+        Asset() {}
         virtual ~Asset() {}
     };
 };

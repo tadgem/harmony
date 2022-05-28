@@ -18,5 +18,9 @@ namespace harmony
 
         void ProcessNode(aiNode* node, const aiScene* scene);
         void ProcessMesh(aiMesh* mesh, aiNode* node, const aiScene* scene);
+
+        std::vector<Ref<Asset>> p_Meshes;
+        std::vector<std::string> p_MeshNames;
+        // std::vector<Ref<Texture>> p_Textures
     };
 };

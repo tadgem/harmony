@@ -81,8 +81,11 @@ namespace harmony {
 };
 int main()
 {
-	harmony::Program app("Harmony Sample Base");
-	auto cubeComponent = app.AddProgramComponent<harmony::CubeMeshProgramComponent>();
+	using namespace harmony;
+	Program app("Harmony Sample Base");
+	app.m_AssetManager.AddAssetFactory(GetTypeHash<Model>(), CreateRef<AssimpModelAssetFactory>());
+
+	auto cubeComponent = app.AddProgramComponent<CubeMeshProgramComponent>();
 	app.Init();
 
 	app.Run([&]()

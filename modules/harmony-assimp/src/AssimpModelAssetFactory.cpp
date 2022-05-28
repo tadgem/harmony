@@ -16,12 +16,18 @@ static glm::vec2 AssimpToGLM(aiVector2D aiVec)
 	return glm::vec2(aiVec.x, aiVec.y);
 }
 
+static std::string AssimpToSTD(aiString str)
+{
+	return std::string(str.C_Str());
+}
+
 harmony::AssimpModelAssetFactory::AssimpModelAssetFactory() : harmony::AssetFactory(GetTypeHash<Model>())
 {
 }
 
 std::unordered_map<size_t, std::vector<harmony::Ref<harmony::Asset>>> harmony::AssimpModelAssetFactory::CreateAssetData(const std::string& path)
 {
+	HARMONY_PROFILE_FUNCTION()
     auto assets = std::unordered_map<size_t, std::vector<Ref<Asset>>>();
 
     Assimp::Importer importer;
@@ -37,10 +43,24 @@ std::unordered_map<size_t, std::vector<harmony::Ref<harmony::Asset>>> harmony::A
     return assets;
 
 	ProcessNode(scene->mRootNode, scene);
+
+	Ref<Model> model = CreateRef<Model>(); 
+	for (int i = 0; i < p_Meshes.size(); i++)
+	{
+		model->m_MeshNames.push_back(p_MeshNames[i]);
+		Ref<Mesh> meshRef = std::static_pointer_cast<Mesh, Asset>(p_Meshes[i]);
+		model->m_Meshes.push_back(GetWeakRef<Mesh>(meshRef));
+	}
+
+	assets.emplace(GetTypeHash<Model>(), std::vector<Ref<Asset>> { std::static_pointer_cast<Asset, Model>(model) });
+	assets.emplace(GetTypeHash<Mesh>(), p_Meshes);
+
+	return assets;
 }
 
 void harmony::AssimpModelAssetFactory::ProcessNode(aiNode* node, const aiScene* scene)
 {
+	HARMONY_PROFILE_FUNCTION()
 	if (node->mNumMeshes > 0)
 	{
 		for (int i = 0; i < node->mNumMeshes; i++)
@@ -64,6 +84,7 @@ void harmony::AssimpModelAssetFactory::ProcessNode(aiNode* node, const aiScene* 
 
 void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, const aiScene* scene)
 {
+	HARMONY_PROFILE_FUNCTION()
 	Ref<Mesh> meshAsset = CreateRef<Mesh>();
 
 	bool hasPositions = mesh->HasPositions();
@@ -150,5 +171,7 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, c
 		harmony::log::error("AssimpModelAssetFactory : Could not initialize mesh!");
 	}
 
+	p_Meshes.emplace_back(meshAsset);
+	p_MeshNames.emplace_back(AssimpToSTD(node->mName));
 }
 

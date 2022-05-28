@@ -4,7 +4,7 @@
 #include "Core/Memory.h"
 namespace harmony
 {
-    class Model : Asset
+    class Model : public Asset
     {
     public:
         Model();
