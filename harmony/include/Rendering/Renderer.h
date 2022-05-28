@@ -26,14 +26,12 @@ namespace harmony
         WeakRef<ShaderProgram> CreateShader(const std::string vertSourcePath, const std::string fragSourcePath);
         WeakRef<ShaderProgram> CreateShader(const std::string computePath);
 #endif
-        BGFXMeshHandle SubmitMeshToGPU(Mesh& mesh);
+        BGFXMeshHandle SubmitMeshToGPU(WeakRef<Mesh> mesh);
         void RenderMesh(const BGFXMeshHandle& meshHandle, const RenderState& renderState);
         void RenderScene(Ref<Scene> scene);
 
     private:
-        bgfx::VertexLayout BuildVertexLayout(const Mesh& mesh);
-        // definitely need to improve this, need to support other vertex attribs other than floats.
-        std::vector<float> BuildVertexBufferData(const Mesh& mesh);
+        bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
 
         std::vector<Ref<ShaderProgram>> p_Shaders;
         std::vector<Ref<ShaderStage>> p_ShaderStages;

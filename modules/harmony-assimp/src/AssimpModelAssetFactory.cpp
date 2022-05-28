@@ -40,7 +40,6 @@ std::unordered_map<size_t, std::vector<harmony::Ref<harmony::Asset>>> harmony::A
 		aiProcess_OptimizeMeshes |
 		aiProcess_OptimizeGraph |
 		aiProcess_GenBoundingBoxes);
-    return assets;
 
 	ProcessNode(scene->mRootNode, scene);
 
@@ -107,7 +106,8 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, c
 	{
 		for (int i = 0; i < mesh->mNumFaces; i++)
 		{
-			if(mesh->mFaces[i].mNumIndices != 3);
+			aiFace currentFace = mesh->mFaces[i];
+			if(currentFace.mNumIndices != 3)
 			{
 				harmony::log::error("Attempting to import a mesh with non triangular face structure! cannot load this mesh.");
 				return;
@@ -172,6 +172,6 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, c
 	}
 
 	p_Meshes.emplace_back(meshAsset);
-	p_MeshNames.emplace_back(AssimpToSTD(node->mName));
+	p_MeshNames.emplace_back(AssimpToSTD(mesh->mName));
 }
 

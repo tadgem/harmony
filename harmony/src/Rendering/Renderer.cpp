@@ -42,15 +42,16 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std
     return wr;
 }
 
-harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(Mesh& mesh)
+harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(WeakRef<Mesh> mesh)
 {
     HARMONY_PROFILE_FUNCTION()
+    auto meshRef = mesh.lock();
     BGFXMeshHandle m = BGFXMeshHandle();
     m.m_Layout = BuildVertexLayout(mesh);
-    mesh.BuildBGFXData();
-    uint32_t dataSize = static_cast<uint32_t>(mesh.m_Indices.size());
-    m.m_VBH = bgfx::createVertexBuffer(bgfx::makeRef(mesh.m_BGFXData.data(), mesh.m_BGFXData.size() * sizeof(float)), m.m_Layout);
-    m.m_IBH = bgfx::createIndexBuffer(bgfx::makeRef(mesh.m_Indices.data(), dataSize * sizeof(unsigned int)));
+    meshRef->BuildBGFXData();
+    uint32_t dataSize = static_cast<uint32_t>(meshRef->m_Indices.size());
+    m.m_VBH = bgfx::createVertexBuffer(bgfx::makeRef(meshRef->m_BGFXData.data(), meshRef->m_BGFXData.size() * sizeof(float)), m.m_Layout);
+    m.m_IBH = bgfx::createIndexBuffer(bgfx::makeRef(meshRef->m_Indices.data(), dataSize * sizeof(unsigned int)));
 
     return m;
 }
@@ -72,8 +73,9 @@ void harmony::Renderer::RenderScene(Ref<Scene> scene)
     // RenderMesh(thatMesh, thatState);
 }
 
-bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(const Mesh& mesh)
+bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRef)
 {
+    auto mesh = meshWeakRef.lock();
     HARMONY_PROFILE_FUNCTION()
     bgfx::VertexLayout vl = bgfx::VertexLayout();
     vl.begin();
@@ -81,22 +83,22 @@ bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(const Mesh& mesh)
     // do we need to support 2 component positions? 
     vl.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float);
 
-    if (mesh.m_HasNormals)
+    if (mesh->m_HasNormals)
     {
         vl.add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float);
     }
 
-    if (mesh.m_HasUVs)
+    if (mesh->m_HasUVs)
     {
         vl.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float);
     }
 
-    if (mesh.m_HasTangents)
+    if (mesh->m_HasTangents)
     {
         vl.add(bgfx::Attrib::Tangent, 3, bgfx::AttribType::Float);
     }
 
-    if (mesh.m_HasBitangents)
+    if (mesh->m_HasBitangents)
     {
         vl.add(bgfx::Attrib::Bitangent, 3, bgfx::AttribType::Float);
     }
@@ -105,44 +107,4 @@ bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(const Mesh& mesh)
     vl.end();
     return vl;
 
-}
-
-std::vector<float> harmony::Renderer::BuildVertexBufferData(const Mesh& mesh)
-{
-    HARMONY_PROFILE_FUNCTION()
-    auto floats = std::vector<float>();
-    for (unsigned int i = 0; i < mesh.m_NumVerts; i++)
-    {
-        floats.push_back(mesh.m_Positions[i].x);
-        floats.push_back(mesh.m_Positions[i].y);
-        floats.push_back(mesh.m_Positions[i].z);
-        if (mesh.m_HasNormals)
-        {
-            floats.push_back(mesh.m_Normals[i].x);
-            floats.push_back(mesh.m_Normals[i].y);
-            floats.push_back(mesh.m_Normals[i].z);
-        }
-
-        if (mesh.m_HasUVs)
-        {
-            floats.push_back(mesh.m_UVs[i].x);
-            floats.push_back(mesh.m_UVs[i].y);
-        }
-
-        if (mesh.m_HasTangents)
-        {
-            floats.push_back(mesh.m_Tangents[i].x);
-            floats.push_back(mesh.m_Tangents[i].y);
-            floats.push_back(mesh.m_Tangents[i].z);
-        }
-
-        if (mesh.m_HasBitangents)
-        {
-            floats.push_back(mesh.m_Bitangents[i].x);
-            floats.push_back(mesh.m_Bitangents[i].y);
-            floats.push_back(mesh.m_Bitangents[i].z);
-        }
-    }
-
-    return floats;
 }

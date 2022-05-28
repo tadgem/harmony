@@ -49,8 +49,6 @@ namespace harmony {
 
             for (auto asset : p_Assets[typeHash])
             {
-                if (asset->m_TypeHash != typeHash) continue;
-
                 if (asset->m_AssetPath.size() == 0)
                 {
                     asset->m_AssetPath = path;
