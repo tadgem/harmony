@@ -10,5 +10,5 @@ get_filename_component(ROOT_DIR ${TEMP_DIR} DIRECTORY)
 add_subdirectory(${ROOT_DIR}/harmony ${CMAKE_CURRENT_BINARY_DIR}/harmony)
 add_subdirectory(${ROOT_DIR}/modules/harmony-assimp ${CMAKE_CURRENT_BINARY_DIR}/harmony-assimp)
 
-target_include_directories(shader_test PRIVATE ${HARMONY_CORE_INCLUDES} ${HARMONY_ASSIMP_INCLUDES})
+target_include_directories(shader_test PRIVATE ${HARMONY_CORE_INCLUDES} ${HARMONY_ASSIMP_INCLUDES} ${ROOT_DIR}/submodules/assimp/include)
 target_link_libraries(shader_test harmony-core)
