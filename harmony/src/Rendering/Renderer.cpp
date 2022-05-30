@@ -59,9 +59,14 @@ harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(WeakRef<Mesh> mesh)
 void harmony::Renderer::RenderMesh(const BGFXMeshHandle& meshHandle, const RenderState& renderState)
 {
     HARMONY_PROFILE_FUNCTION()
+    if (p_CurrentView != renderState.m_View)
+    {
+        p_CurrentView = renderState.m_View;
+        bgfx::touch(p_CurrentView);
+    }
     bgfx::setIndexBuffer(meshHandle.m_IBH);
-    bgfx::setVertexBuffer(renderState.m_View, meshHandle.m_VBH);
-    bgfx::submit(renderState.m_View, renderState.m_Program);
+    bgfx::setVertexBuffer(p_CurrentView, meshHandle.m_VBH);
+    bgfx::submit(p_CurrentView, renderState.m_Program);
 }
 
 void harmony::Renderer::RenderScene(Ref<Scene> scene)

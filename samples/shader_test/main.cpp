@@ -104,6 +104,7 @@ namespace harmony {
 
 			m_CameraPosition = glm::vec3(0.0f, 0.0f, -35.0f);
 			m_Model = glm::mat4(1.0);
+			m_Model = glm::scale(m_Model, glm::vec3(0.1));
 			m_View = glm::mat4(1.0);
 			m_View = glm::lookAt(m_CameraPosition, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			m_Projection = glm::perspectiveFov(glm::radians(80.0f), 1280.0f, 720.0f, 0.1f, 300.0f);
