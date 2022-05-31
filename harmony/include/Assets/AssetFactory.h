@@ -4,28 +4,34 @@
 #include "Assets/Asset.h"
 #include <map>
 namespace harmony {
+
+	struct AssetFactoryCapabilities
+	{
+		std::vector<size_t> AssetTypeHashes;
+
+		bool Contains(size_t typeHash)
+		{
+			bool found = false;
+			for (int i = 0; i < AssetTypeHashes.size(); i++)
+			{
+				if (typeHash == AssetTypeHashes[i])
+				{
+					found = true;
+				}
+			}
+			return found;
+		}
+	};
+
 	class AssetFactory
 	{
 	public:
-		AssetFactory(size_t typeHash);
+		AssetFactory() {}
+		virtual std::vector<Ref<Asset>> LoadAssetData(const std::string& path) = 0;
+		virtual void ClearLoadedData();
 
-		template<typename T>
-		std::unordered_map<size_t, std::vector<Ref<Asset>>> CreateFromFile(const std::string& path)
-		{
-			HARMONY_PROFILE_FUNCTION()
-			static_assert(std::is_base_of<Asset, T>());
-			std::map<size_t, std::vector<Asset*>> assets = CreateAssetData(path);
-			return assets;
-		}
-
-		std::unordered_map<size_t, std::vector<Ref<Asset>>> CreateFromFileUnsafe(const std::string& path)
-		{
-			HARMONY_PROFILE_FUNCTION()
-			return CreateAssetData(path);
-		}
-
+		AssetFactoryCapabilities m_Capabilities;
 	protected:
-		virtual std::unordered_map<size_t, std::vector<Ref<Asset>>> CreateAssetData(const std::string& path);
-		size_t p_TypeHash;
+		std::vector<Ref<Asset>> p_Assets;
 	};
 }

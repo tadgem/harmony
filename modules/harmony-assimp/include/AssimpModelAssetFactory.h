@@ -14,7 +14,7 @@ namespace harmony
     public:
         AssimpModelAssetFactory();
     protected:
-        virtual std::unordered_map<size_t, std::vector<Ref<Asset>>> CreateAssetData(const std::string& path) override;
+        virtual std::vector<Ref<Asset>> LoadAssetData(const std::string& path) override;
 
         void ProcessNode(aiNode* node, const aiScene* scene);
         void ProcessMesh(aiMesh* mesh, aiNode* node, const aiScene* scene);

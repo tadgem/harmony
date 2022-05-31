@@ -1,6 +1,6 @@
 #include "Rendering/Mesh.h"
 #include "Core/Profile.hpp"
-harmony::Mesh::Mesh()
+harmony::Mesh::Mesh() : Asset(GetTypeHash<Mesh>())
 {
 	HARMONY_PROFILE_FUNCTION()
 }
@@ -26,7 +26,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 	m_HasTangents = false;
 	m_HasBitangents = false;
 	m_IsSkeletal = false;
-	m_NumVerts = positions.size();
+	m_NumVerts = static_cast<uint32_t>(positions.size());
 }
 
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices, std::vector<glm::vec3> normals)
@@ -40,7 +40,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 	m_HasTangents = false;
 	m_HasBitangents = false;
 	m_IsSkeletal = false;
-	m_NumVerts = positions.size();
+	m_NumVerts = static_cast<uint32_t>(positions.size());
 }
 
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices, std::vector<glm::vec3> normals, std::vector<glm::vec2> uvs)
@@ -55,7 +55,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 	m_HasTangents = false;
 	m_HasBitangents = false;
 	m_IsSkeletal = false;
-	m_NumVerts = positions.size();
+	m_NumVerts = static_cast<uint32_t>(positions.size());
 }
 
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices, std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents, std::vector<glm::vec2> uvs)
@@ -71,7 +71,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 	m_HasTangents = true;
 	m_HasBitangents = false;
 	m_IsSkeletal = false;
-	m_NumVerts = positions.size();
+	m_NumVerts = static_cast<uint32_t>(positions.size());
 }
 
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices, std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents, std::vector<glm::vec3> bitangents, std::vector<glm::vec2> uvs)
@@ -88,7 +88,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 	m_HasTangents = true;
 	m_HasBitangents = true;
 	m_IsSkeletal = false;
-	m_NumVerts = positions.size();
+	m_NumVerts = static_cast<uint32_t>(positions.size());
 }
 
 void harmony::Mesh::BuildBGFXData()

@@ -8,7 +8,7 @@
 #include "ImGui/imgui_bgfx.h"
 #include "Core/Log.hpp"
 
-harmony::Program::Program(std::string name) : p_AppName(name)
+harmony::Program::Program(std::string name) : p_AppName(name), m_Renderer(m_AssetManager)
 {
 	HARMONY_PROFILE_FUNCTION()
 	if(s_Instance != nullptr)
@@ -118,7 +118,8 @@ void harmony::Program::InitBGFX()
 	bgfx::setViewRect(0, 0, 0, p_StartingWidth, p_StartingHeight);
 
 	uint32_t bgfxDebugFlags = 0;
-#ifdef HARMONY_DEBUG && 
+
+#ifdef HARMONY_DEBUG
 	bgfxDebugFlags |= BGFX_DEBUG_TEXT;
 #endif
 #ifdef HARMONY_PROFILE

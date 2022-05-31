@@ -21,14 +21,19 @@ static std::string AssimpToSTD(aiString str)
 	return std::string(str.C_Str());
 }
 
-harmony::AssimpModelAssetFactory::AssimpModelAssetFactory() : harmony::AssetFactory(GetTypeHash<Model>())
+harmony::AssimpModelAssetFactory::AssimpModelAssetFactory() : harmony::AssetFactory()
 {
+	size_t modelTypeHash = GetTypeHash<Model>();
+	size_t meshTypeHash = GetTypeHash<Mesh>();
+
+	m_Capabilities.AssetTypeHashes.push_back(modelTypeHash);
+	m_Capabilities.AssetTypeHashes.push_back(meshTypeHash);
 }
 
-std::unordered_map<size_t, std::vector<harmony::Ref<harmony::Asset>>> harmony::AssimpModelAssetFactory::CreateAssetData(const std::string& path)
+std::vector<harmony::Ref<harmony::Asset>> harmony::AssimpModelAssetFactory::LoadAssetData(const std::string& path)
 {
 	HARMONY_PROFILE_FUNCTION()
-    auto assets = std::unordered_map<size_t, std::vector<Ref<Asset>>>();
+    auto assets = std::vector<Ref<Asset>>();
 
     Assimp::Importer importer;
     // importer.ReadFile()
@@ -41,19 +46,26 @@ std::unordered_map<size_t, std::vector<harmony::Ref<harmony::Asset>>> harmony::A
 		aiProcess_OptimizeGraph |
 		aiProcess_GenBoundingBoxes);
 
-	ProcessNode(scene->mRootNode, scene);
+	if (scene == nullptr)
+	{
+		harmony::log::error("AssimpModelAssetFactory : Failed to load asset at path : ", path);
+		return assets;
+	}
 
-	Ref<Model> model = CreateRef<Model>(); 
+	ProcessNode(scene->mRootNode, scene);
+	std::string modelName = std::string(scene->mName.C_Str());
+	Ref<Model> model = CreateRef<Model>(modelName); 
+	model->m_AssetPath = path;
 	for (int i = 0; i < p_Meshes.size(); i++)
 	{
 		model->m_MeshNames.push_back(p_MeshNames[i]);
 		Ref<Mesh> meshRef = std::static_pointer_cast<Mesh, Asset>(p_Meshes[i]);
 		model->m_Meshes.push_back(GetWeakRef<Mesh>(meshRef));
+		assets.emplace_back(p_Meshes[i]);
+		p_Meshes[i]->m_AssetPath = path;
 	}
 
-	assets.emplace(GetTypeHash<Model>(), std::vector<Ref<Asset>> { std::static_pointer_cast<Asset, Model>(model) });
-	assets.emplace(GetTypeHash<Mesh>(), p_Meshes);
-
+	assets.push_back(std::static_pointer_cast<Asset, Model>(model));
 	return assets;
 }
 
@@ -62,7 +74,7 @@ void harmony::AssimpModelAssetFactory::ProcessNode(aiNode* node, const aiScene* 
 	HARMONY_PROFILE_FUNCTION()
 	if (node->mNumMeshes > 0)
 	{
-		for (int i = 0; i < node->mNumMeshes; i++)
+		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
 			unsigned int sceneIndex = node->mMeshes[i];
 			aiMesh* mesh = scene->mMeshes[sceneIndex];
@@ -75,7 +87,7 @@ void harmony::AssimpModelAssetFactory::ProcessNode(aiNode* node, const aiScene* 
 		return;
 	}
 
-	for (int i = 0; i < node->mNumChildren; i++)
+	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
 		ProcessNode(node->mChildren[i], scene);
 	}
@@ -95,7 +107,7 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, c
 	std::vector<glm::vec3> positions;
 	if (hasPositions)
 	{
-		for (int i = 0; i < mesh->mNumVertices; i++)
+		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 		{
 			positions.push_back(AssimpToGLM(mesh->mVertices[i]));
 		}
@@ -104,7 +116,7 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, c
 	std::vector<unsigned int> indices;
 	if (hasIndices)
 	{
-		for (int i = 0; i < mesh->mNumFaces; i++)
+		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 		{
 			aiFace currentFace = mesh->mFaces[i];
 			if(currentFace.mNumIndices != 3)
@@ -112,7 +124,7 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, c
 				harmony::log::error("Attempting to import a mesh with non triangular face structure! cannot load this mesh.");
 				return;
 			}
-			for (int index = 0; index < mesh->mFaces[i].mNumIndices; index++)
+			for (unsigned int index = 0; index < mesh->mFaces[i].mNumIndices; index++)
 			{
 				indices.push_back(mesh->mFaces[i].mIndices[index]);
 			}
@@ -122,7 +134,7 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, c
 	std::vector<glm::vec3> normals;
 	if (hasNormals)
 	{
-		for (int i = 0; i < mesh->mNumVertices; i++)
+		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 		{
 			normals.push_back(AssimpToGLM(mesh->mNormals[i]));
 		}
@@ -132,7 +144,7 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, c
 	// TODO: Support additional sets of texture coords.
 	if (hasUVs)
 	{
-		for (int i = 0; i < mesh->mNumVertices; i++)
+		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 		{
 			uvs.emplace_back(AssimpToGLM(mesh->mTextureCoords[0][i]));
 		}

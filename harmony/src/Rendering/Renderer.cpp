@@ -1,8 +1,10 @@
 #include "Rendering/Renderer.h"
 #include "Core/Profile.hpp"
 #include "bgfx/platform.h"
-
-harmony::Renderer::Renderer()
+#include "ECS/ModelComponent.h"
+#include "ECS/MeshComponent.h"
+#include "ECS/MaterialComponent.h"
+harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetManager)
 {
     HARMONY_PROFILE_FUNCTION()
 }
@@ -49,9 +51,10 @@ harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(WeakRef<Mesh> mesh)
     BGFXMeshHandle m = BGFXMeshHandle();
     m.m_Layout = BuildVertexLayout(mesh);
     meshRef->BuildBGFXData();
-    uint32_t dataSize = static_cast<uint32_t>(meshRef->m_Indices.size());
-    m.m_VBH = bgfx::createVertexBuffer(bgfx::makeRef(meshRef->m_BGFXData.data(), meshRef->m_BGFXData.size() * sizeof(float)), m.m_Layout);
-    m.m_IBH = bgfx::createIndexBuffer(bgfx::makeRef(meshRef->m_Indices.data(), (dataSize * sizeof(unsigned int))), BGFX_BUFFER_INDEX32);
+    uint32_t indexBufferSize = static_cast<uint32_t>(meshRef->m_Indices.size() * sizeof(unsigned int));
+    uint32_t vertexBufferSize = static_cast<uint32_t>(meshRef->m_BGFXData.size() * sizeof(float));
+    m.m_VBH = bgfx::createVertexBuffer(bgfx::makeRef(meshRef->m_BGFXData.data(), vertexBufferSize), m.m_Layout);
+    m.m_IBH = bgfx::createIndexBuffer(bgfx::makeRef(meshRef->m_Indices.data(), indexBufferSize), BGFX_BUFFER_INDEX32);
 
     return m;
 }
@@ -65,17 +68,40 @@ void harmony::Renderer::RenderMesh(const BGFXMeshHandle& meshHandle, const Rende
         bgfx::touch(p_CurrentView);
     }
     bgfx::setIndexBuffer(meshHandle.m_IBH);
-    bgfx::setVertexBuffer(p_CurrentView, meshHandle.m_VBH);
+    bgfx::setVertexBuffer(0, meshHandle.m_VBH);
     bgfx::submit(p_CurrentView, renderState.m_Program);
 }
 
-void harmony::Renderer::RenderScene(Ref<Scene> scene)
+void harmony::Renderer::RenderScene(WeakRef<Scene> sceneWeakRef)
 {
     HARMONY_PROFILE_FUNCTION()
+    Ref<Scene> scene = sceneWeakRef.lock();
     // set all uniforms? 
     // foreach mesh drawable in scene.m_Registry...
     // CreateRenderState
+    // Set transform matrix
     // RenderMesh(thatMesh, thatState);
+
+    auto meshRegistryView = scene->m_Registry.view<const MeshComponent, const MaterialComponent>();
+    auto modelRegistryView = scene->m_Registry.view<const ModelComponent, const MaterialComponent>();
+
+    for (auto [entity, meshComponent, materialComponent] : meshRegistryView.each())
+    {
+        RenderState state;
+        // need to figure out how we handle cameras as this is where the associated bgfx view id should be stored.
+        // state.m_View = ? ;
+        state.m_Program = materialComponent.ProgramHandle;
+        RenderMesh(meshComponent.Handle, state);
+    }
+
+    for (auto [entity, modelComponent, materialComponent] : modelRegistryView.each())
+    {
+        RenderState state;
+        // need to figure out how we handle cameras as this is where the associated bgfx view id should be stored.
+        // state.m_View = ? ;
+        state.m_Program = materialComponent.ProgramHandle;
+
+    }
 }
 
 bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRef)

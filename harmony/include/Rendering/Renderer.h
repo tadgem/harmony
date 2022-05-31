@@ -5,12 +5,12 @@
 #include "Core/Scene.h"
 #include "Rendering/Mesh.h"
 #include "Rendering/Shader.h"
-
+#include "Assets/AssetManager.h"
 namespace harmony
 {
     struct RenderState
     {
-        bgfx::ViewId m_View;
+        bgfx::ViewId m_View = 0;
         uint64_t m_State = BGFX_STATE_DEFAULT;
         bgfx::ProgramHandle m_Program;
     };
@@ -18,7 +18,7 @@ namespace harmony
     class Renderer
     {   
     public:
-        Renderer();
+        Renderer(AssetManager& assetManager);
 
         WeakRef<ShaderProgram> LoadShader(const std::string& name, const std::string& vertName, const std::string& fragName);
         WeakRef<ShaderProgram> LoadShader(const std::string& name, const std::string& computeName);
@@ -35,10 +35,12 @@ namespace harmony
 #endif
         BGFXMeshHandle SubmitMeshToGPU(WeakRef<Mesh> mesh);
         void RenderMesh(const BGFXMeshHandle& meshHandle, const RenderState& renderState);
-        void RenderScene(Ref<Scene> scene);
+        void RenderScene(WeakRef<Scene> sceneWeakRef);
 
     private:
         bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
+
+        AssetManager& p_AssetManager;
 
         std::vector<WeakRef<float>>     p_FloatValues;
         std::vector<WeakRef<glm::vec2>> p_Vec2Values;
