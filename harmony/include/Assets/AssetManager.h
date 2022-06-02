@@ -92,10 +92,11 @@ namespace harmony {
 
             return assets;
         }
+
     protected:
-        std::vector<Ref<AssetFactory>> p_AssetFactories;
+        std::vector<Ref<AssetFactory>>                      p_AssetFactories;
         std::unordered_map<size_t, std::vector<Ref<Asset>>> p_Assets;
-        std::unordered_map<size_t, std::string> p_AssetTypeNames;
-        std::vector<std::string> p_LoadedPaths;
+        std::unordered_map<size_t, std::string>             p_AssetTypeNames;
+        std::vector<std::string>                            p_LoadedPaths;
     };
 }

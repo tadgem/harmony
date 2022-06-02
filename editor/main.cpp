@@ -5,6 +5,7 @@
 #include "Rendering/Model.h"
 #include "AssimpModelAssetFactory.h"
 #include "Assets/TextureAssetFactory.h"
+#include "ECS/TransformSystem.h"
 
 int main()
 {
@@ -12,6 +13,7 @@ int main()
 	Editor app;
 	app.m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>());
 	app.m_AssetManager.AddAssetFactory(CreateRef<TextureAssetFactory>());
+	app.AddSystem<TransformSystem>();
 	
 	app.Init();
 	
