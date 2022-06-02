@@ -30,6 +30,21 @@ namespace harmony {
 	{
 		return std::weak_ptr<T>(ref);
 	}
+
+	template<typename Base, typename Derived>
+	constexpr Ref<Derived> GetDerivedRef(Ref<Base> baseRef)
+	{
+		return std::static_pointer_cast<Derived, Base>(baseRef);
+	}
+
+	template<typename Base, typename Derived>
+	constexpr Ref<Derived> GetDerivedRef(WeakRef<Base> baseWeakRef)
+	{
+		Ref<Base> baseRef = baseWeakRef.lock();
+		return std::static_pointer_cast<Derived, Base>(baseRef);
+	}
+
+
 	template<typename T>
 	using WeakRefCallback = std::function<void(Ref<T>)>;
 	template<typename T>

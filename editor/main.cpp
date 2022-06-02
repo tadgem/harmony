@@ -8,21 +8,23 @@
 
 int main()
 {
-	harmony::Editor app;
-	app.m_AssetManager.AddAssetFactory(harmony::CreateRef<harmony::AssimpModelAssetFactory>());
-	app.m_AssetManager.AddAssetFactory(harmony::CreateRef<harmony::TextureAssetFactory>());
+	using namespace harmony;
+	Editor app;
+	app.m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>());
+	app.m_AssetManager.AddAssetFactory(CreateRef<TextureAssetFactory>());
 	
 	app.Init();
 	
-	app.m_AssetManager.LoadAsset<harmony::Model>("sponza/sponza.obj");
-	app.m_AssetManager.LoadAsset<harmony::Texture>("test.png");
+	// app.m_AssetManager.LoadAsset<Model>("sponza/sponza.obj");
+	auto imageAssetsRefCollection = app.m_AssetManager.LoadAsset<Texture>("test.png");
+
+	WeakRef<Texture> tex = GetDerivedRef<Asset, Texture>(imageAssetsRefCollection[0]);
+	app.m_Renderer.SubmitTextureToGPU(tex);
 
 	app.Run([&]()
 	{
-		if (ImGui::Begin("Sample"))
-		{
-                    
-		}
-		ImGui::End();
+#if HARMONY_DEBUG
+		app.m_AssetManager.OnImGui();
+#endif
 	});
 }

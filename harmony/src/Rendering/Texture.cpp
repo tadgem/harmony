@@ -3,6 +3,7 @@
 
 harmony::Texture::Texture(bimg::ImageContainer* imageContainer) : Asset(GetTypeHash<Texture>()), p_ImageContainer(imageContainer)
 {
+    m_SubmittedToGPU = false;
     p_Memory = bgfx::makeRef(
         imageContainer->m_data
         , imageContainer->m_size

@@ -122,7 +122,9 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
             , bgfx::TextureFormat::Enum(imageContainer->m_format)
         );
     }
-        
+
+    texture->m_Handle = handle;
+    texture->m_SubmittedToGPU = true;
     return handle;
 }
 

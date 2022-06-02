@@ -1,5 +1,4 @@
 #pragma once
-#include "Core/Profile.hpp"
 #include "Core/Memory.h"
 #include "Assets/AssetFactory.h"
 #include <map>
@@ -17,7 +16,10 @@ namespace harmony {
         AssetManager();
 
         bool AddAssetFactory(Ref<AssetFactory> assetFactory);
-        
+        void UnloadAllAssets();
+#if HARMONY_DEBUG
+        void OnImGui();
+#endif
         template<typename T>
         bool AddAssetTypeName()
         {
@@ -90,8 +92,6 @@ namespace harmony {
 
             return assets;
         }
-
-        void UnloadAllAssets();
     protected:
         std::vector<Ref<AssetFactory>> p_AssetFactories;
         std::unordered_map<size_t, std::vector<Ref<Asset>>> p_Assets;
