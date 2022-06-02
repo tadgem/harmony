@@ -16,7 +16,7 @@ int main()
 	app.Init();
 	
 	// app.m_AssetManager.LoadAsset<Model>("sponza/sponza.obj");
-	auto imageAssetsRefCollection = app.m_AssetManager.LoadAsset<Texture>("test.png");
+	auto imageAssetsRefCollection = app.m_AssetManager.LoadAsset<Texture>("dungeon.png");
 
 	WeakRef<Texture> tex = GetDerivedRef<Asset, Texture>(imageAssetsRefCollection[0]);
 	app.m_Renderer.SubmitTextureToGPU(tex);

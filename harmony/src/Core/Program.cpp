@@ -18,6 +18,7 @@ harmony::Program::Program(std::string name) : p_AppName(name), m_Renderer(m_Asse
 	}
 	s_Instance = this;
 	p_Run = true;
+	p_ActiveScene = nullptr;
 	using std::filesystem::current_path;
 
 	std::filesystem::path path = std::filesystem::current_path();
@@ -36,11 +37,7 @@ void harmony::Program::Init()
 	InitSDL();
 	InitBGFX();
 	InitImGui();
-
-	for (int i = 0; i < p_ProgramComponents.size(); i++)
-	{
-		p_ProgramComponents[i]->Init();
-	}
+	RunProgramComponentInit();
 }
 
 void harmony::Program::Cleanup()
@@ -48,6 +45,9 @@ void harmony::Program::Cleanup()
 	HARMONY_PROFILE_FUNCTION()
 	ImGui_ImplSDL2_Shutdown();
 	imguiDestroy();
+		
+	RunSystemCleanup();
+	RunProgramComponentCleanup();
 
 	ImGui::DestroyContext();
 	bgfx::shutdown();
@@ -151,6 +151,8 @@ void harmony::Program::InitImGui()
 void harmony::Program::Run(harmony::Callback callback)
 {
 	HARMONY_PROFILE_FUNCTION()
+
+	RunSystemInit();
 	while (p_Run)
 	{
 		SDL_Event sdlEvent;
@@ -165,23 +167,21 @@ void harmony::Program::Run(harmony::Callback callback)
 		ImGui::NewFrame();
 		ImGui_ImplSDL2_NewFrame(p_Window);
 
-		for (int i = 0; i < p_ProgramComponents.size(); i++)
-		{
-			p_ProgramComponents[i]->Update();
-		}
+		RunProgramComponentUpdate();
+
+		RunSystemUpdate();
 
 		callback();
-
 		
-
 		bgfx::touch(0);
 
-		for (int i = 0; i < p_ProgramComponents.size(); i++)
-		{
-			p_ProgramComponents[i]->Render();
-		}
+		RunProgramComponentRender();
 
-		bgfx::touch(1);
+		RunSystemRender();
+
+		// Use last available view for imgui. 
+		// probably not great but will be ammended with view manager impl.
+		bgfx::touch(UINT16_MAX);
 
 		ImGui::Render();
 		imguiEndFrame();
@@ -193,36 +193,41 @@ void harmony::Program::Run(harmony::Callback callback)
 void harmony::Program::Run()
 {
 	HARMONY_PROFILE_FUNCTION()
-		while (p_Run)
+
+		RunSystemInit();
+	while (p_Run)
+	{
+		SDL_Event sdlEvent;
+		while (SDL_PollEvent(&sdlEvent))
 		{
-			bgfx::touch(0);
-			SDL_Event sdlEvent;
-			while (SDL_PollEvent(&sdlEvent))
+			ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
+			if (sdlEvent.type == SDL_QUIT)
 			{
-				ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
-				if (sdlEvent.type == SDL_QUIT)
-				{
-					p_Run = false;
-				}
+				p_Run = false;
 			}
-			ImGui::NewFrame();
-			ImGui_ImplSDL2_NewFrame(p_Window);
-
-			for (int i = 0; i < p_ProgramComponents.size(); i++)
-			{
-				p_ProgramComponents[i]->Update();
-			}
-
-			ImGui::Render();
-			imguiEndFrame();
-
-			for (int i = 0; i < p_ProgramComponents.size(); i++)
-			{
-				p_ProgramComponents[i]->Render();
-			}
-
-			bgfx::frame();
 		}
+		ImGui::NewFrame();
+		ImGui_ImplSDL2_NewFrame(p_Window);
+
+		RunProgramComponentUpdate();
+
+		RunSystemUpdate();
+
+		bgfx::touch(0);
+
+		RunProgramComponentRender();
+
+		RunSystemRender();
+
+		// Use last available view for imgui. 
+		// probably not great but will be ammended with view manager impl.
+		bgfx::touch(UINT16_MAX);
+
+		ImGui::Render();
+		imguiEndFrame();
+
+		bgfx::frame();
+	}
 }
 
 void harmony::Program::SaveProject(Project& proj)
@@ -247,6 +252,90 @@ void harmony::Program::LoadProject(Project& proj)
 				component->FromJson(typeAssetPair.second);
 				component->Refresh();
 			}
+		}
+	}
+}
+
+void harmony::Program::RunProgramComponentInit()
+{
+	HARMONY_PROFILE_FUNCTION()
+	for (int i = 0; i < p_ProgramComponents.size(); i++)
+	{
+		p_ProgramComponents[i]->Init();
+	}
+}
+
+void harmony::Program::RunProgramComponentUpdate()
+{
+	HARMONY_PROFILE_FUNCTION()
+	for (int i = 0; i < p_ProgramComponents.size(); i++)
+	{
+		p_ProgramComponents[i]->Update();
+	}
+}
+
+void harmony::Program::RunProgramComponentRender()
+{
+	HARMONY_PROFILE_FUNCTION()
+	for (int i = 0; i < p_ProgramComponents.size(); i++)
+	{
+		p_ProgramComponents[i]->Render();
+	}
+}
+
+void harmony::Program::RunProgramComponentCleanup()
+{
+	HARMONY_PROFILE_FUNCTION()
+	for (int i = 0; i < p_ProgramComponents.size(); i++)
+	{
+		p_ProgramComponents[i]->Cleanup();
+	}
+}
+
+void harmony::Program::RunSystemInit()
+{
+	HARMONY_PROFILE_FUNCTION()
+	if (p_ActiveScene != nullptr)
+	{
+		for (int i = 0; i < p_ECSSystems.size(); i++)
+		{
+			p_ECSSystems[i]->Init(p_ActiveScene->m_Registry);
+		}
+	}
+}
+
+void harmony::Program::RunSystemUpdate()
+{
+	HARMONY_PROFILE_FUNCTION()
+	if (p_ActiveScene != nullptr)
+	{
+		for (int i = 0; i < p_ECSSystems.size(); i++)
+		{
+			p_ECSSystems[i]->Update(p_ActiveScene->m_Registry);
+		}
+	}
+}
+
+void harmony::Program::RunSystemRender()
+{
+	HARMONY_PROFILE_FUNCTION()
+	if (p_ActiveScene != nullptr)
+	{
+		for (int i = 0; i < p_ECSSystems.size(); i++)
+		{
+			p_ECSSystems[i]->Render(p_ActiveScene->m_Registry);
+		}
+	}
+}
+
+void harmony::Program::RunSystemCleanup()
+{
+	HARMONY_PROFILE_FUNCTION()
+	if (p_ActiveScene != nullptr)
+	{
+		for (int i = 0; i < p_ECSSystems.size(); i++)
+		{
+			p_ECSSystems[i]->Cleanup(p_ActiveScene->m_Registry);
 		}
 	}
 }

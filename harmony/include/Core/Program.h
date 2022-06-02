@@ -9,6 +9,8 @@
 #include "Core/Profile.hpp"
 #include "Assets/AssetManager.h"
 #include "Rendering/Renderer.h"
+#include "Core/Scene.h"
+#include "ECS/System.h"
 #include "Project.h"
 #include "bx/allocator.h"
 #include <bx/allocator.h>
@@ -98,6 +100,16 @@ namespace harmony
 		void Run();
 		void SaveProject(Project& proj);
 		void LoadProject(Project& proj);
+
+		void RunProgramComponentInit();
+		void RunProgramComponentUpdate();
+		void RunProgramComponentRender();
+		void RunProgramComponentCleanup();
+
+		void RunSystemInit();
+		void RunSystemUpdate();
+		void RunSystemRender();
+		void RunSystemCleanup();
 	private:
 		void Cleanup();
 
@@ -106,8 +118,10 @@ namespace harmony
 		void InitImGui();
 
 
-		std::string p_AppName;
-		std::vector<Ref<ProgramComponent>> p_ProgramComponents;
+		std::string							p_AppName;
+		std::vector<Ref<ProgramComponent>>	p_ProgramComponents;
+		std::vector<Ref<System>>			p_ECSSystems;
+		Ref<Scene>							p_ActiveScene;
 		bool p_Run;
 
 		const uint32_t p_StartingWidth = 1280;
@@ -129,6 +143,15 @@ namespace harmony
 			p_ProgramComponents.emplace_back(pc);
 			return GetWeakRef<T>(pc);
 		}
+		template<typename T, typename ... Args>
+		WeakRef<T> AddSystem(Args&& ... args)
+		{
+			HARMONY_PROFILE_FUNCTION()
+			static_assert(std::is_base_of<System, T>());
+			Ref<T> sys = CreateRef<T>(std::forward<Args>(args)...);
+			p_ECSSystems.emplace_back(sys);
+			return GetWeakRef<T>(sys);
+		}
 
 		template<typename T>
 		WeakRef<T> GetProgramComponent()
@@ -147,6 +170,30 @@ namespace harmony
 			if (index >= 0)
 			{
 				return GetWeakRef<T>(p_ProgramComponents[index]);
+			}
+			else
+			{
+				return GetWeakRef<T>(nullptr);
+			}
+		}
+
+		template<typename T>
+		WeakRef<T> GetSystem()
+		{
+			HARMONY_PROFILE_FUNCTION()
+			static_assert(std::is_base_of<System, T>("Not a system"));
+			int index = -1;
+			for (int i = 0; i < p_ECSSystems.size(); i++)
+			{
+				if (typeid(T).hash_code() == typeid(p_ECSSystems[i]).hash_code())
+				{
+					index = i;
+				}
+			}
+
+			if (index >= 0)
+			{
+				return GetWeakRef<T>(p_ECSSystems[index]);
 			}
 			else
 			{
