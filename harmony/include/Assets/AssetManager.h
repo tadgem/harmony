@@ -17,6 +17,20 @@ namespace harmony {
         AssetManager();
 
         bool AddAssetFactory(Ref<AssetFactory> assetFactory);
+        
+        template<typename T>
+        bool AddAssetTypeName()
+        {
+            size_t typeHash = typeid(T).hash_code();
+
+            if (p_AssetTypeNames.find(typeHash) == p_AssetTypeNames.end())
+            {
+                std::string typeName = typeid(T).name();
+                p_AssetTypeNames.emplace(typeHash, typeName);
+                return true;
+            }
+            return false;
+        }
 
         // more of a type hint than a concrete type to load
         // will be used to determine the best asset factory to load the 

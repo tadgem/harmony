@@ -59,6 +59,73 @@ harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(WeakRef<Mesh> mesh)
     return m;
 }
 
+harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture> textureWeakRef)
+{
+    uint64_t flags = 0;
+
+    BGFXTextureHandle handle;
+
+    Ref<Texture> texture = textureWeakRef.lock();
+    bimg::ImageContainer* imageContainer = texture->p_ImageContainer;
+
+    if (imageContainer->m_cubeMap)
+    {
+        handle.m_Handle = bgfx::createTextureCube(
+            uint16_t(imageContainer->m_width)
+            , 1 < imageContainer->m_numMips
+            , imageContainer->m_numLayers
+            , bgfx::TextureFormat::Enum(imageContainer->m_format)
+            , flags
+            , texture->p_Memory
+        );
+    }
+    else if (1 < imageContainer->m_depth)
+    {
+        handle.m_Handle = bgfx::createTexture3D(
+            uint16_t(imageContainer->m_width)
+            , uint16_t(imageContainer->m_height)
+            , uint16_t(imageContainer->m_depth)
+            , 1 < imageContainer->m_numMips
+            , bgfx::TextureFormat::Enum(imageContainer->m_format)
+            , flags
+            , texture->p_Memory
+        );
+    }
+    else if (bgfx::isTextureValid(0, false, imageContainer->m_numLayers, bgfx::TextureFormat::Enum(imageContainer->m_format), flags))
+    {
+        handle.m_Handle = bgfx::createTexture2D(
+            uint16_t(imageContainer->m_width)
+            , uint16_t(imageContainer->m_height)
+            , 1 < imageContainer->m_numMips
+            , imageContainer->m_numLayers
+            , bgfx::TextureFormat::Enum(imageContainer->m_format)
+            , flags
+            , texture->p_Memory
+        );
+    }
+
+    if (bgfx::isValid(handle.m_Handle))
+    {
+        bgfx::setName(handle.m_Handle, texture->m_AssetPath.c_str());
+    }
+
+    if (&handle.m_Info != NULL)
+    {
+        bgfx::calcTextureSize(
+            handle.m_Info
+            , uint16_t(imageContainer->m_width)
+            , uint16_t(imageContainer->m_height)
+            , uint16_t(imageContainer->m_depth)
+            , imageContainer->m_cubeMap
+            , 1 < imageContainer->m_numMips
+            , imageContainer->m_numLayers
+            , bgfx::TextureFormat::Enum(imageContainer->m_format)
+        );
+    }
+        
+    return handle;
+}
+
 void harmony::Renderer::RenderMesh(const BGFXMeshHandle& meshHandle, const RenderState& renderState)
 {
     HARMONY_PROFILE_FUNCTION()

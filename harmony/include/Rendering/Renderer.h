@@ -4,6 +4,7 @@
 #include "Core/Memory.h"
 #include "Core/Scene.h"
 #include "Rendering/Mesh.h"
+#include "Rendering/Texture.h"
 #include "Rendering/Shader.h"
 #include "Assets/AssetManager.h"
 namespace harmony
@@ -33,7 +34,9 @@ namespace harmony
         WeakRef<ShaderProgram> CreateShader(const std::string vertSourcePath, const std::string fragSourcePath);
         WeakRef<ShaderProgram> CreateShader(const std::string computePath);
 #endif
-        BGFXMeshHandle SubmitMeshToGPU(WeakRef<Mesh> mesh);
+        BGFXMeshHandle      SubmitMeshToGPU(WeakRef<Mesh> mesh);
+        BGFXTextureHandle   SubmitTextureToGPU(WeakRef<Texture> textureWeakRef);
+
         void RenderMesh(const BGFXMeshHandle& meshHandle, const RenderState& renderState);
         void RenderScene(WeakRef<Scene> sceneWeakRef);
 
