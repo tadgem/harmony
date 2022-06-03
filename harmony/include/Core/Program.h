@@ -9,10 +9,9 @@
 #include "Core/Profile.hpp"
 #include "Assets/AssetManager.h"
 #include "Rendering/Renderer.h"
-#include "Core/SceneManager.h"
+#include "Core/Scene.h"
 #include "ECS/System.h"
 #include "Project.h"
-#include "bx/allocator.h"
 #include <bx/allocator.h>
 #include <bx/file.h>
 #include <bx/string.h>
@@ -99,8 +98,15 @@ namespace harmony
 		void Init();
 		void Run(Callback callback);
 		void Run();
-		void SaveProject(Project& proj);
-		void LoadProject(Project& proj);
+
+		void CreateProject();
+		void SaveProject(const std::string& path);
+		void LoadProject(nlohmann::json projectJson);
+
+		void CreateScene();
+		void SaveScene(const std::string& path);
+		void LoadSceneJson(nlohmann::json sceneJson);
+		void LoadScene(uint16_t sceneIndex);
 
 		void RunProgramComponentInit();
 		void RunProgramComponentUpdate();
@@ -122,6 +128,8 @@ namespace harmony
 		std::string							p_AppName;
 		std::vector<Ref<ProgramComponent>>	p_ProgramComponents;
 		std::vector<Ref<System>>			p_ECSSystems;
+		Ref<Project>						p_Project;
+		Ref<Scene>							p_ActiveScene;
 		bool p_Run;
 
 		const uint32_t p_StartingWidth = 1280;
@@ -212,6 +220,5 @@ namespace harmony
 
 		AssetManager m_AssetManager;
 		Renderer m_Renderer;
-		SceneManager m_SceneManager;
 	};
 };

@@ -18,6 +18,7 @@ harmony::Program::Program(std::string name) : p_AppName(name), m_Renderer(m_Asse
 	}
 	s_Instance = this;
 	p_Run = true;
+	p_Project = nullptr;
 	using std::filesystem::current_path;
 
 	std::filesystem::path path = std::filesystem::current_path();
@@ -70,8 +71,6 @@ void harmony::Program::InitSDL()
 		return;
 	}
 }
-
-
 
 void harmony::Program::InitBGFX()
 {
@@ -314,32 +313,6 @@ void harmony::Program::Run()
 	}
 }
 
-void harmony::Program::SaveProject(Project& proj)
-{
-	HARMONY_PROFILE_FUNCTION()
-	proj.UpdateProjectComponentSerializationAttributes(p_ProgramComponents);
-	proj.Save();
-	nlohmann::json projectJson = proj;
-	Utils::SaveJsonToPath(projectJson, proj.m_ProjectPath);
-}
-
-void harmony::Program::LoadProject(Project& proj)
-{
-	HARMONY_PROFILE_FUNCTION()
-	proj.Load();
-	for (auto typeAssetPair : proj.p_ProgramComponentSerializationAttributes)
-	{
-		for (auto component : p_ProgramComponents)
-		{
-			if (component->m_TypeHash == typeAssetPair.first)
-			{
-				component->FromJson(typeAssetPair.second);
-				component->Refresh();
-			}
-		}
-	}
-}
-
 void harmony::Program::RunProgramComponentInit()
 {
 	HARMONY_PROFILE_FUNCTION()
@@ -379,35 +352,26 @@ void harmony::Program::RunProgramComponentCleanup()
 void harmony::Program::RunSystemInit()
 {
 	HARMONY_PROFILE_FUNCTION()
-	auto activeSceneWeakRef = m_SceneManager.GetActiveScene();
-
-	if (activeSceneWeakRef.expired())
+	if (p_ActiveScene == nullptr)
 	{
 		return;
 	}
-
-	auto activeScene = activeSceneWeakRef.lock();
 	for (int i = 0; i < p_ECSSystems.size(); i++)
 	{
-		p_ECSSystems[i]->Init(activeScene->m_Registry);
+		p_ECSSystems[i]->Init(p_ActiveScene->m_Registry);
 	}	
 }
 
 void harmony::Program::RunSystemUpdate()
 {
 	HARMONY_PROFILE_FUNCTION()
-	auto activeSceneWeakRef = m_SceneManager.GetActiveScene();
-
-	if (activeSceneWeakRef.expired())
+	if (p_ActiveScene == nullptr)
 	{
 		return;
 	}
-
-	auto activeScene = activeSceneWeakRef.lock();
-	
 	for (int i = 0; i < p_ECSSystems.size(); i++)
 	{
-		p_ECSSystems[i]->Update(activeScene->m_Registry);
+		p_ECSSystems[i]->Update(p_ActiveScene->m_Registry);
 	}
 	
 }
@@ -416,18 +380,13 @@ void harmony::Program::RunSystemRender()
 {
 	HARMONY_PROFILE_FUNCTION()
 
-	auto activeSceneWeakRef = m_SceneManager.GetActiveScene();
-
-	if (activeSceneWeakRef.expired())
+	if (p_ActiveScene == nullptr)
 	{
 		return;
 	}
-
-	auto activeScene = activeSceneWeakRef.lock();
-	
 	for (int i = 0; i < p_ECSSystems.size(); i++)
 	{
-		p_ECSSystems[i]->Render(activeScene->m_Registry);
+		p_ECSSystems[i]->Render(p_ActiveScene->m_Registry);
 	}
 	
 }
@@ -436,17 +395,12 @@ void harmony::Program::RunSystemCleanup()
 {
 	HARMONY_PROFILE_FUNCTION()
 
-	auto activeSceneWeakRef = m_SceneManager.GetActiveScene();
-
-	if (activeSceneWeakRef.expired())
+	if (p_ActiveScene == nullptr)
 	{
 		return;
 	}
-
-	auto activeScene = activeSceneWeakRef.lock();
-
 	for (int i = 0; i < p_ECSSystems.size(); i++)
 	{
-		p_ECSSystems[i]->Cleanup(activeScene->m_Registry);
+		p_ECSSystems[i]->Cleanup(p_ActiveScene->m_Registry);
 	}
 }

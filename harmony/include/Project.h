@@ -5,6 +5,7 @@
 #include <filesystem>
 #include "Assets/AssetManager.h"
 #include "Core/ProgramComponent.h"
+#include "ECS/System.h"
 
 namespace harmony
 {
@@ -24,11 +25,12 @@ namespace harmony
         void Load();
         void Unload(AssetManager& assetManager);
 
-        std::map<size_t, nlohmann::json> p_ProgramComponentSerializationAttributes;
-
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Project, m_ProjectName, m_ProjectPath, m_ProjectDirectory, m_ImGuiIniPath, p_ProgramComponentSerializationAttributes)
+        std::map<size_t, nlohmann::json>    p_ProgramComponentSerializationAttributes;
+        std::vector<nlohmann::json>         p_SerializedScenes;
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Project, m_ProjectName, m_ProjectPath, m_ProjectDirectory, m_ImGuiIniPath, p_ProgramComponentSerializationAttributes, p_SerializedScenes)
     private:
         void UpdateProjectComponentSerializationAttributes(std::vector<Ref<ProgramComponent>>& programComponents);
+        void UpdateProjectSystemSerializationAttributes(std::vector<Ref<System>>& programComponents);
         friend class Program;
 
     };

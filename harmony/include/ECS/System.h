@@ -1,5 +1,6 @@
 #pragma once
 #include "entt.hpp"
+#include "json.hpp"
 
 namespace harmony
 {
@@ -7,9 +8,11 @@ namespace harmony
     {
         public:
         virtual ~System() {};
-        virtual void Init(entt::registry& registry) = 0;
-        virtual void Update(entt::registry& registry) = 0;
-        virtual void Render(entt::registry& registry) = 0;
-        virtual void Cleanup(entt::registry& registry) = 0;
+        virtual void Init(entt::registry& registry) {};
+        virtual void Update(entt::registry& registry) {};
+        virtual void Render(entt::registry& registry) {};
+        virtual void Cleanup(entt::registry& registry) {};
+        virtual nlohmann::json SerializeSystem(entt::registry& registry) {} ;
+        virtual void DeserializeSystem(entt::registry registry) {};
     };
 };
