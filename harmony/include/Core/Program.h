@@ -17,6 +17,7 @@
 #include <bx/file.h>
 #include <bx/string.h>
 #include <bx/debug.h>
+#include "ImGui/imgui.h"
 
 namespace harmony
 {
@@ -116,7 +117,7 @@ namespace harmony
 		void InitSDL();
 		void InitBGFX();
 		void InitImGui();
-
+		void SetStyle();
 
 		std::string							p_AppName;
 		std::vector<Ref<ProgramComponent>>	p_ProgramComponents;
@@ -130,6 +131,7 @@ namespace harmony
 		SDL_Window* p_Window;
 		bx::DefaultAllocator* p_ImGuiAllocator;
 		BgfxCallback p_DebugCallback;
+		ImFont* p_Font;
 
 		inline static Program* s_Instance = nullptr;
 	public:

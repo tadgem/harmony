@@ -52,12 +52,6 @@ struct FontRangeMerge
 	ImWchar     ranges[3];
 };
 
-//static FontRangeMerge s_fontRangeMerge[] =
-//{
-//	{ s_iconsKenneyTtf,      sizeof(s_iconsKenneyTtf),      { ICON_MIN_KI, ICON_MAX_KI, 0 } },
-//	{ s_iconsFontAwesomeTtf, sizeof(s_iconsFontAwesomeTtf), { ICON_MIN_FA, ICON_MAX_FA, 0 } },
-//};
-
 static void* memAlloc(size_t _size, void* _userData);
 static void memFree(void* _ptr, void* _userData);
 
@@ -509,28 +503,7 @@ void imguiEndFrame()
 	s_ctx.endFrame();
 }
 
-//namespace ImGui
-//{
-//	void PushFont(Font::Enum _font)
-//	{
-//		PushFont(s_ctx.m_font[_font]);
-//	}
-//
-//	void PushEnabled(bool _enabled)
-//	{
-//		extern void PushItemFlag(int option, bool enabled);
-//		PushItemFlag(ImGuiItemFlags_Disabled, !_enabled);
-//		PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * (_enabled ? 1.0f : 0.5f) );
-//	}
-//
-//	void PopEnabled()
-//	{
-//		extern void PopItemFlag();
-//		PopItemFlag();
-//		PopStyleVar();
-//	}
-//
-//} // namespace ImGui
+
 
 BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4505); // error C4505: '' : unreferenced local function has been removed
 BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wunused-function"); // warning: 'int rect_width_compare(const void*, const void*)' defined but not used
