@@ -37,7 +37,42 @@ namespace ImGui
 {
 #define IMGUI_FLAGS_NONE        UINT8_C(0x00)
 #define IMGUI_FLAGS_ALPHA_BLEND UINT8_C(0x01)
+	struct Font
+	{
+		enum Enum
+		{
+			Regular,
+			Mono,
 
+			Count
+		};
+	};
+
+	void PushFont(Font::Enum _font);
+
+	// BK - simple string class for convenience.
+	class ImString
+	{
+	public:
+		ImString();
+		ImString(const ImString& rhs);
+		ImString(const char* rhs);
+		~ImString();
+
+		ImString& operator=(const ImString& rhs);
+		ImString& operator=(const char* rhs);
+
+		void Clear();
+		bool IsEmpty() const;
+
+		const char* CStr() const
+		{
+			return NULL == Ptr ? "" : Ptr;
+		}
+
+	private:
+		char* Ptr;
+	};
 	///
 	inline ImTextureID toId(bgfx::TextureHandle _handle, uint8_t _flags, uint8_t _mip)
 	{

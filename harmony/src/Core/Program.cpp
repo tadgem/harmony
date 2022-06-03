@@ -49,7 +49,6 @@ void harmony::Program::Cleanup()
 	RunSystemCleanup();
 	RunProgramComponentCleanup();
 
-	ImGui::DestroyContext();
 	bgfx::shutdown();
 
 	SDL_DestroyWindow(p_Window);
@@ -212,24 +211,6 @@ void harmony::Program::SetStyle()
 	style.GrabRounding = 3;
 	style.LogSliderDeadzone = 4;
 	style.TabRounding = 4;
-
-	auto& io = ImGui::GetIO();
-	p_Font = io.Fonts->AddFontFromMemoryTTF((void*)s_robotoMonoRegularTtf, sizeof(s_robotoMonoRegularTtf), 14.0f);
-	//p_Font = io.Fonts->AddFontFromFileTTF("futura.ttf", 14.0f);
-	uint8_t* data;
-	int32_t width;
-	int32_t height;
-	io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
-	bgfx::createTexture2D(
-		(uint16_t)width
-		, (uint16_t)height
-		, false
-		, 1
-		, bgfx::TextureFormat::BGRA8
-		, 0
-		, bgfx::copy(data, width * height * 4)
-	);
-
 }
 
 void harmony::Program::InitImGui()
@@ -270,7 +251,6 @@ void harmony::Program::Run(harmony::Callback callback)
 			}
 		}
 		ImGui::NewFrame();
-		ImGui::PushFont(p_Font);
 		ImGui_ImplSDL2_NewFrame(p_Window);
 
 		RunProgramComponentUpdate();
@@ -288,7 +268,6 @@ void harmony::Program::Run(harmony::Callback callback)
 		// Use last available view for imgui. 
 		// probably not great but will be ammended with view manager impl.
 		bgfx::touch(UINT16_MAX);
-		ImGui::PopFont();
 		ImGui::Render();
 		imguiEndFrame();
 

@@ -131,7 +131,6 @@ namespace harmony
 		SDL_Window* p_Window;
 		bx::DefaultAllocator* p_ImGuiAllocator;
 		BgfxCallback p_DebugCallback;
-		ImFont* p_Font;
 
 		inline static Program* s_Instance = nullptr;
 	public:
