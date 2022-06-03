@@ -25,3 +25,12 @@ void harmony::TileMapSystem::Render(entt::registry& registry)
 void harmony::TileMapSystem::Cleanup(entt::registry& registry)
 {
 }
+
+nlohmann::json harmony::TileMapSystem::SerializeSystem(entt::registry& registry)
+{
+	return nlohmann::json();
+}
+
+void harmony::TileMapSystem::DeserializeSystem(entt::registry registry)
+{
+}

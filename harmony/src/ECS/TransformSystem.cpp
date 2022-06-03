@@ -30,3 +30,12 @@ void harmony::TransformSystem::Render(entt::registry& registry)
 void harmony::TransformSystem::Cleanup(entt::registry& registry)
 {
 }
+
+nlohmann::json harmony::TransformSystem::SerializeSystem(entt::registry& registry)
+{
+	return nlohmann::json();
+}
+
+void harmony::TransformSystem::DeserializeSystem(entt::registry registry)
+{
+}
