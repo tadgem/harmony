@@ -7,9 +7,9 @@ namespace harmony
     {
         public:
         TileMapSystem();
-        virtual void Init(entt::registry& registry) override;;
-        virtual void Update(entt::registry& registry) override;;
-        virtual void Render(entt::registry& registry) override;;
-        virtual void Cleanup(entt::registry& registry) override;;
+        virtual void Init(entt::registry& registry) override;
+        virtual void Update(entt::registry& registry) override;
+        virtual void Render(entt::registry& registry) override;
+        virtual void Cleanup(entt::registry& registry) override;
     };
 };

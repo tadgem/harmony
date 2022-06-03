@@ -18,7 +18,6 @@ harmony::Program::Program(std::string name) : p_AppName(name), m_Renderer(m_Asse
 	}
 	s_Instance = this;
 	p_Run = true;
-	p_ActiveScene = nullptr;
 	using std::filesystem::current_path;
 
 	std::filesystem::path path = std::filesystem::current_path();
@@ -380,47 +379,74 @@ void harmony::Program::RunProgramComponentCleanup()
 void harmony::Program::RunSystemInit()
 {
 	HARMONY_PROFILE_FUNCTION()
-	if (p_ActiveScene != nullptr)
+	auto activeSceneWeakRef = m_SceneManager.GetActiveScene();
+
+	if (activeSceneWeakRef.expired())
 	{
-		for (int i = 0; i < p_ECSSystems.size(); i++)
-		{
-			p_ECSSystems[i]->Init(p_ActiveScene->m_Registry);
-		}
+		return;
 	}
+
+	auto activeScene = activeSceneWeakRef.lock();
+	for (int i = 0; i < p_ECSSystems.size(); i++)
+	{
+		p_ECSSystems[i]->Init(activeScene->m_Registry);
+	}	
 }
 
 void harmony::Program::RunSystemUpdate()
 {
 	HARMONY_PROFILE_FUNCTION()
-	if (p_ActiveScene != nullptr)
+	auto activeSceneWeakRef = m_SceneManager.GetActiveScene();
+
+	if (activeSceneWeakRef.expired())
 	{
-		for (int i = 0; i < p_ECSSystems.size(); i++)
-		{
-			p_ECSSystems[i]->Update(p_ActiveScene->m_Registry);
-		}
+		return;
 	}
+
+	auto activeScene = activeSceneWeakRef.lock();
+	
+	for (int i = 0; i < p_ECSSystems.size(); i++)
+	{
+		p_ECSSystems[i]->Update(activeScene->m_Registry);
+	}
+	
 }
 
 void harmony::Program::RunSystemRender()
 {
 	HARMONY_PROFILE_FUNCTION()
-	if (p_ActiveScene != nullptr)
+
+	auto activeSceneWeakRef = m_SceneManager.GetActiveScene();
+
+	if (activeSceneWeakRef.expired())
 	{
-		for (int i = 0; i < p_ECSSystems.size(); i++)
-		{
-			p_ECSSystems[i]->Render(p_ActiveScene->m_Registry);
-		}
+		return;
 	}
+
+	auto activeScene = activeSceneWeakRef.lock();
+	
+	for (int i = 0; i < p_ECSSystems.size(); i++)
+	{
+		p_ECSSystems[i]->Render(activeScene->m_Registry);
+	}
+	
 }
 
 void harmony::Program::RunSystemCleanup()
 {
 	HARMONY_PROFILE_FUNCTION()
-	if (p_ActiveScene != nullptr)
+
+	auto activeSceneWeakRef = m_SceneManager.GetActiveScene();
+
+	if (activeSceneWeakRef.expired())
 	{
-		for (int i = 0; i < p_ECSSystems.size(); i++)
-		{
-			p_ECSSystems[i]->Cleanup(p_ActiveScene->m_Registry);
-		}
+		return;
+	}
+
+	auto activeScene = activeSceneWeakRef.lock();
+
+	for (int i = 0; i < p_ECSSystems.size(); i++)
+	{
+		p_ECSSystems[i]->Cleanup(activeScene->m_Registry);
 	}
 }
