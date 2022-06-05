@@ -123,6 +123,9 @@ namespace harmony
 		void InitSDL();
 		void InitBGFX();
 		void InitImGui();
+
+		void ResizeApplicationWindow(int w, int h);
+
 		void SetStyle();
 
 		std::string							p_AppName;
@@ -134,6 +137,8 @@ namespace harmony
 
 		const uint32_t p_StartingWidth = 1280;
 		const uint32_t p_StartingHeight = 720;
+		uint32_t p_WindowWidth;
+		uint32_t p_WindowHeight;
 
 		SDL_Window* p_Window;
 		bx::DefaultAllocator* p_ImGuiAllocator;

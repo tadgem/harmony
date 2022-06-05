@@ -18,22 +18,18 @@ int main()
 	app.AddSystem<TileMapSystem>();
 	app.Init();
 	
-	// app.m_AssetManager.LoadAsset<Model>("sponza/sponza.obj");
 	auto imageAssetsRefCollection = app.m_AssetManager.LoadAsset<Texture>("dungeon.png");
 
 	WeakRef<Texture> tex = GetDerivedRef<Asset, Texture>(imageAssetsRefCollection[0]);
 	app.m_Renderer.SubmitTextureToGPU(tex);
 
-	app.Run([&]()
+	auto callback = [&]()
 	{
-#if HARMONY_DEBUG
-			if (ImGui::Begin("Me Window"))
-			{
-				ImGui::Text("SomeText");
-				ImGui::Text(ICON_FA_MUSIC);
-			}
-			ImGui::End();
-		app.m_AssetManager.OnImGui();
-#endif
-	});
+		if (ImGui::BeginMainMenuBar())
+		{
+
+		}
+		ImGui::EndMainMenuBar();
+	};
+	app.Run(callback);
 }

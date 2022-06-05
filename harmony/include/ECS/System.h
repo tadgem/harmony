@@ -7,7 +7,7 @@ namespace harmony
     class System
     {
         public:
-        virtual ~System() = 0;
+        virtual ~System() {};
         virtual void Init(entt::registry& registry) = 0;
         virtual void Update(entt::registry& registry) = 0;
         virtual void Render(entt::registry& registry) = 0;

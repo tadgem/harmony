@@ -63,8 +63,8 @@ void harmony::Program::InitSDL()
 	SDL_Init(flags);
 
 	p_Window = SDL_CreateWindow(
-		"Harmony", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_StartingWidth,
-		p_StartingHeight, SDL_WINDOW_SHOWN);
+		"Harmony", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, p_StartingWidth,
+		p_StartingHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
 	if (p_Window == nullptr) {
 		printf("Window could not be created. SDL_Error: %s\n", SDL_GetError());
@@ -229,12 +229,19 @@ void harmony::Program::InitImGui()
 #endif
 }
 
+void harmony::Program::ResizeApplicationWindow(int w, int h)
+{
+	p_WindowWidth	= static_cast<uint32_t>(w);
+	p_WindowHeight	= static_cast<uint32_t>(h);
+	SDL_SetWindowSize(p_Window, w, h);
+	bgfx::reset(p_WindowWidth, p_WindowHeight);
+}
+
 void harmony::Program::Run(harmony::Callback callback)
 {
 	HARMONY_PROFILE_FUNCTION()
 
 	RunSystemInit();
-
 
 	SetStyle();
 	while (p_Run)
@@ -246,6 +253,11 @@ void harmony::Program::Run(harmony::Callback callback)
 			if (sdlEvent.type == SDL_QUIT)
 			{
 				p_Run = false;
+			}
+
+			if (sdlEvent.type == SDL_WINDOWEVENT_RESIZED)
+			{
+				ResizeApplicationWindow(sdlEvent.window.data1, sdlEvent.window.data2);
 			}
 		}
 		ImGui::NewFrame();
@@ -266,46 +278,6 @@ void harmony::Program::Run(harmony::Callback callback)
 		// Use last available view for imgui. 
 		// probably not great but will be ammended with view manager impl.
 		bgfx::touch(UINT16_MAX);
-		ImGui::Render();
-		imguiEndFrame();
-
-		bgfx::frame();
-	}
-}
-
-void harmony::Program::Run()
-{
-	HARMONY_PROFILE_FUNCTION()
-
-		RunSystemInit();
-	while (p_Run)
-	{
-		SDL_Event sdlEvent;
-		while (SDL_PollEvent(&sdlEvent))
-		{
-			ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
-			if (sdlEvent.type == SDL_QUIT)
-			{
-				p_Run = false;
-			}
-		}
-		ImGui::NewFrame();
-		ImGui_ImplSDL2_NewFrame(p_Window);
-
-		RunProgramComponentUpdate();
-
-		RunSystemUpdate();
-
-		bgfx::touch(0);
-
-		RunProgramComponentRender();
-
-		RunSystemRender();
-
-		// Use last available view for imgui. 
-		// probably not great but will be ammended with view manager impl.
-		bgfx::touch(UINT16_MAX);
-
 		ImGui::Render();
 		imguiEndFrame();
 
