@@ -12,5 +12,6 @@ namespace harmony
         static void SaveJsonToPath(nlohmann::json& json, const std::string& path);
         static std::vector<uint8_t> LoadBinaryFromPath(const std::string& path);
         static std::vector<uint8_t>* LoadBinaryFromPathHeap(const std::string& path);
+        static int EncodeRGBA(char r, char g, char b, char a);
     };
 };

@@ -112,7 +112,7 @@ void harmony::Program::InitBGFX()
 	bgfx::init(bgfx_init);
 
 	bgfx::setViewClear(
-		0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x6495EDFF, 1.0f, 0);
+		0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Utils::EncodeRGBA(32,36,32, 255), 1.0f, 0);
 	bgfx::setViewRect(0, 0, 0, p_StartingWidth, p_StartingHeight);
 
 	uint32_t bgfxDebugFlags = 0;
@@ -133,6 +133,7 @@ void harmony::Program::InitBGFX()
 
 void harmony::Program::SetStyle()
 {
+	HARMONY_PROFILE_FUNCTION()
 	ImVec4* colors = ImGui::GetStyle().Colors;
 	colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
@@ -302,34 +303,39 @@ void harmony::Program::Run(harmony::Callback callback)
 
 void harmony::Program::CreateProject(const std::string& name)
 {
+	HARMONY_PROFILE_FUNCTION()
 	m_Project = CreateRef<Project>(name);
 }
 
 void harmony::Program::SaveProject(const std::string& path)
 {
+	HARMONY_PROFILE_FUNCTION()
 	m_Project->UpdateProjectComponentSerializationAttributes(p_ProgramComponents);
 	nlohmann::json projectJson = *m_Project;
 	Utils::SaveJsonToPath(projectJson, path);
 }
 
-void harmony::Program::LoadProject(nlohmann::json projectJson)
-{
-}
-
 void harmony::Program::CreateScene(const std::string& name)
 {
+	HARMONY_PROFILE_FUNCTION()
 	if (p_ActiveScene != nullptr)
 	{
 		CloseActiveScene();
 	}
+
+	p_ActiveScene = CreateRef<Scene>(name);
 }
 
 void harmony::Program::CloseActiveScene()
 {
+	HARMONY_PROFILE_FUNCTION()
 	if(p_ActiveScene == nullptr)
 	{
 		return;
 	}
+
+	p_ActiveScene.reset();
+	p_ActiveScene = nullptr;
 
 }
 

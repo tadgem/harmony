@@ -58,7 +58,7 @@ int main()
 			{
 				std::string filepath = ImGuiFileDialog::Instance()->GetFilePathName();
 				nlohmann::json json = harmony::Utils::LoadJsonFromPath(filepath);
-				app.LoadProject(json);
+				// app.LoadProject(json);
 			}
 			ImGuiFileDialog::Instance()->Close();
 		}
