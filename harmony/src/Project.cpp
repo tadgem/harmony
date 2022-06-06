@@ -3,20 +3,20 @@
 #include "ImGui/imgui.h"
 #include "Core/Profile.hpp"
 
-harmony::Project::Project(std::string name, std::string projectPath, std::string projectDirectory) : m_ProjectName(name), m_ProjectPath(projectPath), m_ProjectDirectory(projectDirectory)
+harmony::Project::Project(std::string name) : m_ProjectName(name)
 {
 	
 }
 void harmony::Project::Save()
 {
 	HARMONY_PROFILE_FUNCTION()
-	m_ImGuiIniPath = m_ProjectPath + ".ini";
+	m_ImGuiIniPath = m_ProjectDirectory + m_ProjectName + "ImGui.ini";
 	ImGui::SaveIniSettingsToDisk(m_ImGuiIniPath.c_str());
 }
 void harmony::Project::Load()
 {
 	HARMONY_PROFILE_FUNCTION()
-	m_ImGuiIniPath = m_ProjectPath + ".ini";
+	m_ImGuiIniPath = m_ProjectDirectory + m_ProjectName + "ImGui.ini";
 	if (std::filesystem::exists(m_ImGuiIniPath))
 	{
 		ImGui::LoadIniSettingsFromDisk(m_ImGuiIniPath.c_str());

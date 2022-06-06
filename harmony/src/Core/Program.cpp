@@ -18,7 +18,7 @@ harmony::Program::Program(std::string name) : p_AppName(name), m_Renderer(m_Asse
 	}
 	s_Instance = this;
 	p_Run = true;
-	p_Project = nullptr;
+	m_Project = nullptr;
 	using std::filesystem::current_path;
 
 	std::filesystem::path path = std::filesystem::current_path();
@@ -64,12 +64,13 @@ void harmony::Program::InitSDL()
 
 	p_Window = SDL_CreateWindow(
 		"Harmony", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, p_StartingWidth,
-		p_StartingHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+		p_StartingHeight, SDL_WINDOW_RESIZABLE);
 
 	if (p_Window == nullptr) {
-		printf("Window could not be created. SDL_Error: %s\n", SDL_GetError());
+		harmony::log::error("Window could not be created. SDL_Error: ", SDL_GetError());
 		return;
 	}
+	harmony::log::info("SDL Initialized successfully");
 }
 
 void harmony::Program::InitBGFX()
@@ -125,6 +126,9 @@ void harmony::Program::InitBGFX()
 #endif
 
 	bgfx::setDebug(bgfxDebugFlags);
+
+	m_Capabilities = *bgfx::getCaps();
+	harmony::log::info("Successfully initialized BGFX");
 }
 
 void harmony::Program::SetStyle()
@@ -227,14 +231,22 @@ void harmony::Program::InitImGui()
 #elif BX_PLATFORM_LINUX || BX_PLATFORM_EMSCRIPTEN
 	ImGui_ImplSDL2_InitForOpenGL(p_Window, nullptr);
 #endif
+	harmony::log::info("Successfully initialized ImGui");
 }
 
 void harmony::Program::ResizeApplicationWindow(int w, int h)
 {
-	p_WindowWidth	= static_cast<uint32_t>(w);
-	p_WindowHeight	= static_cast<uint32_t>(h);
+	HARMONY_PROFILE_FUNCTION()
+
+	p_WindowWidth	= static_cast<uint16_t>(w);
+	p_WindowHeight	= static_cast<uint16_t>(h);
 	SDL_SetWindowSize(p_Window, w, h);
 	bgfx::reset(p_WindowWidth, p_WindowHeight);
+	ImGui::GetIO().DisplaySize = ImVec2(p_WindowWidth, p_WindowHeight);
+	for (uint16_t i = 0; i < m_Capabilities.limits.maxViews; i++)
+	{
+		bgfx::setViewRect(i, 0, 0, bgfx::BackbufferRatio::Equal);
+	}
 }
 
 void harmony::Program::Run(harmony::Callback callback)
@@ -255,9 +267,12 @@ void harmony::Program::Run(harmony::Callback callback)
 				p_Run = false;
 			}
 
-			if (sdlEvent.type == SDL_WINDOWEVENT_RESIZED)
+			if (sdlEvent.type == SDL_WINDOWEVENT)
 			{
-				ResizeApplicationWindow(sdlEvent.window.data1, sdlEvent.window.data2);
+				if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED)
+				{
+					ResizeApplicationWindow(sdlEvent.window.data1, sdlEvent.window.data2);
+				}
 			}
 		}
 		ImGui::NewFrame();
@@ -277,12 +292,45 @@ void harmony::Program::Run(harmony::Callback callback)
 
 		// Use last available view for imgui. 
 		// probably not great but will be ammended with view manager impl.
-		bgfx::touch(UINT16_MAX);
+		bgfx::touch(1);
 		ImGui::Render();
 		imguiEndFrame();
 
 		bgfx::frame();
 	}
+}
+
+void harmony::Program::CreateProject(const std::string& name)
+{
+	m_Project = CreateRef<Project>(name);
+}
+
+void harmony::Program::SaveProject(const std::string& path)
+{
+	m_Project->UpdateProjectComponentSerializationAttributes(p_ProgramComponents);
+	nlohmann::json projectJson = *m_Project;
+	Utils::SaveJsonToPath(projectJson, path);
+}
+
+void harmony::Program::LoadProject(nlohmann::json projectJson)
+{
+}
+
+void harmony::Program::CreateScene(const std::string& name)
+{
+	if (p_ActiveScene != nullptr)
+	{
+		CloseActiveScene();
+	}
+}
+
+void harmony::Program::CloseActiveScene()
+{
+	if(p_ActiveScene == nullptr)
+	{
+		return;
+	}
+
 }
 
 void harmony::Program::RunProgramComponentInit()

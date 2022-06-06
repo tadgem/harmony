@@ -99,14 +99,15 @@ namespace harmony
 		void Run(Callback callback);
 		void Run();
 
-		void CreateProject();
+		void CreateProject(const std::string& name);
 		void SaveProject(const std::string& path);
 		void LoadProject(nlohmann::json projectJson);
 
-		void CreateScene();
+		void CreateScene(const std::string& name);
 		void SaveScene(const std::string& path);
 		void LoadSceneJson(nlohmann::json sceneJson);
 		void LoadScene(uint16_t sceneIndex);
+		void CloseActiveScene();
 
 		void RunProgramComponentInit();
 		void RunProgramComponentUpdate();
@@ -131,18 +132,17 @@ namespace harmony
 		std::string							p_AppName;
 		std::vector<Ref<ProgramComponent>>	p_ProgramComponents;
 		std::vector<Ref<System>>			p_ECSSystems;
-		Ref<Project>						p_Project;
 		Ref<Scene>							p_ActiveScene;
 		bool p_Run;
 
-		const uint32_t p_StartingWidth = 1280;
-		const uint32_t p_StartingHeight = 720;
-		uint32_t p_WindowWidth;
-		uint32_t p_WindowHeight;
+		const uint16_t p_StartingWidth = 1920;
+		const uint16_t p_StartingHeight = 1080;
+		uint16_t p_WindowWidth;
+		uint16_t p_WindowHeight;
 
-		SDL_Window* p_Window;
-		bx::DefaultAllocator* p_ImGuiAllocator;
-		BgfxCallback p_DebugCallback;
+		SDL_Window*				p_Window;
+		bx::DefaultAllocator*	p_ImGuiAllocator;
+		BgfxCallback			p_DebugCallback;
 
 		inline static Program* s_Instance = nullptr;
 	public:
@@ -189,7 +189,6 @@ namespace harmony
 				return GetWeakRef<T>(nullptr);
 			}
 		}
-
 		template<typename T>
 		WeakRef<T> GetSystem()
 		{
@@ -223,7 +222,10 @@ namespace harmony
 			return nullptr;
 		}
 
-		AssetManager m_AssetManager;
-		Renderer m_Renderer;
+		AssetManager	m_AssetManager;
+		Renderer		m_Renderer;
+		bgfx::Caps		m_Capabilities;
+
+		Ref<Project>	m_Project;
 	};
 };
