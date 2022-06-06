@@ -34,3 +34,7 @@ nlohmann::json harmony::TileMapSystem::SerializeSystem(entt::registry& registry)
 void harmony::TileMapSystem::DeserializeSystem(entt::registry registry)
 {
 }
+
+void harmony::TileMapSystem::Refresh()
+{
+}

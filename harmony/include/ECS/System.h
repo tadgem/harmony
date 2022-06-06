@@ -14,5 +14,8 @@ namespace harmony
         virtual void Cleanup(entt::registry& registry) = 0;
         virtual nlohmann::json SerializeSystem(entt::registry& registry) = 0;
         virtual void DeserializeSystem(entt::registry registry) = 0;
+    protected:
+        friend class Program;
+        virtual void Refresh() = 0;
     };
 };

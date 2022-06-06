@@ -57,8 +57,18 @@ int main()
 			if (ImGuiFileDialog::Instance()->IsOk())
 			{
 				std::string filepath = ImGuiFileDialog::Instance()->GetFilePathName();
-				nlohmann::json json = harmony::Utils::LoadJsonFromPath(filepath);
-				// app.LoadProject(json);
+				app.LoadProject(filepath);
+			}
+			ImGuiFileDialog::Instance()->Close();
+		}
+
+		if (ImGuiFileDialog::Instance()->Display("HarmonyOpenProject"))
+		{
+			// action if OK
+			if (ImGuiFileDialog::Instance()->IsOk())
+			{
+				std::string filepath = ImGuiFileDialog::Instance()->GetFilePathName();
+				app.LoadProject(filepath);
 			}
 			ImGuiFileDialog::Instance()->Close();
 		}
@@ -81,6 +91,7 @@ int main()
 					std::string projectPath = std::string(projectPathInput);
 					app.CreateProject(std::string(projectNameInput));
 					app.SaveProject(std::string(projectPath + "/" + projectName + ".harmonyproj"));
+					createProjectWindow = false;
 				}
 			}
 			ImGui::End();

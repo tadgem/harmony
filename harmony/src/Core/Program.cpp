@@ -304,15 +304,47 @@ void harmony::Program::Run(harmony::Callback callback)
 void harmony::Program::CreateProject(const std::string& name)
 {
 	HARMONY_PROFILE_FUNCTION()
+	CloseActiveProject();
 	m_Project = CreateRef<Project>(name);
 }
 
 void harmony::Program::SaveProject(const std::string& path)
 {
 	HARMONY_PROFILE_FUNCTION()
+	if (m_Project == nullptr)
+	{
+		return;
+	}
 	m_Project->UpdateProjectComponentSerializationAttributes(p_ProgramComponents);
 	nlohmann::json projectJson = *m_Project;
 	Utils::SaveJsonToPath(projectJson, path);
+}
+
+void harmony::Program::LoadProject(const std::string& path)
+{
+	HARMONY_PROFILE_FUNCTION()
+	CloseActiveProject();
+	nlohmann::json projectJson = Utils::LoadJsonFromPath(path);
+	m_Project = CreateRef<Project>(projectJson);
+}
+
+void harmony::Program::CloseActiveProject()
+{
+	HARMONY_PROFILE_FUNCTION()
+	if (m_Project == nullptr)
+	{
+		return;
+	}
+
+	CloseActiveScene();
+
+	for (unsigned int i = 0; i < p_ProgramComponents.size(); i++)
+	{
+		p_ProgramComponents[i]->Refresh();
+	}
+
+	m_Project.reset();
+	m_Project = nullptr;
 }
 
 void harmony::Program::CreateScene(const std::string& name)
@@ -326,6 +358,20 @@ void harmony::Program::CreateScene(const std::string& name)
 	p_ActiveScene = CreateRef<Scene>(name);
 }
 
+void harmony::Program::SaveScene(const std::string& path)
+{
+	nlohmann::json sceneJson = *p_ActiveScene;
+	Utils::SaveJsonToPath(sceneJson, path);
+	m_Project->m_SerializedScenes.push_back(path);
+}
+
+void harmony::Program::LoadScene(const std::string& path)
+{
+	CloseActiveScene();
+	nlohmann::json sceneJson = Utils::LoadJsonFromPath(path);
+	p_ActiveScene = CreateRef<Scene>(sceneJson);
+}
+
 void harmony::Program::CloseActiveScene()
 {
 	HARMONY_PROFILE_FUNCTION()
@@ -334,8 +380,14 @@ void harmony::Program::CloseActiveScene()
 		return;
 	}
 
+	for (unsigned int i = 0; i < p_ECSSystems.size(); i++)
+	{
+		p_ECSSystems[i]->Refresh();
+	}
+
 	p_ActiveScene.reset();
 	p_ActiveScene = nullptr;
+
 
 }
 

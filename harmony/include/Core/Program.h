@@ -97,16 +97,15 @@ namespace harmony
 		~Program();
 		void Init();
 		void Run(Callback callback);
-		void Run();
 
 		void CreateProject(const std::string& name);
 		void SaveProject(const std::string& path);
-		void LoadProject(nlohmann::json projectJson);
+		void LoadProject(const std::string& path);
+		void CloseActiveProject();
 
 		void CreateScene(const std::string& name);
 		void SaveScene(const std::string& path);
-		void LoadSceneJson(nlohmann::json sceneJson);
-		void LoadScene(uint16_t sceneIndex);
+		void LoadScene(const std::string& path);
 		void CloseActiveScene();
 
 		void RunProgramComponentInit();

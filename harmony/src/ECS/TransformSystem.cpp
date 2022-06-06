@@ -39,3 +39,7 @@ nlohmann::json harmony::TransformSystem::SerializeSystem(entt::registry& registr
 void harmony::TransformSystem::DeserializeSystem(entt::registry registry)
 {
 }
+
+void harmony::TransformSystem::Refresh()
+{
+}

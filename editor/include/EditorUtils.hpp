@@ -6,8 +6,10 @@ void ProjectDetailsImGui(harmony::Ref<harmony::Project> project)
 	std::string windowTitle = "Project Properties : " + project->m_ProjectName;
 	if (ImGui::Begin(windowTitle.c_str()))
 	{
-		ImGui::Text("Project Name : ", project->m_ProjectName);
-		ImGui::Text("Project Path : ", project->m_ProjectDirectory);
+		std::string projectNameText = "Project Name : " + project->m_ProjectName;
+		ImGui::Text(projectNameText.c_str());
+		std::string projectDirectoryText = "Project Path : %s" + project->m_ProjectDirectory;
+		ImGui::Text(projectDirectoryText.c_str());
 	}
 	ImGui::End();
 }
