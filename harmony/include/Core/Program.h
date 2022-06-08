@@ -107,6 +107,7 @@ namespace harmony
 		void SaveScene(const std::string& path);
 		void LoadScene(const std::string& path);
 		void CloseActiveScene();
+		WeakRef<Scene> GetActiveScene();
 
 		void RunProgramComponentInit();
 		void RunProgramComponentUpdate();
@@ -117,7 +118,10 @@ namespace harmony
 		void RunSystemUpdate();
 		void RunSystemRender();
 		void RunSystemCleanup();
+
+		std::string GetWorkingDirectory();
 	private:
+		void ChangeWorkingDirectory(const std::string& directory);
 		void Cleanup();
 
 		void InitSDL();

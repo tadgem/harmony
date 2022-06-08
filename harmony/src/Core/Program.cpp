@@ -40,6 +40,11 @@ void harmony::Program::Init()
 	RunProgramComponentInit();
 }
 
+void harmony::Program::ChangeWorkingDirectory(const std::string& directory)
+{
+	std::filesystem::current_path(std::filesystem::path(directory));
+}
+
 void harmony::Program::Cleanup()
 {
 	HARMONY_PROFILE_FUNCTION()
@@ -326,6 +331,13 @@ void harmony::Program::LoadProject(const std::string& path)
 	CloseActiveProject();
 	nlohmann::json projectJson = Utils::LoadJsonFromPath(path);
 	m_Project = CreateRef<Project>(projectJson);
+	
+	std::string directory = Utils::GetFilePathDirectory(path);
+	ChangeWorkingDirectory(directory);
+	directory = GetWorkingDirectory();
+	harmony::log::info("Current working directory : {}", directory);
+
+	m_Project->m_ProjectDirectory = directory;
 }
 
 void harmony::Program::CloseActiveProject()
@@ -389,6 +401,15 @@ void harmony::Program::CloseActiveScene()
 	p_ActiveScene = nullptr;
 
 
+}
+
+harmony::WeakRef<harmony::Scene> harmony::Program::GetActiveScene()
+{
+	if (p_ActiveScene == nullptr)
+	{
+		return WeakRef<Scene>();
+	}
+	return GetWeakRef<Scene>(p_ActiveScene);
 }
 
 void harmony::Program::RunProgramComponentInit()
@@ -481,4 +502,9 @@ void harmony::Program::RunSystemCleanup()
 	{
 		p_ECSSystems[i]->Cleanup(p_ActiveScene->m_Registry);
 	}
+}
+
+std::string harmony::Program::GetWorkingDirectory()
+{
+	return std::filesystem::current_path().string();
 }

@@ -31,6 +31,8 @@ int main()
 	
 	char projectNameInput[64]{ "" };
 	char projectPathInput[256]{ "" };
+	char sceneNameInput[256]{ "" };
+	char scenePathInput[256]{ "" };
 	auto callback = [&]()
 	{
 		if (ImGui::BeginMainMenuBar())
@@ -62,20 +64,38 @@ int main()
 			ImGuiFileDialog::Instance()->Close();
 		}
 
-		if (ImGuiFileDialog::Instance()->Display("HarmonyOpenProject"))
-		{
-			// action if OK
-			if (ImGuiFileDialog::Instance()->IsOk())
-			{
-				std::string filepath = ImGuiFileDialog::Instance()->GetFilePathName();
-				app.LoadProject(filepath);
-			}
-			ImGuiFileDialog::Instance()->Close();
-		}
 
 		if (app.m_Project != nullptr)
 		{
-			ProjectDetailsImGui(app.m_Project);
+			std::string windowTitle = "Project Properties : " + app.m_Project->m_ProjectName;
+			if (ImGui::Begin(windowTitle.c_str()))
+			{
+				std::string projectNameText = "Project Name : " + app.m_Project->m_ProjectName;
+				ImGui::Text(projectNameText.c_str());
+				std::string projectDirectoryText = "Project Path : %s" + app.m_Project->m_ProjectDirectory;
+				ImGui::Text(projectDirectoryText.c_str());
+				ImGui::Separator();
+				ImGui::InputText("Scene Name", &sceneNameInput[0], 256);
+				if (ImGui::Button("Add Scene"))
+				{
+					app.CreateScene(std::string(sceneNameInput));
+				}
+				auto sceneWeakRef = app.GetActiveScene();
+				if (sceneWeakRef.expired())
+				{
+					ImGui::End();
+					return;
+				}
+				auto scene = sceneWeakRef.lock();
+				ImGui::Separator();
+				ImGui::Text("Scene Name : %s", scene->m_Name.c_str());
+				ImGui::InputText("Scene Path:", &scenePathInput[0], 256);
+				if (ImGui::Button("Save Scene"))
+				{
+					app.SaveScene(std::string(scenePathInput));
+				}
+			}
+			ImGui::End();
 		}
 
 		if (createProjectWindow)

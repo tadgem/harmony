@@ -48,6 +48,11 @@ std::vector<uint8_t>* harmony::Utils::LoadBinaryFromPathHeap(const std::string& 
 
 	return data;
 }
+std::string harmony::Utils::GetFilePathDirectory(const std::string& path)
+{
+	std::size_t found = path.find_last_of("/\\");
+	return path.substr(0, found);
+}
 int harmony::Utils::EncodeRGBA(char r, char g, char b, char a)
 {
 	HARMONY_PROFILE_FUNCTION()
