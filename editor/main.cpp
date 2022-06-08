@@ -47,6 +47,10 @@ int main()
 				{
 					ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenProject", "Choose Project", ".harmonyproj", ".");
 				}
+				if (ImGui::MenuItem("Save Project"))
+				{
+					app.SaveProject();
+				}
 				ImGui::MenuItem("Close Project");
 				ImGui::EndMenu();
 			}

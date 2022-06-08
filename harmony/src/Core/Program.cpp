@@ -313,7 +313,7 @@ void harmony::Program::CreateProject(const std::string& name)
 	m_Project = CreateRef<Project>(name);
 }
 
-void harmony::Program::SaveProject(const std::string& path)
+void harmony::Program::SaveProject()
 {
 	HARMONY_PROFILE_FUNCTION()
 	if (m_Project == nullptr)
@@ -322,7 +322,7 @@ void harmony::Program::SaveProject(const std::string& path)
 	}
 	m_Project->UpdateProjectComponentSerializationAttributes(p_ProgramComponents);
 	nlohmann::json projectJson = *m_Project;
-	Utils::SaveJsonToPath(projectJson, path);
+	Utils::SaveJsonToPath(projectJson, p_LoadedProjectPath);
 }
 
 void harmony::Program::LoadProject(const std::string& path)
@@ -331,13 +331,14 @@ void harmony::Program::LoadProject(const std::string& path)
 	CloseActiveProject();
 	nlohmann::json projectJson = Utils::LoadJsonFromPath(path);
 	m_Project = CreateRef<Project>(projectJson);
-	
+		
 	std::string directory = Utils::GetFilePathDirectory(path);
 	ChangeWorkingDirectory(directory);
 	directory = GetWorkingDirectory();
 	harmony::log::info("Current working directory : {}", directory);
 
 	m_Project->m_ProjectDirectory = directory;
+	p_LoadedProjectPath = path;
 }
 
 void harmony::Program::CloseActiveProject()

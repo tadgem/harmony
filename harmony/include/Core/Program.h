@@ -99,7 +99,7 @@ namespace harmony
 		void Run(Callback callback);
 
 		void CreateProject(const std::string& name);
-		void SaveProject(const std::string& path);
+		void SaveProject();
 		void LoadProject(const std::string& path);
 		void CloseActiveProject();
 
@@ -133,6 +133,7 @@ namespace harmony
 		void SetStyle();
 
 		std::string							p_AppName;
+		std::string							p_LoadedProjectPath;
 		std::vector<Ref<ProgramComponent>>	p_ProgramComponents;
 		std::vector<Ref<System>>			p_ECSSystems;
 		Ref<Scene>							p_ActiveScene;
