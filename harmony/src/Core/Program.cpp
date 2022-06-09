@@ -8,6 +8,7 @@
 #include "ImGui/imgui_bgfx.h"
 #include "Core/Log.hpp"
 #include "ImGui/robotomono_regular.ttf.h"
+
 harmony::Program::Program(std::string name) : p_AppName(name), m_Renderer(m_AssetManager)
 {
 	HARMONY_PROFILE_FUNCTION()
@@ -228,6 +229,8 @@ void harmony::Program::InitImGui()
 	ImGuiIO& io = ImGui::GetIO();
 	p_ImGuiAllocator = new bx::DefaultAllocator();
 	
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
 	imguiCreate(18.0f, p_ImGuiAllocator);
 
 #if BX_PLATFORM_WINDOWS
@@ -285,10 +288,11 @@ void harmony::Program::Run(harmony::Callback callback)
 		ImGui_ImplSDL2_NewFrame(p_Window);
 
 		RunProgramComponentUpdate();
+		
+		callback();
 
 		RunSystemUpdate();
 
-		callback();
 		
 		bgfx::touch(0);
 
@@ -318,9 +322,11 @@ void harmony::Program::SaveProject()
 	HARMONY_PROFILE_FUNCTION()
 	if (m_Project == nullptr)
 	{
+		harmony::log::warn("Program::SaveProject : cannot save project, as there is no active project.");
 		return;
 	}
 	m_Project->UpdateProjectComponentSerializationAttributes(p_ProgramComponents);
+	m_Project->Save();
 	nlohmann::json projectJson = *m_Project;
 	Utils::SaveJsonToPath(projectJson, p_LoadedProjectPath);
 }
@@ -338,6 +344,7 @@ void harmony::Program::LoadProject(const std::string& path)
 	harmony::log::info("Current working directory : {}", directory);
 
 	m_Project->m_ProjectDirectory = directory;
+	m_Project->Load();
 	p_LoadedProjectPath = path;
 }
 
@@ -363,6 +370,10 @@ void harmony::Program::CloseActiveProject()
 void harmony::Program::CreateScene(const std::string& name)
 {
 	HARMONY_PROFILE_FUNCTION()
+	if (m_Project == nullptr)
+	{
+		harmony::log::warn("Program::CreateScene : No project loaded, cannot create scene");
+	}
 	if (p_ActiveScene != nullptr)
 	{
 		CloseActiveScene();
@@ -373,6 +384,11 @@ void harmony::Program::CreateScene(const std::string& name)
 
 void harmony::Program::SaveScene(const std::string& path)
 {
+	if (p_ActiveScene == nullptr)
+	{
+		harmony::log::warn("Program::SaveScene : cannot save scene, as there is no active scene.");
+		return;
+	}
 	nlohmann::json sceneJson = *p_ActiveScene;
 	Utils::SaveJsonToPath(sceneJson, path);
 	m_Project->m_SerializedScenes.push_back(path);
