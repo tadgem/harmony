@@ -66,6 +66,7 @@ void harmony::TileMapSystemImGui::Update(entt::registry& registry)
             ImGui::End();
             return;
         }
+
         std::string currentTexture = "";
         Ref<Texture> texture = nullptr;
         if (!p_SelectedTexture.expired())
@@ -73,8 +74,7 @@ void harmony::TileMapSystemImGui::Update(entt::registry& registry)
             texture = p_SelectedTexture.lock();
             currentTexture = texture->m_AssetPath;
         }
-
-        
+                
         if (ImGui::BeginCombo("Tile Map Texture", currentTexture.c_str()))
         {
             for (int i = 0; i < p_AvailableTextures.size(); i++)
