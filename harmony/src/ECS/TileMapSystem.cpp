@@ -1,7 +1,10 @@
 #include "ECS/TileMapSystem.h"
+#include "ECS/TileMapComponent.h"
 #include "ImGui/imgui.h"
+#include "ImGui/icons_font_awesome.h"
+#include "ImGui/icons_kenney.h"
 
-harmony::TileMapSystem::TileMapSystem()
+harmony::TileMapSystem::TileMapSystem(AssetManager& assetManager, Renderer& renderer) : p_AssetManager(assetManager), p_Renderer(renderer)
 {
 }
 
@@ -11,11 +14,7 @@ void harmony::TileMapSystem::Init(entt::registry& registry)
 
 void harmony::TileMapSystem::Update(entt::registry& registry)
 {
-	if (ImGui::Begin("Tile Map Manager"))
-	{
-		ImGui::Text("Blep");
-	}
-	ImGui::End();
+	
 }
 
 void harmony::TileMapSystem::Render(entt::registry& registry)

@@ -6,7 +6,7 @@
 #include "AssimpModelAssetFactory.h"
 #include "Assets/TextureAssetFactory.h"
 #include "ECS/TransformSystem.h"
-#include "ECS/TileMapSystem.h"
+#include "ECS/TileMapSystemImGui.h"
 #include "ImGui/icons_font_awesome.h"
 #include "EditorUtils.hpp"
 int main()
@@ -16,7 +16,8 @@ int main()
 	app.m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>());
 	app.m_AssetManager.AddAssetFactory(CreateRef<TextureAssetFactory>());
 	app.AddSystem<TransformSystem>();
-	app.AddSystem<TileMapSystem>();
+	WeakRef<TileMapSystem> tileMapSystem = app.AddSystem<TileMapSystem>(app.m_AssetManager, app.m_Renderer);
+	app.AddSystem<TileMapSystemImGui>(tileMapSystem.lock());
 	app.Init();
 	
 	auto imageAssetsRefCollection = app.m_AssetManager.LoadAsset<Texture>("dungeon.png");

@@ -93,6 +93,23 @@ namespace harmony {
             return assets;
         }
 
+        template<typename T>
+        std::vector<WeakRef<T>> GetLoadedAssets()
+        {
+            std::vector<WeakRef<T>> assets;
+            size_t typeHash = typeid(T).hash_code();
+
+            if (p_Assets.find(typeHash) == p_Assets.end())
+            {
+                return assets;
+            }
+
+            for (auto& asset : p_Assets[typeHash])
+            {
+                assets.emplace_back(GetWeakRef<T>(std::static_pointer_cast<T, Asset>(asset)));
+            }
+            return assets;
+        }
     protected:
         std::vector<Ref<AssetFactory>>                      p_AssetFactories;
         std::unordered_map<size_t, std::vector<Ref<Asset>>> p_Assets;

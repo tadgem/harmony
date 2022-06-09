@@ -1,13 +1,11 @@
 #pragma once
-#include "ECS/System.h"
-#include "Rendering/Renderer.h"
-#include "Assets/AssetManager.h"
+#include "ECS/TileMapSystem.h"
 namespace harmony
 {
-    class TileMapSystem : public System
+    class TileMapSystemImGui : public System
     {
-        public:
-        TileMapSystem(AssetManager& assetManager, Renderer& renderer);
+    public:
+        TileMapSystemImGui(Ref<TileMapSystem> tileMapSystem);
         virtual void Init(entt::registry& registry) override;
         virtual void Update(entt::registry& registry) override;
         virtual void Render(entt::registry& registry) override;
@@ -15,9 +13,11 @@ namespace harmony
         virtual nlohmann::json SerializeSystem(entt::registry& registry) override;
         virtual void DeserializeSystem(entt::registry registry) override;
         virtual void Refresh() override;
-    private:
-        AssetManager& p_AssetManager;
-        Renderer& p_Renderer;
-        friend class TileMapSystemImGui;
+
+    protected:
+        Ref<TileMapSystem> p_TileMapSystem;
+        entt::entity p_SelectedTileMapEntity;
+        std::vector<WeakRef<Texture>> p_AvailableTextures;
+        WeakRef<Texture> p_SelectedTexture;
     };
 };
