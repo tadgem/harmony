@@ -101,6 +101,7 @@ namespace harmony {
 
             if (p_Assets.find(typeHash) == p_Assets.end())
             {
+                harmony::log::warn("No assets loaded of type : ", p_AssetTypeNames[typeHash]);
                 return assets;
             }
 
@@ -108,6 +109,29 @@ namespace harmony {
             {
                 assets.emplace_back(GetWeakRef<T>(std::static_pointer_cast<T, Asset>(asset)));
             }
+            return assets;
+        }
+
+        template<typename T>
+        std::vector<WeakRef<T>> GetAssetsAtPath(const std::string& path)
+        {
+            std::vector<WeakRef<T>> assets;
+            size_t typeHash = typeid(T).hash_code();
+
+            if (p_Assets.find(typeHash) == p_Assets.end())
+            {
+                harmony::log::warn("No assets loaded of type : ", p_AssetTypeNames[typeHash]);
+                return assets;
+            }
+
+            for (auto & asset : p_Assets[typeHash])
+            {
+                if (asset->m_AssetPath == path)
+                {
+                    assets.emplace_back(GetWeakRef<T>(std::static_pointer_cast<T, Asset>(asset)));
+                }
+            }
+
             return assets;
         }
     protected:

@@ -16,5 +16,7 @@ namespace harmony
         size_t m_TypeHash;
         Asset(size_t typeHash);
         virtual ~Asset() {}
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Asset, m_TypeHash, m_AssetPath)
     };
 };

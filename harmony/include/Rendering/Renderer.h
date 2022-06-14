@@ -3,6 +3,8 @@
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
 #include "Core/Scene.h"
+#include "Rendering/ViewManager.h"
+#include "Rendering/Framebuffer.h"
 #include "Rendering/Mesh.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Shader.h"
@@ -39,17 +41,19 @@ namespace harmony
 
         void RenderMesh(const BGFXMeshHandle& meshHandle, const RenderState& renderState);
         void RenderScene(WeakRef<Scene> sceneWeakRef);
+        // TODO: Rename me
+        void GlobalProcessRender(WeakRef<Scene> activeScene);
+        ViewManager m_ViewManager;
 
     private:
         bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
-
         AssetManager& p_AssetManager;
 
-        std::vector<WeakRef<float>>     p_FloatValues;
-        std::vector<WeakRef<glm::vec2>> p_Vec2Values;
-        std::vector<WeakRef<glm::vec3>> p_Vec3Values;
-        std::vector<WeakRef<glm::mat3>> p_Mat3Values;
-        std::vector<WeakRef<glm::mat4>> p_Mat4Values;
+        std::unordered_map<bgfx::UniformHandle, WeakRef<float>>     p_FloatValues;
+        std::unordered_map<bgfx::UniformHandle, WeakRef<glm::vec2>> p_Vec2Values;
+        std::unordered_map<bgfx::UniformHandle, WeakRef<glm::vec3>> p_Vec3Values;
+        std::unordered_map<bgfx::UniformHandle, WeakRef<glm::mat3>> p_Mat3Values;
+        std::unordered_map<bgfx::UniformHandle, WeakRef<glm::mat4>> p_Mat4Values;
         
         std::vector<std::string> p_FloatNames;
         std::vector<std::string> p_Vec2Names;
@@ -58,8 +62,9 @@ namespace harmony
         std::vector<std::string> p_Mat4Names;
 
         std::vector<Ref<ShaderProgram>> p_Shaders;
-        std::vector<Ref<ShaderStage>> p_ShaderStages;
         
+
+
         bgfx::ViewId p_CurrentView;
     };
 };

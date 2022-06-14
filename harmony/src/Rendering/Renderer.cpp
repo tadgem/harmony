@@ -15,10 +15,8 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std
     Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
     Ref<ShaderStage> vertStage = CreateRef<ShaderStage>(vertName, ShaderStage::Type::Vertex);
     vertStage->LoadShaderBinary();
-    p_ShaderStages.emplace_back(vertStage);
     Ref<ShaderStage> fragStage = CreateRef<ShaderStage>(fragName, ShaderStage::Type::Fragment);
     fragStage->LoadShaderBinary();
-    p_ShaderStages.emplace_back(fragStage);
     prog->AddStage(ShaderStage::Type::Vertex, GetWeakRef<ShaderStage>(vertStage));
     prog->AddStage(ShaderStage::Type::Fragment, GetWeakRef<ShaderStage>(fragStage));
 
@@ -42,6 +40,10 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std
 
     auto wr = GetWeakRef<ShaderProgram>(prog);
     return wr;
+}
+
+void harmony::Renderer::AddUniform(const std::string name, WeakRef<float> value)
+{
 }
 
 harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(WeakRef<Mesh> mesh)
@@ -173,10 +175,20 @@ void harmony::Renderer::RenderScene(WeakRef<Scene> sceneWeakRef)
     }
 }
 
+void harmony::Renderer::GlobalProcessRender(WeakRef<Scene> activeScene)
+{
+    HARMONY_PROFILE_FUNCTION()
+    for (int i = 0; i < m_ViewManager.m_ActiveViews.size(); i++)
+    {
+        Ref<View> currentView = m_ViewManager.m_ActiveViews[i].lock();
+
+    }
+}
+
 bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRef)
 {
-    auto mesh = meshWeakRef.lock();
     HARMONY_PROFILE_FUNCTION()
+    auto mesh = meshWeakRef.lock();
     bgfx::VertexLayout vl = bgfx::VertexLayout();
     vl.begin();
 

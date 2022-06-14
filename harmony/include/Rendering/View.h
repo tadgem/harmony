@@ -1,19 +1,12 @@
 #pragma once
 #include "Core/Memory.h"
 #include "glm/glm.hpp"
-
+#include "bgfx/bgfx.h"
 namespace harmony
 {
-    struct ViewHandle
-    {
-        uint32_t m_Index;
-    };
-
     class View
     {
     public:
-
-        View(uint32_t index);
 
         enum class Type
         {
@@ -29,8 +22,14 @@ namespace harmony
         glm::mat4 m_Projection;
 
     protected:
-        uint32_t p_Index;
+        std::vector<bgfx::ViewId> m_ViewIds;
+
         friend class ViewManager;
+        friend class Renderer;
+
+        const uint32_t c_InitialViewWidth;
+        const uint32_t c_InitialViewHeight;
+
         
     };
 };

@@ -9,10 +9,14 @@ namespace harmony
     public:
         ViewManager();
 
-        const ViewHandle& AddView();
-        WeakRef<View> GetView(const ViewHandle& handle);
+        WeakRef<View>       AddView();
+        void                RemoveView(WeakRef<View> view);
+        void                SetViewActive(WeakRef<View> viewWeakRef, bool active);
+
+        std::vector<WeakRef<View>> m_ActiveViews;
 
     protected:
+        uint32_t p_HandleCounter;
         std::vector<Ref<View>> p_Views;
     };
 };
