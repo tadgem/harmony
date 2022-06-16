@@ -36,7 +36,7 @@ void harmony::ViewManager::SetViewActive(WeakRef<View> viewWeakRef, bool active)
 {
     if (viewWeakRef.expired())
     {
-        harmony::log::warn("Passed Weak Ref to view which is not managed by view manager! : ", viewWeakRef);
+        harmony::log::warn("Passed Weak Ref to view which is not managed by view manager!");
         return;
     }
 
@@ -50,7 +50,7 @@ void harmony::ViewManager::SetViewActive(WeakRef<View> viewWeakRef, bool active)
         {
             if (active)
             {
-                harmony::log::info("View with handle : {} is already active!", view);
+                harmony::log::info("View already active!");
                 return;
             }
             else

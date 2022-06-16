@@ -1,5 +1,5 @@
 #include "Rendering/Pipeline.h"
-harmony::Pipeline::Pipeline()
+harmony::Pipeline::Pipeline(const PipelineHandle& handle) : m_Handle(handle)
 {
 }
 

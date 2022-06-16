@@ -9,6 +9,8 @@
 #include "Rendering/Texture.h"
 #include "Rendering/Shader.h"
 #include "Assets/AssetManager.h"
+#include "glm/glm.hpp"
+
 namespace harmony
 {
     struct RenderState
@@ -49,11 +51,11 @@ namespace harmony
         bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
         AssetManager& p_AssetManager;
 
-        std::unordered_map<bgfx::UniformHandle, WeakRef<float>>     p_FloatValues;
-        std::unordered_map<bgfx::UniformHandle, WeakRef<glm::vec2>> p_Vec2Values;
-        std::unordered_map<bgfx::UniformHandle, WeakRef<glm::vec3>> p_Vec3Values;
-        std::unordered_map<bgfx::UniformHandle, WeakRef<glm::mat3>> p_Mat3Values;
-        std::unordered_map<bgfx::UniformHandle, WeakRef<glm::mat4>> p_Mat4Values;
+        std::map<bgfx::UniformHandle, WeakRef<float>>     p_FloatValues;
+        std::map<bgfx::UniformHandle, WeakRef<glm::vec2>> p_Vec2Values;
+        std::map<bgfx::UniformHandle, WeakRef<glm::vec3>> p_Vec3Values;
+        std::map<bgfx::UniformHandle, WeakRef<glm::mat3>> p_Mat3Values;
+        std::map<bgfx::UniformHandle, WeakRef<glm::mat4>> p_Mat4Values;
         
         std::vector<std::string> p_FloatNames;
         std::vector<std::string> p_Vec2Names;

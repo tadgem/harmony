@@ -22,7 +22,6 @@ namespace harmony
         glm::mat4 m_Projection;
 
     protected:
-        std::vector<bgfx::ViewId> m_ViewIds;
 
         friend class ViewManager;
         friend class Renderer;
