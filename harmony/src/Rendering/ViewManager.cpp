@@ -70,3 +70,10 @@ void harmony::ViewManager::SetViewActive(WeakRef<View> viewWeakRef, bool active)
     }
 
 }
+
+bgfx::ViewId harmony::ViewManager::GetViewID()
+{
+    bgfx::ViewId v = p_HandleCounter;
+    p_HandleCounter++;
+    return v;
+}
