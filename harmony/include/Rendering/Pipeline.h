@@ -31,6 +31,8 @@ namespace harmony
         virtual void Init(entt::registry& registry);
         virtual void Render(entt::registry& registry);
         virtual void Cleanup(entt::registry& registry);
+
+        bgfx::FrameBufferHandle GetFinalImage();
         const PipelineHandle m_Handle;
 
     protected:

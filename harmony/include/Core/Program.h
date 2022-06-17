@@ -39,7 +39,7 @@ namespace harmony
 
 		virtual void traceVargs(const char* _filePath, uint16_t _line, const char* _format, va_list _argList) override
 		{
-			bx::debugPrintfVargs(_format, _argList);
+			// bx::debugPrintfVargs(_format, _argList);
 		}
 
 		virtual void profilerBegin(const char* /*_name*/, uint32_t /*_abgr*/, const char* /*_filePath*/, uint16_t /*_line*/) override
