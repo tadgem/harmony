@@ -21,9 +21,12 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std
     prog->AddStage(ShaderStage::Type::Fragment, GetWeakRef<ShaderStage>(fragStage));
 
     prog->Build();
-    p_Shaders.emplace_back(prog);
 
     auto wr = GetWeakRef<ShaderProgram>(prog);
+
+    ShaderDataContainer dataContainer = ShaderDataContainer(wr);
+    p_Shaders.emplace(prog, dataContainer);
+
     return wr;
 }
 
@@ -36,9 +39,12 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std
     prog->AddStage(ShaderStage::Type::Compute, GetWeakRef<ShaderStage>(compStage));
 
     prog->Build();
-    p_Shaders.emplace_back(prog);
 
     auto wr = GetWeakRef<ShaderProgram>(prog);
+    ShaderDataContainer dataContainer = ShaderDataContainer(wr);
+    
+    p_Shaders.emplace(prog, dataContainer);
+
     return wr;
 }
 

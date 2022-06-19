@@ -8,6 +8,7 @@
 #include "Rendering/Mesh.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Shader.h"
+#include "Rendering/ShaderDataContainer.h"
 #include "Assets/AssetManager.h"
 #include "glm/glm.hpp"
 
@@ -51,19 +52,13 @@ namespace harmony
         bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
         AssetManager& p_AssetManager;
 
-        std::map<bgfx::UniformHandle, WeakRef<float>>     p_FloatValues;
-        std::map<bgfx::UniformHandle, WeakRef<glm::vec2>> p_Vec2Values;
-        std::map<bgfx::UniformHandle, WeakRef<glm::vec3>> p_Vec3Values;
-        std::map<bgfx::UniformHandle, WeakRef<glm::mat3>> p_Mat3Values;
-        std::map<bgfx::UniformHandle, WeakRef<glm::mat4>> p_Mat4Values;
-        
-        std::vector<std::string> p_FloatNames;
-        std::vector<std::string> p_Vec2Names;
-        std::vector<std::string> p_Vec3Names;
-        std::vector<std::string> p_Mat3Names;
-        std::vector<std::string> p_Mat4Names;
+        std::map<std::string, WeakRef<float>>     p_FloatValues;
+        std::map<std::string, WeakRef<glm::vec2>> p_Vec2Values;
+        std::map<std::string, WeakRef<glm::vec3>> p_Vec3Values;
+        std::map<std::string, WeakRef<glm::mat3>> p_Mat3Values;
+        std::map<std::string, WeakRef<glm::mat4>> p_Mat4Values;
 
-        std::vector<Ref<ShaderProgram>> p_Shaders;
+        std::map<Ref<ShaderProgram>, ShaderDataContainer> p_Shaders;
         
 
 
