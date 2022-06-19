@@ -24,8 +24,10 @@ namespace harmony
         std::map<uint16_t, WeakRef<glm::mat4>> p_Mat4Values;
         std::map<uint16_t, WeakRef<BGFXTextureHandle>> p_TextureValues;
 
+        void UpdateShader(WeakRef<ShaderProgram> newShader);
+        void UpdateContainer();
         void SetContainerUniforms();
-
+        void Clear();
         static constexpr uint16_t g_MaxUniforms = 16;
         std::vector<bgfx::UniformInfo> m_UniformInfos;
         std::vector<bgfx::UniformHandle> m_UniformHandles;

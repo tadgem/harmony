@@ -20,10 +20,6 @@ int main()
 	app.AddSystem<TileMapSystemImGui>(tileMapSystem.lock());
 	app.Init();
 	
-	auto imageAssetsRefCollection = app.m_AssetManager.LoadAsset<Texture>("dungeon.png");
-
-	WeakRef<Texture> tex = GetDerivedRef<Asset, Texture>(imageAssetsRefCollection[0]);
-	app.m_Renderer.SubmitTextureToGPU(tex);
 
 	bool fileOpen = false;
 	bool editUndo = false;
