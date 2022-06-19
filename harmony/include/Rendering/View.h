@@ -14,13 +14,14 @@ namespace harmony
             Perspective
         };
 
-        View();
+        View(const std::string& name);
 
         uint32_t m_Width;
         uint32_t m_Height;
         glm::mat4 m_View;
         glm::mat4 m_Projection;
 
+        const std::string m_Name;
     protected:
 
         friend class ViewManager;

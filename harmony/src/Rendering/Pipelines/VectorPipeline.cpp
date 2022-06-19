@@ -1,10 +1,14 @@
 #include "Rendering/Pipelines/VectorPipeline.h"
 
-void harmony::VectorGraphicsStage::Init(entt::registry& registry)
+void harmony::VectorGraphicsStage::Init(entt::registry& registry, WeakRef<View> view)
 {
 }
 
-void harmony::VectorGraphicsStage::Render(entt::registry& registry)
+void harmony::VectorGraphicsStage::PreUpdate(entt::registry& registry, WeakRef<View> view)
+{
+}
+
+void harmony::VectorGraphicsStage::PostUpdate(entt::registry& registry, WeakRef<View> view)
 {
 }
 

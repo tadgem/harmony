@@ -42,10 +42,7 @@ namespace harmony
         BGFXMeshHandle      SubmitMeshToGPU(WeakRef<Mesh> mesh);
         BGFXTextureHandle   SubmitTextureToGPU(WeakRef<Texture> textureWeakRef);
 
-        void RenderMesh(const BGFXMeshHandle& meshHandle, const RenderState& renderState);
-        void RenderScene(WeakRef<Scene> sceneWeakRef);
-        // TODO: Rename me
-        void GlobalProcessRender(WeakRef<Scene> activeScene);
+        void ProcessRendering();
         ViewManager m_ViewManager;
 
     private:
@@ -59,7 +56,7 @@ namespace harmony
         std::map<std::string, WeakRef<glm::mat4>> p_Mat4Values;
 
         std::map<Ref<ShaderProgram>, ShaderDataContainer> p_Shaders;
-        
+        std::map<PipelineHandle, Ref<Pipeline>> p_Pipelines;
 
 
         bgfx::ViewId p_CurrentView;

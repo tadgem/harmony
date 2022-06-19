@@ -2,12 +2,14 @@
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
 #include "Rendering/PipelineStage.h"
+#include "Rendering/View.h"
 #include "Core/Profile.hpp"
 namespace harmony
 {
     struct PipelineHandle
     {
         uint16_t Index;
+        std::string Name;
     };
 
     class Pipeline
@@ -28,9 +30,10 @@ namespace harmony
 
         }
 
-        virtual void Init(entt::registry& registry);
-        virtual void Render(entt::registry& registry);
-        virtual void Cleanup(entt::registry& registry);
+        virtual void Init(entt::registry& registry, WeakRef<View> view);
+        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view);
+        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view);
+        virtual void Cleanup(entt::registry& registry, WeakRef<View> view);
 
         bgfx::FrameBufferHandle GetFinalImage();
         const PipelineHandle m_Handle;

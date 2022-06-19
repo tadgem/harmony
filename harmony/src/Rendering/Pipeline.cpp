@@ -4,7 +4,7 @@ harmony::Pipeline::Pipeline(const PipelineHandle& handle, const std::string name
 {
 }
 
-void harmony::Pipeline::Init(entt::registry& registry)
+void harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view)
 {
 	if (p_Stages.size() == 0)
 	{
@@ -16,7 +16,7 @@ void harmony::Pipeline::Init(entt::registry& registry)
 	}
 }
 
-void harmony::Pipeline::Render(entt::registry& registry)
+void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view)
 {
 	if (p_Stages.size() == 0)
 	{
@@ -24,11 +24,23 @@ void harmony::Pipeline::Render(entt::registry& registry)
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->Render(registry);
+		p_Stages[i]->PreUpdate(registry);
 	}
 }
 
-void harmony::Pipeline::Cleanup(entt::registry& registry)
+void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view)
+{
+	if (p_Stages.size() == 0)
+	{
+		return;
+	}
+	for (int i = 0; i < p_Stages.size(); i++)
+	{
+		p_Stages[i]->PostUpdate(registry);
+	}
+}
+
+void harmony::Pipeline::Cleanup(entt::registry& registry, WeakRef<View> view)
 {
 	if (p_Stages.size() == 0)
 	{

@@ -7,30 +7,28 @@ harmony::ViewManager::ViewManager()
 {
 }
 
-harmony::WeakRef<harmony::View> harmony::ViewManager::AddView()
+harmony::WeakRef<harmony::View> harmony::ViewManager::AddView(const std::string& name)
 {
-    Ref<View> view = CreateRef<View>();
+    Ref<View> view = CreateRef<View>(name);
 
-    p_Views.emplace_back(view);
+    p_Views.emplace(view, std::vector<PipelineHandle>());
 
     return GetWeakRef<View>(view);
 }
 
 void harmony::ViewManager::RemoveView(WeakRef<View> view)
 {
-    int indexToRemove = -1;
-    for (int i = 0; i < p_Views.size(); i++)
+    if (view.expired())
     {
-        if (p_Views[i] == view.lock())
-        {
-            indexToRemove = i;
-        }
+        harmony::log::error("Removing expired view weak ref!");
+        return;
     }
-
-    if (indexToRemove >= 0)
     {
-        p_Views[indexToRemove].reset();
-        p_Views.erase(p_Views.begin() + indexToRemove);
+        Ref<View> _view = view.lock();
+        if (p_Views.find(_view) != p_Views.end())
+        {
+            p_Views.erase(_view);
+        }
     }
 }
 
@@ -71,6 +69,25 @@ void harmony::ViewManager::SetViewActive(WeakRef<View> viewWeakRef, bool active)
         m_ActiveViews.emplace_back(viewWeakRef);
     }
 
+}
+
+void harmony::ViewManager::AddViewPipelineAssociation(WeakRef<View> viewWeakRef, PipelineHandle pipelineHandle)
+{
+    if (viewWeakRef.expired())
+    {
+        harmony::log::error("Trying to add pipeline association to a view which is expired.");
+        return;
+    }
+
+    Ref<View> view = viewWeakRef.lock();
+
+    if (p_Views.find(view) == p_Views.end())
+    {
+        harmony::log::error("Trying to add pipeline association to a view not managed by this View Manager.");
+        return;
+    }
+
+    p_Views[view].emplace_back(pipelineHandle);
 }
 
 bgfx::ViewId harmony::ViewManager::GetViewID()

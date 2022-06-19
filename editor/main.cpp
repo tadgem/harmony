@@ -20,6 +20,8 @@ int main()
 	app.AddSystem<TileMapSystemImGui>(tileMapSystem.lock());
 	app.Init();
 	
+	Ref<View> view = app.m_Renderer.m_ViewManager.AddView("Editor View").lock();
+
 
 	bool fileOpen = false;
 	bool editUndo = false;

@@ -137,34 +137,7 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
     return handle;
 }
 
-void harmony::Renderer::RenderMesh(const BGFXMeshHandle& meshHandle, const RenderState& renderState)
-{
-    HARMONY_PROFILE_FUNCTION()
-    if (p_CurrentView != renderState.m_View)
-    {
-        p_CurrentView = renderState.m_View;
-        bgfx::touch(p_CurrentView);
-    }
-    bgfx::setIndexBuffer(meshHandle.m_IBH);
-    bgfx::setVertexBuffer(0, meshHandle.m_VBH);
-    bgfx::submit(p_CurrentView, renderState.m_Program);
-}
-
-void harmony::Renderer::RenderScene(WeakRef<Scene> sceneWeakRef)
-{
-    HARMONY_PROFILE_FUNCTION()
-    Ref<Scene> scene = sceneWeakRef.lock();
-    // set all uniforms? 
-    // foreach mesh drawable in scene.m_Registry...
-    // CreateRenderState
-    // Set transform matrix
-    // RenderMesh(thatMesh, thatState);
-
-    auto meshRegistryView = scene->m_Registry.view<const MeshComponent, const MaterialComponent>();
-    auto modelRegistryView = scene->m_Registry.view<const ModelComponent, const MaterialComponent>();
-}
-
-void harmony::Renderer::GlobalProcessRender(WeakRef<Scene> activeScene)
+void harmony::Renderer::ProcessRendering()
 {
     HARMONY_PROFILE_FUNCTION()
     for (int i = 0; i < m_ViewManager.m_ActiveViews.size(); i++)
