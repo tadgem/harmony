@@ -13,7 +13,7 @@ namespace harmony
             PostProcess
         };
 
-        PipelineStage(bgfx::ViewId viewId, Type stageType, WeakRef<ShaderProgram> shader);
+        PipelineStage(Type stageType, WeakRef<ShaderProgram> shader);
 
         virtual void Init(entt::registry& registry) = 0;
         virtual void Render(entt::registry& registry)= 0;

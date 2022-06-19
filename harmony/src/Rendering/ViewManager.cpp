@@ -1,7 +1,9 @@
 #include "Core/Log.hpp"
 #include "Rendering/ViewManager.h"
 
-harmony::ViewManager::ViewManager() : p_HandleCounter(0)
+uint32_t harmony::ViewManager::p_HandleCounter = 0;
+
+harmony::ViewManager::ViewManager() 
 {
 }
 

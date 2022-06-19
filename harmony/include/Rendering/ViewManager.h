@@ -15,9 +15,9 @@ namespace harmony
 
         std::vector<WeakRef<View>> m_ActiveViews;
 
-        bgfx::ViewId GetViewID();
+        static bgfx::ViewId GetViewID();
     protected:
-        uint32_t p_HandleCounter;
+        static uint32_t p_HandleCounter;
         std::vector<Ref<View>> p_Views;
     };
 };

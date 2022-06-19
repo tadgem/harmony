@@ -1,5 +1,6 @@
 #include "Rendering/PipelineStage.h"
+#include "Rendering/ViewManager.h"
 
-harmony::PipelineStage::PipelineStage(bgfx::ViewId viewId, Type stageType, WeakRef<ShaderProgram> shader) : m_ViewId(viewId), m_StageType(stageType), p_Shader(shader)
+harmony::PipelineStage::PipelineStage(Type stageType, WeakRef<ShaderProgram> shader) : m_ViewId(ViewManager::GetViewID()), m_StageType(stageType), p_Shader(shader)
 {
 }

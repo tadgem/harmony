@@ -26,7 +26,7 @@ harmony::ShaderDataContainer::ShaderDataContainer(WeakRef<ShaderProgram> shaderP
 
 void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<float> value)
 {
-	if (ReturnIfNull) return;
+	if (ReturnIfNull()) return;
 	
 	ShaderUniform uniform = GetShaderUniform<float>(name);
 
@@ -43,7 +43,7 @@ void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<floa
 
 void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm::vec2> value)
 {
-	if (ReturnIfNull) return;
+	if (ReturnIfNull()) return;
 
 	ShaderUniform uniform = GetShaderUniform<glm::vec2>(name);
 
@@ -59,7 +59,7 @@ void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm:
 
 void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm::vec3> value)
 {
-	if (ReturnIfNull) return;
+	if (ReturnIfNull()) return;
 
 	ShaderUniform uniform = GetShaderUniform<glm::vec3>(name);
 
@@ -75,7 +75,7 @@ void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm:
 
 void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm::mat3> value)
 {
-	if (ReturnIfNull) return;
+	if (ReturnIfNull()) return;
 
 	ShaderUniform uniform = GetShaderUniform<glm::mat3>(name);
 
@@ -91,7 +91,7 @@ void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm:
 
 void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm::mat4> value)
 {
-	if (ReturnIfNull) return;
+	if (ReturnIfNull()) return;
 
 	ShaderUniform uniform = GetShaderUniform<glm::mat4>(name);
 
@@ -107,7 +107,7 @@ void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm:
 
 void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<BGFXTextureHandle> value)
 {
-	if (ReturnIfNull) return;
+	if (ReturnIfNull()) return;
 
 	ShaderUniform uniform = GetShaderUniform<BGFXTextureHandle>(name);
 
