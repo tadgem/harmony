@@ -74,19 +74,19 @@ namespace harmony {
             for (int i = 0; i < loadedAssets.size(); i++)
             {
                 Ref<Asset> asset = loadedAssets[i];
-                if (p_Assets.find(asset->m_TypeHash) == p_Assets.end())
+                if (p_Assets.find(asset->m_Handle.TypeHash) == p_Assets.end())
                 {
-                    p_Assets.emplace(asset->m_TypeHash, std::vector<Ref<Asset>>());
+                    p_Assets.emplace(asset->m_Handle.TypeHash, std::vector<Ref<Asset>>());
                 }
-                p_Assets[asset->m_TypeHash].emplace_back(asset);
+                p_Assets[asset->m_Handle.TypeHash].emplace_back(asset);
 
-                if (asset->m_TypeHash == typeHash)
+                if (asset->m_Handle.TypeHash == typeHash)
                 {
                     assets.emplace_back(asset);
                 }
                 // if the assets path is not in the managers list of loaded paths
-                if (std::find(p_LoadedPaths.begin(), p_LoadedPaths.end(), asset->m_AssetPath) == p_LoadedPaths.end()) {
-                    p_LoadedPaths.emplace_back(asset->m_AssetPath);
+                if (std::find(p_LoadedPaths.begin(), p_LoadedPaths.end(), asset->m_Handle.Path) == p_LoadedPaths.end()) {
+                    p_LoadedPaths.emplace_back(asset->m_Handle.Path);
                 }
             }
 

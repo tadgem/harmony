@@ -25,14 +25,14 @@ void harmony::AssetManager::OnImGui()
 			for (int i = 0; i < assets.size(); i++)
 			{
 				Ref<Asset> asset = assets[i];
-				ImGui::Text(asset->m_AssetPath.c_str());
+				ImGui::Text(asset->m_Handle.Path.c_str());
 				if (typeHash == GetTypeHash<Texture>())
 				{
 					Ref<Texture> tex = GetDerivedRef<Asset, Texture>(asset);
 					if (tex)
 					{
-						ImVec2 size = ImVec2(tex->m_Handle.m_Info.width, tex->m_Handle.m_Info.height);
-						ImGui::Image(tex->m_Handle.m_Handle, size);
+						ImVec2 size = ImVec2(tex->m_TextureHandle.Info.width, tex->m_TextureHandle.Info.height);
+						ImGui::Image(tex->m_TextureHandle.Handle, size);
 					}
 				}
 			}

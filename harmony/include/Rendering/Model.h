@@ -20,6 +20,6 @@ namespace harmony
         std::string m_Name;
         std::vector<std::string> m_MeshNames;
         std::vector<WeakRef<Mesh>> m_Meshes;
-        ModelHandle m_Handle;
+        ModelHandle m_ModelHandle;
     };
 };

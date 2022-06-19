@@ -13,7 +13,7 @@ namespace harmony
     class Pipeline
     {
     public:
-        Pipeline(const PipelineHandle& handle);
+        Pipeline(const PipelineHandle& handle, const std::string name);
 
         template<typename T, typename ... Args>
         WeakRef<T> AddPipelineStage(Args&& ... args)
@@ -34,6 +34,7 @@ namespace harmony
 
         bgfx::FrameBufferHandle GetFinalImage();
         const PipelineHandle m_Handle;
+        const std::string m_Name;
 
     protected:
         std::vector<Ref<PipelineStage>> p_Stages;

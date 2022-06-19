@@ -44,7 +44,8 @@ std::vector<harmony::Ref<harmony::Asset>> harmony::AssimpModelAssetFactory::Load
 		aiProcess_GenSmoothNormals |
 		aiProcess_OptimizeMeshes |
 		aiProcess_OptimizeGraph |
-		aiProcess_GenBoundingBoxes);
+		aiProcess_GenBoundingBoxes
+	);
 
 	if (scene == nullptr)
 	{
@@ -55,14 +56,14 @@ std::vector<harmony::Ref<harmony::Asset>> harmony::AssimpModelAssetFactory::Load
 	ProcessNode(scene->mRootNode, scene);
 	std::string modelName = std::string(scene->mName.C_Str());
 	Ref<Model> model = CreateRef<Model>(modelName); 
-	model->m_AssetPath = path;
+	model->m_Handle.Path= path;
 	for (int i = 0; i < p_Meshes.size(); i++)
 	{
 		model->m_MeshNames.push_back(p_MeshNames[i]);
 		Ref<Mesh> meshRef = std::static_pointer_cast<Mesh, Asset>(p_Meshes[i]);
 		model->m_Meshes.push_back(GetWeakRef<Mesh>(meshRef));
 		assets.emplace_back(p_Meshes[i]);
-		p_Meshes[i]->m_AssetPath = path;
+		p_Meshes[i]->m_Handle.Path = path;
 	}
 
 	assets.push_back(std::static_pointer_cast<Asset, Model>(model));

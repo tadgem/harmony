@@ -21,9 +21,9 @@ namespace harmony
 
         virtual bgfx::FrameBufferHandle GetStageFinalFramebuffer()  = 0;
 
+        const bgfx::ViewId m_ViewId;
         Type m_StageType;
     protected:
         WeakRef<ShaderProgram> p_Shader;
-        bgfx::ViewId p_ViewId;
     };
 } 

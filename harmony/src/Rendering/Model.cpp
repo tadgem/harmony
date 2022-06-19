@@ -9,6 +9,6 @@ harmony::ModelHandle harmony::ModelHandle::CreateNew()
 	return handle;
 }
 
-harmony::Model::Model(const std::string& name) :Asset(GetTypeHash<Model>()), m_Handle(ModelHandle::CreateNew()), m_Name(name)
+harmony::Model::Model(const std::string& name) :Asset(GetTypeHash<Model>()), m_ModelHandle(ModelHandle::CreateNew()), m_Name(name)
 {
 }

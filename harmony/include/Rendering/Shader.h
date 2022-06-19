@@ -8,6 +8,14 @@
 
 namespace harmony
 {
+	struct ShaderUniform
+	{
+		bgfx::UniformHandle BgfxHandle;
+		std::string Name;
+		size_t TypeHash;
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderUniform, Name, TypeHash)
+	};
+
 	class ShaderStage : public Asset
 	{
 	public:

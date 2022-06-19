@@ -9,15 +9,17 @@ namespace harmony
 {
 	struct BGFXTextureHandle
 	{
-		bgfx::TextureHandle m_Handle;
-		bgfx::TextureInfo m_Info;
+		bgfx::TextureHandle Handle;
+		bgfx::TextureInfo Info;
+		AssetHandle AssetHandle;
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(BGFXTextureHandle, AssetHandle)
 	};
 
     class Texture : public Asset
     {
 	public:
 		Texture(bimg::ImageContainer* imageContainer);
-		BGFXTextureHandle m_Handle;
+		BGFXTextureHandle m_TextureHandle;
 		bool m_SubmittedToGPU;
 
 	protected:

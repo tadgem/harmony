@@ -68,11 +68,12 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
     BGFXTextureHandle handle;
 
     Ref<Texture> texture = textureWeakRef.lock();
+    handle.AssetHandle = texture->m_Handle;
     bimg::ImageContainer* imageContainer = texture->p_ImageContainer;
 
     if (imageContainer->m_cubeMap)
     {
-        handle.m_Handle = bgfx::createTextureCube(
+        handle.Handle = bgfx::createTextureCube(
             uint16_t(imageContainer->m_width)
             , 1 < imageContainer->m_numMips
             , imageContainer->m_numLayers
@@ -83,7 +84,7 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
     }
     else if (1 < imageContainer->m_depth)
     {
-        handle.m_Handle = bgfx::createTexture3D(
+        handle.Handle = bgfx::createTexture3D(
             uint16_t(imageContainer->m_width)
             , uint16_t(imageContainer->m_height)
             , uint16_t(imageContainer->m_depth)
@@ -95,7 +96,7 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
     }
     else if (bgfx::isTextureValid(0, false, imageContainer->m_numLayers, bgfx::TextureFormat::Enum(imageContainer->m_format), flags))
     {
-        handle.m_Handle = bgfx::createTexture2D(
+        handle.Handle = bgfx::createTexture2D(
             uint16_t(imageContainer->m_width)
             , uint16_t(imageContainer->m_height)
             , 1 < imageContainer->m_numMips
@@ -106,15 +107,15 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
         );
     }
 
-    if (bgfx::isValid(handle.m_Handle))
+    if (bgfx::isValid(handle.Handle))
     {
-        bgfx::setName(handle.m_Handle, texture->m_AssetPath.c_str());
+        bgfx::setName(handle.Handle, texture->m_Handle.Path.c_str());
     }
 
-    if (&handle.m_Info != NULL)
+    if (&handle.Info != NULL)
     {
         bgfx::calcTextureSize(
-            handle.m_Info
+            handle.Info
             , uint16_t(imageContainer->m_width)
             , uint16_t(imageContainer->m_height)
             , uint16_t(imageContainer->m_depth)
@@ -125,7 +126,7 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
         );
     }
 
-    texture->m_Handle = handle;
+    texture->m_TextureHandle = handle;
     texture->m_SubmittedToGPU = true;
     return handle;
 }
@@ -155,24 +156,6 @@ void harmony::Renderer::RenderScene(WeakRef<Scene> sceneWeakRef)
 
     auto meshRegistryView = scene->m_Registry.view<const MeshComponent, const MaterialComponent>();
     auto modelRegistryView = scene->m_Registry.view<const ModelComponent, const MaterialComponent>();
-
-    for (auto [entity, meshComponent, materialComponent] : meshRegistryView.each())
-    {
-        RenderState state;
-        // need to figure out how we handle cameras as this is where the associated bgfx view id should be stored.
-        // state.m_View = ? ;
-        state.m_Program = materialComponent.ProgramHandle;
-        RenderMesh(meshComponent.Handle, state);
-    }
-
-    for (auto [entity, modelComponent, materialComponent] : modelRegistryView.each())
-    {
-        RenderState state;
-        // need to figure out how we handle cameras as this is where the associated bgfx view id should be stored.
-        // state.m_View = ? ;
-        state.m_Program = materialComponent.ProgramHandle;
-
-    }
 }
 
 void harmony::Renderer::GlobalProcessRender(WeakRef<Scene> activeScene)

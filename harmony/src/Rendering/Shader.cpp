@@ -44,7 +44,7 @@ void harmony::ShaderProgram::Build()
 	if (m_Stages.find(ShaderStage::Type::Vertex) != m_Stages.end() && 
 		m_Stages.find(ShaderStage::Type::Fragment) != m_Stages.end())
 	{
-		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Vertex].lock()->m_Handle, m_Stages[ShaderStage::Type::Fragment].lock()->m_Handle, true);
+		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Vertex].lock()->m_Handle, m_Stages[ShaderStage::Type::Fragment].lock()->m_Handle, false);
 		return;
 	}
 

@@ -72,14 +72,14 @@ void harmony::TileMapSystemImGui::Update(entt::registry& registry)
         if (!p_SelectedTexture.expired())
         {
             texture = p_SelectedTexture.lock();
-            currentTexture = texture->m_AssetPath;
+            currentTexture = texture->m_Handle.Path;
         }
                 
         if (ImGui::BeginCombo("Tile Map Texture", currentTexture.c_str()))
         {
             for (int i = 0; i < p_AvailableTextures.size(); i++)
             {
-                std::string textureText = p_AvailableTextures[i].lock()->m_AssetPath;
+                std::string textureText = p_AvailableTextures[i].lock()->m_Handle.Path;
                 if (ImGui::Selectable(textureText.c_str()))
                 {
                     p_SelectedTexture = p_AvailableTextures[i];
@@ -94,7 +94,7 @@ void harmony::TileMapSystemImGui::Update(entt::registry& registry)
             return;
         }
 
-        ImGui::Image(texture->m_Handle.m_Handle, ImVec2(texture->m_Handle.m_Info.width, texture->m_Handle.m_Info.height));
+        ImGui::Image(texture->m_TextureHandle.Handle, ImVec2(texture->m_TextureHandle.Info.width, texture->m_TextureHandle.Info.height));
     }
     ImGui::End();
 }

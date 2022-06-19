@@ -31,7 +31,7 @@ std::vector<harmony::Ref<harmony::Asset>> harmony::TextureAssetFactory::LoadAsse
     }
 
     Ref<Texture> textureAsset = CreateRef<Texture>(imageContainer);
-    textureAsset->m_AssetPath = path;
+    textureAsset->m_Handle.Path = path;
     // is this correct?
     data.clear();
 

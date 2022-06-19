@@ -1,6 +1,6 @@
 #include "Rendering/Pipeline.h"
 #include "Core/Log.hpp"
-harmony::Pipeline::Pipeline(const PipelineHandle& handle) : m_Handle(handle)
+harmony::Pipeline::Pipeline(const PipelineHandle& handle, const std::string name) : m_Handle(handle), m_Name(name)
 {
 }
 

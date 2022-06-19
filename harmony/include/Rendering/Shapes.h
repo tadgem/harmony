@@ -9,4 +9,10 @@ namespace harmony
 	public:
 		Cube(float size);
 	};
+
+	class Plane : public Mesh
+	{
+	public:
+		Plane(float size);
+	};
 };

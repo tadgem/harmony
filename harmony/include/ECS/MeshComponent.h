@@ -5,7 +5,9 @@ namespace harmony
 {
     struct MeshComponent
     {
-        BGFXMeshHandle Handle;
-        RenderState State;
+        std::string MeshAssetPath;
+        uint32_t Index;
+
+        bool CastShadow;
     };
 };

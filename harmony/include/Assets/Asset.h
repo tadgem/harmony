@@ -9,14 +9,21 @@ namespace harmony
         return typeid(T).hash_code();
     }
 
+    struct AssetHandle
+    {
+        std::string Path;
+        uint32_t Index;
+        size_t TypeHash;
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetHandle, Path, Index, TypeHash)
+    };
+
     class Asset
     {
     public:
-        std::string m_AssetPath;
-        size_t m_TypeHash;
+        AssetHandle m_Handle;
         Asset(size_t typeHash);
         virtual ~Asset() {}
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Asset, m_TypeHash, m_AssetPath)
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Asset, m_Handle)
     };
 };
