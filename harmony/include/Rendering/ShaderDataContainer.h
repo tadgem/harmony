@@ -17,17 +17,19 @@ namespace harmony
         void AddValue(const std::string name, WeakRef<glm::mat4> value);
         void AddValue(const std::string name, WeakRef<BGFXTextureHandle> value);
 
-        std::unordered_map<ShaderUniform, WeakRef<float>>     p_FloatValues;
-        std::unordered_map<ShaderUniform, WeakRef<glm::vec2>> p_Vec2Values;
-        std::unordered_map<ShaderUniform, WeakRef<glm::vec3>> p_Vec3Values;
-        std::unordered_map<ShaderUniform, WeakRef<glm::mat3>> p_Mat3Values;
-        std::unordered_map<ShaderUniform, WeakRef<glm::mat4>> p_Mat4Values;
-        std::unordered_map <ShaderUniform, WeakRef<BGFXTextureHandle>> p_TextureValues;
+        std::map<uint16_t, WeakRef<float>>     p_FloatValues;
+        std::map<uint16_t, WeakRef<glm::vec2>> p_Vec2Values;
+        std::map<uint16_t, WeakRef<glm::vec3>> p_Vec3Values;
+        std::map<uint16_t, WeakRef<glm::mat3>> p_Mat3Values;
+        std::map<uint16_t, WeakRef<glm::mat4>> p_Mat4Values;
+        std::map<uint16_t, WeakRef<BGFXTextureHandle>> p_TextureValues;
 
         void SetContainerUniforms();
 
         static constexpr uint16_t g_MaxUniforms = 16;
         std::vector<bgfx::UniformInfo> m_UniformInfos;
+        std::vector<bgfx::UniformHandle> m_UniformHandles;
+        std::vector<ShaderUniform> m_Uniforms;
     protected:
 
         bool ReturnIfNull();
@@ -47,7 +49,7 @@ namespace harmony
                 std::string uniformName = info.name;
                 if (uniformName == name)
                 {
-                    uniform.BgfxHandle = uniforms[i];
+                    uniform.BgfxHandle = m_UniformHandles[i];
                 }
             }
             

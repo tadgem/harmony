@@ -20,6 +20,7 @@ harmony::ShaderDataContainer::ShaderDataContainer(WeakRef<ShaderProgram> shaderP
 			bgfx::getUniformInfo(uniforms[i], info);
 
 			m_UniformInfos.emplace_back(info);
+			m_UniformHandles.emplace_back(uniforms[i]);
 		}
 	}
 }
@@ -37,7 +38,8 @@ void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<floa
 	}
 
 	harmony::log::info("Adding shader value : float : {}", name);
-	p_FloatValues.emplace(uniform, value);
+	p_FloatValues.emplace(uniform.BgfxHandle, value);
+	m_Uniforms.emplace_back(uniform);
 	
 }
 
@@ -54,7 +56,8 @@ void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm:
 	}
 
 	harmony::log::info("Adding shader value : vec2 : {}", name);
-	p_Vec2Values.emplace(uniform, value);
+	p_Vec2Values.emplace(uniform.BgfxHandle, value);
+	m_Uniforms.emplace_back(uniform);
 }
 
 void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm::vec3> value)
@@ -70,7 +73,8 @@ void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm:
 	}
 
 	harmony::log::info("Adding shader value : vec3 : {}", name);
-	p_Vec3Values.emplace(uniform, value);
+	p_Vec3Values.emplace(uniform.BgfxHandle, value);
+	m_Uniforms.emplace_back(uniform);
 }
 
 void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm::mat3> value)
@@ -86,7 +90,8 @@ void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm:
 	}
 
 	harmony::log::info("Adding shader value : mat3 : {}", name);
-	p_Mat3Values.emplace(uniform, value);
+	p_Mat3Values.emplace(uniform.BgfxHandle, value);
+	m_Uniforms.emplace_back(uniform);
 }
 
 void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm::mat4> value)
@@ -101,7 +106,8 @@ void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm:
 		return;
 	}
 	harmony::log::info("Adding shader value : mat4 : {}", name);
-	p_Mat4Values.emplace(uniform, value);
+	p_Mat4Values.emplace(uniform.BgfxHandle, value);
+	m_Uniforms.emplace_back(uniform);
 }
 
 
@@ -117,18 +123,20 @@ void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<BGFX
 		return;
 	}
 	harmony::log::info("Adding shader value : texture : {}", name);
-	p_TextureValues.emplace(uniform, value);
+	p_TextureValues.emplace(uniform.BgfxHandle, value);
+	m_Uniforms.emplace_back(uniform);
 }
 
 void harmony::ShaderDataContainer::SetContainerUniforms()
 {
 	uint8_t textureCount = 0;
 
-	if (p_FloatValues.size() > 0)
+	/*if (p_FloatValues.size() > 0)
 	{
 		for (auto& [handle, valueWeakRef] : p_FloatValues)
 		{
-			bgfx::setUniform(handle.BgfxHandle, valueWeakRef.lock().get());
+
+			bgfx::setUniform(handle, valueWeakRef.lock().get());
 		}
 	}
 
@@ -136,7 +144,7 @@ void harmony::ShaderDataContainer::SetContainerUniforms()
 	{
 		for (auto& [handle, valueWeakRef] : p_Vec2Values)
 		{
-			bgfx::setUniform(handle.BgfxHandle, valueWeakRef.lock().get());
+			bgfx::setUniform(handle, valueWeakRef.lock().get());
 		}
 	}
 
@@ -144,7 +152,7 @@ void harmony::ShaderDataContainer::SetContainerUniforms()
 	{
 		for (auto& [handle, valueWeakRef] : p_Vec3Values)
 		{
-			bgfx::setUniform(handle.BgfxHandle, valueWeakRef.lock().get());
+			bgfx::setUniform(handle, valueWeakRef.lock().get());
 		}
 	}
 
@@ -152,16 +160,16 @@ void harmony::ShaderDataContainer::SetContainerUniforms()
 	{
 		for (auto& [handle, valueWeakRef] : p_Mat3Values)
 		{
-			bgfx::setUniform(handle.BgfxHandle, valueWeakRef.lock().get());
+			bgfx::setUniform(handle, valueWeakRef.lock().get());
 		}
 	}
 	if (p_Mat4Values.size() > 0)
 	{
 		for (auto& [handle, valueWeakRef] : p_Mat4Values)
 		{
-			bgfx::setUniform(handle.BgfxHandle, valueWeakRef.lock().get());
+			bgfx::setUniform(handle, valueWeakRef.lock().get());
 		}
-	}
+	}*/
 
 	if (p_TextureValues.size() > 0)
 	{

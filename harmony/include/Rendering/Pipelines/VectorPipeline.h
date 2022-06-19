@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Rendering/Pipeline.h"
-#include "vg/helpers/vgpp.h"
 namespace harmony
 {
     class VectorGraphicsStage : public PipelineStage
