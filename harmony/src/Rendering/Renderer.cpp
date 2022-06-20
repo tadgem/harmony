@@ -319,15 +319,15 @@ bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRe
         vl.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float);
     }
 
-    //if (mesh->m_HasTangents)
-    //{
-    //    vl.add(bgfx::Attrib::Tangent, 3, bgfx::AttribType::Float);
-    //}
+    if (mesh->m_HasTangents)
+    {
+       vl.add(bgfx::Attrib::Tangent, 3, bgfx::AttribType::Float);
+    }
 
-    //if (mesh->m_HasBitangents)
-    //{
-    //    vl.add(bgfx::Attrib::Bitangent, 3, bgfx::AttribType::Float);
-    //}
+    if (mesh->m_HasBitangents)
+    {
+       vl.add(bgfx::Attrib::Bitangent, 3, bgfx::AttribType::Float);
+    }
 
     // TODO add support for skeletal meshes.
     vl.end();
