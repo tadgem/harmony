@@ -285,7 +285,7 @@ void harmony::Program::Run(harmony::Callback callback)
 			}
 		}
 
-		m_Renderer.ProcessPreUpdateRendering();
+		RunRendererPreUpdate();
 
 		// TODO move to pipeline
 		ImGui::NewFrame();
@@ -297,7 +297,7 @@ void harmony::Program::Run(harmony::Callback callback)
 
 		RunSystemUpdate();
 
-		m_Renderer.ProcessPostUpdateRendering();
+		RunRendererPostUpdate();
 
 		bgfx::touch(0);
 
@@ -525,6 +525,24 @@ void harmony::Program::RunSystemCleanup()
 	{
 		p_ECSSystems[i]->Cleanup(p_ActiveScene->m_Registry);
 	}
+}
+
+void harmony::Program::RunRendererPreUpdate()
+{
+	if (p_ActiveScene == nullptr)
+	{
+		return;
+	}
+	m_Renderer.OnPreUpdate(p_ActiveScene->m_Registry);
+}
+
+void harmony::Program::RunRendererPostUpdate()
+{
+	if (p_ActiveScene == nullptr)
+	{
+		return;
+	}
+	m_Renderer.OnPostUpdate(p_ActiveScene->m_Registry);
 }
 
 std::string harmony::Program::GetWorkingDirectory()

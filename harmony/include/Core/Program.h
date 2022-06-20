@@ -119,6 +119,9 @@ namespace harmony
 		void RunSystemRender();
 		void RunSystemCleanup();
 
+		void RunRendererPreUpdate();
+		void RunRendererPostUpdate();
+
 		std::string GetWorkingDirectory();
 	private:
 		void ChangeWorkingDirectory(const std::string& directory);

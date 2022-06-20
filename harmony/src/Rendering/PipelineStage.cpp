@@ -1,7 +1,7 @@
 #include "Rendering/PipelineStage.h"
-#include "Rendering/ViewManager.h"
+#include "Rendering/Renderer.h"
 #include "Core/Log.hpp"
-harmony::PipelineStage::PipelineStage(Type stageType, WeakRef<ShaderProgram> shader) : m_ViewId(ViewManager::GetViewID()), m_StageType(stageType), p_Shader(shader)
+harmony::PipelineStage::PipelineStage(Type stageType, WeakRef<ShaderProgram> shader) : m_ViewId(Renderer::GetViewID()), m_StageType(stageType), p_Shader(shader)
 {
 	p_FrameBufferHandle = BGFX_INVALID_HANDLE;
 }

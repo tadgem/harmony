@@ -4,10 +4,170 @@
 #include "ECS/ModelComponent.h"
 #include "ECS/MeshComponent.h"
 #include "ECS/MaterialComponent.h"
-harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetManager), m_ViewManager(*this)
+
+harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetManager)
 {
     HARMONY_PROFILE_FUNCTION()
 }
+
+#include "Core/Log.hpp"
+#include "Rendering/Renderer.h"
+#if HARMONY_DEBUG
+#include "ImGui/imgui.h"
+#endif
+
+uint32_t harmony::Renderer::p_ViewHandleCounter = 0;
+
+void harmony::Renderer::RemoveView(WeakRef<View> view)
+{
+    if (view.expired())
+    {
+        harmony::log::error("Removing expired view weak ref!");
+        return;
+    }
+    {
+        Ref<View> _view = view.lock();
+        if (p_Views.find(_view) != p_Views.end())
+        {
+            p_Views.erase(_view);
+        }
+    }
+}
+
+void harmony::Renderer::SetViewActive(WeakRef<View> viewWeakRef, bool active)
+{
+    if (viewWeakRef.expired())
+    {
+        harmony::log::warn("Passed Weak Ref to view which is not managed by view manager!");
+        return;
+    }
+
+    auto view = viewWeakRef.lock();
+
+    int indexToRemove = -1;
+
+    for (int i = 0; i < m_ActiveViews.size(); i++)
+    {
+        if (m_ActiveViews[i].lock() == view)
+        {
+            if (active)
+            {
+                harmony::log::info("View already active!");
+                return;
+            }
+            else
+            {
+                indexToRemove = i;
+            }
+        }
+    }
+
+    if (indexToRemove >= 0)
+    {
+        m_ActiveViews.erase(m_ActiveViews.begin() + indexToRemove);
+    }
+    else
+    {
+        m_ActiveViews.emplace_back(viewWeakRef);
+    }
+
+}
+
+void harmony::Renderer::OnPreUpdate(entt::registry& registry)
+{
+    for (int i = 0; i < m_ActiveViews.size(); i++)
+    {
+        if (m_ActiveViews[i].expired())
+        {
+            harmony::log::warn("View {} is expired.", i);
+            continue;
+        }
+
+        Ref<View> view = m_ActiveViews[i].lock();
+        std::vector<WeakRef<Pipeline>>& pipelines = p_Views[view];
+        
+        for (int p = 0; p < pipelines.size(); p++)
+        {
+            if (pipelines[p].expired())
+            {
+                harmony::log::warn("Pipeline {} is expired.", p);
+                continue;
+            }
+            Ref<Pipeline> pipeline = pipelines[p].lock();
+            pipeline->PreUpdate(registry, m_ActiveViews[i]);
+        }
+    }
+}
+
+void harmony::Renderer::OnPostUpdate(entt::registry& registry)
+{
+    for (int i = 0; i < m_ActiveViews.size(); i++)
+    {
+        if (m_ActiveViews[i].expired())
+        {
+            harmony::log::warn("View {} is expired.", i);
+            continue;
+        }
+
+        Ref<View> view = m_ActiveViews[i].lock();
+        std::vector<WeakRef<Pipeline>>& pipelines = p_Views[view];
+
+        for (int p = 0; p < pipelines.size(); p++)
+        {
+            if (pipelines[p].expired())
+            {
+                harmony::log::warn("Pipeline {} is expired.", p);
+                continue;
+            }
+            Ref<Pipeline> pipeline = pipelines[p].lock();
+            pipeline->PostUpdate(registry, m_ActiveViews[i]);
+        }
+    }
+}
+
+void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline)
+{
+    if (viewWeakRef.expired())
+    {
+        harmony::log::error("Trying to add pipeline association to a view which is expired.");
+        return;
+    }
+
+    Ref<View> view = viewWeakRef.lock();
+
+    if (p_Views.find(view) == p_Views.end())
+    {
+        harmony::log::error("Trying to add pipeline association to a view not managed by this View Manager.");
+        return;
+    }
+
+    p_Views[view].emplace_back(pipeline);
+}
+
+#if HARMONY_DEBUG
+void harmony::Renderer::OnImGui()
+{
+    if (ImGui::Begin("View Manager"))
+    {
+        ImGui::Text("Views");
+        ImGui::Separator();
+
+        for (auto& [view, pipelines] : p_Views)
+        {
+            ImGui::Text(view->m_Name.c_str());
+        }
+    }
+    ImGui::End();
+}
+#endif
+
+bgfx::ViewId harmony::Renderer::GetViewID()
+{
+    bgfx::ViewId v = p_ViewHandleCounter;
+    p_ViewHandleCounter++;
+    return v;
+}
+
 
 harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std::string& name, const std::string& vertName, const std::string& fragName)
 {
@@ -137,29 +297,6 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
     return handle;
 }
 
-void harmony::Renderer::ProcessPreUpdateRendering()
-{
-    HARMONY_PROFILE_FUNCTION()
-
-    for (int i = 0; i < m_ViewManager.m_ActiveViews.size(); i++)
-    {
-        Ref<View> currentView = m_ViewManager.m_ActiveViews[i].lock();
-
-    }
-}
-
-void harmony::Renderer::ProcessPostUpdateRendering()
-{
-    HARMONY_PROFILE_FUNCTION()
-#if HARMONY_DEBUG
-        m_ViewManager.OnImGui();
-#endif
-    for (int i = 0; i < m_ViewManager.m_ActiveViews.size(); i++)
-    {
-        Ref<View> currentView = m_ViewManager.m_ActiveViews[i].lock();
-
-    }
-}
 
 
 bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRef)

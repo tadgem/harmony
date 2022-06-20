@@ -16,7 +16,6 @@ int main()
 	Editor app;
 	harmony::Renderer& renderer = app.m_Renderer;
 	harmony::AssetManager& assetManager = app.m_AssetManager;
-	harmony::ViewManager& viewManager = renderer.m_ViewManager;
 
 	renderer.CreatePipeline<harmony::DebugDrawPipeline>();
 	assetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>());
@@ -26,8 +25,6 @@ int main()
 	app.AddSystem<TileMapSystemImGui>(tileMapSystem.lock());
 	app.Init();
 	
-	Ref<View> view = viewManager.AddView("Editor View").lock();
-
 
 	bool fileOpen = false;
 	bool editUndo = false;

@@ -3,8 +3,8 @@
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
 #include "Core/Scene.h"
-#include "Rendering/ViewManager.h"
 #include "Rendering/Framebuffer.h"
+#include "Rendering/Pipeline.h"
 #include "Rendering/Mesh.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Shader.h"
@@ -70,16 +70,28 @@ namespace harmony
         WeakRef<ShaderProgram> CreateShader(const std::string computePath);
 
         std::map<size_t, Ref<Pipeline>> p_PipelinePrototypes;
+
+        void                OnImGui();
+        PipelineHandle      p_SelectedPipelineHandle;
 #endif
+
         BGFXMeshHandle      SubmitMeshToGPU(WeakRef<Mesh> mesh);
         BGFXTextureHandle   SubmitTextureToGPU(WeakRef<Texture> textureWeakRef);
 
-        void ProcessPreUpdateRendering();
-        void ProcessPostUpdateRendering();
-        ViewManager m_ViewManager;
 
-    private:
-        friend class ViewManager;
+        void                RemoveView(WeakRef<View> view);
+        void                SetViewActive(WeakRef<View> viewWeakRef, bool active);
+        void                AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline);
+        
+        void                OnPreUpdate(entt::registry& registry);
+        void                OnPostUpdate(entt::registry& registry);
+        static bgfx::ViewId GetViewID();
+    
+        std::vector<WeakRef<View>> m_ActiveViews;
+    protected:
+        static uint32_t p_ViewHandleCounter;
+        std::map<Ref<View>, std::vector<WeakRef<Pipeline>>> p_Views;
+
         bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
         AssetManager& p_AssetManager;
 
