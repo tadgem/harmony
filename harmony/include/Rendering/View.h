@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Memory.h"
+#include "entt.hpp"
 #include "glm/glm.hpp"
 #include "bgfx/bgfx.h"
 namespace harmony
@@ -15,6 +16,9 @@ namespace harmony
         };
 
         View(const std::string& name);
+
+        virtual void OnPreUpdate(entt::registry& registry) = 0;
+        virtual void OnPostUpdate(entt::registry& registry) = 0;
 
         uint32_t m_Width;
         uint32_t m_Height;
