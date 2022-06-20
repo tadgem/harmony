@@ -1,4 +1,4 @@
-#include "DebugDrawPipeline.h"
+#include "Rendering/Pipelines/DebugDrawPipeline.h"
 
 harmony::DebugDrawStage::DebugDrawStage() : PipelineStage(PipelineStage::Type::Draw, WeakRef<ShaderProgram>())
 {
