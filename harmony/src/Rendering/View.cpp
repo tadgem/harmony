@@ -5,8 +5,8 @@ harmony::View::View(const std::string& name) :
 	c_InitialViewHeight(720),
 	m_View(glm::mat4(1.0)),
 	m_Projection(glm::mat4(1.0)),
-	m_Width(c_InitialViewWidth),
-	m_Height(c_InitialViewHeight),
+	m_Width(1280),
+	m_Height(720),
 	m_Name(name)
 {
 }

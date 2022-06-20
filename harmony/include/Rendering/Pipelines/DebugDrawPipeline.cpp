@@ -6,6 +6,7 @@ harmony::DebugDrawStage::DebugDrawStage() : PipelineStage(PipelineStage::Type::D
 
 void harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view)
 {
+	PipelineStage::Init(registry, view);
 	ddInit();
 }
 
@@ -25,4 +26,9 @@ void harmony::DebugDrawStage::PostUpdate(entt::registry& registry, WeakRef<View>
 void harmony::DebugDrawStage::Cleanup()
 {
 	ddShutdown();
+}
+
+harmony::DebugDrawPipeline::DebugDrawPipeline() : Pipeline(PipelineHandle::New("DebugDrawPipline"))
+{
+	AddPipelineStage<DebugDrawStage>();
 }

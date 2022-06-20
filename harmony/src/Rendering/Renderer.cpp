@@ -4,7 +4,7 @@
 #include "ECS/ModelComponent.h"
 #include "ECS/MeshComponent.h"
 #include "ECS/MaterialComponent.h"
-harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetManager)
+harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetManager), m_ViewManager(*this)
 {
     HARMONY_PROFILE_FUNCTION()
 }
@@ -137,15 +137,30 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
     return handle;
 }
 
-void harmony::Renderer::ProcessRendering()
+void harmony::Renderer::ProcessPreUpdateRendering()
 {
     HARMONY_PROFILE_FUNCTION()
+
     for (int i = 0; i < m_ViewManager.m_ActiveViews.size(); i++)
     {
         Ref<View> currentView = m_ViewManager.m_ActiveViews[i].lock();
 
     }
 }
+
+void harmony::Renderer::ProcessPostUpdateRendering()
+{
+    HARMONY_PROFILE_FUNCTION()
+#if HARMONY_DEBUG
+        m_ViewManager.OnImGui();
+#endif
+    for (int i = 0; i < m_ViewManager.m_ActiveViews.size(); i++)
+    {
+        Ref<View> currentView = m_ViewManager.m_ActiveViews[i].lock();
+
+    }
+}
+
 
 bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRef)
 {

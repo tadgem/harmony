@@ -26,6 +26,36 @@ namespace harmony
     public:
         Renderer(AssetManager& assetManager);
 
+        template<typename T, typename ... Args>
+        WeakRef<T> CreatePipeline(Args&& ... args)
+        {
+            static_assert(std::is_base_of<Pipeline, T>());
+            Ref<T> derivedPipeline = CreateRef<T>(std::forward<Args>(args)...);
+            Ref<Pipeline> pipeline = std::static_pointer_cast<T, Pipeline>(derivedPipeline);
+
+            if (pipeline)
+            {
+                PipelineHandle handle = pipeline->m_Handle;
+                if (p_Pipelines.find(handle.Index) != p_Pipelines.end())
+                {
+                    harmony::log::error("Already have a pipeline with handle {} ", handle.Index);
+                    Ref<T> derivedExistingPipeline = std::static_pointer_cast<T, Pipeline>(p_Pipelines[handle.Index]);
+                    if (derivedExistingPipeline)
+                    {
+                        return GetWeakRef<T>(derivedExistingPipeline);
+                    }
+                    return WeakRef<T>();
+                }
+                p_Pipelines.emplace(handle.Index, pipeline);
+                return GetWeakRef<T>(derivedPipeline);
+            }
+            else
+            {
+                harmony::log::error("Failed to cast {} to a pipeline.", typeid(T).name());
+                return derivedPipeline;
+            }
+        }
+
         WeakRef<ShaderProgram> LoadShader(const std::string& name, const std::string& vertName, const std::string& fragName);
         WeakRef<ShaderProgram> LoadShader(const std::string& name, const std::string& computeName);
 
@@ -38,14 +68,18 @@ namespace harmony
 #if HARMONY_DEBUG
         WeakRef<ShaderProgram> CreateShader(const std::string vertSourcePath, const std::string fragSourcePath);
         WeakRef<ShaderProgram> CreateShader(const std::string computePath);
+
+        std::map<size_t, Ref<Pipeline>> p_PipelinePrototypes;
 #endif
         BGFXMeshHandle      SubmitMeshToGPU(WeakRef<Mesh> mesh);
         BGFXTextureHandle   SubmitTextureToGPU(WeakRef<Texture> textureWeakRef);
 
-        void ProcessRendering();
+        void ProcessPreUpdateRendering();
+        void ProcessPostUpdateRendering();
         ViewManager m_ViewManager;
 
     private:
+        friend class ViewManager;
         bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
         AssetManager& p_AssetManager;
 
@@ -56,7 +90,7 @@ namespace harmony
         std::map<std::string, WeakRef<glm::mat4>> p_Mat4Values;
 
         std::map<Ref<ShaderProgram>, ShaderDataContainer> p_Shaders;
-        std::map<PipelineHandle, Ref<Pipeline>> p_Pipelines;
+        std::map<uint16_t, Ref<Pipeline>> p_Pipelines;
 
 
         bgfx::ViewId p_CurrentView;

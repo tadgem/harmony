@@ -284,6 +284,10 @@ void harmony::Program::Run(harmony::Callback callback)
 				}
 			}
 		}
+
+		m_Renderer.ProcessPreUpdateRendering();
+
+		// TODO move to pipeline
 		ImGui::NewFrame();
 		ImGui_ImplSDL2_NewFrame(p_Window);
 
@@ -293,7 +297,8 @@ void harmony::Program::Run(harmony::Callback callback)
 
 		RunSystemUpdate();
 
-		
+		m_Renderer.ProcessPostUpdateRendering();
+
 		bgfx::touch(0);
 
 		RunProgramComponentRender();
@@ -310,11 +315,12 @@ void harmony::Program::Run(harmony::Callback callback)
 	}
 }
 
-void harmony::Program::CreateProject(const std::string& name)
+void harmony::Program::CreateProject(const std::string& name, const std::string& path)
 {
 	HARMONY_PROFILE_FUNCTION()
 	CloseActiveProject();
 	m_Project = CreateRef<Project>(name);
+	p_LoadedProjectPath = path + "/" + name + ".harmonyproj";
 }
 
 void harmony::Program::SaveProject()

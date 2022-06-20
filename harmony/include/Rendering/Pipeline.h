@@ -10,12 +10,16 @@ namespace harmony
     {
         uint16_t Index;
         std::string Name;
+
+        static PipelineHandle New(const std::string& name);
+    private:
+        inline static uint16_t p_Counter = 0;
     };
 
     class Pipeline
     {
     public:
-        Pipeline(const PipelineHandle& handle, const std::string name);
+        Pipeline(const PipelineHandle& handle);
 
         template<typename T, typename ... Args>
         WeakRef<T> AddPipelineStage(Args&& ... args)
@@ -36,7 +40,7 @@ namespace harmony
         virtual void Cleanup(entt::registry& registry, WeakRef<View> view);
 
         bgfx::FrameBufferHandle GetFinalImage();
-        const PipelineHandle m_Handle;
+        PipelineHandle m_Handle;
         const std::string m_Name;
 
     protected:

@@ -16,5 +16,14 @@ namespace harmony
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view) override;
         virtual void Cleanup() override;
 
+
+    };
+
+    class DebugDrawPipeline : public Pipeline
+    {
+    public:
+        DebugDrawPipeline();
+
+
     };
 };

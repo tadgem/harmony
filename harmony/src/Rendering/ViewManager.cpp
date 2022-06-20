@@ -1,9 +1,13 @@
 #include "Core/Log.hpp"
 #include "Rendering/ViewManager.h"
+#include "Rendering/Renderer.h"
+#if HARMONY_DEBUG
+#include "ImGui/imgui.h"
+#endif
 
 uint32_t harmony::ViewManager::p_HandleCounter = 0;
 
-harmony::ViewManager::ViewManager() 
+harmony::ViewManager::ViewManager(Renderer& renderer) : p_Renderer(renderer)
 {
 }
 
@@ -11,7 +15,7 @@ harmony::WeakRef<harmony::View> harmony::ViewManager::AddView(const std::string&
 {
     Ref<View> view = CreateRef<View>(name);
 
-    p_Views.emplace(view, std::vector<PipelineHandle>());
+    p_Views.emplace(view, std::vector<WeakRef<Pipeline>>());
 
     return GetWeakRef<View>(view);
 }
@@ -71,7 +75,7 @@ void harmony::ViewManager::SetViewActive(WeakRef<View> viewWeakRef, bool active)
 
 }
 
-void harmony::ViewManager::AddViewPipelineAssociation(WeakRef<View> viewWeakRef, PipelineHandle pipelineHandle)
+void harmony::ViewManager::AddViewPipelineAssociation(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipelineHandle)
 {
     if (viewWeakRef.expired())
     {
@@ -89,6 +93,59 @@ void harmony::ViewManager::AddViewPipelineAssociation(WeakRef<View> viewWeakRef,
 
     p_Views[view].emplace_back(pipelineHandle);
 }
+
+#if HARMONY_DEBUG
+void harmony::ViewManager::OnImGui()
+{
+    if (ImGui::Begin("View Manager"))
+    {
+        ImGui::Text("Views");
+        ImGui::Separator();
+
+        for (auto& [view, pipelines] : p_Views)
+        {
+            ImGui::Text(view->m_Name.c_str());
+            if (ImGui::BeginCombo("Add Pipeline", ""))
+            {
+                for (auto& [handle, pipeline] : p_Renderer.p_Pipelines)
+                {
+                    if (ImGui::Selectable(pipeline->m_Name.c_str()))
+                    {
+                        p_SelectedPipelineHandle = pipeline->m_Handle;
+                    }
+                }
+                ImGui::EndCombo();
+            }
+            ImGui::SameLine();
+
+            if (ImGui::Button("Add Association"))
+            {
+                pipelines.emplace_back(p_SelectedPipelineHandle);
+            }
+            
+            ImGui::Indent();
+            int removeIndex = -1;
+            for (int i = 0; i < pipelines.size(); i++)
+            {
+                //// std::string pipelineName = p_Renderer.p_Pipelines[pipelines[i].Index]->m_Name;
+                ////ImGui::Text(pipelineName.c_str());
+                //ImGui::SameLine();
+                //std::string removeText = "Remove " + pipelineName;
+                //if (ImGui::Button(removeText.c_str()))
+                //{
+                //    removeIndex = i;
+                //}
+            }
+            if (removeIndex >= 0)
+            {
+                pipelines.erase(pipelines.begin() + removeIndex);
+            }
+            ImGui::Unindent();
+        }
+    }
+    ImGui::End();
+}
+#endif
 
 bgfx::ViewId harmony::ViewManager::GetViewID()
 {

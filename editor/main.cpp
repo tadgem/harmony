@@ -9,18 +9,24 @@
 #include "ECS/TileMapSystemImGui.h"
 #include "ImGui/icons_font_awesome.h"
 #include "EditorUtils.hpp"
+#include "Rendering/Pipelines/DebugDrawPipeline.h"
 int main()
 {
 	using namespace harmony;
 	Editor app;
-	app.m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>());
-	app.m_AssetManager.AddAssetFactory(CreateRef<TextureAssetFactory>());
+	harmony::Renderer& renderer = app.m_Renderer;
+	harmony::AssetManager& assetManager = app.m_AssetManager;
+	harmony::ViewManager& viewManager = renderer.m_ViewManager;
+
+	renderer.CreatePipeline<harmony::DebugDrawPipeline>();
+	assetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>());
+	assetManager.AddAssetFactory(CreateRef<TextureAssetFactory>());
 	app.AddSystem<TransformSystem>();
 	WeakRef<TileMapSystem> tileMapSystem = app.AddSystem<TileMapSystem>(app.m_AssetManager, app.m_Renderer);
 	app.AddSystem<TileMapSystemImGui>(tileMapSystem.lock());
 	app.Init();
 	
-	Ref<View> view = app.m_Renderer.m_ViewManager.AddView("Editor View").lock();
+	Ref<View> view = viewManager.AddView("Editor View").lock();
 
 
 	bool fileOpen = false;
@@ -172,7 +178,7 @@ int main()
 				{
 					std::string projectName = std::string(projectNameInput);
 					std::string projectPath = std::string(projectPathInput);
-					app.CreateProject(std::string(projectNameInput));
+					app.CreateProject(projectName, projectPath);
 					app.SaveProject();
 					createProjectWindow = false;
 				}

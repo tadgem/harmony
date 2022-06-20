@@ -98,7 +98,7 @@ namespace harmony
 		void Init();
 		void Run(Callback callback);
 
-		void CreateProject(const std::string& name);
+		void CreateProject(const std::string& name, const std::string& path);
 		void SaveProject();
 		void LoadProject(const std::string& path);
 		void CloseActiveProject();

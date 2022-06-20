@@ -1,6 +1,6 @@
 #include "Rendering/Pipeline.h"
 #include "Core/Log.hpp"
-harmony::Pipeline::Pipeline(const PipelineHandle& handle, const std::string name) : m_Handle(handle), m_Name(name)
+harmony::Pipeline::Pipeline(const PipelineHandle& handle) : m_Handle(handle), m_Name(handle.Name)
 {
 }
 
@@ -12,7 +12,7 @@ void harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view)
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->Init(registry);
+		p_Stages[i]->Init(registry, view);
 	}
 }
 
@@ -24,7 +24,7 @@ void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view)
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->PreUpdate(registry);
+		p_Stages[i]->PreUpdate(registry, view);
 	}
 }
 
@@ -36,7 +36,7 @@ void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view)
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->PostUpdate(registry);
+		p_Stages[i]->PostUpdate(registry, view);
 	}
 }
 
@@ -61,4 +61,11 @@ bgfx::FrameBufferHandle harmony::Pipeline::GetFinalImage()
 	}
 	bgfx::FrameBufferHandle v = p_Stages[p_Stages.size() - 1]->GetStageFinalFramebuffer();
 	return v;
+}
+
+harmony::PipelineHandle harmony::PipelineHandle::New(const std::string& name)
+{
+	PipelineHandle handle{ p_Counter, name };
+	p_Counter++;
+	return handle;
 }

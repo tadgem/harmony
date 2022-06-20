@@ -4,23 +4,32 @@
 
 namespace harmony
 {
+    class Renderer;
+
     class ViewManager
     {
     public:
-        ViewManager();
+        ViewManager(Renderer& renderer);
 
         WeakRef<View>       AddView(const std::string& name);
         void                RemoveView(WeakRef<View> view);
         void                SetViewActive(WeakRef<View> viewWeakRef, bool active);
 
-        void                AddViewPipelineAssociation(WeakRef<View> viewWeakRef, PipelineHandle pipelineHandle);
+        void                AddViewPipelineAssociation(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipelineHandle);
 
+#if HARMONY_DEBUG
+   private:
+        void                OnImGui();
+        PipelineHandle      p_SelectedPipelineHandle;
+#endif
+    public:
         std::vector<WeakRef<View>> m_ActiveViews;
 
         static bgfx::ViewId GetViewID();
     protected:
         friend class Renderer;
         static uint32_t p_HandleCounter;
-        std::map<Ref<View>, std::vector<PipelineHandle>> p_Views;
+        std::map<Ref<View>, std::vector<WeakRef<Pipeline>>> p_Views;
+        Renderer& p_Renderer;
     };
 };
