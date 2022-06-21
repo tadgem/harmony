@@ -23,6 +23,11 @@ int main()
 	app.AddSystem<TransformSystem>();
 	WeakRef<TileMapSystem> tileMapSystem = app.AddSystem<TileMapSystem>(app.m_AssetManager, app.m_Renderer);
 	app.AddSystem<TileMapSystemImGui>(tileMapSystem.lock());
+
+	auto viewWr = renderer.CreateView<View>("Editor");
+	auto debugDrawPipelineWr = renderer.CreatePipeline<DebugDrawPipeline>();
+	renderer.AddViewPipeline(viewWr, debugDrawPipelineWr);
+	renderer.SetViewActive(viewWr, true);
 	app.Init();
 	
 
@@ -197,6 +202,7 @@ int main()
 			ImGui::End();
 		}
 
+		renderer.OnImGui();
 
 	};
 	app.Run(callback);

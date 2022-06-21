@@ -78,11 +78,23 @@ namespace harmony
         BGFXMeshHandle      SubmitMeshToGPU(WeakRef<Mesh> mesh);
         BGFXTextureHandle   SubmitTextureToGPU(WeakRef<Texture> textureWeakRef);
 
+        // Create and add a view
+        template<typename T, typename ... Args>
+        WeakRef<T> CreateView(Args&& ... args)
+        {
+            static_assert(std::is_base_of<View, T>(), "Provided type is not a view!");
+            Ref<T> view = CreateRef<T>(std::forward<Args>(args)...);
+
+            p_Views.emplace(view, std::vector<Ref<Pipeline>>());
+
+            return GetWeakRef<T>(view);
+        }
 
         void                RemoveView(WeakRef<View> view);
         void                SetViewActive(WeakRef<View> viewWeakRef, bool active);
         void                AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline);
         
+        void                Init();
         void                OnPreUpdate(entt::registry& registry);
         void                OnPostUpdate(entt::registry& registry);
         static bgfx::ViewId GetViewID();
@@ -90,7 +102,7 @@ namespace harmony
         std::vector<WeakRef<View>> m_ActiveViews;
     protected:
         static uint32_t p_ViewHandleCounter;
-        std::map<Ref<View>, std::vector<WeakRef<Pipeline>>> p_Views;
+        std::map<Ref<View>, std::vector<Ref<Pipeline>>> p_Views;
 
         bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
         AssetManager& p_AssetManager;

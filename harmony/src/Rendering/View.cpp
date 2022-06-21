@@ -10,3 +10,11 @@ harmony::View::View(const std::string& name) :
 	m_Name(name)
 {
 }
+
+void harmony::View::OnPreUpdate(entt::registry& registry)
+{
+}
+
+void harmony::View::OnPostUpdate(entt::registry& registry)
+{
+}

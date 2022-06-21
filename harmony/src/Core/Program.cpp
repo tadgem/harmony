@@ -263,7 +263,8 @@ void harmony::Program::Run(harmony::Callback callback)
 	HARMONY_PROFILE_FUNCTION()
 
 	RunSystemInit();
-
+	bgfx::touch(0);
+	m_Renderer.Init();
 	SetStyle();
 	while (p_Run)
 	{

@@ -14,7 +14,7 @@ void harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view)
 	}
 
 	Ref<View> _view = view.lock();
-	p_FrameBufferHandle = bgfx::createFrameBuffer(_view->m_Width, _view->m_Height, bgfx::TextureFormat::RGBA8);
+	p_FrameBufferHandle = bgfx::createFrameBuffer(_view->m_Width, _view->m_Height, bgfx::TextureFormat::BGRA8);
 	bgfx::setViewFrameBuffer(m_ViewId, p_FrameBufferHandle);
 }
 

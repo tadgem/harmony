@@ -17,8 +17,8 @@ namespace harmony
 
         View(const std::string& name);
 
-        virtual void OnPreUpdate(entt::registry& registry) = 0;
-        virtual void OnPostUpdate(entt::registry& registry) = 0;
+        virtual void OnPreUpdate(entt::registry& registry);
+        virtual void OnPostUpdate(entt::registry& registry);
 
         uint32_t m_Width;
         uint32_t m_Height;
