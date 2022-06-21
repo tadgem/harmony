@@ -161,6 +161,7 @@ namespace harmony {
 
 	class Input
 	{
+	public:
 		void UpdateMousePosition(glm::vec2 mousePosition);
 		void UpdateMouseButton(Mouse::Button button, bool active);
 
@@ -169,6 +170,24 @@ namespace harmony {
 		void UpdateGamepadButton(int gamepadIndex, Gamepad::Button button, bool active);
 		void UpdateGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigger, float value);
 		void UpdateGamepadStick(int gamepadIndex, Gamepad::Stick stick, glm::vec2 value);
+
+		glm::vec2	GetMousePosition();
+		glm::vec2	GetMousePositionLastFrame();
+
+		bool		GetMouseButton(Mouse::Button button);
+		bool		GetMouseButtonJustPressed(Mouse::Button button);
+		bool		GetMouseButtonJustReleased(Mouse::Button button);
+
+		bool GetKey(Key key);
+		bool GetKeyJustPressed(Key key);
+		bool GetKeyJustReleased(Key key);
+
+		bool GetGamepadButton(int gamepadIndex, Gamepad::Button button);
+		bool GetGamepadButtonJustPressed(int gamepadIndex, Gamepad::Button button);
+		bool GetGamepadButtonJustReleased(int gamepadIndex, Gamepad::Button button);
+
+		float GetGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigger);
+		glm::vec2 GetGamepadStick(int gamepadIndex, Gamepad::Stick stick);
 
 		static Input* Get();
 		~Input();

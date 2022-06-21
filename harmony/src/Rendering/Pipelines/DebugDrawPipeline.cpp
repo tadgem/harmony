@@ -1,5 +1,7 @@
 #include "Rendering/Pipelines/DebugDrawPipeline.h"
-
+#include "glm/gtc/matrix_transform.hpp"
+#include "Core/MathsUtils.h"
+#include "Core/Input.h"
 harmony::DebugDrawStage::DebugDrawStage() : PipelineStage(PipelineStage::Type::Draw, WeakRef<ShaderProgram>())
 {
 }
@@ -31,4 +33,26 @@ void harmony::DebugDrawStage::Cleanup()
 harmony::DebugDrawPipeline::DebugDrawPipeline() : Pipeline(PipelineHandle::New("DebugDrawPipline"))
 {
 	AddPipelineStage<DebugDrawStage>();
+}
+
+void harmony::DebugCamera::Update()
+{
+	if (Active)
+	{
+
+	}
+}
+
+glm::mat4 harmony::DebugCamera::GetViewMatrix()
+{
+	glm::mat4 viewMatrix = glm::mat4(1.0);
+
+	glm::vec3 forward = MathsUtils::CalculateForwardVector(Euler);
+
+	return viewMatrix;
+}
+
+glm::mat4 harmony::DebugCamera::GetProjectionMatrix()
+{
+	return glm::mat4();
 }

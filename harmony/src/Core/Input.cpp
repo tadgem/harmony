@@ -59,6 +59,96 @@ void harmony::Input::UpdateGamepadStick(int gamepadIndex, Gamepad::Stick stick, 
 	p_GamepadStates[gamepadIndex].CurrentFrameStickState[stick] = value;
 }
 
+glm::vec2 harmony::Input::GetMousePosition()
+{
+	return p_MouseState.CurrentFrameMouseLocation;
+}
+
+glm::vec2 harmony::Input::GetMousePositionLastFrame()
+{
+	return p_MouseState.PreviousFrameMouseLocation;
+}
+
+bool harmony::Input::GetMouseButton(Mouse::Button button)
+{
+	return p_MouseState.CurrentFrameButtonState[button];
+}
+
+bool harmony::Input::GetMouseButtonJustPressed(Mouse::Button button)
+{
+	return p_MouseState.CurrentFrameButtonState[button] && !p_MouseState.PreviousFrameButtonState[button];
+}
+
+bool harmony::Input::GetMouseButtonJustReleased(Mouse::Button button)
+{
+	return !p_MouseState.CurrentFrameButtonState[button] && p_MouseState.PreviousFrameButtonState[button];
+}
+
+bool harmony::Input::GetKey(Key key)
+{
+	return p_KeyboardState.CurrentFrameKeyState[key];
+}
+
+bool harmony::Input::GetKeyJustPressed(Key key)
+{
+	return p_KeyboardState.CurrentFrameKeyState[key] && !p_KeyboardState.PreviousFrameKeyState[key];
+}
+
+bool harmony::Input::GetKeyJustReleased(Key key)
+{
+	return !p_KeyboardState.CurrentFrameKeyState[key] && p_KeyboardState.PreviousFrameKeyState[key];
+}
+
+bool harmony::Input::GetGamepadButton(int gamepadIndex, Gamepad::Button button)
+{
+	if (gamepadIndex >= g_NumGamepads)
+	{
+		harmony::log::error("Attempting to retrieve gamepad state for index greater than number supported by harmony : ", gamepadIndex + 1);
+		return false;
+	}
+	return p_GamepadStates[gamepadIndex].CurrentFrameButtonState[button];
+}
+
+bool harmony::Input::GetGamepadButtonJustPressed(int gamepadIndex, Gamepad::Button button)
+{
+	if (gamepadIndex >= g_NumGamepads)
+	{
+		harmony::log::error("Attempting to retrieve gamepad state for index greater than number supported by harmony : ", gamepadIndex + 1);
+		return false;
+	}
+	return p_GamepadStates[gamepadIndex].CurrentFrameButtonState[button] && !p_GamepadStates[gamepadIndex].PreviousFrameButtonState[button];
+}
+
+bool harmony::Input::GetGamepadButtonJustReleased(int gamepadIndex, Gamepad::Button button)
+{
+	if (gamepadIndex >= g_NumGamepads)
+	{
+		harmony::log::error("Attempting to retrieve gamepad state for index greater than number supported by harmony : ", gamepadIndex + 1);
+		return false;
+	}
+	return !p_GamepadStates[gamepadIndex].CurrentFrameButtonState[button] && p_GamepadStates[gamepadIndex].PreviousFrameButtonState[button];
+}
+
+float harmony::Input::GetGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigger)
+{
+	if (gamepadIndex >= g_NumGamepads)
+	{
+		harmony::log::error("Attempting to retrieve gamepad state for index greater than number supported by harmony : ", gamepadIndex + 1);
+		return 0.0f;
+	}
+	return p_GamepadStates[gamepadIndex].CurrentFrameTriggerState[trigger];
+}
+
+glm::vec2 harmony::Input::GetGamepadStick(int gamepadIndex, Gamepad::Stick stick)
+{
+	if (gamepadIndex >= g_NumGamepads)
+	{
+		harmony::log::error("Attempting to retrieve gamepad state for index greater than number supported by harmony : " , gamepadIndex + 1);
+		return glm::vec2();
+	}
+	return p_GamepadStates[gamepadIndex].CurrentFrameStickState[stick];
+}
+
 harmony::Input* harmony::Input::Get()
 {
 	if (p_Instance == nullptr)
