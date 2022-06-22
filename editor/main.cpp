@@ -9,6 +9,7 @@
 #include "ECS/TileMapSystemImGui.h"
 #include "ImGui/icons_font_awesome.h"
 #include "EditorUtils.hpp"
+#include "EditorView.h"
 #include "Rendering/Pipelines/DebugDrawPipeline.h"
 int main()
 {
@@ -23,7 +24,7 @@ int main()
 	WeakRef<TileMapSystem> tileMapSystem = app.AddSystem<TileMapSystem>(app.m_AssetManager, app.m_Renderer);
 	app.AddSystem<TileMapSystemImGui>(tileMapSystem.lock());
 
-	auto viewWr = renderer.CreateView<View>("Editor");
+	auto viewWr = renderer.CreateView<EditorView>();
 	auto debugDrawPipelineWr = renderer.CreatePipeline<DebugDrawPipeline>();
 	renderer.AddViewPipeline(viewWr, debugDrawPipelineWr);
 	renderer.SetViewActive(viewWr, true);

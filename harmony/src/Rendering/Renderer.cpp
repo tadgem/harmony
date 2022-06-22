@@ -96,6 +96,7 @@ void harmony::Renderer::OnPreUpdate(entt::registry& registry)
         }
 
         Ref<View> view = m_ActiveViews[i].lock();
+        view->OnPreUpdate(registry);
         std::vector<Ref<Pipeline>>& pipelines = p_Views[view];
         
         for (int p = 0; p < pipelines.size(); p++)
@@ -121,6 +122,7 @@ void harmony::Renderer::OnPostUpdate(entt::registry& registry)
         }
 
         Ref<View> view = m_ActiveViews[i].lock();
+        view->OnPostUpdate(registry);
         std::vector<Ref<Pipeline>>& pipelines = p_Views[view];
 
         for (int p = 0; p < pipelines.size(); p++)
@@ -164,6 +166,8 @@ void harmony::Renderer::OnImGui()
         for (auto& [view, pipelines] : p_Views)
         {
             ImGui::Text(view->m_Name.c_str());
+            view->OnImGui();
+            ImGui::Separator();
         }
     }
     ImGui::End();

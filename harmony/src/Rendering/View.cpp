@@ -1,4 +1,9 @@
 #include "Rendering/View.h"
+#include "Core/Log.hpp"
+#if HARMONY_DEBUG
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_bgfx.h"
+#endif
 
 harmony::View::View(const std::string& name) : 
 	c_InitialViewWidth(1280), 
@@ -17,4 +22,9 @@ void harmony::View::OnPreUpdate(entt::registry& registry)
 
 void harmony::View::OnPostUpdate(entt::registry& registry)
 {
+}
+
+void harmony::View::OnImGui()
+{
+    
 }

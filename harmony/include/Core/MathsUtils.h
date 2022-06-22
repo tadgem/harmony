@@ -7,6 +7,7 @@ namespace harmony
     {
     public:
         static glm::vec3 CalculateForwardVector(const glm::vec3& eulerAngles);
-
+        static glm::vec3 CalculateRightVector(const glm::vec3& eulerAngles);
+        static glm::vec3 CalculateUpVector(const glm::vec3& forward, const glm::vec3& right);
     };
 };
