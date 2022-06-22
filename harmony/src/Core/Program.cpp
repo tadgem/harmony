@@ -308,7 +308,7 @@ void harmony::Program::Run(harmony::Callback callback)
 
 		// Use last available view for imgui. 
 		// probably not great but will be ammended with view manager impl.
-		bgfx::touch(1);
+		bgfx::touch(0);
 		ImGui::Render();
 		imguiEndFrame();
 

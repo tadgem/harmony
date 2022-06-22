@@ -39,11 +39,12 @@ namespace harmony
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view);
         virtual void Cleanup(entt::registry& registry, WeakRef<View> view);
 
-        bgfx::FrameBufferHandle GetFinalImage();
+        bgfx::TextureHandle GetFinalImage();
         PipelineHandle m_Handle;
         const std::string m_Name;
 
     protected:
         std::vector<Ref<PipelineStage>> p_Stages;
+        bgfx::TextureHandle p_FinalImage;
     };
 };

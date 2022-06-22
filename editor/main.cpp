@@ -17,7 +17,6 @@ int main()
 	harmony::Renderer& renderer = app.m_Renderer;
 	harmony::AssetManager& assetManager = app.m_AssetManager;
 
-	renderer.CreatePipeline<harmony::DebugDrawPipeline>();
 	assetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>());
 	assetManager.AddAssetFactory(CreateRef<TextureAssetFactory>());
 	app.AddSystem<TransformSystem>();

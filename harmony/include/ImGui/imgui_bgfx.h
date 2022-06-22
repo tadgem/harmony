@@ -106,7 +106,8 @@ namespace ImGui
 		, const ImVec4& _borderCol = ImVec4(0.0f, 0.0f, 0.0f, 0.0f)
 		)
 	{
-		Image(_handle, IMGUI_FLAGS_ALPHA_BLEND, 0, _size, _uv0, _uv1, _tintCol, _borderCol);
+		// TODO CHANGE ME
+		Image(_handle, IMGUI_FLAGS_NONE, 0, _size, _uv0, _uv1, _tintCol, _borderCol);
 	}
 
 	// Helper function for passing bgfx::TextureHandle to ImGui::ImageButton.

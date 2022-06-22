@@ -4,19 +4,19 @@
 #include "ECS/ModelComponent.h"
 #include "ECS/MeshComponent.h"
 #include "ECS/MaterialComponent.h"
+#include "Core/Log.hpp"
+#if HARMONY_DEBUG
 #include "ImGui/imgui_bgfx.h"
+#include "ImGui/imgui.h"
+#endif
+
 harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetManager)
 {
     HARMONY_PROFILE_FUNCTION()
 }
 
-#include "Core/Log.hpp"
-#include "Rendering/Renderer.h"
-#if HARMONY_DEBUG
-#include "ImGui/imgui.h"
-#endif
-
-uint32_t harmony::Renderer::p_ViewHandleCounter = 0;
+bgfx::VertexLayout harmony::PosColorTexCoord0Vertex::ms_layout;
+uint32_t harmony::Renderer::p_ViewHandleCounter = 1;
 
 void harmony::Renderer::RemoveView(WeakRef<View> view)
 {
@@ -175,14 +175,18 @@ void harmony::Renderer::OnImGui()
         {
             for (int p = 0; p < p_Views[view].size(); p++)
             {
-                bgfx::FrameBufferHandle fbHandle = p_Views[view][p]->GetFinalImage();
+                bgfx::TextureHandle fbHandle = p_Views[view][p]->GetFinalImage();
                 if (fbHandle.idx == bgfx::kInvalidHandle)
                 {
                     harmony::log::warn("Renderer OnImGui : Invalid framebuffer handle for view {} pipeline {}", view->m_Name, p_Views[view][p]->m_Name);
                     continue;
                 }
+                if (!bgfx::isValid(fbHandle))
+                {
+                    continue;
+                }
                 ImGui::Image(
-                    bgfx::getTexture(fbHandle),
+                    fbHandle,
                     ImVec2(view->m_Width, view->m_Height)
                 );
             }
@@ -199,6 +203,63 @@ bgfx::ViewId harmony::Renderer::GetViewID()
     return v;
 }
 
+void harmony::Renderer::ScreenSpaceQuad(float _textureWidth, float _textureHeight, bool _originBottomLeft, float _width, float _height)
+{
+    if (3 == bgfx::getAvailTransientVertexBuffer(3, PosColorTexCoord0Vertex::ms_layout))
+    {
+        bgfx::TransientVertexBuffer vb;
+        bgfx::allocTransientVertexBuffer(&vb, 3, PosColorTexCoord0Vertex::ms_layout);
+        PosColorTexCoord0Vertex* vertex = (PosColorTexCoord0Vertex*)vb.data;
+
+        const float zz = 0.0f;
+
+        const float minx = -_width;
+        const float maxx = _width;
+        const float miny = 0.0f;
+        const float maxy = _height * 2.0f;
+
+        const float texelHalfW = s_texelHalf / _textureWidth;
+        const float texelHalfH = s_texelHalf / _textureHeight;
+        const float minu = -1.0f + texelHalfW;
+        const float maxu = 1.0f + texelHalfW;
+
+        float minv = texelHalfH;
+        float maxv = 2.0f + texelHalfH;
+
+        if (_originBottomLeft)
+        {
+            float temp = minv;
+            minv = maxv;
+            maxv = temp;
+
+            minv -= 1.0f;
+            maxv -= 1.0f;
+        }
+
+        vertex[0].m_x = minx;
+        vertex[0].m_y = miny;
+        vertex[0].m_z = zz;
+        vertex[0].m_rgba = 0xffffffff;
+        vertex[0].m_u = minu;
+        vertex[0].m_v = minv;
+
+        vertex[1].m_x = maxx;
+        vertex[1].m_y = miny;
+        vertex[1].m_z = zz;
+        vertex[1].m_rgba = 0xffffffff;
+        vertex[1].m_u = maxu;
+        vertex[1].m_v = minv;
+
+        vertex[2].m_x = maxx;
+        vertex[2].m_y = maxy;
+        vertex[2].m_z = zz;
+        vertex[2].m_rgba = 0xffffffff;
+        vertex[2].m_u = maxu;
+        vertex[2].m_v = maxv;
+
+        bgfx::setVertexBuffer(0, &vb);
+    }
+}
 
 harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std::string& name, const std::string& vertName, const std::string& fragName)
 {

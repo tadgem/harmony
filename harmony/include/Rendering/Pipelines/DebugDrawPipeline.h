@@ -33,6 +33,8 @@ namespace harmony
 
         bx::DefaultAllocator p_Allocator;
         DebugCamera Camera;
+        DebugDrawEncoder DebugDraw;
+        bool Active;
     };
 
     class DebugDrawPipeline : public Pipeline

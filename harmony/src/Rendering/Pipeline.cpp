@@ -52,15 +52,15 @@ void harmony::Pipeline::Cleanup(entt::registry& registry, WeakRef<View> view)
 	}
 }
 
-bgfx::FrameBufferHandle harmony::Pipeline::GetFinalImage()
+bgfx::TextureHandle harmony::Pipeline::GetFinalImage()
 {
 	if (p_Stages.size() == 0)
 	{
 		harmony::log::warn("Pipeline with handle {} is empty!", m_Handle.Index);
-		return bgfx::FrameBufferHandle();
+		return BGFX_INVALID_HANDLE;
 	}
-	bgfx::FrameBufferHandle v = p_Stages[p_Stages.size() - 1]->GetStageFinalFramebuffer();
-	return v;
+	bgfx::FrameBufferHandle fbToBlit = p_Stages[p_Stages.size() - 1]->GetStageFinalFramebuffer();
+	return bgfx::getTexture(fbToBlit);
 }
 
 harmony::PipelineHandle harmony::PipelineHandle::New(const std::string& name)

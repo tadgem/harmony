@@ -4,30 +4,43 @@
 #include "Core/Input.h"
 harmony::DebugDrawStage::DebugDrawStage() : PipelineStage(PipelineStage::Type::Draw, WeakRef<ShaderProgram>())
 {
+	Active = false;
+	Active = false;
 }
 
 void harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view)
 {
 	PipelineStage::Init(registry, view);
 	ddInit(&p_Allocator);
+	DebugDraw = DebugDrawEncoder();
+	bgfx::setViewName(m_ViewId, "Debug Draw");
 }
 
 void harmony::DebugDrawStage::PreUpdate(entt::registry& registry, WeakRef<View> view)
 {
+	bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0);
 	Ref<View> _view = view.lock();
 	glm::mat4 viewMatrix = Camera.GetViewMatrix();
 	glm::mat4 projectionMatrix = Camera.GetProjectionMatrix(_view->m_Width, _view->m_Height);
 	bgfx::setViewTransform(m_ViewId, &viewMatrix[0], &projectionMatrix[0]);
 	bgfx::setViewRect(m_ViewId, 0, 0, _view->m_Width, _view->m_Height);
 	DebugDraw.begin(m_ViewId);
+	Active = true;
 
-	DebugDraw.drawGrid(Axis::Enum::Y, bx::Vec3(0.0f, 0.0f, 0.0f), 1000);
+	DebugDraw.drawGrid(Axis::Enum::Y, bx::Vec3(0.0f, -2.0f, 0.0f), 1000);
 	DebugDraw.drawAxis(0.0f, 1.0f, 0.0f, 1.0f);
 }
 
 void harmony::DebugDrawStage::PostUpdate(entt::registry& registry, WeakRef<View> view)
 {
+	if (!Active)
+	{
+		return;
+	}
 	DebugDraw.end();
+	bgfx::touch(m_ViewId);
+	Active = false;
+
 }
 
 void harmony::DebugDrawStage::Cleanup()
@@ -42,7 +55,7 @@ harmony::DebugDrawPipeline::DebugDrawPipeline() : Pipeline(PipelineHandle::New("
 
 harmony::DebugCamera::DebugCamera()
 {
-	Position = glm::vec3(0.0f, 3.0f, 0.0f);
+	Position = glm::vec3(0.0f, 10.0f, 0.0f);
 	Euler = glm::vec3(-20.0f, 0.0f, 0.0f);
 	FOV = 80.0f;
 	Near = 0.1f;
