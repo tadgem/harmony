@@ -10,7 +10,8 @@ namespace harmony
     public:
         enum class Type
         {
-            Draw,
+            PrimaryDraw,
+            SecondaryDraw,
             PostProcess
         };
 

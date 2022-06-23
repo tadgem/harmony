@@ -14,10 +14,15 @@ namespace harmony
         virtual void Cleanup() override;
 
         bx::DefaultAllocator p_Allocator;
-        DebugDrawEncoder DebugDraw;
         bool Active;
     };
-
+    /// <summary>
+    /// CURRENT KNOWN LIMITATION:
+    /// Cannot have more than one DebugDrawPipeline active at once
+    /// ddebug draw needs to be statically available for easy access 
+    /// but the bgfx ref impl cannot be reused in more than one using the static instance.
+    /// would require each draw call was called again after the initial view was rendered.
+    /// </summary>
     class DebugDrawPipeline : public Pipeline
     {
     public:

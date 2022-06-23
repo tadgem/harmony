@@ -1,14 +1,15 @@
 #include <filesystem>
 #include "Core/Program.h"
+#include "Core/Log.hpp"
+#include "Core/Time.h"
 #include "SDL_syswm.h"
 #include "ImGui/imgui.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
 #include "ImGui/backends/imgui_impl_sdl.h"
 #include "ImGui/imgui_bgfx.h"
-#include "Core/Log.hpp"
 #include "ImGui/robotomono_regular.ttf.h"
-
+#include "bx/timer.h"
 harmony::Program::Program(std::string name) : p_AppName(name), m_Renderer(m_AssetManager)
 {
 	HARMONY_PROFILE_FUNCTION()
@@ -268,7 +269,15 @@ void harmony::Program::Run(harmony::Callback callback)
 	SetStyle();
 	while (p_Run)
 	{
+		int64_t now = bx::getHPCounter();
+		static int64_t last = now;
+		const int64_t frameTime = now - last;
+		last = now;
+		const double freq = double(bx::getHPFrequency());
+
+		Time::p_FrameTime = (double)(frameTime * 1.0 / freq);
 		SDL_Event sdlEvent;
+
 		while (SDL_PollEvent(&sdlEvent))
 		{
 			ImGui_ImplSDL2_ProcessEvent(&sdlEvent);

@@ -5,6 +5,7 @@
 #include "ECS/MeshComponent.h"
 #include "ECS/MaterialComponent.h"
 #include "Core/Log.hpp"
+#include "Core/Time.h"
 #if HARMONY_DEBUG
 #include "ImGui/imgui_bgfx.h"
 #include "ImGui/imgui.h"
@@ -160,6 +161,9 @@ void harmony::Renderer::OnImGui()
 {
     if (ImGui::Begin("View Manager"))
     {
+        ImGui::Text("Frametime : %f", Time::GetFrameTime());
+        ImGui::Text("FPS : %f", 1.0 / Time::GetFrameTime());
+        ImGui::Separator();
         ImGui::Text("Views");
         ImGui::Separator();
 
