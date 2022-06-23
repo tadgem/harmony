@@ -133,6 +133,9 @@ def shader_tool():
             subprocess.call(command)
         binary_array_strings = []
         for dir in os.listdir("./shaders/bin"):
+            if os.path.isdir("./shaders/bin/" + dir) == False:
+                continue
+            
             print(dir)
             filedir = "./shaders/bin/" + dir + "/" + shader_name + ".bin.h"
             if(os.path.exists(filedir)):
