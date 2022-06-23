@@ -1,5 +1,4 @@
-$input a_position, a_normal, a_texcoord0
-$output v_color0
+$input v_texcoord0
 
 /*
  * Copyright 2011-2022 Branimir Karadzic. All rights reserved.
@@ -8,10 +7,10 @@ $output v_color0
 
 #include "common.sh"
 
-uniform mat4 u_mtx;
+SAMPLER2D(s_texColor, 0);
 
 void main()
 {
-	gl_Position = mul(u_modelViewProj, vec4(a_position, 1.0) );
-	v_color0 = vec4(a_normal, 1.0);
+    vec3 rgb = texture2D(s_texColor, v_texcoord0)
+    gl_FragColor = vec4(rgb, 1.0);
 }
