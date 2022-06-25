@@ -9,7 +9,10 @@
 #include "Core/Memory.h"
 #include "Core/Log.hpp"
 #include "Core/Profile.hpp"
+#include "entt.hpp"
+
 namespace harmony {
+
     class AssetManager
     {
     public:
@@ -34,9 +37,6 @@ namespace harmony {
             return false;
         }
 
-        // more of a type hint than a concrete type to load
-        // will be used to determine the best asset factory to load the 
-        // asset at the given path
         template<typename T>
         std::vector<WeakRef<Asset>>LoadAsset(const std::string& path)
         {
@@ -90,6 +90,9 @@ namespace harmony {
                 }
             }
 
+            entt::entity e = p_AssetRegistry.create();
+            p_AssetRegistry.emplace(e, AssetComponent<T>());
+
             return assets;
         }
 
@@ -134,10 +137,13 @@ namespace harmony {
 
             return assets;
         }
+    
     protected:
         std::vector<Ref<AssetFactory>>                      p_AssetFactories;
         std::unordered_map<size_t, std::vector<Ref<Asset>>> p_Assets;
         std::unordered_map<size_t, std::string>             p_AssetTypeNames;
         std::vector<std::string>                            p_LoadedPaths;
+
+        entt::registry p_AssetRegistry;
     };
 }

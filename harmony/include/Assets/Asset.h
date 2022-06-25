@@ -9,6 +9,12 @@ namespace harmony
         return typeid(T).hash_code();
     }
 
+    template<typename T>
+    struct AssetComponent
+    {
+        Ref<T> Asset;
+    };
+
     struct AssetHandle
     {
         std::string Path;
