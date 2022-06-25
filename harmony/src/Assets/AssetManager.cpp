@@ -16,32 +16,80 @@ void harmony::AssetManager::UnloadAllAssets()
 #if HARMONY_DEBUG
 void harmony::AssetManager::OnImGui()
 {
-	/*if (ImGui::Begin("Assets"))
-	{
-		for (auto const& [typeHash, assets] : p_Assets)
-		{
-			ImGui::Text(p_AssetTypeNames[typeHash].c_str());
-			ImGui::Separator();
-			for (int i = 0; i < assets.size(); i++)
-			{
-				Ref<Asset> asset = assets[i];
-				ImGui::Text(asset->m_Handle.Path.c_str());
-				if (typeHash == GetTypeHash<Texture>())
-				{
-					Ref<Texture> tex = GetDerivedRef<Asset, Texture>(asset);
-					if (tex)
-					{
-						ImVec2 size = ImVec2(tex->m_TextureHandle.Info.width, tex->m_TextureHandle.Info.height);
-						ImGui::Image(tex->m_TextureHandle.Handle, size);
-					}
-				}
-			}
-			ImGui::Separator();
-		}
-	}
-	ImGui::End();*/
+	
 }
 #endif
+
+bool harmony::AssetManager::IsPathLoaded(const std::string path)
+{
+	auto it = std::find(p_LoadedPaths.begin(), p_LoadedPaths.end(), path);
+	if (it != p_LoadedPaths.end())
+	{
+		return true;
+	}
+
+	return false;
+}
+std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::string& path, size_t typeHash)
+{
+	Ref<AssetFactory> factory = GetAssetFactory(typeHash);
+	factory->LoadAssetData(path, p_AssetRegistry);
+	return GetAssetsAtPath(path);
+}
+
+std::vector<harmony::AssetHandle> harmony::AssetManager::GetAssetsAtPath(const std::string& path)
+{
+	auto handles = std::vector<AssetHandle>();
+	auto view = p_AssetRegistry.view<AssetHandle>();
+
+	for (auto& [e, handle] : view.each())
+	{
+		if (handle.Path != path)
+		{
+			continue;
+		}
+		handles.emplace_back(handle);
+	}
+	return handles;
+}
+
+void harmony::AssetManager::Clear()
+{
+	p_LoadedPaths.clear();
+	p_AssetRegistry.clear();
+}
+
+nlohmann::json harmony::AssetManager::Serialize()
+{
+	nlohmann::json json;
+	auto view = p_AssetRegistry.view<AssetHandle>();
+
+
+	json["assets"] = nlohmann::json::array();
+
+	for (auto& [entity, handle] : view.each())
+	{
+		json["assets"].emplace_back(handle);
+	}
+
+	return json;
+}
+
+void harmony::AssetManager::Deserialize(nlohmann::json& json)
+{
+	for (auto j : json["assets"])
+	{
+		AssetHandle handle = j;
+
+		if (IsPathLoaded(handle.Path))
+		{
+			continue;
+		}
+
+		LoadAsset(handle.Path, handle.TypeHash);
+	}
+}
+
 
 harmony::Ref<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory(size_t typeHash)
 {

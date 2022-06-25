@@ -40,7 +40,6 @@ namespace harmony {
         template<typename T>
         std::vector<AssetHandle>LoadAsset(const std::string& path)
         {
-            std::vector<AssetHandle> assets;
             size_t typeHash = typeid(T).hash_code();
 
             Ref<AssetFactory> factory = GetAssetFactory(typeHash);
@@ -50,8 +49,12 @@ namespace harmony {
             // manager has ownership of all assets.
             factory->ClearLoadedData();
 
-            return assets;
+            return GetAssetsAtPath<T>(path);
         }
+
+        bool IsPathLoaded(const std::string path);
+
+        std::vector<AssetHandle>LoadAsset(const std::string& path, size_t typeHash);
 
         template<typename T>
         std::vector<AssetHandle> GetLoadedAssets()
@@ -65,22 +68,8 @@ namespace harmony {
             return assets;
         }
 
-        template<typename T>
-        std::vector<AssetHandle> GetAssetsAtPath(const std::string& path)
-        {
-            std::vector<WeakRef<AssetHandle>> assets;
-            auto view = p_AssetRegistry.view<AssetComponent<T>>();
-            for (auto& [entity, asset] : view.each())
-            {
-                if (!asset.Handle.Path == path)
-                {
-                    continue;
-                }
-                assets.emplace_back(asset.Handle);
-            }
-            return assets;
-        }
-
+        std::vector<AssetHandle> GetAssetsAtPath(const std::string& path);
+        
         template<typename T>
         WeakRef<Asset> GetAsset(const AssetHandle& assetHandle)
         {
@@ -97,11 +86,15 @@ namespace harmony {
 
         }
 
+        void Clear();
+
+        nlohmann::json Serialize();
+        void Deserialize(nlohmann::json& json);
+
     protected:
 
         Ref<AssetFactory> GetAssetFactory(size_t typeHash);
         std::vector<Ref<AssetFactory>>                      p_AssetFactories;
-        std::unordered_map<size_t, std::vector<Ref<Asset>>> p_Assets;
         std::unordered_map<size_t, std::string>             p_AssetTypeNames;
         std::vector<std::string>                            p_LoadedPaths;
 

@@ -34,7 +34,7 @@ void harmony::TextureAssetFactory::LoadAssetData(const std::string& path, entt::
 
     entt::entity e = registry.create();
     registry.emplace<AssetComponent<Texture>>(e, textureComponent);
-    
+    registry.emplace<AssetHandle>(e, handle);
     // is this correct?
     data.clear();
 }

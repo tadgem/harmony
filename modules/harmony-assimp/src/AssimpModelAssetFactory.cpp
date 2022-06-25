@@ -221,12 +221,14 @@ void harmony::AssimpModelAssetFactory::LoadAssetData(const std::string& path, en
 		AssetComponent<Mesh> meshComponent{ meshAsset, meshHandle };
 		entt::entity e = registry.create();
 		registry.emplace<AssetComponent<Mesh>>(e, meshComponent);
+		registry.emplace<AssetHandle>(e, meshHandle);
 	}
 
 	AssetComponent<Model> modelComponent{ model, handle };
 	
 	entt::entity e = registry.create();
 	registry.emplace<AssetComponent<Model>>(e, modelComponent);
+	registry.emplace<AssetHandle>(e, handle);
 		
 }
 

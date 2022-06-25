@@ -203,6 +203,7 @@ int main()
 		}
 
 		renderer.OnImGui();
+		assetManager.OnImGui();
 
 	};
 	app.Run(callback);
