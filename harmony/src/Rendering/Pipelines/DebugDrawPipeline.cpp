@@ -8,28 +8,25 @@ harmony::DebugDrawStage::DebugDrawStage() : PipelineStage(PipelineStage::Type::P
 	Active = false;
 }
 
-void harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view)
+void harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
 {
-	PipelineStage::Init(registry, view);
+	PipelineStage::Init(registry, view, handle);
 	ddInit(&p_Allocator);
 	DebugDraw = new DebugDrawEncoder();
 	bgfx::setViewName(m_ViewId, "Debug Draw");
 }
 
-void harmony::DebugDrawStage::PreUpdate(entt::registry& registry, WeakRef<View> view)
+void harmony::DebugDrawStage::PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
 {
-	bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0);
-	Ref<View> _view = view.lock();
-	bgfx::setViewTransform(m_ViewId, &_view->m_View[0], &_view->m_Projection[0]);
-	bgfx::setViewRect(m_ViewId, 0, 0, _view->m_Width, _view->m_Height);
+	PipelineStage::PreUpdate(registry, view, handle);
 	DebugDraw->begin(m_ViewId);
 	Active = true;
 
 	DebugDraw->drawGrid(Axis::Enum::Y, bx::Vec3(0.0f, -2.0f, 0.0f), 1000);
-	DebugDraw->drawAxis(0.0f, 1.0f, 0.0f, 10.0f);
+	DebugDraw->drawAxis(0.0f, 1.0f, 0.0f, 5.0f);
 }
 
-void harmony::DebugDrawStage::PostUpdate(entt::registry& registry, WeakRef<View> view)
+void harmony::DebugDrawStage::PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
 {
 	if (!Active)
 	{

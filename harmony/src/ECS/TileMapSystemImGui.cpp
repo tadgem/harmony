@@ -2,7 +2,7 @@
 #include "ECS/TileMapComponent.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_bgfx.h"
-harmony::TileMapSystemImGui::TileMapSystemImGui(Ref<TileMapSystem> tileMapSystem) : p_TileMapSystem(tileMapSystem)
+harmony::TileMapSystemImGui::TileMapSystemImGui(Ref<TileMapSystem> tileMapSystem) : System(GetTypeHash<TileMapSystemImGui>()), p_TileMapSystem(tileMapSystem)
 {
 
 }

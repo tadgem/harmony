@@ -6,7 +6,7 @@ harmony::PipelineStage::PipelineStage(Type stageType, WeakRef<ShaderProgram> sha
 	p_FrameBufferHandle = BGFX_INVALID_HANDLE;
 }
 
-void harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view)
+void harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
 {
 	if (view.expired())
 	{
@@ -19,11 +19,16 @@ void harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view)
 	bgfx::setViewRect(m_ViewId, 0, 0, bgfx::BackbufferRatio::Equal);
 }
 
-void harmony::PipelineStage::PreUpdate(entt::registry& registry, WeakRef<View> view)
+void harmony::PipelineStage::PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
 {
+	bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0);
+	Ref<View> _view = view.lock();
+	bgfx::setViewTransform(m_ViewId, &_view->m_View[0], &_view->m_Projection[0]);
+	bgfx::setViewRect(m_ViewId, 0, 0, _view->m_Width, _view->m_Height);
+
 }
 
-void harmony::PipelineStage::PostUpdate(entt::registry& registry, WeakRef<View> view)
+void harmony::PipelineStage::PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
 {
 }
 

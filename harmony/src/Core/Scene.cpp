@@ -15,9 +15,11 @@ void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<Ref<Sy
 {
 	HARMONY_PROFILE_FUNCTION()
 	nlohmann::json sceneJson;
+	sceneJson["scene"] = nlohmann::json::array();
 	for (int i = 0; i < systems.size(); i++)
 	{
 		Ref<System> system = systems[i];
 		nlohmann::json sceneSystemJson = system->SerializeSystem(m_Registry);
+		sceneJson["scene"].push_back(sceneSystemJson);
 	}
 }

@@ -4,7 +4,7 @@
 #include "ImGui/icons_font_awesome.h"
 #include "ImGui/icons_kenney.h"
 
-harmony::TileMapSystem::TileMapSystem(AssetManager& assetManager, Renderer& renderer) : p_AssetManager(assetManager), p_Renderer(renderer)
+harmony::TileMapSystem::TileMapSystem(AssetManager& assetManager, Renderer& renderer) : System(GetTypeHash<TileMapSystem>()), p_AssetManager(assetManager), p_Renderer(renderer)
 {
 }
 

@@ -6,16 +6,6 @@
 #include "Core/Profile.hpp"
 namespace harmony
 {
-    struct PipelineHandle
-    {
-        uint16_t Index;
-        std::string Name;
-
-        static PipelineHandle New(const std::string& name);
-    private:
-        inline static uint16_t p_Counter = 0;
-    };
-
     class Pipeline
     {
     public:

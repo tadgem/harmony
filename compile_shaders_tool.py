@@ -30,7 +30,7 @@ include_path = "shaders/include"
 output_path = "shaders/bin/"
 varying_def_path = "shaders/varying.def.sc"
 
-renderers = ["dx9", "dx11","pssl","metal","glsl","essl", "spirv"]
+renderers = ["dx9", "dx11","pssl","metal","glsl","essl", "spv"]
 renderer_shader_profile = ["s_3_0", "s_5_0", "pssl", "metal", "430", "300_es", "spirv"]
 
 def build_output_path(platform):
@@ -132,12 +132,13 @@ def shader_tool():
             command = build_bintoexe_command(current_shader_stage_selection, renderer)
             subprocess.call(command)
         binary_array_strings = []
-        binary_array_strings.append("#prama once")
+        binary_array_strings.append("#pragma once")
         for dir in os.listdir("./shaders/bin"):
             if os.path.isdir("./shaders/bin/" + dir) == False:
                 continue
 
             print(dir)
+            
             filedir = "./shaders/bin/" + dir + "/" + shader_name + ".bin.h"
             if(os.path.exists(filedir)):
                 text_file = open(filedir, 'r')

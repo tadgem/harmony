@@ -12,7 +12,7 @@ void harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view)
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->Init(registry, view);
+		p_Stages[i]->Init(registry, view, m_Handle);
 	}
 }
 
@@ -24,7 +24,7 @@ void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view)
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->PreUpdate(registry, view);
+		p_Stages[i]->PreUpdate(registry, view, m_Handle);
 	}
 }
 
@@ -36,7 +36,7 @@ void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view)
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->PostUpdate(registry, view);
+		p_Stages[i]->PostUpdate(registry, view, m_Handle);
 	}
 }
 

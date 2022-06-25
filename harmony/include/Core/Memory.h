@@ -4,6 +4,12 @@
 #include <functional>
 namespace harmony {
 
+	template <typename T>
+	static size_t GetTypeHash()
+	{
+		return typeid(T).hash_code();
+	}
+
 	/// <summary>
 	/// Reference counting pointer
 	/// Systems owning objects should create a Ref

@@ -1,7 +1,7 @@
 #include "ECS/TransformSystem.h"
 #include "ECS/TransformComponent.h"
-
-harmony::TransformSystem::TransformSystem()
+#include "Core/Memory.h"
+harmony::TransformSystem::TransformSystem() : System(GetTypeHash<TransformSystem>())
 {
 }
 

@@ -3,12 +3,6 @@
 #include "Core/Memory.h"
 namespace harmony
 {
-    template <typename T>
-    static size_t GetTypeHash()
-    {
-        return typeid(T).hash_code();
-    }
-
     struct AssetHandle
     {
         std::string Path;
