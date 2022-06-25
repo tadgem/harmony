@@ -16,6 +16,7 @@ namespace harmony
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(Scene, m_Name, p_SystemSerializationAttributes)
     protected:
         void UpdateSceneSystemSerializationAttributes(std::vector<Ref<System>>& systems);
+        void Deserialize(std::vector<Ref<System>>& systems);
         std::map<size_t, nlohmann::json>    p_SystemSerializationAttributes;
         friend class Program;
     };

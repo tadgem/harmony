@@ -413,9 +413,15 @@ void harmony::Program::SaveScene(const std::string& path)
 
 void harmony::Program::LoadScene(const std::string& path)
 {
-	CloseActiveScene();
 	nlohmann::json sceneJson = Utils::LoadJsonFromPath(path);
+}
+
+void harmony::Program::OpenScene(uint32_t index)
+{
+	CloseActiveScene();
+	nlohmann::json sceneJson = m_Project->m_SerializedScenes[index];
 	p_ActiveScene = CreateRef<Scene>(sceneJson);
+	p_ActiveScene->Deserialize(p_ECSSystems);
 }
 
 void harmony::Program::CloseActiveScene()

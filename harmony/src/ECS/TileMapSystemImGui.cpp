@@ -112,7 +112,7 @@ nlohmann::json harmony::TileMapSystemImGui::SerializeSystem(entt::registry& regi
     return nlohmann::json();
 }
 
-void harmony::TileMapSystemImGui::DeserializeSystem(entt::registry registry)
+void harmony::TileMapSystemImGui::DeserializeSystem(entt::registry& registry, nlohmann::json systemJson)
 {
 }
 

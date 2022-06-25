@@ -38,6 +38,7 @@ namespace harmony
 		void CreateScene(const std::string& name);
 		void SaveScene(const std::string& path);
 		void LoadScene(const std::string& path);
+		void OpenScene(uint32_t index);
 		void CloseActiveScene();
 		WeakRef<Scene> GetActiveScene();
 

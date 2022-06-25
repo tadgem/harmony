@@ -195,7 +195,7 @@ void harmony::Renderer::OnImGui()
                 }
                 ImGui::Image(
                     fbHandle,
-                    ImVec2(view->m_Width, view->m_Height)
+                    ImVec2(static_cast<float>(view->m_Width), static_cast<float>(view->m_Height))
                 );
             }
         }

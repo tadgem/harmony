@@ -11,15 +11,30 @@ harmony::Scene::Scene(const std::string& name) : m_Name(name)
 	HARMONY_PROFILE_FUNCTION()
 }
 
+void harmony::Scene::Deserialize(std::vector<Ref<System>>& systems)
+{
+	HARMONY_PROFILE_FUNCTION()
+	for (auto& [systemTypeHash, json] : p_SystemSerializationAttributes)
+	{
+		for (int i = 0; i < systems.size(); i++)
+		{
+			if (systems[i]->m_TypeHash == systemTypeHash)
+			{
+				systems[i]->DeserializeSystem(m_Registry, json);
+			}
+		}
+	}
+}
+
 void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<Ref<System>>& systems)
 {
 	HARMONY_PROFILE_FUNCTION()
-	nlohmann::json sceneJson;
-	sceneJson["scene"] = nlohmann::json::array();
+	p_SystemSerializationAttributes.clear();
+	
 	for (int i = 0; i < systems.size(); i++)
 	{
 		Ref<System> system = systems[i];
 		nlohmann::json sceneSystemJson = system->SerializeSystem(m_Registry);
-		sceneJson["scene"].push_back(sceneSystemJson);
+		p_SystemSerializationAttributes.emplace(system->m_TypeHash, sceneSystemJson);
 	}
 }

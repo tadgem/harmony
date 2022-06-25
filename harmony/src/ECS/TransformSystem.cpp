@@ -36,7 +36,7 @@ nlohmann::json harmony::TransformSystem::SerializeSystem(entt::registry& registr
 	return nlohmann::json();
 }
 
-void harmony::TransformSystem::DeserializeSystem(entt::registry registry)
+void harmony::TransformSystem::DeserializeSystem(entt::registry& registry, nlohmann::json systemJson)
 {
 }
 
