@@ -22,10 +22,10 @@ void harmony::TileMapSystemImGui::Update(entt::registry& registry)
             registry.emplace<TileMapComponent>(entity);
             p_SelectedTileMapEntity = entity;
         }
-        if (ImGui::Button("Refresh Available Textures"))
+        /*if (ImGui::Button("Refresh Available Textures"))
         {
             p_AvailableTextures = p_TileMapSystem->p_AssetManager.GetLoadedAssets<Texture>();
-        }
+        }*/
         ImGui::Separator();
         if (view.size() == 0)
         {
@@ -69,7 +69,7 @@ void harmony::TileMapSystemImGui::Update(entt::registry& registry)
 
         std::string currentTexture = "";
         Ref<Texture> texture = nullptr;
-        if (!p_SelectedTexture.expired())
+        /*if (!p_SelectedTexture.expired())
         {
             texture = p_SelectedTexture.lock();
             currentTexture = texture->m_Handle.Path;
@@ -86,7 +86,7 @@ void harmony::TileMapSystemImGui::Update(entt::registry& registry)
                 }
             }
             ImGui::EndCombo();
-        }
+        }*/
 
         if (texture == nullptr)
         {

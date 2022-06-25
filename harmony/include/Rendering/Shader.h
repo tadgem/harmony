@@ -26,7 +26,6 @@ namespace harmony
 			Fragment, 
 			Compute
 		};
-		ShaderStage() : Asset(GetTypeHash<ShaderStage>()), m_Type(Type::Vertex) {}
 		ShaderStage(const std::string& name, const Type& shaderType);
 		~ShaderStage();
 

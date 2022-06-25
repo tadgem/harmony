@@ -1,7 +1,7 @@
 #include "Rendering/Texture.h"
 #include "bx/readerwriter.h"
 
-harmony::Texture::Texture(bimg::ImageContainer* imageContainer) : Asset(GetTypeHash<Texture>()), p_ImageContainer(imageContainer)
+harmony::Texture::Texture(const std::string& path, bimg::ImageContainer* imageContainer) : Asset(AssetHandle{ path, 0 , GetTypeHash<Texture>() }), p_ImageContainer(imageContainer)
 {
     m_SubmittedToGPU = false;
     p_Memory = bgfx::makeRef(

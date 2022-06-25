@@ -1,6 +1,6 @@
 #include "Rendering/Shapes.h"
 #include "Core/Profile.hpp"
-harmony::Cube::Cube(float size)
+harmony::Cube::Cube(float size) : Mesh("builtin://cube", 0)
 {
 	HARMONY_PROFILE_FUNCTION()
 	float side2 = size / 2.0f;
@@ -63,7 +63,7 @@ harmony::Cube::Cube(float size)
 	InitializeMesh(positions, indices, normals, uvs);
 }
 
-harmony::Plane::Plane(float size)
+harmony::Plane::Plane(float size) : Mesh("builtin://plane", 0)
 {
 	HARMONY_PROFILE_FUNCTION()
 	float side2 = size / 2.0f;

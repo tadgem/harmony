@@ -17,7 +17,7 @@ namespace harmony {
 	class Mesh : public Asset
     {
     public:
-        Mesh();
+        Mesh(const std::string& path, uint32_t index);
 
         ~Mesh() override
         {

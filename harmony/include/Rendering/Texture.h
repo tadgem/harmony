@@ -18,7 +18,7 @@ namespace harmony
     class Texture : public Asset
     {
 	public:
-		Texture(bimg::ImageContainer* imageContainer);
+		Texture(const std::string& path, bimg::ImageContainer* imageContainer);
 		BGFXTextureHandle m_TextureHandle;
 		bool m_SubmittedToGPU;
 

@@ -10,32 +10,61 @@ harmony::TextureAssetFactory::TextureAssetFactory()
     m_Capabilities.AssetTypeHashes.push_back(textureTypeHash);
 }
 
-std::vector<harmony::Ref<harmony::Asset>> harmony::TextureAssetFactory::LoadAssetData(const std::string& path)
+void harmony::TextureAssetFactory::LoadAssetData(const std::string& path, entt::registry& registry)
 {
-    std::vector<Ref<Asset>> assets =  std::vector<Ref<Asset>>();
-
     auto data = Utils::LoadBinaryFromPath(path);
     uint32_t dataSize = static_cast<uint32_t>(data.size());
-    
+        
     if (data.size() == 0)
     {
         harmony::log::error("TextureAssetFactory : Failed to load texture data at path : ", path);
-        return assets;
+        return;
     }
-
+    
     bimg::ImageContainer* imageContainer = bimg::imageParse(&p_Allocator, data.data(), dataSize);
-
+    
     if (imageContainer == NULL)
     {
         harmony::log::error("TextureAssetFactory : Failed to create image container for texture data at path : ", path);
     }
+    
+    Ref<Texture> textureAsset = CreateRef<Texture>(path, imageContainer);
+    AssetHandle handle{ path, 0, GetTypeHash<Texture>() };
+    AssetComponent<Texture> textureComponent{ textureAsset, handle };
 
-    Ref<Texture> textureAsset = CreateRef<Texture>(imageContainer);
-    textureAsset->m_Handle.Path = path;
+    entt::entity e = registry.create();
+    registry.emplace<AssetComponent<Texture>>(e, textureComponent);
+    
     // is this correct?
     data.clear();
-
-    assets.emplace_back(textureAsset);
-
-    return assets; 
 }
+
+//std::vector<harmony::Ref<harmony::Asset>> harmony::TextureAssetFactory::LoadAssetData(const std::string& path)
+//{
+//    std::vector<Ref<Asset>> assets =  std::vector<Ref<Asset>>();
+//
+//    auto data = Utils::LoadBinaryFromPath(path);
+//    uint32_t dataSize = static_cast<uint32_t>(data.size());
+//    
+//    if (data.size() == 0)
+//    {
+//        harmony::log::error("TextureAssetFactory : Failed to load texture data at path : ", path);
+//        return assets;
+//    }
+//
+//    bimg::ImageContainer* imageContainer = bimg::imageParse(&p_Allocator, data.data(), dataSize);
+//
+//    if (imageContainer == NULL)
+//    {
+//        harmony::log::error("TextureAssetFactory : Failed to create image container for texture data at path : ", path);
+//    }
+//
+//    Ref<Texture> textureAsset = CreateRef<Texture>(imageContainer);
+//    textureAsset->m_Handle.Path = path;
+//    // is this correct?
+//    data.clear();
+//
+//    assets.emplace_back(textureAsset);
+//
+//    return assets; 
+//}

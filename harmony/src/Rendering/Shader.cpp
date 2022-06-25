@@ -51,7 +51,7 @@ void harmony::ShaderProgram::Build()
 	harmony::log::error("Failed to build shader! invalid combination provided.");
 }
 
-harmony::ShaderStage::ShaderStage(const std::string& name, const Type& shaderType) : Asset(GetTypeHash<ShaderStage>()), m_Type(shaderType), m_Handle(BGFX_INVALID_HANDLE), m_Name(name)
+harmony::ShaderStage::ShaderStage(const std::string& name, const Type& shaderType) : Asset(AssetHandle {name, 0, GetTypeHash<ShaderStage>()}), m_Type(shaderType), m_Handle(BGFX_INVALID_HANDLE), m_Name(name)
 {
 }
 

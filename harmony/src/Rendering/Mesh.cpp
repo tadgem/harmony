@@ -1,6 +1,6 @@
 #include "Rendering/Mesh.h"
 #include "Core/Profile.hpp"
-harmony::Mesh::Mesh() : Asset(GetTypeHash<Mesh>())
+harmony::Mesh::Mesh(const std::string& path, uint32_t index) : Asset(AssetHandle{ path, index, GetTypeHash<Mesh>() })
 {
 	HARMONY_PROFILE_FUNCTION()
 }

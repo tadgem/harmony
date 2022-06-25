@@ -30,47 +30,47 @@ harmony::AssimpModelAssetFactory::AssimpModelAssetFactory() : harmony::AssetFact
 	m_Capabilities.AssetTypeHashes.push_back(meshTypeHash);
 }
 
-std::vector<harmony::Ref<harmony::Asset>> harmony::AssimpModelAssetFactory::LoadAssetData(const std::string& path)
-{
-	HARMONY_PROFILE_FUNCTION()
-    auto assets = std::vector<Ref<Asset>>();
+//std::vector<harmony::Ref<harmony::Asset>> harmony::AssimpModelAssetFactory::LoadAssetData(const std::string& path)
+//{
+//	HARMONY_PROFILE_FUNCTION()
+//    auto assets = std::vector<Ref<Asset>>();
+//
+//    Assimp::Importer importer;
+//    // importer.ReadFile()
+//	const aiScene* scene = importer.ReadFile(path,
+//		aiProcess_Triangulate |
+//		aiProcess_FlipUVs |
+//		aiProcess_CalcTangentSpace |
+//		aiProcess_GenSmoothNormals |
+//		aiProcess_OptimizeMeshes |
+//		aiProcess_OptimizeGraph |
+//		aiProcess_GenBoundingBoxes
+//	);
+//
+//	if (scene == nullptr)
+//	{
+//		harmony::log::error("AssimpModelAssetFactory : Failed to load asset at path : ", path);
+//		return assets;
+//	}
+//
+//	ProcessNode(scene->mRootNode, scene);
+//	std::string modelName = std::string(scene->mName.C_Str());
+//	Ref<Model> model = CreateRef<Model>(modelName); 
+//	model->m_Handle.Path= path;
+//	for (int i = 0; i < p_Meshes.size(); i++)
+//	{
+//		model->m_MeshNames.push_back(p_MeshNames[i]);
+//		Ref<Mesh> meshRef = std::static_pointer_cast<Mesh, Asset>(p_Meshes[i]);
+//		model->m_Meshes.push_back(GetWeakRef<Mesh>(meshRef));
+//		assets.emplace_back(p_Meshes[i]);
+//		p_Meshes[i]->m_Handle.Path = path;
+//	}
+//
+//	assets.push_back(std::static_pointer_cast<Asset, Model>(model));
+//	return assets;
+//}
 
-    Assimp::Importer importer;
-    // importer.ReadFile()
-	const aiScene* scene = importer.ReadFile(path,
-		aiProcess_Triangulate |
-		aiProcess_FlipUVs |
-		aiProcess_CalcTangentSpace |
-		aiProcess_GenSmoothNormals |
-		aiProcess_OptimizeMeshes |
-		aiProcess_OptimizeGraph |
-		aiProcess_GenBoundingBoxes
-	);
-
-	if (scene == nullptr)
-	{
-		harmony::log::error("AssimpModelAssetFactory : Failed to load asset at path : ", path);
-		return assets;
-	}
-
-	ProcessNode(scene->mRootNode, scene);
-	std::string modelName = std::string(scene->mName.C_Str());
-	Ref<Model> model = CreateRef<Model>(modelName); 
-	model->m_Handle.Path= path;
-	for (int i = 0; i < p_Meshes.size(); i++)
-	{
-		model->m_MeshNames.push_back(p_MeshNames[i]);
-		Ref<Mesh> meshRef = std::static_pointer_cast<Mesh, Asset>(p_Meshes[i]);
-		model->m_Meshes.push_back(GetWeakRef<Mesh>(meshRef));
-		assets.emplace_back(p_Meshes[i]);
-		p_Meshes[i]->m_Handle.Path = path;
-	}
-
-	assets.push_back(std::static_pointer_cast<Asset, Model>(model));
-	return assets;
-}
-
-void harmony::AssimpModelAssetFactory::ProcessNode(aiNode* node, const aiScene* scene)
+void harmony::AssimpModelAssetFactory::ProcessNode(const std::string& path, aiNode* node, const aiScene* scene)
 {
 	HARMONY_PROFILE_FUNCTION()
 	if (node->mNumMeshes > 0)
@@ -79,7 +79,7 @@ void harmony::AssimpModelAssetFactory::ProcessNode(aiNode* node, const aiScene* 
 		{
 			unsigned int sceneIndex = node->mMeshes[i];
 			aiMesh* mesh = scene->mMeshes[sceneIndex];
-			ProcessMesh(mesh, node, scene);
+			ProcessMesh(path, mesh, node, scene);
 		}
 	}
 
@@ -90,15 +90,15 @@ void harmony::AssimpModelAssetFactory::ProcessNode(aiNode* node, const aiScene* 
 
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
-		ProcessNode(node->mChildren[i], scene);
+		ProcessNode(path, node->mChildren[i], scene);
 	}
 }
 
-void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, const aiScene* scene)
+void harmony::AssimpModelAssetFactory::ProcessMesh(const std::string& path, aiMesh* mesh, aiNode* node, const aiScene* scene)
 {
 	HARMONY_PROFILE_FUNCTION()
-	Ref<Mesh> meshAsset = CreateRef<Mesh>();
-
+	Ref<Mesh> meshAsset = CreateRef<Mesh>(path, p_MeshCounter);
+	p_MeshCounter++;
 	bool hasPositions = mesh->HasPositions();
 	bool hasIndices = mesh->HasFaces();
 	bool hasNormals = mesh->HasNormals();
@@ -186,5 +186,47 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(aiMesh* mesh, aiNode* node, c
 
 	p_Meshes.emplace_back(meshAsset);
 	p_MeshNames.emplace_back(AssimpToSTD(mesh->mName));
+}
+
+void harmony::AssimpModelAssetFactory::LoadAssetData(const std::string& path, entt::registry& registry)
+{
+	HARMONY_PROFILE_FUNCTION()
+
+	Assimp::Importer importer;
+	const aiScene* scene = importer.ReadFile(path,
+		aiProcess_Triangulate |
+		aiProcess_FlipUVs |
+		aiProcess_CalcTangentSpace |
+		aiProcess_GenSmoothNormals |
+		aiProcess_OptimizeMeshes |
+		aiProcess_OptimizeGraph |
+		aiProcess_GenBoundingBoxes
+	);
+	//
+	if (scene == nullptr)
+	{
+		harmony::log::error("AssimpModelAssetFactory : Failed to load asset at path : ", path);
+		return;
+	}
+	//
+	ProcessNode(path, scene->mRootNode, scene);
+	std::string modelName = std::string(scene->mName.C_Str());
+	Ref<Model> model = CreateRef<Model>(modelName); 
+	AssetHandle handle{ path, 0, GetTypeHash<Model>() };
+
+	for (int i = 0; i < p_Meshes.size(); i++)
+	{
+		Ref<Mesh> meshAsset = std::static_pointer_cast<Mesh, Asset>(p_Meshes[i]);
+		AssetHandle meshHandle{ path, i, GetTypeHash<Mesh>() };
+		AssetComponent<Mesh> meshComponent{ meshAsset, meshHandle };
+		entt::entity e = registry.create();
+		registry.emplace<AssetComponent<Mesh>>(e, meshComponent);
+	}
+
+	AssetComponent<Model> modelComponent{ model, handle };
+	
+	entt::entity e = registry.create();
+	registry.emplace<AssetComponent<Model>>(e, modelComponent);
+		
 }
 

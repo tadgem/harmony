@@ -38,107 +38,68 @@ namespace harmony {
         }
 
         template<typename T>
-        std::vector<WeakRef<Asset>>LoadAsset(const std::string& path)
+        std::vector<AssetHandle>LoadAsset(const std::string& path)
         {
-            std::vector<WeakRef<Asset>> assets;
+            std::vector<AssetHandle> assets;
             size_t typeHash = typeid(T).hash_code();
 
-            Ref<AssetFactory> factory = nullptr;
-            for (int i = 0; i < p_AssetFactories.size(); i++)
-            {                
-                if (!p_AssetFactories[i]->m_Capabilities.Contains(typeHash))
-                {
-                    continue;
-                }
+            Ref<AssetFactory> factory = GetAssetFactory(typeHash);
 
-                int currentCapabilities = 0;
-                
-                if (factory != nullptr)
-                {
-                    currentCapabilities = factory->m_Capabilities.AssetTypeHashes.size();
-                }
-                
-                int newCapabilities = p_AssetFactories[i]->m_Capabilities.AssetTypeHashes.size();
-
-                if (newCapabilities > currentCapabilities)
-                {
-                    factory = p_AssetFactories[i];
-                }
-            }
-
-            std::vector<Ref<Asset>> loadedAssets = factory->LoadAssetData(path);
+            factory->LoadAssetData(path, registry);
             // Cleanup any shared pointers in factory
             // manager has ownership of all assets.
             factory->ClearLoadedData();
 
-            for (int i = 0; i < loadedAssets.size(); i++)
-            {
-                Ref<Asset> asset = loadedAssets[i];
-                if (p_Assets.find(asset->m_Handle.TypeHash) == p_Assets.end())
-                {
-                    p_Assets.emplace(asset->m_Handle.TypeHash, std::vector<Ref<Asset>>());
-                }
-                p_Assets[asset->m_Handle.TypeHash].emplace_back(asset);
-
-                if (asset->m_Handle.TypeHash == typeHash)
-                {
-                    assets.emplace_back(asset);
-                }
-                // if the assets path is not in the managers list of loaded paths
-                if (std::find(p_LoadedPaths.begin(), p_LoadedPaths.end(), asset->m_Handle.Path) == p_LoadedPaths.end()) {
-                    p_LoadedPaths.emplace_back(asset->m_Handle.Path);
-                }
-            }
-
-            entt::entity e = p_AssetRegistry.create();
-            p_AssetRegistry.emplace(e, AssetComponent<T>());
-
             return assets;
         }
 
         template<typename T>
-        std::vector<WeakRef<T>> GetLoadedAssets()
+        std::vector<AssetHandle> GetLoadedAssets()
         {
-            std::vector<WeakRef<T>> assets;
-            size_t typeHash = typeid(T).hash_code();
-
-            if (p_Assets.find(typeHash) == p_Assets.end())
+            std::vector<AssetHandle> assets;
+            auto view = p_AssetRegistry.view<AssetComponent<T>>();
+            for (auto& [entity, asset] : view.each())
             {
-                harmony::log::warn("No assets loaded of type : ", p_AssetTypeNames[typeHash]);
-                return assets;
-            }
-
-            for (auto& asset : p_Assets[typeHash])
-            {
-                assets.emplace_back(GetWeakRef<T>(std::static_pointer_cast<T, Asset>(asset)));
+                assets.emplace_back(asset.Handle);
             }
             return assets;
         }
 
         template<typename T>
-        std::vector<WeakRef<T>> GetAssetsAtPath(const std::string& path)
+        std::vector<AssetHandle> GetAssetsAtPath(const std::string& path)
         {
-            std::vector<WeakRef<T>> assets;
-            size_t typeHash = typeid(T).hash_code();
-
-            if (p_Assets.find(typeHash) == p_Assets.end())
+            std::vector<WeakRef<AssetHandle>> assets;
+            auto view = p_AssetRegistry.view<AssetComponent<T>>();
+            for (auto& [entity, asset] : view.each())
             {
-                harmony::log::warn("No assets loaded of type : ", p_AssetTypeNames[typeHash]);
-                return assets;
-            }
-
-            for (auto & asset : p_Assets[typeHash])
-            {
-                if (asset->m_AssetPath == path)
+                if (!asset.Handle.Path == path)
                 {
-                    assets.emplace_back(GetWeakRef<T>(std::static_pointer_cast<T, Asset>(asset)));
+                    continue;
                 }
+                assets.emplace_back(asset.Handle);
             }
-
             return assets;
         }
-    
+
+        template<typename T>
+        WeakRef<Asset> GetAsset(const AssetHandle& assetHandle)
+        {
+            auto view = p_AssetRegistry.view<AssetComponent<T>>();
+            for (auto& [entity, asset] : view.each())
+            {
+                if (!asset.Handle == assetHandle)
+                {
+                    continue;
+                }
+                return asset;
+            }
+            return WeakRef<Asset>();
+
+        }
+
     protected:
+
+        Ref<AssetFactory> GetAssetFactory(size_t typeHash);
         std::vector<Ref<AssetFactory>>                      p_AssetFactories;
         std::unordered_map<size_t, std::vector<Ref<Asset>>> p_Assets;
         std::unordered_map<size_t, std::string>             p_AssetTypeNames;

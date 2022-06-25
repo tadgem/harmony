@@ -12,5 +12,8 @@ namespace harmony
         virtual void Cleanup() override;
         virtual nlohmann::json ToJson() override;
         virtual void FromJson(const nlohmann::json& json) override;
+    
+    protected:
+        sol::state p_State;
     };
 }

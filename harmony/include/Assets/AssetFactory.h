@@ -1,4 +1,5 @@
 #pragma once
+#include "entt.hpp"
 #include "Core/Memory.h"
 #include "Core/Profile.hpp"
 #include "Assets/Asset.h"
@@ -27,7 +28,7 @@ namespace harmony {
 	{
 	public:
 		AssetFactory() {}
-		virtual std::vector<Ref<Asset>> LoadAssetData(const std::string& path) = 0;
+		virtual void LoadAssetData(const std::string& path, entt::registry& registry) = 0;
 		virtual void ClearLoadedData();
 
 		AssetFactoryCapabilities m_Capabilities;

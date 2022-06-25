@@ -16,7 +16,7 @@ void harmony::AssetManager::UnloadAllAssets()
 #if HARMONY_DEBUG
 void harmony::AssetManager::OnImGui()
 {
-	if (ImGui::Begin("Assets"))
+	/*if (ImGui::Begin("Assets"))
 	{
 		for (auto const& [typeHash, assets] : p_Assets)
 		{
@@ -39,9 +39,36 @@ void harmony::AssetManager::OnImGui()
 			ImGui::Separator();
 		}
 	}
-	ImGui::End();
+	ImGui::End();*/
 }
 #endif
+
+harmony::Ref<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory(size_t typeHash)
+{
+	Ref<AssetFactory> factory = nullptr;
+	for (int i = 0; i < p_AssetFactories.size(); i++)
+	{
+		if (!p_AssetFactories[i]->m_Capabilities.Contains(typeHash))
+		{
+			continue;
+		}
+
+		int currentCapabilities = 0;
+
+		if (factory != nullptr)
+		{
+			currentCapabilities = factory->m_Capabilities.AssetTypeHashes.size();
+		}
+
+		int newCapabilities = p_AssetFactories[i]->m_Capabilities.AssetTypeHashes.size();
+
+		if (newCapabilities > currentCapabilities)
+		{
+			factory = p_AssetFactories[i];
+		}
+	}
+	return factory;
+}
 
 bool harmony::AssetManager::AddAssetFactory(Ref<AssetFactory> assetFactory)
 {

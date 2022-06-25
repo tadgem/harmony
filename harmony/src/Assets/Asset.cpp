@@ -1,6 +1,14 @@
 #include "Assets/Asset.h"
 
-harmony::Asset::Asset(size_t typeHash)
+harmony::Asset::Asset(AssetHandle handle) : m_Handle(handle)
 {
-	m_Handle.TypeHash = typeHash;
+}
+
+bool harmony::AssetHandle::operator==(AssetHandle other)
+{
+	if (other.Index == Index && other.Path == Path && other.TypeHash == TypeHash)
+	{
+		return true;
+	}
+	return false;
 }
