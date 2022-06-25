@@ -132,10 +132,11 @@ def shader_tool():
             command = build_bintoexe_command(current_shader_stage_selection, renderer)
             subprocess.call(command)
         binary_array_strings = []
+        binary_array_strings.append("#prama once")
         for dir in os.listdir("./shaders/bin"):
             if os.path.isdir("./shaders/bin/" + dir) == False:
                 continue
-            
+
             print(dir)
             filedir = "./shaders/bin/" + dir + "/" + shader_name + ".bin.h"
             if(os.path.exists(filedir)):
