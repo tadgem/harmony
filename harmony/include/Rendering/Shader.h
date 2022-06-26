@@ -13,6 +13,10 @@ namespace harmony
 		bgfx::UniformHandle BgfxHandle;
 		std::string Name;
 		size_t TypeHash;
+
+		bool operator<(const ShaderUniform& o)  const {
+			return BgfxHandle.idx < o.BgfxHandle.idx;
+		}
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderUniform, Name, TypeHash)
 	};
 
@@ -33,6 +37,7 @@ namespace harmony
 		})
 
 		ShaderStage(const std::string& name, const Type& shaderType);
+		ShaderStage();
 		~ShaderStage();
 
 		void LoadShaderBinary();
@@ -57,6 +62,7 @@ namespace harmony
 	{
 	public:
 		ShaderProgram(const std::string& name);
+		ShaderProgram();
 
 		bool AddStage(ShaderStage::Type stageType, WeakRef<ShaderStage> shader);
 		bool RemoveStage(ShaderStage::Type stageType);
@@ -65,7 +71,7 @@ namespace harmony
 		std::string m_Name;
 		std::unordered_map<ShaderStage::Type, WeakRef<ShaderStage>> m_Stages;
 		
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderProgram, m_Name)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderProgram, m_Name, m_Stages)
 
 		bgfx::ProgramHandle m_Handle;
 	};

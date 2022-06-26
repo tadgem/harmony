@@ -2,6 +2,9 @@
 
 #include <memory>
 #include <functional>
+#include "json.hpp"
+
+
 namespace harmony {
 
 	template <typename T>
@@ -66,3 +69,27 @@ namespace harmony {
 	}
 
 };
+
+namespace nlohmann {
+	template <typename T>
+	struct adl_serializer<harmony::WeakRef<T>> {
+		static void to_json(json& j, const harmony::WeakRef<T>& opt) {
+			if (opt.expired()) {
+				j = nullptr;
+			}
+			else {
+				j = *opt.lock();
+			}
+		}
+
+		static void from_json(const json& j, harmony::WeakRef<T>& opt) {
+			if (opt.expired()) {
+				return;
+			}
+			else {
+				harmony::Ref<T> o = opt.lock();
+				*o.get() = j;
+			}
+		}
+	};
+}

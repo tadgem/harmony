@@ -19,7 +19,7 @@ namespace harmony
     class PipelineStage
     {
     public:
-        enum class Type
+        enum Type
         {
             PrimaryDraw,
             SecondaryDraw,
@@ -36,6 +36,7 @@ namespace harmony
         virtual bgfx::FrameBufferHandle GetStageFinalFramebuffer();
 
         const bgfx::ViewId m_ViewId;
+
         Type m_StageType;
     protected:
         bgfx::FrameBufferHandle p_FrameBufferHandle;

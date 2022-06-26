@@ -31,7 +31,7 @@ namespace harmony
 
         bgfx::TextureHandle GetFinalImage();
         PipelineHandle m_Handle;
-        const std::string m_Name;
+        std::string m_Name;
 
     protected:
         std::vector<Ref<PipelineStage>> p_Stages;

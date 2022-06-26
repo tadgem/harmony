@@ -27,7 +27,8 @@ namespace harmony
     {
     public:
         Asset(AssetHandle handle);
-        const AssetHandle m_Handle;
+        Asset() {}
+        AssetHandle m_Handle;
         virtual ~Asset() {}
     };
 };

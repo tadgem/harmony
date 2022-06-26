@@ -11,6 +11,10 @@ harmony::ShaderProgram::ShaderProgram(const std::string& name) : m_Name(name), m
 {
 }
 
+harmony::ShaderProgram::ShaderProgram() : m_Handle(BGFX_INVALID_HANDLE)
+{
+}
+
 bool harmony::ShaderProgram::AddStage(ShaderStage::Type stageType, WeakRef<ShaderStage> shader)
 {
 	if (m_Stages.find(stageType) != m_Stages.end())
@@ -52,6 +56,10 @@ void harmony::ShaderProgram::Build()
 }
 
 harmony::ShaderStage::ShaderStage(const std::string& name, const Type& shaderType) : Asset(AssetHandle {name, 0, GetTypeHash<ShaderStage>()}), m_Type(shaderType), m_Handle(BGFX_INVALID_HANDLE), m_Name(name)
+{
+}
+
+harmony::ShaderStage::ShaderStage() : Asset()
 {
 }
 

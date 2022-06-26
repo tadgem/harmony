@@ -37,4 +37,5 @@ void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<Ref<Sy
 		nlohmann::json sceneSystemJson = system->SerializeSystem(m_Registry);
 		p_SystemSerializationAttributes.emplace(system->m_TypeHash, sceneSystemJson);
 	}
+	m_NumEntities = m_Registry.size();
 }

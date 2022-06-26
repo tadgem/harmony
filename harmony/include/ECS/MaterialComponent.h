@@ -4,6 +4,8 @@ namespace harmony
 {
     struct MaterialComponent
     {
-        bgfx::ProgramHandle ProgramHandle;
+        ShaderDataContainer Data;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(MaterialComponent, Data);
     };
 };
