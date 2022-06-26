@@ -15,14 +15,15 @@ namespace harmony
         uint32_t m_NumEntities;
         entt::registry m_Registry;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Scene, m_Name, m_NumEntities, p_SystemSerializationAttributes)
     
     protected:
 
         void UpdateSceneSystemSerializationAttributes(std::vector<Ref<System>>& systems);
         void Deserialize(std::vector<Ref<System>>& systems);
         std::map<size_t, nlohmann::json>    p_SystemSerializationAttributes;
-        std::vector<Entity> p_Entities;
         friend class Program;
+        std::vector<Entity> p_Entities;
+    public:
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Scene, m_Name, m_NumEntities, p_Entities, p_SystemSerializationAttributes)
     };
 };
