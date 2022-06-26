@@ -11,6 +11,7 @@
 #include "EditorUtils.hpp"
 #include "EditorView.h"
 #include "Rendering/Pipelines/DebugDrawPipeline.h"
+#include "Rendering/Pipelines/TexturedMeshPipeline.h"
 int main()
 {
 	using namespace harmony;
@@ -26,7 +27,9 @@ int main()
 
 	auto viewWr = renderer.CreateView<EditorView>();
 	auto debugDrawPipelineWr = renderer.CreatePipeline<DebugDrawPipeline>();
+	auto texturedMeshPipelineWr = renderer.CreatePipeline<TexturedMeshPipeline>();
 	renderer.AddViewPipeline(viewWr, debugDrawPipelineWr);
+	renderer.AddViewPipeline(viewWr, texturedMeshPipelineWr);
 	renderer.SetViewActive(viewWr, true);
 	app.Init();
 	

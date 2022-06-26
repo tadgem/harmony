@@ -41,5 +41,7 @@ namespace harmony
     protected:
         bgfx::FrameBufferHandle p_FrameBufferHandle;
         WeakRef<ShaderProgram> p_Shader;
+
+        bool p_RunPreFrame;
     };
 } 

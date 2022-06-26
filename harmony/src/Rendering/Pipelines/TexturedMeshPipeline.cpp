@@ -5,15 +5,20 @@
 #include "ECS/TransformComponent.h"
 #include "Core/Program.h"
 
-void harmony::TextureMeshStage::Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
+harmony::TexturedMeshStage::TexturedMeshStage() : PipelineStage(PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>())
+{
+}
+
+void harmony::TexturedMeshStage::Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
 {
     HARMONY_PROFILE_FUNCTION()
     PipelineStage::Init(registry, view, handle);
 
     p_Shader = Program::Get()->m_Renderer.GetShader("TexturedMesh");
+    bgfx::setViewName(m_ViewId, "Textured Mesh");
 }
 
-void harmony::TextureMeshStage::PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
+void harmony::TexturedMeshStage::PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
 {
     HARMONY_PROFILE_FUNCTION()
     PipelineStage::PreUpdate(registry, view, handle);
@@ -24,34 +29,35 @@ void harmony::TextureMeshStage::PreUpdate(entt::registry& registry, WeakRef<View
     {
         if (material.Data.m_Shader.lock() == pipelineShader)
         {
-            WeakRef<Mesh> meshAsset = Program::Get()->m_AssetManager.GetAsset<Mesh>(mesh.MeshAsset);
-            
-            if (meshAsset.expired())
-            {
-                harmony::log::error("Cannot render mesh, as it is not loaded : {}", mesh.MeshAsset.Path);
-                continue;
-            }
-
-            BGFXMeshHandle handle = meshAsset.lock()->m_Handle;
-
             material.Data.SetContainerUniforms();
             bgfx::setTransform(&transform.Model[0]);
-            bgfx::setVertexBuffer(0, handle.m_VBH);
-            bgfx::setIndexBuffer(handle.m_IBH);
+            bgfx::setVertexBuffer(0, mesh.MeshHandle.m_VBH);
+            bgfx::setIndexBuffer(mesh.MeshHandle.m_IBH);
             bgfx::submit(m_ViewId, pipelineShader->m_Handle);
         }
     }
 }
 
-void harmony::TextureMeshStage::PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
+void harmony::TexturedMeshStage::PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
+{
+    if (!p_RunPreFrame)
+    {
+        return;
+    }
+    bgfx::touch(m_ViewId);
+    PipelineStage::PostUpdate(registry, view, handle);
+}
+
+void harmony::TexturedMeshStage::Cleanup()
 {
 }
 
-void harmony::TextureMeshStage::Cleanup()
-{
-}
-
-bgfx::FrameBufferHandle harmony::TextureMeshStage::GetStageFinalFramebuffer()
+bgfx::FrameBufferHandle harmony::TexturedMeshStage::GetStageFinalFramebuffer()
 {
     return bgfx::FrameBufferHandle();
+}
+
+harmony::TexturedMeshPipeline::TexturedMeshPipeline() : Pipeline(PipelineHandle::New("TexturedMeshPipeline"))
+{
+    AddPipelineStage<TexturedMeshStage>();
 }

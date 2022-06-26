@@ -56,7 +56,7 @@ bgfx::TextureHandle harmony::Pipeline::GetFinalImage()
 {
 	if (p_Stages.size() == 0)
 	{
-		harmony::log::warn("Pipeline with handle {} is empty!", m_Handle.Index);
+		// harmony::log::warn("Pipeline with handle {} is empty!", m_Handle.Index);
 		return BGFX_INVALID_HANDLE;
 	}
 	bgfx::FrameBufferHandle fbToBlit = p_Stages[p_Stages.size() - 1]->GetStageFinalFramebuffer();

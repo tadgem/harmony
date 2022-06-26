@@ -21,15 +21,20 @@ void harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view, 
 
 void harmony::PipelineStage::PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
 {
+	if (p_RunPreFrame)
+	{
+		harmony::log::error("Already ran pre frame callback for this frame!");
+		return;
+	}
 	bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0);
 	Ref<View> _view = view.lock();
 	bgfx::setViewTransform(m_ViewId, &_view->m_View[0], &_view->m_Projection[0]);
 	bgfx::setViewRect(m_ViewId, 0, 0, _view->m_Width, _view->m_Height);
-
 }
 
 void harmony::PipelineStage::PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
 {
+	p_RunPreFrame = false;
 }
 
 bgfx::FrameBufferHandle harmony::PipelineStage::GetStageFinalFramebuffer()

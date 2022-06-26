@@ -124,7 +124,7 @@ void harmony::Renderer::OnPreUpdate(entt::registry& registry)
                 harmony::log::warn("Pipeline {} is expired.", p);
                 continue;
             }
-            pipelines[i]->PreUpdate(registry, m_ActiveViews[i]);
+            pipelines[p]->PreUpdate(registry, m_ActiveViews[i]);
         }
     }
 }
@@ -150,7 +150,7 @@ void harmony::Renderer::OnPostUpdate(entt::registry& registry)
                 harmony::log::warn("Pipeline {} is expired.", p);
                 continue;
             }
-            pipelines[i]->PostUpdate(registry, m_ActiveViews[i]);
+            pipelines[p]->PostUpdate(registry, m_ActiveViews[i]);
         }
     }
 }
@@ -203,7 +203,7 @@ void harmony::Renderer::OnImGui()
                 bgfx::TextureHandle fbHandle = p_Views[view][p]->GetFinalImage();
                 if (fbHandle.idx == bgfx::kInvalidHandle)
                 {
-                    harmony::log::warn("Renderer OnImGui : Invalid framebuffer handle for view {} pipeline {}", view->m_Name, p_Views[view][p]->m_Name);
+                    // harmony::log::warn("Renderer OnImGui : Invalid framebuffer handle for view {} pipeline {}", view->m_Name, p_Views[view][p]->m_Name);
                     continue;
                 }
                 if (!bgfx::isValid(fbHandle))

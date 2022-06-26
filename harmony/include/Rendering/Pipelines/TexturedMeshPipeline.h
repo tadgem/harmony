@@ -4,8 +4,11 @@
 
 namespace harmony
 {
-    class TextureMeshStage : public PipelineStage
+    class TexturedMeshStage : public PipelineStage
     {
+    public:
+        TexturedMeshStage();
+
         virtual void Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
         virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
@@ -15,6 +18,7 @@ namespace harmony
 
     class TexturedMeshPipeline : public Pipeline
     {
-
+    public:
+        TexturedMeshPipeline();
     };
 };
