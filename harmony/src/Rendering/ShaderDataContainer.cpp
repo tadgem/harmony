@@ -1,5 +1,8 @@
 #include "Rendering/ShaderDataContainer.h"
 #include "Core/Log.hpp"
+#if HARMONY_DEBUG
+#include "ImGui/imgui.h";
+#endif
 harmony::ShaderDataContainer::ShaderDataContainer(WeakRef<ShaderProgram> shaderProgram)
 {
 	UpdateShader(shaderProgram);
@@ -97,7 +100,6 @@ void harmony::ShaderDataContainer::Clear()
 {
 	m_UniformInfos.clear();
 	m_UniformHandles.clear();
-	m_Uniforms.clear();
 
 	m_FloatValues.clear();
 	m_Vec2Values.clear();
@@ -106,7 +108,11 @@ void harmony::ShaderDataContainer::Clear()
 	m_Mat4Values.clear();
 	m_TextureValues.clear();
 }
-
+#if HARMONY_DEBUG
+void harmony::ShaderDataContainer::OnImGui()
+{
+}
+#endif
 bool harmony::ShaderDataContainer::ReturnIfNull()
 {
 	if (p_Shader.expired())
