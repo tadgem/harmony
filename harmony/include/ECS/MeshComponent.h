@@ -5,8 +5,7 @@ namespace harmony
 {
     struct MeshComponent
     {
-        std::string MeshAssetPath;
-        uint32_t Index;
+        AssetHandle MeshAsset;
 
         bool CastShadow;
     };

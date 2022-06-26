@@ -6,6 +6,7 @@
 #include "ECS/MaterialComponent.h"
 #include "Core/Log.hpp"
 #include "Core/Time.h"
+#include "Rendering/BuiltinShaders.h"
 #if HARMONY_DEBUG
 #include "ImGui/imgui_bgfx.h"
 #include "ImGui/imgui.h"
@@ -14,6 +15,21 @@
 harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetManager)
 {
     HARMONY_PROFILE_FUNCTION()
+}
+
+void harmony::Renderer::AddBuiltInShaders()
+{
+    Ref<ShaderProgram> texturedMesh = CreateRef<ShaderProgram>("TexturedMesh");
+    Ref<BuiltInShaderStage> texturedMeshVS = CreateRef<BuiltInShaderStage>("vs_simple_textured", ShaderStage::Type::Vertex, s_BuiltInShader[0]);
+    texturedMeshVS->LoadShaderBinary();
+    Ref<BuiltInShaderStage> texturedMeshFS = CreateRef<BuiltInShaderStage>("fs_simple_textured", ShaderStage::Type::Fragment, s_BuiltInShader[1]);
+    texturedMeshFS->LoadShaderBinary();
+    texturedMesh->AddStage(ShaderStage::Type::Vertex, texturedMeshVS);
+    texturedMesh->AddStage(ShaderStage::Type::Fragment, texturedMeshFS);
+
+    texturedMesh->Build();
+    ShaderDataContainer dataContainer = ShaderDataContainer(texturedMesh);
+    p_Shaders.emplace(texturedMesh, dataContainer);
 }
 
 bgfx::VertexLayout harmony::PosColorTexCoord0Vertex::ms_layout;
@@ -76,6 +92,7 @@ void harmony::Renderer::SetViewActive(WeakRef<View> viewWeakRef, bool active)
 
 void harmony::Renderer::Init()
 {
+    AddBuiltInShaders();
     for (auto& [key, val] : p_Views)
     {
         for (int i = 0; i < val.size(); i++)
@@ -308,6 +325,18 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std
     return wr;
 }
 
+harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::GetShader(const std::string& name)
+{
+    for (auto& [shader, data] : p_Shaders)
+    {
+        if (shader->m_Name == name)
+        {
+            return GetWeakRef<ShaderProgram>(shader);
+        }
+    }
+    return WeakRef<ShaderProgram>();
+}
+
 void harmony::Renderer::AddUniform(const std::string name, WeakRef<float> value)
 {
 }
@@ -323,7 +352,8 @@ harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(WeakRef<Mesh> mesh)
     uint32_t vertexBufferSize = static_cast<uint32_t>(meshRef->m_BGFXData.size() * sizeof(float));
     m.m_VBH = bgfx::createVertexBuffer(bgfx::makeRef(meshRef->m_BGFXData.data(), vertexBufferSize), m.m_Layout);
     m.m_IBH = bgfx::createIndexBuffer(bgfx::makeRef(meshRef->m_Indices.data(), indexBufferSize), BGFX_BUFFER_INDEX32);
-
+    meshRef->m_SubmittedToGpu = true;
+    meshRef->m_Handle = m;
     return m;
 }
 

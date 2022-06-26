@@ -131,3 +131,17 @@ std::string harmony::ShaderStage::GetShaderRendererDirectory()
 
 	return shaderPath;
 }
+
+harmony::BuiltInShaderStage::BuiltInShaderStage(
+	const std::string& name, 
+	const Type& shaderType, 
+	bgfx::EmbeddedShader embeddedShader) : ShaderStage(name, shaderType), p_EmbeddedShader(embeddedShader)
+{
+}
+
+void harmony::BuiltInShaderStage::LoadShaderBinary()
+{
+	bgfx::RendererType::Enum type = bgfx::getRendererType();
+	m_Handle = bgfx::createEmbeddedShader(&p_EmbeddedShader,type, m_Name.c_str());
+	bgfx::setName(m_Handle, m_Name.c_str());
+}

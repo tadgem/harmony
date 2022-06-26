@@ -11,9 +11,9 @@ harmony::ShaderDataContainer::ShaderDataContainer(WeakRef<ShaderProgram> shaderP
 void harmony::ShaderDataContainer::UpdateShader(WeakRef<ShaderProgram> newShader)
 {
 	p_ShaderUniformCount = 0;
-	p_Shader = newShader;
+	m_Shader = newShader;
 
-	if (p_Shader.expired())
+	if (m_Shader.expired())
 	{
 		harmony::log::error("Shader for data container is expired!");
 		return;
@@ -26,7 +26,7 @@ void harmony::ShaderDataContainer::UpdateContainer()
 {
 	Clear();
 
-	Ref<ShaderProgram> shader = p_Shader.lock();
+	Ref<ShaderProgram> shader = m_Shader.lock();
 	for (auto& [key, val] : shader->m_Stages)
 	{
 		bgfx::UniformHandle uniforms[g_MaxUniforms];
@@ -100,7 +100,7 @@ void harmony::ShaderDataContainer::OnImGui()
 
 bool harmony::ShaderDataContainer::ReturnIfNull()
 {
-	if (p_Shader.expired())
+	if (m_Shader.expired())
 	{
 		harmony::log::error("Shader for data container is expired!");
 		return true;

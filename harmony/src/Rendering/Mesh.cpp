@@ -2,6 +2,7 @@
 #include "Core/Profile.hpp"
 harmony::Mesh::Mesh(const std::string& path, uint32_t index) : Asset(AssetHandle{ path, index, GetTypeHash<Mesh>() })
 {
+	m_SubmittedToGpu = false;
 	HARMONY_PROFILE_FUNCTION()
 }
 

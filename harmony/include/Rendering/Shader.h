@@ -1,11 +1,11 @@
 #pragma once
 
 #include "bgfx/bgfx.h"
+#include "bgfx/embedded_shader.h"
 #include "Assets/Asset.h"
 #include "Core/Memory.h"
 #include "bx/readerwriter.h"
 #include "bx/file.h"
-
 namespace harmony
 {
 	struct ShaderUniform
@@ -40,7 +40,7 @@ namespace harmony
 		ShaderStage();
 		~ShaderStage();
 
-		void LoadShaderBinary();
+		virtual void LoadShaderBinary();
 
 		static std::string GetShaderStageNameFromEnum(Type type);
 		static std::string GetShaderRendererDirectory();
@@ -56,6 +56,15 @@ namespace harmony
 
 	private:
 		bx::FileReader _reader;
+	};
+
+	class BuiltInShaderStage : public ShaderStage
+	{
+	public:
+		BuiltInShaderStage(const std::string& name, const Type& shaderType, bgfx::EmbeddedShader embeddedShader);
+		virtual void LoadShaderBinary() override;
+	protected:
+		bgfx::EmbeddedShader p_EmbeddedShader;
 	};
 
 	class ShaderProgram

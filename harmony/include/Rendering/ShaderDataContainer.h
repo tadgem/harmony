@@ -96,7 +96,8 @@ namespace harmony
         std::vector<bgfx::UniformInfo> m_UniformInfos;
         std::vector<bgfx::UniformHandle> m_UniformHandles;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderDataContainer, m_Vec4Values, m_Mat3Values, m_Mat4Values, m_TextureValues, p_Shader)
+        WeakRef<ShaderProgram> m_Shader;
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderDataContainer, m_Vec4Values, m_Mat3Values, m_Mat4Values, m_TextureValues, m_Shader)
     protected:
 
         bool ReturnIfNull();
@@ -123,7 +124,6 @@ namespace harmony
             
             return uniform;
         }
-        WeakRef<ShaderProgram> p_Shader;
         uint16_t p_ShaderUniformCount;
     };
 };

@@ -1,4 +1,4 @@
-$input a_position, a_texcoord0
+$input a_position, a_normal, a_texcoord0
 $output v_texcoord0
 
 /*

@@ -71,18 +71,17 @@ namespace harmony {
         std::vector<AssetHandle> GetAssetsAtPath(const std::string& path);
         
         template<typename T>
-        WeakRef<Asset> GetAsset(const AssetHandle& assetHandle)
+        WeakRef<T> GetAsset(const AssetHandle& assetHandle)
         {
             auto view = p_AssetRegistry.view<AssetComponent<T>>();
             for (auto& [entity, asset] : view.each())
             {
-                if (!asset.Handle == assetHandle)
+                if (asset.Handle == assetHandle)
                 {
-                    continue;
+                    return asset.Asset;
                 }
-                return asset;
             }
-            return WeakRef<Asset>();
+            return WeakRef<T>();
 
         }
 

@@ -41,6 +41,9 @@ namespace harmony {
 		bool m_IsSkeletal;
 		uint32_t m_NumVerts = 0;
 
+		bool m_SubmittedToGpu;
+		BGFXMeshHandle m_Handle;
+
 		std::vector<unsigned int> m_Indices;
 		std::vector<glm::vec3> m_Positions;
 		std::vector<glm::vec3> m_Normals;

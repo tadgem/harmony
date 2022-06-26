@@ -49,6 +49,8 @@ namespace harmony
     public:
         Renderer(AssetManager& assetManager);
 
+        void AddBuiltInShaders();
+
         template<typename T, typename ... Args>
         WeakRef<T> CreatePipeline(Args&& ... args)
         {
@@ -81,6 +83,8 @@ namespace harmony
 
         WeakRef<ShaderProgram> LoadShader(const std::string& name, const std::string& vertName, const std::string& fragName);
         WeakRef<ShaderProgram> LoadShader(const std::string& name, const std::string& computeName);
+
+        WeakRef<ShaderProgram> GetShader(const std::string& name);
 
         void AddUniform(const std::string name, WeakRef<float> value);
         void AddUniform(const std::string name, WeakRef<glm::vec2> value);
