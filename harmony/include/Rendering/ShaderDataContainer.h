@@ -10,19 +10,12 @@ namespace harmony
     public:
         ShaderDataContainer(WeakRef<ShaderProgram> shaderProgram);
 
-        void AddValue(const std::string name, WeakRef<float> value);
-        void AddValue(const std::string name, WeakRef<glm::vec2> value);
-        void AddValue(const std::string name, WeakRef<glm::vec3> value);
-        void AddValue(const std::string name, WeakRef<glm::mat3> value);
-        void AddValue(const std::string name, WeakRef<glm::mat4> value);
-        void AddValue(const std::string name, WeakRef<BGFXTextureHandle> value);
-
-        std::map<uint16_t, WeakRef<float>>     p_FloatValues;
-        std::map<uint16_t, WeakRef<glm::vec2>> p_Vec2Values;
-        std::map<uint16_t, WeakRef<glm::vec3>> p_Vec3Values;
-        std::map<uint16_t, WeakRef<glm::mat3>> p_Mat3Values;
-        std::map<uint16_t, WeakRef<glm::mat4>> p_Mat4Values;
-        std::map<uint16_t, WeakRef<BGFXTextureHandle>> p_TextureValues;
+        std::map<ShaderUniform, float>     m_FloatValues;
+        std::map<ShaderUniform, glm::vec2> m_Vec2Values;
+        std::map<ShaderUniform, glm::vec3> m_Vec3Values;
+        std::map<ShaderUniform, glm::mat3> m_Mat3Values;
+        std::map<ShaderUniform, glm::mat4> m_Mat4Values;
+        std::map<ShaderUniform, BGFXTextureHandle> m_TextureValues;
 
         void UpdateShader(WeakRef<ShaderProgram> newShader);
         void UpdateContainer();

@@ -5,108 +5,6 @@ harmony::ShaderDataContainer::ShaderDataContainer(WeakRef<ShaderProgram> shaderP
 	UpdateShader(shaderProgram);
 }
 
-void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<float> value)
-{
-	if (ReturnIfNull()) return;
-	
-	ShaderUniform uniform = GetShaderUniform<float>(name);
-
-	if (uniform.BgfxHandle.idx == bgfx::kInvalidHandle)
-	{
-		harmony::log::error("Failed to find float uniform with name {0} in shader {1}", name, p_Shader.lock()->m_Name);
-		return;
-	}
-
-	harmony::log::info("Adding shader value : float : {}", name);
-	p_FloatValues.emplace(uniform.BgfxHandle.idx, value);
-	m_Uniforms.emplace_back(uniform);
-	
-}
-
-void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm::vec2> value)
-{
-	if (ReturnIfNull()) return;
-
-	ShaderUniform uniform = GetShaderUniform<glm::vec2>(name);
-
-	if (uniform.BgfxHandle.idx == bgfx::kInvalidHandle)
-	{
-		harmony::log::error("Failed to find vec2 uniform with name {0} in shader {1}", name, p_Shader.lock()->m_Name);
-		return;
-	}
-
-	harmony::log::info("Adding shader value : vec2 : {}", name);
-	p_Vec2Values.emplace(uniform.BgfxHandle.idx, value);
-	m_Uniforms.emplace_back(uniform);
-}
-
-void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm::vec3> value)
-{
-	if (ReturnIfNull()) return;
-
-	ShaderUniform uniform = GetShaderUniform<glm::vec3>(name);
-
-	if (uniform.BgfxHandle.idx == bgfx::kInvalidHandle)
-	{
-		harmony::log::error("Failed to find vec3 uniform with name {0} in shader {1}", name, p_Shader.lock()->m_Name);
-		return;
-	}
-
-	harmony::log::info("Adding shader value : vec3 : {}", name);
-	p_Vec3Values.emplace(uniform.BgfxHandle.idx, value);
-	m_Uniforms.emplace_back(uniform);
-}
-
-void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm::mat3> value)
-{
-	if (ReturnIfNull()) return;
-
-	ShaderUniform uniform = GetShaderUniform<glm::mat3>(name);
-
-	if (uniform.BgfxHandle.idx == bgfx::kInvalidHandle)
-	{
-		harmony::log::error("Failed to find mat3 uniform with name {0} in shader {1}", name, p_Shader.lock()->m_Name);
-		return;
-	}
-
-	harmony::log::info("Adding shader value : mat3 : {}", name);
-	p_Mat3Values.emplace(uniform.BgfxHandle.idx, value);
-	m_Uniforms.emplace_back(uniform);
-}
-
-void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<glm::mat4> value)
-{
-	if (ReturnIfNull()) return;
-
-	ShaderUniform uniform = GetShaderUniform<glm::mat4>(name);
-
-	if (uniform.BgfxHandle.idx == bgfx::kInvalidHandle)
-	{
-		harmony::log::error("Failed to find mat4 uniform with name {0} in shader {1}", name, p_Shader.lock()->m_Name);
-		return;
-	}
-	harmony::log::info("Adding shader value : mat4 : {}", name);
-	p_Mat4Values.emplace(uniform.BgfxHandle.idx, value);
-	m_Uniforms.emplace_back(uniform);
-}
-
-
-void harmony::ShaderDataContainer::AddValue(const std::string name, WeakRef<BGFXTextureHandle> value)
-{
-	if (ReturnIfNull()) return;
-
-	ShaderUniform uniform = GetShaderUniform<BGFXTextureHandle>(name);
-
-	if (uniform.BgfxHandle.idx == bgfx::kInvalidHandle)
-	{
-		harmony::log::error("Failed to find texture uniform with name {0} in shader {1}", name, p_Shader.lock()->m_Name);
-		return;
-	}
-	harmony::log::info("Adding shader value : texture : {}", name);
-	p_TextureValues.emplace(uniform.BgfxHandle.idx, value);
-	m_Uniforms.emplace_back(uniform);
-}
-
 void harmony::ShaderDataContainer::UpdateShader(WeakRef<ShaderProgram> newShader)
 {
 	p_ShaderUniformCount = 0;
@@ -146,57 +44,50 @@ void harmony::ShaderDataContainer::SetContainerUniforms()
 {
 	uint8_t textureCount = 0;
 
-	if (p_FloatValues.size() > 0)
+	if (m_FloatValues.size() > 0)
 	{
-		for (auto& [handleIndex, valueWeakRef] : p_FloatValues)
+		for (auto& [handle, value] : m_FloatValues)
 		{
-			bgfx::UniformHandle handle{ handleIndex };
-			bgfx::setUniform(handle, valueWeakRef.lock().get());
+			bgfx::setUniform(handle.BgfxHandle, &value);
 		}
 	}
 
-	if (p_Vec2Values.size() > 0)
+	if (m_Vec2Values.size() > 0)
 	{
-		for (auto& [handleIndex, valueWeakRef] : p_Vec2Values)
+		for (auto& [handle, value] : m_Vec2Values)
 		{
-			bgfx::UniformHandle handle{ handleIndex };
-			bgfx::setUniform(handle, valueWeakRef.lock().get());
+			bgfx::setUniform(handle.BgfxHandle, &value[0]);
 		}
 	}
 
-	if (p_Vec3Values.size() > 0)
+	if (m_Vec3Values.size() > 0)
 	{
-		for (auto& [handleIndex, valueWeakRef] : p_Vec3Values)
+		for (auto& [handle, value] : m_Vec3Values)
 		{
-			bgfx::UniformHandle handle{ handleIndex };
-			bgfx::setUniform(handle, valueWeakRef.lock().get());
+			bgfx::setUniform(handle.BgfxHandle, &value[0]);
 		}
 	}
 
-	if (p_Mat3Values.size() > 0)
+	if (m_Mat3Values.size() > 0)
 	{
-		for (auto& [handleIndex, valueWeakRef] : p_Mat3Values)
+		for (auto& [handle, value] : m_Mat3Values)
 		{
-			bgfx::UniformHandle handle{ handleIndex };
-			bgfx::setUniform(handle, valueWeakRef.lock().get());
+			bgfx::setUniform(handle.BgfxHandle, &value[0]);
 		}
 	}
-	if (p_Mat4Values.size() > 0)
+	if (m_Mat4Values.size() > 0)
 	{
-		for (auto& [handleIndex, valueWeakRef] : p_Mat4Values)
+		for (auto& [handle, value] : m_Mat4Values)
 		{
-			bgfx::UniformHandle handle{ handleIndex };
-			bgfx::setUniform(handle, valueWeakRef.lock().get());
+			bgfx::setUniform(handle.BgfxHandle, &value[0]);
 		}
 	}
 
-	if (p_TextureValues.size() > 0)
+	if (m_TextureValues.size() > 0)
 	{
-		for (auto& [handleIndex, valueWeakRef] : p_TextureValues)
+		for (auto& [handle, value] : m_TextureValues)
 		{
-			bgfx::UniformHandle handle{ handleIndex };
-			Ref<BGFXTextureHandle> textureHandle = valueWeakRef.lock();
-			bgfx::setTexture(textureCount, handle, textureHandle->Handle);
+			bgfx::setTexture(textureCount, handle.BgfxHandle, value.Handle);
 			textureCount++;
 		}
 	}
@@ -208,12 +99,12 @@ void harmony::ShaderDataContainer::Clear()
 	m_UniformHandles.clear();
 	m_Uniforms.clear();
 
-	p_FloatValues.clear();
-	p_Vec2Values.clear();
-	p_Vec3Values.clear();
-	p_Mat3Values.clear();
-	p_Mat4Values.clear();
-	p_TextureValues.clear();
+	m_FloatValues.clear();
+	m_Vec2Values.clear();
+	m_Vec3Values.clear();
+	m_Mat3Values.clear();
+	m_Mat4Values.clear();
+	m_TextureValues.clear();
 }
 
 bool harmony::ShaderDataContainer::ReturnIfNull()
