@@ -20,12 +20,18 @@ namespace harmony
 	{
 	public:
 
-		enum class Type
+		enum Type
 		{
 			Vertex,
 			Fragment, 
 			Compute
 		};
+		NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
+			{Vertex, "vert"},
+			{Fragment, "frag"},
+			{Compute, "compute"}
+		})
+
 		ShaderStage(const std::string& name, const Type& shaderType);
 		~ShaderStage();
 
@@ -35,7 +41,9 @@ namespace harmony
 		static std::string GetShaderRendererDirectory();
 		
 		Type m_Type;
-		const std::string m_Name;
+		std::string m_Name;
+
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderStage, m_Name, m_Type)
 
 		std::vector<bgfx::UniformInfo> m_UniformInfos;
 		bgfx::ShaderHandle m_Handle;
@@ -54,9 +62,11 @@ namespace harmony
 		bool RemoveStage(ShaderStage::Type stageType);
 		void Build();
 
-		const std::string m_Name;
-		
+		std::string m_Name;
 		std::unordered_map<ShaderStage::Type, WeakRef<ShaderStage>> m_Stages;
+		
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderProgram, m_Name)
+
 		bgfx::ProgramHandle m_Handle;
 	};
 };

@@ -77,9 +77,7 @@ namespace harmony
     public:
         ShaderDataContainer(WeakRef<ShaderProgram> shaderProgram);
 
-        std::map<ShaderUniform, float>     m_FloatValues;
-        std::map<ShaderUniform, glm::vec2> m_Vec2Values;
-        std::map<ShaderUniform, glm::vec3> m_Vec3Values;
+        std::map<ShaderUniform, glm::vec4> m_Vec4Values;
         std::map<ShaderUniform, glm::mat3> m_Mat3Values;
         std::map<ShaderUniform, glm::mat4> m_Mat4Values;
         std::map<ShaderUniform, BGFXTextureHandle> m_TextureValues;
@@ -97,10 +95,11 @@ namespace harmony
         std::vector<bgfx::UniformInfo> m_UniformInfos;
         std::vector<bgfx::UniformHandle> m_UniformHandles;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderDataContainer, m_FloatValues, m_Vec2Values, m_Vec3Values, m_Mat3Values, m_Mat4Values, m_TextureValues)
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderDataContainer, m_Vec4Values, m_Mat3Values, m_Mat4Values, m_TextureValues)
     protected:
 
         bool ReturnIfNull();
+        void CreateEmptyValue(bgfx::UniformInfo info, bgfx::UniformHandle handle);
 
         template <typename T>
         ShaderUniform GetShaderUniform(const std::string name)
