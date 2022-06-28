@@ -6,6 +6,7 @@ namespace harmony
     class LuaProgramComponent : public ProgramComponent
     {
     public:
+        LuaProgramComponent();
         virtual void Init() override;
         virtual void Update() override;
         virtual void Render() override;

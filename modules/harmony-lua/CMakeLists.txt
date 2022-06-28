@@ -19,4 +19,4 @@ ${ROOT_DIR}/submodules/sol2/include
 CACHE INTERNAL "")
 
 target_include_directories(harmony-lua PUBLIC ${HARMONY_LUA_INCLUDES})
-target_link_libraries(harmony-lua harmony-core assimp sol2)
+target_link_libraries(harmony-lua harmony-core lua sol2)

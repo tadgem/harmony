@@ -12,10 +12,12 @@
 #include "EditorView.h"
 #include "Rendering/Pipelines/DebugDrawPipeline.h"
 #include "Rendering/Pipelines/TexturedMeshPipeline.h"
+#include "LuaProgramComponent.h"
 int main()
 {
 	using namespace harmony;
 	Editor app;
+	app.AddProgramComponent<LuaProgramComponent>();
 	harmony::Renderer& renderer = app.m_Renderer;
 	harmony::AssetManager& assetManager = app.m_AssetManager;
 
