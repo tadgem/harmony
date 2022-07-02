@@ -6,6 +6,9 @@ harmony::Editor::Editor() : harmony::Program("Harmony Editor")
 	AddAssetFactories();
 	AddProgramComponents();
 	AddSystems();
+
+	InitializePipelines();
+	InitializeViews();
 }
 
 void harmony::Editor::AddAssetTypeNames()
@@ -67,4 +70,6 @@ void harmony::Editor::RunEditor()
 
 void harmony::Editor::UpdateEditor()
 {
+	m_Renderer.OnImGui();
+	m_AssetManager.OnImGui();
 }

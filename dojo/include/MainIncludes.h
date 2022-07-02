@@ -11,5 +11,5 @@
 #include "ECS/TransformSystem.h"
 #include "ECS/TileMapSystemImGui.h"
 #include "LuaProgramComponent.h"
-#include "EditorUtils.hpp"
+#include "EditorUtils.h"
 #include "EditorView.h"

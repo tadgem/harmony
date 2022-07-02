@@ -1,22 +1,10 @@
+#pragma once
+
 #include "ImGui/imgui.h"
 #include "Core/Program.h"
 #include "Assets/AssetManager.h"
 
-void ProjectDetailsImGui(harmony::Program& program)
-{
-	if (ImGui::Begin("Project"))
-	{
-		if (program.m_Project != nullptr)
-		{
-			ImGui::Text("Project Name : ", program.m_Project->m_ProjectName.c_str());
-		}
-		else
-		{
-			ImGui::Text("No Project Loaded");
-		}
-	}
-	ImGui::End();
-}
+void ProjectDetailsImGui(harmony::Program& program);
 
 template<typename T>
 bool AssetTypeSelector(const std::string& selectorName, harmony::AssetManager& am, harmony::AssetHandle& handle)

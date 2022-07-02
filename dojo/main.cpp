@@ -1,4 +1,4 @@
-#include "MainIncludes.h"
+#include "EditorApplication.h"
 
 int main()
 {
