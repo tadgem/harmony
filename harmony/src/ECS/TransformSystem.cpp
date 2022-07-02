@@ -14,7 +14,7 @@ void harmony::TransformSystem::Update(entt::registry& registry)
 	auto transformView = registry.view<TransformComponent>();
 	glm::mat4 modelMatrix = glm::mat4(1.0);
 
-	for (auto& [entity, transform] : transformView.each())
+	for (auto [entity, transform] : transformView.each())
 	{
 		modelMatrix = glm::mat4(1.0);
 		modelMatrix = glm::translate(modelMatrix, transform.Position);

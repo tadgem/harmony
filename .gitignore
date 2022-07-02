@@ -38,3 +38,7 @@ imgui.ini
 *.pdb
 *.pyc
 *.bin
+
+*idea
+*/cmake-build-debug
+*/build

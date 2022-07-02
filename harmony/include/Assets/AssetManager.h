@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Memory.h"
+#include "Assets/Asset.h"
 #include "Assets/AssetFactory.h"
 #include <map>
 #include <vector>
@@ -44,12 +45,12 @@ namespace harmony {
 
             Ref<AssetFactory> factory = GetAssetFactory(typeHash);
 
-            factory->LoadAssetData(path, registry);
+            factory->LoadAssetData(path, p_AssetRegistry);
             // Cleanup any shared pointers in factory
             // manager has ownership of all assets.
             factory->ClearLoadedData();
 
-            return GetAssetsAtPath<T>(path);
+            return GetAssetsAtPath(path);
         }
 
         bool IsPathLoaded(const std::string path);

@@ -42,7 +42,7 @@ std::vector<harmony::AssetHandle> harmony::AssetManager::GetAssetsAtPath(const s
 	auto handles = std::vector<AssetHandle>();
 	auto view = p_AssetRegistry.view<AssetHandle>();
 
-	for (auto& [e, handle] : view.each())
+	for (auto [e, handle] : view.each())
 	{
 		if (handle.Path != path)
 		{
@@ -67,7 +67,7 @@ nlohmann::json harmony::AssetManager::Serialize()
 
 	json["assets"] = nlohmann::json::array();
 
-	for (auto& [entity, handle] : view.each())
+	for (auto [entity, handle] : view.each())
 	{
 		json["assets"].emplace_back(handle);
 	}

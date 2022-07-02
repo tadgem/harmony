@@ -25,7 +25,7 @@ void harmony::TexturedMeshStage::PreUpdate(entt::registry& registry, WeakRef<Vie
     auto drawables = registry.view<MeshComponent, MaterialComponent, TransformComponent>();
     Ref<ShaderProgram> pipelineShader = p_Shader.lock();
 
-    for (auto& [e, mesh, material, transform] : drawables.each())
+    for (auto [e, mesh, material, transform] : drawables.each())
     {
         if (material.Data.m_Shader.lock() == pipelineShader)
         {

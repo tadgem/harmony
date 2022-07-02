@@ -98,7 +98,8 @@ void harmony::Renderer::Init()
         for (int i = 0; i < val.size(); i++)
         {
             Ref<Pipeline> pipeline = val[i];
-            pipeline->Init(entt::registry(), key);
+            entt::registry tempRegistry;
+            pipeline->Init(tempRegistry, key);
         }
     }
 }
@@ -364,12 +365,12 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
     BGFXTextureHandle handle;
 
     Ref<Texture> texture = textureWeakRef.lock();
-    handle.AssetHandle = texture->m_Handle;
+    handle.Handle = texture->m_Handle;
     bimg::ImageContainer* imageContainer = texture->p_ImageContainer;
 
     if (imageContainer->m_cubeMap)
     {
-        handle.Handle = bgfx::createTextureCube(
+        handle.BgfxHandle = bgfx::createTextureCube(
             uint16_t(imageContainer->m_width)
             , 1 < imageContainer->m_numMips
             , imageContainer->m_numLayers
@@ -380,7 +381,7 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
     }
     else if (1 < imageContainer->m_depth)
     {
-        handle.Handle = bgfx::createTexture3D(
+        handle.BgfxHandle = bgfx::createTexture3D(
             uint16_t(imageContainer->m_width)
             , uint16_t(imageContainer->m_height)
             , uint16_t(imageContainer->m_depth)
@@ -392,7 +393,7 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
     }
     else if (bgfx::isTextureValid(0, false, imageContainer->m_numLayers, bgfx::TextureFormat::Enum(imageContainer->m_format), flags))
     {
-        handle.Handle = bgfx::createTexture2D(
+        handle.BgfxHandle = bgfx::createTexture2D(
             uint16_t(imageContainer->m_width)
             , uint16_t(imageContainer->m_height)
             , 1 < imageContainer->m_numMips
@@ -403,9 +404,9 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
         );
     }
 
-    if (bgfx::isValid(handle.Handle))
+    if (bgfx::isValid(handle.BgfxHandle))
     {
-        bgfx::setName(handle.Handle, texture->m_Handle.Path.c_str());
+        bgfx::setName(handle.BgfxHandle, texture->m_Handle.Path.c_str());
     }
 
     if (&handle.Info != NULL)

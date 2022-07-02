@@ -2,6 +2,10 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include "bx/platform.h"
+#	if BX_PLATFORM_LINUX || BX_PLATFORM_BSD
+#define SDL_VIDEO_DRIVER_X11
+#endif
 #include "SDL.h"
 #undef main
 #include "Memory.h"
@@ -114,7 +118,7 @@ namespace harmony
 			int index = -1;
 			for (int i = 0; i < p_ProgramComponents.size(); i++)
 			{
-				if (typeid(T).hash_code() == typeid(p_ProgramComponent[i]).hash_code())
+				if (typeid(T).hash_code() == typeid(p_ProgramComponents[i]).hash_code())
 				{
 					index = i;
 				}

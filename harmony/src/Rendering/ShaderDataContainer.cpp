@@ -76,7 +76,7 @@ void harmony::ShaderDataContainer::SetContainerUniforms()
 	{
 		for (auto& [handle, value] : m_TextureValues)
 		{
-			bgfx::setTexture(textureCount, handle.BgfxHandle, value.Handle);
+			bgfx::setTexture(textureCount, handle.BgfxHandle, value.BgfxHandle);
 			textureCount++;
 		}
 	}

@@ -37,7 +37,7 @@ void harmony::TileMapSystemImGui::Update(entt::registry& registry)
 
         if (ImGui::BeginCombo("TileMap : ", selectedEntityName.c_str()))
         {
-            for (auto& [entity, tileMap] : view.each())
+            for (auto [entity, tileMap] : view.each())
             {
                 std::string entityName = "Entity " + std::to_string(static_cast<uint32_t>(entity));
                 if (ImGui::Selectable(entityName.c_str()))
@@ -94,7 +94,7 @@ void harmony::TileMapSystemImGui::Update(entt::registry& registry)
             return;
         }
 
-        ImGui::Image(texture->m_TextureHandle.Handle, ImVec2(texture->m_TextureHandle.Info.width, texture->m_TextureHandle.Info.height));
+        ImGui::Image(texture->m_TextureHandle.BgfxHandle, ImVec2(texture->m_TextureHandle.Info.width, texture->m_TextureHandle.Info.height));
     }
     ImGui::End();
 }
