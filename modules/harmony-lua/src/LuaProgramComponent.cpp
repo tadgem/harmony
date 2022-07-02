@@ -16,7 +16,7 @@ void harmony::LuaProgramComponent::Init()
 
 void harmony::LuaProgramComponent::Update()
 {
-    std::string debugScript1 = "opened = imgui.Begin('Lua Window')";
+    /*std::string debugScript1 = "opened = imgui.Begin('Lua Window')";
     auto result = p_State.script(debugScript1);
     std::string debugScript2 = "imgui.Text('Dad')";
     result = p_State.script(debugScript2);
@@ -27,8 +27,9 @@ void harmony::LuaProgramComponent::Update()
     std::string debugScript5 = "pressed = imgui.Button('My Button')";
     result = p_State.script(debugScript5);
     std::string debugScriptLast = "imgui.End()";
-    result = p_State.script(debugScriptLast);
-    harmony::log::info("Blep");
+    result = p_State.script(debugScriptLast);*/
+
+    return;
 }
 
 void harmony::LuaProgramComponent::Render()

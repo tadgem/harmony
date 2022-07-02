@@ -13,6 +13,8 @@
 #include "Rendering/Pipelines/DebugDrawPipeline.h"
 #include "Rendering/Pipelines/TexturedMeshPipeline.h"
 #include "LuaProgramComponent.h"
+
+
 int main()
 {
 	using namespace harmony;
