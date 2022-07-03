@@ -40,7 +40,10 @@ void harmony::Editor::AddSystems()
 void harmony::Editor::AddEditorPanels()
 {
 	p_Panels.emplace_back(CreateRef<ScenePanel>(*this));
-	p_Panels.emplace_back(CreateRef<EntityInspectorPanel>(*this));
+	
+	Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this);
+	inspector->AddComponentUI<TransformComponentUI>();
+	p_Panels.emplace_back(inspector);
 }
 
 void harmony::Editor::InitializePipelines()

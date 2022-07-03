@@ -27,8 +27,13 @@ namespace harmony
     {
     public:
         virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) = 0;
+    };
 
-        const size_t m_ComponentTypeHash;
+    class TransformComponentUI : public ComponentUI
+    {
+    public:
+        TransformComponentUI();
+        virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
     };
 
     class EntityInspectorPanel : public Panel
@@ -37,6 +42,15 @@ namespace harmony
 
         EntityInspectorPanel(Program& prog);
 
+        template<typename T, typename ... Args>
+        WeakRef<T> AddComponentUI(Args&& ... args)
+        {
+            HARMONY_PROFILE_FUNCTION()
+            static_assert(std::is_base_of<ComponentUI, T>());
+            Ref<T> ui = CreateRef<T>(std::forward<Args>(args)...);
+            p_ComponentUIProviders.emplace_back(ui);
+            return GetWeakRef<T>(ui);
+        }
         virtual void OnImGui() override;
 
         entt::entity m_SelectedEntity;
