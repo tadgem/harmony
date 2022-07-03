@@ -3,7 +3,7 @@
 #include "ImGui/imgui.h"
 #include "Core/Program.h"
 #include "Assets/AssetManager.h"
-
+#include "Rendering/Renderer.h"
 void ProjectDetailsImGui(harmony::Program& program);
 
 template<typename T>
@@ -27,3 +27,5 @@ bool AssetTypeSelector(const std::string& selectorName, harmony::AssetManager& a
 
 	return selectedAsset;
 }
+
+bool ShaderSelector(const std::string& selectorName, harmony::Renderer& renderer, harmony::WeakRef<harmony::ShaderProgram>& prog);

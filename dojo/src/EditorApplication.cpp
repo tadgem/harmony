@@ -1,5 +1,6 @@
 #include "EditorApplication.h"
 #include "Rendering/Shapes.h"
+#include "ECS/MeshSystem.h"
 
 harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*this)
 {
@@ -36,6 +37,7 @@ void harmony::Editor::AddProgramComponents()
 void harmony::Editor::AddSystems()
 {
 	AddSystem<TransformSystem>();
+	AddSystem<MeshSystem>(m_AssetManager);
 }
 
 void harmony::Editor::AddEditorPanels()
@@ -46,6 +48,7 @@ void harmony::Editor::AddEditorPanels()
 	Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, scenePanel);
 	inspector->AddComponentUI<TransformComponentUI>();
 	inspector->AddComponentUI<MeshComponentUI>(m_AssetManager);
+	inspector->AddComponentUI<MaterialComponentUI>(m_Renderer);
 	p_Panels.emplace_back(inspector);
 }
 

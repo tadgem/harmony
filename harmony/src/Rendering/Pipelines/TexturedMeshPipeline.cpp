@@ -29,6 +29,12 @@ void harmony::TexturedMeshStage::PreUpdate(entt::registry& registry, WeakRef<Vie
     {
         if (material.Data.m_Shader.lock() == pipelineShader)
         {
+            bool vbhValid = bgfx::isValid(mesh.MeshHandle.m_VBH);
+            bool ibhValid = bgfx::isValid(mesh.MeshHandle.m_IBH);
+            if (!vbhValid || ibhValid)
+            {
+                continue;
+            }
             material.Data.SetContainerUniforms();
             bgfx::setTransform(&transform.Model[0]);
             bgfx::setVertexBuffer(0, mesh.MeshHandle.m_VBH);

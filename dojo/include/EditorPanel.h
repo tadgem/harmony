@@ -68,13 +68,13 @@ namespace harmony
     class MaterialComponentUI : public ComponentUI
     {
     public:
-        MaterialComponentUI(AssetManager& am);
+        MaterialComponentUI(Renderer& am);
         virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
 
     protected:
-        AssetManager& p_AssetManager;
+        Renderer& p_Renderer;
     };
 
     class EntityInspectorPanel : public Panel

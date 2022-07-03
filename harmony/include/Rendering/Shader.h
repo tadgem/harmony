@@ -12,12 +12,13 @@ namespace harmony
 	{
 		bgfx::UniformHandle BgfxHandle;
 		std::string Name;
-		size_t TypeHash;
+		bgfx::UniformType::Enum Type;
+		uint16_t ArraySize;
 
 		bool operator<(const ShaderUniform& o)  const {
 			return BgfxHandle.idx < o.BgfxHandle.idx;
 		}
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderUniform, Name, TypeHash)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderUniform, Name, Type)
 	};
 
 	class ShaderStage : public Asset
@@ -77,10 +78,15 @@ namespace harmony
 		bool RemoveStage(ShaderStage::Type stageType);
 		void Build();
 
+		void GetUniforms();
+
 		std::string m_Name;
 		std::unordered_map<ShaderStage::Type, WeakRef<ShaderStage>> m_Stages;
-		
+		std::vector<ShaderUniform> m_Uniforms;
+
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderProgram, m_Name, m_Stages)
+
+		static constexpr uint16_t g_MaxUniforms = 16;
 
 		bgfx::ProgramHandle m_Handle;
 	};

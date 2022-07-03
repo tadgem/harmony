@@ -181,7 +181,7 @@ bool harmony::MeshComponentUI::HasComponent(entt::registry& registry, entt::enti
 	return RegistryHasComponent<MeshComponent>(registry, entity);
 }
 
-harmony::MaterialComponentUI::MaterialComponentUI(AssetManager& am) : ComponentUI("Material"), p_AssetManager(am)
+harmony::MaterialComponentUI::MaterialComponentUI(Renderer& r) : ComponentUI("Material"), p_Renderer(r)
 {
 }
 
@@ -196,6 +196,20 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 		return;
 	}
 	MaterialComponent& mc = registry.get<MaterialComponent>(entity);
+	WeakRef<ShaderProgram> shaderWr = mc.Data.m_Shader;
+	std::string sn = "Shader Name : ";
+	
+	if (shaderWr.expired() == false)
+	{
+		Ref<ShaderProgram> shader = shaderWr.lock();
+		sn += shader->m_Name;
+	}
+
+	ImGui::Text(sn.c_str());
+	if (ShaderSelector("Select Shader", p_Renderer, shaderWr))
+	{
+		mc.Data.UpdateShader(shaderWr);
+	}
 }
 
 void harmony::MaterialComponentUI::AddComponent(entt::registry& registry, entt::entity entity)

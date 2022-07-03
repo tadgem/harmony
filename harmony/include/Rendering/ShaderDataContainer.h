@@ -76,6 +76,7 @@ namespace harmony
     class ShaderDataContainer
     {
     public:
+        ShaderDataContainer();
         ShaderDataContainer(WeakRef<ShaderProgram> shaderProgram);
 
         std::map<ShaderUniform, glm::vec4> m_Vec4Values;
@@ -88,20 +89,12 @@ namespace harmony
         void SetContainerUniforms();
         void Clear();
 
-#if HARMONY_DEBUG
-        void OnImGui();
-#endif
-
-        static constexpr uint16_t g_MaxUniforms = 16;
-        std::vector<bgfx::UniformInfo> m_UniformInfos;
-        std::vector<bgfx::UniformHandle> m_UniformHandles;
-
         WeakRef<ShaderProgram> m_Shader;
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderDataContainer, m_Vec4Values, m_Mat3Values, m_Mat4Values, m_TextureValues, m_Shader)
     protected:
 
         bool ReturnIfNull();
-        void CreateEmptyValue(bgfx::UniformInfo info, bgfx::UniformHandle handle);
+        void CreateEmptyValue(ShaderUniform& uniform);
 
         template <typename T>
         ShaderUniform GetShaderUniform(const std::string name)

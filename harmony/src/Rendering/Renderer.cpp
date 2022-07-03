@@ -349,6 +349,16 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::GetShader(const std:
     return WeakRef<ShaderProgram>();
 }
 
+std::vector<std::string> harmony::Renderer::GetShaderNames()
+{
+    std::vector<std::string> shaders = std::vector<std::string>();
+    for (auto& [shader, data] : p_Shaders)
+    {
+        shaders.push_back(shader->m_Name);
+    }
+    return shaders;
+}
+
 void harmony::Renderer::AddUniform(const std::string name, WeakRef<float> value)
 {
 }

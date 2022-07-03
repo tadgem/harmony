@@ -39,20 +39,44 @@ bool harmony::ShaderProgram::RemoveStage(ShaderStage::Type stageType)
 
 void harmony::ShaderProgram::Build()
 {
+	GetUniforms();
 	if (m_Stages.find(ShaderStage::Type::Compute) != m_Stages.end())
 	{
-		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Compute].lock()->m_Handle, false);
+		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Compute].lock()->m_Handle, true);
 		return;
 	}
 
 	if (m_Stages.find(ShaderStage::Type::Vertex) != m_Stages.end() && 
 		m_Stages.find(ShaderStage::Type::Fragment) != m_Stages.end())
 	{
-		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Vertex].lock()->m_Handle, m_Stages[ShaderStage::Type::Fragment].lock()->m_Handle, false);
+		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Vertex].lock()->m_Handle, m_Stages[ShaderStage::Type::Fragment].lock()->m_Handle, true);
 		return;
 	}
 
 	harmony::log::error("Failed to build shader! invalid combination provided.");
+}
+
+void harmony::ShaderProgram::GetUniforms()
+{
+	for (auto [type, s] : m_Stages)
+	{
+		Ref<ShaderStage> stage = s.lock();
+		bgfx::UniformHandle uniforms[g_MaxUniforms];
+		uint16_t stageUniformCount = bgfx::getShaderUniforms(stage->m_Handle, &uniforms[0], g_MaxUniforms);
+
+		for (uint16_t i = 0; i < stageUniformCount; i++)
+		{
+			bgfx::UniformInfo info;
+			bgfx::getUniformInfo(uniforms[i], info);
+
+			ShaderUniform uniform;
+			uniform.BgfxHandle = uniforms[i];
+			uniform.Name = info.name;
+			uniform.Type = info.type;
+			uniform.ArraySize = info.num;
+			m_Uniforms.emplace_back(uniform);
+		}
+	}
 }
 
 harmony::ShaderStage::ShaderStage(const std::string& name, const Type& shaderType) : Asset(AssetHandle {name, 0, GetTypeHash<ShaderStage>()}), m_Type(shaderType), m_Handle(BGFX_INVALID_HANDLE), m_Name(name)

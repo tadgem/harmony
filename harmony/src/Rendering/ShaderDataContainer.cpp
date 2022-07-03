@@ -3,6 +3,9 @@
 #if HARMONY_DEBUG
 #include "ImGui/imgui.h";
 #endif
+harmony::ShaderDataContainer::ShaderDataContainer()
+{
+}
 harmony::ShaderDataContainer::ShaderDataContainer(WeakRef<ShaderProgram> shaderProgram)
 {
 	UpdateShader(shaderProgram);
@@ -27,21 +30,9 @@ void harmony::ShaderDataContainer::UpdateContainer()
 	Clear();
 
 	Ref<ShaderProgram> shader = m_Shader.lock();
-	for (auto& [key, val] : shader->m_Stages)
+	for (int i = 0; i < shader->m_Uniforms.size(); i++)
 	{
-		bgfx::UniformHandle uniforms[g_MaxUniforms];
-		uint16_t stageUniformCount = bgfx::getShaderUniforms(val.lock()->m_Handle, &uniforms[0], g_MaxUniforms);
-
-		for (uint16_t i = 0; i < stageUniformCount; i++)
-		{
-			bgfx::UniformInfo info;
-			bgfx::getUniformInfo(uniforms[i], info);
-
-			m_UniformInfos.emplace_back(info);
-			m_UniformHandles.emplace_back(uniforms[i]);
-
-			CreateEmptyValue(info, uniforms[i]);
-		}
+		CreateEmptyValue(shader->m_Uniforms[i]);
 	}
 }
 
@@ -84,9 +75,6 @@ void harmony::ShaderDataContainer::SetContainerUniforms()
 
 void harmony::ShaderDataContainer::Clear()
 {
-	m_UniformInfos.clear();
-	m_UniformHandles.clear();
-
 	m_Vec4Values.clear();
 	m_Mat3Values.clear();
 	m_Mat4Values.clear();
@@ -102,28 +90,20 @@ bool harmony::ShaderDataContainer::ReturnIfNull()
 	return false;
 }
 
-void harmony::ShaderDataContainer::CreateEmptyValue(bgfx::UniformInfo info, bgfx::UniformHandle handle)
+void harmony::ShaderDataContainer::CreateEmptyValue(ShaderUniform& uniform)
 {
-	ShaderUniform uniform;
-	uniform.Name = std::string(info.name);
-	uniform.BgfxHandle = handle;
-
-	switch (info.type)
+	switch (uniform.Type)
 	{
-		case bgfx::UniformType::Vec4:
-			uniform.TypeHash = GetTypeHash<glm::vec4>();			
+		case bgfx::UniformType::Vec4:	
 			m_Vec4Values.emplace(uniform, glm::vec4(0.0));;
 			break;
 		case bgfx::UniformType::Mat3:
-			uniform.TypeHash = GetTypeHash<glm::mat3>();
 			m_Mat3Values.emplace(uniform, glm::mat3(1.0));;
 			break;
 		case bgfx::UniformType::Mat4:
-			uniform.TypeHash = GetTypeHash<glm::mat4>();
 			m_Mat4Values.emplace(uniform, glm::mat4(1.0));;
 			break;
 		case bgfx::UniformType::Sampler:
-			uniform.TypeHash = GetTypeHash<BGFXTextureHandle>();
 			m_TextureValues.emplace(uniform, BGFXTextureHandle());;
 			break;
 	}
