@@ -61,6 +61,9 @@ namespace harmony
 
 		std::string GetWorkingDirectory();
 	protected:
+
+		virtual void LoadBuiltInAssets();
+
 		void ChangeWorkingDirectory(const std::string& directory);
 		void Cleanup();
 

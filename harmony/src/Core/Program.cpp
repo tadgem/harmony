@@ -42,6 +42,10 @@ void harmony::Program::Init()
 	RunProgramComponentInit();
 }
 
+void harmony::Program::LoadBuiltInAssets()
+{
+}
+
 void harmony::Program::ChangeWorkingDirectory(const std::string& directory)
 {
 	std::filesystem::current_path(std::filesystem::path(directory));
@@ -301,6 +305,7 @@ void harmony::Program::Run(harmony::Callback callback)
 	RunSystemInit();
 	bgfx::touch(0);
 	m_Renderer.Init();
+	LoadBuiltInAssets();
 	SetStyle();
 	while (p_Run)
 	{

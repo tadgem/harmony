@@ -1,4 +1,5 @@
 #include "EditorApplication.h"
+#include "Rendering/Shapes.h"
 
 harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*this)
 {
@@ -122,4 +123,10 @@ void harmony::Editor::GlobalDockspace()
 	ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 	ImGui::End();
+}
+
+void harmony::Editor::LoadBuiltInAssets()
+{
+	m_AssetManager.AddBuiltInAsset<Mesh>("builtin/cube", CreateRef<Cube>(1.0f));
+	m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Plane", CreateRef<Plane>(1.0f));
 }

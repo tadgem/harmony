@@ -90,7 +90,6 @@ void harmony::AssetManager::Deserialize(nlohmann::json& json)
 	}
 }
 
-
 harmony::Ref<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory(size_t typeHash)
 {
 	Ref<AssetFactory> factory = nullptr;

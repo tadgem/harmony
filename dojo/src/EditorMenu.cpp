@@ -102,6 +102,14 @@ void harmony::EditorMainMenuBar::Popups()
 
 	if (p_CreateSceneMenu)
 	{
+		ImGuiIO io = ImGui::GetIO();
+		const float windowWidth = 300.0f;
+		const float windowHeight = 300.0f;
+		float w = (io.DisplaySize.x * 0.5f) - (windowWidth / 2);
+		float h = (io.DisplaySize.y * 0.5f) - (windowHeight / 2);
+
+		ImGui::SetNextWindowPos(ImVec2(w, h), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
 		if (ImGui::Begin("Create Scene"))
 		{
 			ImGui::InputText("Scene Name", &p_SceneNameInput[0], 256);

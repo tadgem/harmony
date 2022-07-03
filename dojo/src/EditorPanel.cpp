@@ -2,6 +2,7 @@
 #include "EditorUtils.h"
 #include "ECS/TransformComponent.h";
 #include "ECS/MeshComponent.h";
+#include "ECS/MaterialComponent.h";
 #include "ImGui/icons_font_awesome.h"
 harmony::ScenePanel::ScenePanel(Program& program) : p_Prog(program)
 {
@@ -154,13 +155,19 @@ void harmony::MeshComponentUI::OnComponentImGui(entt::registry& registry, entt::
 	{
 		return;
 	}
-	AssetHandle handle;
-
-	if (AssetTypeSelector<Mesh>("Mesh", p_AssetManager, handle))
+	AssetHandle ah;
+	MeshComponent& mc = registry.get<MeshComponent>(entity);
+	std::string meshPath = "Mesh Asset: " + mc.MeshAsset.Path;
+	ImGui::Text(meshPath.c_str());
+	if (AssetTypeSelector<Mesh>("Mesh", p_AssetManager, ah))
 	{
-		MeshComponent& mc = registry.get<MeshComponent>(entity);
-		mc.MeshAsset = handle;
-		harmony::log::info("Entity {} updated mesh to handle at path : {}", static_cast<uint32_t>(entity), handle.Path);
+		mc.MeshAsset = ah;
+		harmony::log::info("Entity {} updated mesh to handle at path : {}", static_cast<uint32_t>(entity), mc.MeshAsset.Path);
+	}
+
+	if (ImGui::RadioButton("Cast Shadow", &mc.CastShadow))
+	{
+		mc.CastShadow = !mc.CastShadow;
 	}
 }
 
@@ -172,4 +179,31 @@ void harmony::MeshComponentUI::AddComponent(entt::registry& registry, entt::enti
 bool harmony::MeshComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
 	return RegistryHasComponent<MeshComponent>(registry, entity);
+}
+
+harmony::MaterialComponentUI::MaterialComponentUI(AssetManager& am) : ComponentUI("Material"), p_AssetManager(am)
+{
+}
+
+void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, entt::entity entity)
+{
+	if (registry.valid(entity) == false)
+	{
+		return;
+	}
+	if (RegistryHasComponent<MaterialComponent>(registry, entity) == false)
+	{
+		return;
+	}
+	MaterialComponent& mc = registry.get<MaterialComponent>(entity);
+}
+
+void harmony::MaterialComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
+{
+	registry.emplace<MaterialComponent>(entity);
+}
+
+bool harmony::MaterialComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
+{
+	return RegistryHasComponent<MaterialComponent>(registry, entity);
 }

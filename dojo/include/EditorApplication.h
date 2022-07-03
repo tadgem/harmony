@@ -24,6 +24,7 @@ namespace harmony
 		void UpdateEditor();
 		void GlobalDockspace();
 
+		virtual void LoadBuiltInAssets() override;
 	protected:
 		std::vector<Ref<Panel>> p_Panels;
 		Ref<EditorView> p_EditorView;

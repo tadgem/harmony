@@ -91,8 +91,26 @@ namespace harmony {
         nlohmann::json Serialize();
         void Deserialize(nlohmann::json& json);
 
-    protected:
+        template <typename T>
+        AssetHandle AddBuiltInAsset(const std::string& path, Ref<T> asset)
+        {
+            static_assert(std::is_base_of<Asset, T>());
+            AssetHandle handle;
+            handle.Path = path;
+            handle.Index = 0;
+            handle.TypeHash = GetTypeHash<T>();
 
+            AssetComponent<T> ac;
+            ac.Asset = asset;
+            ac.Handle = handle;
+
+            entt::entity e = p_AssetRegistry.create();
+            p_AssetRegistry.emplace<AssetComponent<T>>(e, ac);
+            p_AssetRegistry.emplace<AssetHandle>(e, handle);
+
+            return handle;
+        }
+    protected:
         Ref<AssetFactory> GetAssetFactory(size_t typeHash);
         std::vector<Ref<AssetFactory>>                      p_AssetFactories;
         std::unordered_map<size_t, std::string>             p_AssetTypeNames;
