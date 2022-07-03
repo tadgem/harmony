@@ -11,6 +11,8 @@ namespace harmony
         public:
         Scene();
         Scene(const std::string& name);
+
+        Entity AddEntity();
         std::string m_Name;
         uint32_t m_NumEntities;
         entt::registry m_Registry;

@@ -39,3 +39,13 @@ void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<Ref<Sy
 	}
 	m_NumEntities = m_Registry.size();
 }
+
+harmony::Entity harmony::Scene::AddEntity()
+{
+	HARMONY_PROFILE_FUNCTION()
+	entt::entity e = m_Registry.create();
+	Entity entity = Entity();
+	entity.m_Handle = e;
+	p_Entities.emplace_back(entity);
+	return entity;
+}

@@ -60,7 +60,7 @@ namespace harmony
 		void RunRendererPostUpdate();
 
 		std::string GetWorkingDirectory();
-	private:
+	protected:
 		void ChangeWorkingDirectory(const std::string& directory);
 		void Cleanup();
 

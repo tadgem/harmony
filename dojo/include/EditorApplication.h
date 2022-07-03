@@ -1,5 +1,7 @@
 #pragma once
 #include "Core/Program.h"
+#include "EditorPanel.h"
+#include "EditorMenu.h"
 #include "MainIncludes.h"
 
 namespace harmony
@@ -12,16 +14,22 @@ namespace harmony
 		void AddAssetFactories();
 		void AddProgramComponents();
 		void AddSystems();
+
+		void AddEditorPanels();
+
 		void InitializePipelines();
 		void InitializeViews();
 
 		void RunEditor();
 		void UpdateEditor();
+		void GlobalDockspace();
 
 	protected:
+		std::vector<Ref<Panel>> p_Panels;
 		Ref<EditorView> p_EditorView;
 		Ref<Pipeline> p_DebugPipeline;
 		Ref<Pipeline> p_TexturedMeshPipeline;
+		EditorMainMenuBar p_MainMenuBar;
 	};
 
 };
