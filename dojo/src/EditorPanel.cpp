@@ -1,5 +1,7 @@
 #include "EditorPanel.h"
+#include "EditorUtils.h"
 #include "ECS/TransformComponent.h";
+#include "ECS/MeshComponent.h";
 #include "ImGui/icons_font_awesome.h"
 harmony::ScenePanel::ScenePanel(Program& program) : p_Prog(program)
 {
@@ -108,7 +110,7 @@ void harmony::TransformComponentUI::OnComponentImGui(entt::registry& registry, e
 	{
 		return;
 	}
-	if (registry.all_of<TransformComponent>(entity) == false)
+	if (RegistryHasComponent<TransformComponent>(registry, entity) == false)
 	{
 		return;
 	}
@@ -136,4 +138,38 @@ harmony::ComponentUI::ComponentUI(const std::string name): p_ComponentName(name)
 const std::string& harmony::ComponentUI::GetComponentName()
 {
 	return p_ComponentName;
+}
+
+harmony::MeshComponentUI::MeshComponentUI(AssetManager& am) : ComponentUI("Mesh"), p_AssetManager(am)
+{
+}
+
+void harmony::MeshComponentUI::OnComponentImGui(entt::registry& registry, entt::entity entity)
+{
+	if (registry.valid(entity) == false)
+	{
+		return;
+	}
+	if (RegistryHasComponent<MeshComponent>(registry, entity) == false)
+	{
+		return;
+	}
+	AssetHandle handle;
+
+	if (AssetTypeSelector<Mesh>("Mesh", p_AssetManager, handle))
+	{
+		MeshComponent& mc = registry.get<MeshComponent>(entity);
+		mc.MeshAsset = handle;
+		harmony::log::info("Entity {} updated mesh to handle at path : {}", static_cast<uint32_t>(entity), handle.Path);
+	}
+}
+
+void harmony::MeshComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
+{
+	registry.emplace<MeshComponent>(entity);
+}
+
+bool harmony::MeshComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
+{
+	return RegistryHasComponent<MeshComponent>(registry, entity);
 }
