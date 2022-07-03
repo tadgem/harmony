@@ -26,7 +26,21 @@ namespace harmony
     class ComponentUI
     {
     public:
+        ComponentUI(const std::string name);
         virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) = 0;
+        const std::string& GetComponentName();
+        virtual void AddComponent(entt::registry& registry, entt::entity entity) = 0;
+        virtual bool HasComponent(entt::registry& registry, entt::entity entity) = 0;
+
+        template<typename T>
+        bool RegistryHasComponent(entt::registry& reg, entt::entity e)
+        {
+            return reg.any_of<T>(e);
+        }
+
+    protected:
+        const std::string p_ComponentName;
+
     };
 
     class TransformComponentUI : public ComponentUI
@@ -34,13 +48,16 @@ namespace harmony
     public:
         TransformComponentUI();
         virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
+        virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
+        virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+
     };
 
     class EntityInspectorPanel : public Panel
     {
     public:
 
-        EntityInspectorPanel(Program& prog);
+        EntityInspectorPanel(Program& prog, Ref<ScenePanel> scenePanel);
 
         template<typename T, typename ... Args>
         WeakRef<T> AddComponentUI(Args&& ... args)
@@ -53,9 +70,9 @@ namespace harmony
         }
         virtual void OnImGui() override;
 
-        entt::entity m_SelectedEntity;
     protected:
         Program& p_Prog;
+        Ref<ScenePanel> p_ScenePanel;
         std::vector<Ref<ComponentUI>> p_ComponentUIProviders;
     };
 }

@@ -1,6 +1,6 @@
 #include "EditorPanel.h"
 #include "ECS/TransformComponent.h";
-
+#include "ImGui/icons_font_awesome.h"
 harmony::ScenePanel::ScenePanel(Program& program) : p_Prog(program)
 {
 }
@@ -38,7 +38,7 @@ void harmony::ScenePanel::OnImGui()
 	ImGui::End();
 }
 
-harmony::EntityInspectorPanel::EntityInspectorPanel(Program& prog) : p_Prog(prog)
+harmony::EntityInspectorPanel::EntityInspectorPanel(Program& prog, Ref<ScenePanel> scenePanel) : p_Prog(prog), p_ScenePanel(scenePanel)
 {
 }
 
@@ -56,15 +56,49 @@ void harmony::EntityInspectorPanel::OnImGui()
 
 		Ref<Scene> activeScene = activeSceneWr.lock();
 
+		if (activeScene->m_Registry.valid(p_ScenePanel->m_SelectedEntity) == false)
+		{
+			ImGui::End();
+			return;
+		}
+
+		if (p_ComponentUIProviders.size() == 0)
+		{
+			ImGui::End();
+			return;
+		}
+
 		for (int i = 0; i < p_ComponentUIProviders.size(); i++)
 		{
-			p_ComponentUIProviders[i]->OnComponentImGui(activeScene->m_Registry, m_SelectedEntity);
+			if (!p_ComponentUIProviders[i]->HasComponent(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity))
+			{
+				continue;
+			}
+			if (ImGui::TreeNode(p_ComponentUIProviders[i]->GetComponentName().c_str()))
+			{
+				p_ComponentUIProviders[i]->OnComponentImGui(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity);
+				ImGui::TreePop();
+			}
 		}
+		ImGui::Separator();
+		if (ImGui::BeginCombo("Add Component", ICON_FA_PLUS_CIRCLE))
+		{
+			for (int i = 0; i < p_ComponentUIProviders.size(); i++)
+			{
+				//p_ComponentUIProviders[i]->OnComponentImGui(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity);
+				if (ImGui::Selectable(p_ComponentUIProviders[i]->GetComponentName().c_str()))
+				{
+					p_ComponentUIProviders[i]->AddComponent(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity);
+				}
+			}
+			ImGui::EndCombo();
+		}
+		
 	}
 	ImGui::End();
 }
 
-harmony::TransformComponentUI::TransformComponentUI()
+harmony::TransformComponentUI::TransformComponentUI() : ComponentUI("Transform")
 {
 }
 
@@ -80,9 +114,26 @@ void harmony::TransformComponentUI::OnComponentImGui(entt::registry& registry, e
 	}
 	const int _MAX = 1000000;
 	TransformComponent& t = registry.get<TransformComponent>(entity);
-	ImGui::Text("Transform;");
-	ImGui::Separator();
-	ImGui::SliderFloat3("Position", &t.Position[0], -_MAX, _MAX, "", 0.01f);
-	ImGui::SliderFloat3("Rotation", &t.Euler[0], -180, 180, "", 0.01f);
-	ImGui::SliderFloat3("Scale", &t.Scale[0], -_MAX, _MAX, "", 0.01f);
+	ImGui::SliderFloat3("Position", &t.Position[0], -_MAX, _MAX, "", ImGuiSliderFlags_Logarithmic);
+	ImGui::SliderFloat3("Rotation", &t.Euler[0], -180, 180, "", ImGuiSliderFlags_Logarithmic);
+	ImGui::SliderFloat3("Scale", &t.Scale[0], -_MAX, _MAX, "", ImGuiSliderFlags_Logarithmic);
+}
+
+void harmony::TransformComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
+{
+	registry.emplace<TransformComponent>(entity);
+}
+
+bool harmony::TransformComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
+{
+	return RegistryHasComponent<TransformComponent>(registry, entity);
+}
+
+harmony::ComponentUI::ComponentUI(const std::string name): p_ComponentName(name)
+{
+}
+
+const std::string& harmony::ComponentUI::GetComponentName()
+{
+	return p_ComponentName;
 }

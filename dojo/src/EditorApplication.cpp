@@ -39,9 +39,10 @@ void harmony::Editor::AddSystems()
 
 void harmony::Editor::AddEditorPanels()
 {
-	p_Panels.emplace_back(CreateRef<ScenePanel>(*this));
+	Ref<ScenePanel> scenePanel = CreateRef<ScenePanel>(*this);
+	p_Panels.emplace_back(scenePanel);
 	
-	Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this);
+	Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, scenePanel);
 	inspector->AddComponentUI<TransformComponentUI>();
 	p_Panels.emplace_back(inspector);
 }
@@ -70,7 +71,7 @@ void harmony::Editor::InitializeViews()
 void harmony::Editor::RunEditor()
 {
 	Init();
-
+	LoadProject("D:/Test/Test.harmonyproj");
 	auto callback = [&]()
 	{
 		UpdateEditor();

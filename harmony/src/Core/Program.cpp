@@ -68,15 +68,14 @@ void harmony::Program::InitSDL()
 	// init SDL window
 	Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_EVENTS;
 	SDL_Init(flags);
-
-
-
+	
 	SDL_Rect rect;
 	SDL_GetDisplayUsableBounds(0, &rect);
 
 	p_WindowWidth	= rect.w;
 	p_WindowHeight	= rect.h;
 
+	// TODO: Add window resizing.
 	p_Window = SDL_CreateWindow(
 		"Harmony", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, p_WindowWidth,
 		p_WindowHeight, SDL_WINDOW_SHOWN);
@@ -155,8 +154,6 @@ void harmony::Program::InitBGFX()
 #elif BX_PLATFORM_EMSCRIPTEN
 	pd.nwh = (void*)"#canvas";
 #endif
-
-
 
 	bgfx::Init bgfx_init;
 	bgfx_init.type = bgfx::RendererType::Count; // auto choose renderer
