@@ -336,10 +336,10 @@ void harmony::Program::Run(harmony::Callback callback)
 		ImGui::NewFrame();
 		ImGui_ImplSDL2_NewFrame(p_Window);
 
-		RunProgramComponentUpdate();
-		
 		callback();
 
+		RunProgramComponentUpdate();
+		
 		RunSystemUpdate();
 
 		RunRendererPostUpdate();
