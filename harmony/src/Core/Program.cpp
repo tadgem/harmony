@@ -69,9 +69,17 @@ void harmony::Program::InitSDL()
 	Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_EVENTS;
 	SDL_Init(flags);
 
+
+
+	SDL_Rect rect;
+	SDL_GetDisplayUsableBounds(0, &rect);
+
+	p_WindowWidth	= rect.w;
+	p_WindowHeight	= rect.h;
+
 	p_Window = SDL_CreateWindow(
-		"Harmony", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, p_StartingWidth,
-		p_StartingHeight, SDL_WINDOW_RESIZABLE);
+		"Harmony", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, p_WindowWidth,
+		p_WindowHeight, SDL_WINDOW_SHOWN);
 
 	if (p_Window == nullptr) {
 		harmony::log::error("Window could not be created. SDL_Error: ", SDL_GetError());
@@ -148,10 +156,12 @@ void harmony::Program::InitBGFX()
 	pd.nwh = (void*)"#canvas";
 #endif
 
+
+
 	bgfx::Init bgfx_init;
 	bgfx_init.type = bgfx::RendererType::Count; // auto choose renderer
-	bgfx_init.resolution.width = p_StartingWidth;
-	bgfx_init.resolution.height = p_StartingHeight;
+	bgfx_init.resolution.width = p_WindowWidth;
+	bgfx_init.resolution.height = p_WindowHeight;
 	bgfx_init.resolution.reset = BGFX_RESET_VSYNC;
 	bgfx_init.platformData = pd;
 	bgfx_init.debug = true;
@@ -160,7 +170,7 @@ void harmony::Program::InitBGFX()
 
 	bgfx::setViewClear(
 		0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Utils::EncodeRGBA(32,36,32, 255), 1.0f, 0);
-	bgfx::setViewRect(0, 0, 0, p_StartingWidth, p_StartingHeight);
+	bgfx::setViewRect(0, 0, 0, p_WindowWidth, p_WindowHeight);
 
 	uint32_t bgfxDebugFlags = 0;
 
@@ -279,12 +289,12 @@ void harmony::Program::ResizeApplicationWindow(int w, int h)
 	p_WindowWidth	= static_cast<uint16_t>(w);
 	p_WindowHeight	= static_cast<uint16_t>(h);
 	SDL_SetWindowSize(p_Window, w, h);
-	bgfx::reset(p_WindowWidth, p_WindowHeight);
 	ImGui::GetIO().DisplaySize = ImVec2(p_WindowWidth, p_WindowHeight);
 	for (uint16_t i = 0; i < m_Capabilities.limits.maxViews; i++)
 	{
 		bgfx::setViewRect(i, 0, 0, bgfx::BackbufferRatio::Equal);
 	}
+	bgfx::reset(p_WindowWidth, p_WindowHeight);
 }
 
 void harmony::Program::Run(harmony::Callback callback)

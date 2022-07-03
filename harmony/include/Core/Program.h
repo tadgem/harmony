@@ -79,8 +79,6 @@ namespace harmony
 		Ref<Scene>							p_ActiveScene;
 		bool p_Run;
 
-		const uint16_t p_StartingWidth = 1600;
-		const uint16_t p_StartingHeight = 900;
 		uint16_t p_WindowWidth;
 		uint16_t p_WindowHeight;
 

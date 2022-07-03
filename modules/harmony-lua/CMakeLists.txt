@@ -20,3 +20,6 @@ CACHE INTERNAL "")
 
 target_include_directories(harmony-lua PUBLIC ${HARMONY_LUA_INCLUDES})
 target_link_libraries(harmony-lua harmony-core lua sol2)
+if (MSVC)
+  target_compile_options(harmony-lua PRIVATE /bigobj)
+endif()

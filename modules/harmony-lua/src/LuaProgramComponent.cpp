@@ -10,7 +10,7 @@ harmony::LuaProgramComponent::LuaProgramComponent()
 void harmony::LuaProgramComponent::Init()
 {
     p_State.open_libraries(sol::lib::base, sol::lib::package);
-    bind_imgui(p_State);
+    sol_ImGui::Init(p_State); 
     bind_bgfx(p_State);
 }
 

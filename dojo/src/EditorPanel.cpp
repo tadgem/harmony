@@ -23,11 +23,15 @@ void harmony::ScenePanel::OnImGui()
 		{
 			activeScene->AddEntity();
 		}
-
+		const std::string entityNamePrefix = "Entity ";
 		ImGui::Separator();
-		activeScene->m_Registry.each([](entt::entity e)
+		activeScene->m_Registry.each([&](entt::entity e)
 		{
-			ImGui::Text("", e);
+			std::string entityName = entityNamePrefix + std::to_string(static_cast<uint32_t>(e));
+			if (ImGui::Selectable(entityName.c_str()))
+			{
+				m_SelectedEntity = e;
+			}
 		});
 
 	}

@@ -174,6 +174,17 @@ void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipel
     p_Views[view].emplace_back(pipeline);
 }
 
+void harmony::Renderer::RefreshViews()
+{
+    for (int i = 0; i < m_ActiveViews.size(); i++)
+    {
+        Ref<View> view = m_ActiveViews[i].lock();
+        for (int p = 0; p < p_Views[view].size(); p++)
+        {
+        }
+    }
+}
+
 #if HARMONY_DEBUG
 void harmony::Renderer::OnImGui()
 {

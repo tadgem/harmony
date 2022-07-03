@@ -119,7 +119,8 @@ namespace harmony
         void                RemoveView(WeakRef<View> view);
         void                SetViewActive(WeakRef<View> viewWeakRef, bool active);
         void                AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline);
-        
+        void                RefreshViews();
+
         void                Init();
         void                OnPreUpdate(entt::registry& registry);
         void                OnPostUpdate(entt::registry& registry);

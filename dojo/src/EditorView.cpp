@@ -8,7 +8,7 @@
 harmony::DebugCamera::DebugCamera()
 {
 	Position = glm::vec3(0.0f, 10.0f, 0.0f);
-	Euler = glm::vec3(-20.0f, 0.0f, 0.0f);
+	Euler = glm::vec3(0.0f, 0.0f, 0.0f);
 	FOV = 80.0f;
 	Near = 0.1f;
 	Far = 300.0f;
