@@ -92,12 +92,6 @@ void harmony::ShaderDataContainer::Clear()
 	m_Mat4Values.clear();
 	m_TextureValues.clear();
 }
-#if HARMONY_DEBUG
-void harmony::ShaderDataContainer::OnImGui()
-{
-}
-#endif
-
 bool harmony::ShaderDataContainer::ReturnIfNull()
 {
 	if (m_Shader.expired())
