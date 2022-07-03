@@ -1,6 +1,6 @@
 #include "EditorApplication.h"
 
-harmony::Editor::Editor() : harmony::Program("Harmony Editor")
+harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*this)
 {
 	AddAssetTypeNames();
 	AddAssetFactories();
