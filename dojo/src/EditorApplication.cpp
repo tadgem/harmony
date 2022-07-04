@@ -110,7 +110,7 @@ void harmony::Editor::GlobalDockspace()
 	ImVec2 winSize = viewport->Size;
 	//winPos.y += p_MainMenuBar.m_MenuBarSize.y;
 	winSize.x = p_WindowWidth;
-	winSize.y = p_WindowHeight - p_MainMenuBar.m_MenuBarSize.y;
+	winSize.y = p_WindowHeight + p_MainMenuBar.m_MenuBarSize.y;
 	ImGui::SetNextWindowPos(winPos);
 	ImGui::SetNextWindowSize(winSize);
 	ImGui::SetNextWindowViewport(viewport->ID);

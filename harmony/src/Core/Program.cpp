@@ -76,7 +76,7 @@ void harmony::Program::InitSDL()
 	SDL_Rect rect;
 	SDL_GetDisplayUsableBounds(0, &rect);
 	p_WindowWidth	= rect.w;
-	p_WindowHeight	= rect.h;
+	p_WindowHeight	= rect.h - 24;
 
 	// TODO: Add window resizing.
 	p_Window = SDL_CreateWindow(
