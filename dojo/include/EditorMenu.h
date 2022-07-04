@@ -17,6 +17,8 @@ namespace harmony
 		void Dialogs();
 		void Popups();
 
+		ImVec2 m_MenuBarSize;
+
 	protected:
 		Program& p_Prog;
 

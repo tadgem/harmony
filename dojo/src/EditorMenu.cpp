@@ -50,6 +50,8 @@ void harmony::EditorMainMenuBar::MenuBar()
 			}
 			ImGui::EndMenu();
 		}
+
+		m_MenuBarSize = ImGui::GetWindowSize();
 	}
 	ImGui::EndMainMenuBar();
 }

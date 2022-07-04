@@ -106,10 +106,16 @@ void harmony::Editor::GlobalDockspace()
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(viewport->Pos);
-	ImGui::SetNextWindowSize(viewport->Size);
+	ImVec2 winPos = viewport->Pos;
+	ImVec2 winSize = viewport->Size;
+	//winPos.y += p_MainMenuBar.m_MenuBarSize.y;
+	winSize.x = p_WindowWidth;
+	winSize.y = p_WindowHeight - p_MainMenuBar.m_MenuBarSize.y;
+	ImGui::SetNextWindowPos(winPos);
+	ImGui::SetNextWindowSize(winSize);
 	ImGui::SetNextWindowViewport(viewport->ID);
-	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+
+	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
 
@@ -124,7 +130,7 @@ void harmony::Editor::GlobalDockspace()
 	// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
 	ImGui::Begin("DockSpace", nullptr, window_flags);
 	ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+	ImGui::DockSpace(dockspace_id, winSize, dockspace_flags);
 	ImGui::End();
 }
 

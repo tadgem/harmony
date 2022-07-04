@@ -75,7 +75,6 @@ void harmony::Program::InitSDL()
 	
 	SDL_Rect rect;
 	SDL_GetDisplayUsableBounds(0, &rect);
-
 	p_WindowWidth	= rect.w;
 	p_WindowHeight	= rect.h;
 
@@ -170,7 +169,7 @@ void harmony::Program::InitBGFX()
 	bgfx::init(bgfx_init);
 
 	bgfx::setViewClear(
-		0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Utils::EncodeRGBA(32,36,32, 255), 1.0f, 0);
+		0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Utils::EncodeRGBA(0,255,0, 255), 1.0f, 0);
 	bgfx::setViewRect(0, 0, 0, p_WindowWidth, p_WindowHeight);
 
 	uint32_t bgfxDebugFlags = 0;
@@ -200,8 +199,11 @@ void harmony::Program::SetStyle()
 	style.ScrollbarRounding = 0;
 	style.TabRounding = 2;
 	style.WindowRounding = 0;
-	style.FramePadding = { 4, 4 };
-
+	style.FramePadding = { 2, 2 };
+	style.FrameBorderSize = 0;
+	style.DisplayWindowPadding = { 0,0 };
+	style.DisplaySafeAreaPadding = { 0, 0 };
+	style.WindowPadding = { 0,0 };
 	ImVec4* colors = ImGui::GetStyle().Colors;
 	colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
