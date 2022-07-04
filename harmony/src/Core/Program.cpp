@@ -169,7 +169,7 @@ void harmony::Program::InitBGFX()
 	bgfx::init(bgfx_init);
 
 	bgfx::setViewClear(
-		0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Utils::EncodeRGBA(0,255,0, 255), 1.0f, 0);
+		0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Utils::EncodeRGBA(14,18,14, 255), 1.0f, 0);
 	bgfx::setViewRect(0, 0, 0, p_WindowWidth, p_WindowHeight);
 
 	uint32_t bgfxDebugFlags = 0;
