@@ -136,6 +136,10 @@ void harmony::Editor::GlobalDockspace()
 
 void harmony::Editor::LoadBuiltInAssets()
 {
-	m_AssetManager.AddBuiltInAsset<Mesh>("builtin/cube", CreateRef<Cube>(1.0f));
-	m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Plane", CreateRef<Plane>(1.0f));
+	AssetHandle cubeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Cube", CreateRef<Cube>(1.0f));
+	Ref<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
+	m_Renderer.SubmitMeshToGPU(cube);
+	AssetHandle planeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Plane", CreateRef<Plane>(1.0f));
+	Ref<Mesh> plane = m_AssetManager.GetAsset<Mesh>(planeHandle).lock();
+	m_Renderer.SubmitMeshToGPU(plane);
 }

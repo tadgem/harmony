@@ -16,7 +16,7 @@ void harmony::MeshSystem::Update(entt::registry& registry)
 
 	for (auto& [entity, mesh] : view.each())
 	{
-		bool meshValid = bgfx::isValid(mesh.MeshHandle.m_VBH) && bgfx::isValid(mesh.MeshHandle.m_IBH);
+		bool meshValid = mesh.MeshHandle.m_Layout.m_stride > 0;
 		if (!meshValid)
 		{
 			WeakRef<Mesh> meshAssetWr = p_AssetManager.GetAsset<Mesh>(mesh.MeshAsset);

@@ -22,6 +22,7 @@ void harmony::TexturedMeshStage::PreUpdate(entt::registry& registry, WeakRef<Vie
 {
     HARMONY_PROFILE_FUNCTION()
     PipelineStage::PreUpdate(registry, view, handle);
+    bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR, 0xFFFFFFFF);
     auto drawables = registry.view<MeshComponent, MaterialComponent, TransformComponent>();
     Ref<ShaderProgram> pipelineShader = p_Shader.lock();
 
@@ -31,7 +32,7 @@ void harmony::TexturedMeshStage::PreUpdate(entt::registry& registry, WeakRef<Vie
         {
             bool vbhValid = bgfx::isValid(mesh.MeshHandle.m_VBH);
             bool ibhValid = bgfx::isValid(mesh.MeshHandle.m_IBH);
-            if (!vbhValid || ibhValid)
+            if (!vbhValid || !ibhValid)
             {
                 continue;
             }
