@@ -1,6 +1,7 @@
 #include "EditorApplication.h"
 #include "Rendering/Shapes.h"
 #include "ECS/MeshSystem.h"
+#include "Rendering/Pipelines/NormalPipeline.h"
 harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*this)
 {
 	AddAssetTypeNames();
@@ -55,9 +56,10 @@ void harmony::Editor::InitializePipelines()
 {
 	auto debugDrawPipelineWr = m_Renderer.CreatePipeline<DebugDrawPipeline>();
 	auto texturedMeshPipelineWr = m_Renderer.CreatePipeline<TexturedMeshPipeline>();
-
+	auto normalPipelineWr = m_Renderer.CreatePipeline<NormalPipeline>();
 	p_DebugPipeline = debugDrawPipelineWr.lock();
 	p_TexturedMeshPipeline = texturedMeshPipelineWr.lock();
+	p_NormalPipeline = normalPipelineWr.lock();
 
 }
 
@@ -66,6 +68,7 @@ void harmony::Editor::InitializeViews()
 	auto viewWr = m_Renderer.CreateView<EditorView>();
 
 	m_Renderer.AddViewPipeline(viewWr, p_DebugPipeline);
+	m_Renderer.AddViewPipeline(viewWr, p_NormalPipeline);
 	m_Renderer.AddViewPipeline(viewWr, p_TexturedMeshPipeline);
 	m_Renderer.SetViewActive(viewWr, true);
 

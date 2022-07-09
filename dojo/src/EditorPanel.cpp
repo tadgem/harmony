@@ -115,11 +115,11 @@ void harmony::TransformComponentUI::OnComponentImGui(entt::registry& registry, e
 	{
 		return;
 	}
-	const int _MAX = 1000000;
+	const int _MAX = 1000;
 	TransformComponent& t = registry.get<TransformComponent>(entity);
-	ImGui::SliderFloat3("Position", &t.Position[0], -_MAX, _MAX, "", ImGuiSliderFlags_Logarithmic);
-	ImGui::SliderFloat3("Rotation", &t.Euler[0], -180, 180, "", ImGuiSliderFlags_Logarithmic);
-	ImGui::SliderFloat3("Scale", &t.Scale[0], -_MAX, _MAX, "", ImGuiSliderFlags_Logarithmic);
+	ImGui::DragFloat3("Position", &t.Position[0]);
+	ImGui::DragFloat3("Rotation", &t.Euler[0]);
+	ImGui::DragFloat3("Scale", &t.Scale[0]);
 }
 
 void harmony::TransformComponentUI::AddComponent(entt::registry& registry, entt::entity entity)

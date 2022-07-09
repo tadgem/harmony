@@ -83,7 +83,7 @@ harmony::Plane::Plane(float size) : Mesh("builtin://plane", 0)
 		glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, -1.0f),
 	};
 
-	std::vector<glm::vec3> tangents = {
+	/*std::vector<glm::vec3> tangents = {
 		glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f),
 		glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f),
 	};
@@ -91,10 +91,10 @@ harmony::Plane::Plane(float size) : Mesh("builtin://plane", 0)
 	std::vector<glm::vec3> bitangents = {
 		glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f),
 		glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f),
-	};
+	};*/
 
 	std::vector<unsigned int> indices = {
 		0,1,2,2,3,0
 	};
-	InitializeMesh(positions, indices, normals, tangents, bitangents, uvs);
+	InitializeMesh(positions, indices, normals, uvs);
 }
