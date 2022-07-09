@@ -26,7 +26,7 @@ void harmony::PipelineStage::PreUpdate(entt::registry& registry, WeakRef<View> v
 		harmony::log::error("Already ran pre frame callback for this frame!");
 		return;
 	}
-	bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0);
+	bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH , 0x00000000);
 	Ref<View> _view = view.lock();
 	bgfx::setViewTransform(m_ViewId, &_view->m_View[0], &_view->m_Projection[0]);
 	bgfx::setViewRect(m_ViewId, 0, 0, _view->m_Width, _view->m_Height);

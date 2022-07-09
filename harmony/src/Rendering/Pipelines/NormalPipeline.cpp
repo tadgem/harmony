@@ -22,7 +22,7 @@ void harmony::NormalStage::PreUpdate(entt::registry& registry, WeakRef<View> vie
 {
     HARMONY_PROFILE_FUNCTION()
     PipelineStage::PreUpdate(registry, view, handle);
-    bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR, 0x333333FF);
+    bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR, 0x00000000);
     auto drawables = registry.view<MeshComponent, MaterialComponent, TransformComponent>();
     Ref<ShaderProgram> pipelineShader = p_Shader.lock();
 
