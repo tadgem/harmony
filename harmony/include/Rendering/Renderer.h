@@ -128,6 +128,7 @@ namespace harmony
         static bgfx::ViewId GetViewID();
     
         std::vector<WeakRef<View>> m_ActiveViews;
+        
     protected:
         inline static float s_texelHalf = 0.0f;
         void ScreenSpaceQuad(float _textureWidth, float _textureHeight, bool _originBottomLeft = false, float _width = 1.0f, float _height = 1.0f);
