@@ -25,7 +25,7 @@ dx_shader_types = ["v", "p", "c"]
 current_shader_stage_selection = 0
 current_platform_selection = 0
 
-source_path = "shaders/vs_cubes.sc"
+source_path = "shaders/vs_normal.sc"
 include_path = "shaders/include"
 output_path = "shaders/bin/"
 varying_def_path = "shaders/varying.def.sc"

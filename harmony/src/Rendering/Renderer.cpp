@@ -28,8 +28,20 @@ void harmony::Renderer::AddBuiltInShaders()
     texturedMesh->AddStage(ShaderStage::Type::Fragment, texturedMeshFS);
 
     texturedMesh->Build();
-    ShaderDataContainer dataContainer = ShaderDataContainer(texturedMesh);
-    p_Shaders.emplace(texturedMesh, dataContainer);
+    ShaderDataContainer texDataContainer = ShaderDataContainer(texturedMesh);
+    p_Shaders.emplace(texturedMesh, texDataContainer);
+
+    Ref<ShaderProgram> normal = CreateRef<ShaderProgram>("Normal");
+    Ref<BuiltInShaderStage> normalVS = CreateRef<BuiltInShaderStage>("vs_normal", ShaderStage::Type::Vertex, s_BuiltInShader[2]);
+    normalVS->LoadShaderBinary();
+    Ref<BuiltInShaderStage> normalFS = CreateRef<BuiltInShaderStage>("fs_normal", ShaderStage::Type::Fragment, s_BuiltInShader[3]);
+    normalFS->LoadShaderBinary();
+    normal->AddStage(ShaderStage::Type::Vertex, normalVS);
+    normal->AddStage(ShaderStage::Type::Fragment, normalFS);
+
+    normal->Build();
+    ShaderDataContainer normDataContainer = ShaderDataContainer(normal);
+    p_Shaders.emplace(normal, normDataContainer);
 }
 
 bgfx::VertexLayout harmony::PosColorTexCoord0Vertex::ms_layout;

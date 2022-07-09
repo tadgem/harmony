@@ -20,6 +20,9 @@ static std::atomic<int64_t> allocator_memory (0);
 #elif BX_PLATFORM_IOS
 #include <malloc/malloc.h>
 #define bx_malloc_size malloc_size
+#elif BX_PLATFORM_WINRT
+#include <malloc.h>
+#define bx_malloc_size malloc_size
 #else
 #    error "Unknown PLATFORM!"
 #endif

@@ -6,6 +6,10 @@ file(GLOB_RECURSE C_SRC_FILES src/*.c)
 file(GLOB_RECURSE HEADER_FILES include/*.h)
 file(GLOB_RECURSE HEADERPP_FILES include/*.hpp)
 
+if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS /W2)
+endif()
+
 add_library(harmony-lua STATIC ${HEADER_FILES} ${HEADERPP_FILES} ${SRC_FILES}  ${C_SRC_FILES})
 set_property(TARGET harmony-lua PROPERTY CXX_STANDARD 17)
 

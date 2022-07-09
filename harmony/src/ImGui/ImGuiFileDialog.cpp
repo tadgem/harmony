@@ -504,6 +504,9 @@ namespace IGFD
 	std::vector<std::string> IGFD::Utils::GetDrivesList()
 	{
 		std::vector<std::string> res;
+#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
+		// Windows Store or Universal Windows Platform
+#else
 
 #ifdef _IGFD_WIN_
 		const DWORD mydrives = 2048;
@@ -518,7 +521,7 @@ namespace IGFD
 			res = IGFD::Utils::SplitStringToVector(var, '\0', false);
 		}
 #endif // _IGFD_WIN_
-
+#endif
 		return res;
 	}
 

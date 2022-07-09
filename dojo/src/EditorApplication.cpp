@@ -1,7 +1,6 @@
 #include "EditorApplication.h"
 #include "Rendering/Shapes.h"
 #include "ECS/MeshSystem.h"
-
 harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*this)
 {
 	AddAssetTypeNames();

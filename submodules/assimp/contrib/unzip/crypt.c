@@ -98,7 +98,9 @@ int cryptrand(unsigned char *buf, unsigned int len)
 {
     static unsigned calls = 0;
     int rlen = 0;
-#ifdef _WIN32
+#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
+    
+#elif _WIN32
     HCRYPTPROV provider;
     unsigned __int64 pentium_tsc[1];
     int result = 0;

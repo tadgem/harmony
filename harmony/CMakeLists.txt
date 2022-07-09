@@ -3,6 +3,10 @@ project(harmony-core VERSION 0.1.0)
 
 option(HARMONY_DEBUG "Build harmony with debug functionality enabled." ON)
 
+if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS /W2)
+endif()
+
 file(GLOB_RECURSE CORE_SRC_FILES src/*.cpp)
 file(GLOB_RECURSE CORE_HEADER_FILES include/*.h)
 file(GLOB_RECURSE CORE_HEADERPP_FILES include/*.hpp)

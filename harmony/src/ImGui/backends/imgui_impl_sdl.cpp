@@ -358,10 +358,17 @@ static bool ImGui_ImplSDL2_Init(SDL_Window* window, SDL_Renderer* renderer)
 
     // Set platform dependent data in viewport
 #ifdef _WIN32
+#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
+    SDL_SysWMinfo info;
+    SDL_VERSION(&info.version);
+    if (SDL_GetWindowWMInfo(window, &info))
+        ImGui::GetMainViewport()->PlatformHandleRaw = (void*)info.info.winrt.window;
+#else
     SDL_SysWMinfo info;
     SDL_VERSION(&info.version);
     if (SDL_GetWindowWMInfo(window, &info))
         ImGui::GetMainViewport()->PlatformHandleRaw = (void*)info.info.win.window;
+#endif
 #else
     (void)window;
 #endif
