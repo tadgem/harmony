@@ -8,8 +8,8 @@ namespace harmony
     class PipelineStack
     {
     public:
-
-        PipelineStack(WeakRef<View> view, Ref<ShaderProgram> presentShader);
+        PipelineStack(); 
+        PipelineStack(WeakRef<View> view, WeakRef<ShaderProgram> presentShader);
         /// <summary>
         /// Call after all pipelines have been rendered
         /// </summary>
@@ -25,8 +25,11 @@ namespace harmony
 
     protected:
         Ref<View> p_View;
+
         bgfx::FrameBufferHandle p_FinalFramebufferHandle;
         bgfx::ViewId p_FinalImageViewId;
+        
         Ref<ShaderProgram> p_PresentProgram;
+        bgfx::UniformHandle p_TexHandle;
     };
 }

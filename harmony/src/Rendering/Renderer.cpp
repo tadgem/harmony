@@ -113,13 +113,13 @@ void harmony::Renderer::SetViewActive(WeakRef<View> viewWeakRef, bool active)
 void harmony::Renderer::Init()
 {
     AddBuiltInShaders();
-    for (auto& [key, val] : p_Views)
+    for (auto& [view, stack] : p_Views)
     {
-        for (int i = 0; i < val.size(); i++)
+        for (int i = 0; i < stack.m_Stack.size(); i++)
         {
-            Ref<Pipeline> pipeline = val[i];
+            Ref<Pipeline> pipeline = stack.m_Stack[i];
             entt::registry tempRegistry;
-            pipeline->Init(tempRegistry, key);
+            pipeline->Init(tempRegistry, view);
         }
     }
 }
@@ -136,16 +136,16 @@ void harmony::Renderer::OnPreUpdate(entt::registry& registry)
 
         Ref<View> view = m_ActiveViews[i].lock();
         view->OnPreUpdate(registry);
-        std::vector<Ref<Pipeline>>& pipelines = p_Views[view];
+        PipelineStack& stack = p_Views[view];
         
-        for (int p = 0; p < pipelines.size(); p++)
+        for (int p = 0; p < stack.m_Stack.size(); p++)
         {
-            if (!pipelines[p])
+            if (!stack.m_Stack[p])
             {
                 harmony::log::warn("Pipeline {} is expired.", p);
                 continue;
             }
-            pipelines[p]->PreUpdate(registry, m_ActiveViews[i]);
+            stack.m_Stack[p]->PreUpdate(registry, m_ActiveViews[i]);
         }
     }
 }
@@ -162,16 +162,17 @@ void harmony::Renderer::OnPostUpdate(entt::registry& registry)
 
         Ref<View> view = m_ActiveViews[i].lock();
         view->OnPostUpdate(registry);
-        std::vector<Ref<Pipeline>>& pipelines = p_Views[view];
+        
+        PipelineStack& stack = p_Views[view];
 
-        for (int p = 0; p < pipelines.size(); p++)
+        for (int p = 0; p < stack.m_Stack.size(); p++)
         {
-            if (!pipelines[p])
+            if (!stack.m_Stack[p])
             {
                 harmony::log::warn("Pipeline {} is expired.", p);
                 continue;
             }
-            pipelines[p]->PostUpdate(registry, m_ActiveViews[i]);
+            stack.m_Stack[p]->PostUpdate(registry, m_ActiveViews[i]);
         }
     }
 }
@@ -191,7 +192,7 @@ void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipel
         harmony::log::error("Trying to add pipeline association to a view not managed by this View Manager.");
         return;
     }
-    p_Views[view].emplace_back(pipeline);
+    p_Views[view].m_Stack.emplace_back(pipeline);
 }
 
 void harmony::Renderer::RefreshViews()
@@ -199,7 +200,7 @@ void harmony::Renderer::RefreshViews()
     for (int i = 0; i < m_ActiveViews.size(); i++)
     {
         Ref<View> view = m_ActiveViews[i].lock();
-        for (int p = 0; p < p_Views[view].size(); p++)
+        for (int p = 0; p < p_Views[view].m_Stack.size(); p++)
         {
         }
     }
@@ -230,9 +231,9 @@ void harmony::Renderer::OnImGui()
         Ref<View> view = m_ActiveViews[i].lock();
         if (ImGui::Begin(view->m_Name.c_str()))
         {
-            for (int p = 0; p < p_Views[view].size(); p++)
+            for (int p = 0; p < p_Views[view].m_Stack.size(); p++)
             {
-                bgfx::TextureHandle fbHandle = p_Views[view][p]->GetFinalImage();
+                bgfx::TextureHandle fbHandle = p_Views[view].m_Stack[p]->GetFinalImage();
                 if (fbHandle.idx == bgfx::kInvalidHandle)
                 {
                     // harmony::log::warn("Renderer OnImGui : Invalid framebuffer handle for view {} pipeline {}", view->m_Name, p_Views[view][p]->m_Name);

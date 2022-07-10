@@ -3,7 +3,11 @@
 #include "Core/Log.hpp"
 #include "Rendering/Renderer.h"
 
-harmony::PipelineStack::PipelineStack(WeakRef<View> view, Ref<ShaderProgram> presentShader) : p_View(view.lock()), p_PresentProgram(presentShader)
+harmony::PipelineStack::PipelineStack()
+{
+}
+
+harmony::PipelineStack::PipelineStack(WeakRef<View> view, WeakRef<ShaderProgram> presentShader) : p_View(view.lock()), p_PresentProgram(presentShader.lock())
 {
 }
 
@@ -23,6 +27,8 @@ void harmony::PipelineStack::Init(entt::registry& registry)
     p_FinalFramebufferHandle = bgfx::createFrameBuffer(p_View->m_Width, p_View->m_Height, bgfx::TextureFormat::BGRA8);
     bgfx::setViewFrameBuffer(p_FinalImageViewId, p_FinalFramebufferHandle);
     bgfx::setViewRect(p_FinalImageViewId, 0, 0, bgfx::BackbufferRatio::Equal);
+
+    p_TexHandle = p_PresentProgram->m_Uniforms[0].BgfxHandle;
 }
 
 void harmony::PipelineStack::PreUpdate(entt::registry& registry)

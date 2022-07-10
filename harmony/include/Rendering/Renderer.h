@@ -5,6 +5,7 @@
 #include "Core/Scene.h"
 #include "Rendering/Framebuffer.h"
 #include "Rendering/Pipeline.h"
+#include "Rendering/PipelineStack.h"
 #include "Rendering/Mesh.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Shader.h"
@@ -93,7 +94,7 @@ namespace harmony
         {
             static_assert(std::is_base_of<View, T>(), "Provided type is not a view!");
             Ref<T> view = CreateRef<T>(std::forward<Args>(args)...);
-            p_Views.emplace(view, std::vector<Ref<Pipeline>>());
+            p_Views.emplace(view, PipelineStack(view, GetShader("Present")));
 
             return GetWeakRef<T>(view);
         }
@@ -113,7 +114,7 @@ namespace harmony
     protected:
         
         static uint32_t p_ViewHandleCounter;
-        std::map<Ref<View>, std::vector<Ref<Pipeline>>> p_Views;
+        std::map<Ref<View>, PipelineStack> p_Views;
 
         bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
         AssetManager& p_AssetManager;
