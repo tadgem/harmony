@@ -17,34 +17,42 @@ harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetMa
     HARMONY_PROFILE_FUNCTION()
 }
 
-void harmony::Renderer::AddBuiltInShaders()
+void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex)
 {
-    Ref<ShaderProgram> texturedMesh = CreateRef<ShaderProgram>("TexturedMesh");
-    Ref<BuiltInShaderStage> texturedMeshVS = CreateRef<BuiltInShaderStage>("vs_simple_textured", ShaderStage::Type::Vertex, s_BuiltInShader[0]);
-    texturedMeshVS->LoadShaderBinary();
-    Ref<BuiltInShaderStage> texturedMeshFS = CreateRef<BuiltInShaderStage>("fs_simple_textured", ShaderStage::Type::Fragment, s_BuiltInShader[1]);
-    texturedMeshFS->LoadShaderBinary();
-    texturedMesh->AddStage(ShaderStage::Type::Vertex, texturedMeshVS);
-    texturedMesh->AddStage(ShaderStage::Type::Fragment, texturedMeshFS);
+    Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(progName);
+    Ref<BuiltInShaderStage> vs = CreateRef<BuiltInShaderStage>(vsName, ShaderStage::Type::Vertex, s_BuiltInShader[vsIndex]);
+    vs->LoadShaderBinary();
+    Ref<BuiltInShaderStage> fs = CreateRef<BuiltInShaderStage>(fsName, ShaderStage::Type::Fragment, s_BuiltInShader[fsIndex]);
+    fs->LoadShaderBinary();
+    prog->AddStage(ShaderStage::Type::Vertex, vs);
+    prog->AddStage(ShaderStage::Type::Fragment, fs);
 
-    texturedMesh->Build();
-    ShaderDataContainer texDataContainer = ShaderDataContainer(texturedMesh);
-    p_Shaders.emplace(texturedMesh, texDataContainer);
+    prog->Build();
 
-    Ref<ShaderProgram> normal = CreateRef<ShaderProgram>("Normal");
-    Ref<BuiltInShaderStage> normalVS = CreateRef<BuiltInShaderStage>("vs_normal", ShaderStage::Type::Vertex, s_BuiltInShader[2]);
-    normalVS->LoadShaderBinary();
-    Ref<BuiltInShaderStage> normalFS = CreateRef<BuiltInShaderStage>("fs_normal", ShaderStage::Type::Fragment, s_BuiltInShader[3]);
-    normalFS->LoadShaderBinary();
-    normal->AddStage(ShaderStage::Type::Vertex, normalVS);
-    normal->AddStage(ShaderStage::Type::Fragment, normalFS);
-
-    normal->Build();
-    ShaderDataContainer normDataContainer = ShaderDataContainer(normal);
-    p_Shaders.emplace(normal, normDataContainer);
+    ShaderDataContainer dataContainer = ShaderDataContainer(prog);
+    p_Shaders.emplace(prog, dataContainer);
 }
 
-bgfx::VertexLayout harmony::PosColorTexCoord0Vertex::ms_layout;
+void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& csName, uint32_t csIndex)
+{
+    Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(progName);
+    Ref<BuiltInShaderStage> cs = CreateRef<BuiltInShaderStage>(csName, ShaderStage::Type::Compute, s_BuiltInShader[csIndex]);
+    cs->LoadShaderBinary();
+    prog->AddStage(ShaderStage::Type::Compute, cs);
+
+    prog->Build();
+
+    ShaderDataContainer dataContainer = ShaderDataContainer(prog);
+    p_Shaders.emplace(prog, dataContainer);
+}
+
+void harmony::Renderer::AddBuiltInShaders()
+{
+    AddBuiltInShader("TexturedMesh", "vs_simple_textured", "fs_simple_textured", 0, 1);
+    AddBuiltInShader("Normal", "vs_normal", "fs_normal", 2, 3);
+    AddBuiltInShader("Present", "vs_present", "fs_present", 4, 5);
+}
+
 uint32_t harmony::Renderer::p_ViewHandleCounter = 1;
 
 void harmony::Renderer::RemoveView(WeakRef<View> view)
@@ -250,64 +258,6 @@ bgfx::ViewId harmony::Renderer::GetViewID()
     bgfx::ViewId v = p_ViewHandleCounter;
     p_ViewHandleCounter++;
     return v;
-}
-
-void harmony::Renderer::ScreenSpaceQuad(float _textureWidth, float _textureHeight, bool _originBottomLeft, float _width, float _height)
-{
-    if (3 == bgfx::getAvailTransientVertexBuffer(3, PosColorTexCoord0Vertex::ms_layout))
-    {
-        bgfx::TransientVertexBuffer vb;
-        bgfx::allocTransientVertexBuffer(&vb, 3, PosColorTexCoord0Vertex::ms_layout);
-        PosColorTexCoord0Vertex* vertex = (PosColorTexCoord0Vertex*)vb.data;
-
-        const float zz = 0.0f;
-
-        const float minx = -_width;
-        const float maxx = _width;
-        const float miny = 0.0f;
-        const float maxy = _height * 2.0f;
-
-        const float texelHalfW = s_texelHalf / _textureWidth;
-        const float texelHalfH = s_texelHalf / _textureHeight;
-        const float minu = -1.0f + texelHalfW;
-        const float maxu = 1.0f + texelHalfW;
-
-        float minv = texelHalfH;
-        float maxv = 2.0f + texelHalfH;
-
-        if (_originBottomLeft)
-        {
-            float temp = minv;
-            minv = maxv;
-            maxv = temp;
-
-            minv -= 1.0f;
-            maxv -= 1.0f;
-        }
-
-        vertex[0].m_x = minx;
-        vertex[0].m_y = miny;
-        vertex[0].m_z = zz;
-        vertex[0].m_rgba = 0xffffffff;
-        vertex[0].m_u = minu;
-        vertex[0].m_v = minv;
-
-        vertex[1].m_x = maxx;
-        vertex[1].m_y = miny;
-        vertex[1].m_z = zz;
-        vertex[1].m_rgba = 0xffffffff;
-        vertex[1].m_u = maxu;
-        vertex[1].m_v = minv;
-
-        vertex[2].m_x = maxx;
-        vertex[2].m_y = maxy;
-        vertex[2].m_z = zz;
-        vertex[2].m_rgba = 0xffffffff;
-        vertex[2].m_u = maxu;
-        vertex[2].m_v = maxv;
-
-        bgfx::setVertexBuffer(0, &vb);
-    }
 }
 
 harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std::string& name, const std::string& vertName, const std::string& fragName)
