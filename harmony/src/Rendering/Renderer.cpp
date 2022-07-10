@@ -231,6 +231,21 @@ void harmony::Renderer::OnImGui()
         Ref<View> view = m_ActiveViews[i].lock();
         if (ImGui::Begin(view->m_Name.c_str()))
         {
+            bgfx::TextureHandle fbHandle = p_Views[view].GetStackFinalImage();
+            if (fbHandle.idx == bgfx::kInvalidHandle)
+            {
+                // harmony::log::warn("Renderer OnImGui : Invalid framebuffer handle for view {} pipeline {}", view->m_Name, p_Views[view][p]->m_Name);
+                continue;
+            }
+            if (!bgfx::isValid(fbHandle))
+            {
+                continue;
+            }
+            ImGui::Image(
+                fbHandle,
+                ImVec2(static_cast<float>(view->m_Width), static_cast<float>(view->m_Height))
+            );
+            ImGui::Separator();
             for (int p = 0; p < p_Views[view].m_Stack.size(); p++)
             {
                 bgfx::TextureHandle fbHandle = p_Views[view].m_Stack[p]->GetFinalImage();
@@ -248,6 +263,7 @@ void harmony::Renderer::OnImGui()
                     ImVec2(static_cast<float>(view->m_Width), static_cast<float>(view->m_Height))
                 );
             }
+
         }
         ImGui::End();
     }

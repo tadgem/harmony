@@ -25,6 +25,7 @@ namespace harmony
 
     protected:
         Ref<View> p_View;
+        bool p_Initialized;
 
         bgfx::FrameBufferHandle p_FinalFramebufferHandle;
         bgfx::ViewId p_FinalImageViewId;
