@@ -46,6 +46,18 @@ void harmony::Program::LoadBuiltInAssets()
 {
 }
 
+void harmony::Program::SetupBGFXCapabilities(bgfx::Init& init)
+{
+	uint64_t caps;
+
+	if (m_Capabilities->supported && BGFX_CAPS_BLEND_INDEPENDENT)
+	{
+		caps |= BGFX_CAPS_BLEND_INDEPENDENT;
+	}
+
+	init.capabilities = caps;
+}
+
 void harmony::Program::ChangeWorkingDirectory(const std::string& directory)
 {
 	std::filesystem::current_path(std::filesystem::path(directory));
@@ -158,6 +170,8 @@ void harmony::Program::InitBGFX()
 	pd.nwh = (void*)"#canvas";
 #endif
 
+	m_Capabilities = (bgfx::Caps*)bgfx::getCaps();
+
 	bgfx::Init bgfx_init;
 	bgfx_init.type = bgfx::RendererType::Count; // auto choose renderer
 	bgfx_init.resolution.width = p_WindowWidth;
@@ -166,11 +180,9 @@ void harmony::Program::InitBGFX()
 	bgfx_init.platformData = pd;
 	bgfx_init.debug = true;
 	bgfx_init.callback = &p_DebugCallback;
-	bgfx::init(bgfx_init);
 
-	bgfx::setViewClear(
-		0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Utils::EncodeRGBA(14,18,14, 255), 1.0f, 0);
-	bgfx::setViewRect(0, 0, 0, p_WindowWidth, p_WindowHeight);
+	// SetupBGFXCapabilities(bgfx_init);
+	bgfx::init(bgfx_init);
 
 	uint32_t bgfxDebugFlags = 0;
 
@@ -184,7 +196,6 @@ void harmony::Program::InitBGFX()
 
 	bgfx::setDebug(bgfxDebugFlags);
 
-	m_Capabilities = *bgfx::getCaps();
 	harmony::log::info("Successfully initialized BGFX");
 }
 
@@ -293,7 +304,7 @@ void harmony::Program::ResizeApplicationWindow(int w, int h)
 	p_WindowHeight	= static_cast<uint16_t>(h);
 	SDL_SetWindowSize(p_Window, w, h);
 	ImGui::GetIO().DisplaySize = ImVec2(p_WindowWidth, p_WindowHeight);
-	for (uint16_t i = 0; i < m_Capabilities.limits.maxViews; i++)
+	for (uint16_t i = 0; i < m_Capabilities->limits.maxViews; i++)
 	{
 		bgfx::setViewRect(i, 0, 0, bgfx::BackbufferRatio::Equal);
 	}
@@ -306,7 +317,6 @@ void harmony::Program::Run(harmony::Callback callback)
 
 	RunSystemInit();
 	bgfx::touch(0);
-	m_Renderer.Init();
 	LoadBuiltInAssets();
 	SetStyle();
 	while (p_Run)

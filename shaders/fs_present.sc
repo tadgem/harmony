@@ -11,6 +11,6 @@ SAMPLER2D(s_texColor, 0);
 
 void main()
 {
-    vec3 rgb = decodeRGBE8(texture2D(s_texColor, v_texcoord0) );
-    gl_FragColor = toGamma(vec4(rgb, 1.0) );
+    vec4 rgba = texture2D(s_texColor, v_texcoord0);
+    gl_FragColor = rgba;
 }

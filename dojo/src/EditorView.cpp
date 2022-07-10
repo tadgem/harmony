@@ -53,6 +53,6 @@ void harmony::EditorView::OnPreUpdate(entt::registry& registry)
 
 void harmony::EditorView::OnImGui()
 {
-	ImGui::SliderFloat3("Camera Position", &Camera.Position[0], -180.0f, 180.0f);
-	ImGui::SliderFloat3("Camera Rotation", &Camera.Euler[0], -180.0f, 180.0f);
+	ImGui::DragFloat3("Camera Position", &Camera.Position[0], -50.0f, 50.0f);
+	ImGui::DragFloat3("Camera Rotation", &Camera.Euler[0], -180.0f, 180.0f);
 }

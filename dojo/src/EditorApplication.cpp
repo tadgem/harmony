@@ -10,9 +10,6 @@ harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*t
 	AddSystems();
 
 	AddEditorPanels();
-
-	InitializePipelines();
-	InitializeViews();
 }
 
 void harmony::Editor::AddAssetTypeNames()
@@ -78,6 +75,10 @@ void harmony::Editor::InitializeViews()
 void harmony::Editor::RunEditor()
 {
 	Init();
+	m_Renderer.Init();
+	InitializePipelines();
+	InitializeViews();
+
 	LoadProject("D:/Test/Test.harmonyproj");
 	auto callback = [&]()
 	{

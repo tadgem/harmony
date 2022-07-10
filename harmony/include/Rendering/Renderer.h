@@ -95,7 +95,10 @@ namespace harmony
             static_assert(std::is_base_of<View, T>(), "Provided type is not a view!");
             Ref<T> view = CreateRef<T>(std::forward<Args>(args)...);
             p_Views.emplace(view, PipelineStack(view, GetShader("Present")));
+            
+            entt::registry reg;
 
+            p_Views[view].Init(reg);
             return GetWeakRef<T>(view);
         }
 

@@ -42,7 +42,7 @@ void harmony::PipelineStack::Init(entt::registry& registry)
     p_FinalFramebufferHandle = bgfx::createFrameBuffer(p_View->m_Width, p_View->m_Height, bgfx::TextureFormat::BGRA8);
     bgfx::setViewFrameBuffer(p_FinalImageViewId, p_FinalFramebufferHandle);
     bgfx::setViewRect(p_FinalImageViewId, 0, 0, bgfx::BackbufferRatio::Equal);
-
+    bgfx::setViewName(p_FinalImageViewId, "FinalImage");
     p_TexHandle = p_PresentProgram->m_Uniforms[0].BgfxHandle;
     p_Initialized = true;
 }
@@ -71,7 +71,8 @@ void harmony::PipelineStack::PostUpdate(entt::registry& registry)
         }
         m_Stack[p]->PostUpdate(registry, p_View);
     }
-
+    bgfx::setViewClear(p_FinalImageViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000);
+    
     for (int p = 0; p < m_Stack.size(); p++)
     {
         if (!m_Stack[p])
@@ -80,8 +81,8 @@ void harmony::PipelineStack::PostUpdate(entt::registry& registry)
             continue;
         }
         bgfx::setTexture(0, p_TexHandle, m_Stack[p]->GetFinalImage());
-        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
         ScreenSpaceQuad(p_View->m_Width, p_View->m_Height);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
         bgfx::submit(p_FinalImageViewId, p_PresentProgram->m_Handle);
     }
 }

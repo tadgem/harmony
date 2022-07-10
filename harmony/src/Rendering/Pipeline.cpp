@@ -60,6 +60,12 @@ bgfx::TextureHandle harmony::Pipeline::GetFinalImage()
 		return BGFX_INVALID_HANDLE;
 	}
 	bgfx::FrameBufferHandle fbToBlit = p_Stages[p_Stages.size() - 1]->GetStageFinalFramebuffer();
+
+	if (fbToBlit.idx == bgfx::kInvalidHandle)
+	{
+		return bgfx::TextureHandle();
+	}
+
 	return bgfx::getTexture(fbToBlit);
 }
 

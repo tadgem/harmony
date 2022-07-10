@@ -7,6 +7,7 @@
 #include "Core/Log.hpp"
 #include "Core/Time.h"
 #include "Rendering/BuiltinShaders.h"
+#include "Rendering/Shapes.h"
 #if HARMONY_DEBUG
 #include "ImGui/imgui_bgfx.h"
 #include "ImGui/imgui.h"
@@ -112,15 +113,17 @@ void harmony::Renderer::SetViewActive(WeakRef<View> viewWeakRef, bool active)
 
 void harmony::Renderer::Init()
 {
+    PosColorTexCoord0Vertex::init();
     AddBuiltInShaders();
+    entt::registry tempRegistry;
     for (auto& [view, stack] : p_Views)
     {
         for (int i = 0; i < stack.m_Stack.size(); i++)
         {
             Ref<Pipeline> pipeline = stack.m_Stack[i];
-            entt::registry tempRegistry;
             pipeline->Init(tempRegistry, view);
         }
+        stack.Init(tempRegistry);
     }
 }
 
@@ -138,15 +141,7 @@ void harmony::Renderer::OnPreUpdate(entt::registry& registry)
         view->OnPreUpdate(registry);
         PipelineStack& stack = p_Views[view];
         
-        for (int p = 0; p < stack.m_Stack.size(); p++)
-        {
-            if (!stack.m_Stack[p])
-            {
-                harmony::log::warn("Pipeline {} is expired.", p);
-                continue;
-            }
-            stack.m_Stack[p]->PreUpdate(registry, m_ActiveViews[i]);
-        }
+        stack.PreUpdate(registry);
     }
 }
 
@@ -165,15 +160,7 @@ void harmony::Renderer::OnPostUpdate(entt::registry& registry)
         
         PipelineStack& stack = p_Views[view];
 
-        for (int p = 0; p < stack.m_Stack.size(); p++)
-        {
-            if (!stack.m_Stack[p])
-            {
-                harmony::log::warn("Pipeline {} is expired.", p);
-                continue;
-            }
-            stack.m_Stack[p]->PostUpdate(registry, m_ActiveViews[i]);
-        }
+        stack.PostUpdate(registry);
     }
 }
 
@@ -192,6 +179,17 @@ void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipel
         harmony::log::error("Trying to add pipeline association to a view not managed by this View Manager.");
         return;
     }
+
+    if (pipeline.expired())
+    {
+        harmony::log::error("Trying to add pipeline to stack but pipeline is expired");
+        return;
+    }
+
+    Ref<Pipeline> p = pipeline.lock();
+    entt::registry r;
+    p->Init(r, viewWeakRef);
+
     p_Views[view].m_Stack.emplace_back(pipeline);
 }
 

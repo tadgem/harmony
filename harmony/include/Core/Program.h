@@ -63,6 +63,7 @@ namespace harmony
 	protected:
 
 		virtual void LoadBuiltInAssets();
+		virtual void SetupBGFXCapabilities(bgfx::Init& init);
 
 		void ChangeWorkingDirectory(const std::string& directory);
 		void Cleanup();
@@ -169,7 +170,7 @@ namespace harmony
 
 		AssetManager	m_AssetManager;
 		Renderer		m_Renderer;
-		bgfx::Caps		m_Capabilities;
+		bgfx::Caps*		m_Capabilities;
 
 		Ref<Project>	m_Project;
 	};

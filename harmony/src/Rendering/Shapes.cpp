@@ -101,59 +101,54 @@ harmony::Plane::Plane(float size) : Mesh("builtin://plane", 0)
 
 
 bgfx::VertexLayout harmony::PosColorTexCoord0Vertex::ms_layout;
-void harmony::ScreenSpaceQuad(float _textureWidth, float _textureHeight, bool _originBottomLeft, float _width, float _height)
+void harmony::ScreenSpaceQuad(float _textureWidth, float _textureHeight)
 {
-	if (3 == bgfx::getAvailTransientVertexBuffer(3, PosColorTexCoord0Vertex::ms_layout))
+	if (6 == bgfx::getAvailTransientVertexBuffer(6, PosColorTexCoord0Vertex::ms_layout))
 	{
 		bgfx::TransientVertexBuffer vb;
-		bgfx::allocTransientVertexBuffer(&vb, 3, PosColorTexCoord0Vertex::ms_layout);
+		bgfx::allocTransientVertexBuffer(&vb, 6, PosColorTexCoord0Vertex::ms_layout);
 		PosColorTexCoord0Vertex* vertex = (PosColorTexCoord0Vertex*)vb.data;
 
-		const float zz = 0.0f;
+		// bottom left
+		vertex[0].m_x = -1.0;
+		vertex[0].m_y = -1.0;
+		vertex[0].m_z = 0.0;
+		vertex[0].m_u = 0.0;
+		vertex[0].m_v = 1.0;
+		// bottom right
+		vertex[1].m_x = 1.0;
+		vertex[1].m_y = -1.0;
+		vertex[1].m_z = 0.0;
+		vertex[1].m_u = 1.0;
+		vertex[1].m_v = 1.0;
 
-		const float minx = -_width;
-		const float maxx = _width;
-		const float miny = 0.0f;
-		const float maxy = _height * 2.0f;
+		// top right
+		vertex[2].m_x = 1.0;
+		vertex[2].m_y = 1.0;
+		vertex[2].m_z = 0.0;
+		vertex[2].m_u = 1.0;
+		vertex[2].m_v = 0.0;
 
-		const float texelHalfW = s_texelHalf / _textureWidth;
-		const float texelHalfH = s_texelHalf / _textureHeight;
-		const float minu = -1.0f + texelHalfW;
-		const float maxu = 1.0f + texelHalfW;
+		// top right
+		vertex[3].m_x = 1.0;
+		vertex[3].m_y = 1.0;
+		vertex[3].m_z = 0.0;
+		vertex[3].m_u = 1.0;
+		vertex[3].m_v = 0.0;
 
-		float minv = texelHalfH;
-		float maxv = 2.0f + texelHalfH;
+		// top left
+		vertex[4].m_x = -1.0;
+		vertex[4].m_y = 1.0;
+		vertex[4].m_z = 0.0;
+		vertex[4].m_u = 0.0;
+		vertex[4].m_v = 0.0;
 
-		if (_originBottomLeft)
-		{
-			float temp = minv;
-			minv = maxv;
-			maxv = temp;
-
-			minv -= 1.0f;
-			maxv -= 1.0f;
-		}
-
-		vertex[0].m_x = minx;
-		vertex[0].m_y = miny;
-		vertex[0].m_z = zz;
-		vertex[0].m_rgba = 0xffffffff;
-		vertex[0].m_u = minu;
-		vertex[0].m_v = minv;
-
-		vertex[1].m_x = maxx;
-		vertex[1].m_y = miny;
-		vertex[1].m_z = zz;
-		vertex[1].m_rgba = 0xffffffff;
-		vertex[1].m_u = maxu;
-		vertex[1].m_v = minv;
-
-		vertex[2].m_x = maxx;
-		vertex[2].m_y = maxy;
-		vertex[2].m_z = zz;
-		vertex[2].m_rgba = 0xffffffff;
-		vertex[2].m_u = maxu;
-		vertex[2].m_v = maxv;
+		// bottom left
+		vertex[5].m_x = -1.0;
+		vertex[5].m_y = -1.0;
+		vertex[5].m_z = 0.0;
+		vertex[5].m_u = 0.0;
+		vertex[5].m_v = 1.0;
 
 		bgfx::setVertexBuffer(0, &vb);
 	}

@@ -4,6 +4,7 @@
 harmony::PipelineStage::PipelineStage(Type stageType, WeakRef<ShaderProgram> shader) : m_ViewId(Renderer::GetViewID()), m_StageType(stageType), p_Shader(shader)
 {
 	p_FrameBufferHandle = BGFX_INVALID_HANDLE;
+	p_RunPreFrame = false;
 }
 
 void harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)

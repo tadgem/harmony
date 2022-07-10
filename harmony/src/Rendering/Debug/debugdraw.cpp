@@ -1052,6 +1052,7 @@ struct DebugDrawEncoderImpl
 		Attrib& attrib = m_attrib[0];
 		attrib.m_state = 0
 			| BGFX_STATE_WRITE_RGB
+			| BGFX_STATE_WRITE_A
 			| (m_depthTestLess ? BGFX_STATE_DEPTH_TEST_LESS : BGFX_STATE_DEPTH_TEST_GREATER)
 			| BGFX_STATE_CULL_CW
 			| BGFX_STATE_WRITE_Z
