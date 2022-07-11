@@ -3,6 +3,8 @@
 #include <fstream>
 #include <thread>
 #include "json.hpp"
+#include "glm/glm.hpp"
+#include "glm/gtc/quaternion.hpp"
 
 /// Thank you cherno
 /// https://gist.github.com/TheCherno/31f135eea6ee729ab5f26a6908eb3a5e
@@ -133,3 +135,5 @@ private:
 #define HARMONY_PROFILE_SCOPE(name)
 #define HARMONY_PROFILE_END_SESSION()
 #endif
+
+

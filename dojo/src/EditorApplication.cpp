@@ -1,6 +1,7 @@
 #include "EditorApplication.h"
 #include "Rendering/Shapes.h"
 #include "ECS/MeshSystem.h"
+#include "ECS/MaterialSystem.h"
 #include "Rendering/Pipelines/NormalPipeline.h"
 harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*this)
 {
@@ -34,6 +35,7 @@ void harmony::Editor::AddProgramComponents()
 void harmony::Editor::AddSystems()
 {
 	AddSystem<TransformSystem>();
+	AddSystem<MaterialSystem>();
 	AddSystem<MeshSystem>(m_AssetManager);
 }
 

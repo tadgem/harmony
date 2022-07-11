@@ -1,6 +1,9 @@
 #pragma once
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
+#include "json.hpp"
+#include "Core/Profile.hpp"
+#include "Rendering/ShaderDataContainer.h"
 
 namespace harmony
 {
@@ -18,6 +21,8 @@ namespace harmony
         glm::vec3 Scale;
         glm::vec3 Euler;
         glm::quat Rotation;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(TransformComponent, Position, Scale, Euler, Rotation);
 
         glm::mat4 Model;
     };

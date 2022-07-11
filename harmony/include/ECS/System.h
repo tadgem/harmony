@@ -16,6 +16,9 @@ namespace harmony
         virtual nlohmann::json SerializeSystem(entt::registry& registry) = 0;
         virtual void DeserializeSystem(entt::registry& registry, nlohmann::json systemJson) = 0;
         const size_t m_TypeHash;
+
+        static std::string GetEntityKey(entt::entity& entity);
+        static entt::entity GetEntityFromKey(const std::string& key);
     protected:
         friend class Program;
         virtual void Refresh() = 0;

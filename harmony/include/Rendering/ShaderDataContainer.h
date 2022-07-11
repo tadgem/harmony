@@ -3,6 +3,7 @@
 #include "Rendering/Shader.h"
 #include "Rendering/Texture.h"
 #include "glm/glm.hpp"
+#include "glm/gtc/quaternion.hpp"
 
 
 namespace glm
@@ -68,6 +69,20 @@ namespace glm
         j.at("row1").get_to(v[1]);
         j.at("row2").get_to(v[2]);
         j.at("row3").get_to(v[3]);
+    }
+
+    inline void to_json(nlohmann::json& j, const glm::quat& v)
+    {
+        j = nlohmann::json{ {"row0", v[0]}, {"row1", v[1]}, {"row2", v[2]}, {"row3", v[3]}
+        };
+
+    }
+    inline void from_json(const nlohmann::json& j, glm::quat& v)
+    {
+        j.at("x").get_to(v.x);
+        j.at("y").get_to(v.y);
+        j.at("z").get_to(v.z);
+        j.at("w").get_to(v.w);
     }
 }
 

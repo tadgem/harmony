@@ -68,11 +68,27 @@ void harmony::TransformSystem::Cleanup(entt::registry& registry)
 
 nlohmann::json harmony::TransformSystem::SerializeSystem(entt::registry& registry)
 {
-	return nlohmann::json();
+    nlohmann::json j;
+
+    auto view = registry.view<TransformComponent>();
+
+    for (auto [e, t] : view.each())
+    {
+        j[GetEntityKey(e)] = t;
+    }
+
+    return j;
 }
 
 void harmony::TransformSystem::DeserializeSystem(entt::registry& registry, nlohmann::json systemJson)
 {
+    for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++)
+    {
+        entt::entity e = GetEntityFromKey(entry.key());
+        TransformComponent tc = entry.value();
+
+        registry.emplace<TransformComponent>(e, tc);
+    }
 }
 
 void harmony::TransformSystem::Refresh()

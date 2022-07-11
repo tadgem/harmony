@@ -41,11 +41,27 @@ void harmony::MeshSystem::Cleanup(entt::registry& registry)
 
 nlohmann::json harmony::MeshSystem::SerializeSystem(entt::registry& registry)
 {
-	return nlohmann::json();
+	nlohmann::json j;
+
+	auto view = registry.view<MeshComponent>();
+
+	for(auto [e, mesh] : view.each())
+	{
+		j[GetEntityKey(e)] = mesh;
+	}
+
+	return j;
 }
 
 void harmony::MeshSystem::DeserializeSystem(entt::registry& registry, nlohmann::json systemJson)
 {
+	for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++)
+	{
+		entt::entity e = GetEntityFromKey(entry.key());
+		MeshComponent mc = entry.value();
+
+		registry.emplace<MeshComponent>(e, mc);
+	}
 }
 
 void harmony::MeshSystem::Refresh()

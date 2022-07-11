@@ -43,3 +43,4 @@ imgui.ini
 */cmake-build-debug
 */build
 */uwp
+*/.vs
