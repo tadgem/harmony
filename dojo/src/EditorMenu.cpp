@@ -41,11 +41,26 @@ void harmony::EditorMainMenuBar::MenuBar()
 					p_CreateSceneMenu = true;
 				}
 			}
+			if (ImGui::BeginMenu("Open Scene"))
+			{
+				if (p_Prog.m_Project)
+				{
+					for (int i = 0; i < p_Prog.m_Project->m_SerializedScenes.size(); i++)
+					{
+						std::string sceneName = p_Prog.m_Project->m_SerializedScenes[i].c_str();
+						if (ImGui::MenuItem(sceneName.c_str()))
+						{
+							p_Prog.OpenScene(i);
+						}
+					}
+				}
+				ImGui::EndMenu();
+			}
 			if (ImGui::MenuItem("Save Scene"))
 			{
 				if (!p_Prog.GetActiveScene().expired())
 				{
-					ImGuiFileDialog::Instance()->OpenDialog("HarmonySaveScene", "Choose Scene", ".harmonyscene,.json", ".");
+					ImGuiFileDialog::Instance()->OpenDialog("HarmonySaveScene", "Save Scene", ".harmonyscene,.json", ".");
 				}
 			}
 			ImGui::EndMenu();
@@ -118,6 +133,12 @@ void harmony::EditorMainMenuBar::Popups()
 			if (ImGui::Button("Create"))
 			{
 				p_Prog.CreateScene(std::string(p_SceneNameInput));
+				p_CreateSceneMenu = false;
+			}
+			ImGui::SameLine();
+			ImGui::Spacing();
+			if (ImGui::Button("Cancel"))
+			{
 				p_CreateSceneMenu = false;
 			}
 		}
