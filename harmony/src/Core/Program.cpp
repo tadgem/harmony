@@ -2,6 +2,7 @@
 #include "Core/Program.h"
 #include "Core/Log.hpp"
 #include "Core/Time.h"
+#include "Core/Input.h"
 #include "SDL_syswm.h"
 #include "ImGui/imgui.h"
 #include "bgfx/bgfx.h"
@@ -311,6 +312,22 @@ void harmony::Program::ResizeApplicationWindow(int w, int h)
 	bgfx::reset(p_WindowWidth, p_WindowHeight);
 }
 
+void harmony::Program::HandleInputEvent(SDL_Event& event)
+{
+	// Keyboard
+	if (event.type == SDL_KEYDOWN)
+	{
+
+	}
+
+	if (event.type == SDL_KEYUP)
+	{
+
+	}
+
+	// Mouse
+}
+
 void harmony::Program::Run(harmony::Callback callback)
 {
 	HARMONY_PROFILE_FUNCTION()
@@ -336,6 +353,7 @@ void harmony::Program::Run(harmony::Callback callback)
 			if (sdlEvent.type == SDL_QUIT)
 			{
 				p_Run = false;
+				return;
 			}
 
 			if (sdlEvent.type == SDL_WINDOWEVENT)
@@ -345,6 +363,7 @@ void harmony::Program::Run(harmony::Callback callback)
 					ResizeApplicationWindow(sdlEvent.window.data1, sdlEvent.window.data2);
 				}
 			}
+			HandleInputEvent(sdlEvent);
 		}
 
 		RunRendererPreUpdate();
@@ -366,6 +385,8 @@ void harmony::Program::Run(harmony::Callback callback)
 		RunProgramComponentRender();
 
 		RunSystemRender();
+
+		Input::Get()->PostFrame();
 
 		// Use last available view for imgui. 
 		// probably not great but will be ammended with view manager impl.

@@ -73,7 +73,7 @@ namespace harmony
 		void InitImGui();
 
 		void ResizeApplicationWindow(int w, int h);
-
+		void HandleInputEvent(SDL_Event& event);
 		void SetStyle();
 
 		std::string							p_AppName;

@@ -149,6 +149,9 @@ namespace harmony {
 		std::map<Mouse::Button, bool> CurrentFrameButtonState;
 		std::map<Mouse::Button, bool> PreviousFrameButtonState;
 
+		float CurrentFrameScroll;
+		float PreviousFrameScroll;
+
 		glm::vec2 CurrentFrameMouseLocation;
 		glm::vec2 PreviousFrameMouseLocation;
 	};
@@ -162,6 +165,7 @@ namespace harmony {
 	class Input
 	{
 	public:
+		void UpdateMouseScroll(float val);
 		void UpdateMousePosition(glm::vec2 mousePosition);
 		void UpdateMouseButton(Mouse::Button button, bool active);
 
@@ -170,6 +174,9 @@ namespace harmony {
 		void UpdateGamepadButton(int gamepadIndex, Gamepad::Button button, bool active);
 		void UpdateGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigger, float value);
 		void UpdateGamepadStick(int gamepadIndex, Gamepad::Stick stick, glm::vec2 value);
+
+		void		OnControllerConnected(uint8_t index);
+		void		OnControllerDisconnected(uint8_t index);
 
 		glm::vec2	GetMousePosition();
 		glm::vec2	GetMousePositionLastFrame();
@@ -189,6 +196,7 @@ namespace harmony {
 		float GetGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigger);
 		glm::vec2 GetGamepadStick(int gamepadIndex, Gamepad::Stick stick);
 
+		void PostFrame();
 		static Input* Get();
 		~Input();
 		const uint8_t g_NumGamepads = 4;

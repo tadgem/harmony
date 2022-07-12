@@ -1,5 +1,10 @@
 #include "Core/Input.h"
 #include "Core/Log.hpp"
+void harmony::Input::UpdateMouseScroll(float val)
+{
+	p_MouseState.PreviousFrameScroll = p_MouseState.CurrentFrameScroll;
+	p_MouseState.CurrentFrameScroll = val;
+}
 void harmony::Input::UpdateMousePosition(glm::vec2 mousePosition)
 {
 	p_MouseState.PreviousFrameMouseLocation = p_MouseState.CurrentFrameMouseLocation;
@@ -57,6 +62,15 @@ void harmony::Input::UpdateGamepadStick(int gamepadIndex, Gamepad::Stick stick, 
 		= p_GamepadStates[gamepadIndex].CurrentFrameStickState[stick];
 
 	p_GamepadStates[gamepadIndex].CurrentFrameStickState[stick] = value;
+}
+
+void harmony::Input::OnControllerConnected(uint8_t index)
+{
+	return;
+}
+
+void harmony::Input::OnControllerDisconnected(uint8_t index)
+{
 }
 
 glm::vec2 harmony::Input::GetMousePosition()
@@ -147,6 +161,83 @@ glm::vec2 harmony::Input::GetGamepadStick(int gamepadIndex, Gamepad::Stick stick
 		return glm::vec2();
 	}
 	return p_GamepadStates[gamepadIndex].CurrentFrameStickState[stick];
+}
+
+void harmony::Input::PostFrame()
+{
+	for (int button = Gamepad::Button::FaceNorth; button != Gamepad::Button::Start; button++)
+	{
+		Gamepad::Button padButton = static_cast<Gamepad::Button>(button);
+		for (int pad = 0; pad < g_NumGamepads; pad++)
+		{
+			bool activeCurrentFrame = p_GamepadStates[pad].CurrentFrameButtonState[padButton];
+			bool activePreviousFrame = p_GamepadStates[pad].PreviousFrameButtonState[padButton];
+			bool updatedThisFrame = activeCurrentFrame != activePreviousFrame;
+			if (updatedThisFrame)
+			{
+				p_GamepadStates[pad].PreviousFrameButtonState[padButton] = activeCurrentFrame;
+			}
+		}
+	}
+
+	for (int button = Gamepad::Trigger::LT; button != Gamepad::Trigger::RT; button++)
+	{
+		Gamepad::Trigger padButton = static_cast<Gamepad::Trigger>(button);
+		for (int pad = 0; pad < g_NumGamepads; pad++)
+		{
+			float valueCurrentFrame = p_GamepadStates[pad].CurrentFrameTriggerState[padButton];
+			float valuePreviousFrame = p_GamepadStates[pad].PreviousFrameTriggerState[padButton];
+			
+			float diff = std::abs(valueCurrentFrame - valuePreviousFrame);
+			if (diff > 0.001f)
+			{
+				p_GamepadStates[pad].PreviousFrameTriggerState[padButton] = valueCurrentFrame;
+			}
+		}
+	}
+
+	for (int button = Gamepad::Stick::LS; button != Gamepad::Stick::RS; button++)
+	{
+		Gamepad::Stick padButton = static_cast<Gamepad::Stick>(button);
+		for (int pad = 0; pad < g_NumGamepads; pad++)
+		{
+			glm::vec2 valueCurrentFrame = p_GamepadStates[pad].CurrentFrameStickState[padButton];
+			glm::vec2 valuePreviousFrame = p_GamepadStates[pad].PreviousFrameStickState[padButton];
+			bool updatedThisFrame = valueCurrentFrame != valuePreviousFrame;
+		
+			if (updatedThisFrame)
+			{
+				p_GamepadStates[pad].PreviousFrameStickState[padButton] = valueCurrentFrame;
+			}
+		}
+	}
+
+	for (int button = Key::A ; button != Key::Right; button++)
+	{
+		Key padButton = static_cast<Key>(button);
+		for (int pad = 0; pad < g_NumGamepads; pad++)
+		{
+			bool activeCurrentFrame = p_KeyboardState.CurrentFrameKeyState[padButton];
+			bool activePreviousFrame = p_KeyboardState.PreviousFrameKeyState[padButton];
+			bool updatedThisFrame = activeCurrentFrame != activePreviousFrame;
+			if (updatedThisFrame)
+			{
+				p_KeyboardState.PreviousFrameKeyState[padButton] = activeCurrentFrame;
+			}
+		}
+	}
+
+	for (int button = Mouse::Button::Left; button != Mouse::Button::Extra3; button++)
+	{
+		Mouse::Button mouseButton = static_cast<Mouse::Button>(button);
+		bool activeCurrentFrame = p_MouseState.CurrentFrameButtonState[mouseButton];
+		bool activePreviousFrame = p_MouseState.PreviousFrameButtonState[mouseButton];
+		bool updatedThisFrame = activeCurrentFrame != activePreviousFrame;
+		if (updatedThisFrame)
+		{
+			p_MouseState.PreviousFrameButtonState[mouseButton] = activeCurrentFrame;
+		}
+	}
 }
 
 harmony::Input* harmony::Input::Get()
