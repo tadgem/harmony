@@ -73,7 +73,7 @@ namespace glm
 
     inline void to_json(nlohmann::json& j, const glm::quat& v)
     {
-        j = nlohmann::json{ {"row0", v[0]}, {"row1", v[1]}, {"row2", v[2]}, {"row3", v[3]}
+        j = nlohmann::json{ {"x", v.x}, {"y", v.y}, {"z", v.z}, {"w", v.w}
         };
 
     }
@@ -105,7 +105,8 @@ namespace harmony
         void Clear();
 
         WeakRef<ShaderProgram> m_Shader;
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderDataContainer, m_Vec4Values, m_Mat3Values, m_Mat4Values, m_TextureValues, m_Shader)
+        std::string m_ShaderName;
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderDataContainer, m_Vec4Values, m_Mat3Values, m_Mat4Values, m_TextureValues, m_ShaderName)
     protected:
 
         bool ReturnIfNull();

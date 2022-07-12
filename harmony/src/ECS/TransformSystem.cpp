@@ -85,7 +85,9 @@ void harmony::TransformSystem::DeserializeSystem(entt::registry& registry, nlohm
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++)
     {
         entt::entity e = GetEntityFromKey(entry.key());
-        TransformComponent tc = entry.value();
+        nlohmann::json transformJson = entry.value();
+        TransformComponent tc;
+        transformJson.get_to<TransformComponent>(tc);
 
         registry.emplace<TransformComponent>(e, tc);
     }

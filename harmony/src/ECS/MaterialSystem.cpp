@@ -1,7 +1,7 @@
 #include "ECS/MaterialSystem.h"
 #include "ECS/MaterialComponent.h"
 
-harmony::MaterialSystem::MaterialSystem() : System(GetTypeHash<MaterialComponent>())
+harmony::MaterialSystem::MaterialSystem(Renderer& renderer) : System(GetTypeHash<MaterialComponent>()), p_Renderer(renderer)
 {
 }
 
@@ -41,7 +41,8 @@ void harmony::MaterialSystem::DeserializeSystem(entt::registry& registry, nlohma
 	{
 		entt::entity e = GetEntityFromKey(entry.key());
 		MaterialComponent mc = entry.value();
-
+		WeakRef<ShaderProgram> shader = p_Renderer.GetShader(mc.Data.m_ShaderName);
+		mc.Data.UpdateShader(shader);
 		registry.emplace<MaterialComponent>(e, mc);
 	}
 }

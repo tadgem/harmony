@@ -34,6 +34,8 @@ void harmony::ShaderDataContainer::UpdateContainer()
 	{
 		CreateEmptyValue(shader->m_Uniforms[i]);
 	}
+
+	m_ShaderName = shader->m_Name;
 }
 
 void harmony::ShaderDataContainer::SetContainerUniforms()

@@ -35,7 +35,7 @@ void harmony::Editor::AddProgramComponents()
 void harmony::Editor::AddSystems()
 {
 	AddSystem<TransformSystem>();
-	AddSystem<MaterialSystem>();
+	AddSystem<MaterialSystem>(m_Renderer);
 	AddSystem<MeshSystem>(m_AssetManager);
 }
 

@@ -1,12 +1,13 @@
 #pragma once
 #include "ECS/System.h"
+#include "Rendering/Renderer.h"
 
 namespace harmony
 {
     class MaterialSystem : public System
     {
         public:
-        MaterialSystem();
+        MaterialSystem(Renderer& renderer);
         virtual void Init(entt::registry& registry) override;
         virtual void Update(entt::registry& registry) override;
         virtual void Render(entt::registry& registry) override;
@@ -14,5 +15,8 @@ namespace harmony
         virtual nlohmann::json SerializeSystem(entt::registry& registry) override;
         virtual void DeserializeSystem(entt::registry& registry, nlohmann::json systemJson) override;
         virtual void Refresh() override;
+
+    protected:
+        Renderer& p_Renderer;
     };
 };
