@@ -163,6 +163,85 @@ glm::vec2 harmony::Input::GetGamepadStick(int gamepadIndex, Gamepad::Stick stick
 	return p_GamepadStates[gamepadIndex].CurrentFrameStickState[stick];
 }
 
+harmony::Key harmony::Input::GetKeyFromSDLKeycode(SDL_Keycode keyCode)
+{
+	if (keyCode >= SDLK_0 && keyCode <= SDLK_9)
+	{
+		int diff = keyCode - SDLK_0;
+		return static_cast<Key>(Key::Zero + diff);
+	}
+
+	if (keyCode >= SDLK_a && keyCode <= SDLK_z)
+	{
+		int diff = keyCode - SDLK_a;
+		return static_cast<Key>(Key::A + diff);
+	}
+
+	if (keyCode >= SDLK_F1 && keyCode <= SDLK_F12)
+	{
+		int diff = keyCode - SDLK_F1;
+		return static_cast<Key>(Key::F1 + diff);
+	}
+
+	switch (keyCode)
+	{
+	case SDLK_MINUS:
+		return Key::Minus;
+	case SDLK_UNDERSCORE:
+		return Key::Underscore;
+	case SDLK_EQUALS:
+		return Key::Equals;
+	case SDLK_PLUS:
+		return Key::Plus;
+	case SDLK_BACKSPACE:
+		return Key::Backspace;
+	case SDLK_RETURN:
+		return Key::Enter;
+	case SDLK_SPACE:
+		return Key::Space;
+	case SDLK_TAB:
+		return Key::Tab;
+	case SDLK_CAPSLOCK:
+		return Key::CapsLock;
+	case SDLK_LSHIFT:
+		return Key::LeftShift;
+	case SDLK_LCTRL:
+		return Key::LeftControl;
+	case SDLK_LALT:
+		return Key::LeftAlt;
+	case SDLK_RSHIFT:
+		return Key::RightShift;
+	case SDLK_RCTRL:
+		return Key::RightControl;
+	case SDLK_RALT:	
+		return Key::RightAlt;
+	case SDLK_INSERT:
+		return Key::Insert;
+	case SDLK_HOME:
+		return Key::Home;
+	case SDLK_PAGEUP:
+		return Key::PageUp;
+	case SDLK_PAGEDOWN:
+		return Key::PageDown;
+	case SDLK_DELETE:
+		return Key::Delete;
+	case SDLK_END:
+		return Key::End;
+	case SDLK_UP:
+		return Key::Up;
+	case SDLK_DOWN:
+		return Key::Down;
+	case SDLK_LEFT:
+		return Key::Left;
+	case SDLK_RIGHT:
+		return Key::Right;
+	default:
+		harmony::log::error("Unknown key passed.");
+		return Key::End;
+	}
+	
+}
+
 void harmony::Input::PostFrame()
 {
 	for (int button = Gamepad::Button::FaceNorth; button != Gamepad::Button::Start; button++)

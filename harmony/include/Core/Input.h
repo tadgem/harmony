@@ -4,7 +4,7 @@
 #include <map>
 #include <vector>
 #include "glm/glm.hpp"
-
+#include "SDL.h"
 namespace harmony {
 
 	namespace Gamepad
@@ -81,6 +81,7 @@ namespace harmony {
 		X,
 		Y,
 		Z,
+		Zero,
 		One,
 		Two,
 		Three,
@@ -90,7 +91,6 @@ namespace harmony {
 		Seven,
 		Eight,
 		Nine,
-		Zero,
 		Minus,
 		Underscore,
 		Equals,
@@ -195,6 +195,9 @@ namespace harmony {
 
 		float GetGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigger);
 		glm::vec2 GetGamepadStick(int gamepadIndex, Gamepad::Stick stick);
+
+		static Key GetKeyFromSDLKeycode(SDL_Keycode keyCode);
+		static Mouse::Button GetMouseButtonFromSDLKeycode(SDL_KeyCode keyCode);
 
 		void PostFrame();
 		static Input* Get();

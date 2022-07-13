@@ -317,14 +317,23 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 	// Keyboard
 	if (event.type == SDL_KEYDOWN)
 	{
-
+		SDL_KeyboardEvent keyEvent = event.key;
+		SDL_Keysym keySym = keyEvent.keysym;
+		Key key = Input::GetKeyFromSDLKeycode(keySym.sym);
+		Input::Get()->UpdateKey(key, true);
 	}
 
 	if (event.type == SDL_KEYUP)
 	{
-
+		SDL_KeyboardEvent keyEvent = event.key;
+		SDL_Keysym keySym = keyEvent.keysym;
+		Key key = Input::GetKeyFromSDLKeycode(keySym.sym);
+		Input::Get()->UpdateKey(key, false);
 	}
 
+	if (event.type == SDL_MOUSEMOTION)
+	{
+	}
 	// Mouse
 }
 
