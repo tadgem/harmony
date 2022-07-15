@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Rendering/Pipeline.h"
-#include "Rendering/Debug/DebugDraw.h"
+#include "Rendering/Debug/GfxDebug.h"
 namespace harmony
 {
     class DebugDrawStage : public PipelineStage
@@ -13,8 +13,8 @@ namespace harmony
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
         virtual void Cleanup() override;
 
-        bx::DefaultAllocator p_Allocator;
         bool Active;
+        DebugDrawEncoder* p_DebugRenderer;
     };
     /// <summary>
     /// CURRENT KNOWN LIMITATION:

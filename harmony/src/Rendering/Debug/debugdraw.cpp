@@ -318,6 +318,7 @@ bx::Vec3 getPoint(Axis::Enum _axis, float _x, float _y)
 #include "Rendering/Debug/debugdraw/fs_debugdraw_fill_lit.bin.h"
 #include "Rendering/Debug/debugdraw/vs_debugdraw_fill_texture.bin.h"
 #include "Rendering/Debug/debugdraw/fs_debugdraw_fill_texture.bin.h"
+// #include "DebugDraw.h"
 
 static const bgfx::EmbeddedShader s_embeddedShaders[] =
 {
