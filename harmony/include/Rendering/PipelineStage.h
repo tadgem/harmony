@@ -34,12 +34,17 @@ namespace harmony
         virtual void Cleanup() = 0;
 
         virtual bgfx::FrameBufferHandle GetStageFinalFramebuffer();
+        virtual bgfx::TextureHandle GetStageDepthTexture();
 
         const bgfx::ViewId m_ViewId;
+
+        bool m_HasHDRAttachment;
+        bool m_HasDepthAttachment;
 
         Type m_StageType;
     protected:
         bgfx::FrameBufferHandle p_FrameBufferHandle;
+        std::vector<bgfx::TextureHandle> p_Attachments;
         WeakRef<ShaderProgram> p_Shader;
 
         bool p_RunPreFrame;

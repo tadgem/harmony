@@ -16,27 +16,27 @@ void harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view, 
 
 	Ref<View> _view = view.lock();
 
-	bgfx::TextureHandle fbtextures[] =
-	{
+	p_Attachments.emplace_back(
 		bgfx::createTexture2D(
-		        _view->m_Width
-		    , _view->m_Height
-		    , false
-		    , 1
-		    , bgfx::TextureFormat::BGRA8
-		    , BGFX_TEXTURE_RT
-		    ),
+			_view->m_Width
+			, _view->m_Height
+			, false
+			, 1
+			, bgfx::TextureFormat::BGRA8
+			, BGFX_TEXTURE_RT
+		));
+	p_Attachments.emplace_back(
 		bgfx::createTexture2D(
-		        _view->m_Width
-		    , _view->m_Height
-		    , false
-		    , 1
-		    , bgfx::TextureFormat::D32F
-		    , BGFX_TEXTURE_RT_WRITE_ONLY | BGFX_STATE_DEPTH_TEST_LESS
-		    ),
-	};
-
-	p_FrameBufferHandle = bgfx::createFrameBuffer(BX_COUNTOF(fbtextures), fbtextures, false);
+			_view->m_Width
+			, _view->m_Height
+			, false
+			, 1
+			, bgfx::TextureFormat::D32F
+			, BGFX_TEXTURE_RT| BGFX_STATE_DEPTH_TEST_LESS | BGFX_TEXTURE_BLIT_DST 
+		));
+	m_HasHDRAttachment = false;
+	m_HasDepthAttachment = true;
+	p_FrameBufferHandle = bgfx::createFrameBuffer(p_Attachments.size(), p_Attachments.data(), false);
 	bgfx::setViewFrameBuffer(m_ViewId, p_FrameBufferHandle);
 	bgfx::setViewRect(m_ViewId, 0, 0, bgfx::BackbufferRatio::Equal);
 }
@@ -48,7 +48,7 @@ void harmony::PipelineStage::PreUpdate(entt::registry& registry, WeakRef<View> v
 		harmony::log::error("Already ran pre frame callback for this frame!");
 		return;
 	}
-	bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH , 0x00000000, 1.0f);
+	// bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH , 0x00000000, 1.0f);
 	Ref<View> _view = view.lock();
 	bgfx::setViewTransform(m_ViewId, &_view->m_View[0], &_view->m_Projection[0]);
 	bgfx::setViewRect(m_ViewId, 0, 0, _view->m_Width, _view->m_Height);
@@ -62,4 +62,13 @@ void harmony::PipelineStage::PostUpdate(entt::registry& registry, WeakRef<View> 
 bgfx::FrameBufferHandle harmony::PipelineStage::GetStageFinalFramebuffer()
 {
 	return p_FrameBufferHandle;
+}
+
+bgfx::TextureHandle harmony::PipelineStage::GetStageDepthTexture()
+{
+	if (!m_HasDepthAttachment)
+	{
+		return bgfx::TextureHandle();
+	}
+
 }

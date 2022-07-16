@@ -57,6 +57,27 @@ void harmony::PipelineStack::PreUpdate(entt::registry& registry)
             continue;
         }
         m_Stack[p]->PreUpdate(registry, p_View);
+        int nextIndex = p + 1;
+
+        if (nextIndex >= m_Stack.size())
+        {
+            continue;
+        }
+
+        bgfx::ViewId nextViewId = m_Stack[nextIndex]->GetFirstViewID();
+        bgfx::TextureHandle destTexture = m_Stack[nextIndex]->GetInitialDepth();
+        bgfx::TextureHandle srcTexture = m_Stack[p]->GetFinalDepth();
+        if (srcTexture.idx >=  4096 || destTexture.idx >= 4096)
+        {
+            continue;
+        }
+        bgfx::blit(
+            nextViewId,
+            destTexture,
+            0,
+           0,
+            srcTexture
+        );
     }
 }
 

@@ -30,6 +30,10 @@ namespace harmony
         virtual void Cleanup(entt::registry& registry, WeakRef<View> view);
 
         bgfx::TextureHandle GetFinalImage();
+        bgfx::TextureHandle GetInitialDepth();
+        bgfx::TextureHandle GetFinalDepth();
+        bgfx::ViewId GetFirstViewID();
+        uint32_t NumPipelineStages();
         PipelineHandle m_Handle;
         std::string m_Name;
 
