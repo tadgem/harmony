@@ -15,7 +15,28 @@ void harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view, 
 	}
 
 	Ref<View> _view = view.lock();
-	p_FrameBufferHandle = bgfx::createFrameBuffer(_view->m_Width, _view->m_Height, bgfx::TextureFormat::BGRA8);
+
+	bgfx::TextureHandle fbtextures[] =
+	{
+		bgfx::createTexture2D(
+		        _view->m_Width
+		    , _view->m_Height
+		    , false
+		    , 1
+		    , bgfx::TextureFormat::BGRA8
+		    , BGFX_TEXTURE_RT
+		    ),
+		bgfx::createTexture2D(
+		        _view->m_Width
+		    , _view->m_Height
+		    , false
+		    , 1
+		    , bgfx::TextureFormat::D32F
+		    , BGFX_TEXTURE_RT_WRITE_ONLY | BGFX_STATE_DEPTH_TEST_LESS
+		    ),
+	};
+
+	p_FrameBufferHandle = bgfx::createFrameBuffer(BX_COUNTOF(fbtextures), fbtextures, false);
 	bgfx::setViewFrameBuffer(m_ViewId, p_FrameBufferHandle);
 	bgfx::setViewRect(m_ViewId, 0, 0, bgfx::BackbufferRatio::Equal);
 }
@@ -27,7 +48,7 @@ void harmony::PipelineStage::PreUpdate(entt::registry& registry, WeakRef<View> v
 		harmony::log::error("Already ran pre frame callback for this frame!");
 		return;
 	}
-	bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH , 0x00000000);
+	bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH , 0x00000000, 1.0f);
 	Ref<View> _view = view.lock();
 	bgfx::setViewTransform(m_ViewId, &_view->m_View[0], &_view->m_Projection[0]);
 	bgfx::setViewRect(m_ViewId, 0, 0, _view->m_Width, _view->m_Height);

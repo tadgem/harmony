@@ -7,12 +7,13 @@ namespace harmony
     class DebugDrawStage : public PipelineStage
     {
     public:
-        DebugDrawStage();
+        DebugDrawStage(GfxDebug::Channel channel);
         virtual void Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
         virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
         virtual void Cleanup() override;
 
+        const GfxDebug::Channel m_Channel;
         bool Active;
         DebugDrawEncoder* p_DebugRenderer;
     };
@@ -26,6 +27,6 @@ namespace harmony
     class DebugDrawPipeline : public Pipeline
     {
     public:
-        DebugDrawPipeline();
+        DebugDrawPipeline(GfxDebug::Channel channel);
     };
 };

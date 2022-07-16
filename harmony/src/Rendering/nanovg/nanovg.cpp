@@ -21,7 +21,7 @@
 #include <math.h>
 #include <memory.h>
 
-#include "Rendering/Pipelines/nanovg/nanovg.h"
+#include "Rendering/nanovg/nanovg.h"
 
 #include <bx/bx.h>
 
@@ -34,7 +34,7 @@ BX_PRAGMA_DIAGNOSTIC_PUSH();
 BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wunused-parameter");
 BX_PRAGMA_DIAGNOSTIC_IGNORED_GCC("-Wunused-result");
 #define FONTSTASH_IMPLEMENTATION
-#include "Rendering/Pipelines/nanovg/fontstash.h"
+#include "Rendering/nanovg/fontstash.h"
 BX_PRAGMA_DIAGNOSTIC_POP();
 
 #ifdef _MSC_VER

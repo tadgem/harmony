@@ -53,7 +53,7 @@ void harmony::Editor::AddEditorPanels()
 
 void harmony::Editor::InitializePipelines()
 {
-	auto debugDrawPipelineWr = m_Renderer.CreatePipeline<DebugDrawPipeline>();
+	auto debugDrawPipelineWr = m_Renderer.CreatePipeline<DebugDrawPipeline>(GfxDebug::Channel::Editor);
 	auto texturedMeshPipelineWr = m_Renderer.CreatePipeline<TexturedMeshPipeline>();
 	auto normalPipelineWr = m_Renderer.CreatePipeline<NormalPipeline>();
 	p_DebugPipeline = debugDrawPipelineWr.lock();
@@ -92,6 +92,9 @@ void harmony::Editor::RunEditor()
 
 void harmony::Editor::UpdateEditor()
 {
+	GfxDebug::Get()->setColor(GfxDebug::Channel::Editor, 0xfffffff);
+	GfxDebug::Get()->drawGrid(GfxDebug::Channel::Editor, Axis::Enum::Y, bx::Vec3(0.0f, -2.0f, 0.0f), 1000);
+	GfxDebug::Get()->drawAxis(GfxDebug::Channel::Editor, 0.0f, 1.0f, 0.0f, 5.0f);
 	p_MainMenuBar.OnImGui();
 	GlobalDockspace();
 

@@ -2,7 +2,9 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "Core/MathsUtils.h"
 #include "Core/Input.h"
-harmony::DebugDrawStage::DebugDrawStage() : PipelineStage(PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>())
+#include "Core/Log.hpp"
+
+harmony::DebugDrawStage::DebugDrawStage(GfxDebug::Channel channel) : PipelineStage(PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>()), m_Channel(channel)
 {
 	p_RunPreFrame = false;
 	p_DebugRenderer = nullptr;
@@ -10,19 +12,39 @@ harmony::DebugDrawStage::DebugDrawStage() : PipelineStage(PipelineStage::Type::P
 
 void harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
 {
-	PipelineStage::Init(registry, view, handle);
-	
-	p_DebugRenderer = GfxDebug::Get()->AddViewChannel(GfxDebug::Channel::Editor);
+	if (view.expired())
+	{
+		harmony::log::error("trying to run pipeline init for view that does not exist.");
+	}
+
+	Ref<View> _view = view.lock();
+
+	bgfx::TextureHandle fbtextures[] =
+	{
+		bgfx::createTexture2D(
+				_view->m_Width
+			, _view->m_Height
+			, false
+			, 1
+			, bgfx::TextureFormat::BGRA8
+			, BGFX_TEXTURE_RT
+			)
+	};
+
+	p_FrameBufferHandle = bgfx::createFrameBuffer(BX_COUNTOF(fbtextures), fbtextures, false);
+	bgfx::setViewFrameBuffer(m_ViewId, p_FrameBufferHandle);
+	bgfx::setViewRect(m_ViewId, 0, 0, bgfx::BackbufferRatio::Equal);
 	bgfx::setViewName(m_ViewId, "Debug Draw");
+
+	p_DebugRenderer = GfxDebug::Get()->AddViewChannel(m_Channel);
+	p_DebugRenderer->begin(m_ViewId, false);
+	p_RunPreFrame = true;
 }
 
 void harmony::DebugDrawStage::PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
 {
 	PipelineStage::PreUpdate(registry, view, handle);
 	p_DebugRenderer->begin(m_ViewId, false);
-	GfxDebug::Get()->setColor(GfxDebug::Channel::Editor, 0xfffffff);
-	GfxDebug::Get()->drawGrid(GfxDebug::Channel::Editor, Axis::Enum::Y, bx::Vec3(0.0f, -2.0f, 0.0f), 1000);
-	GfxDebug::Get()->drawAxis(GfxDebug::Channel::Editor, 0.0f, 1.0f, 0.0f, 5.0f);
 	p_RunPreFrame = true;
 }
 
@@ -43,8 +65,8 @@ void harmony::DebugDrawStage::Cleanup()
 
 }
 
-harmony::DebugDrawPipeline::DebugDrawPipeline() : Pipeline(PipelineHandle::New("DebugDrawPipline"))
+harmony::DebugDrawPipeline::DebugDrawPipeline(GfxDebug::Channel channel) : Pipeline(PipelineHandle::New("DebugDrawPipline"))
 {
-	AddPipelineStage<DebugDrawStage>();
+	AddPipelineStage<DebugDrawStage>(channel);
 }
 

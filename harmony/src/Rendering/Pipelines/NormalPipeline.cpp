@@ -13,6 +13,7 @@ void harmony::NormalStage::Init(entt::registry& registry, WeakRef<View> view, Pi
 {
     HARMONY_PROFILE_FUNCTION()
     PipelineStage::Init(registry, view, handle);
+    
 
     p_Shader = Program::Get()->m_Renderer.GetShader("Normal");
     bgfx::setViewName(m_ViewId, "Normal");
@@ -40,6 +41,11 @@ void harmony::NormalStage::PreUpdate(entt::registry& registry, WeakRef<View> vie
             bgfx::setTransform(&transform.Model[0]);
             bgfx::setVertexBuffer(0, mesh.MeshHandle.m_VBH);
             bgfx::setIndexBuffer(mesh.MeshHandle.m_IBH);
+            bgfx::setState(BGFX_STATE_DEFAULT
+                | BGFX_STATE_WRITE_RGB
+                | BGFX_STATE_WRITE_A
+                | BGFX_STATE_WRITE_Z
+                | BGFX_STATE_DEPTH_TEST_LESS);
             bgfx::submit(m_ViewId, pipelineShader->m_Handle);
         }
     }
