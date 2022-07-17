@@ -21,14 +21,23 @@ namespace harmony
         std::string m_ImGuiIniPath;
 
         void Save();
-        void Load();
+        void Load(AssetManager& assetManager);
         void Unload(AssetManager& assetManager);
 
         std::map<size_t, nlohmann::json>    p_ProgramComponentSerializationAttributes;
+        nlohmann::json m_AssetManagerSerializationAttributes;
         std::vector<std::string>         m_SerializedScenes;
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Project, m_ProjectName, m_ProjectDirectory, m_ImGuiIniPath, p_ProgramComponentSerializationAttributes, m_SerializedScenes)
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(
+            Project, 
+            m_ProjectName, 
+            m_ProjectDirectory, 
+            m_ImGuiIniPath, 
+            p_ProgramComponentSerializationAttributes, 
+            m_AssetManagerSerializationAttributes,
+            m_SerializedScenes)
     private:
         void UpdateProjectComponentSerializationAttributes(std::vector<Ref<ProgramComponent>>& programComponents);
+        void UpdateProjectAssetsSerializationAttributes(AssetManager& assetManager);
         friend class Program;
 
     };

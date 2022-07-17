@@ -68,7 +68,6 @@ namespace harmony {
             }
             return assets;
         }
-
         std::vector<AssetHandle> GetAssetsAtPath(const std::string& path);
         
         template<typename T>

@@ -2,8 +2,10 @@
 #include "EditorUtils.h"
 #include "ECS/TransformComponent.h";
 #include "ECS/MeshComponent.h";
+#include "Rendering/Model.h"
 #include "ECS/MaterialComponent.h";
 #include "ImGui/icons_font_awesome.h"
+#include "ImGui/ImGuiFileDialog.h"
 harmony::ScenePanel::ScenePanel(Program& program) : p_Prog(program)
 {
 }
@@ -181,7 +183,7 @@ bool harmony::MeshComponentUI::HasComponent(entt::registry& registry, entt::enti
 	return RegistryHasComponent<MeshComponent>(registry, entity);
 }
 
-harmony::MaterialComponentUI::MaterialComponentUI(Renderer& r) : ComponentUI("Material"), p_Renderer(r)
+harmony::MaterialComponentUI::MaterialComponentUI(Renderer& r, AssetManager& am) : ComponentUI("Material"), p_Renderer(r), p_AssetManager(am)
 {
 }
 
@@ -206,9 +208,42 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 	}
 
 	ImGui::Text(sn.c_str());
+	ImGui::Separator();
 	if (ShaderSelector("Select Shader", p_Renderer, shaderWr))
 	{
 		mc.Data.UpdateShader(shaderWr);
+	}
+	ImGui::Text("Shader Variables");
+	if (ImGui::TreeNode("Data"))
+	{
+		ImGui::Text("Vec4");
+		for (auto& [key, v] : mc.Data.m_Vec4Values)
+		{
+			ImGui::DragFloat4(key.Name.c_str(), &v[0]);
+		}
+		ImGui::Separator();
+		ImGui::Text("Textures");
+		for (auto& [key, handle] : mc.Data.m_TextureValues)
+		{
+			std::string textureName = "Tex : " + handle.Handle.Path;
+			ImGui::Text(textureName.c_str());
+			AssetTypeSelector<Texture>(key.Name, p_AssetManager, handle.Handle);
+		}
+		ImGui::Separator();
+		ImGui::Text("Mat3");
+		for (auto& [key, v] : mc.Data.m_Mat3Values)
+		{
+			ImGui::Text(key.Name.c_str());
+		}
+		ImGui::Separator();
+		ImGui::Text("Mat4");
+		for (auto& [key, v] : mc.Data.m_Mat4Values)
+		{
+			ImGui::Text(key.Name.c_str());
+		}
+		ImGui::Separator();
+
+		ImGui::TreePop();
 	}
 }
 
@@ -220,4 +255,59 @@ void harmony::MaterialComponentUI::AddComponent(entt::registry& registry, entt::
 bool harmony::MaterialComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
 	return RegistryHasComponent<MaterialComponent>(registry, entity);
+}
+
+harmony::AssetManagerPanel::AssetManagerPanel(Program& program) : p_Prog(program), p_AssetManager(program.m_AssetManager)
+{
+}
+
+void harmony::AssetManagerPanel::OnImGui()
+{
+	if (ImGui::Begin("Assets"))
+	{
+		ImGui::Text("Textures");
+		std::vector<AssetHandle> texHandles = p_AssetManager.GetLoadedAssets<Texture>();
+		if (ImGui::TreeNode("Textures")) {
+			for (int i = 0; i < texHandles.size(); i++)
+			{
+				ImGui::Text(texHandles[i].Path.c_str());
+			}
+			ImGui::TreePop();
+
+			if (ImGui::Button("Load Texture"))
+			{
+				ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Asset", ".png,.jpg", ".");
+				p_SelectedTypeHash = GetTypeHash<Texture>();
+			}
+		}
+
+		ImGui::Separator();
+		ImGui::Text("Meshes");
+		std::vector<AssetHandle> meshHandles = p_AssetManager.GetLoadedAssets<Mesh>();
+		if (ImGui::TreeNode("Meshes")) {
+			for (int i = 0; i < meshHandles.size(); i++)
+			{
+				ImGui::Text(meshHandles[i].Path.c_str());
+			}
+			ImGui::TreePop();
+			if (ImGui::Button("Load Texture"))
+			{
+				ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Model", ".fbx,.obj,.dae,.gltf,.blend", ".");
+				p_SelectedTypeHash = GetTypeHash<Model>();
+			}
+		}
+		
+	}
+	ImGui::End();
+
+	if (ImGuiFileDialog::Instance()->Display("HarmonyOpenAsset"))
+	{
+		// action if OK
+		if (ImGuiFileDialog::Instance()->IsOk())
+		{
+			std::string filepath = ImGuiFileDialog::Instance()->GetFilePathName();
+			p_AssetManager.LoadAsset(filepath, p_SelectedTypeHash);
+		}
+		ImGuiFileDialog::Instance()->Close();
+	}
 }

@@ -23,6 +23,19 @@ namespace harmony
         Program& p_Prog;
     };
 
+    class AssetManagerPanel : public Panel
+    {
+    public:
+
+        AssetManagerPanel(Program& program);
+        virtual void OnImGui() override;
+
+    protected:
+        size_t p_SelectedTypeHash;
+        AssetManager& p_AssetManager;
+        Program& p_Prog;
+    };
+
     class ComponentUI
     {
     public:
@@ -68,13 +81,14 @@ namespace harmony
     class MaterialComponentUI : public ComponentUI
     {
     public:
-        MaterialComponentUI(Renderer& am);
+        MaterialComponentUI(Renderer& r, AssetManager& am);
         virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
 
     protected:
         Renderer& p_Renderer;
+        AssetManager& p_AssetManager;
     };
 
     class EntityInspectorPanel : public Panel

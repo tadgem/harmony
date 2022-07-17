@@ -13,7 +13,7 @@ void harmony::Project::Save()
 	m_ImGuiIniPath = m_ProjectDirectory + m_ProjectName + "ImGui.ini";
 	ImGui::SaveIniSettingsToDisk(m_ImGuiIniPath.c_str());
 }
-void harmony::Project::Load()
+void harmony::Project::Load(AssetManager& assetManager)
 {
 	HARMONY_PROFILE_FUNCTION()
 	m_ImGuiIniPath = m_ProjectDirectory + m_ProjectName + "ImGui.ini";
@@ -22,6 +22,7 @@ void harmony::Project::Load()
 		ImGui::LoadIniSettingsFromDisk(m_ImGuiIniPath.c_str());
 	}
 	std::filesystem::current_path(std::filesystem::path(m_ProjectDirectory));
+	assetManager.Deserialize(m_AssetManagerSerializationAttributes);
 }
 
 void harmony::Project::Unload(AssetManager& assetManager)
@@ -40,4 +41,9 @@ void harmony::Project::UpdateProjectComponentSerializationAttributes(std::vector
 		auto pcRef = programComponents[i];
 		p_ProgramComponentSerializationAttributes.emplace(pcRef->m_TypeHash, pcRef->ToJson());
 	}
+}
+
+void harmony::Project::UpdateProjectAssetsSerializationAttributes(AssetManager& assetManager)
+{
+	m_AssetManagerSerializationAttributes = assetManager.Serialize();
 }

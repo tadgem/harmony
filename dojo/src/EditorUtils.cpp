@@ -37,3 +37,4 @@ bool ShaderSelector(const std::string& selectorName, harmony::Renderer& renderer
 	return selectedAsset;
 
 }
+

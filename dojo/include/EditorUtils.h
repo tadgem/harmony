@@ -29,3 +29,5 @@ bool AssetTypeSelector(const std::string& selectorName, harmony::AssetManager& a
 }
 
 bool ShaderSelector(const std::string& selectorName, harmony::Renderer& renderer, harmony::WeakRef<harmony::ShaderProgram>& prog);
+
+void Vec4Input(const std::string& name, glm::vec4& v);

@@ -42,12 +42,14 @@ void harmony::Editor::AddSystems()
 void harmony::Editor::AddEditorPanels()
 {
 	Ref<ScenePanel> scenePanel = CreateRef<ScenePanel>(*this);
+	Ref<AssetManagerPanel> assetManagerPanel = CreateRef<AssetManagerPanel>(*this);
 	p_Panels.emplace_back(scenePanel);
+	p_Panels.emplace_back(assetManagerPanel);
 	
 	Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, scenePanel);
 	inspector->AddComponentUI<TransformComponentUI>();
 	inspector->AddComponentUI<MeshComponentUI>(m_AssetManager);
-	inspector->AddComponentUI<MaterialComponentUI>(m_Renderer);
+	inspector->AddComponentUI<MaterialComponentUI>(m_Renderer, m_AssetManager);
 	p_Panels.emplace_back(inspector);
 }
 
