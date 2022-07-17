@@ -28,3 +28,8 @@ void harmony::View::OnImGui()
 {
     
 }
+
+void harmony::View::OnImGuiOptions()
+{
+
+}

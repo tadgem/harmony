@@ -333,6 +333,23 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 
 	if (event.type == SDL_MOUSEMOTION)
 	{
+		SDL_MouseMotionEvent motionEvent = event.motion;
+		glm::vec2 currentPosition = glm::vec2(motionEvent.x, motionEvent.y);
+		Input::Get()->UpdateMousePosition(currentPosition);
+	}
+
+	if (event.type == SDL_MOUSEBUTTONDOWN)
+	{
+		SDL_MouseButtonEvent buttonEvent = event.button;
+		Mouse::Button button = buttonEvent.button > 0 ? Mouse::Button::Right : Mouse::Button::Left;
+		Input::Get()->UpdateMouseButton(button, true);
+	}
+
+	if (event.type == SDL_MOUSEBUTTONUP)
+	{
+		SDL_MouseButtonEvent buttonEvent = event.button;
+		Mouse::Button button = buttonEvent.button > 0 ? Mouse::Button::Right : Mouse::Button::Left;
+		Input::Get()->UpdateMouseButton(button, false);
 	}
 	// Mouse
 }

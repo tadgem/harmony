@@ -5,6 +5,9 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_bgfx.h"
 #endif
+
+#include "Core/Input.h"
+
 harmony::DebugCamera::DebugCamera()
 {
 	Position = glm::vec3(0.0f, 10.0f, 0.0f);
@@ -13,11 +16,12 @@ harmony::DebugCamera::DebugCamera()
 	Near = 0.1f;
 	Far = 300.0f;
 	Type = ProjectionType::Perspective;
+	Focussed = false;
 }
 
 void harmony::DebugCamera::Update()
 {
-	if (Active)
+	if (Focussed)
 	{
 	}
 }
@@ -40,7 +44,7 @@ glm::mat4 harmony::DebugCamera::GetProjectionMatrix(uint32_t width, uint32_t hei
 	return projMatrix;
 }
 
-harmony::EditorView::EditorView() : View("Editor")
+harmony::EditorView::EditorView(Renderer& renderer) : View("Editor"), p_Renderer(renderer)
 {
 }
 
@@ -50,9 +54,30 @@ void harmony::EditorView::OnPreUpdate(entt::registry& registry)
 	m_View = Camera.GetViewMatrix();
 	m_Projection = Camera.GetProjectionMatrix(m_Width, m_Height);
 }
-
+#if HARMONY_DEBUG
 void harmony::EditorView::OnImGui()
+{
+	PipelineStack& stack = p_Renderer.GetViewPipelineStack("Editor");
+	if (ImGui::Begin("Editor"))
+	{
+		bgfx::TextureHandle finalImageHandle = stack.GetStackFinalImage();
+		if (!bgfx::isValid(finalImageHandle))
+		{
+			ImGui::End();
+			return;
+		}
+		ImGui::Image(
+			finalImageHandle,
+			ImVec2(static_cast<float>(m_Width), static_cast<float>(m_Height))
+		);
+	}
+	ImGui::End();
+}
+
+void harmony::EditorView::OnImGuiOptions()
 {
 	ImGui::DragFloat3("Camera Position", &Camera.Position[0], -50.0f, 50.0f);
 	ImGui::DragFloat3("Camera Rotation", &Camera.Euler[0], -180.0f, 180.0f);
+
 }
+#endif

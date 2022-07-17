@@ -1,6 +1,7 @@
 #pragma once
 #include "Rendering/View.h"
 #include "Rendering/Camera.h"
+#include "Rendering/Renderer.h"
 namespace harmony
 {
     class DebugCamera : public Camera
@@ -12,7 +13,7 @@ namespace harmony
         float FOV;
         float Near, Far;
 
-        bool Active = true;
+        bool Focussed = true;
 
         void Update();
 
@@ -24,10 +25,16 @@ namespace harmony
 	{
 	public:
 
-        EditorView();
+        EditorView(Renderer& renderer);
 		virtual void OnPreUpdate(entt::registry& registry) override;
+#if HARMONY_DEBUG
         virtual void OnImGui() override;
+        virtual void OnImGuiOptions() override;
+#endif
         DebugCamera Camera;
+
+    protected:
+        Renderer& p_Renderer;
 
 	};
 }

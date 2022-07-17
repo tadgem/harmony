@@ -110,9 +110,13 @@ namespace harmony
         void                Init();
         void                OnPreUpdate(entt::registry& registry);
         void                OnPostUpdate(entt::registry& registry);
+        
+        PipelineStack&      GetViewPipelineStack(const std::string& viewName);
+
         static bgfx::ViewId GetViewID();
     
         std::vector<WeakRef<View>> m_ActiveViews;
+        
         
     protected:
         

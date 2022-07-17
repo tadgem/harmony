@@ -66,7 +66,7 @@ void harmony::Editor::InitializePipelines()
 
 void harmony::Editor::InitializeViews()
 {
-	auto viewWr = m_Renderer.CreateView<EditorView>();
+	auto viewWr = m_Renderer.CreateView<EditorView>(m_Renderer);
 
 	m_Renderer.AddViewPipeline(viewWr, p_DebugPipeline);
 	m_Renderer.AddViewPipeline(viewWr, p_NormalPipeline);

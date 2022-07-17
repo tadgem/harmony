@@ -21,6 +21,7 @@ namespace harmony
         virtual void OnPostUpdate(entt::registry& registry);
 #if HARMONY_DEBUG
         virtual void OnImGui();
+        virtual void OnImGuiOptions();
 #endif
 
         uint32_t m_Width;

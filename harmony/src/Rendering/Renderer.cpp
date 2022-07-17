@@ -11,6 +11,7 @@
 #if HARMONY_DEBUG
 #include "ImGui/imgui_bgfx.h"
 #include "ImGui/imgui.h"
+#include "ImGui/icons_font_awesome.h"
 #endif
 
 harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetManager)
@@ -164,6 +165,19 @@ void harmony::Renderer::OnPostUpdate(entt::registry& registry)
     }
 }
 
+harmony::PipelineStack& harmony::Renderer::GetViewPipelineStack(const std::string& viewName)
+{
+    for (auto& [view, stack] : p_Views)
+    {
+        if (view->m_Name == viewName)
+        {
+            return stack;
+        }
+    }
+    // TODO: This is horrible, fix me
+    return p_Views.begin()->second;
+}
+
 void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline)
 {
     if (viewWeakRef.expired())
@@ -207,64 +221,73 @@ void harmony::Renderer::RefreshViews()
 #if HARMONY_DEBUG
 void harmony::Renderer::OnImGui()
 {
-    if (ImGui::Begin("View Manager"))
+    const std::string rendererTitle = std::string(ICON_FA_SLIDERS) + " Renderer";
+
+    if (ImGui::Begin(rendererTitle.c_str()))
     {
         ImGui::Text("Frametime : %f", Time::GetFrameTime());
         ImGui::Text("FPS : %f", 1.0 / Time::GetFrameTime());
         ImGui::Separator();
-        ImGui::Text("Views");
+        ImGui::Text("View Properties");
         ImGui::Separator();
 
         for (auto& [view, pipelines] : p_Views)
         {
             ImGui::Text(view->m_Name.c_str());
-            view->OnImGui();
+            ImGui::Indent();
+            view->OnImGuiOptions();
+            ImGui::Unindent();
             ImGui::Separator();
         }
     }
     ImGui::End();
 
-    for (int i = 0; i < m_ActiveViews.size();i++)
+    for (auto& [view, pipelines] : p_Views)
     {
-        Ref<View> view = m_ActiveViews[i].lock();
-        if (ImGui::Begin(view->m_Name.c_str()))
-        {
-            bgfx::TextureHandle fbHandle = p_Views[view].GetStackFinalImage();
-            if (fbHandle.idx == bgfx::kInvalidHandle)
-            {
-                // harmony::log::warn("Renderer OnImGui : Invalid framebuffer handle for view {} pipeline {}", view->m_Name, p_Views[view][p]->m_Name);
-                continue;
-            }
-            if (!bgfx::isValid(fbHandle))
-            {
-                continue;
-            }
-            ImGui::Image(
-                fbHandle,
-                ImVec2(static_cast<float>(view->m_Width), static_cast<float>(view->m_Height))
-            );
-            ImGui::Separator();
-            for (int p = 0; p < p_Views[view].m_Stack.size(); p++)
-            {
-                bgfx::TextureHandle fbHandle = p_Views[view].m_Stack[p]->GetFinalImage();
-                if (fbHandle.idx == bgfx::kInvalidHandle)
-                {
-                    // harmony::log::warn("Renderer OnImGui : Invalid framebuffer handle for view {} pipeline {}", view->m_Name, p_Views[view][p]->m_Name);
-                    continue;
-                }
-                if (!bgfx::isValid(fbHandle))
-                {
-                    continue;
-                }
-                ImGui::Image(
-                    fbHandle,
-                    ImVec2(static_cast<float>(view->m_Width), static_cast<float>(view->m_Height))
-                );
-            }
-
-        }
-        ImGui::End();
+        view->OnImGui();
     }
+
+    //for (int i = 0; i < m_ActiveViews.size();i++)
+    //{
+    //    Ref<View> view = m_ActiveViews[i].lock();
+    //    if (ImGui::Begin(view->m_Name.c_str()))
+    //    {
+    //        bgfx::TextureHandle fbHandle = p_Views[view].GetStackFinalImage();
+    //        if (fbHandle.idx == bgfx::kInvalidHandle)
+    //        {
+    //            // harmony::log::warn("Renderer OnImGui : Invalid framebuffer handle for view {} pipeline {}", view->m_Name, p_Views[view][p]->m_Name);
+    //            continue;
+    //        }
+    //        if (!bgfx::isValid(fbHandle))
+    //        {
+    //            continue;
+    //        }
+    //        ImGui::Image(
+    //            fbHandle,
+    //            ImVec2(static_cast<float>(view->m_Width), static_cast<float>(view->m_Height))
+    //        );
+    //        ImGui::Separator();
+    //        for (int p = 0; p < p_Views[view].m_Stack.size(); p++)
+    //        {
+    //            bgfx::TextureHandle fbHandle = p_Views[view].m_Stack[p]->GetFinalImage();
+    //            if (fbHandle.idx == bgfx::kInvalidHandle)
+    //            {
+    //                // harmony::log::warn("Renderer OnImGui : Invalid framebuffer handle for view {} pipeline {}", view->m_Name, p_Views[view][p]->m_Name);
+    //                continue;
+    //            }
+    //            if (!bgfx::isValid(fbHandle))
+    //            {
+    //                continue;
+    //            }
+    //            ImGui::Image(
+    //                fbHandle,
+    //                ImVec2(static_cast<float>(view->m_Width), static_cast<float>(view->m_Height))
+    //            );
+    //        }
+
+    //    }
+    //    ImGui::End();
+    //}
 }
 #endif
 

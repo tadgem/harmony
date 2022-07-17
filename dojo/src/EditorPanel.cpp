@@ -12,7 +12,8 @@ harmony::ScenePanel::ScenePanel(Program& program) : p_Prog(program)
 
 void harmony::ScenePanel::OnImGui()
 {
-	if (ImGui::Begin("Scene Inspector"))
+	const std::string  scenePanelTitle = std::string(ICON_FA_GLOBE) + " Scene";
+	if (ImGui::Begin(scenePanelTitle.c_str()))
 	{
 		auto activeSceneWr = p_Prog.GetActiveScene();
 
@@ -49,7 +50,8 @@ harmony::EntityInspectorPanel::EntityInspectorPanel(Program& prog, Ref<ScenePane
 
 void harmony::EntityInspectorPanel::OnImGui()
 {
-	if (ImGui::Begin("Entity Inspector"))
+	const std::string  entityInspectorTitle = std::string(ICON_FA_INFO_CIRCLE) + " Inspector";
+	if (ImGui::Begin(entityInspectorTitle.c_str()))
 	{
 		auto activeSceneWr = p_Prog.GetActiveScene();
 
@@ -84,6 +86,7 @@ void harmony::EntityInspectorPanel::OnImGui()
 				p_ComponentUIProviders[i]->OnComponentImGui(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity);
 				ImGui::TreePop();
 			}
+			ImGui::Separator();
 		}
 		ImGui::Separator();
 		if (ImGui::BeginCombo("Add Component", ICON_FA_PLUS_CIRCLE))
@@ -268,9 +271,13 @@ harmony::AssetManagerPanel::AssetManagerPanel(Program& program) : p_Prog(program
 
 void harmony::AssetManagerPanel::OnImGui()
 {
-	if (ImGui::Begin("Assets"))
+	const std::string  assetPanelTitle = std::string(ICON_FA_FOLDER) + " Assets";
+
+	if (ImGui::Begin(assetPanelTitle.c_str()))
 	{
-		ImGui::Text("Textures");
+		ImGui::Indent();
+		const std::string textureAssetTitle = std::string(ICON_FA_FILE_IMAGE_O) + " Textures";
+		ImGui::Text(textureAssetTitle.c_str());
 		std::vector<AssetHandle> texHandles = p_AssetManager.GetLoadedAssets<Texture>();
 		if (ImGui::TreeNode("Textures")) {
 			for (int i = 0; i < texHandles.size(); i++)
@@ -287,7 +294,8 @@ void harmony::AssetManagerPanel::OnImGui()
 		}
 
 		ImGui::Separator();
-		ImGui::Text("Meshes");
+		const std::string meshAssetTitle = std::string(ICON_FA_CUBE) + " Meshes";
+		ImGui::Text(meshAssetTitle.c_str());
 		std::vector<AssetHandle> meshHandles = p_AssetManager.GetLoadedAssets<Mesh>();
 		if (ImGui::TreeNode("Meshes")) {
 			for (int i = 0; i < meshHandles.size(); i++)
@@ -295,13 +303,13 @@ void harmony::AssetManagerPanel::OnImGui()
 				ImGui::Text(meshHandles[i].Path.c_str());
 			}
 			ImGui::TreePop();
-			if (ImGui::Button("Load Texture"))
+			if (ImGui::Button("Load Mesh/Model"))
 			{
 				ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Model", ".fbx,.obj,.dae,.gltf,.blend", ".");
 				p_SelectedTypeHash = GetTypeHash<Model>();
 			}
 		}
-		
+		ImGui::Unindent();
 	}
 	ImGui::End();
 
