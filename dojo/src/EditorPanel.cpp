@@ -227,7 +227,12 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 		{
 			std::string textureName = "Tex : " + handle.Handle.Path;
 			ImGui::Text(textureName.c_str());
-			AssetTypeSelector<Texture>(key.Name, p_AssetManager, handle.Handle);
+			if (AssetTypeSelector<Texture>(key.Name, p_AssetManager, handle.Handle))
+			{
+				WeakRef<Texture> texWr = p_AssetManager.GetAsset<Texture>(handle.Handle);
+				Ref<Texture> tex = texWr.lock();
+				handle.BgfxHandle = tex->m_TextureHandle.BgfxHandle;
+			}
 		}
 		ImGui::Separator();
 		ImGui::Text("Mat3");

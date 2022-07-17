@@ -3,7 +3,7 @@
 #include "Rendering/Texture.h"
 #include "Core/Utils.h"
 #include "Core/Log.hpp"
-harmony::TextureAssetFactory::TextureAssetFactory()
+harmony::TextureAssetFactory::TextureAssetFactory(Renderer& renderer) : p_Renderer(renderer)
 {
     size_t textureTypeHash = GetTypeHash<Texture>();
 
@@ -36,6 +36,7 @@ void harmony::TextureAssetFactory::LoadAssetData(const std::string& path, entt::
     registry.emplace<AssetComponent<Texture>>(e, textureComponent);
     registry.emplace<AssetHandle>(e, handle);
     // is this correct?
+    p_Renderer.SubmitTextureToGPU(textureAsset);
     data.clear();
 }
 

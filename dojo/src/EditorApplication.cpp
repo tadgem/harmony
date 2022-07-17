@@ -22,7 +22,7 @@ void harmony::Editor::AddAssetTypeNames()
 
 void harmony::Editor::AddAssetFactories()
 {
-	m_AssetManager.AddAssetFactory(CreateRef<TextureAssetFactory>());
+	m_AssetManager.AddAssetFactory(CreateRef<TextureAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>());
 
 }
