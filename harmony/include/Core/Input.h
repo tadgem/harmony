@@ -154,6 +154,9 @@ namespace harmony {
 
 		glm::vec2 CurrentFrameMouseLocation;
 		glm::vec2 PreviousFrameMouseLocation;
+
+		glm::vec2 CurrentFrameMouseVelocity;
+		glm::vec2 PreviousFrameMouseVelocity;
 	};
 
 	struct KeyboardState

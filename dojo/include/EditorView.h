@@ -10,9 +10,10 @@ namespace harmony
         DebugCamera();
         glm::vec3 Position;
         glm::vec3 Euler;
+        glm::quat Rotation;
         float FOV;
         float Near, Far;
-
+        float Speed;
         bool Focussed = true;
 
         void Update();
