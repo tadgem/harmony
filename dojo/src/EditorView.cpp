@@ -216,7 +216,7 @@ void harmony::EditorView::OnImGui()
 			ImGui::End();
 			return;	
 		}
-		if (Input::Get()->GetKeyJustPressed(Key::T))
+		if (Input::Get()->GetKeyJustPressed(Key::W))
 		{
 			p_Op = ImGuizmo::OPERATION::TRANSLATE;
 		}
