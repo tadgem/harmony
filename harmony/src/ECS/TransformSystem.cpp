@@ -49,7 +49,7 @@ void harmony::TransformSystem::Update(entt::registry& registry)
         glm::quat yRotation = glm::angleAxis(eulerRadians.y, glm::vec3(0, 1, 0));
         glm::quat zRotation = glm::angleAxis(eulerRadians.z, glm::vec3(0, 0, 1));
 
-        transform.Rotation = xRotation * yRotation * zRotation;
+        transform.Rotation = zRotation * yRotation * xRotation;
         glm::mat4 localRotation = glm::mat4_cast(transform.Rotation);
 
         glm::mat4 localScale = glm::mat4(1.0);

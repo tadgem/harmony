@@ -2,9 +2,11 @@
 #include "Core/MathsUtils.h"
 #include "Core/Log.hpp"
 #include "Core/Time.h"
+#include "ECS/TransformComponent.h"
 #if HARMONY_DEBUG
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_bgfx.h"
+#include "ImGui/ImGuizmo.h"
 #include "ImGui/icons_font_awesome.h"
 #endif
 
@@ -110,8 +112,9 @@ glm::mat4 harmony::DebugCamera::GetProjectionMatrix(uint32_t width, uint32_t hei
 	return projMatrix;
 }
 
-harmony::EditorView::EditorView(Renderer& renderer) : View("Editor"), p_Renderer(renderer)
+harmony::EditorView::EditorView(Program& program, Ref<ScenePanel> scenePanel) : View("Editor"), p_Program(program), p_Renderer(program.m_Renderer), p_ScenePanel(scenePanel)
 {
+	p_Op = ImGuizmo::OPERATION::TRANSLATE;
 }
 
 void harmony::EditorView::OnPreUpdate(entt::registry& registry)
@@ -123,8 +126,15 @@ void harmony::EditorView::OnPreUpdate(entt::registry& registry)
 #if HARMONY_DEBUG
 void harmony::EditorView::OnImGui()
 {
-	const std::string editorViewTitle = std::string(ICON_FA_VIDEO_CAMERA) + " Editor";
+	if (p_Program.GetActiveScene().expired())
+	{
+		return;
+	}
 
+	Ref<Scene> scene = p_Program.GetActiveScene().lock();
+	
+	const std::string editorViewTitle = std::string(ICON_FA_VIDEO_CAMERA) + " Editor";
+	glm::mat4 mat = glm::mat4(1.0);
 	PipelineStack& stack = p_Renderer.GetViewPipelineStack("Editor");
 	if (ImGui::Begin(editorViewTitle.c_str()))
 	{
@@ -143,6 +153,84 @@ void harmony::EditorView::OnImGui()
 		{
 			Camera.Focussed = true;
 		}
+		ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
+		ImGuizmo::AllowAxisFlip(false);
+		float windowWidth = (float)ImGui::GetWindowWidth();
+		float windowHeight = (float)ImGui::GetWindowHeight();
+		
+		if (!scene->m_Registry.valid(p_ScenePanel->m_SelectedEntity))
+		{
+			ImGui::End();
+			return;
+		}
+
+		if (!scene->m_Registry.any_of<TransformComponent>(p_ScenePanel->m_SelectedEntity))
+		{
+			ImGui::End();
+			return;
+		}
+
+		TransformComponent& tc = scene->m_Registry.get<TransformComponent>(p_ScenePanel->m_SelectedEntity);
+		ImGuizmo::SetOrthographic(false);
+		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+		if (ImGuizmo::Manipulate(
+			&m_View[0][0],
+			&m_Projection[0][0],
+			p_Op,
+			ImGuizmo::MODE::WORLD,
+			&tc.Model[0][0]
+		))
+		{
+			float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+			ImGuizmo::DecomposeMatrixToComponents(&tc.Model[0][0], matrixTranslation, matrixRotation, matrixScale);
+			
+			if (p_Op == ImGuizmo::OPERATION::TRANSLATE)
+			{
+				tc.Position.x = matrixTranslation[0];
+				tc.Position.y = matrixTranslation[1];
+				tc.Position.z = matrixTranslation[2];
+			}
+
+			if (p_Op == ImGuizmo::OPERATION::ROTATE)
+			{
+				tc.Euler.x = matrixRotation[0];
+				tc.Euler.y = matrixRotation[1];
+				tc.Euler.z = matrixRotation[2];
+			}
+
+			if (p_Op == ImGuizmo::OPERATION::SCALE)
+			{
+				tc.Scale.x = matrixScale[0];
+				tc.Scale.y = matrixScale[1];
+				tc.Scale.z = matrixScale[2];
+			}
+
+			ImGuizmo::RecomposeMatrixFromComponents(
+				matrixTranslation,
+				matrixRotation,
+				matrixScale,
+				&tc.Model[0][0]);
+		}
+		if (Input::Get()->GetMouseButton(Mouse::Button::Right))
+		{
+			ImGui::End();
+			return;	
+		}
+		if (Input::Get()->GetKeyJustPressed(Key::T))
+		{
+			p_Op = ImGuizmo::OPERATION::TRANSLATE;
+		}
+
+		if (Input::Get()->GetKeyJustPressed(Key::R))
+		{
+			p_Op = ImGuizmo::OPERATION::ROTATE;
+		}
+
+		if (Input::Get()->GetKeyJustPressed(Key::S))
+		{
+			p_Op = ImGuizmo::OPERATION::SCALE;
+		}
+
 	}
 	ImGui::End();
 }

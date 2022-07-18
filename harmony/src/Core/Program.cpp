@@ -4,13 +4,16 @@
 #include "Core/Time.h"
 #include "Core/Input.h"
 #include "SDL_syswm.h"
-#include "ImGui/imgui.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
-#include "ImGui/backends/imgui_impl_sdl.h"
-#include "ImGui/imgui_bgfx.h"
-#include "ImGui/robotomono_regular.ttf.h"
 #include "bx/timer.h"
+#if HARMONY_DEBUG
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_bgfx.h"
+#include "ImGui/ImGuizmo.h"
+#include "ImGui/backends/imgui_impl_sdl.h"
+#include "ImGui/robotomono_regular.ttf.h"
+#endif
 harmony::Program::Program(std::string name) : p_AppName(name), m_Renderer(m_AssetManager)
 {
 	HARMONY_PROFILE_FUNCTION()
@@ -397,6 +400,7 @@ void harmony::Program::Run(harmony::Callback callback)
 		// TODO move to pipeline
 		ImGui::NewFrame();
 		ImGui_ImplSDL2_NewFrame(p_Window);
+		ImGuizmo::BeginFrame();
 
 		callback();
 

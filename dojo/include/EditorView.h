@@ -2,6 +2,8 @@
 #include "Rendering/View.h"
 #include "Rendering/Camera.h"
 #include "Rendering/Renderer.h"
+#include "EditorPanel.h"
+#include "ImGui/ImGuizmo.h"
 namespace harmony
 {
     class DebugCamera : public Camera
@@ -26,7 +28,7 @@ namespace harmony
 	{
 	public:
 
-        EditorView(Renderer& renderer);
+        EditorView(Program& program, Ref<ScenePanel> scenePanel );
 		virtual void OnPreUpdate(entt::registry& registry) override;
 #if HARMONY_DEBUG
         virtual void OnImGui() override;
@@ -35,7 +37,10 @@ namespace harmony
         DebugCamera Camera;
 
     protected:
+        ImGuizmo::OPERATION p_Op;
+        Program& p_Program;
         Renderer& p_Renderer;
+        Ref<ScenePanel> p_ScenePanel;
 
 	};
 }

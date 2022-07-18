@@ -41,12 +41,12 @@ void harmony::Editor::AddSystems()
 
 void harmony::Editor::AddEditorPanels()
 {
-	Ref<ScenePanel> scenePanel = CreateRef<ScenePanel>(*this);
+	p_ScenePanel = CreateRef<ScenePanel>(*this);
 	Ref<AssetManagerPanel> assetManagerPanel = CreateRef<AssetManagerPanel>(*this);
-	p_Panels.emplace_back(scenePanel);
+	p_Panels.emplace_back(p_ScenePanel);
 	p_Panels.emplace_back(assetManagerPanel);
 	
-	Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, scenePanel);
+	Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, p_ScenePanel);
 	inspector->AddComponentUI<TransformComponentUI>();
 	inspector->AddComponentUI<MeshComponentUI>(m_AssetManager);
 	inspector->AddComponentUI<MaterialComponentUI>(m_Renderer, m_AssetManager);
@@ -66,7 +66,7 @@ void harmony::Editor::InitializePipelines()
 
 void harmony::Editor::InitializeViews()
 {
-	auto viewWr = m_Renderer.CreateView<EditorView>(m_Renderer);
+	auto viewWr = m_Renderer.CreateView<EditorView>(*this, p_ScenePanel);
 
 	m_Renderer.AddViewPipeline(viewWr, p_DebugPipeline);
 	m_Renderer.AddViewPipeline(viewWr, p_NormalPipeline);
@@ -95,8 +95,8 @@ void harmony::Editor::RunEditor()
 void harmony::Editor::UpdateEditor()
 {
 	GfxDebug::Get()->setColor(GfxDebug::Channel::Editor, 0xfffffff);
-	GfxDebug::Get()->drawGrid(GfxDebug::Channel::Editor, Axis::Enum::Y, bx::Vec3(0.0f, -2.0f, 0.0f), 1000);
-	GfxDebug::Get()->drawAxis(GfxDebug::Channel::Editor, 0.0f, 1.0f, 0.0f, 5.0f);
+	GfxDebug::Get()->drawGrid(GfxDebug::Channel::Editor, Axis::Enum::Y, bx::Vec3(0.0f, 0.0f, 0.0f), 1000);
+	
 	p_MainMenuBar.OnImGui();
 	GlobalDockspace();
 

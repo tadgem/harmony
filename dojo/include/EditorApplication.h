@@ -27,6 +27,7 @@ namespace harmony
 		virtual void LoadBuiltInAssets() override;
 	protected:
 		std::vector<Ref<Panel>> p_Panels;
+		Ref<ScenePanel> p_ScenePanel;
 		Ref<EditorView> p_EditorView;
 		Ref<Pipeline> p_DebugPipeline;
 		Ref<Pipeline> p_TexturedMeshPipeline;
