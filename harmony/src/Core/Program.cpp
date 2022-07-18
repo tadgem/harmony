@@ -341,14 +341,14 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 	if (event.type == SDL_MOUSEBUTTONDOWN)
 	{
 		SDL_MouseButtonEvent buttonEvent = event.button;
-		Mouse::Button button = buttonEvent.button > 0 ? Mouse::Button::Right : Mouse::Button::Left;
+		Mouse::Button button = buttonEvent.button == 3 ? Mouse::Button::Right : Mouse::Button::Left;
 		Input::Get()->UpdateMouseButton(button, true);
 	}
 
 	if (event.type == SDL_MOUSEBUTTONUP)
 	{
 		SDL_MouseButtonEvent buttonEvent = event.button;
-		Mouse::Button button = buttonEvent.button > 0 ? Mouse::Button::Right : Mouse::Button::Left;
+		Mouse::Button button = buttonEvent.button == 3 ? Mouse::Button::Right : Mouse::Button::Left;
 		Input::Get()->UpdateMouseButton(button, false);
 	}
 	// Mouse

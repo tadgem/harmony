@@ -1,4 +1,5 @@
 #include "Core/Input.h"
+#include "Core/Program.h"
 #include "Core/Log.hpp"
 void harmony::Input::UpdateMouseScroll(float val)
 {
@@ -9,6 +10,13 @@ void harmony::Input::UpdateMousePosition(glm::vec2 mousePosition)
 {
 	p_MouseState.PreviousFrameMouseLocation = p_MouseState.CurrentFrameMouseLocation;
 	p_MouseState.CurrentFrameMouseLocation = mousePosition;
+
+	glm::vec2 currentVelocity = p_MouseState.CurrentFrameMouseLocation - p_MouseState.PreviousFrameMouseLocation;
+	currentVelocity.x /= Program::p_WindowWidth;
+	currentVelocity.y /= Program::p_WindowHeight;
+
+	p_MouseState.PreviousFrameMouseVelocity = p_MouseState.CurrentFrameMouseVelocity;
+	p_MouseState.CurrentFrameMouseVelocity = currentVelocity;
 }
 
 void harmony::Input::UpdateMouseButton(Mouse::Button button, bool active)
@@ -81,6 +89,16 @@ glm::vec2 harmony::Input::GetMousePosition()
 glm::vec2 harmony::Input::GetMousePositionLastFrame()
 {
 	return p_MouseState.PreviousFrameMouseLocation;
+}
+
+glm::vec2 harmony::Input::GetMouseVelocity()
+{
+	return p_MouseState.CurrentFrameMouseVelocity;
+}
+
+glm::vec2 harmony::Input::GetMouseVelocityLastFrame()
+{
+	return p_MouseState.PreviousFrameMouseVelocity;
 }
 
 bool harmony::Input::GetMouseButton(Mouse::Button button)
@@ -317,6 +335,7 @@ void harmony::Input::PostFrame()
 			p_MouseState.PreviousFrameButtonState[mouseButton] = activeCurrentFrame;
 		}
 	}
+
 }
 
 harmony::Input* harmony::Input::Get()

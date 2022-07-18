@@ -183,6 +183,8 @@ namespace harmony {
 
 		glm::vec2	GetMousePosition();
 		glm::vec2	GetMousePositionLastFrame();
+		glm::vec2	GetMouseVelocity();
+		glm::vec2	GetMouseVelocityLastFrame();
 
 		bool		GetMouseButton(Mouse::Button button);
 		bool		GetMouseButtonJustPressed(Mouse::Button button);

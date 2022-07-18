@@ -29,7 +29,9 @@ void harmony::DebugCamera::Update()
 	{
 		if (Input::Get()->GetMouseButton(Mouse::Button::Right))
 		{
-			SDL_ShowCursor(0);
+			ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+			SDL_ShowCursor(SDL_DISABLE);
+			
 			if (Input::Get()->GetKey(Key::W))
 			{
 				Position += MathsUtils::CalculateForwardVector(Rotation) * (float)Time::GetFrameTime() * Speed;
@@ -55,13 +57,17 @@ void harmony::DebugCamera::Update()
 				Position += MathsUtils::CalculateUpVector(Rotation) * (float)Time::GetFrameTime() * Speed;
 			}
 
+			glm::vec2 mouseVelocity = Input::Get()->GetMouseVelocity();
+			
+			float magnitude = glm::length(mouseVelocity);
+
+			if (magnitude > 0.0015f)
+			{
+				Euler.x -= mouseVelocity.y * Time::GetFrameTime() * 180.0f * 180.0f;
+				Euler.y += mouseVelocity.x * Time::GetFrameTime() * 180.0f * 180.0f;
+			}
 		}
-		if (Input::Get()->GetMouseButtonJustReleased(Mouse::Button::Right))
-		{
-			SDL_ShowCursor(1);
-			return;
-		}
-		
+	
 	}
 	if (Euler.x < -90.0f)
 	{

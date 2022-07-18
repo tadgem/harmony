@@ -83,8 +83,6 @@ namespace harmony
 		Ref<Scene>							p_ActiveScene;
 		bool p_Run;
 
-		uint16_t p_WindowWidth;
-		uint16_t p_WindowHeight;
 
 		SDL_Window*				p_Window;
 		bx::DefaultAllocator*	p_ImGuiAllocator;
@@ -92,6 +90,8 @@ namespace harmony
 
 		inline static Program* s_Instance = nullptr;
 	public:
+		inline static uint16_t p_WindowWidth;
+		inline static uint16_t p_WindowHeight;
 
 		template<typename T, typename ... Args>
 		WeakRef<T> AddProgramComponent(Args&& ... args)
