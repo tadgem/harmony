@@ -359,6 +359,10 @@ std::vector<std::string> harmony::Renderer::GetShaderNames()
     return shaders;
 }
 
+void harmony::Renderer::RefreshShaderDataContainers()
+{
+}
+
 void harmony::Renderer::AddUniform(const std::string name, WeakRef<float> value)
 {
 }

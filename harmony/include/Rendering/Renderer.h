@@ -66,14 +66,17 @@ namespace harmony
         WeakRef<ShaderProgram> LoadShader(const std::string& name, const std::string& vertName, const std::string& fragName);
         WeakRef<ShaderProgram> LoadShader(const std::string& name, const std::string& computeName);
 
-        WeakRef<ShaderProgram> GetShader(const std::string& name);
-        std::vector<std::string> GetShaderNames();
+        WeakRef<ShaderProgram>      GetShader(const std::string& name);
+        std::vector<std::string>    GetShaderNames();
+
+        void RefreshShaderDataContainers();
 
         void AddUniform(const std::string name, WeakRef<float> value);
         void AddUniform(const std::string name, WeakRef<glm::vec2> value);
         void AddUniform(const std::string name, WeakRef<glm::vec3> value);
         void AddUniform(const std::string name, WeakRef<glm::mat3> value);
         void AddUniform(const std::string name, WeakRef<glm::mat4> value);
+
 
 #if HARMONY_DEBUG
         WeakRef<ShaderProgram> CreateShader(const std::string vertSourcePath, const std::string fragSourcePath);
@@ -110,6 +113,7 @@ namespace harmony
         void                Init();
         void                OnPreUpdate(entt::registry& registry);
         void                OnPostUpdate(entt::registry& registry);
+        
         
         PipelineStack&      GetViewPipelineStack(const std::string& viewName);
 

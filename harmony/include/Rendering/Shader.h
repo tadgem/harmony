@@ -10,10 +10,12 @@ namespace harmony
 {
 	struct ShaderUniform
 	{
-		bgfx::UniformHandle BgfxHandle;
+		bgfx::UniformHandle BgfxHandle{ UINT16_MAX };
 		std::string Name;
 		bgfx::UniformType::Enum Type;
 		uint16_t ArraySize;
+
+		bool Valid();
 
 		bool operator<(const ShaderUniform& o)  const {
 			return BgfxHandle.idx < o.BgfxHandle.idx;

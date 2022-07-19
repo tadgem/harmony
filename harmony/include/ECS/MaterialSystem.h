@@ -1,13 +1,13 @@
 #pragma once
 #include "ECS/System.h"
 #include "Rendering/Renderer.h"
-
+#include "Assets/AssetManager.h"
 namespace harmony
 {
     class MaterialSystem : public System
     {
         public:
-        MaterialSystem(Renderer& renderer);
+        MaterialSystem(Renderer& renderer, AssetManager& assetManager);
         virtual void Init(entt::registry& registry) override;
         virtual void Update(entt::registry& registry) override;
         virtual void Render(entt::registry& registry) override;
@@ -18,5 +18,6 @@ namespace harmony
 
     protected:
         Renderer& p_Renderer;
+        AssetManager& p_AssetManager;
     };
 };

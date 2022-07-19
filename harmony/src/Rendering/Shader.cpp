@@ -169,3 +169,8 @@ void harmony::BuiltInShaderStage::LoadShaderBinary()
 	m_Handle = bgfx::createEmbeddedShader(&p_EmbeddedShader,type, m_Name.c_str());
 	bgfx::setName(m_Handle, m_Name.c_str());
 }
+
+bool harmony::ShaderUniform::Valid()
+{
+	return BgfxHandle.idx != UINT16_MAX;
+}

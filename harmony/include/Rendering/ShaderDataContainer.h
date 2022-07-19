@@ -4,6 +4,7 @@
 #include "Rendering/Texture.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
+#include "Assets/AssetManager.h"
 
 
 namespace glm
@@ -99,8 +100,8 @@ namespace harmony
         std::map<ShaderUniform, glm::mat4> m_Mat4Values;
         std::map<ShaderUniform, BGFXTextureHandle> m_TextureValues;
 
-        void UpdateShader(WeakRef<ShaderProgram> newShader);
-        void UpdateContainer();
+        void UpdateShader(WeakRef<ShaderProgram> newShader, AssetManager& am);
+        void UpdateContainer(AssetManager& am);
         void SetContainerUniforms();
         void Clear();
 
@@ -108,9 +109,9 @@ namespace harmony
         std::string m_ShaderName;
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderDataContainer, m_Vec4Values, m_Mat3Values, m_Mat4Values, m_TextureValues, m_ShaderName)
     protected:
-
+        
         bool ReturnIfNull();
-        void CreateEmptyValue(ShaderUniform& uniform);
+        void UpdateUniform(ShaderUniform& uniform);
 
         template <typename T>
         ShaderUniform GetShaderUniform(const std::string name)

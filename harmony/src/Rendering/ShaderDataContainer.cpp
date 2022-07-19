@@ -1,17 +1,17 @@
 #include "Rendering/ShaderDataContainer.h"
 #include "Core/Log.hpp"
+#include "Rendering/Renderer.h"
 #if HARMONY_DEBUG
 #include "ImGui/imgui.h";
 #endif
 harmony::ShaderDataContainer::ShaderDataContainer()
 {
 }
-harmony::ShaderDataContainer::ShaderDataContainer(WeakRef<ShaderProgram> shaderProgram)
+harmony::ShaderDataContainer::ShaderDataContainer(WeakRef<ShaderProgram> shaderProgram) : m_Shader(shaderProgram)
 {
-	UpdateShader(shaderProgram);
 }
 
-void harmony::ShaderDataContainer::UpdateShader(WeakRef<ShaderProgram> newShader)
+void harmony::ShaderDataContainer::UpdateShader(WeakRef<ShaderProgram> newShader, AssetManager& am)
 {
 	p_ShaderUniformCount = 0;
 	m_Shader = newShader;
@@ -22,17 +22,99 @@ void harmony::ShaderDataContainer::UpdateShader(WeakRef<ShaderProgram> newShader
 		return;
 	}
 
-	UpdateContainer();
+	UpdateContainer(am);
 }
 
-void harmony::ShaderDataContainer::UpdateContainer()
+void harmony::ShaderDataContainer::UpdateContainer(AssetManager& am)
 {
+	std::map<std::string, glm::vec4> vec4s;
+	std::map<std::string, glm::mat3> mat3s;
+	std::map<std::string, glm::mat4> mat4s;
+	std::map<std::string, BGFXTextureHandle> textures;
+
+	if (m_Vec4Values.size() > 0)
+	{
+		for (auto& [handle, value] : m_Vec4Values)
+		{
+			vec4s.emplace(handle.Name, value);
+		}
+	}
+
+	if (m_Mat3Values.size() > 0)
+	{
+		for (auto& [handle, value] : m_Mat3Values)
+		{
+			mat3s.emplace(handle.Name, value);
+		}
+	}
+	if (m_Mat4Values.size() > 0)
+	{
+		for (auto& [handle, value] : m_Mat4Values)
+		{
+			mat4s.emplace(handle.Name, value);
+		}
+	}
+
+	if (m_TextureValues.size() > 0)
+	{
+		for (auto& [handle, value] : m_TextureValues)
+		{
+			textures.emplace(handle.Name, value);
+		}
+	}
+
 	Clear();
 
 	Ref<ShaderProgram> shader = m_Shader.lock();
 	for (int i = 0; i < shader->m_Uniforms.size(); i++)
 	{
-		CreateEmptyValue(shader->m_Uniforms[i]);
+		UpdateUniform(shader->m_Uniforms[i]);
+	}
+
+	if (m_Vec4Values.size() > 0)
+	{
+		for (auto& [handle, value] : m_Vec4Values)
+		{
+			if (vec4s.find(handle.Name) != vec4s.end())
+			{
+				value = vec4s[handle.Name];
+			}
+		}
+	}
+
+	if (m_Mat3Values.size() > 0)
+	{
+		for (auto& [handle, value] : m_Mat3Values)
+		{
+			if (mat3s.find(handle.Name) != mat3s.end())
+			{
+				value = mat3s[handle.Name];
+			}
+		}
+	}
+	if (m_Mat4Values.size() > 0)
+	{
+		for (auto& [handle, value] : m_Mat4Values)
+		{
+			if (mat4s.find(handle.Name) != mat4s.end())
+			{
+				value = mat4s[handle.Name];
+			}
+		}
+	}
+
+	if (m_TextureValues.size() > 0)
+	{
+		for (auto& [handle, value] : m_TextureValues)
+		{
+			if (textures.find(handle.Name) != textures.end())
+			{
+				value = textures[handle.Name];
+				WeakRef<Texture> texWr = am.GetAsset<Texture>(value.Handle);
+				Ref<Texture> tex = texWr.lock();
+				value = tex->m_TextureHandle;
+			}
+		}
 	}
 
 	m_ShaderName = shader->m_Name;
@@ -92,8 +174,9 @@ bool harmony::ShaderDataContainer::ReturnIfNull()
 	return false;
 }
 
-void harmony::ShaderDataContainer::CreateEmptyValue(ShaderUniform& uniform)
+void harmony::ShaderDataContainer::UpdateUniform(ShaderUniform& uniform)
 {
+	bool exists = false;
 	switch (uniform.Type)
 	{
 		case bgfx::UniformType::Vec4:	
@@ -110,7 +193,3 @@ void harmony::ShaderDataContainer::CreateEmptyValue(ShaderUniform& uniform)
 			break;
 	}
 }
-
-
-
-
