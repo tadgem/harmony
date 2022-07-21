@@ -76,16 +76,15 @@ bgfx::TextureHandle harmony::Pipeline::GetFinalImage()
 
 bgfx::TextureHandle harmony::Pipeline::GetInitialDepth()
 {
-	int index = 0;
-	while (!p_Stages[index]->m_HasDepthAttachment)
+	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		index++;
+		if (p_Stages[i]->m_HasDepthAttachment)
+		{
+			return bgfx::getTexture(p_Stages[i]->GetStageFinalFramebuffer(), 1);
+		}
 	}
-	if (index >= p_Stages.size())
-	{
-		return bgfx::TextureHandle();
-	}
-	return bgfx::getTexture(p_Stages[index]->GetStageFinalFramebuffer(), 1);
+	
+	return bgfx::TextureHandle();
 }
 
 bgfx::TextureHandle harmony::Pipeline::GetFinalDepth()
@@ -114,6 +113,18 @@ bgfx::ViewId harmony::Pipeline::GetFirstViewID()
 uint32_t harmony::Pipeline::NumPipelineStages()
 {
 	return p_Stages.size();
+}
+
+bool harmony::Pipeline::HasDepth()
+{
+	for (Ref<PipelineStage> pipeline : p_Stages)
+	{
+		if (pipeline->m_HasDepthAttachment)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 harmony::PipelineHandle harmony::PipelineHandle::New(const std::string& name)

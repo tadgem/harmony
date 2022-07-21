@@ -29,13 +29,15 @@ namespace harmony
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view);
         virtual void Cleanup(entt::registry& registry, WeakRef<View> view);
 
-        bgfx::TextureHandle GetFinalImage();
+        virtual bgfx::TextureHandle GetFinalImage();
         bgfx::TextureHandle GetInitialDepth();
         bgfx::TextureHandle GetFinalDepth();
         bgfx::ViewId GetFirstViewID();
         uint32_t NumPipelineStages();
         PipelineHandle m_Handle;
         std::string m_Name;
+
+        bool HasDepth();
 
     protected:
         std::vector<Ref<PipelineStage>> p_Stages;

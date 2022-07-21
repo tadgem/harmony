@@ -64,6 +64,11 @@ void harmony::PipelineStack::PreUpdate(entt::registry& registry)
             continue;
         }
 
+        if (!m_Stack[nextIndex]->HasDepth())
+        {
+            continue;
+        }
+
         bgfx::ViewId nextViewId = m_Stack[nextIndex]->GetFirstViewID();
         bgfx::TextureHandle destTexture = m_Stack[nextIndex]->GetInitialDepth();
         bgfx::TextureHandle srcTexture = m_Stack[p]->GetFinalDepth();
@@ -101,7 +106,8 @@ void harmony::PipelineStack::PostUpdate(entt::registry& registry)
             harmony::log::warn("Pipeline {} is expired.", p);
             continue;
         }
-        bgfx::setTexture(0, p_TexHandle, m_Stack[p]->GetFinalImage());
+        bgfx::TextureHandle pipelineFinalImage = m_Stack[p]->GetFinalImage();
+        bgfx::setTexture(0, p_TexHandle, pipelineFinalImage);
         ScreenSpaceQuad(p_View->m_Width, p_View->m_Height);
         bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
         bgfx::submit(p_FinalImageViewId, p_PresentProgram->m_Handle);

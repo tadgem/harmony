@@ -1167,11 +1167,20 @@ uint16_t nvgGetViewId(struct NVGcontext* _ctx)
 	return gl->viewId;
 }
 
+
 bgfx::TextureHandle nvglImageHandle(NVGcontext* _ctx, int32_t _image)
 {
 	GLNVGcontext* gl = (GLNVGcontext*)nvgInternalParams(_ctx)->userPtr;
 	GLNVGtexture* tex = glnvg__findTexture(gl, _image);
 	return tex->id;
+}
+
+bgfx::TextureHandle nvgGetFramebufferTexture(NVGcontext* _ctx)
+{
+	GLNVGcontext * gl = (GLNVGcontext*)nvgInternalParams(_ctx)->userPtr;
+	bgfx::TextureHandle handle = gl->th;
+	handle.idx -= 1;
+	return handle;
 }
 
 NVGLUframebuffer* nvgluCreateFramebuffer(NVGcontext* ctx, int32_t width, int32_t height, int32_t imageFlags, bgfx::ViewId viewId)

@@ -3,6 +3,9 @@
 #include "ECS/MeshSystem.h"
 #include "ECS/MaterialSystem.h"
 #include "Rendering/Pipelines/NormalPipeline.h"
+#include "Rendering/Pipelines/VectorPipeline.h"
+#include "Core/Time.h"
+#include "Core/Input.h"
 harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*this)
 {
 	AddAssetTypeNames();
@@ -24,7 +27,6 @@ void harmony::Editor::AddAssetFactories()
 {
 	m_AssetManager.AddAssetFactory(CreateRef<TextureAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>());
-
 }
 
 void harmony::Editor::AddProgramComponents()
@@ -58,9 +60,11 @@ void harmony::Editor::InitializePipelines()
 	auto debugDrawPipelineWr = m_Renderer.CreatePipeline<DebugDrawPipeline>(GfxDebug::Channel::Editor);
 	auto texturedMeshPipelineWr = m_Renderer.CreatePipeline<TexturedMeshPipeline>();
 	auto normalPipelineWr = m_Renderer.CreatePipeline<NormalPipeline>();
+	auto vectorGraphicsPipelineWr = m_Renderer.CreatePipeline<VectorPipeline>();
 	p_DebugPipeline = debugDrawPipelineWr.lock();
 	p_TexturedMeshPipeline = texturedMeshPipelineWr.lock();
 	p_NormalPipeline = normalPipelineWr.lock();
+	p_VectorGraphicsPipeline = vectorGraphicsPipelineWr.lock();
 
 }
 
@@ -71,6 +75,7 @@ void harmony::Editor::InitializeViews()
 	m_Renderer.AddViewPipeline(viewWr, p_DebugPipeline);
 	m_Renderer.AddViewPipeline(viewWr, p_NormalPipeline);
 	m_Renderer.AddViewPipeline(viewWr, p_TexturedMeshPipeline);
+	m_Renderer.AddViewPipeline(viewWr, p_VectorGraphicsPipeline);
 	m_Renderer.SetViewActive(viewWr, true);
 
 	p_EditorView = viewWr.lock();
@@ -106,6 +111,16 @@ void harmony::Editor::UpdateEditor()
 	for (int i = 0; i < p_Panels.size(); i++)
 	{
 		p_Panels[i]->OnImGui();
+	}
+
+	if (VectorGraphics::GetNVGContext() == nullptr)
+	{
+		return;
+	}
+
+	if (!p_ActiveScene)
+	{
+		return;
 	}
 }
 

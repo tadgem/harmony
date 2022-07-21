@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Rendering/Pipeline.h"
+#include "Rendering/VectorGraphics.h"
 namespace harmony
 {
     class VectorGraphicsStage : public PipelineStage
@@ -18,6 +19,9 @@ namespace harmony
 
     class VectorPipeline : public Pipeline
     {
+    public:
+        VectorPipeline();
 
+        virtual bgfx::TextureHandle GetFinalImage() override;
     };
 };

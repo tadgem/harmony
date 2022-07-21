@@ -35,6 +35,8 @@ void nvgSetViewId(NVGcontext* _ctx, bgfx::ViewId _viewId);
 ///
 uint16_t nvgGetViewId(struct NVGcontext* _ctx);
 
+bgfx::TextureHandle nvgGetFramebufferTexture(NVGcontext* _ctx);
+
 // Helper functions to create bgfx framebuffer to render to.
 // Example:
 //		float scale = 2;

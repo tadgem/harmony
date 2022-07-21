@@ -32,6 +32,7 @@ namespace harmony
 		Ref<Pipeline> p_DebugPipeline;
 		Ref<Pipeline> p_TexturedMeshPipeline;
 		Ref<Pipeline> p_NormalPipeline;
+		Ref<Pipeline> p_VectorGraphicsPipeline;
 		EditorMainMenuBar p_MainMenuBar;
 	};
 

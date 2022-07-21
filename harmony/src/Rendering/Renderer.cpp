@@ -53,6 +53,7 @@ void harmony::Renderer::AddBuiltInShaders()
     AddBuiltInShader("TexturedMesh", "vs_simple_textured", "fs_simple_textured", 0, 1);
     AddBuiltInShader("Normal", "vs_normal", "fs_normal", 2, 3);
     AddBuiltInShader("Present", "vs_present", "fs_present", 4, 5);
+    AddBuiltInShader("NanoVG", "vs_nanovg_fill", "fs_nanovg_fill", 6, 7);
 }
 
 uint32_t harmony::Renderer::p_ViewHandleCounter = 1;
