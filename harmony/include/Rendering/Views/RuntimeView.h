@@ -1,5 +1,6 @@
 #pragma once
 #include "Rendering/View.h"
+#include "ECS/Entity.h"
 
 namespace harmony 
 {
@@ -13,5 +14,7 @@ namespace harmony
 #if HARMONY_DEBUG
         virtual void OnImGui() override;
 #endif
+        Entity CameraEntity;
+        
     };
 }
