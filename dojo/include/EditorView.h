@@ -13,15 +13,10 @@ namespace harmony
         glm::vec3 Position;
         glm::vec3 Euler;
         glm::quat Rotation;
-        float FOV;
-        float Near, Far;
         float Speed;
         bool Focussed = true;
 
         void Update();
-
-        virtual glm::mat4 GetViewMatrix() override;
-        virtual glm::mat4 GetProjectionMatrix(uint32_t width, uint32_t height) override;
     };
 
 	class EditorView : public View

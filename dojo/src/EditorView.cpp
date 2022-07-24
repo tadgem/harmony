@@ -17,8 +17,8 @@ harmony::DebugCamera::DebugCamera()
 	Position = glm::vec3(0.0f, 10.0f, 0.0f);
 	Euler = glm::vec3(0.0f, 0.0f, 0.0f);
 	FOV = 80.0f;
-	Near = 0.1f;
-	Far = 300.0f;
+	NearClipPlane = 0.1f;
+	FarClipPlane = 300.0f;
 	Speed = 10.0f;
 	Type = ProjectionType::Perspective;
 	Focussed = false;
@@ -87,10 +87,11 @@ void harmony::DebugCamera::Update()
 	{
 		Euler.y -= 360.0f;
 	}
-}
 
-glm::mat4 harmony::DebugCamera::GetViewMatrix()
-{
+	Projection = glm::mat4(1.0);
+
+	Projection = glm::perspectiveFov(glm::radians(FOV), static_cast<float>(Program::p_WindowWidth), static_cast<float>(Program::p_WindowHeight), NearClipPlane, FarClipPlane);
+
 	glm::quat qPitch = glm::angleAxis(glm::radians(-Euler.x), glm::vec3(1, 0, 0));
 	glm::quat qYaw = glm::angleAxis(glm::radians(Euler.y), glm::vec3(0, 1, 0));
 	// omit roll
@@ -100,16 +101,7 @@ glm::mat4 harmony::DebugCamera::GetViewMatrix()
 	glm::mat4 translate = glm::mat4(1.0f);
 	translate = glm::translate(translate, -Position);
 
-	return rotate * translate;
-}
-
-glm::mat4 harmony::DebugCamera::GetProjectionMatrix(uint32_t width, uint32_t height)
-{
-	glm::mat4 projMatrix = glm::mat4(1.0);
-
-	projMatrix = glm::perspectiveFov(glm::radians(FOV), static_cast<float>(width), static_cast<float>(height), Near, Far);
-
-	return projMatrix;
+	View =  rotate * translate;
 }
 
 harmony::EditorView::EditorView(Program& program, Ref<ScenePanel> scenePanel) : View("Editor"), p_Program(program), p_Renderer(program.m_Renderer), p_ScenePanel(scenePanel)
@@ -120,8 +112,8 @@ harmony::EditorView::EditorView(Program& program, Ref<ScenePanel> scenePanel) : 
 void harmony::EditorView::OnPreUpdate(entt::registry& registry)
 {
 	Camera.Update();
-	m_View = Camera.GetViewMatrix();
-	m_Projection = Camera.GetProjectionMatrix(m_Width, m_Height);
+	m_View = Camera.View;
+	m_Projection = Camera.Projection;
 }
 #if HARMONY_DEBUG
 void harmony::EditorView::OnImGui()

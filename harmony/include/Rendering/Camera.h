@@ -13,8 +13,11 @@ namespace harmony
             Perspective
         };
 
-        virtual glm::mat4 GetViewMatrix() = 0;
-        virtual glm::mat4 GetProjectionMatrix(uint32_t width, uint32_t height) = 0;
+        glm::mat4 View;
+        glm::mat4 Projection;
+
+        float FOV;
+        float NearClipPlane, FarClipPlane;
 
         ProjectionType Type;
     };
