@@ -50,8 +50,9 @@ namespace harmony
 		
 		Type m_Type;
 		std::string m_Name;
+		std::string m_Path;
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderStage, m_Name, m_Type)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderStage, m_Name, m_Path, m_Type)
 
 		std::vector<bgfx::UniformInfo> m_UniformInfos;
 		bgfx::ShaderHandle m_Handle;
@@ -79,7 +80,7 @@ namespace harmony
 		bool AddStage(ShaderStage::Type stageType, WeakRef<ShaderStage> shader);
 		bool RemoveStage(ShaderStage::Type stageType);
 		void Build();
-
+		void Destroy();
 		void GetUniforms();
 
 		std::string m_Name;

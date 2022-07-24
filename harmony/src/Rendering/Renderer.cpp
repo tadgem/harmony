@@ -229,6 +229,23 @@ void harmony::Renderer::OnImGui()
         ImGui::Text("Frametime : %f", Time::GetFrameTime());
         ImGui::Text("FPS : %f", 1.0 / Time::GetFrameTime());
         ImGui::Separator();
+        ImGui::Text("Shaders");
+        ImGui::Indent();
+        for (auto& [shader, data] : p_Shaders)
+        {
+            ImGui::Text(shader->m_Name.c_str());
+        }
+        ImGui::Unindent();
+        ImGui::Separator();
+        ImGui::Text("Shader Stages");
+        ImGui::Indent();
+        for (auto& [path, stage] : p_LoadedStagePaths)
+        {
+            ImGui::Text(path.c_str());
+        }
+        ImGui::Unindent();
+        ImGui::Separator();
+        
         ImGui::Text("View Properties");
         ImGui::Separator();
 
@@ -305,8 +322,10 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std
     Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
     Ref<ShaderStage> vertStage = CreateRef<ShaderStage>(vertName, ShaderStage::Type::Vertex);
     vertStage->LoadShaderBinary();
+    p_LoadedStagePaths.emplace(vertStage->m_Path, vertStage);
     Ref<ShaderStage> fragStage = CreateRef<ShaderStage>(fragName, ShaderStage::Type::Fragment);
     fragStage->LoadShaderBinary();
+    p_LoadedStagePaths.emplace(fragStage->m_Path, fragStage);
     prog->AddStage(ShaderStage::Type::Vertex, GetWeakRef<ShaderStage>(vertStage));
     prog->AddStage(ShaderStage::Type::Fragment, GetWeakRef<ShaderStage>(fragStage));
 
@@ -336,6 +355,41 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std
     p_Shaders.emplace(prog, dataContainer);
 
     return wr;
+}
+
+void harmony::Renderer::ReloadShader(WeakRef<ShaderProgram> shader)
+{
+    if (shader.expired())
+    {
+        harmony::log::error("Trying to reload an invalid shader.");
+        return;
+    }
+
+    Ref<ShaderProgram> prog = shader.lock();
+
+    prog->Destroy();
+    for (auto& [type, stageWr] : prog->m_Stages)
+    {
+        if (stageWr.expired())
+        {
+            harmony::log::error("Trying to reload an invalid shader.");
+            return;
+        }
+
+        Ref<ShaderStage> stage = stageWr.lock();
+        stage->LoadShaderBinary();
+    }
+
+    prog->Build();
+    
+}
+
+void harmony::Renderer::ReloadAllShaders()
+{
+    for (auto [shader, data] : p_Shaders)
+    {
+        ReloadShader(shader);
+    }
 }
 
 harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::GetShader(const std::string& name)

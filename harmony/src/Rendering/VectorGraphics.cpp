@@ -1,4 +1,4 @@
-#include "VectorGraphics.h"
+#include "Rendering/VectorGraphics.h"
 
 VectorGraphics::VectorGraphics()
 {

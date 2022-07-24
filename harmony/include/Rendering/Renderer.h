@@ -65,6 +65,9 @@ namespace harmony
 
         WeakRef<ShaderProgram> LoadShader(const std::string& name, const std::string& vertName, const std::string& fragName);
         WeakRef<ShaderProgram> LoadShader(const std::string& name, const std::string& computeName);
+        
+        void ReloadShader(WeakRef<ShaderProgram> shader);
+        void ReloadAllShaders();
 
         WeakRef<ShaderProgram>      GetShader(const std::string& name);
         std::vector<std::string>    GetShaderNames();
@@ -139,7 +142,7 @@ namespace harmony
         std::map<Ref<ShaderProgram>, ShaderDataContainer> p_Shaders;
         std::map<uint16_t, Ref<Pipeline>> p_Pipelines;
 
-
+        std::map<std::string, WeakRef<ShaderStage>> p_LoadedStagePaths;
         bgfx::ViewId p_CurrentView;
     };
 };

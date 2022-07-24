@@ -43,7 +43,6 @@ void harmony::Program::Init()
 	InitSDL();
 	InitBGFX();
 	InitImGui();
-	RunProgramComponentInit();
 }
 
 void harmony::Program::LoadBuiltInAssets()
@@ -466,6 +465,8 @@ void harmony::Program::LoadProject(const std::string& path)
 	m_Project->m_ProjectDirectory = directory;
 	m_Project->Load(m_AssetManager);
 	p_LoadedProjectPath = path;
+
+	RunProgramComponentInit();
 }
 
 void harmony::Program::CloseActiveProject()

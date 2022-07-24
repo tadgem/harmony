@@ -56,6 +56,11 @@ void harmony::ShaderProgram::Build()
 	harmony::log::error("Failed to build shader! invalid combination provided.");
 }
 
+void harmony::ShaderProgram::Destroy()
+{
+	bgfx::destroy(m_Handle);
+}
+
 void harmony::ShaderProgram::GetUniforms()
 {
 	for (auto [type, s] : m_Stages)
@@ -93,9 +98,14 @@ harmony::ShaderStage::~ShaderStage()
 
 void harmony::ShaderStage::LoadShaderBinary()
 {
-	std::string binaryPath = GetShaderRendererDirectory() + m_Name + ".bin";
+	m_Path = GetShaderRendererDirectory() + m_Name + ".bin";
 
-	if (bx::open(&_reader, binaryPath.c_str()))
+	if (m_Handle.idx != UINT16_MAX)
+	{
+		bgfx::destroy(m_Handle);
+	}
+
+	if (bx::open(&_reader, m_Path.c_str()))
 	{
 		uint32_t size = static_cast<uint32_t>(bx::getSize(&_reader));
 		const bgfx::Memory* mem = bgfx::alloc(size + 1);
@@ -106,7 +116,7 @@ void harmony::ShaderStage::LoadShaderBinary()
 	}
 	else
 	{
-		harmony::log::error("Failed to load shader binary at path : ", binaryPath);
+		harmony::log::error("Failed to load shader binary at path : ", m_Path);
 	}
 }
 

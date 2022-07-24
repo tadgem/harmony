@@ -6,6 +6,7 @@
 #include "Rendering/Pipelines/VectorPipeline.h"
 #include "Core/Time.h"
 #include "Core/Input.h"
+#include "ShaderHotReload.h"
 harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*this)
 {
 	AddAssetTypeNames();
@@ -32,6 +33,7 @@ void harmony::Editor::AddAssetFactories()
 void harmony::Editor::AddProgramComponents()
 {
 	AddProgramComponent<LuaProgramComponent>();
+	AddProgramComponent<ShaderHotReload>(*this);
 }
 
 void harmony::Editor::AddSystems()
