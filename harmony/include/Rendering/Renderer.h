@@ -12,7 +12,7 @@
 #include "Rendering/ShaderDataContainer.h"
 #include "Assets/AssetManager.h"
 #include "glm/glm.hpp"
-
+#include "json.hpp"
 namespace harmony
 {
     struct RenderState
@@ -116,33 +116,26 @@ namespace harmony
         void                Init();
         void                OnPreUpdate(entt::registry& registry);
         void                OnPostUpdate(entt::registry& registry);
-        
-        
+                
         PipelineStack&      GetViewPipelineStack(const std::string& viewName);
-
         static bgfx::ViewId GetViewID();
     
         std::vector<WeakRef<View>> m_ActiveViews;
         
-        
+        nlohmann::json      Serialize();
+        void                Deserialize(nlohmann::json& json);
     protected:
         
         static uint32_t p_ViewHandleCounter;
-        std::map<Ref<View>, PipelineStack> p_Views;
 
         bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
         AssetManager& p_AssetManager;
 
-        std::map<std::string, WeakRef<float>>     p_FloatValues;
-        std::map<std::string, WeakRef<glm::vec2>> p_Vec2Values;
-        std::map<std::string, WeakRef<glm::vec3>> p_Vec3Values;
-        std::map<std::string, WeakRef<glm::mat3>> p_Mat3Values;
-        std::map<std::string, WeakRef<glm::mat4>> p_Mat4Values;
+        std::map<Ref<View>, PipelineStack>                  p_Views;
+        std::map<Ref<ShaderProgram>, ShaderDataContainer>   p_Shaders;
+        std::map<uint16_t, Ref<Pipeline>>                   p_Pipelines;
+        std::map<std::string, WeakRef<ShaderStage>>         p_LoadedStagePaths;
 
-        std::map<Ref<ShaderProgram>, ShaderDataContainer> p_Shaders;
-        std::map<uint16_t, Ref<Pipeline>> p_Pipelines;
-
-        std::map<std::string, WeakRef<ShaderStage>> p_LoadedStagePaths;
         bgfx::ViewId p_CurrentView;
     };
 };

@@ -32,7 +32,6 @@ namespace harmony
         const std::string m_Name;
     protected:
 
-        friend class ViewManager;
         friend class Renderer;
 
         const uint32_t c_InitialViewWidth;
