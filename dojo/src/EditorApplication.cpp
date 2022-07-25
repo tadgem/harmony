@@ -26,6 +26,7 @@ void harmony::Editor::AddAssetFactories()
 {
 	m_AssetManager.AddAssetFactory(CreateRef<TextureAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>());
+	m_AssetManager.AddAssetFactory(CreateRef<ShaderStageBinaryAssetFactory>(m_Renderer));
 }
 
 void harmony::Editor::AddProgramComponents()

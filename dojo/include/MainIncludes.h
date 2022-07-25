@@ -8,6 +8,7 @@
 #include "Rendering/Pipelines/VectorPipeline.h"
 #include "AssimpModelAssetFactory.h"
 #include "Assets/TextureAssetFactory.h"
+#include "Assets/ShaderStageBinaryAssetFactory.h"
 #include "ECS/TransformSystem.h"
 #include "ECS/TileMapSystemImGui.h"
 #include "EditorUtils.h"

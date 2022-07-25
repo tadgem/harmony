@@ -84,7 +84,7 @@ void harmony::ShaderProgram::GetUniforms()
 	}
 }
 
-harmony::ShaderStage::ShaderStage(const std::string& name, const Type& shaderType) : Asset(AssetHandle {name, 0, GetTypeHash<ShaderStage>()}), m_Type(shaderType), m_Handle(BGFX_INVALID_HANDLE), m_Name(name)
+harmony::ShaderStage::ShaderStage(const std::string& name, const std::string& binaryPath, const Type& shaderType) : Asset(AssetHandle {name, 0, GetTypeHash<ShaderStage>()}), m_Type(shaderType), m_Handle(BGFX_INVALID_HANDLE), m_Name(name), m_Path(binaryPath)
 {
 }
 
@@ -96,10 +96,9 @@ harmony::ShaderStage::~ShaderStage()
 {
 }
 
+
 void harmony::ShaderStage::LoadShaderBinary()
 {
-	m_Path = GetShaderRendererDirectory() + m_Name + ".bin";
-
 	if (m_Handle.idx != UINT16_MAX)
 	{
 		bgfx::destroy(m_Handle);
@@ -169,7 +168,7 @@ std::string harmony::ShaderStage::GetShaderRendererDirectory()
 harmony::BuiltInShaderStage::BuiltInShaderStage(
 	const std::string& name, 
 	const Type& shaderType, 
-	bgfx::EmbeddedShader embeddedShader) : ShaderStage(name, shaderType), p_EmbeddedShader(embeddedShader)
+	bgfx::EmbeddedShader embeddedShader) : ShaderStage(name, "builtin", shaderType), p_EmbeddedShader(embeddedShader)
 {
 }
 

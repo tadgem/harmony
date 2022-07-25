@@ -82,9 +82,6 @@ namespace harmony
 
 
 #if HARMONY_DEBUG
-
-        std::map<size_t, Ref<Pipeline>> p_PipelinePrototypes;
-
         void                OnImGui();
         PipelineHandle      p_SelectedPipelineHandle;
 #endif

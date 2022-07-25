@@ -27,11 +27,12 @@ namespace harmony
 	{
 	public:
 
-		enum Type
+		enum Type : char
 		{
 			Vertex,
 			Fragment, 
-			Compute
+			Compute,
+			Unknown = 255
 		};
 		NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
 			{Vertex, "vert"},
@@ -39,12 +40,11 @@ namespace harmony
 			{Compute, "compute"}
 		})
 
-		ShaderStage(const std::string& name, const Type& shaderType);
+		ShaderStage(const std::string& name, const std::string & binaryPath, const Type& shaderType);
 		ShaderStage();
 		~ShaderStage();
 
 		virtual void LoadShaderBinary();
-
 		static std::string GetShaderStageNameFromEnum(Type type);
 		static std::string GetShaderRendererDirectory();
 		
