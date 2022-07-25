@@ -16,7 +16,7 @@ void harmony::ShaderHotReload::Init()
     if (p_Program.m_Project)
     {
         std::string projDirectory = p_Program.m_Project->m_ProjectDirectory;
-        std::string shadersDirectory = projDirectory + "\\shaders";
+        std::string shadersDirectory = projDirectory + "\\assets\\shaders";
 
         p_FileWatcher = new filewatch::FileWatch<std::string>(
             shadersDirectory,

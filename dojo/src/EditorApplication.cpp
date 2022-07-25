@@ -2,8 +2,6 @@
 #include "Rendering/Shapes.h"
 #include "ECS/MeshSystem.h"
 #include "ECS/MaterialSystem.h"
-#include "Rendering/Pipelines/NormalPipeline.h"
-#include "Rendering/Pipelines/VectorPipeline.h"
 #include "Core/Time.h"
 #include "Core/Input.h"
 #include "ShaderHotReload.h"
@@ -32,7 +30,6 @@ void harmony::Editor::AddAssetFactories()
 
 void harmony::Editor::AddProgramComponents()
 {
-	AddProgramComponent<LuaProgramComponent>();
 	AddProgramComponent<ShaderHotReload>(*this);
 }
 
@@ -60,13 +57,18 @@ void harmony::Editor::AddEditorPanels()
 void harmony::Editor::InitializePipelines()
 {
 	auto debugDrawPipelineWr = m_Renderer.CreatePipeline<DebugDrawPipeline>(GfxDebug::Channel::Editor);
-	auto texturedMeshPipelineWr = m_Renderer.CreatePipeline<TexturedMeshPipeline>();
-	auto normalPipelineWr = m_Renderer.CreatePipeline<NormalPipeline>();
+	auto texturedMeshPipelineWr = m_Renderer.CreatePipeline<Pipeline>(PipelineHandle::New("Textured Mesh"));
+	auto normalPipelineWr = m_Renderer.CreatePipeline<Pipeline>(PipelineHandle::New("Mesh Normals"));
 	auto vectorGraphicsPipelineWr = m_Renderer.CreatePipeline<VectorPipeline>();
 	p_DebugPipeline = debugDrawPipelineWr.lock();
-	p_TexturedMeshPipeline = texturedMeshPipelineWr.lock();
-	p_NormalPipeline = normalPipelineWr.lock();
 	p_VectorGraphicsPipeline = vectorGraphicsPipelineWr.lock();
+	
+	p_NormalPipeline = normalPipelineWr.lock();
+	p_NormalPipeline->AddPipelineStage<PipelineStage>(PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
+
+	p_TexturedMeshPipeline = texturedMeshPipelineWr.lock();
+	p_TexturedMeshPipeline->AddPipelineStage<PipelineStage>(PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
+
 
 }
 

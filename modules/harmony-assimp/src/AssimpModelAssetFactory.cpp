@@ -30,46 +30,6 @@ harmony::AssimpModelAssetFactory::AssimpModelAssetFactory() : harmony::AssetFact
 	m_Capabilities.AssetTypeHashes.push_back(meshTypeHash);
 }
 
-//std::vector<harmony::Ref<harmony::Asset>> harmony::AssimpModelAssetFactory::LoadAssetData(const std::string& path)
-//{
-//	HARMONY_PROFILE_FUNCTION()
-//    auto assets = std::vector<Ref<Asset>>();
-//
-//    Assimp::Importer importer;
-//    // importer.ReadFile()
-//	const aiScene* scene = importer.ReadFile(path,
-//		aiProcess_Triangulate |
-//		aiProcess_FlipUVs |
-//		aiProcess_CalcTangentSpace |
-//		aiProcess_GenSmoothNormals |
-//		aiProcess_OptimizeMeshes |
-//		aiProcess_OptimizeGraph |
-//		aiProcess_GenBoundingBoxes
-//	);
-//
-//	if (scene == nullptr)
-//	{
-//		harmony::log::error("AssimpModelAssetFactory : Failed to load asset at path : ", path);
-//		return assets;
-//	}
-//
-//	ProcessNode(scene->mRootNode, scene);
-//	std::string modelName = std::string(scene->mName.C_Str());
-//	Ref<Model> model = CreateRef<Model>(modelName); 
-//	model->m_Handle.Path= path;
-//	for (int i = 0; i < p_Meshes.size(); i++)
-//	{
-//		model->m_MeshNames.push_back(p_MeshNames[i]);
-//		Ref<Mesh> meshRef = std::static_pointer_cast<Mesh, Asset>(p_Meshes[i]);
-//		model->m_Meshes.push_back(GetWeakRef<Mesh>(meshRef));
-//		assets.emplace_back(p_Meshes[i]);
-//		p_Meshes[i]->m_Handle.Path = path;
-//	}
-//
-//	assets.push_back(std::static_pointer_cast<Asset, Model>(model));
-//	return assets;
-//}
-
 void harmony::AssimpModelAssetFactory::ProcessNode(const std::string& path, aiNode* node, const aiScene* scene)
 {
 	HARMONY_PROFILE_FUNCTION()
@@ -187,6 +147,36 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(const std::string& path, aiMe
 	p_Meshes.emplace_back(meshAsset);
 	p_MeshNames.emplace_back(AssimpToSTD(mesh->mName));
 }
+
+void harmony::AssimpModelAssetFactory::UnloadAssetData(const std::string& path, entt::registry& registry)
+{
+	std::vector<entt::entity> entitiesToDestroy;
+
+	auto meshView = registry.view<AssetComponent<Mesh>, AssetHandle>();
+
+	for (auto [e, mesh, handle] : meshView.each())
+	{
+		if (handle.Path == path)
+		{
+			entitiesToDestroy.push_back(e);
+		}
+	}
+	auto modelView = registry.view<AssetComponent<Model>, AssetHandle>();
+
+	for (auto [e, mesh, handle] : modelView.each())
+	{
+		if (handle.Path == path)
+		{
+			entitiesToDestroy.push_back(e);
+		}
+	}
+
+	for (int i = 0; i < entitiesToDestroy.size(); i++)
+	{
+		registry.destroy(entitiesToDestroy[i]);
+	}
+}
+
 
 void harmony::AssimpModelAssetFactory::LoadAssetData(const std::string& path, entt::registry& registry)
 {

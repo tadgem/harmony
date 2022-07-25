@@ -32,8 +32,23 @@ bool harmony::AssetManager::IsPathLoaded(const std::string path)
 }
 std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::string& path, size_t typeHash)
 {
+	auto builtin = path.find("builtin");
+	if (builtin >= 0 && builtin < path.size())
+	{
+		return GetAssetsAtPath(path);
+	}
 	Ref<AssetFactory> factory = GetAssetFactory(typeHash);
 	factory->LoadAssetData(path, p_AssetRegistry);
+#if HARMONY_DEBUG
+	p_AssetFileWatchers.emplace_back(new 
+		filewatch::FileWatch<std::string>(
+			path,
+			[&](const std::string& path, const filewatch::Event change_type) {
+				OnAssetChanged(path, change_type, factory);
+			}
+
+	));
+#endif
 	return GetAssetsAtPath(path);
 }
 
@@ -116,6 +131,15 @@ harmony::Ref<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory(size_
 	}
 	return factory;
 }
+
+#if HARMONY_DEBUG
+void harmony::AssetManager::OnAssetChanged(const std::string& path, const filewatch::Event change_type, Ref<AssetFactory> factory)
+{
+	factory->UnloadAssetData(path, p_AssetRegistry);
+	factory->LoadAssetData(path,  p_AssetRegistry);
+}
+
+#endif
 
 bool harmony::AssetManager::AddAssetFactory(Ref<AssetFactory> assetFactory)
 {

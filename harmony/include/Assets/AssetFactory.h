@@ -29,6 +29,7 @@ namespace harmony {
 	public:
 		AssetFactory() {}
 		virtual void LoadAssetData(const std::string& path, entt::registry& registry) = 0;
+		virtual void UnloadAssetData(const std::string& path, entt::registry& registry) = 0;
 		virtual void ClearLoadedData();
 
 		AssetFactoryCapabilities m_Capabilities;

@@ -31,7 +31,7 @@ namespace harmony
         virtual void Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle);
         virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle);
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle);
-        virtual void Cleanup() = 0;
+        virtual void Cleanup();
 
         virtual bgfx::FrameBufferHandle GetStageFinalFramebuffer();
         virtual bgfx::TextureHandle GetStageDepthTexture();

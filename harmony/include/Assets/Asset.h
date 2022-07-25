@@ -28,6 +28,7 @@ namespace harmony
     public:
         Asset(AssetHandle handle);
         Asset() {}
+
         AssetHandle m_Handle;
         virtual ~Asset() {}
     };

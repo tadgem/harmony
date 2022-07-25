@@ -40,32 +40,22 @@ void harmony::TextureAssetFactory::LoadAssetData(const std::string& path, entt::
     data.clear();
 }
 
-//std::vector<harmony::Ref<harmony::Asset>> harmony::TextureAssetFactory::LoadAssetData(const std::string& path)
-//{
-//    std::vector<Ref<Asset>> assets =  std::vector<Ref<Asset>>();
-//
-//    auto data = Utils::LoadBinaryFromPath(path);
-//    uint32_t dataSize = static_cast<uint32_t>(data.size());
-//    
-//    if (data.size() == 0)
-//    {
-//        harmony::log::error("TextureAssetFactory : Failed to load texture data at path : ", path);
-//        return assets;
-//    }
-//
-//    bimg::ImageContainer* imageContainer = bimg::imageParse(&p_Allocator, data.data(), dataSize);
-//
-//    if (imageContainer == NULL)
-//    {
-//        harmony::log::error("TextureAssetFactory : Failed to create image container for texture data at path : ", path);
-//    }
-//
-//    Ref<Texture> textureAsset = CreateRef<Texture>(imageContainer);
-//    textureAsset->m_Handle.Path = path;
-//    // is this correct?
-//    data.clear();
-//
-//    assets.emplace_back(textureAsset);
-//
-//    return assets; 
-//}
+void harmony::TextureAssetFactory::UnloadAssetData(const std::string& path, entt::registry& registry)
+{
+    auto view = registry.view<AssetComponent<Texture>, AssetHandle>();
+    entt::entity e;
+    bool found = false;
+    for (auto [entity, tex, handle] : view.each())
+    {
+        if (handle.Path == path)
+        {
+            found = true;
+            e = entity;
+        }
+    }
+
+    if (found)
+    {
+        registry.destroy(e);
+    }
+}

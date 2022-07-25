@@ -11,6 +11,7 @@
 #include "Core/Log.hpp"
 #include "Core/Profile.hpp"
 #include "entt.hpp"
+#include "Core/FileWatcher.hpp"
 
 namespace harmony {
 
@@ -38,24 +39,17 @@ namespace harmony {
             return false;
         }
 
+        std::vector<AssetHandle>LoadAsset(const std::string& path, size_t typeHash);
         template<typename T>
         std::vector<AssetHandle>LoadAsset(const std::string& path)
         {
             size_t typeHash = typeid(T).hash_code();
 
-            Ref<AssetFactory> factory = GetAssetFactory(typeHash);
-
-            factory->LoadAssetData(path, p_AssetRegistry);
-            // Cleanup any shared pointers in factory
-            // manager has ownership of all assets.
-            factory->ClearLoadedData();
-
-            return GetAssetsAtPath(path);
+            return LoadAsset(path, typeHash);
         }
 
         bool IsPathLoaded(const std::string path);
 
-        std::vector<AssetHandle>LoadAsset(const std::string& path, size_t typeHash);
 
         template<typename T>
         std::vector<AssetHandle> GetLoadedAssets()
@@ -87,11 +81,11 @@ namespace harmony {
 
         void Clear();
 
-        nlohmann::json Serialize();
-        void Deserialize(nlohmann::json& json);
+        nlohmann::json  Serialize();
+        void            Deserialize(nlohmann::json& json);
 
         template <typename T>
-        AssetHandle AddBuiltInAsset(const std::string& path, Ref<T> asset)
+        AssetHandle     AddBuiltInAsset(const std::string& path, Ref<T> asset)
         {
             static_assert(std::is_base_of<Asset, T>());
             AssetHandle handle;
@@ -109,12 +103,17 @@ namespace harmony {
 
             return handle;
         }
+    
     protected:
         Ref<AssetFactory> GetAssetFactory(size_t typeHash);
         std::vector<Ref<AssetFactory>>                      p_AssetFactories;
         std::unordered_map<size_t, std::string>             p_AssetTypeNames;
         std::vector<std::string>                            p_LoadedPaths;
+#if HARMONY_DEBUG
+        std::vector<filewatch::FileWatch<std::string>*> p_AssetFileWatchers;
+        void OnAssetChanged(const std::string& path, const filewatch::Event change_type, Ref<AssetFactory> factory);
 
+#endif
         entt::registry p_AssetRegistry;
     };
 }

@@ -32,6 +32,9 @@ namespace harmony
         void AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex);
         void AddBuiltInShader(const std::string& progName, const std::string& vsName, uint32_t csIndex);
         void AddBuiltInShaders();
+ 
+        WeakRef<ShaderProgram> CreateShader(const std::string& name, WeakRef<ShaderStage> vertStage, WeakRef<ShaderStage> fragStage);
+        WeakRef<ShaderProgram> CreateShader(const std::string& name, WeakRef<ShaderStage> compStage);
 
         template<typename T, typename ... Args>
         WeakRef<T> CreatePipeline(Args&& ... args)
@@ -62,9 +65,6 @@ namespace harmony
                 return derivedPipeline;
             }
         }
-
-        WeakRef<ShaderProgram> LoadShader(const std::string& name, const std::string& vertName, const std::string& fragName);
-        WeakRef<ShaderProgram> LoadShader(const std::string& name, const std::string& computeName);
         
         void ReloadShader(WeakRef<ShaderProgram> shader);
         void ReloadAllShaders();
@@ -82,8 +82,6 @@ namespace harmony
 
 
 #if HARMONY_DEBUG
-        WeakRef<ShaderProgram> CreateShader(const std::string vertSourcePath, const std::string fragSourcePath);
-        WeakRef<ShaderProgram> CreateShader(const std::string computePath);
 
         std::map<size_t, Ref<Pipeline>> p_PipelinePrototypes;
 
