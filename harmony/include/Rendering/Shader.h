@@ -41,7 +41,7 @@ namespace harmony
 			{Unknown, "unknown"}
 		})
 
-		ShaderStage(const std::string& name, const std::string & binaryPath, const Type& shaderType);
+		ShaderStage(const std::string& name, const Type& shaderType);
 		ShaderStage();
 		~ShaderStage();
 
@@ -51,7 +51,7 @@ namespace harmony
 		
 		Type m_Type;
 		std::string m_Name;
-
+		std::string m_BinaryPath;
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderStage, m_Name, m_Type, m_Handle)
 
 		std::vector<bgfx::UniformInfo> m_UniformInfos;

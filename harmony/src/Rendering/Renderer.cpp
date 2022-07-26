@@ -404,6 +404,8 @@ bgfx::ViewId harmony::Renderer::GetViewID()
     return v;
 }
 
+
+
 nlohmann::json harmony::Renderer::Serialize()
 {
     auto json =  nlohmann::json();

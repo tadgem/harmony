@@ -84,9 +84,10 @@ void harmony::ShaderProgram::GetUniforms()
 	}
 }
 
-harmony::ShaderStage::ShaderStage(const std::string& name, const std::string& binaryPath, const Type& shaderType) 
-	: Asset(AssetHandle { binaryPath, 0, GetTypeHash<ShaderStage>()}), m_Type(shaderType), m_ProgramHandle(BGFX_INVALID_HANDLE), m_Name(name)
+harmony::ShaderStage::ShaderStage(const std::string& name, const Type& shaderType) 
+	: Asset(AssetHandle { name, 0, GetTypeHash<ShaderStage>()}), m_Type(shaderType), m_ProgramHandle(BGFX_INVALID_HANDLE), m_Name(name)
 {
+	m_BinaryPath = "assets/" + GetShaderRendererDirectory() + name + ".bin";
 }
 
 harmony::ShaderStage::ShaderStage() : Asset()
@@ -105,7 +106,7 @@ void harmony::ShaderStage::LoadShaderBinary()
 		bgfx::destroy(m_ProgramHandle);
 	}
 
-	if (bx::open(&_reader, m_Handle.Path.c_str()))
+	if (bx::open(&_reader, m_BinaryPath.c_str()))
 	{
 		uint32_t size = static_cast<uint32_t>(bx::getSize(&_reader));
 		const bgfx::Memory* mem = bgfx::alloc(size + 1);
@@ -116,7 +117,7 @@ void harmony::ShaderStage::LoadShaderBinary()
 	}
 	else
 	{
-		harmony::log::error("Failed to load shader binary at path : ", m_Handle.Path.c_str());
+		harmony::log::error("Failed to load shader binary at path : ", m_BinaryPath);
 	}
 }
 
@@ -169,7 +170,7 @@ std::string harmony::ShaderStage::GetShaderRendererDirectory()
 harmony::BuiltInShaderStage::BuiltInShaderStage(
 	const std::string& name, 
 	const Type& shaderType, 
-	bgfx::EmbeddedShader embeddedShader) : ShaderStage(name, "builtin", shaderType), p_EmbeddedShader(embeddedShader)
+	bgfx::EmbeddedShader embeddedShader) : ShaderStage(name, shaderType), p_EmbeddedShader(embeddedShader)
 {
 }
 

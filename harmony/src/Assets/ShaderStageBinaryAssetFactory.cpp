@@ -20,27 +20,25 @@ void harmony::ShaderStageBinaryAssetFactory::LoadAssetData(const std::string& pa
 		}
 	}
 
-	std::string shaderName = path.substr(path.find_last_of("\\") + 1);
-
 	ShaderStage::Type type = ShaderStage::Type::Unknown;
 
-	auto foundVs = shaderName.find("vs");
-	auto foundFs = shaderName.find("fs");
-	auto foundCs = shaderName.find("cs");
-	if (foundVs >= 0 && foundVs < shaderName.size())
+	auto foundVs = path.find("vs");
+	auto foundFs = path.find("fs");
+	auto foundCs = path.find("cs");
+	if (foundVs >= 0 && foundVs < path.size())
 	{
 		type = ShaderStage::Type::Vertex;
 	}
-	if (foundFs >= 0 && foundFs < shaderName.size())
+	if (foundFs >= 0 && foundFs < path.size())
 	{
 		type = ShaderStage::Type::Fragment;
 	}
-	if (foundCs >= 0 && foundCs < shaderName.size())
+	if (foundCs >= 0 && foundCs < path.size())
 	{
 		type = ShaderStage::Type::Compute;
 	}
 	
-	Ref<ShaderStage> shaderStage = CreateRef<ShaderStage>(shaderName, path, type);
+	Ref<ShaderStage> shaderStage = CreateRef<ShaderStage>(path, type);
 	shaderStage->LoadShaderBinary();
 	
 	AssetHandle handle{ path, 0, GetTypeHash<ShaderStage>() };

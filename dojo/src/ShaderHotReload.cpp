@@ -28,7 +28,8 @@ void harmony::ShaderHotReload::Init()
         );
     }
 
-    auto handles = p_Program.m_AssetManager.GetLoadedAssets<ShaderSourceAsset>();
+    auto sourceHandles = p_Program.m_AssetManager.GetLoadedAssets<ShaderSourceAsset>();
+    auto binaryHandles = p_Program.m_AssetManager.GetLoadedAssets<ShaderStage>();
 }
 
 void harmony::ShaderHotReload::Update()
@@ -68,7 +69,12 @@ void harmony::ShaderHotReload::OnChange(const std::string& path, const filewatch
         }
         if (path.find(".bin") < path.size())
         {
-            
+            size_t firstIndex = path.find_last_of("\\");
+            size_t lastIndex = path.find(".bin");
+            std::string shaderName = path.substr(firstIndex + 1, lastIndex - (firstIndex + 1));
+
+            p_LoadedShaderSources.emplace_back(shaderName);
+            p_Program.m_AssetManager.LoadAsset<ShaderStage>(shaderName);
         }
     }
     if (change_type == filewatch::Event::modified)

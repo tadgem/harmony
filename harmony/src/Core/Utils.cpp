@@ -2,7 +2,7 @@
 #include <fstream>
 #include <filesystem>
 #include "Core/Profile.hpp"
-
+#include "bgfx/bgfx.h"
 std::string harmony::Utils::LoadStringFromPath(const std::string& path)
 {
 	HARMONY_PROFILE_FUNCTION()

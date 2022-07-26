@@ -14,5 +14,8 @@ namespace harmony
         static std::vector<uint8_t>* LoadBinaryFromPathHeap(const std::string& path);
         static std::string GetFilePathDirectory(const std::string& path);
         static int EncodeRGBA(char r, char g, char b, char a);
+
+
+        static std::string GetBgfxRendererName();
     };
 };

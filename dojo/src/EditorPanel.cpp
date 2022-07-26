@@ -314,11 +314,11 @@ void harmony::AssetManagerPanel::OnImGui()
 		ImGui::Separator();
 		const std::string shaderSouceAssetTitle = std::string(ICON_FA_FILE_TEXT_O) + " Shader Source";
 		ImGui::Text(shaderSouceAssetTitle.c_str());
-		std::vector<AssetHandle> stageHandles = p_AssetManager.GetLoadedAssets<ShaderSourceAsset>();
+		std::vector<AssetHandle> sourceHandles = p_AssetManager.GetLoadedAssets<ShaderSourceAsset>();
 		if (ImGui::TreeNode("Shader Sources")) {
-			for (int i = 0; i < stageHandles.size(); i++)
+			for (int i = 0; i < sourceHandles.size(); i++)
 			{
-				ImGui::Text(stageHandles[i].Path.c_str());
+				ImGui::Text(sourceHandles[i].Path.c_str());
 			}
 			ImGui::TreePop();
 			if (ImGui::Button("Load Shader Source"))
@@ -326,6 +326,18 @@ void harmony::AssetManagerPanel::OnImGui()
 				ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Source", ".sc,.sh", ".");
 				p_SelectedTypeHash = GetTypeHash<ShaderSourceAsset>();
 			}
+		}
+
+		ImGui::Separator();
+		const std::string shaderBinariesAssetTitle = std::string(ICON_FA_FILE_ARCHIVE_O) + " Shader Binaries";
+		ImGui::Text(shaderBinariesAssetTitle.c_str());
+		std::vector<AssetHandle> stageHandles = p_AssetManager.GetLoadedAssets<ShaderStage>();
+		if (ImGui::TreeNode("Shader Binaries")) {
+			for (int i = 0; i < stageHandles.size(); i++)
+			{
+				ImGui::Text(stageHandles[i].Path.c_str());
+			}
+			ImGui::TreePop();
 		}
 		ImGui::Unindent();
 	}
