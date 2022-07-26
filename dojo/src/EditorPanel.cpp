@@ -2,10 +2,11 @@
 #include "EditorUtils.h"
 #include "ECS/TransformComponent.h";
 #include "ECS/MeshComponent.h";
-#include "Rendering/Model.h"
 #include "ECS/MaterialComponent.h";
+#include "Rendering/Model.h"
 #include "ImGui/icons_font_awesome.h"
 #include "ImGui/ImGuiFileDialog.h"
+#include "Assets/ShaderSourceAsset.h"
 harmony::ScenePanel::ScenePanel(Program& program) : p_Prog(program)
 {
 }
@@ -307,6 +308,23 @@ void harmony::AssetManagerPanel::OnImGui()
 			{
 				ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Model", ".fbx,.obj,.dae,.gltf,.blend", ".");
 				p_SelectedTypeHash = GetTypeHash<Model>();
+			}
+		}
+
+		ImGui::Separator();
+		const std::string shaderSouceAssetTitle = std::string(ICON_FA_FILE_TEXT_O) + " Shader Source";
+		ImGui::Text(shaderSouceAssetTitle.c_str());
+		std::vector<AssetHandle> stageHandles = p_AssetManager.GetLoadedAssets<ShaderSourceAsset>();
+		if (ImGui::TreeNode("Shader Sources")) {
+			for (int i = 0; i < stageHandles.size(); i++)
+			{
+				ImGui::Text(stageHandles[i].Path.c_str());
+			}
+			ImGui::TreePop();
+			if (ImGui::Button("Load Shader Source"))
+			{
+				ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Source", ".sc,.sh", ".");
+				p_SelectedTypeHash = GetTypeHash<ShaderSourceAsset>();
 			}
 		}
 		ImGui::Unindent();

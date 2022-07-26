@@ -26,7 +26,8 @@ namespace harmony
         std::string p_ShaderCompilerLocation;
 
         filewatch::FileWatch<std::string>* p_FileWatcher;
-
+        std::vector<std::string> p_LoadedShaderSources;
+        std::vector<std::string> p_LoadedShaderBinaries;
 #if BX_PLATFORM_WINDOWS
         const std::string PLATFORM_SHADER_COMPILER_EXTENSION = ".exe";
 #endif

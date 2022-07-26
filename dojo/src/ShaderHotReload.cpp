@@ -3,6 +3,7 @@
 #include "Core/Memory.h"
 #include "Core/Log.hpp"
 #include "Rendering/Renderer.h"
+#include "Assets/ShaderSourceAsset.h"
 #include <filesystem>
 harmony::ShaderHotReload::ShaderHotReload(Program& prog) : p_Program(prog), p_Renderer(prog.m_Renderer)
 {
@@ -26,6 +27,8 @@ void harmony::ShaderHotReload::Init()
 
         );
     }
+
+    auto handles = p_Program.m_AssetManager.GetLoadedAssets<ShaderSourceAsset>();
 }
 
 void harmony::ShaderHotReload::Update()
@@ -53,5 +56,32 @@ void harmony::ShaderHotReload::OnChange(const std::string& path, const filewatch
 {
     harmony::log::info("Path : {} Change Type : {}", path);
 
-    // if(change_type == filewatch::Event::)
+    if (change_type == filewatch::Event::added)
+    {
+        if (path.find(".sc") < path.size())
+        {
+            p_Program.m_AssetManager.LoadAsset<ShaderSourceAsset>(path);
+            size_t lastIndex = path.find(".sc");
+            std::string shaderName = path.substr(0, lastIndex);
+
+            p_LoadedShaderSources.emplace_back(shaderName);
+        }
+        if (path.find(".bin") < path.size())
+        {
+            
+        }
+    }
+    if (change_type == filewatch::Event::modified)
+    {
+        if (path.find(".sc") < path.size())
+        {
+            
+        }
+        if (path.find(".bin") < path.size())
+        {
+
+        }
+    }
+
+
 }

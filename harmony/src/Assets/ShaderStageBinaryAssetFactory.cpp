@@ -2,6 +2,7 @@
 
 harmony::ShaderStageBinaryAssetFactory::ShaderStageBinaryAssetFactory(Renderer& renderer) : p_Renderer(renderer)
 {
+	m_Capabilities.AssetTypeHashes.push_back(GetTypeHash<ShaderStage>());
 }
 
 void harmony::ShaderStageBinaryAssetFactory::LoadAssetData(const std::string& path, entt::registry& registry)

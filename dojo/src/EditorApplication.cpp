@@ -5,6 +5,7 @@
 #include "Core/Time.h"
 #include "Core/Input.h"
 #include "ShaderHotReload.h"
+#include "Assets/ShaderSourceAssetFactory.h"
 harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*this)
 {
 	AddAssetTypeNames();
@@ -20,6 +21,8 @@ void harmony::Editor::AddAssetTypeNames()
 	m_AssetManager.AddAssetTypeName<Mesh>();
 	m_AssetManager.AddAssetTypeName<Model>();
 	m_AssetManager.AddAssetTypeName<Texture>();
+	m_AssetManager.AddAssetTypeName<ShaderSourceAsset>();
+	m_AssetManager.AddAssetTypeName<ShaderStage>();
 }
 
 void harmony::Editor::AddAssetFactories()
@@ -27,6 +30,7 @@ void harmony::Editor::AddAssetFactories()
 	m_AssetManager.AddAssetFactory(CreateRef<TextureAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<ShaderStageBinaryAssetFactory>(m_Renderer));
+	m_AssetManager.AddAssetFactory(CreateRef<ShaderSourceAssetFactory>());
 }
 
 void harmony::Editor::AddProgramComponents()

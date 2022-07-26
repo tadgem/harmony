@@ -232,29 +232,31 @@ void harmony::Renderer::OnImGui()
         ImGui::Text("Frametime : %f", Time::GetFrameTime());
         ImGui::Text("FPS : %f", 1.0 / Time::GetFrameTime());
         ImGui::Separator();
-        ImGui::Text("Shaders");
+        if (ImGui::TreeNode("Shaders"))
+        {
+            for (auto& [shader, data] : p_Shaders)
+            {
+                ImGui::Text(shader->m_Name.c_str());
+            }
+            ImGui::TreePop();
+        }
         if (ImGui::Button("Create Shader"))
         {
             p_CreateShaderProgramWindow = true;
         }
-        ImGui::Indent();
-        for (auto& [shader, data] : p_Shaders)
-        {
-            ImGui::Text(shader->m_Name.c_str());
-        }
-        ImGui::Unindent();
         ImGui::Separator();
-        ImGui::Text("Pipelines");
+        if (ImGui::TreeNode("Pipelines"))
+        {
+            for (auto& [id, pipeline] : p_Pipelines)
+            {
+                ImGui::Text(pipeline->m_Name.c_str());
+            }
+            ImGui::TreePop();
+        }
         if (ImGui::Button("Create Pipeline"))
         {
             p_CreatePipelineWindow = true;
         }
-        ImGui::Indent();
-        for (auto& [id, pipeline] : p_Pipelines)
-        {
-            ImGui::Text(pipeline->m_Name.c_str());
-        }
-        ImGui::Unindent();
         ImGui::Separator();
         ImGui::Text("Views");
         ImGui::Separator();
@@ -287,8 +289,6 @@ void harmony::Renderer::OnImGui()
                 {
                     std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + std::to_string(i);
                     std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + std::to_string(i);
-                    ImGui::Text(pipelines.m_Stack[i]->m_Name.c_str());
-                    ImGui::SameLine();
                     if (ImGui::Button(downArrowText.c_str()))
                     {
                         shift = true;
@@ -301,6 +301,8 @@ void harmony::Renderer::OnImGui()
                         shift = true;
                         indexToShift = i;
                     }
+                    ImGui::SameLine();
+                    ImGui::Text(pipelines.m_Stack[i]->m_Name.c_str());
                 }
 
                 if (shift)
