@@ -74,6 +74,19 @@ bgfx::TextureHandle harmony::Pipeline::GetFinalImage()
 	return bgfx::getTexture(fbToBlit);
 }
 
+harmony::Ref<harmony::Pipeline> harmony::Pipeline::Clone()
+{
+	Ref<Pipeline> newPipeline =  CreateRef<Pipeline>(PipelineHandle::New(m_Handle.Name));
+
+	for (int i = 0; i < p_Stages.size(); i++)
+	{
+		Ref<PipelineStage> newStage = p_Stages[i]->Clone();
+		newPipeline->p_Stages.emplace_back(newStage);
+	}
+
+	return newPipeline;
+}
+
 bgfx::TextureHandle harmony::Pipeline::GetInitialDepth()
 {
 	for (int i = 0; i < p_Stages.size(); i++)
@@ -90,15 +103,16 @@ bgfx::TextureHandle harmony::Pipeline::GetInitialDepth()
 bgfx::TextureHandle harmony::Pipeline::GetFinalDepth()
 {
 	int index = p_Stages.size() - 1;
-	while (!p_Stages[index]->m_HasDepthAttachment)
+
+	for (int index = p_Stages.size() - 1; index >= 0; index--)
 	{
-		index--;
+		if (p_Stages[index]->m_HasDepthAttachment)
+		{
+			return bgfx::getTexture(p_Stages[index]->GetStageFinalFramebuffer(), 1);
+		}
 	}
-	if (index < 0)
-	{
-		return bgfx::TextureHandle();
-	}
-	return bgfx::getTexture(p_Stages[index]->GetStageFinalFramebuffer(), 1);
+
+	return bgfx::TextureHandle();
 }
 
 bgfx::ViewId harmony::Pipeline::GetFirstViewID()

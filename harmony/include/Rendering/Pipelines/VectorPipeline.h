@@ -21,7 +21,6 @@ namespace harmony
     {
     public:
         VectorPipeline();
-
         virtual bgfx::TextureHandle GetFinalImage() override;
     };
 };

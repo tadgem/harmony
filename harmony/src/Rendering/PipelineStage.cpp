@@ -104,3 +104,11 @@ bgfx::TextureHandle harmony::PipelineStage::GetStageDepthTexture()
 	}
 	return bgfx::getTexture(p_FrameBufferHandle, 1);
 }
+
+harmony::Ref<harmony::PipelineStage> harmony::PipelineStage::Clone()
+{
+	Ref<PipelineStage> newStage = CreateRef<PipelineStage>(m_StageType, p_Shader);
+	newStage->m_HasDepthAttachment = m_HasDepthAttachment;
+	newStage->m_HasHDRAttachment = m_HasHDRAttachment;
+	return newStage;
+}

@@ -57,28 +57,27 @@ void harmony::Editor::AddEditorPanels()
 
 void harmony::Editor::InitializePipelines()
 {
-	auto debugDrawPipelineWr = m_Renderer.CreatePipeline<DebugDrawPipeline>(GfxDebug::Channel::Editor);
-	auto texturedMeshPipelineWr = m_Renderer.CreatePipeline<Pipeline>(PipelineHandle::New("Textured Mesh"));
-	auto normalPipelineWr = m_Renderer.CreatePipeline<Pipeline>(PipelineHandle::New("Mesh Normals"));
-	auto vectorGraphicsPipelineWr = m_Renderer.CreatePipeline<VectorPipeline>();
-	p_DebugPipeline = debugDrawPipelineWr.lock();
-	p_VectorGraphicsPipeline = vectorGraphicsPipelineWr.lock();
+	p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
+	p_TexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle::New("Textured Mesh"));
+	p_NormalPipeline = CreateRef<Pipeline>(PipelineHandle::New("Mesh Normals"));
+	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>();
 	
-	p_NormalPipeline = normalPipelineWr.lock();
 	p_NormalPipeline->AddPipelineStage<PipelineStage>(PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
 
-	p_TexturedMeshPipeline = texturedMeshPipelineWr.lock();
 	p_TexturedMeshPipeline->AddPipelineStage<PipelineStage>(PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
-
-
+	
+	m_Renderer.AddPipeline(p_DebugPipeline, true);
+	m_Renderer.AddPipeline(p_TexturedMeshPipeline, true);
+	m_Renderer.AddPipeline(p_NormalPipeline, true);
+	m_Renderer.AddPipeline(p_VectorGraphicsPipeline, true);
 }
 
 void harmony::Editor::InitializeViews()
 {
 	auto viewWr = m_Renderer.CreateView<EditorView>(*this, p_ScenePanel);
 
-	m_Renderer.AddViewPipeline(viewWr, p_DebugPipeline);
-	m_Renderer.AddViewPipeline(viewWr, p_NormalPipeline);
+	/*m_Renderer.AddViewPipeline(viewWr, p_DebugPipeline);
+	m_Renderer.AddViewPipeline(viewWr, p_NormalPipeline);*/
 	m_Renderer.AddViewPipeline(viewWr, p_TexturedMeshPipeline);
 	m_Renderer.AddViewPipeline(viewWr, p_VectorGraphicsPipeline);
 	m_Renderer.SetViewActive(viewWr, true);

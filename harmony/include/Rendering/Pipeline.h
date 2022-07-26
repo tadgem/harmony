@@ -30,6 +30,9 @@ namespace harmony
         virtual void Cleanup(entt::registry& registry, WeakRef<View> view);
 
         virtual bgfx::TextureHandle GetFinalImage();
+        
+        virtual Ref<Pipeline> Clone();
+        
         bgfx::TextureHandle GetInitialDepth();
         bgfx::TextureHandle GetFinalDepth();
         bgfx::ViewId GetFirstViewID();

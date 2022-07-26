@@ -69,6 +69,11 @@ void harmony::PipelineStack::PreUpdate(entt::registry& registry)
             continue;
         }
 
+        if (!m_Stack[p]->HasDepth())
+        {
+            continue;
+        }
+
         bgfx::ViewId nextViewId = m_Stack[nextIndex]->GetFirstViewID();
         bgfx::TextureHandle destTexture = m_Stack[nextIndex]->GetInitialDepth();
         bgfx::TextureHandle srcTexture = m_Stack[p]->GetFinalDepth();

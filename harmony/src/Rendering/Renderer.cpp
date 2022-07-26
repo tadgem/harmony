@@ -9,6 +9,7 @@
 #include "Rendering/BuiltinShaders.h"
 #include "Rendering/Shapes.h"
 #if HARMONY_DEBUG
+#include <algorithm>
 #include "ImGui/imgui_bgfx.h"
 #include "ImGui/imgui.h"
 #include "ImGui/icons_font_awesome.h"
@@ -17,6 +18,8 @@
 harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetManager)
 {
     HARMONY_PROFILE_FUNCTION()
+    p_CreatePipelineWindow = false;
+    p_CreateShaderProgramWindow = false;
 }
 
 void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex)
@@ -230,6 +233,10 @@ void harmony::Renderer::OnImGui()
         ImGui::Text("FPS : %f", 1.0 / Time::GetFrameTime());
         ImGui::Separator();
         ImGui::Text("Shaders");
+        if (ImGui::Button("Create Shader"))
+        {
+            p_CreateShaderProgramWindow = true;
+        }
         ImGui::Indent();
         for (auto& [shader, data] : p_Shaders)
         {
@@ -245,13 +252,77 @@ void harmony::Renderer::OnImGui()
         }
         ImGui::Unindent();
         ImGui::Separator();
-        
-        ImGui::Text("View Properties");
+        ImGui::Text("Pipelines");
+        if (ImGui::Button("Create Pipeline"))
+        {
+            p_CreatePipelineWindow = true;
+        }
+        ImGui::Indent();
+        for (auto& [id, pipeline] : p_Pipelines)
+        {
+            ImGui::Text(pipeline->m_Name.c_str());
+        }
+        ImGui::Unindent();
+        ImGui::Separator();
+        ImGui::Text("Views");
         ImGui::Separator();
 
         for (auto& [view, pipelines] : p_Views)
         {
             ImGui::Text(view->m_Name.c_str());
+            if (ImGui::BeginCombo("Add Pipeline", ""))
+            {
+                for (int i = 0; i < m_PipelinePrototypes.size(); i++)
+                {
+                    if (ImGui::Selectable(m_PipelinePrototypes[i]->m_Name.c_str()))
+                    {
+                        Ref<Pipeline> newPipeline = m_PipelinePrototypes[i]->Clone();
+                        AddPipeline(newPipeline);
+
+                        AddViewPipeline(view, newPipeline);
+
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+            if (ImGui::TreeNode("View Pipelines"))
+            {
+                bool shift = false;
+                int indexToShift = -1;
+                bool shiftRight = false;
+                for (int i = 0; i < pipelines.m_Stack.size(); i++)
+                {
+                    std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + std::to_string(i);
+                    std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + std::to_string(i);
+                    ImGui::Text(pipelines.m_Stack[i]->m_Name.c_str());
+                    ImGui::SameLine();
+                    if (ImGui::Button(downArrowText.c_str()))
+                    {
+                        shift = true;
+                        indexToShift = i;
+                        shiftRight = true;
+                    }
+                    ImGui::SameLine();
+                    if (ImGui::Button(upArrowText.c_str()))
+                    {
+                        shift = true;
+                        indexToShift = i;
+                    }
+                }
+
+                if (shift)
+                {
+                    int shiftDir = shiftRight ? 1 : -1;
+
+                    if (shiftDir + indexToShift < pipelines.m_Stack.size())
+                    {
+                        std::iter_swap(pipelines.m_Stack.begin() + indexToShift, pipelines.m_Stack.begin() + (indexToShift + shiftDir));
+                    }
+                }
+                ImGui::TreePop();
+            }
+
             ImGui::Indent();
             view->OnImGuiOptions();
             ImGui::Unindent();
@@ -259,6 +330,29 @@ void harmony::Renderer::OnImGui()
         }
     }
     ImGui::End();
+
+    if (p_CreateShaderProgramWindow)
+    {
+        ImGui::SetNextWindowSize(ImVec2(320, 180));
+        if (ImGui::Begin("New Shader"))
+        {
+            // Type
+            // VS and FS Asset Selector 
+            // or
+            // CS Selector
+        }
+        ImGui::End();
+    }
+
+    if (p_CreatePipelineWindow)
+    {
+        ImGui::SetNextWindowSize(ImVec2(320, 180));
+        if (ImGui::Begin("New Pipeline"))
+        {
+
+        }
+        ImGui::End();
+    }
 
     for (auto& [view, pipelines] : p_Views)
     {
@@ -356,6 +450,29 @@ bgfx::ViewId harmony::Renderer::GetViewID()
 //
 //    return wr;
 //}
+
+void harmony::Renderer::AddPipeline(Ref<Pipeline> pipeline, bool makeClone)
+{
+    if (pipeline)
+    {
+        PipelineHandle handle = pipeline->m_Handle;
+        if (p_Pipelines.find(handle.Index) != p_Pipelines.end())
+        {
+            harmony::log::error("Already have a pipeline with handle {} ", handle.Index);
+            return;
+        }
+        p_Pipelines.emplace(handle.Index, pipeline);
+
+        if (makeClone)
+        {
+            m_PipelinePrototypes.push_back(pipeline->Clone());
+        }
+    }
+    else
+    {
+        harmony::log::error("Invalid pipeline provided.");
+    }
+}
 
 void harmony::Renderer::ReloadShader(WeakRef<ShaderProgram> shader)
 {

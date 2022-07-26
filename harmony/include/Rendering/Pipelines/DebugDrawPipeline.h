@@ -12,7 +12,7 @@ namespace harmony
         virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
         virtual void Cleanup() override;
-
+        virtual Ref<PipelineStage> Clone() override;
         const GfxDebug::Channel m_Channel;
         bool Active;
         DebugDrawEncoder* p_DebugRenderer;

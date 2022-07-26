@@ -42,7 +42,11 @@ namespace harmony
         bool m_HasDepthAttachment;
 
         Type m_StageType;
+
+        virtual Ref<PipelineStage> Clone();
     protected:
+
+
         bgfx::FrameBufferHandle p_FrameBufferHandle;
         std::vector<bgfx::TextureHandle> p_Attachments;
         WeakRef<ShaderProgram> p_Shader;

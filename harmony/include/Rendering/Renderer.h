@@ -42,6 +42,12 @@ namespace harmony
             static_assert(std::is_base_of<Pipeline, T>());
             Ref<T> derivedPipeline = CreateRef<T>(std::forward<Args>(args)...);
             Ref<Pipeline> pipeline = std::static_pointer_cast<T, Pipeline>(derivedPipeline);
+            
+#if HARMONY_DEBUG
+            Ref<Pipeline> pipelinePrototype = derivedPipeline->Clone();
+
+            m_PipelinePrototypes.emplace_back(pipelinePrototype);
+#endif
 
             if (pipeline)
             {
@@ -65,7 +71,8 @@ namespace harmony
                 return derivedPipeline;
             }
         }
-        
+        void AddPipeline(Ref<Pipeline> pipeline, bool makeClone = false);
+
         void ReloadShader(WeakRef<ShaderProgram> shader);
         void ReloadAllShaders();
 
@@ -84,6 +91,14 @@ namespace harmony
 #if HARMONY_DEBUG
         void                OnImGui();
         PipelineHandle      p_SelectedPipelineHandle;
+        std::vector<Ref<Pipeline>> m_PipelinePrototypes;
+
+        bool p_CreateShaderProgramWindow;
+        bool p_CreatePipelineWindow;
+
+
+        char p_ShaderNameInput[64];
+        char p_PipelineNameInput[64];
 #endif
 
         BGFXMeshHandle      SubmitMeshToGPU(WeakRef<Mesh> mesh);

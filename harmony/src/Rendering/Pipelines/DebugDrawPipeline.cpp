@@ -65,8 +65,13 @@ void harmony::DebugDrawStage::Cleanup()
 
 }
 
+harmony::Ref<harmony::PipelineStage> harmony::DebugDrawStage::Clone()
+{
+	Ref <DebugDrawStage> newStage = CreateRef<DebugDrawStage>(m_Channel);
+	return newStage;
+}
+
 harmony::DebugDrawPipeline::DebugDrawPipeline(GfxDebug::Channel channel) : Pipeline(PipelineHandle::New("DebugDrawPipline"))
 {
 	AddPipelineStage<DebugDrawStage>(channel);
 }
-
