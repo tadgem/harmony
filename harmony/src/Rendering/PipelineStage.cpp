@@ -4,10 +4,14 @@
 #include "ECS/MeshComponent.h"
 #include "ECS/TransformComponent.h"
 #include "Core/Log.hpp"
-harmony::PipelineStage::PipelineStage(Type stageType, WeakRef<ShaderProgram> shader) : m_ViewId(Renderer::GetViewID()), m_StageType(stageType), p_Shader(shader)
+harmony::PipelineStage::PipelineStage(const std::string& name, Type stageType, WeakRef<ShaderProgram> shader) : m_Name(name), m_ViewId(Renderer::GetViewID()), m_StageType(stageType), p_Shader(shader)
 {
 	p_FrameBufferHandle = BGFX_INVALID_HANDLE;
 	p_RunPreFrame = false;
+}
+
+harmony::PipelineStage::PipelineStage()
+{
 }
 
 void harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
@@ -63,8 +67,8 @@ void harmony::PipelineStage::PreUpdate(entt::registry& registry, WeakRef<View> v
 	{
 		if (material.Data.m_Shader.lock() == pipelineShader)
 		{
-			bool vbhValid = bgfx::isValid(mesh.MeshHandle.m_VBH);
-			bool ibhValid = bgfx::isValid(mesh.MeshHandle.m_IBH);
+			bool vbhValid = mesh.MeshHandle.m_VBH.idx <= 4096;
+			bool ibhValid = mesh.MeshHandle.m_IBH.idx <= 4096;
 			if (!vbhValid || !ibhValid)
 			{
 				continue;
@@ -107,7 +111,7 @@ bgfx::TextureHandle harmony::PipelineStage::GetStageDepthTexture()
 
 harmony::Ref<harmony::PipelineStage> harmony::PipelineStage::Clone()
 {
-	Ref<PipelineStage> newStage = CreateRef<PipelineStage>(m_StageType, p_Shader);
+	Ref<PipelineStage> newStage = CreateRef<PipelineStage>(m_Name, m_StageType, p_Shader);
 	newStage->m_HasDepthAttachment = m_HasDepthAttachment;
 	newStage->m_HasHDRAttachment = m_HasHDRAttachment;
 	return newStage;

@@ -1,7 +1,7 @@
 #pragma once
 #include "Rendering/Debug/debugdraw/debugdraw.h"
 #include "Rendering/View.h"
-
+#include "json.hpp"
 namespace harmony
 {
 	class GfxDebug
@@ -10,11 +10,16 @@ namespace harmony
 		inline static GfxDebug* p_Instance = nullptr;
 		GfxDebug();
 	public:
-		enum Channel
+		enum Channel : char
 		{
 			Editor,
 			Game
 		};
+
+		NLOHMANN_JSON_SERIALIZE_ENUM(Channel, {
+			{Editor, "editor"},
+			{Game, "game"},
+			})
 
 		~GfxDebug();
 

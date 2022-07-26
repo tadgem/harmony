@@ -1,6 +1,6 @@
 #include "Rendering/Pipelines/VectorPipeline.h"
 #include "Core/Program.h"
-harmony::VectorGraphicsStage::VectorGraphicsStage() : PipelineStage(PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>())
+harmony::VectorGraphicsStage::VectorGraphicsStage() : PipelineStage("VectorGraphicsStage", PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>())
 {
 }
 

@@ -3,6 +3,7 @@
 #include "glm/glm.hpp"
 
 #include "Rendering/Model.h"
+#include "Rendering/Renderer.h"
 
 struct aiNode;
 struct aiScene;
@@ -12,7 +13,7 @@ namespace harmony
     class AssimpModelAssetFactory : public AssetFactory
     {
     public:
-        AssimpModelAssetFactory();
+        AssimpModelAssetFactory(Renderer& renderer);
     protected:
         virtual void LoadAssetData(const std::string& path, entt::registry& registry) override;
         virtual void UnloadAssetData(const std::string& path, entt::registry& registry) override;
@@ -24,5 +25,8 @@ namespace harmony
         std::vector<std::string> p_MeshNames;
 
         uint32_t p_MeshCounter = 0;
+
+    protected:
+        Renderer& p_Renderer;
     };
 };

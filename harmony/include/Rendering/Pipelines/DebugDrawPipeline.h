@@ -13,17 +13,13 @@ namespace harmony
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
         virtual void Cleanup() override;
         virtual Ref<PipelineStage> Clone() override;
-        const GfxDebug::Channel m_Channel;
+        GfxDebug::Channel m_Channel;
         bool Active;
         DebugDrawEncoder* p_DebugRenderer;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(DebugDrawStage, m_Name, p_Shader, m_StageType, m_Channel)
     };
-    /// <summary>
-    /// CURRENT KNOWN LIMITATION:
-    /// Cannot have more than one DebugDrawPipeline active at once
-    /// ddebug draw needs to be statically available for easy access 
-    /// but the bgfx ref impl cannot be reused in more than one using the static instance.
-    /// would require each draw call was called again after the initial view was rendered.
-    /// </summary>
+   
     class DebugDrawPipeline : public Pipeline
     {
     public:

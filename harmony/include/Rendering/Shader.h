@@ -32,12 +32,13 @@ namespace harmony
 			Vertex,
 			Fragment, 
 			Compute,
-			Unknown = 255
+			Unknown = CHAR_MAX
 		};
 		NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
 			{Vertex, "vert"},
 			{Fragment, "frag"},
-			{Compute, "compute"}
+			{Compute, "compute"},
+			{Unknown, "unknown"}
 		})
 
 		ShaderStage(const std::string& name, const std::string & binaryPath, const Type& shaderType);
@@ -50,12 +51,11 @@ namespace harmony
 		
 		Type m_Type;
 		std::string m_Name;
-		std::string m_Path;
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderStage, m_Name, m_Path, m_Type)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderStage, m_Name, m_Type, m_Handle)
 
 		std::vector<bgfx::UniformInfo> m_UniformInfos;
-		bgfx::ShaderHandle m_Handle;
+		bgfx::ShaderHandle m_ProgramHandle;
 
 
 	private:

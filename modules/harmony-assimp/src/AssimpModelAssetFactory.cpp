@@ -21,7 +21,7 @@ static std::string AssimpToSTD(aiString str)
 	return std::string(str.C_Str());
 }
 
-harmony::AssimpModelAssetFactory::AssimpModelAssetFactory() : harmony::AssetFactory()
+harmony::AssimpModelAssetFactory::AssimpModelAssetFactory(Renderer& renderer) : harmony::AssetFactory(), p_Renderer(renderer)
 {
 	size_t modelTypeHash = GetTypeHash<Model>();
 	size_t meshTypeHash = GetTypeHash<Mesh>();
@@ -207,11 +207,15 @@ void harmony::AssimpModelAssetFactory::LoadAssetData(const std::string& path, en
 	for (int i = 0; i < p_Meshes.size(); i++)
 	{
 		Ref<Mesh> meshAsset = std::static_pointer_cast<Mesh, Asset>(p_Meshes[i]);
+		
+		p_Renderer.SubmitMeshToGPU(meshAsset);
+
 		AssetHandle meshHandle{ path, i, GetTypeHash<Mesh>() };
 		AssetComponent<Mesh> meshComponent{ meshAsset, meshHandle };
 		entt::entity e = registry.create();
 		registry.emplace<AssetComponent<Mesh>>(e, meshComponent);
 		registry.emplace<AssetHandle>(e, meshHandle);
+
 	}
 
 	AssetComponent<Model> modelComponent{ model, handle };

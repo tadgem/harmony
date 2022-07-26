@@ -23,6 +23,9 @@ namespace harmony
 
         std::vector<Ref<Pipeline>> m_Stack;
 
+        nlohmann::json Serialize();
+        void Deserialize(nlohmann::json& json);
+
     protected:
         Ref<View> p_View;
         bool p_Initialized;

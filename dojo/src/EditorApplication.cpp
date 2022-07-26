@@ -25,7 +25,7 @@ void harmony::Editor::AddAssetTypeNames()
 void harmony::Editor::AddAssetFactories()
 {
 	m_AssetManager.AddAssetFactory(CreateRef<TextureAssetFactory>(m_Renderer));
-	m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>());
+	m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<ShaderStageBinaryAssetFactory>(m_Renderer));
 }
 
@@ -62,9 +62,9 @@ void harmony::Editor::InitializePipelines()
 	p_NormalPipeline = CreateRef<Pipeline>(PipelineHandle::New("Mesh Normals"));
 	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>();
 	
-	p_NormalPipeline->AddPipelineStage<PipelineStage>(PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
+	p_NormalPipeline->AddPipelineStage<PipelineStage>("NormalStage", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
 
-	p_TexturedMeshPipeline->AddPipelineStage<PipelineStage>(PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
+	p_TexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
 	
 	m_Renderer.AddPipeline(p_DebugPipeline, true);
 	m_Renderer.AddPipeline(p_TexturedMeshPipeline, true);

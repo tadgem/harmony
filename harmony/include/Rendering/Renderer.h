@@ -71,6 +71,18 @@ namespace harmony
                 return derivedPipeline;
             }
         }
+
+#if HARMONY_DEBUG
+        template<typename T, typename ... Args>
+        void CreatePipelinePrototype(Args&& ... args)
+        {
+            static_assert(std::is_base_of<Pipeline, T>());
+            Ref<T> derivedPipeline = CreateRef<T>(std::forward<Args>(args)...);
+            Ref<Pipeline> pipeline = std::static_pointer_cast<T, Pipeline>(derivedPipeline);
+
+            m_PipelinePrototypes.emplace_back(pipeline);
+        }
+#endif
         void AddPipeline(Ref<Pipeline> pipeline, bool makeClone = false);
 
         void ReloadShader(WeakRef<ShaderProgram> shader);
@@ -144,7 +156,6 @@ namespace harmony
         std::map<Ref<View>, PipelineStack>                  p_Views;
         std::map<Ref<ShaderProgram>, ShaderDataContainer>   p_Shaders;
         std::map<uint16_t, Ref<Pipeline>>                   p_Pipelines;
-        std::map<std::string, WeakRef<ShaderStage>>         p_LoadedStagePaths;
 
         bgfx::ViewId p_CurrentView;
     };

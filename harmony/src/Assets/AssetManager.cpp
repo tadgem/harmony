@@ -39,6 +39,7 @@ std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::st
 	}
 	Ref<AssetFactory> factory = GetAssetFactory(typeHash);
 	factory->LoadAssetData(path, p_AssetRegistry);
+	p_LoadedPaths.emplace_back(path);
 #if HARMONY_DEBUG
 	p_AssetFileWatchers.emplace_back(new 
 		filewatch::FileWatch<std::string>(

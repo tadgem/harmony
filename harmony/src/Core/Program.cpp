@@ -444,6 +444,7 @@ void harmony::Program::SaveProject()
 		return;
 	}
 	m_Project->UpdateProjectComponentSerializationAttributes(p_ProgramComponents);
+	m_Project->UpdateRendererSerializationAttributes(m_Renderer);
 	m_Project->UpdateProjectAssetsSerializationAttributes(m_AssetManager);
 	m_Project->Save();
 	nlohmann::json projectJson = *m_Project;
@@ -463,7 +464,7 @@ void harmony::Program::LoadProject(const std::string& path)
 	harmony::log::info("Current working directory : {}", directory);
 
 	m_Project->m_ProjectDirectory = directory;
-	m_Project->Load(m_AssetManager);
+	m_Project->Load(m_AssetManager, m_Renderer);
 	p_LoadedProjectPath = path;
 
 	RunProgramComponentInit();

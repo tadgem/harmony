@@ -4,6 +4,7 @@
 #include "Rendering/PipelineStage.h"
 #include "Rendering/View.h"
 #include "Core/Profile.hpp"
+#include "json.hpp"
 namespace harmony
 {
     class Pipeline
@@ -41,6 +42,9 @@ namespace harmony
         std::string m_Name;
 
         bool HasDepth();
+
+        nlohmann::json Serialize();
+        void Deserialize(nlohmann::json& json);
 
     protected:
         std::vector<Ref<PipelineStage>> p_Stages;

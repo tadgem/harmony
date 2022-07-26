@@ -131,3 +131,22 @@ void harmony::PipelineStack::Cleanup(entt::registry& registry)
         m_Stack[p]->Cleanup(registry, p_View);
     }
 }
+
+nlohmann::json harmony::PipelineStack::Serialize()
+{
+    auto json = nlohmann::json::array();
+    for (auto pipeline : m_Stack)
+    {
+        json.emplace_back(pipeline->Serialize());
+    }
+    return json;
+}
+
+void harmony::PipelineStack::Deserialize(nlohmann::json& json)
+{
+    for (int i = 0; i < json.size(); i++)
+    {
+        Ref<Pipeline> p = CreateRef<Pipeline>(PipelineHandle::New(""));
+        p->Deserialize(json[i]);
+    }
+}

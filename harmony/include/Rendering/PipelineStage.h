@@ -1,5 +1,6 @@
 #pragma once
 #include "entt.hpp"
+#include "json.hpp"
 #include "Core/Memory.h"
 #include "Rendering/Shader.h"
 #include "Rendering/View.h"
@@ -11,7 +12,10 @@ namespace harmony
         std::string Name;
 
         static PipelineHandle New(const std::string& name);
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineHandle, Index, Name)
     private:
+        friend class Pipeline;
         inline static uint16_t p_Counter = 0;
     };
 
@@ -19,14 +23,21 @@ namespace harmony
     class PipelineStage
     {
     public:
-        enum Type
+        enum Type : char
         {
             PrimaryDraw,
             SecondaryDraw,
             PostProcess
         };
 
-        PipelineStage(Type stageType, WeakRef<ShaderProgram> shader);
+        NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
+            {PrimaryDraw, "primaryDraw"},
+            {SecondaryDraw, "secondaryDraw"},
+            {PostProcess, "postProcess"},
+            })
+
+        PipelineStage(const std::string& name, Type stageType, WeakRef<ShaderProgram> shader);
+        PipelineStage();
 
         virtual void Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle);
         virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle);
@@ -36,14 +47,16 @@ namespace harmony
         virtual bgfx::FrameBufferHandle GetStageFinalFramebuffer();
         virtual bgfx::TextureHandle GetStageDepthTexture();
 
-        const bgfx::ViewId m_ViewId;
+        bgfx::ViewId m_ViewId;
 
         bool m_HasHDRAttachment;
         bool m_HasDepthAttachment;
 
         Type m_StageType;
-
+        std::string m_Name;
         virtual Ref<PipelineStage> Clone();
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStage, m_Name, m_StageType, p_Shader)
     protected:
 
 

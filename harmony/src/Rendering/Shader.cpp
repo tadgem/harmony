@@ -42,14 +42,14 @@ void harmony::ShaderProgram::Build()
 	GetUniforms();
 	if (m_Stages.find(ShaderStage::Type::Compute) != m_Stages.end())
 	{
-		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Compute].lock()->m_Handle, true);
+		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Compute].lock()->m_ProgramHandle, true);
 		return;
 	}
 
 	if (m_Stages.find(ShaderStage::Type::Vertex) != m_Stages.end() && 
 		m_Stages.find(ShaderStage::Type::Fragment) != m_Stages.end())
 	{
-		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Vertex].lock()->m_Handle, m_Stages[ShaderStage::Type::Fragment].lock()->m_Handle, true);
+		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Vertex].lock()->m_ProgramHandle, m_Stages[ShaderStage::Type::Fragment].lock()->m_ProgramHandle, true);
 		return;
 	}
 
@@ -67,7 +67,7 @@ void harmony::ShaderProgram::GetUniforms()
 	{
 		Ref<ShaderStage> stage = s.lock();
 		bgfx::UniformHandle uniforms[g_MaxUniforms];
-		uint16_t stageUniformCount = bgfx::getShaderUniforms(stage->m_Handle, &uniforms[0], g_MaxUniforms);
+		uint16_t stageUniformCount = bgfx::getShaderUniforms(stage->m_ProgramHandle, &uniforms[0], g_MaxUniforms);
 
 		for (uint16_t i = 0; i < stageUniformCount; i++)
 		{
@@ -84,7 +84,8 @@ void harmony::ShaderProgram::GetUniforms()
 	}
 }
 
-harmony::ShaderStage::ShaderStage(const std::string& name, const std::string& binaryPath, const Type& shaderType) : Asset(AssetHandle {name, 0, GetTypeHash<ShaderStage>()}), m_Type(shaderType), m_Handle(BGFX_INVALID_HANDLE), m_Name(name), m_Path(binaryPath)
+harmony::ShaderStage::ShaderStage(const std::string& name, const std::string& binaryPath, const Type& shaderType) 
+	: Asset(AssetHandle { binaryPath, 0, GetTypeHash<ShaderStage>()}), m_Type(shaderType), m_ProgramHandle(BGFX_INVALID_HANDLE), m_Name(name)
 {
 }
 
@@ -99,23 +100,23 @@ harmony::ShaderStage::~ShaderStage()
 
 void harmony::ShaderStage::LoadShaderBinary()
 {
-	if (m_Handle.idx != UINT16_MAX)
+	if (m_ProgramHandle.idx != UINT16_MAX)
 	{
-		bgfx::destroy(m_Handle);
+		bgfx::destroy(m_ProgramHandle);
 	}
 
-	if (bx::open(&_reader, m_Path.c_str()))
+	if (bx::open(&_reader, m_Handle.Path.c_str()))
 	{
 		uint32_t size = static_cast<uint32_t>(bx::getSize(&_reader));
 		const bgfx::Memory* mem = bgfx::alloc(size + 1);
 		bx::read(&_reader, mem->data, size, bx::ErrorAssert{});
 		bx::close(&_reader);
-		m_Handle = bgfx::createShader(mem);
-		bgfx::setName(m_Handle, m_Name.c_str());
+		m_ProgramHandle = bgfx::createShader(mem);
+		bgfx::setName(m_ProgramHandle, m_Name.c_str());
 	}
 	else
 	{
-		harmony::log::error("Failed to load shader binary at path : ", m_Path);
+		harmony::log::error("Failed to load shader binary at path : ", m_Handle.Path.c_str());
 	}
 }
 
@@ -175,8 +176,8 @@ harmony::BuiltInShaderStage::BuiltInShaderStage(
 void harmony::BuiltInShaderStage::LoadShaderBinary()
 {
 	bgfx::RendererType::Enum type = bgfx::getRendererType();
-	m_Handle = bgfx::createEmbeddedShader(&p_EmbeddedShader,type, m_Name.c_str());
-	bgfx::setName(m_Handle, m_Name.c_str());
+	m_ProgramHandle = bgfx::createEmbeddedShader(&p_EmbeddedShader,type, m_Name.c_str());
+	bgfx::setName(m_ProgramHandle, m_Name.c_str());
 }
 
 bool harmony::ShaderUniform::Valid()

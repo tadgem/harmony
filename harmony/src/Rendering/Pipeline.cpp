@@ -141,9 +141,45 @@ bool harmony::Pipeline::HasDepth()
 	return false;
 }
 
+nlohmann::json harmony::Pipeline::Serialize()
+{
+	auto json = nlohmann::json();
+
+	json["pipeline"] = nlohmann::json();
+	json["pipeline"]["name"] = m_Name;
+	json["pipeline"]["stages"] = nlohmann::json::array();
+	for (int i = 0; i < p_Stages.size(); i++)
+	{
+		json["pipeline"]["stages"][i] = *p_Stages[i];
+	}
+	json["pipeline"]["handle"] = m_Handle;
+
+	return json;
+}
+
+void harmony::Pipeline::Deserialize(nlohmann::json& json)
+{
+	m_Name = json["pipeline"]["name"];
+	m_Handle = json["pipeline"]["handle"] = m_Handle;
+
+	if (PipelineHandle::p_Counter < m_Handle.Index)
+	{
+		PipelineHandle::p_Counter = m_Handle.Index + 1;
+	}
+
+	auto pipelinesJson = json["pipeline"]["stages"];
+
+	for (int i = 0; i < pipelinesJson.size(); i++)
+	{
+		Ref<PipelineStage> stage = CreateRef<PipelineStage>(pipelinesJson[i]);
+		p_Stages.emplace_back(stage);
+	}
+}
+
 harmony::PipelineHandle harmony::PipelineHandle::New(const std::string& name)
 {
 	PipelineHandle handle{ p_Counter, name };
 	p_Counter++;
 	return handle;
 }
+

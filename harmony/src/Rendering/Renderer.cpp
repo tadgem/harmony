@@ -244,14 +244,6 @@ void harmony::Renderer::OnImGui()
         }
         ImGui::Unindent();
         ImGui::Separator();
-        ImGui::Text("Shader Stages");
-        ImGui::Indent();
-        for (auto& [path, stage] : p_LoadedStagePaths)
-        {
-            ImGui::Text(path.c_str());
-        }
-        ImGui::Unindent();
-        ImGui::Separator();
         ImGui::Text("Pipelines");
         if (ImGui::Button("Create Pipeline"))
         {
@@ -408,6 +400,56 @@ bgfx::ViewId harmony::Renderer::GetViewID()
     bgfx::ViewId v = p_ViewHandleCounter;
     p_ViewHandleCounter++;
     return v;
+}
+
+nlohmann::json harmony::Renderer::Serialize()
+{
+    auto json =  nlohmann::json();
+
+    json["renderer"] = nlohmann::json();
+    json["renderer"]["shaders"] = nlohmann::json::array();
+    for (auto& [shader, data] : p_Shaders)
+    {
+        nlohmann::json shaderJson;
+        shaderJson["program"] = *shader;
+        shaderJson["data"] = data;
+
+        json["renderer"]["shaders"].emplace_back(shaderJson);
+    }
+
+    json["renderer"]["pipelines"] = nlohmann::json::array();
+    for (auto& [index, pipeline] : p_Pipelines)
+    {
+        json["renderer"]["pipelines"].emplace_back(pipeline->Serialize());
+    }
+    json["renderer"]["views"] = nlohmann::json::array();
+
+    for (auto& [view, pipelineStack] : p_Views)
+    {
+        nlohmann::json viewJson;
+        viewJson["view"] = *view;
+        viewJson["stack"] = pipelineStack.Serialize();
+        json["renderer"]["views"].emplace_back(viewJson);
+
+    }
+    json["renderer"]["active_views"] = nlohmann::json::array();
+    for (WeakRef<View> viewWr : m_ActiveViews)
+    {
+        if (viewWr.expired())
+        {
+            continue;
+        }
+
+        Ref<View> view = viewWr.lock();
+        json["renderer"]["active_views"].emplace_back(*view);
+    }
+    
+
+    return json;
+}
+
+void harmony::Renderer::Deserialize(nlohmann::json& json)
+{
 }
 
 //harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std::string& name, const std::string& vertName, const std::string& fragName)

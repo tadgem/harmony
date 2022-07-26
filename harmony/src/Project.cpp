@@ -2,6 +2,7 @@
 #include <filesystem>
 #include "ImGui/imgui.h"
 #include "Core/Profile.hpp"
+#include "Rendering/Renderer.h"
 
 harmony::Project::Project(std::string name) : m_ProjectName(name)
 {
@@ -13,7 +14,7 @@ void harmony::Project::Save()
 	m_ImGuiIniPath = m_ProjectDirectory + m_ProjectName + "ImGui.ini";
 	ImGui::SaveIniSettingsToDisk(m_ImGuiIniPath.c_str());
 }
-void harmony::Project::Load(AssetManager& assetManager)
+void harmony::Project::Load(AssetManager& assetManager, Renderer& renderer)
 {
 	HARMONY_PROFILE_FUNCTION()
 	m_ImGuiIniPath = m_ProjectDirectory + m_ProjectName + "ImGui.ini";
@@ -23,6 +24,7 @@ void harmony::Project::Load(AssetManager& assetManager)
 	}
 	std::filesystem::current_path(std::filesystem::path(m_ProjectDirectory));
 	assetManager.Deserialize(m_AssetManagerSerializationAttributes);
+	renderer.Deserialize(m_RendererSerializationAttributes);
 }
 
 void harmony::Project::Unload(AssetManager& assetManager)
@@ -46,4 +48,9 @@ void harmony::Project::UpdateProjectComponentSerializationAttributes(std::vector
 void harmony::Project::UpdateProjectAssetsSerializationAttributes(AssetManager& assetManager)
 {
 	m_AssetManagerSerializationAttributes = assetManager.Serialize();
+}
+
+void harmony::Project::UpdateRendererSerializationAttributes(Renderer& renderer)
+{
+	m_RendererSerializationAttributes = renderer.Serialize();
 }
