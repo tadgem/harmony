@@ -58,7 +58,10 @@ void harmony::ShaderProgram::Build()
 
 void harmony::ShaderProgram::Destroy()
 {
-	bgfx::destroy(m_Handle);
+	if (bgfx::isValid(m_Handle))
+	{
+		bgfx::destroy(m_Handle);
+	}
 }
 
 void harmony::ShaderProgram::GetUniforms()
@@ -143,25 +146,31 @@ std::string harmony::ShaderStage::GetShaderStageNameFromEnum(Type type)
 
 std::string harmony::ShaderStage::GetShaderRendererDirectory()
 {
-	std::string shaderPath = "shaders/bin/";
+	std::string shaderPath = "shaders/bin/" + GetShaderRendererName() + "/";
+	return shaderPath;
+}
+
+std::string harmony::ShaderStage::GetShaderRendererName()
+{
+	std::string shaderPath = "";
 
 	switch (bgfx::getRendererType())
 	{
-	case bgfx::RendererType::Noop:
-	case bgfx::RendererType::Direct3D9:  shaderPath += "dx9/";   break;
-	case bgfx::RendererType::Direct3D11:
-	case bgfx::RendererType::Direct3D12: shaderPath += "dx11/";  break;
-	case bgfx::RendererType::Agc:
-	case bgfx::RendererType::Gnm:        shaderPath += "pssl/";  break;
-	case bgfx::RendererType::Metal:      shaderPath += "metal/"; break;
-	case bgfx::RendererType::OpenGL:     shaderPath += "glsl/";  break;
-	case bgfx::RendererType::OpenGLES:   shaderPath += "essl/";  break;
-	case bgfx::RendererType::Vulkan:     shaderPath += "spirv/"; break;
-	case bgfx::RendererType::WebGPU:     shaderPath += "spirv/"; break;
+		case bgfx::RendererType::Noop:
+		case bgfx::RendererType::Direct3D9:  shaderPath += "dx9";   break;
+		case bgfx::RendererType::Direct3D11:
+		case bgfx::RendererType::Direct3D12: shaderPath += "dx11";  break;
+		case bgfx::RendererType::Agc:
+		case bgfx::RendererType::Gnm:        shaderPath += "pssl";  break;
+		case bgfx::RendererType::Metal:      shaderPath += "metal"; break;
+		case bgfx::RendererType::OpenGL:     shaderPath += "glsl";  break;
+		case bgfx::RendererType::OpenGLES:   shaderPath += "essl";  break;
+		case bgfx::RendererType::Vulkan:     shaderPath += "spirv"; break;
+		case bgfx::RendererType::WebGPU:     shaderPath += "spirv"; break;
 
-	case bgfx::RendererType::Count:
-		harmony::log::error("You should not be here!");
-		break;
+		case bgfx::RendererType::Count:
+			harmony::log::error("You should not be here!");
+			break;
 	}
 
 	return shaderPath;

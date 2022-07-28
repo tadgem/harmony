@@ -15,26 +15,3 @@ void ProjectDetailsImGui(harmony::Program& program)
 	}
 	ImGui::End();
 }
-
-bool ShaderSelector(const std::string& selectorName, harmony::Renderer& renderer, harmony::WeakRef<harmony::ShaderProgram>& prog)
-{
-	bool selectedAsset = false;
-	std::vector<std::string> shaders = renderer.GetShaderNames();
-
-	if (ImGui::BeginCombo(selectorName.c_str(), ""))
-	{
-		for (int i = 0; i < shaders.size(); i++)
-		{
-			if (ImGui::Selectable(shaders[i].c_str()))
-			{
-				prog = renderer.GetShader(shaders[i]);
-				selectedAsset = true;
-			}
-		}
-		ImGui::EndCombo();
-	}
-
-	return selectedAsset;
-
-}
-

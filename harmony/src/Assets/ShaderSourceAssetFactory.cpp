@@ -1,4 +1,4 @@
-#include "ShaderSourceAssetFactory.h"
+#include "Assets/ShaderSourceAssetFactory.h"
 
 harmony::ShaderSourceAssetFactory::ShaderSourceAssetFactory() : AssetFactory()
 {

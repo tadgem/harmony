@@ -58,6 +58,12 @@ int harmony::Utils::EncodeRGBA(char r, char g, char b, char a)
 	HARMONY_PROFILE_FUNCTION()
 	return ((r << 24) | ((g & 255) << 16) | ((b & 255) << 8) | (a & 255));
 }
+void harmony::Utils::TrimString(std::string& str)
+{
+	str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](unsigned char ch) {
+		return !std::isspace(ch);
+		}));
+}
 void harmony::Utils::SaveStringToPath(const std::string& str, const std::string& path)
 {
 	HARMONY_PROFILE_FUNCTION()

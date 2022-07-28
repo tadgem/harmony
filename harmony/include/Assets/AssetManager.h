@@ -22,9 +22,8 @@ namespace harmony {
 
         bool AddAssetFactory(Ref<AssetFactory> assetFactory);
         void UnloadAllAssets();
-#if HARMONY_DEBUG
-        void OnImGui();
-#endif
+
+
         template<typename T>
         bool AddAssetTypeName()
         {
@@ -47,7 +46,13 @@ namespace harmony {
 
             return LoadAsset(path, typeHash);
         }
-
+        void UnloadAsset(AssetHandle& handle, size_t typeHash);
+        template<typename T>
+        void UnloadAsset(AssetHandle& handle)
+        {
+            size_t typeHash = typeid(T).hash_code();
+            UnloadAsset(handle, typeHash);
+        }
         bool IsPathLoaded(const std::string path);
 
 
@@ -104,6 +109,34 @@ namespace harmony {
             return handle;
         }
     
+#if HARMONY_DEBUG
+        void OnImGui();
+
+
+        template<typename T>
+        bool AssetTypeSelector(const std::string& selectorName, harmony::AssetHandle& handle)
+        {
+            static_assert(std::is_base_of<Asset, T>());
+            bool selectedAsset = false;
+            std::vector<harmony::AssetHandle> assets = GetLoadedAssets<T>();
+            if (ImGui::BeginCombo(selectorName.c_str(), ""))
+            {
+                for (int i = 0; i < assets.size(); i++)
+                {
+                    if (ImGui::Selectable(assets[i].Path.c_str()))
+                    {
+                        handle = assets[i];
+                        selectedAsset = true;
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+            return selectedAsset;
+        }
+    
+
+#endif
     protected:
         Ref<AssetFactory> GetAssetFactory(size_t typeHash);
         std::vector<Ref<AssetFactory>>                      p_AssetFactories;

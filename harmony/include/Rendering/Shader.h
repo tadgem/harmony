@@ -48,6 +48,7 @@ namespace harmony
 		virtual void LoadShaderBinary();
 		static std::string GetShaderStageNameFromEnum(Type type);
 		static std::string GetShaderRendererDirectory();
+		static std::string GetShaderRendererName();
 		
 		Type m_Type;
 		std::string m_Name;

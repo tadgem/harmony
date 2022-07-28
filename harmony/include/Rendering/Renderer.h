@@ -11,6 +11,7 @@
 #include "Rendering/Shader.h"
 #include "Rendering/ShaderDataContainer.h"
 #include "Assets/AssetManager.h"
+#include "Assets/Asset.h"
 #include "glm/glm.hpp"
 #include "json.hpp"
 namespace harmony
@@ -35,6 +36,8 @@ namespace harmony
  
         WeakRef<ShaderProgram> CreateShader(const std::string& name, WeakRef<ShaderStage> vertStage, WeakRef<ShaderStage> fragStage);
         WeakRef<ShaderProgram> CreateShader(const std::string& name, WeakRef<ShaderStage> compStage);
+
+        WeakRef<ShaderProgram> BuildShader(const std::string name, WeakRef<ShaderStage> vertStage, WeakRef<ShaderStage> fragStage);
 
         template<typename T, typename ... Args>
         WeakRef<T> CreatePipeline(Args&& ... args)
@@ -102,15 +105,21 @@ namespace harmony
 
 #if HARMONY_DEBUG
         void                OnImGui();
+        bool ShaderSelector(const std::string& selectorName, harmony::WeakRef<harmony::ShaderProgram>& prog);
+
         PipelineHandle      p_SelectedPipelineHandle;
         std::vector<Ref<Pipeline>> m_PipelinePrototypes;
+
+        AssetHandle p_SelectedVertexAsset;
+        AssetHandle p_SelectedFragmentAsset;
+
+        WeakRef<ShaderProgram> p_SelectedShaderProgram;
 
         bool p_CreateShaderProgramWindow;
         bool p_CreatePipelineWindow;
 
-
-        char p_ShaderNameInput[64];
-        char p_PipelineNameInput[64];
+        char p_ShaderNameInput[64]{ "" };
+        char p_PipelineNameInput[64]{ "" };
 #endif
 
         BGFXMeshHandle      SubmitMeshToGPU(WeakRef<Mesh> mesh);
@@ -147,7 +156,8 @@ namespace harmony
         nlohmann::json      Serialize();
         void                Deserialize(nlohmann::json& json);
     protected:
-        
+#if HARMONY_DEBUG
+#endif
         static uint32_t p_ViewHandleCounter;
 
         bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
@@ -156,6 +166,7 @@ namespace harmony
         std::map<Ref<View>, PipelineStack>                  p_Views;
         std::map<Ref<ShaderProgram>, ShaderDataContainer>   p_Shaders;
         std::map<uint16_t, Ref<Pipeline>>                   p_Pipelines;
+        std::vector<WeakRef<ShaderProgram>>                 p_BuiltInShaders;
 
         bgfx::ViewId p_CurrentView;
     };

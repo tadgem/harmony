@@ -41,4 +41,8 @@ if(HARMONY_DEBUG)
     target_compile_definitions(harmony-core PUBLIC SDL_SENSOR_DUMMY HARMONY_DEBUG)
 endif()
 
+if (MSVC)
+  target_compile_options(harmony-core PRIVATE /bigobj)
+endif()
+
 target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bgfx glm)

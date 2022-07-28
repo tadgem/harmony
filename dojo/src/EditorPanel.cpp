@@ -165,7 +165,7 @@ void harmony::MeshComponentUI::OnComponentImGui(entt::registry& registry, entt::
 	MeshComponent& mc = registry.get<MeshComponent>(entity);
 	std::string meshPath = "Mesh Asset: " + mc.MeshAsset.Path;
 	ImGui::Text(meshPath.c_str());
-	if (AssetTypeSelector<Mesh>("Mesh", p_AssetManager, ah))
+	if (p_AssetManager.AssetTypeSelector<Mesh>("Mesh", ah))
 	{
 		mc.MeshAsset = ah;
 		harmony::log::info("Entity {} updated mesh to handle at path : {}", static_cast<uint32_t>(entity), mc.MeshAsset.Path);
@@ -213,7 +213,7 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 
 	ImGui::Text(sn.c_str());
 	ImGui::Separator();
-	if (ShaderSelector("Select Shader", p_Renderer, shaderWr))
+	if (p_Renderer.ShaderSelector("Select Shader", shaderWr))
 	{
 		mc.Data.UpdateShader(shaderWr, p_AssetManager);
 	}
@@ -231,7 +231,7 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 		{
 			std::string textureName = "Tex : " + handle.Handle.Path;
 			ImGui::Text(textureName.c_str());
-			if (AssetTypeSelector<Texture>(key.Name, p_AssetManager, handle.Handle))
+			if (p_AssetManager.AssetTypeSelector<Texture>(key.Name, handle.Handle))
 			{
 				WeakRef<Texture> texWr = p_AssetManager.GetAsset<Texture>(handle.Handle);
 				Ref<Texture> tex = texWr.lock();

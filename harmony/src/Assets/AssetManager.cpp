@@ -53,6 +53,18 @@ std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::st
 	return GetAssetsAtPath(path);
 }
 
+void harmony::AssetManager::UnloadAsset(AssetHandle& handle, size_t typeHash)
+{
+	auto builtin = handle.Path.find("builtin");
+	if (builtin >= 0 && builtin < handle.Path.size())
+	{
+		return;
+	}
+
+	Ref<AssetFactory> factory = GetAssetFactory(typeHash);
+	factory->UnloadAssetData(handle.Path, p_AssetRegistry);
+}
+
 std::vector<harmony::AssetHandle> harmony::AssetManager::GetAssetsAtPath(const std::string& path)
 {
 	auto handles = std::vector<AssetHandle>();

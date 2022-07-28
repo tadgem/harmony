@@ -202,7 +202,7 @@ void harmony::AssimpModelAssetFactory::LoadAssetData(const std::string& path, en
 	ProcessNode(path, scene->mRootNode, scene);
 	std::string modelName = std::string(scene->mName.C_Str());
 	Ref<Model> model = CreateRef<Model>(modelName); 
-	AssetHandle handle{ path, 0, GetTypeHash<Model>() };
+	AssetHandle handle(path, 0, GetTypeHash<Model>() );
 
 	for (int i = 0; i < p_Meshes.size(); i++)
 	{
@@ -210,7 +210,7 @@ void harmony::AssimpModelAssetFactory::LoadAssetData(const std::string& path, en
 		
 		p_Renderer.SubmitMeshToGPU(meshAsset);
 
-		AssetHandle meshHandle{ path, i, GetTypeHash<Mesh>() };
+		AssetHandle meshHandle(path, i, GetTypeHash<Mesh>() );
 		AssetComponent<Mesh> meshComponent{ meshAsset, meshHandle };
 		entt::entity e = registry.create();
 		registry.emplace<AssetComponent<Mesh>>(e, meshComponent);

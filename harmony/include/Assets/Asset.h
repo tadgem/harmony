@@ -5,6 +5,9 @@ namespace harmony
 {
     struct AssetHandle
     {
+        AssetHandle();
+        AssetHandle(std::string path, uint32_t index, size_t typeHash);
+
         std::string Path;
         uint32_t Index;
         size_t TypeHash;

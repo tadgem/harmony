@@ -20,6 +20,8 @@ harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetMa
     HARMONY_PROFILE_FUNCTION()
     p_CreatePipelineWindow = false;
     p_CreateShaderProgramWindow = false;
+    /*p_SelectedVertexAsset = AssetHandle();
+    p_SelectedFragmentAsset = AssetHandle();*/
 }
 
 void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex)
@@ -36,6 +38,7 @@ void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std:
 
     ShaderDataContainer dataContainer = ShaderDataContainer(prog);
     p_Shaders.emplace(prog, dataContainer);
+    p_BuiltInShaders.emplace_back(prog);
 }
 
 void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& csName, uint32_t csIndex)
@@ -49,6 +52,7 @@ void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std:
 
     ShaderDataContainer dataContainer = ShaderDataContainer(prog);
     p_Shaders.emplace(prog, dataContainer);
+    p_BuiltInShaders.emplace_back(prog);
 }
 
 void harmony::Renderer::AddBuiltInShaders()
@@ -57,6 +61,24 @@ void harmony::Renderer::AddBuiltInShaders()
     AddBuiltInShader("Normal", "vs_normal", "fs_normal", 2, 3);
     AddBuiltInShader("Present", "vs_present", "fs_present", 4, 5);
     AddBuiltInShader("NanoVG", "vs_nanovg_fill", "fs_nanovg_fill", 6, 7);
+}
+
+harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::BuildShader(const std::string name, WeakRef<ShaderStage> vertStage, WeakRef<ShaderStage> fragStage)
+{
+    Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
+    Ref<ShaderStage> vs = vertStage.lock();
+    Ref<ShaderStage> fs = fragStage.lock();
+    vs->LoadShaderBinary();
+    fs->LoadShaderBinary();
+    prog->AddStage(ShaderStage::Type::Vertex, vs);
+    prog->AddStage(ShaderStage::Type::Fragment, fs);
+
+    prog->Build();
+
+    ShaderDataContainer dataContainer = ShaderDataContainer(prog);
+    p_Shaders.emplace(prog, dataContainer);
+
+    return GetWeakRef<ShaderProgram>(prog);
 }
 
 uint32_t harmony::Renderer::p_ViewHandleCounter = 1;
@@ -332,6 +354,48 @@ void harmony::Renderer::OnImGui()
         {
             // Type
             // VS and FS Asset Selector 
+            ImGui::Text("Surface Shader");
+
+            p_AssetManager.AssetTypeSelector<ShaderStage>("Vert Stage", p_SelectedVertexAsset);
+            p_AssetManager.AssetTypeSelector<ShaderStage>("Frag Stage", p_SelectedFragmentAsset);
+
+            ImGui::InputText("Shader Name", p_ShaderNameInput, 64);
+            
+            if (ImGui::Button("Build"))
+            {
+                bool canBuild = true;
+                WeakRef<ShaderStage> vStage = p_AssetManager.GetAsset<ShaderStage>(p_SelectedVertexAsset);
+                WeakRef<ShaderStage> fStage = p_AssetManager.GetAsset<ShaderStage>(p_SelectedFragmentAsset);
+
+                if (vStage.expired())
+                {
+                    harmony::log::error("Cannot build shader, invalid vertex stage provided");
+                    canBuild = false;
+                }
+
+                if (fStage.expired())
+                {
+                    harmony::log::error("Cannot build shader, invalid vertex stage provided");
+                    canBuild = false;
+                }
+
+                std::string shaderName = std::string(p_ShaderNameInput);
+                Utils::TrimString(shaderName);
+
+                if (shaderName.size() == 0)
+                {
+                    canBuild = false;
+                }
+
+                if (canBuild)
+                {
+                    BuildShader(shaderName, vStage, fStage);
+                    p_CreateShaderProgramWindow = false;
+                }
+
+
+            }
+
             // or
             // CS Selector
         }
@@ -343,7 +407,36 @@ void harmony::Renderer::OnImGui()
         ImGui::SetNextWindowSize(ImVec2(320, 180));
         if (ImGui::Begin("New Pipeline"))
         {
+            ImGui::Text("Basic Surface Pipeline");
+            ImGui::InputText("Pipeline Name", p_PipelineNameInput, 64);
+            ShaderSelector("Choose Surface Shader", p_SelectedShaderProgram);
 
+            if (ImGui::Button("Create Pipeline"))
+            {
+                bool canCreate = true;
+                if (p_SelectedShaderProgram.expired())
+                {
+                    harmony::log::error("Cannot create pipeline : invalid shader selected.");
+                    canCreate = false;
+                }
+
+                std::string pipelineName = std::string(p_PipelineNameInput);
+                Utils::TrimString(pipelineName);
+
+                if (pipelineName.size() == 0)
+                {
+                    canCreate = false;
+                }
+
+                if (canCreate)
+                {
+                    Ref<Pipeline> pipeline = CreateRef<Pipeline>(PipelineHandle::New(pipelineName));
+                    pipeline->AddPipelineStage<PipelineStage>(pipelineName + ".surface", PipelineStage::Type::PrimaryDraw, p_SelectedShaderProgram);
+                    AddPipeline(pipeline, true);
+                    p_CreatePipelineWindow = false;
+                }
+
+            }
         }
         ImGui::End();
     }
@@ -395,6 +488,29 @@ void harmony::Renderer::OnImGui()
     //    ImGui::End();
     //}
 }
+
+
+bool harmony::Renderer::ShaderSelector(const std::string& selectorName, harmony::WeakRef<harmony::ShaderProgram>& prog)
+{
+    bool selectedAsset = false;
+    std::vector<std::string> shaders = GetShaderNames();
+
+    if (ImGui::BeginCombo(selectorName.c_str(), ""))
+    {
+        for (int i = 0; i < shaders.size(); i++)
+        {
+            if (ImGui::Selectable(shaders[i].c_str()))
+            {
+                prog = GetShader(shaders[i]);
+                selectedAsset = true;
+            }
+        }
+        ImGui::EndCombo();
+    }
+
+    return selectedAsset;
+
+}
 #endif
 
 bgfx::ViewId harmony::Renderer::GetViewID()
@@ -403,8 +519,6 @@ bgfx::ViewId harmony::Renderer::GetViewID()
     p_ViewHandleCounter++;
     return v;
 }
-
-
 
 nlohmann::json harmony::Renderer::Serialize()
 {
@@ -529,6 +643,21 @@ void harmony::Renderer::ReloadShader(WeakRef<ShaderProgram> shader)
     }
 
     Ref<ShaderProgram> prog = shader.lock();
+
+    for (int i = 0; i < p_BuiltInShaders.size(); i++)
+    {
+        if (p_BuiltInShaders[i].expired())
+        {
+            continue;
+        }
+
+        auto b = p_BuiltInShaders[i].lock();
+        if (prog == b)
+        {
+            harmony::log::warn("Cannot reload a built in shader");
+            return;
+        }
+    }
 
     prog->Destroy();
     for (auto& [type, stageWr] : prog->m_Stages)
@@ -671,8 +800,6 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
     return handle;
 }
 
-
-
 bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRef)
 {
     HARMONY_PROFILE_FUNCTION()
@@ -708,3 +835,6 @@ bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRe
     return vl;
 
 }
+
+
+

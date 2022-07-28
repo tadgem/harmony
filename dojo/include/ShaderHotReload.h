@@ -1,13 +1,15 @@
 #pragma once
 #include "Core/ProgramComponent.h"
-#include "bx/platform.h"
-
 #include "Core/FileWatcher.hpp"
-
+#include "Assets/Asset.h"
+#include "bx/platform.h"
+#include "Rendering/Shader.h"
 namespace harmony
 {
     class Program;
     class Renderer;
+    class ShaderSourceAsset;
+
     class ShaderHotReload : public ProgramComponent
     {
     public:
@@ -24,12 +26,17 @@ namespace harmony
         Program& p_Program;
         Renderer& p_Renderer;
         std::string p_ShaderCompilerLocation;
+        
+        void CompileShader(const std::string& shaderName);
 
         filewatch::FileWatch<std::string>* p_FileWatcher;
-        std::vector<std::string> p_LoadedShaderSources;
-        std::vector<std::string> p_LoadedShaderBinaries;
+        std::map<std::string , Ref<ShaderSourceAsset>> p_LoadedShaderSources;
+        std::map<std::string, Ref<ShaderStage>> p_LoadedShaderBinaries;
+        std::map<std::string, std::string> p_RendererProfileMapping;
 #if BX_PLATFORM_WINDOWS
-        const std::string PLATFORM_SHADER_COMPILER_EXTENSION = ".exe";
+        const std::string PLATFORM_SHADER_COMPILER_EXECUTABLE = ".exe";
 #endif
+
+
     };
 }

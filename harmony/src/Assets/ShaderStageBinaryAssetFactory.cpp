@@ -41,7 +41,7 @@ void harmony::ShaderStageBinaryAssetFactory::LoadAssetData(const std::string& pa
 	Ref<ShaderStage> shaderStage = CreateRef<ShaderStage>(path, type);
 	shaderStage->LoadShaderBinary();
 	
-	AssetHandle handle{ path, 0, GetTypeHash<ShaderStage>() };
+	AssetHandle handle(path, 0, GetTypeHash<ShaderStage>() );
 	AssetComponent<ShaderStage> stageComponent{ shaderStage, handle };
 
 	entt::entity e = registry.create();
