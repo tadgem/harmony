@@ -4,6 +4,7 @@
 #if HARMONY_DEBUG
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_bgfx.h"
+#include "Core/Program.h"
 #include "Rendering/Texture.h"
 #endif
 harmony::AssetManager::AssetManager()
@@ -32,25 +33,28 @@ bool harmony::AssetManager::IsPathLoaded(const std::string path)
 }
 std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::string& path, size_t typeHash)
 {
-	auto builtin = path.find("builtin");
-	if (builtin >= 0 && builtin < path.size())
+	std::string cleanPath = path;
+	auto project = Program::Get()->m_Project;
+	if (project)
 	{
-		return GetAssetsAtPath(path);
+		std::string projectDir = project->m_ProjectDirectory;
+		size_t pos = cleanPath.find(projectDir);
+		if (pos != std::string::npos)
+		{
+			cleanPath.erase(pos, projectDir.length() + 1);
+		}
+	}
+
+	auto builtin = cleanPath.find("builtin");
+	if (builtin >= 0 && builtin < cleanPath.size())
+	{
+		return GetAssetsAtPath(cleanPath);
 	}
 	Ref<AssetFactory> factory = GetAssetFactory(typeHash);
-	factory->LoadAssetData(path, p_AssetRegistry);
-	p_LoadedPaths.emplace_back(path);
-//#if HARMONY_DEBUG
-//	p_AssetFileWatchers.emplace_back(new 
-//		filewatch::FileWatch<std::string>(
-//			path,
-//			[&](const std::string& path, const filewatch::Event change_type) {
-//				OnAssetChanged(path, change_type, factory);
-//			}
-//
-//	));
-//#endif
-	return GetAssetsAtPath(path);
+	factory->LoadAssetData(cleanPath, p_AssetRegistry);
+	p_LoadedPaths.emplace_back(cleanPath);
+
+	return GetAssetsAtPath(cleanPath);
 }
 
 void harmony::AssetManager::UnloadAsset(AssetHandle& handle, size_t typeHash)

@@ -111,6 +111,11 @@ void harmony::ShaderDataContainer::UpdateContainer(AssetManager& am)
 			{
 				value = textures[handle.Name];
 				WeakRef<Texture> texWr = am.GetAsset<Texture>(value.Handle);
+
+				if (texWr.expired())
+				{
+					continue;
+				}
 				Ref<Texture> tex = texWr.lock();
 				value = tex->m_TextureHandle;
 			}

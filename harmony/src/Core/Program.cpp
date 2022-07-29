@@ -511,10 +511,27 @@ void harmony::Program::SaveScene(const std::string& path)
 		harmony::log::warn("Program::SaveScene : cannot save scene, as there is no active scene.");
 		return;
 	}
+
+	std::string cleanPath = path;
+	if (m_Project)
+	{
+		std::string projectDir = m_Project->m_ProjectDirectory;
+		size_t pos = cleanPath.find(projectDir);
+		if (pos != std::string::npos)
+		{
+			cleanPath.erase(pos, projectDir.length() + 1);
+		}
+	}
+
 	p_ActiveScene->UpdateSceneSystemSerializationAttributes(p_ECSSystems);
 	nlohmann::json sceneJson = *p_ActiveScene;
-	Utils::SaveJsonToPath(sceneJson, path);
-	m_Project->m_SerializedScenes.push_back(path);
+	Utils::SaveJsonToPath(sceneJson, cleanPath);
+
+	auto it = std::find(m_Project->m_SerializedScenes.begin(), m_Project->m_SerializedScenes.end(), cleanPath);
+	if (it->empty())
+	{
+		m_Project->m_SerializedScenes.push_back(path);
+	}
 }
 
 void harmony::Program::LoadScene(const std::string& path)

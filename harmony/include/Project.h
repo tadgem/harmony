@@ -33,7 +33,6 @@ namespace harmony
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(
             Project, 
             m_ProjectName, 
-            m_ProjectDirectory, 
             m_ImGuiIniPath, 
             p_ProgramComponentSerializationAttributes, 
             m_AssetManagerSerializationAttributes,

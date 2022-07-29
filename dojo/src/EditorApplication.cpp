@@ -96,7 +96,7 @@ void harmony::Editor::RunEditor()
 	InitializePipelines();
 	InitializeViews();
 
-	LoadProject("D:/Test/Test.harmonyproj");
+	LoadProject("../../projects/Test/Test.harmonyproj");
 	auto callback = [&]()
 	{
 		UpdateEditor();
