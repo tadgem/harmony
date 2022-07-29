@@ -1,0 +1,336 @@
+{
+    "m_AssetManagerSerializationAttributes": {
+        "assets": [
+            {
+                "Index": 0,
+                "Path": "vs_project",
+                "TypeHash": 14516182300149562688
+            },
+            {
+                "Index": 0,
+                "Path": "vs_project.sc",
+                "TypeHash": 1675298709017154941
+            },
+            {
+                "Index": 0,
+                "Path": "fs_project",
+                "TypeHash": 14516182300149562688
+            },
+            {
+                "Index": 0,
+                "Path": "fs_project.sc",
+                "TypeHash": 1675298709017154941
+            },
+            {
+                "Index": 0,
+                "Path": "builtin/Plane",
+                "TypeHash": 15382400497200106398
+            },
+            {
+                "Index": 0,
+                "Path": "builtin/Cube",
+                "TypeHash": 15382400497200106398
+            },
+            {
+                "Index": 0,
+                "Path": "D:\\Test\\assets\\black skull.fbx",
+                "TypeHash": 8744626192323988336
+            },
+            {
+                "Index": 0,
+                "Path": "D:\\Test\\assets\\black skull.fbx",
+                "TypeHash": 15382400497200106398
+            },
+            {
+                "Index": 0,
+                "Path": "D:\\Test\\assets\\pikapng.png",
+                "TypeHash": 8904890124188850629
+            }
+        ]
+    },
+    "m_ImGuiIniPath": "D:\\TestTestImGui.ini",
+    "m_ProjectDirectory": "D:\\Test",
+    "m_ProjectName": "Test",
+    "m_RendererSerializationAttributes": {
+        "renderer": {
+            "active_views": [
+                {
+                    "m_Height": 720,
+                    "m_Name": "Editor",
+                    "m_Width": 1280
+                }
+            ],
+            "pipelines": [
+                {
+                    "pipeline": {
+                        "handle": {
+                            "Index": 0,
+                            "Name": "DebugDrawPipline"
+                        },
+                        "name": "DebugDrawPipline",
+                        "stages": [
+                            {
+                                "m_Name": "DebugDrawStage",
+                                "m_StageType": 0,
+                                "p_Shader": null
+                            }
+                        ]
+                    }
+                },
+                {
+                    "pipeline": {
+                        "handle": {
+                            "Index": 1,
+                            "Name": "Textured Mesh"
+                        },
+                        "name": "Textured Mesh",
+                        "stages": [
+                            {
+                                "m_Name": "TexturedMeshStage",
+                                "m_StageType": 0,
+                                "p_Shader": {
+                                    "m_Name": "TexturedMesh",
+                                    "m_Stages": [
+                                        [
+                                            0,
+                                            null
+                                        ],
+                                        [
+                                            1,
+                                            null
+                                        ]
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "pipeline": {
+                        "handle": {
+                            "Index": 2,
+                            "Name": "Mesh Normals"
+                        },
+                        "name": "Mesh Normals",
+                        "stages": [
+                            {
+                                "m_Name": "NormalStage",
+                                "m_StageType": 0,
+                                "p_Shader": {
+                                    "m_Name": "Normal",
+                                    "m_Stages": [
+                                        [
+                                            0,
+                                            null
+                                        ],
+                                        [
+                                            1,
+                                            null
+                                        ]
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "pipeline": {
+                        "handle": {
+                            "Index": 3,
+                            "Name": "VectorGraphicsPipeline"
+                        },
+                        "name": "VectorGraphicsPipeline",
+                        "stages": [
+                            {
+                                "m_Name": "VectorGraphicsStage",
+                                "m_StageType": 0,
+                                "p_Shader": {
+                                    "m_Name": "NanoVG",
+                                    "m_Stages": [
+                                        [
+                                            0,
+                                            null
+                                        ],
+                                        [
+                                            1,
+                                            null
+                                        ]
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            ],
+            "shaders": [
+                {
+                    "data": {
+                        "m_Mat3Values": [],
+                        "m_Mat4Values": [],
+                        "m_ShaderName": "",
+                        "m_TextureValues": [],
+                        "m_Vec4Values": []
+                    },
+                    "program": {
+                        "m_Name": "Present",
+                        "m_Stages": [
+                            [
+                                0,
+                                null
+                            ],
+                            [
+                                1,
+                                null
+                            ]
+                        ]
+                    }
+                },
+                {
+                    "data": {
+                        "m_Mat3Values": [],
+                        "m_Mat4Values": [],
+                        "m_ShaderName": "",
+                        "m_TextureValues": [],
+                        "m_Vec4Values": []
+                    },
+                    "program": {
+                        "m_Name": "NanoVG",
+                        "m_Stages": [
+                            [
+                                0,
+                                null
+                            ],
+                            [
+                                1,
+                                null
+                            ]
+                        ]
+                    }
+                },
+                {
+                    "data": {
+                        "m_Mat3Values": [],
+                        "m_Mat4Values": [],
+                        "m_ShaderName": "",
+                        "m_TextureValues": [],
+                        "m_Vec4Values": []
+                    },
+                    "program": {
+                        "m_Name": "TexturedMesh",
+                        "m_Stages": [
+                            [
+                                0,
+                                null
+                            ],
+                            [
+                                1,
+                                null
+                            ]
+                        ]
+                    }
+                },
+                {
+                    "data": {
+                        "m_Mat3Values": [],
+                        "m_Mat4Values": [],
+                        "m_ShaderName": "",
+                        "m_TextureValues": [],
+                        "m_Vec4Values": []
+                    },
+                    "program": {
+                        "m_Name": "Normal",
+                        "m_Stages": [
+                            [
+                                0,
+                                null
+                            ],
+                            [
+                                1,
+                                null
+                            ]
+                        ]
+                    }
+                }
+            ],
+            "views": [
+                {
+                    "stack": [
+                        {
+                            "pipeline": {
+                                "handle": {
+                                    "Index": 1,
+                                    "Name": "Textured Mesh"
+                                },
+                                "name": "Textured Mesh",
+                                "stages": [
+                                    {
+                                        "m_Name": "TexturedMeshStage",
+                                        "m_StageType": 0,
+                                        "p_Shader": {
+                                            "m_Name": "TexturedMesh",
+                                            "m_Stages": [
+                                                [
+                                                    0,
+                                                    null
+                                                ],
+                                                [
+                                                    1,
+                                                    null
+                                                ]
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "pipeline": {
+                                "handle": {
+                                    "Index": 3,
+                                    "Name": "VectorGraphicsPipeline"
+                                },
+                                "name": "VectorGraphicsPipeline",
+                                "stages": [
+                                    {
+                                        "m_Name": "VectorGraphicsStage",
+                                        "m_StageType": 0,
+                                        "p_Shader": {
+                                            "m_Name": "NanoVG",
+                                            "m_Stages": [
+                                                [
+                                                    0,
+                                                    null
+                                                ],
+                                                [
+                                                    1,
+                                                    null
+                                                ]
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "view": {
+                        "m_Height": 720,
+                        "m_Name": "Editor",
+                        "m_Width": 1280
+                    }
+                }
+            ]
+        }
+    },
+    "m_SerializedScenes": [
+        "D:\\Test\\Test.harmonyscene",
+        "D:\\Test\\Test.harmonyscene",
+        "D:\\Test\\Test.harmonyscene",
+        "D:\\Test\\Test.harmonyscene"
+    ],
+    "p_ProgramComponentSerializationAttributes": [
+        [
+            14829735431805717965,
+            null
+        ]
+    ]
+}
