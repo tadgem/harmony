@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(harmony-assimp VERSION 0.1.0)
+project(harmony-lua VERSION 0.1.0)
 
 file(GLOB_RECURSE SRC_FILES src/*.cpp)
 file(GLOB_RECURSE C_SRC_FILES src/*.c)
