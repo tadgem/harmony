@@ -43,7 +43,10 @@ void harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view,
 
 void harmony::DebugDrawStage::PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
 {
-	PipelineStage::PreUpdate(registry, view, handle);
+	bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
+	Ref<View> _view = view.lock();
+	bgfx::setViewTransform(m_ViewId, &_view->m_View[0], &_view->m_Projection[0]);
+	bgfx::setViewRect(m_ViewId, 0, 0, _view->m_Width, _view->m_Height);
 	p_DebugRenderer->begin(m_ViewId, false);
 	p_RunPreFrame = true;
 }

@@ -67,7 +67,6 @@ void harmony::Editor::InitializePipelines()
 	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>();
 	
 	p_NormalPipeline->AddPipelineStage<PipelineStage>("NormalStage", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
-
 	p_TexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
 	
 	m_Renderer.AddPipeline(p_DebugPipeline, true);
@@ -80,8 +79,8 @@ void harmony::Editor::InitializeViews()
 {
 	auto viewWr = m_Renderer.CreateView<EditorView>(*this, p_ScenePanel);
 
-	/*m_Renderer.AddViewPipeline(viewWr, p_DebugPipeline);
-	m_Renderer.AddViewPipeline(viewWr, p_NormalPipeline);*/
+	m_Renderer.AddViewPipeline(viewWr, p_DebugPipeline);
+	m_Renderer.AddViewPipeline(viewWr, p_NormalPipeline);
 	m_Renderer.AddViewPipeline(viewWr, p_TexturedMeshPipeline);
 	m_Renderer.AddViewPipeline(viewWr, p_VectorGraphicsPipeline);
 	m_Renderer.SetViewActive(viewWr, true);

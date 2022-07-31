@@ -616,6 +616,10 @@ void harmony::Renderer::AddPipeline(Ref<Pipeline> pipeline, bool makeClone)
     if (pipeline)
     {
         PipelineHandle handle = pipeline->m_Handle;
+        if (makeClone)
+        {
+            m_PipelinePrototypes.push_back(pipeline->Clone());
+        }
         if (p_Pipelines.find(handle.Index) != p_Pipelines.end())
         {
             harmony::log::error("Already have a pipeline with handle {} ", handle.Index);
@@ -623,10 +627,6 @@ void harmony::Renderer::AddPipeline(Ref<Pipeline> pipeline, bool makeClone)
         }
         p_Pipelines.emplace(handle.Index, pipeline);
 
-        if (makeClone)
-        {
-            m_PipelinePrototypes.push_back(pipeline->Clone());
-        }
     }
     else
     {
