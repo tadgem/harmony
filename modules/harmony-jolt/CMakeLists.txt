@@ -23,7 +23,3 @@ CACHE INTERNAL "")
 
 target_include_directories(harmony-jolt PUBLIC ${HARMONY_JOLT_INCLUDES})
 target_link_libraries(harmony-jolt Jolt)
-
-# if (MSVC)
-#   target_compile_options(harmony-jolt PRIVATE /bigobj)
-# endif()

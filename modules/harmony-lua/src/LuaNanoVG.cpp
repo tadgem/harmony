@@ -75,6 +75,7 @@ void harmony::InitNanoVG(sol::state& state)
 		"middle"	, NVG_ALIGN_MIDDLE,
 		"bottom"	, NVG_ALIGN_BOTTOM,
 		"baseline"	, NVG_ALIGN_BASELINE);
+
 	nvg.new_enum("blendFactor",
 		"zero", NVG_ZERO,
 		"one", NVG_ONE,
@@ -88,6 +89,7 @@ void harmony::InitNanoVG(sol::state& state)
 		"oneMinusDstAlpha", NVG_ONE_MINUS_DST_ALPHA,
 		"srcAlphaSaturate", NVG_SRC_ALPHA_SATURATE
 		);
+
 	nvg.new_enum("compOp",
 		"srcOver", NVG_SOURCE_OVER,
 		"srcIn", NVG_SOURCE_IN,
@@ -100,10 +102,18 @@ void harmony::InitNanoVG(sol::state& state)
 		"ligher", NVG_LIGHTER,
 		"copy", NVG_COPY,
 		"xor", NVG_XOR);
+
 	nvg.new_enum("imageFlags",
-		"repeatX", NVG_IMAGE_REPEATX,
-		"repeatY", NVG_IMAGE_REPEATY,
-		"flipY", N)
+		"repeatX"		, NVG_IMAGE_REPEATX,
+		"repeatY"		, NVG_IMAGE_REPEATY,
+		"flipY"			, NVG_IMAGE_FLIPY,
+		"premultiplied"	, NVG_IMAGE_PREMULTIPLIED,
+		"nearest"		, NVG_IMAGE_NEAREST);
+
+	nvg.new_enum("texture",
+		"alpha", NVG_TEXTURE_ALPHA,
+		"rgba", NVG_TEXTURE_RGBA);
+
 
 	// functiona
 	nvg.set_function("rgb", rgb);
