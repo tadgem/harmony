@@ -1,5 +1,6 @@
 #include "LuaProgramComponent.h"
 #include "LuaImGui.hpp"
+#include "LuaNanoVG.hpp"
 #include "BindBGFX.hpp"
 #include "Core/Log.hpp"
 
