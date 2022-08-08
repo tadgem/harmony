@@ -95,8 +95,14 @@ void harmony::ShaderHotReload::OnChange(const std::string& path, const filewatch
             Ref<ShaderSourceAsset> source = p_Program.m_AssetManager.GetAsset<ShaderSourceAsset>(handle[0]).lock();
             size_t lastIndex = path.find(".sc");
             std::string shaderName = path.substr(0, lastIndex);
-            CompileShader(shaderName);
-            p_LoadedShaderSources.emplace(path, source);
+            if (CompileShader(shaderName) == 0)
+            {
+                p_LoadedShaderSources.emplace(path, source);
+            }
+            else
+            {
+                harmony::log::error("Failed to compile shader : {}", path);
+            }
         }
         if (path.find(".bin") < path.size())
         {
@@ -117,17 +123,20 @@ void harmony::ShaderHotReload::OnChange(const std::string& path, const filewatch
     {
         if (path.find(".sc") < path.size())
         {
-         // Update shader text...
-         std::string newText = Utils::LoadStringFromPath("assets/shaders" + path);
-         if (p_LoadedShaderSources.find(path) == p_LoadedShaderSources.end())
-         {
-             harmony::log::warn("shader not being tracked by hot reload.");
-             return;
-         }
-         // recompile shader
-         size_t lastIndex = path.find(".sc");
-         std::string shaderName = path.substr(0, lastIndex);
-         CompileShader(shaderName);
+            // Update shader text...
+            std::string newText = Utils::LoadStringFromPath("assets/shaders" + path);
+            if (p_LoadedShaderSources.find(path) == p_LoadedShaderSources.end())
+            {
+                harmony::log::warn("shader not being tracked by hot reload.");
+                return;
+            }
+            // recompile shader
+            size_t lastIndex = path.find(".sc");
+            std::string shaderName = path.substr(0, lastIndex);
+            if (CompileShader(shaderName) > 0)
+            {
+                harmony::log::error("Failed to compile shader : {}", path);
+            }
         }
         if (path.find(".bin") < path.size())
         {
@@ -151,7 +160,7 @@ void harmony::ShaderHotReload::OnChange(const std::string& path, const filewatch
 
 }
 
-void harmony::ShaderHotReload::CompileShader(const std::string& shaderName)
+int harmony::ShaderHotReload::CompileShader(const std::string& shaderName)
 {
     std::string shaderRendererName = ShaderStage::GetShaderRendererName();
     std::string outputPath = "assets/shaders/bin/" + shaderRendererName + "/" + shaderName + ".bin";
@@ -190,7 +199,7 @@ void harmony::ShaderHotReload::CompileShader(const std::string& shaderName)
         break;
     default:
         harmony::log::warn("Unknown Shader Type provided when compiling shader : {}", shaderName);
-        return;
+        return 1;
     }
 
     std::string compileCommand = p_ShaderCompilerLocation;
@@ -241,5 +250,6 @@ void harmony::ShaderHotReload::CompileShader(const std::string& shaderName)
     compileCommand += profileName;
 
     harmony::log::info("ShaderHotReload : final compile command for input file {} : {}", shaderName, compileCommand);
-    system(compileCommand.c_str());
+    return system(compileCommand.c_str());
+
 }

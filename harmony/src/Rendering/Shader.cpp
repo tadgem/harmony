@@ -104,11 +104,6 @@ harmony::ShaderStage::~ShaderStage()
 
 void harmony::ShaderStage::LoadShaderBinary()
 {
-	if (m_ProgramHandle.idx != UINT16_MAX)
-	{
-		bgfx::destroy(m_ProgramHandle);
-	}
-
 	if (bx::open(&_reader, m_BinaryPath.c_str()))
 	{
 		uint32_t size = static_cast<uint32_t>(bx::getSize(&_reader));

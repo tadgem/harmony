@@ -27,7 +27,7 @@ namespace harmony
         Renderer& p_Renderer;
         std::string p_ShaderCompilerLocation;
         
-        void CompileShader(const std::string& shaderName);
+        int CompileShader(const std::string& shaderName);
 
         filewatch::FileWatch<std::string>* p_FileWatcher;
         std::map<std::string , Ref<ShaderSourceAsset>> p_LoadedShaderSources;
