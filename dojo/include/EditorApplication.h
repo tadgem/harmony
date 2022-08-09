@@ -3,6 +3,7 @@
 #include "EditorPanel.h"
 #include "EditorMenu.h"
 #include "MainIncludes.h"
+#include "LuaProgramComponent.h"
 
 namespace harmony
 {
@@ -26,6 +27,8 @@ namespace harmony
 
 		virtual void LoadBuiltInAssets() override;
 	protected:
+
+
 		std::vector<Ref<Panel>> p_Panels;
 		Ref<ScenePanel> p_ScenePanel;
 		Ref<EditorView> p_EditorView;
@@ -33,6 +36,7 @@ namespace harmony
 		Ref<Pipeline> p_TexturedMeshPipeline;
 		Ref<Pipeline> p_NormalPipeline;
 		Ref<Pipeline> p_VectorGraphicsPipeline;
+		Ref<LuaProgramComponent> p_LuaComponent;
 		EditorMainMenuBar p_MainMenuBar;
 	};
 

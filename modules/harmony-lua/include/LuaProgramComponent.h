@@ -16,5 +16,6 @@ namespace harmony
     
     protected:
         sol::state p_State;
+        friend class LuaSystem;
     };
 }

@@ -7,6 +7,7 @@
 #include "ShaderHotReload.h"
 #include "Assets/ShaderSourceAssetFactory.h"
 #include "LuaScriptAssetFactory.h"
+#include "LuaSystem.h"
 
 harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*this)
 {
@@ -39,6 +40,8 @@ void harmony::Editor::AddAssetFactories()
 void harmony::Editor::AddProgramComponents()
 {
 	AddProgramComponent<ShaderHotReload>(*this);
+	auto luaWr = AddProgramComponent<LuaProgramComponent>();
+	p_LuaComponent = luaWr.lock();
 }
 
 void harmony::Editor::AddSystems()
@@ -46,6 +49,7 @@ void harmony::Editor::AddSystems()
 	AddSystem<TransformSystem>();
 	AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
 	AddSystem<MeshSystem>(m_AssetManager);
+	AddSystem<LuaSystem>(p_LuaComponent);
 }
 
 void harmony::Editor::AddEditorPanels()
