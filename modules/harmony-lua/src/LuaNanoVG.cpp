@@ -114,7 +114,6 @@ void harmony::InitNanoVG(sol::state& state)
 		"alpha", NVG_TEXTURE_ALPHA,
 		"rgba", NVG_TEXTURE_RGBA);
 
-
 	// functiona
 	nvg.set_function("rgb", rgb);
 	nvg.set_function("rgba", rgba);

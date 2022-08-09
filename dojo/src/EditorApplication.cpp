@@ -6,6 +6,8 @@
 #include "Core/Input.h"
 #include "ShaderHotReload.h"
 #include "Assets/ShaderSourceAssetFactory.h"
+#include "LuaScriptAssetFactory.h"
+
 harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*this)
 {
 	AddAssetTypeNames();
@@ -31,6 +33,7 @@ void harmony::Editor::AddAssetFactories()
 	m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<ShaderStageBinaryAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<ShaderSourceAssetFactory>());
+	m_AssetManager.AddAssetFactory(CreateRef<LuaScriptAssetFactory>());
 }
 
 void harmony::Editor::AddProgramComponents()
