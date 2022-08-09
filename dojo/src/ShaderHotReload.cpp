@@ -76,7 +76,7 @@ void harmony::ShaderHotReload::FromJson(const nlohmann::json& json)
 
 void harmony::ShaderHotReload::OnChange(const std::string& path, const filewatch::Event change_type)
 {
-    harmony::log::info("Path : {} Change Type : {}", path);
+    harmony::log::info("ShaderHotReload : Path : {} Change Type : {}", path);
     // ignore changes to include shader files
     if (path.find("include") < path.size())
     {
