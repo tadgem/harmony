@@ -23,6 +23,11 @@ harmony::FSM::FSM() : p_CurrentState(UINT16_MAX), p_RunEntry(false)
 {
 }
 
+void harmony::FSM::SetStartingState(int state)
+{
+	p_CurrentState = state;
+}
+
 void harmony::FSM::Process()
 {
 	int index = -1;

@@ -31,6 +31,7 @@ namespace harmony
     public:
         FSM();
 
+        void SetStartingState(int state);
         void Process();
 
         void AddState(int state, std::function<int()> action);
