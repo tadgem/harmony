@@ -1,9 +1,9 @@
 #include "LuaSystem.h"
 #include "LuaProgramComponent.h"
 #include "LuaScriptAsset.h"
+#include "LuaComponent.h"
 
-
-harmony::LuaSystem::LuaSystem(Ref<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaScriptAsset>()), p_LuaProgramComponent(luaPc)
+harmony::LuaSystem::LuaSystem(Ref<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaComponent>()), p_LuaProgramComponent(luaPc)
 {
 }
 
