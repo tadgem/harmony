@@ -9,7 +9,7 @@ namespace harmony
         class State
         {
         public:
-            State(uint16_t state, std::function<int()> action, std::function<void()> entry = NULL, std::function<void()> exit = NULL);
+            State(int state, std::function<int()> action, std::function<void()> entry = NULL, std::function<void()> exit = NULL);
 
             bool HasEntry;
             bool HasExit;
@@ -17,15 +17,15 @@ namespace harmony
             std::function<void()> m_EntryProcedure;
             std::function<void()> m_ExitProcedure;
             std::function<int()> m_Action;
-            const uint16_t m_State;
+            const int m_State;
             friend class FSM;
         };
 
         struct StateTransition
         {
-            uint16_t Trigger;
-            uint16_t SrcState;
-            uint16_t DstState;
+            int Trigger;
+            int SrcState;
+            int DstState;
         };
 
     public:
@@ -33,16 +33,18 @@ namespace harmony
 
         void Process();
 
-        void AddState(uint16_t state, std::function<int()> action);
-        void AddStateEntry(uint16_t state, std::function<int()> entry);
-        void AddStateExit(uint16_t state, std::function<int()> exit);
+        void AddState(int state, std::function<int()> action);
+        void AddStateEntry(int state, std::function<int()> entry);
+        void AddStateExit(int state, std::function<int()> exit);
 
-        void AddTrigger(uint16_t trigger, uint16_t srcState, uint16_t dstState);
+        void AddTrigger(int trigger, int srcState, int dstState);
 
     protected:
-        uint16_t p_CurrentState;
+        int p_PreviousState;
+        int p_CurrentState;
         bool p_RunEntry;
-        bool p_RunExit;
+
+        void TransitionState(int newState);
 
         std::vector<State> p_States;
         std::vector<StateTransition> p_Transitions;
