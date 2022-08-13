@@ -18,6 +18,16 @@ harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*t
 	AddSystems();
 
 	AddEditorPanels();
+
+	m_EditorFSM.AddState(Mode::Edit,		[]() {return FSM::NO_TRIGGER; });
+	m_EditorFSM.AddStateExit(Mode::Edit,	[]() {});
+	
+	m_EditorFSM.AddState(Mode::Play, 		[]() {return FSM::NO_TRIGGER; });
+	m_EditorFSM.AddStateExit(Mode::Play,	[]() {});
+
+	m_EditorFSM.AddTrigger(Trigger::Play, Mode::Edit, Mode::Play);
+	m_EditorFSM.AddTrigger(Trigger::Stop, Mode::Play, Mode::Edit);
+
 }
 
 void harmony::Editor::AddAssetTypeNames()

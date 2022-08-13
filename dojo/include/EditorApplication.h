@@ -1,15 +1,29 @@
 #pragma once
 #include "Core/Program.h"
+#include "Core/FSM.h"
 #include "EditorPanel.h"
 #include "EditorMenu.h"
 #include "MainIncludes.h"
 #include "LuaProgramComponent.h"
-
 namespace harmony
 {
+
 	class Editor : public Program
 	{
 	public:
+
+		enum Mode
+		{
+			Edit,
+			Play
+		};
+
+		enum Trigger
+		{
+			Play,
+			Stop
+		};
+
 		Editor();
 		void AddAssetTypeNames();
 		void AddAssetFactories();
@@ -28,6 +42,7 @@ namespace harmony
 		virtual void LoadBuiltInAssets() override;
 	protected:
 
+		FSM m_EditorFSM;
 
 		std::vector<Ref<Panel>> p_Panels;
 		Ref<ScenePanel> p_ScenePanel;

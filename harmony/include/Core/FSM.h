@@ -10,14 +10,14 @@ namespace harmony
         class State
         {
         public:
-            State(int state, std::function<int()> action, std::function<void()> entry = NULL, std::function<void()> exit = NULL);
+            State(int state, int(*action)(), void(*entry)() = nullptr, void(*exit)() = nullptr);
 
             bool HasEntry;
             bool HasExit;
         protected:
-            std::function<void()> m_EntryProcedure;
-            std::function<void()> m_ExitProcedure;
-            std::function<int()> m_Action;
+            void(*m_EntryProcedure)();
+            void(*m_ExitProcedure)();
+            int(*m_Action)();
             const int m_State;
             friend class FSM;
         };
@@ -35,14 +35,14 @@ namespace harmony
         void SetStartingState(int state);
         void Process();
 
-        void AddState(int state, std::function<int()> action);
-        void AddStateEntry(int state, std::function<int()> entry);
-        void AddStateExit(int state, std::function<int()> exit);
+        void AddState(int state, int(*action)());
+        void AddStateEntry(int state, void(*entry)());
+        void AddStateExit(int state, void(*exit)());
 
         void AddTrigger(int trigger, int srcState, int dstState);
 
         // arbitrary, can probably be done in a better way but we are in trouble if we have an FSM with more than 65000 states.
-        const int NO_TRANSITION = 65536; 
+        inline static const int NO_TRIGGER = 65536; 
     protected:
         int p_PreviousState;
         int p_CurrentState;
