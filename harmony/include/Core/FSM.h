@@ -6,6 +6,7 @@ namespace harmony
     class FSM
     {
     protected:
+        const uint8_t MAX_TRANSITIONS_PER_PROCESS = 8;
         class State
         {
         public:
@@ -40,6 +41,8 @@ namespace harmony
 
         void AddTrigger(int trigger, int srcState, int dstState);
 
+        // arbitrary, can probably be done in a better way but we are in trouble if we have an FSM with more than 65000 states.
+        const int NO_TRANSITION = 65536; 
     protected:
         int p_PreviousState;
         int p_CurrentState;

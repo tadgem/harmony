@@ -55,21 +55,43 @@ void harmony::FSM::Process()
 			p_RunEntry = true;
 		}
 	}
+
 	int trigger = p_States[index].m_Action();
-
-	p_PreviousState = p_CurrentState;
-
-	for (int i = 0; i < p_Transitions.size(); i++)
+	uint8_t numTransitions = 0;
+	while (trigger != NO_TRANSITION)
 	{
-		if (p_Transitions[i].Trigger == trigger)
+		p_PreviousState = p_CurrentState;
+
+		if (!p_RunEntry)
 		{
-			if (p_Transitions[i].SrcState == p_CurrentState)
+			if (p_States[index].HasEntry)
 			{
-				TransitionState(p_Transitions[i].DstState);
-				break;
+				p_States[index].m_EntryProcedure();
+				p_RunEntry = true;
 			}
 		}
+
+		for (int i = 0; i < p_Transitions.size(); i++)
+		{
+			if (p_Transitions[i].Trigger == trigger)
+			{
+				if (p_Transitions[i].SrcState == p_CurrentState)
+				{
+					TransitionState(p_Transitions[i].DstState);
+					numTransitions++;
+					break;
+				}
+			}
+		}
+
+		if (p_CurrentState != p_PreviousState)
+		{
+			trigger = p_States[index].m_Action();
+		}
+
 	}
+
+	p_PreviousState = p_CurrentState;
 
 }
 
