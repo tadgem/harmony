@@ -19,7 +19,7 @@ harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*t
 
 	AddEditorPanels();
 
-	m_EditorFSM.AddState(Mode::Edit,		[]() {return FSM::NO_TRIGGER; });
+	m_EditorFSM.AddState(Mode::Edit,		[]() {return OnEditUpdate(); });
 	m_EditorFSM.AddStateExit(Mode::Edit,	[]() {});
 	
 	m_EditorFSM.AddState(Mode::Debug, 		[]() {return FSM::NO_TRIGGER; });
@@ -27,6 +27,8 @@ harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*t
 
 	m_EditorFSM.AddTrigger(Trigger::Play, Mode::Edit, Mode::Debug);
 	m_EditorFSM.AddTrigger(Trigger::Stop, Mode::Debug, Mode::Edit);
+
+	m_EditorFSM.SetStartingState(Mode::Edit);
 
 }
 
@@ -105,6 +107,72 @@ void harmony::Editor::InitializeViews()
 	m_Renderer.SetViewActive(viewWr, true);
 
 	p_EditorView = viewWr.lock();
+}
+
+int harmony::Editor::OnEditUpdate()
+{
+	UpdateTimeVariables();
+
+	HandleSDLEvent();
+
+	RunRendererPreUpdate();
+
+	ImGuiPreUpdate();
+
+	UpdateEditor();
+
+	RunProgramComponentUpdate();
+
+	RunRendererPostUpdate();
+
+	RunProgramComponentRender();
+
+	Input::Get()->PostFrame();
+
+	ImGuiPostUpdate();
+
+	bgfx::frame();
+
+	return FSM::NO_TRIGGER;
+}
+
+void harmony::Editor::OnEditExit()
+{
+}
+
+int harmony::Editor::OnDebugUpdate()
+{
+	UpdateTimeVariables();
+
+	HandleSDLEvent();
+
+	RunRendererPreUpdate();
+
+	ImGuiPreUpdate();
+
+	UpdateEditor();
+
+	RunProgramComponentUpdate();
+
+	RunSystemUpdate();
+
+	RunRendererPostUpdate();
+
+	RunProgramComponentRender();
+
+	RunSystemRender();
+
+	Input::Get()->PostFrame();
+
+	ImGuiPostUpdate();
+
+	bgfx::frame();
+
+	return FSM::NO_TRIGGER;
+}
+
+void harmony::Editor::OnDebugExit()
+{
 }
 
 void harmony::Editor::Run()

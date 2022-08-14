@@ -35,6 +35,12 @@ namespace harmony
 		void InitializePipelines();
 		void InitializeViews();
 
+		int OnEditUpdate();
+		void OnEditExit();
+
+		int OnDebugUpdate();
+		void OnDebugExit();
+
 		virtual void Run() override;
 		void UpdateEditor();
 		void GlobalDockspace();
