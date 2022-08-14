@@ -36,13 +36,14 @@ namespace harmony
         void Process();
 
         void AddState(int state, std::function<int()> action);
-        void AddStateEntry(int state, std::function<int()> entry);
-        void AddStateExit(int state, std::function<int()> exit);
+        void AddStateEntry(int state, std::function<void()> entry);
+        void AddStateExit(int state, std::function<void()> exit);
 
         void AddTrigger(int trigger, int srcState, int dstState);
+        void Trigger(int trigger);
 
         // arbitrary, can probably be done in a better way but we are in trouble if we have an FSM with more than 65000 states.
-        const int NO_TRANSITION = 65536; 
+        inline static const int NO_TRIGGER = 65536; 
     protected:
         int p_PreviousState;
         int p_CurrentState;

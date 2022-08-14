@@ -16,18 +16,7 @@ void harmony::MeshSystem::Update(entt::registry& registry)
 
 	for (auto& [entity, mesh] : view.each())
 	{
-		bool meshValid = mesh.MeshHandle.m_Layout.m_stride > 0;
-		if (!meshValid)
-		{
-			WeakRef<Mesh> meshAssetWr = p_AssetManager.GetAsset<Mesh>(mesh.MeshAsset);
-			if (meshAssetWr.expired())
-			{
-				harmony::log::warn("Asset not loaded at path: ", mesh.MeshAsset.Path);
-				continue;
-			}
-			Ref<Mesh> meshAsset = meshAssetWr.lock();
-			mesh.MeshHandle = meshAsset->m_Handle;
-		}
+		UpdateMeshComponent(mesh);
 	}
 }
 
@@ -60,10 +49,28 @@ void harmony::MeshSystem::DeserializeSystem(entt::registry& registry, nlohmann::
 		entt::entity e = GetEntityFromKey(entry.key());
 		MeshComponent mc = entry.value();
 
+		UpdateMeshComponent(mc);
+
 		registry.emplace<MeshComponent>(e, mc);
 	}
 }
 
 void harmony::MeshSystem::Refresh()
 {
+}
+
+void harmony::MeshSystem::UpdateMeshComponent(MeshComponent& mc)
+{
+	bool meshValid = mc.MeshHandle.m_Layout.m_stride > 0;
+	if (!meshValid)
+	{
+		WeakRef<Mesh> meshAssetWr = p_AssetManager.GetAsset<Mesh>(mc.MeshAsset);
+		if (meshAssetWr.expired())
+		{
+			harmony::log::warn("Asset not loaded at path: ", mc.MeshAsset.Path);
+			return;
+		}
+		Ref<Mesh> meshAsset = meshAssetWr.lock();
+		mc.MeshHandle = meshAsset->m_Handle;
+	}
 }

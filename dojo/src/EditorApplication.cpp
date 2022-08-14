@@ -19,11 +19,11 @@ harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*t
 
 	AddEditorPanels();
 
-	m_EditorFSM.AddState(Mode::Edit,		[]() {return OnEditUpdate(); });
-	m_EditorFSM.AddStateExit(Mode::Edit,	[]() {});
+	m_EditorFSM.AddState(Mode::Edit,		[&]() {return OnEditUpdate(); });
+	m_EditorFSM.AddStateExit(Mode::Edit, [&]() {OnEditExit(); });
 	
-	m_EditorFSM.AddState(Mode::Debug, 		[]() {return FSM::NO_TRIGGER; });
-	m_EditorFSM.AddStateExit(Mode::Debug,	[]() {});
+	m_EditorFSM.AddState(Mode::Debug, 		[&]() {return OnDebugUpdate(); });
+	m_EditorFSM.AddStateExit(Mode::Debug, [&]() {OnDebugExit(); });
 
 	m_EditorFSM.AddTrigger(Trigger::Play, Mode::Edit, Mode::Debug);
 	m_EditorFSM.AddTrigger(Trigger::Stop, Mode::Debug, Mode::Edit);
@@ -60,7 +60,7 @@ void harmony::Editor::AddProgramComponents()
 
 void harmony::Editor::AddSystems()
 {
-	AddSystem<TransformSystem>();
+	p_TransformSystem = AddSystem<TransformSystem>().lock();
 	AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
 	AddSystem<MeshSystem>(m_AssetManager);
 	AddSystem<LuaSystem>(p_LuaComponent);
@@ -122,6 +122,11 @@ int harmony::Editor::OnEditUpdate()
 	UpdateEditor();
 
 	RunProgramComponentUpdate();
+
+	if (p_ActiveScene)
+	{
+		p_TransformSystem->Update(p_ActiveScene->m_Registry);
+	}
 
 	RunRendererPostUpdate();
 
@@ -191,31 +196,7 @@ void harmony::Editor::Run()
 
 	while (p_Run)
 	{
-		UpdateTimeVariables();
-
-		HandleSDLEvent();
-
-		RunRendererPreUpdate();
-
-		ImGuiPreUpdate();
-
-		UpdateEditor();
-		
-		RunProgramComponentUpdate();
-
-		RunSystemUpdate();
-
-		RunRendererPostUpdate();
-
-		RunProgramComponentRender();
-
-		RunSystemRender();
-
-		Input::Get()->PostFrame();
-
-		ImGuiPostUpdate();
-
-		bgfx::frame();
+		m_EditorFSM.Process();
 	}
 }
 

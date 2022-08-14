@@ -4,6 +4,7 @@
 
 namespace harmony
 {
+    struct MeshComponent;
     class MeshSystem : public System
     {
         public:
@@ -18,5 +19,7 @@ namespace harmony
 
     protected:
         AssetManager& p_AssetManager;
+
+        void UpdateMeshComponent(MeshComponent& mc);
     };
 };

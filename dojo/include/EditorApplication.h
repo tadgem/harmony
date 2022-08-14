@@ -58,6 +58,7 @@ namespace harmony
 		Ref<Pipeline> p_NormalPipeline;
 		Ref<Pipeline> p_VectorGraphicsPipeline;
 		Ref<LuaProgramComponent> p_LuaComponent;
+		Ref<TransformSystem> p_TransformSystem;
 		EditorMainMenuBar p_MainMenuBar;
 	};
 
