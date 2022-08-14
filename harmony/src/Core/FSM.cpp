@@ -1,7 +1,7 @@
 #include "Core/FSM.h"
 #include "Core/Log.hpp"
 
-harmony::FSM::State::State(int state, int(*action)(), void(*entry)(), void(*exit)()) : m_State(state), m_Action(action)
+harmony::FSM::State::State(int state, std::function<int()> action, std::function<void()> entry, std::function<void()> exit) : m_State(state), m_Action(action)
 {
 	HasEntry = false;
 	HasExit = false;
@@ -58,7 +58,7 @@ void harmony::FSM::Process()
 
 	int trigger = p_States[index].m_Action();
 	uint8_t numTransitions = 0;
-	while (trigger != NO_TRIGGER)
+	while (trigger != NO_TRANSITION)
 	{
 		p_PreviousState = p_CurrentState;
 
@@ -95,7 +95,7 @@ void harmony::FSM::Process()
 
 }
 
-void harmony::FSM::AddState(int state, int(*action)())
+void harmony::FSM::AddState(int state, std::function<int()> action)
 {
 	for (int i = 0; i < p_States.size(); i++)
 	{
@@ -111,7 +111,7 @@ void harmony::FSM::AddState(int state, int(*action)())
 
 }
 
-void harmony::FSM::AddStateEntry(int state, void(*entry)())
+void harmony::FSM::AddStateEntry(int state, std::function<int()> entry)
 {
 	for (int i = 0; i < p_States.size(); i++)
 	{
@@ -123,7 +123,7 @@ void harmony::FSM::AddStateEntry(int state, void(*entry)())
 	}
 }
 
-void harmony::FSM::AddStateExit(int state, void(*exit)())
+void harmony::FSM::AddStateExit(int state, std::function<int()> exit)
 {
 	for (int i = 0; i < p_States.size(); i++)
 	{
