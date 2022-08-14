@@ -22,11 +22,11 @@ harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*t
 	m_EditorFSM.AddState(Mode::Edit,		[]() {return FSM::NO_TRIGGER; });
 	m_EditorFSM.AddStateExit(Mode::Edit,	[]() {});
 	
-	m_EditorFSM.AddState(Mode::Play, 		[]() {return FSM::NO_TRIGGER; });
-	m_EditorFSM.AddStateExit(Mode::Play,	[]() {});
+	m_EditorFSM.AddState(Mode::Debug, 		[]() {return FSM::NO_TRIGGER; });
+	m_EditorFSM.AddStateExit(Mode::Debug,	[]() {});
 
-	m_EditorFSM.AddTrigger(Trigger::Play, Mode::Edit, Mode::Play);
-	m_EditorFSM.AddTrigger(Trigger::Stop, Mode::Play, Mode::Edit);
+	m_EditorFSM.AddTrigger(Trigger::Play, Mode::Edit, Mode::Debug);
+	m_EditorFSM.AddTrigger(Trigger::Stop, Mode::Debug, Mode::Edit);
 
 }
 
@@ -107,20 +107,48 @@ void harmony::Editor::InitializeViews()
 	p_EditorView = viewWr.lock();
 }
 
-void harmony::Editor::RunEditor()
+void harmony::Editor::Run()
 {
+	HARMONY_PROFILE_FUNCTION()
+
 	Init();
 	m_Renderer.Init();
 	InitializePipelines();
 	InitializeViews();
-
+#if HARMONY_DEBUG
 	LoadProject("../../projects/Test/Test.harmonyproj");
-	auto callback = [&]()
-	{
-		UpdateEditor();
-	};
+#endif
+	
+	PreRunInit();
 
-	Run(callback);
+	while (p_Run)
+	{
+		UpdateTimeVariables();
+
+		HandleSDLEvent();
+
+		RunRendererPreUpdate();
+
+		ImGuiPreUpdate();
+
+		UpdateEditor();
+		
+		RunProgramComponentUpdate();
+
+		RunSystemUpdate();
+
+		RunRendererPostUpdate();
+
+		RunProgramComponentRender();
+
+		RunSystemRender();
+
+		Input::Get()->PostFrame();
+
+		ImGuiPostUpdate();
+
+		bgfx::frame();
+	}
 }
 
 void harmony::Editor::UpdateEditor()

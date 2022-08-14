@@ -15,7 +15,7 @@ namespace harmony
 		enum Mode
 		{
 			Edit,
-			Play
+			Debug
 		};
 
 		enum Trigger
@@ -35,7 +35,7 @@ namespace harmony
 		void InitializePipelines();
 		void InitializeViews();
 
-		void RunEditor();
+		virtual void Run() override;
 		void UpdateEditor();
 		void GlobalDockspace();
 

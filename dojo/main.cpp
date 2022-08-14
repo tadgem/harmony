@@ -5,5 +5,5 @@ int main()
 	using namespace harmony;
 	Editor app;
 	
-	app.RunEditor();
+	app.Run();
 }

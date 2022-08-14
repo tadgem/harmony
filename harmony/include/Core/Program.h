@@ -32,7 +32,7 @@ namespace harmony
 		Program(std::string name);
 		~Program();
 		void Init();
-		void Run(Callback callback);
+		virtual void Run();
 
 		void CreateProject(const std::string& name, const std::string& path);
 		void SaveProject();
@@ -72,8 +72,16 @@ namespace harmony
 		void InitBGFX();
 		void InitImGui();
 
+		void PreRunInit();
+		void UpdateTimeVariables();
+
 		void ResizeApplicationWindow(int w, int h);
+		
+		void HandleSDLEvent();
 		void HandleInputEvent(SDL_Event& event);
+		
+		void ImGuiPreUpdate();
+		void ImGuiPostUpdate();
 		void SetStyle();
 
 		std::string							p_AppName;

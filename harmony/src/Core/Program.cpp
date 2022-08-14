@@ -299,6 +299,27 @@ void harmony::Program::InitImGui()
 	harmony::log::info("Successfully initialized ImGui");
 }
 
+void harmony::Program::PreRunInit()
+{
+	HARMONY_PROFILE_FUNCTION()
+
+	RunSystemInit();
+	bgfx::touch(0);
+	LoadBuiltInAssets();
+	SetStyle();
+}
+
+void harmony::Program::UpdateTimeVariables()
+{
+	int64_t now = bx::getHPCounter();
+	static int64_t last = now;
+	const int64_t frameTime = now - last;
+	last = now;
+	const double freq = double(bx::getHPFrequency());
+
+	Time::p_FrameTime = (double)(frameTime * 1.0 / freq);
+}
+
 void harmony::Program::ResizeApplicationWindow(int w, int h)
 {
 	HARMONY_PROFILE_FUNCTION()
@@ -312,6 +333,30 @@ void harmony::Program::ResizeApplicationWindow(int w, int h)
 		bgfx::setViewRect(i, 0, 0, bgfx::BackbufferRatio::Equal);
 	}
 	bgfx::reset(p_WindowWidth, p_WindowHeight);
+}
+
+void harmony::Program::HandleSDLEvent()
+{
+	SDL_Event sdlEvent;
+
+	while (SDL_PollEvent(&sdlEvent))
+	{
+		ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
+		if (sdlEvent.type == SDL_QUIT)
+		{
+			p_Run = false;
+			return;
+		}
+
+		if (sdlEvent.type == SDL_WINDOWEVENT)
+		{
+			if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED)
+			{
+				ResizeApplicationWindow(sdlEvent.window.data1, sdlEvent.window.data2);
+			}
+		}
+		HandleInputEvent(sdlEvent);
+	}
 }
 
 void harmony::Program::HandleInputEvent(SDL_Event& event)
@@ -356,52 +401,35 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 	// Mouse
 }
 
-void harmony::Program::Run(harmony::Callback callback)
+void harmony::Program::ImGuiPreUpdate()
+{
+	// TODO move to pipeline
+	ImGui::NewFrame();
+	ImGui_ImplSDL2_NewFrame(p_Window);
+	ImGuizmo::BeginFrame();
+}
+
+void harmony::Program::ImGuiPostUpdate()
+{
+	ImGui::Render();
+	imguiEndFrame();
+}
+
+void harmony::Program::Run()
 {
 	HARMONY_PROFILE_FUNCTION()
 
-	RunSystemInit();
-	bgfx::touch(0);
-	LoadBuiltInAssets();
-	SetStyle();
+	PreRunInit();
+
 	while (p_Run)
 	{
-		int64_t now = bx::getHPCounter();
-		static int64_t last = now;
-		const int64_t frameTime = now - last;
-		last = now;
-		const double freq = double(bx::getHPFrequency());
-
-		Time::p_FrameTime = (double)(frameTime * 1.0 / freq);
-		SDL_Event sdlEvent;
-
-		while (SDL_PollEvent(&sdlEvent))
-		{
-			ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
-			if (sdlEvent.type == SDL_QUIT)
-			{
-				p_Run = false;
-				return;
-			}
-
-			if (sdlEvent.type == SDL_WINDOWEVENT)
-			{
-				if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED)
-				{
-					ResizeApplicationWindow(sdlEvent.window.data1, sdlEvent.window.data2);
-				}
-			}
-			HandleInputEvent(sdlEvent);
-		}
+		UpdateTimeVariables();
+		
+		HandleSDLEvent();
 
 		RunRendererPreUpdate();
 
-		// TODO move to pipeline
-		ImGui::NewFrame();
-		ImGui_ImplSDL2_NewFrame(p_Window);
-		ImGuizmo::BeginFrame();
-
-		callback();
+		ImGuiPreUpdate();
 
 		RunProgramComponentUpdate();
 		
@@ -409,19 +437,13 @@ void harmony::Program::Run(harmony::Callback callback)
 
 		RunRendererPostUpdate();
 
-		bgfx::touch(0);
-
 		RunProgramComponentRender();
 
 		RunSystemRender();
 
 		Input::Get()->PostFrame();
 
-		// Use last available view for imgui. 
-		// probably not great but will be ammended with view manager impl.
-		bgfx::touch(0);
-		ImGui::Render();
-		imguiEndFrame();
+		ImGuiPostUpdate();
 
 		bgfx::frame();
 	}
