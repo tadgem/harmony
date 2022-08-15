@@ -6,10 +6,11 @@
 
 namespace harmony
 {
+	class Editor;
 	class EditorMainMenuBar
 	{
 	public:
-		EditorMainMenuBar(Program& prog);
+		EditorMainMenuBar(Editor& prog);
 
 		void OnImGui();
 
@@ -20,7 +21,7 @@ namespace harmony
 		ImVec2 m_MenuBarSize;
 
 	protected:
-		Program& p_Prog;
+		Editor& p_Prog;
 
 		char p_ProjectNameInput[64]{ "" };
 		char p_ProjectPathInput[256]{ "" };

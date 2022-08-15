@@ -34,16 +34,16 @@ namespace harmony
 		void Init();
 		virtual void Run();
 
-		void CreateProject(const std::string& name, const std::string& path);
-		void SaveProject();
-		void LoadProject(const std::string& path);
-		void CloseActiveProject();
+		virtual void CreateProject(const std::string& name, const std::string& path);
+		virtual void SaveProject();
+		virtual void LoadProject(const std::string& path);
+		virtual void CloseActiveProject();
 
-		void CreateScene(const std::string& name);
-		void SaveScene(const std::string& path);
-		void LoadScene(const std::string& path);
-		void OpenScene(uint32_t index);
-		void CloseActiveScene();
+		virtual void CreateScene(const std::string& name);
+		virtual void SaveScene(const std::string& path);
+		virtual void LoadScene(const std::string& path);
+		virtual void OpenScene(uint32_t index);
+		virtual void CloseActiveScene();
 		WeakRef<Scene> GetActiveScene();
 
 		void RunProgramComponentInit();

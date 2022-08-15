@@ -42,14 +42,16 @@ namespace harmony
 		void OnDebugExit();
 
 		virtual void Run() override;
+
+		virtual void LoadScene(const std::string& path) override;
+		virtual void OpenScene(uint32_t index) override;
 		void UpdateEditor();
 		void GlobalDockspace();
 
 		virtual void LoadBuiltInAssets() override;
-	protected:
 
 		FSM m_EditorFSM;
-
+	protected:		
 		std::vector<Ref<Panel>> p_Panels;
 		Ref<ScenePanel> p_ScenePanel;
 		Ref<EditorView> p_EditorView;
@@ -60,6 +62,8 @@ namespace harmony
 		Ref<LuaProgramComponent> p_LuaComponent;
 		Ref<TransformSystem> p_TransformSystem;
 		EditorMainMenuBar p_MainMenuBar;
+	private:
+		std::string p_LoadedScenePath;
 	};
 
 };

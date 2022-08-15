@@ -1,7 +1,8 @@
 #include "EditorMenu.h"
 #include "ImGui/ImGuiFileDialog.h"
+#include "EditorApplication.h"
 
-harmony::EditorMainMenuBar::EditorMainMenuBar(Program& prog) : p_Prog(prog)
+harmony::EditorMainMenuBar::EditorMainMenuBar(Editor& prog) : p_Prog(prog)
 {
 	p_CreateProjectMenu = false;
 	p_CreateSceneMenu = false;
@@ -65,7 +66,19 @@ void harmony::EditorMainMenuBar::MenuBar()
 			}
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Run"))
+		{
+			if (ImGui::MenuItem("Play"))
+			{
+				p_Prog.m_EditorFSM.Trigger(Editor::Trigger::Play);
+			}
 
+			if (ImGui::MenuItem("Stop"))
+			{
+				p_Prog.m_EditorFSM.Trigger(Editor::Trigger::Stop);
+			}
+			ImGui::EndMenu();
+		}
 		m_MenuBarSize = ImGui::GetWindowSize();
 	}
 	ImGui::EndMainMenuBar();

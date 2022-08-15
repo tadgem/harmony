@@ -143,6 +143,7 @@ int harmony::Editor::OnEditUpdate()
 
 void harmony::Editor::OnEditExit()
 {
+	SaveScene(p_LoadedScenePath);
 }
 
 int harmony::Editor::OnDebugUpdate()
@@ -178,6 +179,7 @@ int harmony::Editor::OnDebugUpdate()
 
 void harmony::Editor::OnDebugExit()
 {
+	LoadScene(p_LoadedScenePath);
 }
 
 void harmony::Editor::Run()
@@ -198,6 +200,18 @@ void harmony::Editor::Run()
 	{
 		m_EditorFSM.Process();
 	}
+}
+
+void harmony::Editor::LoadScene(const std::string& path)
+{
+	Program::LoadScene(path);
+	p_LoadedScenePath = path;
+}
+
+void harmony::Editor::OpenScene(uint32_t index)
+{
+	Program::OpenScene(index);
+	p_LoadedScenePath = m_Project->m_SerializedScenes[index];
 }
 
 void harmony::Editor::UpdateEditor()
