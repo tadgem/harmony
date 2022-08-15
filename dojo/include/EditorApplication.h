@@ -58,6 +58,10 @@ namespace harmony
 		Ref<Pipeline> p_DebugPipeline;
 		Ref<Pipeline> p_TexturedMeshPipeline;
 		Ref<Pipeline> p_NormalPipeline;
+
+		Ref<Pipeline> p_RuntimeDebugPipeline;
+		Ref<Pipeline> p_RuntimeTexturedMeshPipeline;
+		Ref<Pipeline> p_RuntimeNormalPipeline;
 		Ref<Pipeline> p_VectorGraphicsPipeline;
 		Ref<LuaProgramComponent> p_LuaComponent;
 		Ref<TransformSystem> p_TransformSystem;

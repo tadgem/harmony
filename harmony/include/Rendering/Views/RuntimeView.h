@@ -4,17 +4,21 @@
 
 namespace harmony 
 {
+    class Program;
+    class Renderer;
     class RuntimeView : public View
     {
     public:
-        RuntimeView();
+        RuntimeView(Program& prog);
 
         virtual void OnPreUpdate(entt::registry& registry) override;
-        virtual void OnPostUpdate(entt::registry& registry) override;
 #if HARMONY_DEBUG
         virtual void OnImGui() override;
+        virtual void OnImGuiOptions() override;
 #endif
-        Entity CameraEntity;
-        
+        entt::entity CameraEntity;
+    protected:
+        Program& p_Program;
+        Renderer& p_Renderer;
     };
 }

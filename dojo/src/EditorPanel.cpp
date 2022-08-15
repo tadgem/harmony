@@ -7,6 +7,7 @@
 #include "ImGui/icons_font_awesome.h"
 #include "ImGui/ImGuiFileDialog.h"
 #include "Assets/ShaderSourceAsset.h"
+#include "ECS/CameraComponent.h"
 harmony::ScenePanel::ScenePanel(Program& program) : p_Prog(program)
 {
 }
@@ -353,4 +354,30 @@ void harmony::AssetManagerPanel::OnImGui()
 		}
 		ImGuiFileDialog::Instance()->Close();
 	}
+}
+
+harmony::CameraComponentUI::CameraComponentUI(Renderer& r) : ComponentUI("Camera"), p_Renderer(r)
+{
+}
+
+void harmony::CameraComponentUI::OnComponentImGui(entt::registry& registry, entt::entity entity)
+{
+	if (registry.valid(entity) == false)
+	{
+		return;
+	}
+	if (RegistryHasComponent<CameraComponent>(registry, entity) == false)
+	{
+		return;
+	}
+}
+
+void harmony::CameraComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
+{
+	registry.emplace<CameraComponent>(entity);
+}
+
+bool harmony::CameraComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
+{
+	return RegistryHasComponent<CameraComponent>(registry, entity);
 }

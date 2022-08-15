@@ -5,6 +5,7 @@
 #include "Core/Time.h"
 #include "Core/Input.h"
 #include "ShaderHotReload.h"
+#include "Rendering/Views/RuntimeView.h"
 #include "Assets/ShaderSourceAssetFactory.h"
 #include "LuaScriptAssetFactory.h"
 #include "LuaSystem.h"
@@ -83,30 +84,44 @@ void harmony::Editor::AddEditorPanels()
 void harmony::Editor::InitializePipelines()
 {
 	p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
-	p_TexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle::New("Textured Mesh"));
-	p_NormalPipeline = CreateRef<Pipeline>(PipelineHandle::New("Mesh Normals"));
+	p_RuntimeDebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Game);
+	p_TexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle::New("Editor Textured Mesh"));
+	p_NormalPipeline = CreateRef<Pipeline>(PipelineHandle::New("Editor Mesh Normals"));
+	p_RuntimeTexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle::New("Runtime Textured Mesh"));
+	p_RuntimeNormalPipeline = CreateRef<Pipeline>(PipelineHandle::New("Runtime Mesh Normals"));
 	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>();
 	
 	p_NormalPipeline->AddPipelineStage<PipelineStage>("NormalStage", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
 	p_TexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
-	
+	p_RuntimeNormalPipeline->AddPipelineStage<PipelineStage>("NormalStage", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
+	p_RuntimeTexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
+
+
 	m_Renderer.AddPipeline(p_DebugPipeline, true);
+	m_Renderer.AddPipeline(p_RuntimeDebugPipeline, true);
 	m_Renderer.AddPipeline(p_TexturedMeshPipeline, true);
 	m_Renderer.AddPipeline(p_NormalPipeline, true);
+	m_Renderer.AddPipeline(p_RuntimeTexturedMeshPipeline, true);
+	m_Renderer.AddPipeline(p_RuntimeNormalPipeline, true);
 	m_Renderer.AddPipeline(p_VectorGraphicsPipeline, true);
 }
 
 void harmony::Editor::InitializeViews()
 {
-	auto viewWr = m_Renderer.CreateView<EditorView>(*this, p_ScenePanel);
+	auto editorViewWr = m_Renderer.CreateView<EditorView>(*this, p_ScenePanel);
+	auto runtimeViewWr = m_Renderer.CreateView<RuntimeView>(*this);
+	m_Renderer.AddViewPipeline(editorViewWr, p_DebugPipeline);
+	m_Renderer.AddViewPipeline(editorViewWr, p_NormalPipeline);
+	m_Renderer.AddViewPipeline(editorViewWr, p_TexturedMeshPipeline);
+	m_Renderer.SetViewActive(editorViewWr, true);
 
-	m_Renderer.AddViewPipeline(viewWr, p_DebugPipeline);
-	m_Renderer.AddViewPipeline(viewWr, p_NormalPipeline);
-	m_Renderer.AddViewPipeline(viewWr, p_TexturedMeshPipeline);
-	m_Renderer.AddViewPipeline(viewWr, p_VectorGraphicsPipeline);
-	m_Renderer.SetViewActive(viewWr, true);
+	m_Renderer.AddViewPipeline(runtimeViewWr, p_RuntimeDebugPipeline);
+	m_Renderer.AddViewPipeline(runtimeViewWr, p_RuntimeNormalPipeline);
+	m_Renderer.AddViewPipeline(runtimeViewWr, p_RuntimeTexturedMeshPipeline);
+	m_Renderer.AddViewPipeline(runtimeViewWr, p_VectorGraphicsPipeline);
+	m_Renderer.SetViewActive(runtimeViewWr, true);
 
-	p_EditorView = viewWr.lock();
+	p_EditorView = editorViewWr.lock();
 }
 
 int harmony::Editor::OnEditUpdate()
