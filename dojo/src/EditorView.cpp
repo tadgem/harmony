@@ -91,7 +91,7 @@ void harmony::DebugCamera::Update()
 	Projection = glm::mat4(1.0);
 
 	Projection = glm::perspectiveFov(glm::radians(FOV), static_cast<float>(Program::p_WindowWidth), static_cast<float>(Program::p_WindowHeight), NearClipPlane, FarClipPlane);
-
+	
 	glm::quat qPitch = glm::angleAxis(glm::radians(-Euler.x), glm::vec3(1, 0, 0));
 	glm::quat qYaw = glm::angleAxis(glm::radians(Euler.y), glm::vec3(0, 1, 0));
 	// omit roll

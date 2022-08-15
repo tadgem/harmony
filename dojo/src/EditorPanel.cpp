@@ -370,6 +370,12 @@ void harmony::CameraComponentUI::OnComponentImGui(entt::registry& registry, entt
 	{
 		return;
 	}
+
+	CameraComponent& c = registry.get<CameraComponent>(entity);
+	ImGui::DragFloat("Aspect", &c.Cam.Aspect);
+	ImGui::DragFloat("FOV", &c.Cam.FOV);
+	ImGui::DragFloat("Near Clip Plane", &c.Cam.NearClipPlane);
+	ImGui::DragFloat("Far Clip Plane", &c.Cam.FarClipPlane);
 }
 
 void harmony::CameraComponentUI::AddComponent(entt::registry& registry, entt::entity entity)

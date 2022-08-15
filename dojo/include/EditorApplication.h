@@ -7,7 +7,7 @@
 #include "LuaProgramComponent.h"
 namespace harmony
 {
-
+	class CameraSystem;
 	class Editor : public Program
 	{
 	public:
@@ -65,6 +65,7 @@ namespace harmony
 		Ref<Pipeline> p_VectorGraphicsPipeline;
 		Ref<LuaProgramComponent> p_LuaComponent;
 		Ref<TransformSystem> p_TransformSystem;
+		Ref<CameraSystem> p_CameraSystem;
 		EditorMainMenuBar p_MainMenuBar;
 	private:
 		std::string p_LoadedScenePath;

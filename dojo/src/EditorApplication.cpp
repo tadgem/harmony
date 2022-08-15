@@ -2,6 +2,7 @@
 #include "Rendering/Shapes.h"
 #include "ECS/MeshSystem.h"
 #include "ECS/MaterialSystem.h"
+#include "ECS/CameraSystem.h"
 #include "Core/Time.h"
 #include "Core/Input.h"
 #include "ShaderHotReload.h"
@@ -62,9 +63,11 @@ void harmony::Editor::AddProgramComponents()
 void harmony::Editor::AddSystems()
 {
 	p_TransformSystem = AddSystem<TransformSystem>().lock();
+	p_CameraSystem = AddSystem<CameraSystem>().lock();
 	AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
 	AddSystem<MeshSystem>(m_AssetManager);
 	AddSystem<LuaSystem>(p_LuaComponent);
+	
 }
 
 void harmony::Editor::AddEditorPanels()
@@ -78,6 +81,7 @@ void harmony::Editor::AddEditorPanels()
 	inspector->AddComponentUI<TransformComponentUI>();
 	inspector->AddComponentUI<MeshComponentUI>(m_AssetManager);
 	inspector->AddComponentUI<MaterialComponentUI>(m_Renderer, m_AssetManager);
+	inspector->AddComponentUI<CameraComponentUI>(m_Renderer);
 	p_Panels.emplace_back(inspector);
 }
 
@@ -141,6 +145,7 @@ int harmony::Editor::OnEditUpdate()
 	if (p_ActiveScene)
 	{
 		p_TransformSystem->Update(p_ActiveScene->m_Registry);
+		p_CameraSystem->Update(p_ActiveScene->m_Registry);
 	}
 
 	RunRendererPostUpdate();

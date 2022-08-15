@@ -16,5 +16,8 @@ namespace harmony
 
     protected:
         Ref<Camera> p_MainCamera;
+
+        // Inherited via System
+        virtual void Refresh() override;
     };
 };

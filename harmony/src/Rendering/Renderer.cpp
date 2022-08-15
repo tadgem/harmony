@@ -200,6 +200,7 @@ harmony::PipelineStack& harmony::Renderer::GetViewPipelineStack(const std::strin
             return stack;
         }
     }
+    harmony::log::error("No pipeline stack with name : {}", viewName);
     // TODO: This is horrible, fix me
     return p_Views.begin()->second;
 }

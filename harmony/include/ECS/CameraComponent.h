@@ -6,5 +6,6 @@ namespace harmony
     struct CameraComponent
     {
         Camera Cam;
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(CameraComponent, Cam);
     };
 };

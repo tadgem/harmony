@@ -35,7 +35,7 @@ void harmony::RuntimeView::OnImGui()
 
 	const std::string runteimeViewTitle = std::string(ICON_FA_PLAY_CIRCLE) + " Runtime";
 	glm::mat4 mat = glm::mat4(1.0);
-	PipelineStack& stack = p_Renderer.GetViewPipelineStack("Runtime");
+	PipelineStack& stack = p_Renderer.GetViewPipelineStack("RuntimeView");
 	if (ImGui::Begin(runteimeViewTitle.c_str()))
 	{
 		bgfx::TextureHandle finalImageHandle = stack.GetStackFinalImage();
