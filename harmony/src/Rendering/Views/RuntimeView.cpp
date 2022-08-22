@@ -79,4 +79,16 @@ void harmony::RuntimeView::OnImGuiOptions()
 		ImGui::EndCombo();
 	}
 }
+nlohmann::json harmony::RuntimeView::Serialize()
+{
+	nlohmann::json j = View::Serialize();
+	j["entity"] = CameraEntity;
+	return j;
+}
+void harmony::RuntimeView::Deserialize(nlohmann::json& json)
+{
+	View::Deserialize(json);
+	CameraEntity = json["entity"];
+
+}
 #endif

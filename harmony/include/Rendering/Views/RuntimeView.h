@@ -16,6 +16,9 @@ namespace harmony
         virtual void OnImGui() override;
         virtual void OnImGuiOptions() override;
 #endif
+
+        virtual nlohmann::json  Serialize() override;
+        virtual void            Deserialize(nlohmann::json& json) override;
         entt::entity CameraEntity;
     protected:
         Program& p_Program;

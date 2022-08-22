@@ -33,3 +33,18 @@ void harmony::View::OnImGuiOptions()
 {
 
 }
+
+nlohmann::json harmony::View::Serialize()
+{
+	auto j = nlohmann::json();
+	j["name"] = m_Name;
+	j["width"] = m_Width;
+	j["height"] = m_Height;
+}
+
+void harmony::View::Deserialize(nlohmann::json& json)
+{
+	m_Name = json["name"];
+	m_Width = json["width"];
+	m_Height = json["height"];
+}

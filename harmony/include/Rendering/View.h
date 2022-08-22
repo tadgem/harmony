@@ -39,7 +39,8 @@ namespace harmony
 
         std::string m_Name;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(View, m_Name, m_Width, m_Height)
+        virtual nlohmann::json  Serialize();
+        virtual void            Deserialize(nlohmann::json& json);
 
     protected:
 

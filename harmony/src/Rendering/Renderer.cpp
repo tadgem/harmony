@@ -546,7 +546,7 @@ nlohmann::json harmony::Renderer::Serialize()
     for (auto& [view, pipelineStack] : p_Views)
     {
         nlohmann::json viewJson;
-        viewJson["view"] = *view;
+        viewJson["view"] = view->Serialize();
         viewJson["stack"] = pipelineStack.Serialize();
         json["renderer"]["views"].emplace_back(viewJson);
 
