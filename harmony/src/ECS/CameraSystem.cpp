@@ -3,6 +3,11 @@
 #include "ECS/TransformComponent.h"
 #include "Core/Memory.h"
 #include "Core/MathsUtils.h"
+#include "Core/Program.h"
+#ifdef HARMONY_DEBUG
+#include "Rendering/Debug/GfxDebug.h"
+#endif
+
 harmony::CameraSystem::CameraSystem() : System(GetTypeHash<CameraComponent>())
 {
 }
@@ -15,9 +20,10 @@ void harmony::CameraSystem::Update(entt::registry& registry)
 {
     auto view = registry.view<TransformComponent, CameraComponent>();
 
-    for (auto [entity, t,  c] : view.each())
+    for (auto& [entity, t,  c] : view.each())
     {
-        c.Cam.Projection = glm::perspectiveFov(glm::radians(c.Cam.FOV), c.Cam.Aspect, 1.0f, c.Cam.NearClipPlane, c.Cam.FarClipPlane);
+        c.Cam.Projection = glm::mat4(1.0);
+        c.Cam.Projection = glm::perspectiveFov(glm::radians(c.Cam.FOV), static_cast<float>(Program::p_WindowWidth), static_cast<float>(Program::p_WindowHeight),  c.Cam.NearClipPlane, c.Cam.FarClipPlane);
 
         glm::quat qPitch = glm::angleAxis(glm::radians(-t.Euler.x), glm::vec3(1, 0, 0));
         glm::quat qYaw = glm::angleAxis(glm::radians(t.Euler.y), glm::vec3(0, 1, 0));
@@ -28,6 +34,12 @@ void harmony::CameraSystem::Update(entt::registry& registry)
         translate = glm::translate(translate, -t.Position);
 
         c.Cam.View = rotate * translate;        
+#ifdef  HARMONY_DEBUG
+        glm::mat4 viewProj = c.Cam.Projection * c.Cam.View;
+        GfxDebug::Get()->setColor(GfxDebug::Channel::Editor, 0xaaffffff);
+        GfxDebug::Get()->drawFrustum(GfxDebug::Channel::Editor, &viewProj[0]);
+#endif 
+
     }
 }
 

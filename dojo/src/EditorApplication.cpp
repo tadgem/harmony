@@ -95,10 +95,10 @@ void harmony::Editor::InitializePipelines()
 	p_RuntimeNormalPipeline = CreateRef<Pipeline>(PipelineHandle::New("Runtime Mesh Normals"));
 	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>();
 	
-	p_NormalPipeline->AddPipelineStage<PipelineStage>("NormalStage", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
-	p_TexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
-	p_RuntimeNormalPipeline->AddPipelineStage<PipelineStage>("NormalStage", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
-	p_RuntimeTexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
+	p_NormalPipeline->AddPipelineStage<PipelineStage>("NormalStage1", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
+	p_TexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage1", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
+	p_RuntimeNormalPipeline->AddPipelineStage<PipelineStage>("NormalStage2", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
+	p_RuntimeTexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage2", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
 
 
 	m_Renderer.AddPipeline(p_DebugPipeline, true);

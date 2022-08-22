@@ -20,7 +20,7 @@ void harmony::RuntimeView::OnPreUpdate(entt::registry& registry)
 	{
 		CameraComponent& component = registry.get<CameraComponent>(CameraEntity);
 		m_View = component.Cam.View;
-		m_Projection = component.Cam.View;
+		m_Projection = component.Cam.Projection;
 	}
 }
 #if HARMONY_DEBUG

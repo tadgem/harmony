@@ -128,7 +128,7 @@ void harmony::EditorView::OnImGui()
 	const std::string editorViewTitle = std::string(ICON_FA_VIDEO_CAMERA) + " Editor";
 	glm::mat4 mat = glm::mat4(1.0);
 	PipelineStack& stack = p_Renderer.GetViewPipelineStack("Editor");
-	if (ImGui::Begin(editorViewTitle.c_str()))
+	if (ImGui::Begin(editorViewTitle.c_str(), (bool*)0, ImGuiWindowFlags_NoScrollbar))
 	{
 		bgfx::TextureHandle finalImageHandle = stack.GetStackFinalImage();
 		if (!bgfx::isValid(finalImageHandle))
@@ -136,9 +136,10 @@ void harmony::EditorView::OnImGui()
 			ImGui::End();
 			return;
 		}
+	
 		ImGui::Image(
 			finalImageHandle,
-			ImVec2(static_cast<float>(m_Width), static_cast<float>(m_Height))
+			ImGui::GetWindowSize()
 		);
 
 		if (ImGui::IsWindowFocused())

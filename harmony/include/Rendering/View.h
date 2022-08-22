@@ -6,6 +6,8 @@
 #include "bgfx/bgfx.h"
 namespace harmony
 {
+    inline static const uint32_t g_InitialWidth = 1024;
+    inline static const uint32_t g_InitialHeight = 600;
     class View
     {
     public:

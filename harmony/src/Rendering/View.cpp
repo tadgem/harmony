@@ -6,12 +6,12 @@
 #endif
 
 harmony::View::View(const std::string& name) : 
-	c_InitialViewWidth(1280), 
-	c_InitialViewHeight(720),
+	c_InitialViewWidth(g_InitialWidth),
+	c_InitialViewHeight(g_InitialHeight),
 	m_View(glm::mat4(1.0)),
 	m_Projection(glm::mat4(1.0)),
-	m_Width(1280),
-	m_Height(720),
+	m_Width(g_InitialWidth),
+	m_Height(g_InitialHeight),
 	m_Name(name)
 {
 }
