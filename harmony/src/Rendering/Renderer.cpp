@@ -560,7 +560,7 @@ nlohmann::json harmony::Renderer::Serialize()
         }
 
         Ref<View> view = viewWr.lock();
-        json["renderer"]["active_views"].emplace_back(*view);
+        json["renderer"]["active_views"].emplace_back(view->Serialize());
     }
     
 

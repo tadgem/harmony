@@ -40,6 +40,8 @@ nlohmann::json harmony::View::Serialize()
 	j["name"] = m_Name;
 	j["width"] = m_Width;
 	j["height"] = m_Height;
+
+	return j;
 }
 
 void harmony::View::Deserialize(nlohmann::json& json)
