@@ -8,8 +8,13 @@ file(GLOB_RECURSE CORE_HEADERPP_FILES include/*.hpp)
 add_executable(Dojo main.cpp ${CORE_SRC_FILES} ${CORE_HEADER_FILES} ${CORE_HEADERPP_FILES})
 
 set_property(TARGET Dojo PROPERTY CXX_STANDARD 17)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error")
+
+if (WIN32)
+  # set stuff for windows
+else()
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error")
+endif()
 
 get_filename_component(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
