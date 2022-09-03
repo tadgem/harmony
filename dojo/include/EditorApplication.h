@@ -4,7 +4,6 @@
 #include "EditorPanel.h"
 #include "EditorMenu.h"
 #include "MainIncludes.h"
-#include "LuaProgramComponent.h"
 namespace harmony
 {
 	class CameraSystem;
@@ -63,7 +62,6 @@ namespace harmony
 		Ref<Pipeline> p_RuntimeTexturedMeshPipeline;
 		Ref<Pipeline> p_RuntimeNormalPipeline;
 		Ref<Pipeline> p_VectorGraphicsPipeline;
-		Ref<LuaProgramComponent> p_LuaComponent;
 		Ref<TransformSystem> p_TransformSystem;
 		Ref<CameraSystem> p_CameraSystem;
 		EditorMainMenuBar p_MainMenuBar;

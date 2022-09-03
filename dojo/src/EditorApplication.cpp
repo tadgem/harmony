@@ -8,10 +8,6 @@
 #include "ShaderHotReload.h"
 #include "Rendering/Views/RuntimeView.h"
 #include "Assets/ShaderSourceAssetFactory.h"
-#include "LuaScriptAssetFactory.h"
-#include "LuaSystem.h"
-#include "LuaScriptHotReload.h"
-
 harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*this)
 {
 	AddAssetTypeNames();
@@ -49,15 +45,11 @@ void harmony::Editor::AddAssetFactories()
 	m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<ShaderStageBinaryAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<ShaderSourceAssetFactory>());
-	m_AssetManager.AddAssetFactory(CreateRef<LuaScriptAssetFactory>());
 }
 
 void harmony::Editor::AddProgramComponents()
 {
 	AddProgramComponent<ShaderHotReload>(*this);
-	auto luaWr = AddProgramComponent<LuaProgramComponent>();
-	p_LuaComponent = luaWr.lock();
-	AddProgramComponent<LuaScriptHotReload>(*this, p_LuaComponent);
 }
 
 void harmony::Editor::AddSystems()
@@ -66,7 +58,6 @@ void harmony::Editor::AddSystems()
 	p_CameraSystem = AddSystem<CameraSystem>().lock();
 	AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
 	AddSystem<MeshSystem>(m_AssetManager);
-	AddSystem<LuaSystem>(p_LuaComponent);
 	
 }
 
