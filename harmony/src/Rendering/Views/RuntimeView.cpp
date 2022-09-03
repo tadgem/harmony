@@ -67,7 +67,7 @@ void harmony::RuntimeView::OnImGuiOptions()
 	{
 		auto view = scene->m_Registry.view<CameraComponent>();
 
-		for (auto& [entity, camera] : view.each())
+		for (auto [entity, camera] : view.each())
 		{
 			std::string name = "Entity " + std::to_string(static_cast<uint32_t>(entity));
 			if (ImGui::Selectable(name.c_str()))

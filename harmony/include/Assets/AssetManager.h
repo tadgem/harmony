@@ -12,6 +12,7 @@
 #include "Core/Profile.hpp"
 #include "entt.hpp"
 #include "Core/FileWatcher.hpp"
+#include  "ImGui/imgui.h"
 
 namespace harmony {
 
@@ -61,7 +62,7 @@ namespace harmony {
         {
             std::vector<AssetHandle> assets;
             auto view = p_AssetRegistry.view<AssetComponent<T>>();
-            for (auto& [entity, asset] : view.each())
+            for (auto [entity, asset] : view.each())
             {
                 assets.emplace_back(asset.Handle);
             }
@@ -73,7 +74,7 @@ namespace harmony {
         WeakRef<T> GetAsset(const AssetHandle& assetHandle)
         {
             auto view = p_AssetRegistry.view<AssetComponent<T>>();
-            for (auto& [entity, asset] : view.each())
+            for (auto [entity, asset] : view.each())
             {
                 if (asset.Handle == assetHandle)
                 {

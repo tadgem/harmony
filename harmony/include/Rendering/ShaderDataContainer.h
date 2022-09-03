@@ -112,28 +112,7 @@ namespace harmony
         
         bool ReturnIfNull();
         void UpdateUniform(ShaderUniform& uniform);
-
-        template <typename T>
-        ShaderUniform GetShaderUniform(const std::string name)
-        {
-            ShaderUniform uniform;
-            uniform.BgfxHandle = BGFX_INVALID_HANDLE;
-            uniform.Name = name;
-            uniform.TypeHash = typeid(T).hash_code();
-
-            for (uint16_t i = 0; i < m_UniformInfos.size(); i++)
-            {
-                bgfx::UniformInfo info = m_UniformInfos[i];
-
-                std::string uniformName = info.name;
-                if (uniformName == name)
-                {
-                    uniform.BgfxHandle = m_UniformHandles[i];
-                }
-            }
-            
-            return uniform;
-        }
+        
         uint16_t p_ShaderUniformCount;
     };
 };

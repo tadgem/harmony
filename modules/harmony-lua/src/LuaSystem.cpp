@@ -13,7 +13,7 @@ void harmony::LuaSystem::Init(entt::registry& registry)
 
     sol::state& state = p_LuaProgramComponent->p_State;
 
-    for (auto& [entity, lua] : view.each())
+    for (auto [entity, lua] : view.each())
     {
     }
 }

@@ -6,7 +6,12 @@
 std::string harmony::Utils::LoadStringFromPath(const std::string& path)
 {
 	HARMONY_PROFILE_FUNCTION()
-	std::ifstream inputFile = std::ifstream(path, std::ios::in | std::ios::binary);
+	std::string finalPath = path;
+	#if BX_PLATFORM_LINUX
+	finalPath = "./" + path;
+	#endif
+
+	std::ifstream inputFile = std::ifstream(finalPath, std::ios::in | std::ios::binary);
 
 	if (!inputFile.is_open())
 	{

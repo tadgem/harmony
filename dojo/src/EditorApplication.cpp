@@ -210,7 +210,7 @@ void harmony::Editor::Run()
 	m_Renderer.Init();
 	InitializePipelines();
 	InitializeViews();
-#if HARMONY_DEBUG
+#if HARMONY_DEBUG && BX_PLATFORM_WINDOWS
 	LoadProject("../../projects/Test/Test.harmonyproj");
 #endif
 	

@@ -19,8 +19,8 @@ namespace harmony
         };
 
         NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
-            {Orthographic, "orthographic"},
-            {Perspective, "perspective"},
+            {Type::Orthographic, "orthographic"},
+            {Type::Perspective, "perspective"},
             })
 
         View(const std::string& name);

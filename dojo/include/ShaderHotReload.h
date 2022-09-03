@@ -35,6 +35,8 @@ namespace harmony
         std::map<std::string, std::string> p_RendererProfileMapping;
 #if BX_PLATFORM_WINDOWS
         const std::string PLATFORM_SHADER_COMPILER_EXECUTABLE = ".exe";
+#elif BX_PLATFORM_LINUX
+        const std::string PLATFORM_SHADER_COMPILER_EXECUTABLE = "";
 #endif
 
 

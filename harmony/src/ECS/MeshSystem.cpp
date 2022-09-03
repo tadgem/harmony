@@ -14,7 +14,7 @@ void harmony::MeshSystem::Update(entt::registry& registry)
 {
 	auto view = registry.view<MeshComponent>();
 
-	for (auto& [entity, mesh] : view.each())
+	for (auto [entity, mesh] : view.each())
 	{
 		UpdateMeshComponent(mesh);
 	}

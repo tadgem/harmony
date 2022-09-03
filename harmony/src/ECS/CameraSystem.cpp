@@ -20,7 +20,7 @@ void harmony::CameraSystem::Update(entt::registry& registry)
 {
     auto view = registry.view<TransformComponent, CameraComponent>();
 
-    for (auto& [entity, t,  c] : view.each())
+    for (auto [entity, t,  c] : view.each())
     {
         c.Cam.Projection = glm::mat4(1.0);
         c.Cam.Projection = glm::perspectiveFov(glm::radians(c.Cam.FOV), static_cast<float>(Program::p_WindowWidth), static_cast<float>(Program::p_WindowHeight),  c.Cam.NearClipPlane, c.Cam.FarClipPlane);

@@ -27,12 +27,12 @@ namespace harmony
 	{
 	public:
 
-		enum Type : char
+		enum Type : unsigned char
 		{
 			Vertex,
 			Fragment, 
 			Compute,
-			Unknown = CHAR_MAX
+			Unknown = 255
 		};
 		NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
 			{Vertex, "vert"},

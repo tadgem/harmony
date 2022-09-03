@@ -681,12 +681,7 @@ bool glTF2Exporter::GetMatSheen(const aiMaterial &mat, glTF2::MaterialSheen &she
     if (GetMatColor(mat, sheen.sheenColorFactor, AI_MATKEY_SHEEN_COLOR_FACTOR) != aiReturn_SUCCESS) {
         return false;
     }
-
-    // Default Sheen color factor {0,0,0} disables Sheen, so do not export
-    if (sheen.sheenColorFactor == defaultSheenFactor) {
-        return false;
-    }
-
+    
     mat.Get(AI_MATKEY_SHEEN_ROUGHNESS_FACTOR, sheen.sheenRoughnessFactor);
 
     GetMatTex(mat, sheen.sheenColorTexture, AI_MATKEY_SHEEN_COLOR_TEXTURE);

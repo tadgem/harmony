@@ -6,7 +6,7 @@ namespace harmony
     class FSM
     {
     protected:
-        const uint8_t MAX_TRANSITIONS_PER_PROCESS = 8;
+        const unsigned char MAX_TRANSITIONS_PER_PROCESS = 8;
         class State
         {
         public:
