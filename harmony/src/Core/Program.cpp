@@ -304,7 +304,6 @@ void harmony::Program::PreRunInit()
 	HARMONY_PROFILE_FUNCTION()
 
 	RunSystemInit();
-	bgfx::touch(0);
 	LoadBuiltInAssets();
 	SetStyle();
 }
@@ -403,7 +402,7 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 
 void harmony::Program::ImGuiPreUpdate()
 {
-	// TODO move to pipeline
+	bgfx::setViewClear((bgfx::ViewId)255, BGFX_CLEAR_COLOR, 0x00000000);
 	ImGui::NewFrame();
 	ImGui_ImplSDL2_NewFrame(p_Window);
 	ImGuizmo::BeginFrame();
