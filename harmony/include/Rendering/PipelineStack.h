@@ -9,11 +9,10 @@ namespace harmony
     {
     public:
         PipelineStack(); 
+        
         PipelineStack(WeakRef<View> view, WeakRef<ShaderProgram> presentShader);
-        /// <summary>
-        /// Call after all pipelines have been rendered
-        /// </summary>
-        /// <returns></returns>
+
+        // N.B call after stack has run pre/post update
         bgfx::TextureHandle GetStackFinalImage();
         
         void Init(entt::registry& registry);
@@ -21,19 +20,19 @@ namespace harmony
         void PostUpdate(entt::registry& registry);
         void Cleanup(entt::registry& registry);
 
-        std::vector<Ref<Pipeline>> m_Stack;
 
-        nlohmann::json Serialize();
-        void Deserialize(nlohmann::json& json);
+        nlohmann::json  Serialize();
+        void            Deserialize(nlohmann::json& json);
 
     protected:
-        Ref<View> p_View;
-        bool p_Initialized;
+        Ref<View>                   p_View;
+        Ref<ShaderProgram>          p_PresentProgram;
+        std::vector<Ref<Pipeline>>  m_Stack;
+        bool                        p_Initialized;
 
-        bgfx::FrameBufferHandle p_FinalFramebufferHandle;
-        bgfx::ViewId p_FinalImageViewId;
+        bgfx::FrameBufferHandle     p_FinalFramebufferHandle;
+        bgfx::ViewId                p_FinalImageViewId;
+        bgfx::UniformHandle         p_TexHandle;
         
-        Ref<ShaderProgram> p_PresentProgram;
-        bgfx::UniformHandle p_TexHandle;
     };
 }

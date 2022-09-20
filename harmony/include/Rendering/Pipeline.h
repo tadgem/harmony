@@ -38,6 +38,7 @@ namespace harmony
         bgfx::TextureHandle GetFinalDepth();
         bgfx::ViewId GetFirstViewID();
         uint32_t NumPipelineStages();
+
         PipelineHandle m_Handle;
         std::string m_Name;
 
