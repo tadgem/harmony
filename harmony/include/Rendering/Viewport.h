@@ -10,7 +10,7 @@ namespace harmony
         Viewport();
         ~Viewport();
 
-        View m_ViewData;
+        Ref<View> m_ViewData;
         PipelineStack m_Stack;
 
     };

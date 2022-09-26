@@ -6,6 +6,25 @@
 #include "Rendering/View.h"
 namespace harmony
 {
+
+    struct Attachment 
+    {
+        enum Type
+        {
+            RGBA8F = 1,
+            RGBA16F = 2,
+            RGBA32F = 4,
+            Depth16F = 8,
+            Depth24F = 16,
+            Depth32F = 32,
+
+        };
+
+        bgfx::TextureHandle m_Handle;
+        Type                m_Type;
+    };
+
+    // TODO: do we need this
     struct PipelineHandle
     {
         uint16_t Index;
@@ -27,43 +46,39 @@ namespace harmony
         {
             PrimaryDraw,
             SecondaryDraw,
-            PostProcess
+            PostProcess, 
+            Compute
         };
 
         NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
             {PrimaryDraw, "primaryDraw"},
             {SecondaryDraw, "secondaryDraw"},
             {PostProcess, "postProcess"},
+            {Compute, "compute"}
             })
 
-        PipelineStage(const std::string& name, Type stageType, WeakRef<ShaderProgram> shader);
+        PipelineStage(
+            const std::string& name, 
+            Type stageType,
+            WeakRef<ShaderProgram> shader, 
+            Attachment::Type attachments = (Attachment::Type)(Attachment::Type::RGBA8F | Attachment::Type::Depth16F));
         PipelineStage();
 
-        virtual void Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle);
-        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle);
-        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle);
+        virtual bgfx::FrameBufferHandle Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
+        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view , bgfx::ViewId viewId);
+        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
         virtual void Cleanup();     
 
-        virtual bgfx::FrameBufferHandle GetStageFinalFramebuffer();
-        virtual bgfx::TextureHandle GetStageDepthTexture();
-
-        bgfx::ViewId m_ViewId;
 
         bool m_HasHDRAttachment;
         bool m_HasDepthAttachment;
 
         Type m_StageType;
+        Attachment::Type m_Attachments;
         std::string m_Name;
-        virtual Ref<PipelineStage> Clone();
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStage, m_Name, m_StageType, p_Shader)
     protected:
-
-
-        bgfx::FrameBufferHandle p_FrameBufferHandle;
-        std::vector<bgfx::TextureHandle> p_Attachments;
         WeakRef<ShaderProgram> p_Shader;
-
-        bool p_RunPreFrame;
     };
 } 

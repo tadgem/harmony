@@ -8,11 +8,11 @@ namespace harmony
     {
     public:
         DebugDrawStage(GfxDebug::Channel channel);
-        virtual void Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
-        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
-        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
+        virtual bgfx::FrameBufferHandle Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId) override;
+        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId) override;
+        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId) override;
         virtual void Cleanup() override;
-        virtual Ref<PipelineStage> Clone() override;
+
         GfxDebug::Channel m_Channel;
         bool Active;
         DebugDrawEncoder* p_DebugRenderer;

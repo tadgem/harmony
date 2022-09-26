@@ -4,17 +4,15 @@
 #include "ECS/MeshComponent.h"
 #include "ECS/TransformComponent.h"
 #include "Core/Log.hpp"
-harmony::PipelineStage::PipelineStage(const std::string& name, Type stageType, WeakRef<ShaderProgram> shader) : m_Name(name), m_ViewId(Renderer::GetViewID()), m_StageType(stageType), p_Shader(shader)
+harmony::PipelineStage::PipelineStage(const std::string& name, Type stageType, WeakRef<ShaderProgram> shader, Attachment::Type attachments) : m_Name(name), m_StageType(stageType), m_Attachments(attachments), p_Shader(shader)
 {
-	p_FrameBufferHandle = BGFX_INVALID_HANDLE;
-	p_RunPreFrame = false;
 }
 
 harmony::PipelineStage::PipelineStage()
 {
 }
 
-void harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
+bgfx::FrameBufferHandle harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
 	if (view.expired())
 	{
@@ -22,43 +20,109 @@ void harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view, 
 	}
 
 	Ref<View> _view = view.lock();
+	std::vector<bgfx::TextureHandle> fbAttachments = std::vector<bgfx::TextureHandle>();
 
-	p_Attachments.emplace_back(
-		bgfx::createTexture2D(
-			_view->m_Width
-			, _view->m_Height
-			, false
-			, 1
-			, bgfx::TextureFormat::BGRA8
-			, BGFX_TEXTURE_RT
-		));
-	p_Attachments.emplace_back(
-		bgfx::createTexture2D(
-			_view->m_Width
-			, _view->m_Height
-			, false
-			, 1
-			, bgfx::TextureFormat::D32F
-			, BGFX_TEXTURE_RT| BGFX_STATE_DEPTH_TEST_LESS | BGFX_TEXTURE_BLIT_DST 
-		));
-	m_HasHDRAttachment = false;
-	m_HasDepthAttachment = true;
-	p_FrameBufferHandle = bgfx::createFrameBuffer(p_Attachments.size(), p_Attachments.data(), false);
-	bgfx::setViewFrameBuffer(m_ViewId, p_FrameBufferHandle);
-	bgfx::setViewRect(m_ViewId, 0, 0, bgfx::BackbufferRatio::Equal);
+	if (m_Attachments && Attachment::Type::RGBA16F ||
+		m_Attachments && Attachment::Type::RGBA32F)
+	{
+		m_HasHDRAttachment = true;
+	}
+
+	if (m_Attachments && Attachment::Type::Depth16F ||
+		m_Attachments && Attachment::Type::Depth24F ||
+		m_Attachments && Attachment::Type::Depth32F)
+	{
+		m_HasDepthAttachment = true;
+	}
+
+
+	if (m_HasHDRAttachment)
+	{
+		bgfx::TextureFormat::Enum format = bgfx::TextureFormat::Unknown;
+		if (m_Attachments && Attachment::Type::RGBA16F)
+		{
+			format = bgfx::TextureFormat::RGBA16F;
+		}
+		else if (m_Attachments && Attachment::Type::RGBA32F)
+		{
+			format = bgfx::TextureFormat::RGBA32F;
+		}
+		else
+		{
+			harmony::log::error("Invalid attachment format specified, defaulting to RGBA16F");
+			format = bgfx::TextureFormat::RGBA16F;
+		}
+
+		fbAttachments.emplace_back(
+			bgfx::createTexture2D(
+				 _view->m_Width
+				, _view->m_Height
+				, false
+				, 1
+				, format
+				, BGFX_TEXTURE_RT
+			));
+	}
+	else
+	{
+		fbAttachments.emplace_back(
+			bgfx::createTexture2D(
+				_view->m_Width
+				, _view->m_Height
+				, false
+				, 1
+				, bgfx::TextureFormat::BGRA8
+				, BGFX_TEXTURE_RT
+			));
+	}
+
+	if (m_HasDepthAttachment)
+	{
+		bgfx::TextureFormat::Enum format = bgfx::TextureFormat::Unknown;
+		if (m_Attachments && Attachment::Type::Depth16F)
+		{
+			format = bgfx::TextureFormat::D16F;
+		}
+		else if (m_Attachments && Attachment::Type::Depth24F)
+		{
+			format = bgfx::TextureFormat::D24F;
+		}
+		else if (m_Attachments && Attachment::Type::Depth32F)
+		{
+			format = bgfx::TextureFormat::D32F;
+		}
+		else
+		{
+			harmony::log::error("Invalid depth attachment format specified, defaulting to D16F");
+			format = bgfx::TextureFormat::D16F;
+		}
+
+		fbAttachments.emplace_back(
+			bgfx::createTexture2D(
+				_view->m_Width
+				, _view->m_Height
+				, false
+				, 1
+				, format
+				, BGFX_TEXTURE_RT | BGFX_STATE_DEPTH_TEST_LESS | BGFX_TEXTURE_BLIT_DST
+			));
+	}
+	
+	bgfx::FrameBufferHandle fbh = bgfx::createFrameBuffer(fbAttachments.size(), fbAttachments.data(), false);
+	// this needs to be moved to the Viewport or PipelineStack
+	bgfx::setViewFrameBuffer(viewId, fbh);
+	bgfx::setViewRect(viewId, 0, 0, bgfx::BackbufferRatio::Equal);
+
+	return fbh;
 }
 
-void harmony::PipelineStage::PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
+void harmony::PipelineStage::PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
-	if (p_RunPreFrame)
-	{
-		harmony::log::error("Already ran pre frame callback for this frame!");
-		return;
-	}
-	bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH , 0x00000000, 1.0f);
+	
+	bgfx::setViewClear(viewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH , 0x00000000, 1.0f);
 	Ref<View> _view = view.lock();
-	bgfx::setViewTransform(m_ViewId, &_view->m_View[0], &_view->m_Projection[0]);
-	bgfx::setViewRect(m_ViewId, 0, 0, _view->m_Width, _view->m_Height);
+	bgfx::setViewTransform(viewId, &_view->m_View[0], &_view->m_Projection[0]);
+	bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
 
 	auto drawables = registry.view<MeshComponent, MaterialComponent, TransformComponent>();
 	Ref<ShaderProgram> pipelineShader = p_Shader.lock();
@@ -77,42 +141,16 @@ void harmony::PipelineStage::PreUpdate(entt::registry& registry, WeakRef<View> v
 			bgfx::setTransform(&transform.Model[0]);
 			bgfx::setVertexBuffer(0, mesh.MeshHandle.m_VBH);
 			bgfx::setIndexBuffer(mesh.MeshHandle.m_IBH);
-			bgfx::submit(m_ViewId, pipelineShader->m_Handle);
+			bgfx::submit(viewId, pipelineShader->m_Handle);
 		}
 	}
 }
 
-void harmony::PipelineStage::PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
+void harmony::PipelineStage::PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
-	if (!p_RunPreFrame)
-	{
-		return;
-	}
-	p_RunPreFrame = false;
+	
 }
 
 void harmony::PipelineStage::Cleanup()
 {
-}
-
-bgfx::FrameBufferHandle harmony::PipelineStage::GetStageFinalFramebuffer()
-{
-	return p_FrameBufferHandle;
-}
-
-bgfx::TextureHandle harmony::PipelineStage::GetStageDepthTexture()
-{
-	if (!m_HasDepthAttachment)
-	{
-		return bgfx::TextureHandle();
-	}
-	return bgfx::getTexture(p_FrameBufferHandle, 1);
-}
-
-harmony::Ref<harmony::PipelineStage> harmony::PipelineStage::Clone()
-{
-	Ref<PipelineStage> newStage = CreateRef<PipelineStage>(m_Name, m_StageType, p_Shader);
-	newStage->m_HasDepthAttachment = m_HasDepthAttachment;
-	newStage->m_HasHDRAttachment = m_HasHDRAttachment;
-	return newStage;
 }

@@ -6,22 +6,24 @@
 #include "bgfx/bgfx.h"
 namespace harmony
 {
-    inline static const uint32_t g_InitialWidth = 1024;
-    inline static const uint32_t g_InitialHeight = 600;
-
+    inline static const uint32_t    g_InitialWidth = 1024;
+    inline static const uint32_t    g_InitialHeight = 600;
+    inline static const float       g_DefaultFOV = 75.0f;
+    
+    enum class ProjectionType
+    {
+        Orthographic,
+        Perspective
+    };
+    
+    NLOHMANN_JSON_SERIALIZE_ENUM(ProjectionType, {
+        {Type::Orthographic, "orthographic"},
+        {Type::Perspective, "perspective"},
+    })
+    
     class View
     {
     public:
-        enum class Type
-        {
-            Orthographic,
-            Perspective
-        };
-
-        NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
-            {Type::Orthographic, "orthographic"},
-            {Type::Perspective, "perspective"},
-        })
 
         View(const std::string& name);
 
@@ -35,13 +37,13 @@ namespace harmony
         virtual void OnImGuiOptions();
 #endif
 
-        std::string m_Name;
-        uint32_t    m_Width;
-        uint32_t    m_Height;
-        glm::mat4   m_View;
-        glm::mat4   m_Projection;
+        std::string     m_Name;
+        uint32_t        m_Width;
+        uint32_t        m_Height;
+        glm::mat4       m_View;
+        glm::mat4       m_Projection;
+        float           m_FOV;
+        ProjectionType  m_ProjectionType;
 
-    protected:
-        friend class Renderer;
     };
 };

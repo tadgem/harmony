@@ -80,14 +80,18 @@ void harmony::Editor::InitializePipelines()
 {
 	p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
 	p_RuntimeDebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Game);
+
 	p_TexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle::New("Editor Textured Mesh"));
+	
 	p_NormalPipeline = CreateRef<Pipeline>(PipelineHandle::New("Editor Mesh Normals"));
 	p_RuntimeTexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle::New("Runtime Textured Mesh"));
 	p_RuntimeNormalPipeline = CreateRef<Pipeline>(PipelineHandle::New("Runtime Mesh Normals"));
 	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>();
 	
 	p_NormalPipeline->AddPipelineStage<PipelineStage>("NormalStage1", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
+	
 	p_TexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage1", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
+	
 	p_RuntimeNormalPipeline->AddPipelineStage<PipelineStage>("NormalStage2", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
 	p_RuntimeTexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage2", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
 

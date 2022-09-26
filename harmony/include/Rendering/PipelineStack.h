@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include <vector>
 #include "Rendering/Pipeline.h"
 #include "Rendering/View.h"
@@ -9,30 +10,25 @@ namespace harmony
     {
     public:
         PipelineStack(); 
-        
-        PipelineStack(WeakRef<View> view, WeakRef<ShaderProgram> presentShader);
 
         // N.B call after stack has run pre/post update
         bgfx::TextureHandle GetStackFinalImage();
         
-        void Init(entt::registry& registry);
-        void PreUpdate(entt::registry& registry);
-        void PostUpdate(entt::registry& registry);
-        void Cleanup(entt::registry& registry);
+        void Init(entt::registry& registry, WeakRef<View> view);
+        void PreUpdate(entt::registry& registry, WeakRef<View> view);
+        void PostUpdate(entt::registry& registry, WeakRef<View> view);
+        void Cleanup(entt::registry& registry, WeakRef<View> view);
 
 
         nlohmann::json  Serialize();
         void            Deserialize(nlohmann::json& json);
 
     protected:
-        Ref<View>                   p_View;
-        Ref<ShaderProgram>          p_PresentProgram;
-        std::vector<Ref<Pipeline>>  m_Stack;
+        std::map<PipelineHandle, std::vector<bgfx::ViewId>>  m_Stack;
         bool                        p_Initialized;
 
         bgfx::FrameBufferHandle     p_FinalFramebufferHandle;
         bgfx::ViewId                p_FinalImageViewId;
-        bgfx::UniformHandle         p_TexHandle;
         
     };
 }

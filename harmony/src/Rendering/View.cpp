@@ -10,7 +10,9 @@ harmony::View::View(const std::string& name) :
 	m_Projection(glm::mat4(1.0)),
 	m_Width(g_InitialWidth),
 	m_Height(g_InitialHeight),
-	m_Name(name)
+	m_Name(name),
+	m_FOV(harmony::g_DefaultFOV),
+	m_ProjectionType(harmony::ProjectionType::Perspective)
 {
 }
 
@@ -38,6 +40,8 @@ nlohmann::json harmony::View::Serialize()
 	j["name"] = m_Name;
 	j["width"] = m_Width;
 	j["height"] = m_Height;
+	j["fov"] = m_FOV;
+	j["projectionType"] = m_ProjectionType;
 
 	return j;
 }
@@ -47,4 +51,6 @@ void harmony::View::Deserialize(nlohmann::json& json)
 	m_Name = json["name"];
 	m_Width = json["width"];
 	m_Height = json["height"];
+	m_FOV = json["fov"];
+	m_ProjectionType = json["projectionType"];
 }

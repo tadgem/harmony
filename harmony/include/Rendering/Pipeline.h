@@ -25,18 +25,11 @@ namespace harmony
 
         }
 
-        virtual void Init(entt::registry& registry, WeakRef<View> view);
-        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view);
-        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view);
-        virtual void Cleanup(entt::registry& registry, WeakRef<View> view);
-
-        virtual bgfx::TextureHandle GetFinalImage();
-        
-        virtual Ref<Pipeline> Clone();
-        
-        bgfx::TextureHandle GetInitialDepth();
-        bgfx::TextureHandle GetFinalDepth();
-        bgfx::ViewId GetFirstViewID();
+        virtual void Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
+        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
+        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
+        virtual void Cleanup(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
+                
         uint32_t NumPipelineStages();
 
         PipelineHandle m_Handle;
@@ -49,6 +42,5 @@ namespace harmony
 
     protected:
         std::vector<Ref<PipelineStage>> p_Stages;
-        bgfx::TextureHandle p_FinalImage;
     };
 };

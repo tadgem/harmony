@@ -4,7 +4,7 @@ harmony::Pipeline::Pipeline(const PipelineHandle& handle) : m_Handle(handle), m_
 {
 }
 
-void harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view)
+void harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
 	if (p_Stages.size() == 0)
 	{
@@ -12,11 +12,11 @@ void harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view)
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->Init(registry, view, m_Handle);
+		p_Stages[i]->Init(registry, view, viewId);
 	}
 }
 
-void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view)
+void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
 	Ref<View> _v = view.lock();
 	if (p_Stages.size() == 0)
@@ -25,15 +25,15 @@ void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view)
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		bgfx::setViewClear(p_Stages[i]->m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
+		bgfx::setViewClear(viewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->PreUpdate(registry, view, m_Handle);
+		p_Stages[i]->PreUpdate(registry, view, viewId);
 	}
 }
 
-void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view)
+void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
 	if (p_Stages.size() == 0)
 	{
@@ -41,11 +41,11 @@ void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view)
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->PostUpdate(registry, view, m_Handle);
+		p_Stages[i]->PostUpdate(registry, view, viewId);
 	}
 }
 
-void harmony::Pipeline::Cleanup(entt::registry& registry, WeakRef<View> view)
+void harmony::Pipeline::Cleanup(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
 	if (p_Stages.size() == 0)
 	{
@@ -57,72 +57,6 @@ void harmony::Pipeline::Cleanup(entt::registry& registry, WeakRef<View> view)
 	}
 }
 
-bgfx::TextureHandle harmony::Pipeline::GetFinalImage()
-{
-	if (p_Stages.size() == 0)
-	{
-		// harmony::log::warn("Pipeline with handle {} is empty!", m_Handle.Index);
-		return BGFX_INVALID_HANDLE;
-	}
-	bgfx::FrameBufferHandle fbToBlit = p_Stages[p_Stages.size() - 1]->GetStageFinalFramebuffer();
-
-	if (fbToBlit.idx == bgfx::kInvalidHandle)
-	{
-		return bgfx::TextureHandle();
-	}
-
-	return bgfx::getTexture(fbToBlit);
-}
-
-harmony::Ref<harmony::Pipeline> harmony::Pipeline::Clone()
-{
-	Ref<Pipeline> newPipeline =  CreateRef<Pipeline>(PipelineHandle::New(m_Handle.Name));
-
-	for (int i = 0; i < p_Stages.size(); i++)
-	{
-		Ref<PipelineStage> newStage = p_Stages[i]->Clone();
-		newPipeline->p_Stages.emplace_back(newStage);
-	}
-
-	return newPipeline;
-}
-
-bgfx::TextureHandle harmony::Pipeline::GetInitialDepth()
-{
-	for (int i = 0; i < p_Stages.size(); i++)
-	{
-		if (p_Stages[i]->m_HasDepthAttachment)
-		{
-			return bgfx::getTexture(p_Stages[i]->GetStageFinalFramebuffer(), 1);
-		}
-	}
-	
-	return bgfx::TextureHandle();
-}
-
-bgfx::TextureHandle harmony::Pipeline::GetFinalDepth()
-{
-	int index = p_Stages.size() - 1;
-
-	for (int index = p_Stages.size() - 1; index >= 0; index--)
-	{
-		if (p_Stages[index]->m_HasDepthAttachment)
-		{
-			return bgfx::getTexture(p_Stages[index]->GetStageFinalFramebuffer(), 1);
-		}
-	}
-
-	return bgfx::TextureHandle();
-}
-
-bgfx::ViewId harmony::Pipeline::GetFirstViewID()
-{
-	if (p_Stages.size() == 0)
-	{
-		return bgfx::ViewId();
-	}
-	return p_Stages[0]->m_ViewId;
-}
 
 uint32_t harmony::Pipeline::NumPipelineStages()
 {
