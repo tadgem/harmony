@@ -11,6 +11,7 @@ namespace harmony
     {
         enum Type
         {
+            Unknown = 0,
             RGBA8F = 1,
             RGBA16F = 2,
             RGBA32F = 4,
@@ -50,6 +51,12 @@ namespace harmony
             Compute
         };
 
+        struct Data
+        {
+            bgfx::FrameBufferHandle m_FramebufferHandle;
+            std::vector<Attachment> m_Attachments;
+        };
+
         NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
             {PrimaryDraw, "primaryDraw"},
             {SecondaryDraw, "secondaryDraw"},
@@ -64,7 +71,7 @@ namespace harmony
             Attachment::Type attachments = (Attachment::Type)(Attachment::Type::RGBA8F | Attachment::Type::Depth16F));
         PipelineStage();
 
-        virtual bgfx::FrameBufferHandle Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
+        virtual Data Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
         virtual void PreUpdate(entt::registry& registry, WeakRef<View> view , bgfx::ViewId viewId);
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
         virtual void Cleanup();     

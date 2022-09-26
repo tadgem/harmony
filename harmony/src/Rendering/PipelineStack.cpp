@@ -24,23 +24,23 @@ bgfx::TextureHandle harmony::PipelineStack::GetStackFinalImage()
 
 void harmony::PipelineStack::Init(entt::registry& registry, WeakRef<View> view)
 {
-    //for (int p = 0; p < m_Stack.size(); p++)
-    //{
-    //    if (!m_Stack[p])
-    //    {
-    //        harmony::log::warn("Pipeline {} is expired.", p);
-    //        continue;
-    //    }
-    //    m_Stack[p]->Init(registry, view);
-    //}
+    for (int p = 0; p < m_Stack.size(); p++)
+    {
+        if (!m_Stack[p])
+        {
+            harmony::log::warn("Pipeline {} is expired.", p);
+            continue;
+        }
+        m_Stack[p]->Init(registry, view);
+    }
 
-    //p_FinalImageViewId = Renderer::GetViewID();
-    //p_FinalFramebufferHandle = bgfx::createFrameBuffer(view->m_Width, view->m_Height, bgfx::TextureFormat::BGRA8);
-    //bgfx::setViewFrameBuffer(p_FinalImageViewId, p_FinalFramebufferHandle);
-    //bgfx::setViewRect(p_FinalImageViewId, 0, 0, bgfx::BackbufferRatio::Equal);
-    //bgfx::setViewName(p_FinalImageViewId, "FinalImage");
-    //p_TexHandle = p_PresentProgram->m_Uniforms[0].BgfxHandle;
-    //p_Initialized = true;
+    p_FinalImageViewId = Renderer::GetViewID();
+    p_FinalFramebufferHandle = bgfx::createFrameBuffer(view->m_Width, view->m_Height, bgfx::TextureFormat::BGRA8);
+    bgfx::setViewFrameBuffer(p_FinalImageViewId, p_FinalFramebufferHandle);
+    bgfx::setViewRect(p_FinalImageViewId, 0, 0, bgfx::BackbufferRatio::Equal);
+    bgfx::setViewName(p_FinalImageViewId, "FinalImage");
+    p_TexHandle = p_PresentProgram->m_Uniforms[0].BgfxHandle;
+    p_Initialized = true;
 }
 
 void harmony::PipelineStack::PreUpdate(entt::registry& registry, WeakRef<View> view)

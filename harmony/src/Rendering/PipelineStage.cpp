@@ -12,7 +12,7 @@ harmony::PipelineStage::PipelineStage()
 {
 }
 
-bgfx::FrameBufferHandle harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
+harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
 	if (view.expired())
 	{
@@ -20,7 +20,8 @@ bgfx::FrameBufferHandle harmony::PipelineStage::Init(entt::registry& registry, W
 	}
 
 	Ref<View> _view = view.lock();
-	std::vector<bgfx::TextureHandle> fbAttachments = std::vector<bgfx::TextureHandle>();
+	std::vector<Attachment> attachments = std::vector<Attachment>();
+	std::vector<bgfx::TextureHandle> attachmentTextureHandles = std::vector<bgfx::TextureHandle>();
 
 	if (m_Attachments && Attachment::Type::RGBA16F ||
 		m_Attachments && Attachment::Type::RGBA32F)
@@ -39,81 +40,115 @@ bgfx::FrameBufferHandle harmony::PipelineStage::Init(entt::registry& registry, W
 	if (m_HasHDRAttachment)
 	{
 		bgfx::TextureFormat::Enum format = bgfx::TextureFormat::Unknown;
+		Attachment::Type type = Attachment::Type::Unknown;
 		if (m_Attachments && Attachment::Type::RGBA16F)
 		{
 			format = bgfx::TextureFormat::RGBA16F;
+			type = Attachment::Type::RGBA16F;
 		}
 		else if (m_Attachments && Attachment::Type::RGBA32F)
 		{
 			format = bgfx::TextureFormat::RGBA32F;
+			type = Attachment::Type::RGBA32F;
 		}
 		else
 		{
 			harmony::log::error("Invalid attachment format specified, defaulting to RGBA16F");
 			format = bgfx::TextureFormat::RGBA16F;
+			type = Attachment::Type::RGBA16F;
 		}
+		bgfx::TextureHandle textureHandle = bgfx::createTexture2D(
+			_view->m_Width
+			, _view->m_Height
+			, false
+			, 1
+			, format
+			, BGFX_TEXTURE_RT
+		);
 
-		fbAttachments.emplace_back(
-			bgfx::createTexture2D(
-				 _view->m_Width
-				, _view->m_Height
-				, false
-				, 1
-				, format
-				, BGFX_TEXTURE_RT
-			));
+		Attachment a{
+			textureHandle,
+			type
+		};
+
+		attachments.emplace_back(a);
+		attachmentTextureHandles.emplace_back(textureHandle);
 	}
 	else
 	{
-		fbAttachments.emplace_back(
-			bgfx::createTexture2D(
-				_view->m_Width
-				, _view->m_Height
-				, false
-				, 1
-				, bgfx::TextureFormat::BGRA8
-				, BGFX_TEXTURE_RT
-			));
+		Attachment::Type type = Attachment::Type::RGBA8F;
+		bgfx::TextureHandle textureHandle = bgfx::createTexture2D(
+			_view->m_Width
+			, _view->m_Height
+			, false
+			, 1
+			, bgfx::TextureFormat::BGRA8
+			, BGFX_TEXTURE_RT
+		);
+
+		Attachment a{
+			textureHandle,
+			type
+		};
+		attachments.emplace_back(a);
+		attachmentTextureHandles.emplace_back(textureHandle);
 	}
 
 	if (m_HasDepthAttachment)
 	{
 		bgfx::TextureFormat::Enum format = bgfx::TextureFormat::Unknown;
+		Attachment::Type type = Attachment::Type::Unknown;
 		if (m_Attachments && Attachment::Type::Depth16F)
 		{
 			format = bgfx::TextureFormat::D16F;
+			type = Attachment::Type::Depth16F;
 		}
 		else if (m_Attachments && Attachment::Type::Depth24F)
 		{
 			format = bgfx::TextureFormat::D24F;
+			type = Attachment::Type::Depth24F;
 		}
 		else if (m_Attachments && Attachment::Type::Depth32F)
 		{
 			format = bgfx::TextureFormat::D32F;
+			type = Attachment::Type::Depth32F;
 		}
 		else
 		{
 			harmony::log::error("Invalid depth attachment format specified, defaulting to D16F");
 			format = bgfx::TextureFormat::D16F;
+			type = Attachment::Type::Depth16F;
 		}
+		bgfx::TextureHandle textureHandle = bgfx::createTexture2D(
+			_view->m_Width
+			, _view->m_Height
+			, false
+			, 1
+			, format
+			, BGFX_TEXTURE_RT | BGFX_STATE_DEPTH_TEST_LESS | BGFX_TEXTURE_BLIT_DST
+		);
 
-		fbAttachments.emplace_back(
-			bgfx::createTexture2D(
-				_view->m_Width
-				, _view->m_Height
-				, false
-				, 1
-				, format
-				, BGFX_TEXTURE_RT | BGFX_STATE_DEPTH_TEST_LESS | BGFX_TEXTURE_BLIT_DST
-			));
+		Attachment a{
+			textureHandle,
+			type
+		};
+
+		attachments.emplace_back(a);
+		attachmentTextureHandles.emplace_back(textureHandle);
 	}
 	
-	bgfx::FrameBufferHandle fbh = bgfx::createFrameBuffer(fbAttachments.size(), fbAttachments.data(), false);
+	bgfx::FrameBufferHandle fbh = bgfx::createFrameBuffer(attachmentTextureHandles.size(), attachmentTextureHandles.data(), false);
 	// this needs to be moved to the Viewport or PipelineStack
 	bgfx::setViewFrameBuffer(viewId, fbh);
 	bgfx::setViewRect(viewId, 0, 0, bgfx::BackbufferRatio::Equal);
 
-	return fbh;
+	Data data
+	{
+		fbh,
+		attachments
+	};
+
+	return data;
 }
 
 void harmony::PipelineStage::PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
