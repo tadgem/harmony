@@ -20,8 +20,6 @@ harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetMa
     HARMONY_PROFILE_FUNCTION()
     p_CreatePipelineWindow = false;
     p_CreateShaderProgramWindow = false;
-    /*p_SelectedVertexAsset = AssetHandle();
-    p_SelectedFragmentAsset = AssetHandle();*/
 }
 
 void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex)
@@ -142,16 +140,16 @@ void harmony::Renderer::Init()
 {
     PosColorTexCoord0Vertex::init();
     AddBuiltInShaders();
-    entt::registry tempRegistry;
+    /*entt::registry tempRegistry;
     for (auto& [view, stack] : p_Views)
     {
         for (int i = 0; i < stack.m_Stack.size(); i++)
         {
-            Ref<Pipeline> pipeline = stack.m_Stack[i];
+            Ref<Pipeline> pipeline = stack.m_Stack[i].lock();
             pipeline->Init(tempRegistry, view);
         }
         stack.Init(tempRegistry);
-    }
+    }*/
 }
 
 void harmony::Renderer::OnPreUpdate(entt::registry& registry)
@@ -168,7 +166,7 @@ void harmony::Renderer::OnPreUpdate(entt::registry& registry)
         view->OnPreUpdate(registry);
         PipelineStack& stack = p_Views[view];
         
-        stack.PreUpdate(registry);
+        // stack.PreUpdate(registry);
     }
 }
 
@@ -187,7 +185,7 @@ void harmony::Renderer::OnPostUpdate(entt::registry& registry)
         
         PipelineStack& stack = p_Views[view];
 
-        stack.PostUpdate(registry);
+        // stack.PostUpdate(registry);
     }
 }
 
@@ -229,7 +227,7 @@ void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipel
 
     Ref<Pipeline> p = pipeline.lock();
     entt::registry r;
-    p->Init(r, viewWeakRef);
+    // p->Init(r, viewWeakRef);
 
     p_Views[view].m_Stack.emplace_back(pipeline);
 }
@@ -289,17 +287,6 @@ void harmony::Renderer::OnImGui()
             ImGui::Text(view->m_Name.c_str());
             if (ImGui::BeginCombo("Add Pipeline", ""))
             {
-                for (int i = 0; i < m_PipelinePrototypes.size(); i++)
-                {
-                    if (ImGui::Selectable(m_PipelinePrototypes[i]->m_Name.c_str()))
-                    {
-                        Ref<Pipeline> newPipeline = m_PipelinePrototypes[i]->Clone();
-                        AddPipeline(newPipeline);
-
-                        AddViewPipeline(view, newPipeline);
-
-                    }
-                }
                 ImGui::EndCombo();
             }
 
@@ -325,7 +312,7 @@ void harmony::Renderer::OnImGui()
                         indexToShift = i;
                     }
                     ImGui::SameLine();
-                    ImGui::Text(pipelines.m_Stack[i]->m_Name.c_str());
+                    ImGui::Text(pipelines.m_Stack[i].lock()->m_Name.c_str());
                 }
 
                 if (shift)
@@ -431,7 +418,7 @@ void harmony::Renderer::OnImGui()
 
                 if (canCreate)
                 {
-                    Ref<Pipeline> pipeline = CreateRef<Pipeline>(PipelineHandle::New(pipelineName));
+                    Ref<Pipeline> pipeline = CreateRef<Pipeline>(PipelineHandle{ pipelineName });
                     pipeline->AddPipelineStage<PipelineStage>(pipelineName + ".surface", PipelineStage::Type::PrimaryDraw, p_SelectedShaderProgram);
                     AddPipeline(pipeline, true);
                     p_CreatePipelineWindow = false;
@@ -617,22 +604,28 @@ void harmony::Renderer::AddPipeline(Ref<Pipeline> pipeline, bool makeClone)
     if (pipeline)
     {
         PipelineHandle handle = pipeline->m_Handle;
-        if (makeClone)
+        if (p_Pipelines.find(handle) != p_Pipelines.end())
         {
-            m_PipelinePrototypes.push_back(pipeline->Clone());
-        }
-        if (p_Pipelines.find(handle.Index) != p_Pipelines.end())
-        {
-            harmony::log::error("Already have a pipeline with handle {} ", handle.Index);
+            harmony::log::error("Already have a pipeline with name {} ", handle.Name);
             return;
         }
-        p_Pipelines.emplace(handle.Index, pipeline);
+        p_Pipelines.emplace(handle, pipeline);
 
     }
     else
     {
         harmony::log::error("Invalid pipeline provided.");
     }
+}
+
+harmony::WeakRef<harmony::Pipeline> harmony::Renderer::GetPipeline(const PipelineHandle& handle)
+{
+    if (p_Pipelines.find(handle) == p_Pipelines.end())
+    {
+        return WeakRef<Pipeline>();
+    }
+
+    return p_Pipelines[handle];
 }
 
 void harmony::Renderer::ReloadShader(WeakRef<ShaderProgram> shader)

@@ -5,30 +5,38 @@ harmony::VectorGraphicsStage::VectorGraphicsStage() : PipelineStage("VectorGraph
 	
 }
 
-bgfx::FrameBufferHandle harmony::VectorGraphicsStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
+harmony::PipelineStage::Data harmony::VectorGraphicsStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
     HARMONY_PROFILE_FUNCTION()
 
     p_Shader = Program::Get()->m_Renderer.GetShader("NanoVG");
     
 	Ref<View> _view = view.lock();
-	std::vector<bgfx::TextureHandle> attachments = std::vector<bgfx::TextureHandle>();
-	attachments.emplace_back(
-		bgfx::createTexture2D(
-				_view->m_Width
-			,	_view->m_Height
-			, false
-			, 1
-			, bgfx::TextureFormat::BGRA8
-			, BGFX_TEXTURE_RT
-		));
+	std::vector<bgfx::TextureHandle> fbAttachments = std::vector<bgfx::TextureHandle>();
+	std::vector<Attachment> attachments = std::vector<Attachment>();
+	fbAttachments.emplace_back(
+	bgfx::createTexture2D(
+			_view->m_Width
+		,	_view->m_Height
+		, false
+		, 1
+		, bgfx::TextureFormat::BGRA8
+		, BGFX_TEXTURE_RT
+	));
+
+	Attachment a
+	{
+		fbAttachments[0],
+		Attachment::Type::RGBA8F
+	};
+	attachments.emplace_back(a);
 
 	m_HasHDRAttachment = false;
 	m_HasDepthAttachment = false;
 
 	VectorGraphics::Get();
 	VectorGraphics::SetInstanceContext(nvgCreate(1, viewId));
-	bgfx::FrameBufferHandle fbh = bgfx::createFrameBuffer(attachments.size(), attachments.data(), false);
+	bgfx::FrameBufferHandle fbh = bgfx::createFrameBuffer(fbAttachments.size(), fbAttachments.data(), false);
 	bgfx::setViewRect(viewId, 0, 0, bgfx::BackbufferRatio::Equal);
 	bgfx::setViewFrameBuffer(viewId, fbh);
 	bgfx::setViewMode(viewId, bgfx::ViewMode::Sequential);
@@ -37,6 +45,8 @@ bgfx::FrameBufferHandle harmony::VectorGraphicsStage::Init(entt::registry& regis
 	s_InstanceCounter++;
 
 	bgfx::setViewName(viewId, viewName.c_str());
+
+	return PipelineStage::Data{ fbh, attachments };
 }
 
 void harmony::VectorGraphicsStage::PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
@@ -58,7 +68,7 @@ void harmony::VectorGraphicsStage::Cleanup()
 }
 
 
-harmony::VectorPipeline::VectorPipeline() : Pipeline(PipelineHandle::New("VectorGraphicsPipeline"))
+harmony::VectorPipeline::VectorPipeline() : Pipeline(PipelineHandle{ "VectorGraphicsPipeline" })
 {
 	AddPipelineStage<VectorGraphicsStage>();
 }

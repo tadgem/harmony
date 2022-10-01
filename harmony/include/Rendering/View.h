@@ -17,8 +17,8 @@ namespace harmony
     };
     
     NLOHMANN_JSON_SERIALIZE_ENUM(ProjectionType, {
-        {Type::Orthographic, "orthographic"},
-        {Type::Perspective, "perspective"},
+        {ProjectionType::Orthographic, "Orthographic"},
+        {ProjectionType::Perspective, "Perspective"},
     })
     
     class View

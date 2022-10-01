@@ -24,7 +24,7 @@ bgfx::TextureHandle harmony::PipelineStack::GetStackFinalImage()
 
 void harmony::PipelineStack::Init(entt::registry& registry, WeakRef<View> view)
 {
-    for (int p = 0; p < m_Stack.size(); p++)
+    /*for (int p = 0; p < m_Stack.size(); p++)
     {
         if (!m_Stack[p])
         {
@@ -40,7 +40,7 @@ void harmony::PipelineStack::Init(entt::registry& registry, WeakRef<View> view)
     bgfx::setViewRect(p_FinalImageViewId, 0, 0, bgfx::BackbufferRatio::Equal);
     bgfx::setViewName(p_FinalImageViewId, "FinalImage");
     p_TexHandle = p_PresentProgram->m_Uniforms[0].BgfxHandle;
-    p_Initialized = true;
+    p_Initialized = true;*/
 }
 
 void harmony::PipelineStack::PreUpdate(entt::registry& registry, WeakRef<View> view)
@@ -128,14 +128,85 @@ void harmony::PipelineStack::Cleanup(entt::registry& registry, WeakRef<View> vie
     }*/
 }
 
+void harmony::PipelineStack::AddPipeline(WeakRef<Pipeline> pipeline)
+{
+    Ref<Pipeline> p = pipeline.lock();
+    if (!p)
+    {
+        harmony::log::warn("Pipeline is expired, cannot remove from the stack.");
+        return;
+    }
+
+    if (p_StackViewIDs.find(p->m_Handle) == p_StackViewIDs.end())
+    {
+        // add pipeline
+        p_StackViewIDs.emplace(p->m_Handle, std::vector<bgfx::ViewId>());
+        m_Stack.push_back(pipeline);
+        // create view ids
+        InitializePipelineViewIDs(p);
+        SortStack();
+    }
+    else
+    {
+        harmony::log::warn("Pipeline : {} already added to the stack.", p->m_Handle.Name);
+    }
+}
+
+void harmony::PipelineStack::RemovePipeline(WeakRef<Pipeline> pipeline)
+{
+    Ref<Pipeline> p = pipeline.lock();
+
+    if (!p)
+    {
+        harmony::log::warn("Pipeline is expired, cannot remove from the stack.");
+        return;
+    }
+    if (p_StackViewIDs.find(p->m_Handle) == p_StackViewIDs.end())
+    {
+        harmony::log::warn("Pipeline : {} not in the stack.", p->m_Handle.Name);
+        return;
+    }
+    else
+    {
+        int indexToRemove = -1;
+
+        for (int i = 0; i < m_Stack.size(); i++)
+        {
+            if (m_Stack[i].lock() == p)
+            {
+                indexToRemove = i;
+                break;
+            }
+        }
+
+        if (indexToRemove >= 0)
+        {
+            m_Stack.erase(m_Stack.begin() + indexToRemove);
+        }
+
+        p_StackViewIDs.erase(p->m_Handle);
+        SortStack();
+    }
+}
+
+void harmony::PipelineStack::MoveUp(const PipelineHandle& pipelineHandle)
+{
+    MovePipeline(pipelineHandle, true);
+}
+
+void harmony::PipelineStack::MoveDown(const PipelineHandle& pipelineHandle)
+{
+    MovePipeline(pipelineHandle, false);
+}
+
 nlohmann::json harmony::PipelineStack::Serialize()
 {
-    /*auto json = nlohmann::json::array();
-    for (auto pipeline : m_Stack)
+    auto json = nlohmann::json::array();
+    /*for (auto pipeline : m_Stack)
     {
         json.emplace_back(pipeline->Serialize());
-    }
-    return json;*/
+    }*/
+    return json;
 }
 
 void harmony::PipelineStack::Deserialize(nlohmann::json& json)
@@ -145,4 +216,46 @@ void harmony::PipelineStack::Deserialize(nlohmann::json& json)
         Ref<Pipeline> p = CreateRef<Pipeline>(PipelineHandle::New(""));
         p->Deserialize(json[i]);
     }*/
+}
+
+void harmony::PipelineStack::InitializePipelineViewIDs(Ref<Pipeline> pipeline)
+{
+    int numViewsRequired = pipeline->NumPipelineStages();
+
+    harmony::log::info("Generating {} ViewIds for Pipeline {}", numViewsRequired, pipeline->m_Name);
+
+    for (int i = 0; i < numViewsRequired; i++)
+    {
+        p_StackViewIDs[pipeline->m_Handle].emplace_back(Renderer::GetViewID());
+    }
+}
+
+void harmony::PipelineStack::SortStack()
+{
+}
+
+void harmony::PipelineStack::MovePipeline(const PipelineHandle& pipelineHandle, bool moveUp)
+{
+    int shiftDir = moveUp ? 1 : -1;
+    int indexToShift = -1;
+
+    for (int i = 0; i < m_Stack.size(); i++)
+    {
+        if (m_Stack[i].lock()->m_Handle == pipelineHandle)
+        {
+            indexToShift = i;
+            break;
+        }
+    }
+
+    if (indexToShift < 0)
+    {
+        harmony::log::warn("Pipeline {} is not in the stack!", pipelineHandle.Name);
+        return;
+    }
+
+    if (shiftDir + indexToShift < m_Stack.size())
+    {
+        std::iter_swap(m_Stack.begin() + indexToShift, m_Stack.begin() + (indexToShift + shiftDir));
+    }
 }

@@ -28,15 +28,15 @@ namespace harmony
     // TODO: do we need this
     struct PipelineHandle
     {
-        uint16_t Index;
         std::string Name;
 
-        static PipelineHandle New(const std::string& name);
+        bool operator==(const PipelineHandle& other) const;
+        bool operator!=(const PipelineHandle& other) const;
+        bool operator<(const PipelineHandle& other)  const;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineHandle, Index, Name)
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineHandle, Name)
     private:
         friend class Pipeline;
-        inline static uint16_t p_Counter = 0;
     };
 
 

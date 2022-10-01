@@ -25,10 +25,10 @@ namespace harmony
 
         }
 
-        virtual void Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
-        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
-        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
-        virtual void Cleanup(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
+        virtual void Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
+        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
+        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
+        virtual void Cleanup(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
                 
         uint32_t NumPipelineStages();
 

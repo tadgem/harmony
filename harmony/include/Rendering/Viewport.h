@@ -10,8 +10,11 @@ namespace harmony
         Viewport();
         ~Viewport();
 
+        void OnResized(uint32_t w, uint32_t h);
+
         Ref<View> m_ViewData;
         PipelineStack m_Stack;
-
+    protected:
+        void RefreshPipelineViews();
     };
 }

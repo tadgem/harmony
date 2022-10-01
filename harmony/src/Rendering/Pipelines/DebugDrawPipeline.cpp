@@ -9,7 +9,7 @@ harmony::DebugDrawStage::DebugDrawStage(GfxDebug::Channel channel) : PipelineSta
 	p_DebugRenderer = nullptr;
 }
 
-bgfx::FrameBufferHandle harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
+harmony::PipelineStage::Data harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
 	if (view.expired())
 	{
@@ -17,26 +17,38 @@ bgfx::FrameBufferHandle harmony::DebugDrawStage::Init(entt::registry& registry, 
 	}
 
 	Ref<View> _view = view.lock();
-
-	bgfx::TextureHandle fbtextures[] =
+	std::vector<Attachment> attachments = std::vector<Attachment>();
+	bgfx::TextureHandle fbtexture[] =
+	{ bgfx::createTexture2D(
+		_view->m_Width
+		, _view->m_Height
+		, false
+		, 1
+		, bgfx::TextureFormat::BGRA8
+		, BGFX_TEXTURE_RT
+	)
+	};
+	Attachment a
 	{
-		bgfx::createTexture2D(
-				_view->m_Width
-			, _view->m_Height
-			, false
-			, 1
-			, bgfx::TextureFormat::BGRA8
-			, BGFX_TEXTURE_RT
-			)
+		fbtexture[0],
+		Attachment::Type::RGBA8F
 	};
 
-	bgfx::FrameBufferHandle fbh = bgfx::createFrameBuffer(BX_COUNTOF(fbtextures), fbtextures, false);
+	attachments.emplace_back(a);
+
+	bgfx::FrameBufferHandle fbh = bgfx::createFrameBuffer(BX_COUNTOF(fbtexture), fbtexture, false);
 	bgfx::setViewFrameBuffer(viewId, fbh);
 	bgfx::setViewRect(viewId, 0, 0, bgfx::BackbufferRatio::Equal);
 	bgfx::setViewName(viewId, "Debug Draw");
 
 	p_DebugRenderer = GfxDebug::Get()->AddViewChannel(m_Channel);
-	return fbh;
+	PipelineStage::Data data
+	{
+		fbh,
+		attachments
+	};
+
+	return data;
 }
 
 void harmony::DebugDrawStage::PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
@@ -62,7 +74,7 @@ void harmony::DebugDrawStage::Cleanup()
 }
 
 
-harmony::DebugDrawPipeline::DebugDrawPipeline(GfxDebug::Channel channel) : Pipeline(PipelineHandle::New("DebugDrawPipline"))
+harmony::DebugDrawPipeline::DebugDrawPipeline(GfxDebug::Channel channel) : Pipeline(PipelineHandle{ "DebugDrawPipline" })
 {
 	AddPipelineStage<DebugDrawStage>(channel);
 }

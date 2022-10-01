@@ -81,11 +81,11 @@ void harmony::Editor::InitializePipelines()
 	p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
 	p_RuntimeDebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Game);
 
-	p_TexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle::New("Editor Textured Mesh"));
+	p_TexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle{ "Editor Textured Mesh" });
 	
-	p_NormalPipeline = CreateRef<Pipeline>(PipelineHandle::New("Editor Mesh Normals"));
-	p_RuntimeTexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle::New("Runtime Textured Mesh"));
-	p_RuntimeNormalPipeline = CreateRef<Pipeline>(PipelineHandle::New("Runtime Mesh Normals"));
+	p_NormalPipeline = CreateRef<Pipeline>(PipelineHandle{ "Editor Mesh Normals" });
+	p_RuntimeTexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle{"Runtime Textured Mesh"});
+	p_RuntimeNormalPipeline = CreateRef<Pipeline>(PipelineHandle{ "Runtime Mesh Normals" });
 	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>();
 	
 	p_NormalPipeline->AddPipelineStage<PipelineStage>("NormalStage1", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));

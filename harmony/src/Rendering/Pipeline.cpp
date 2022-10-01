@@ -1,10 +1,11 @@
 #include "Rendering/Pipeline.h"
+#include "Rendering/PipelineStage.h"
 #include "Core/Log.hpp"
 harmony::Pipeline::Pipeline(const PipelineHandle& handle) : m_Handle(handle), m_Name(handle.Name)
 {
 }
 
-void harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
+void harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)
 {
 	if (p_Stages.size() == 0)
 	{
@@ -12,11 +13,11 @@ void harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view, bgfx:
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->Init(registry, view, viewId);
+		p_Stages[i]->Init(registry, view, viewIds[i]);
 	}
 }
 
-void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
+void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)
 {
 	Ref<View> _v = view.lock();
 	if (p_Stages.size() == 0)
@@ -25,15 +26,15 @@ void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view, 
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		bgfx::setViewClear(viewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
+		bgfx::setViewClear(viewIds[i], BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->PreUpdate(registry, view, viewId);
+		p_Stages[i]->PreUpdate(registry, view, viewIds[i]);
 	}
 }
 
-void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
+void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)
 {
 	if (p_Stages.size() == 0)
 	{
@@ -41,11 +42,11 @@ void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view,
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->PostUpdate(registry, view, viewId);
+		p_Stages[i]->PostUpdate(registry, view, viewIds[i]);
 	}
 }
 
-void harmony::Pipeline::Cleanup(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
+void harmony::Pipeline::Cleanup(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)
 {
 	if (p_Stages.size() == 0)
 	{
@@ -96,11 +97,6 @@ void harmony::Pipeline::Deserialize(nlohmann::json& json)
 	m_Name = json["pipeline"]["name"];
 	m_Handle = json["pipeline"]["handle"] = m_Handle;
 
-	if (PipelineHandle::p_Counter < m_Handle.Index)
-	{
-		PipelineHandle::p_Counter = m_Handle.Index + 1;
-	}
-
 	auto pipelinesJson = json["pipeline"]["stages"];
 
 	for (int i = 0; i < pipelinesJson.size(); i++)
@@ -110,10 +106,19 @@ void harmony::Pipeline::Deserialize(nlohmann::json& json)
 	}
 }
 
-harmony::PipelineHandle harmony::PipelineHandle::New(const std::string& name)
+
+bool harmony::PipelineHandle::operator==(const PipelineHandle& other) const
 {
-	PipelineHandle handle{ p_Counter, name };
-	p_Counter++;
-	return handle;
+	return other.Name == Name;
+}
+
+bool harmony::PipelineHandle::operator!=(const PipelineHandle& other) const
+{
+	return other.Name != Name;
+}
+
+bool harmony::PipelineHandle::operator<(const PipelineHandle& other) const
+{
+	return other.Name.size() < Name.size();
 }
 

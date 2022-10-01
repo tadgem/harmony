@@ -46,16 +46,11 @@ namespace harmony
             Ref<T> derivedPipeline = CreateRef<T>(std::forward<Args>(args)...);
             Ref<Pipeline> pipeline = std::static_pointer_cast<T, Pipeline>(derivedPipeline);
             
-#if HARMONY_DEBUG
-            Ref<Pipeline> pipelinePrototype = derivedPipeline->Clone();
-
-            m_PipelinePrototypes.emplace_back(pipelinePrototype);
-#endif
 
             if (pipeline)
             {
                 PipelineHandle handle = pipeline->m_Handle;
-                if (p_Pipelines.find(handle.Index) != p_Pipelines.end())
+                if (p_Pipelines.find(handle) != p_Pipelines.end())
                 {
                     harmony::log::error("Already have a pipeline with handle {} ", handle.Index);
                     Ref<T> derivedExistingPipeline = std::static_pointer_cast<T, Pipeline>(p_Pipelines[handle.Index]);
@@ -65,7 +60,7 @@ namespace harmony
                     }
                     return WeakRef<T>();
                 }
-                p_Pipelines.emplace(handle.Index, pipeline);
+                p_Pipelines.emplace(handle, pipeline);
                 return GetWeakRef<T>(derivedPipeline);
             }
             else
@@ -75,18 +70,8 @@ namespace harmony
             }
         }
 
-#if HARMONY_DEBUG
-        template<typename T, typename ... Args>
-        void CreatePipelinePrototype(Args&& ... args)
-        {
-            static_assert(std::is_base_of<Pipeline, T>());
-            Ref<T> derivedPipeline = CreateRef<T>(std::forward<Args>(args)...);
-            Ref<Pipeline> pipeline = std::static_pointer_cast<T, Pipeline>(derivedPipeline);
-
-            m_PipelinePrototypes.emplace_back(pipeline);
-        }
-#endif
-        void AddPipeline(Ref<Pipeline> pipeline, bool makeClone = false);
+        void                AddPipeline(Ref<Pipeline> pipeline, bool makeClone = false);
+        WeakRef<Pipeline>   GetPipeline(const PipelineHandle& handle);
 
         void ReloadShader(WeakRef<ShaderProgram> shader);
         void ReloadAllShaders();
@@ -108,7 +93,6 @@ namespace harmony
         bool ShaderSelector(const std::string& selectorName, harmony::WeakRef<harmony::ShaderProgram>& prog);
 
         PipelineHandle      p_SelectedPipelineHandle;
-        std::vector<Ref<Pipeline>> m_PipelinePrototypes;
 
         AssetHandle p_SelectedVertexAsset;
         AssetHandle p_SelectedFragmentAsset;
@@ -131,11 +115,11 @@ namespace harmony
         {
             static_assert(std::is_base_of<View, T>(), "Provided type is not a view!");
             Ref<T> view = CreateRef<T>(std::forward<Args>(args)...);
-            p_Views.emplace(view, PipelineStack(view, GetShader("Present")));
+            p_Views.emplace(view, PipelineStack());
             
             entt::registry reg;
 
-            p_Views[view].Init(reg);
+            p_Views[view].Init(reg, view);
             return GetWeakRef<T>(view);
         }
 
@@ -165,7 +149,7 @@ namespace harmony
 
         std::map<Ref<View>, PipelineStack>                  p_Views;
         std::map<Ref<ShaderProgram>, ShaderDataContainer>   p_Shaders;
-        std::map<uint16_t, Ref<Pipeline>>                   p_Pipelines;
+        std::map<PipelineHandle, Ref<Pipeline>>             p_Pipelines;
         std::vector<WeakRef<ShaderProgram>>                 p_BuiltInShaders;
 
         bgfx::ViewId p_CurrentView;
