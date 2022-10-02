@@ -45,3 +45,4 @@ imgui.ini
 */uwp
 */.vs
 */out
+*CMakeSettings.json
