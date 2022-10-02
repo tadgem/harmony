@@ -1,5 +1,6 @@
 #include "Rendering/Pipeline.h"
 #include "Rendering/PipelineStage.h"
+#include "Rendering/View.h"
 #include "Core/Log.hpp"
 harmony::Pipeline::Pipeline(const PipelineHandle& handle) : m_Handle(handle), m_Name(handle.Name)
 {

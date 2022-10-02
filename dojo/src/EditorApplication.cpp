@@ -96,13 +96,13 @@ void harmony::Editor::InitializePipelines()
 	p_RuntimeTexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage2", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
 
 
-	m_Renderer.AddPipeline(p_DebugPipeline, true);
-	m_Renderer.AddPipeline(p_RuntimeDebugPipeline, true);
-	m_Renderer.AddPipeline(p_TexturedMeshPipeline, true);
-	m_Renderer.AddPipeline(p_NormalPipeline, true);
-	m_Renderer.AddPipeline(p_RuntimeTexturedMeshPipeline, true);
-	m_Renderer.AddPipeline(p_RuntimeNormalPipeline, true);
-	m_Renderer.AddPipeline(p_VectorGraphicsPipeline, true);
+	m_Renderer.AddPipeline(p_DebugPipeline);
+	m_Renderer.AddPipeline(p_RuntimeDebugPipeline);
+	m_Renderer.AddPipeline(p_TexturedMeshPipeline);
+	m_Renderer.AddPipeline(p_NormalPipeline);
+	m_Renderer.AddPipeline(p_RuntimeTexturedMeshPipeline);
+	m_Renderer.AddPipeline(p_RuntimeNormalPipeline);
+	m_Renderer.AddPipeline(p_VectorGraphicsPipeline);
 }
 
 void harmony::Editor::InitializeViews()

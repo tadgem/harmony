@@ -2,8 +2,6 @@
 #include <map>
 #include <vector>
 #include "Rendering/Pipeline.h"
-#include "Rendering/View.h"
-#include "Rendering/Shader.h"
 namespace harmony
 {
     class PipelineStack
@@ -13,11 +11,6 @@ namespace harmony
 
         // N.B call after stack has run pre/post update
         bgfx::TextureHandle GetStackFinalImage();
-        
-        void Init(entt::registry& registry, WeakRef<View> view);
-        void PreUpdate(entt::registry& registry, WeakRef<View> view);
-        void PostUpdate(entt::registry& registry, WeakRef<View> view);
-        void Cleanup(entt::registry& registry, WeakRef<View> view);
 
         void AddPipeline(WeakRef<Pipeline> pipeline);
         void RemovePipeline(WeakRef<Pipeline> pipeline);

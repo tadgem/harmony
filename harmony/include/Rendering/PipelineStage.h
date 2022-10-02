@@ -3,7 +3,6 @@
 #include "json.hpp"
 #include "Core/Memory.h"
 #include "Rendering/Shader.h"
-#include "Rendering/View.h"
 namespace harmony
 {
 
@@ -39,6 +38,7 @@ namespace harmony
         friend class Pipeline;
     };
 
+    class View;
 
     class PipelineStage
     {

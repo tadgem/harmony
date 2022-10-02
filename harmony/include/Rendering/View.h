@@ -4,6 +4,8 @@
 #include "glm/glm.hpp"
 #include "json.hpp"
 #include "bgfx/bgfx.h"
+#include "Rendering/PipelineStack.h"
+
 namespace harmony
 {
     inline static const uint32_t    g_InitialWidth = 1024;
@@ -19,8 +21,8 @@ namespace harmony
     NLOHMANN_JSON_SERIALIZE_ENUM(ProjectionType, {
         {ProjectionType::Orthographic, "Orthographic"},
         {ProjectionType::Perspective, "Perspective"},
-    })
-    
+        })
+
     class View
     {
     public:
@@ -44,6 +46,6 @@ namespace harmony
         glm::mat4       m_Projection;
         float           m_FOV;
         ProjectionType  m_ProjectionType;
-
+        PipelineStack   m_PipelineStack;
     };
 };

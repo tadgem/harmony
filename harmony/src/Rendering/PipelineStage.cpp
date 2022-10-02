@@ -1,5 +1,6 @@
 #include "Rendering/PipelineStage.h"
 #include "Rendering/Renderer.h"
+#include "Rendering/View.h"
 #include "ECS/MaterialComponent.h"
 #include "ECS/MeshComponent.h"
 #include "ECS/TransformComponent.h"

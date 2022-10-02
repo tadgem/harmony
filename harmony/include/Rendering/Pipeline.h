@@ -2,11 +2,11 @@
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
 #include "Rendering/PipelineStage.h"
-#include "Rendering/View.h"
 #include "Core/Profile.hpp"
 #include "json.hpp"
 namespace harmony
 {
+    class View;
     class Pipeline
     {
     public:
