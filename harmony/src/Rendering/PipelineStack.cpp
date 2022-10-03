@@ -82,7 +82,6 @@ std::vector<bgfx::TextureHandle>  harmony::PipelineStack::PostUpdate(entt::regis
         }
         pipeline->PostUpdate(registry, view, p_StackViewIDs[pipeline->m_Handle]);
     }
-    bgfx::setViewClear(p_FinalImageViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000);
     
     Ref<View> _view = view.lock();
 

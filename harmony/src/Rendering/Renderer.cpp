@@ -21,6 +21,7 @@ harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetMa
     HARMONY_PROFILE_FUNCTION()
     p_CreatePipelineWindow = false;
     p_CreateShaderProgramWindow = false;
+    p_PresentViewId = GetViewID();
 }
 
 harmony::WeakRef<harmony::ShaderProgram>  harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex)
@@ -186,16 +187,19 @@ void harmony::Renderer::OnPostUpdate(entt::registry& registry)
         
         PipelineStack& stack = p_Views[view];
         auto texturesToBlit = stack.PostUpdate(registry, m_ActiveViews[i]);
+        Ref<ShaderProgram> prog = p_PresentProgram.lock();
+        bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000);
 
         for (int i = 0; i < texturesToBlit.size(); i++)
         {
             bgfx::TextureHandle th = texturesToBlit[i];
+            bgfx::setTexture(0, prog->m_Uniforms[0].BgfxHandle, th);
+            // do this better
+            ScreenSpaceQuad(view->m_Width, view->m_Height);
+            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
+            bgfx::submit(p_PresentViewId, prog->m_Handle);
         }
         //produce view image from blittable textures
-        //bgfx::setTexture(0, p_TexHandle, th);
-        //ScreenSpaceQuad(_view->m_Width, _view->m_Height);
-        //bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
-        //bgfx::submit(p_FinalImageViewId, p_PresentProgram->m_Handle);
     }
 }
 
