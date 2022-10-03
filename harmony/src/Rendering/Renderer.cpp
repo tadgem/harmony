@@ -23,7 +23,7 @@ harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetMa
     p_CreateShaderProgramWindow = false;
 }
 
-void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex)
+harmony::WeakRef<harmony::ShaderProgram>  harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex)
 {
     Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(progName);
     Ref<BuiltInShaderStage> vs = CreateRef<BuiltInShaderStage>(vsName, ShaderStage::Type::Vertex, s_BuiltInShader[vsIndex]);
@@ -38,9 +38,11 @@ void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std:
     ShaderDataContainer dataContainer = ShaderDataContainer(prog);
     p_Shaders.emplace(prog, dataContainer);
     p_BuiltInShaders.emplace_back(prog);
+
+    return prog;
 }
 
-void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& csName, uint32_t csIndex)
+harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& csName, uint32_t csIndex)
 {
     Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(progName);
     Ref<BuiltInShaderStage> cs = CreateRef<BuiltInShaderStage>(csName, ShaderStage::Type::Compute, s_BuiltInShader[csIndex]);
@@ -52,13 +54,15 @@ void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std:
     ShaderDataContainer dataContainer = ShaderDataContainer(prog);
     p_Shaders.emplace(prog, dataContainer);
     p_BuiltInShaders.emplace_back(prog);
+
+    return prog;
 }
 
 void harmony::Renderer::AddBuiltInShaders()
 {
+    p_PresentProgram = AddBuiltInShader("Present", "vs_present", "fs_present", 4, 5);
     AddBuiltInShader("TexturedMesh", "vs_simple_textured", "fs_simple_textured", 0, 1);
     AddBuiltInShader("Normal", "vs_normal", "fs_normal", 2, 3);
-    AddBuiltInShader("Present", "vs_present", "fs_present", 4, 5);
     AddBuiltInShader("NanoVG", "vs_nanovg_fill", "fs_nanovg_fill", 6, 7);
 }
 

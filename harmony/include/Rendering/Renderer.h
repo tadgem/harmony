@@ -62,8 +62,8 @@ namespace harmony
             return GetWeakRef<T>(view);
         }
 
-        void                    AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex);
-        void                    AddBuiltInShader(const std::string& progName, const std::string& vsName, uint32_t csIndex);
+        WeakRef<ShaderProgram>  AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex);
+        WeakRef<ShaderProgram>  AddBuiltInShader(const std::string& progName, const std::string& vsName, uint32_t csIndex);
         void                    AddBuiltInShaders();
         WeakRef<ShaderProgram>  BuildShader(const std::string name, WeakRef<ShaderStage> vertStage, WeakRef<ShaderStage> fragStage);
 
@@ -133,5 +133,6 @@ namespace harmony
         std::vector<Ref<Pipeline>>                          p_Pipelines;
         std::map<Ref<ShaderProgram>, ShaderDataContainer>   p_Shaders;
         std::vector<WeakRef<ShaderProgram>>                 p_BuiltInShaders;
+        WeakRef<ShaderProgram>                              p_PresentProgram;
     };
 };
