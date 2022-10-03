@@ -21,7 +21,7 @@ harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& regist
 	}
 
 	Ref<View> _view = view.lock();
-	std::vector<Attachment> attachments = std::vector<Attachment>();
+	std::map<Attachment::Type, Attachment> attachments = std::map<Attachment::Type, Attachment>();
 	std::vector<bgfx::TextureHandle> attachmentTextureHandles = std::vector<bgfx::TextureHandle>();
 
 	if (m_Attachments && Attachment::Type::RGBA16F ||
@@ -72,7 +72,7 @@ harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& regist
 			type
 		};
 
-		attachments.emplace_back(a);
+		attachments.emplace(type, a);
 		attachmentTextureHandles.emplace_back(textureHandle);
 	}
 	else
@@ -91,7 +91,7 @@ harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& regist
 			textureHandle,
 			type
 		};
-		attachments.emplace_back(a);
+		attachments.emplace(type, a);
 		attachmentTextureHandles.emplace_back(textureHandle);
 	}
 
@@ -134,7 +134,7 @@ harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& regist
 			type
 		};
 
-		attachments.emplace_back(a);
+		attachments.emplace(type, a);
 		attachmentTextureHandles.emplace_back(textureHandle);
 	}
 	

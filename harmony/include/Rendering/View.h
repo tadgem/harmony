@@ -39,6 +39,9 @@ namespace harmony
         virtual void OnImGuiOptions();
 #endif
 
+        bool operator==(const View& other);
+        bool operator!=(const View& other);
+
         std::string     m_Name;
         uint32_t        m_Width;
         uint32_t        m_Height;
@@ -46,6 +49,5 @@ namespace harmony
         glm::mat4       m_Projection;
         float           m_FOV;
         ProjectionType  m_ProjectionType;
-        PipelineStack   m_PipelineStack;
     };
 };

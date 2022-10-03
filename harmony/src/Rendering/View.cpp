@@ -34,6 +34,22 @@ void harmony::View::OnImGuiOptions()
 
 }
 
+bool harmony::View::operator==(const View& other)
+{
+	return	other.m_Name == m_Name &&
+		other.m_Width == m_Width &&
+		other.m_Height == m_Height &&
+		other.m_ProjectionType == m_ProjectionType;
+}
+
+bool harmony::View::operator!=(const View& other)
+{
+	return	other.m_Name != m_Name ||
+		other.m_Width != m_Width ||
+		other.m_Height != m_Height ||
+		other.m_ProjectionType != m_ProjectionType;
+}
+
 nlohmann::json harmony::View::Serialize()
 {
 	auto j = nlohmann::json();

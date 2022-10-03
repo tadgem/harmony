@@ -54,7 +54,8 @@ namespace harmony
         struct Data
         {
             bgfx::FrameBufferHandle m_FramebufferHandle;
-            std::vector<Attachment> m_Attachments;
+            std::map<Attachment::Type, Attachment> m_Attachments;
+
         };
 
         NLOHMANN_JSON_SERIALIZE_ENUM(Type, {

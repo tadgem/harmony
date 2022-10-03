@@ -6,16 +6,18 @@ harmony::Pipeline::Pipeline(const PipelineHandle& handle) : m_Handle(handle), m_
 {
 }
 
-void harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)
+std::vector<harmony::PipelineStage::Data> harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)
 {
+	std::vector<PipelineStage::Data> datas = std::vector<PipelineStage::Data>();
 	if (p_Stages.size() == 0)
 	{
-		return;
+		return datas;
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->Init(registry, view, viewIds[i]);
+		datas.emplace_back(p_Stages[i]->Init(registry, view, viewIds[i]));
 	}
+	return datas;
 }
 
 void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)

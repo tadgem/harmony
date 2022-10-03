@@ -25,20 +25,21 @@ namespace harmony
 
         }
 
-        virtual void Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
+        virtual std::vector<PipelineStage::Data> Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
+        
         virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
         virtual void Cleanup(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
                 
         uint32_t NumPipelineStages();
 
-        PipelineHandle m_Handle;
-        std::string m_Name;
+        PipelineHandle    m_Handle;
+        std::string       m_Name;
 
         bool HasDepth();
 
-        nlohmann::json Serialize();
-        void Deserialize(nlohmann::json& json);
+        nlohmann::json  Serialize();
+        void            Deserialize(nlohmann::json& json);
 
     protected:
         std::vector<Ref<PipelineStage>> p_Stages;

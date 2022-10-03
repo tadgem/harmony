@@ -91,21 +91,7 @@ void harmony::Renderer::RemoveView(WeakRef<View> view)
     }
     {
         Ref<View> _view = view.lock();
-        int indexToRemove = -1;
-
-        for (int i = 0; i < p_Views.size(); i++)
-        {
-            if (p_Views[i] == _view)
-            {
-                indexToRemove = i;
-                break;
-            }
-        }
-
-        if (indexToRemove >= 0)
-        {
-            p_Views.erase(p_Views.begin() + indexToRemove);
-        }
+        p_Views.erase(_view);
     }
 }
 
@@ -176,8 +162,8 @@ void harmony::Renderer::OnPreUpdate(entt::registry& registry)
 
         Ref<View> view = m_ActiveViews[i].lock();
         view->OnPreUpdate(registry);
-        //PipelineStack& stack = p_Views[view];
-        // stack.PreUpdate(registry);
+        PipelineStack& stack = p_Views[view];
+        stack.PreUpdate(registry, m_ActiveViews[i]);
     }
 }
 
@@ -194,23 +180,33 @@ void harmony::Renderer::OnPostUpdate(entt::registry& registry)
         Ref<View> view = m_ActiveViews[i].lock();
         view->OnPostUpdate(registry);
         
-        // PipelineStack& stack = p_Views[view];
-        // stack.PostUpdate(registry);
+        PipelineStack& stack = p_Views[view];
+        auto texturesToBlit = stack.PostUpdate(registry, m_ActiveViews[i]);
+
+        for (int i = 0; i < texturesToBlit.size(); i++)
+        {
+            bgfx::TextureHandle th = texturesToBlit[i];
+        }
+        //produce view image from blittable textures
+        //bgfx::setTexture(0, p_TexHandle, th);
+        //ScreenSpaceQuad(_view->m_Width, _view->m_Height);
+        //bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
+        //bgfx::submit(p_FinalImageViewId, p_PresentProgram->m_Handle);
     }
 }
 
 harmony::PipelineStack& harmony::Renderer::GetViewPipelineStack(const std::string& viewName)
 {
-    for (auto& view : p_Views)
+    for (auto& [view , stack]: p_Views)
     {
         if (view->m_Name == viewName)
         {
-            return view->m_PipelineStack;
+            return stack;
         }
     }
     harmony::log::error("No pipeline stack with name : {}", viewName);
     // TODO: This is horrible, fix me
-    return p_Views[0]->m_PipelineStack;
+    return PipelineStack();
 }
 
 void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline)
@@ -223,13 +219,6 @@ void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipel
 
     Ref<View> view = viewWeakRef.lock();
 
-    auto it = std::find(p_Views.begin(), p_Views.end(), view);
-    if (it == p_Views.end())
-    {
-        harmony::log::error("Trying to add pipeline association to a view not managed by Renderer.");
-        return;
-    }
-
     if (pipeline.expired())
     {
         harmony::log::error("Trying to add pipeline to stack but pipeline is expired");
@@ -237,19 +226,15 @@ void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipel
     }
 
     Ref<Pipeline> p = pipeline.lock();
-    entt::registry r;
-    // p->Init(r, viewWeakRef);
     
-    p_Views.at(it - p_Views.begin())->m_PipelineStack.AddPipeline(pipeline);
+    p_Views[view].AddPipeline(pipeline, view);
 }
 
 void harmony::Renderer::RefreshViews()
 {
-    for (int i = 0; i < p_Views.size(); i++)
+    for (auto& [view, stack] :p_Views)
     {
-        for (int p = 0; p < p_Views[i]->m_PipelineStack.m_Stack.size(); p++)
-        {
-        }
+
     }
 }
 
@@ -292,7 +277,7 @@ void harmony::Renderer::OnImGui()
         ImGui::Text("Views");
         ImGui::Separator();
 
-        for (auto& view : p_Views)
+        for (auto& [view , stack]: p_Views)
         {
             ImGui::Text(view->m_Name.c_str());
             if (ImGui::BeginCombo("Add Pipeline", ""))
@@ -402,7 +387,7 @@ void harmony::Renderer::OnImGui()
         ImGui::End();
     }
 
-    for (auto& view : p_Views)
+    for (auto& [view , stack]: p_Views)
     {
         view->OnImGui();
     }
@@ -503,7 +488,7 @@ nlohmann::json harmony::Renderer::Serialize()
     }
     json["renderer"]["views"] = nlohmann::json::array();
 
-    for (auto& view : p_Views)
+    for (auto& [view, stack] : p_Views)
     {
         nlohmann::json viewJson;
         viewJson["view"] = view->Serialize();
@@ -803,6 +788,3 @@ bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRe
     return vl;
 
 }
-
-
-

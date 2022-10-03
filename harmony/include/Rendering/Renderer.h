@@ -58,9 +58,7 @@ namespace harmony
         {
             static_assert(std::is_base_of<View, T>(), "Provided type is not a view!");
             Ref<T> view = CreateRef<T>(std::forward<Args>(args)...);
-            p_Views.emplace_back(view);
-            
-            // p_Views[view].Init(reg, view);
+            p_Views.emplace(view, PipelineStack());
             return GetWeakRef<T>(view);
         }
 
@@ -123,12 +121,15 @@ namespace harmony
         char p_ShaderNameInput[64]{ "" };
         char p_PipelineNameInput[64]{ "" };
 #endif
+    protected:
         static uint32_t p_ViewHandleCounter;
 
         bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
         AssetManager& p_AssetManager;
 
-        std::vector<Ref<View>>                              p_Views;
+        int s_PresentShaderIndex;
+
+        std::map<Ref<View>, PipelineStack>                  p_Views;
         std::vector<Ref<Pipeline>>                          p_Pipelines;
         std::map<Ref<ShaderProgram>, ShaderDataContainer>   p_Shaders;
         std::vector<WeakRef<ShaderProgram>>                 p_BuiltInShaders;

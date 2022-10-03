@@ -96,20 +96,20 @@ void harmony::Editor::InitializePipelines()
 	p_RuntimeTexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage2", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
 
 
-	m_Renderer.AddPipeline(p_DebugPipeline);
-	m_Renderer.AddPipeline(p_RuntimeDebugPipeline);
-	m_Renderer.AddPipeline(p_TexturedMeshPipeline);
-	m_Renderer.AddPipeline(p_NormalPipeline);
-	m_Renderer.AddPipeline(p_RuntimeTexturedMeshPipeline);
-	m_Renderer.AddPipeline(p_RuntimeNormalPipeline);
-	m_Renderer.AddPipeline(p_VectorGraphicsPipeline);
+	//m_Renderer.AddPipeline(p_DebugPipeline);
+	//m_Renderer.AddPipeline(p_RuntimeDebugPipeline);
+	//m_Renderer.AddPipeline(p_TexturedMeshPipeline);
+	//m_Renderer.AddPipeline(p_NormalPipeline);
+	//m_Renderer.AddPipeline(p_RuntimeTexturedMeshPipeline);
+	//m_Renderer.AddPipeline(p_RuntimeNormalPipeline);
+	//m_Renderer.AddPipeline(p_VectorGraphicsPipeline);
 }
 
 void harmony::Editor::InitializeViews()
 {
 	auto editorViewWr = m_Renderer.CreateView<EditorView>(*this, p_ScenePanel);
 	auto runtimeViewWr = m_Renderer.CreateView<RuntimeView>(*this);
-	m_Renderer.AddViewPipeline(editorViewWr, p_DebugPipeline);
+	/*m_Renderer.AddViewPipeline(editorViewWr, p_DebugPipeline);
 	m_Renderer.AddViewPipeline(editorViewWr, p_NormalPipeline);
 	m_Renderer.AddViewPipeline(editorViewWr, p_TexturedMeshPipeline);
 	m_Renderer.SetViewActive(editorViewWr, true);
@@ -118,7 +118,7 @@ void harmony::Editor::InitializeViews()
 	m_Renderer.AddViewPipeline(runtimeViewWr, p_RuntimeNormalPipeline);
 	m_Renderer.AddViewPipeline(runtimeViewWr, p_RuntimeTexturedMeshPipeline);
 	m_Renderer.AddViewPipeline(runtimeViewWr, p_VectorGraphicsPipeline);
-	m_Renderer.SetViewActive(runtimeViewWr, true);
+	m_Renderer.SetViewActive(runtimeViewWr, true);*/
 
 	p_EditorView = editorViewWr.lock();
 }

@@ -17,7 +17,7 @@ harmony::PipelineStage::Data harmony::DebugDrawStage::Init(entt::registry& regis
 	}
 
 	Ref<View> _view = view.lock();
-	std::vector<Attachment> attachments = std::vector<Attachment>();
+	std::map<Attachment::Type, Attachment> attachments = std::map<Attachment::Type, Attachment>();
 	bgfx::TextureHandle fbtexture[] =
 	{ bgfx::createTexture2D(
 		_view->m_Width
@@ -34,7 +34,7 @@ harmony::PipelineStage::Data harmony::DebugDrawStage::Init(entt::registry& regis
 		Attachment::Type::RGBA8F
 	};
 
-	attachments.emplace_back(a);
+	attachments.emplace(Attachment::Type::RGBA8F, a);
 
 	bgfx::FrameBufferHandle fbh = bgfx::createFrameBuffer(BX_COUNTOF(fbtexture), fbtexture, false);
 	bgfx::setViewFrameBuffer(viewId, fbh);

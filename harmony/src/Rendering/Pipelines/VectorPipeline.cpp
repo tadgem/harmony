@@ -14,7 +14,7 @@ harmony::PipelineStage::Data harmony::VectorGraphicsStage::Init(entt::registry& 
     
 	Ref<View> _view = view.lock();
 	std::vector<bgfx::TextureHandle> fbAttachments = std::vector<bgfx::TextureHandle>();
-	std::vector<Attachment> attachments = std::vector<Attachment>();
+	std::map<Attachment::Type, Attachment> attachments = std::map<Attachment::Type, Attachment>();
 	fbAttachments.emplace_back(
 	bgfx::createTexture2D(
 			_view->m_Width
@@ -30,7 +30,7 @@ harmony::PipelineStage::Data harmony::VectorGraphicsStage::Init(entt::registry& 
 		fbAttachments[0],
 		Attachment::Type::RGBA8F
 	};
-	attachments.emplace_back(a);
+	attachments.emplace(Attachment::Type::RGBA8F, a);
 
 	m_HasHDRAttachment = false;
 	m_HasDepthAttachment = false;
