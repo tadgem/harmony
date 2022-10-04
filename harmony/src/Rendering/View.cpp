@@ -50,6 +50,11 @@ bool harmony::View::operator!=(const View& other)
 		other.m_ProjectionType != m_ProjectionType;
 }
 
+bool harmony::View::operator<(const View& other)
+{
+	return false;
+}
+
 nlohmann::json harmony::View::Serialize()
 {
 	auto j = nlohmann::json();

@@ -134,6 +134,5 @@ namespace harmony
         std::map<Ref<ShaderProgram>, ShaderDataContainer>   p_Shaders;
         std::vector<WeakRef<ShaderProgram>>                 p_BuiltInShaders;
         WeakRef<ShaderProgram>                              p_PresentProgram;
-        bgfx::ViewId                                        p_PresentViewId;
     };
 };

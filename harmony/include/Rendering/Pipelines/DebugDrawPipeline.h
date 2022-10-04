@@ -15,7 +15,7 @@ namespace harmony
 
         GfxDebug::Channel m_Channel;
         bool Active;
-        DebugDrawEncoder* p_DebugRenderer;
+        std::map<std::string,DebugDrawEncoder*> p_DebugRenderers;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(DebugDrawStage, m_Name, p_Shader, m_StageType, m_Channel)
     };

@@ -7,19 +7,16 @@
 harmony::PipelineStack::PipelineStack()
 {
     p_Initialized = false;
+    m_FinalImageViewId = Renderer::GetViewID();
 }
 
-bgfx::TextureHandle harmony::PipelineStack::Blit()
+bgfx::TextureHandle harmony::PipelineStack::GetFinalImage()
 {
     if (!p_Initialized)
     {
         return bgfx::TextureHandle();
     }
-    if (!bgfx::isValid(p_FinalFramebufferHandle))
-    {
-        return bgfx::TextureHandle();
-    }
-    return bgfx::getTexture(p_FinalFramebufferHandle);
+    return bgfx::getTexture(m_FinalFramebufferHandle);
 }
 
 void harmony::PipelineStack::PreUpdate(entt::registry& registry, WeakRef<View> view)
@@ -130,6 +127,25 @@ std::vector<bgfx::TextureHandle>  harmony::PipelineStack::PostUpdate(entt::regis
 
 void harmony::PipelineStack::AddPipeline(WeakRef<Pipeline> pipeline, WeakRef<View> view)
 {
+    if (!p_Initialized)
+    {
+        Ref<View> _view = view.lock();
+        bgfx::TextureHandle textureHandle = bgfx::createTexture2D(
+            _view->m_Width
+            , _view->m_Height
+            , false
+            , 1
+            , bgfx::TextureFormat::BGRA8
+            , BGFX_TEXTURE_RT
+        );
+        std::vector<bgfx::TextureHandle> attachments = std::vector<bgfx::TextureHandle>();
+        attachments.emplace_back(textureHandle);
+        m_FinalFramebufferHandle = bgfx::createFrameBuffer(attachments.size(), attachments.data(), false);
+        bgfx::setViewFrameBuffer(m_FinalImageViewId, m_FinalFramebufferHandle);
+        bgfx::setViewName(m_FinalImageViewId, _view->m_Name.c_str());
+        bgfx::setViewRect(m_FinalImageViewId, 0,0, (uint16_t)_view->m_Width, (uint16_t)_view->m_Height);
+        p_Initialized = true;
+    }
     Ref<Pipeline> p = pipeline.lock();
     if (!p)
     {

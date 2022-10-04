@@ -41,6 +41,7 @@ namespace harmony
 
         bool operator==(const View& other);
         bool operator!=(const View& other);
+        bool operator<(const View& other);
 
         std::string     m_Name;
         uint32_t        m_Width;

@@ -54,14 +54,12 @@ namespace harmony
 		std::vector<Ref<Panel>> p_Panels;
 		Ref<ScenePanel> p_ScenePanel;
 		Ref<EditorView> p_EditorView;
+
 		Ref<Pipeline> p_DebugPipeline;
 		Ref<Pipeline> p_TexturedMeshPipeline;
 		Ref<Pipeline> p_NormalPipeline;
-
-		Ref<Pipeline> p_RuntimeDebugPipeline;
-		Ref<Pipeline> p_RuntimeTexturedMeshPipeline;
-		Ref<Pipeline> p_RuntimeNormalPipeline;
 		Ref<Pipeline> p_VectorGraphicsPipeline;
+
 		Ref<TransformSystem> p_TransformSystem;
 		Ref<CameraSystem> p_CameraSystem;
 		EditorMainMenuBar p_MainMenuBar;

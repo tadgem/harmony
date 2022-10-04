@@ -10,9 +10,7 @@ namespace harmony
     public:
         PipelineStack(); 
 
-        // Combines all layers of the stack into a single
-        // tonemapped image. N.B call after stack has run post update
-        bgfx::TextureHandle Blit();
+        bgfx::TextureHandle GetFinalImage();
 
         void AddPipeline(WeakRef<Pipeline> pipeline, WeakRef<View> view);
         void RemovePipeline(WeakRef<Pipeline> pipeline);
@@ -27,6 +25,9 @@ namespace harmony
 
         std::vector<WeakRef<Pipeline>> m_Stack;
 
+        bgfx::FrameBufferHandle     m_FinalFramebufferHandle;
+        bgfx::ViewId                m_FinalImageViewId;
+
     protected:
         void InitializePipeline(Ref<Pipeline> pipeline, WeakRef<View> view);
         void SortStack();
@@ -40,8 +41,6 @@ namespace harmony
         std::map<PipelineHandle, std::vector<bgfx::ViewId>>             p_StackViewIDs;
         std::map<PipelineHandle, std::vector<PipelineStage::Data>>      p_StackData;
 
-        bgfx::FrameBufferHandle     p_FinalFramebufferHandle;
-        bgfx::ViewId                p_FinalImageViewId;
         
     };
 }

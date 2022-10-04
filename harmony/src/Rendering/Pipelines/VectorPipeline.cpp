@@ -42,10 +42,9 @@ harmony::PipelineStage::Data harmony::VectorGraphicsStage::Init(entt::registry& 
 	bgfx::setViewFrameBuffer(viewId, fbh);
 	bgfx::setViewMode(viewId, bgfx::ViewMode::Sequential);
 
-	std::string viewName = "NanoVG#" + std::to_string(s_InstanceCounter);
 	s_InstanceCounter++;
 
-	bgfx::setViewName(viewId, viewName.c_str());
+	bgfx::setViewName(viewId, "NanoVG");
 
 	return PipelineStage::Data{ fbh, attachments };
 }

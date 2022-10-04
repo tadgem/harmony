@@ -6,7 +6,6 @@
 
 harmony::DebugDrawStage::DebugDrawStage(GfxDebug::Channel channel) : PipelineStage("DebugDrawStage", PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>()), m_Channel(channel)
 {
-	p_DebugRenderer = nullptr;
 }
 
 harmony::PipelineStage::Data harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
@@ -41,7 +40,7 @@ harmony::PipelineStage::Data harmony::DebugDrawStage::Init(entt::registry& regis
 	bgfx::setViewRect(viewId, 0, 0, bgfx::BackbufferRatio::Equal);
 	bgfx::setViewName(viewId, "Debug Draw");
 
-	p_DebugRenderer = GfxDebug::Get()->AddViewChannel(m_Channel);
+	p_DebugRenderers.emplace(_view->m_Name, GfxDebug::Get()->AddViewChannel(m_Channel));
 	PipelineStage::Data data
 	{
 		fbh,
@@ -57,12 +56,12 @@ void harmony::DebugDrawStage::PreUpdate(entt::registry& registry, WeakRef<View> 
 	Ref<View> _view = view.lock();
 	bgfx::setViewTransform(viewId, &_view->m_View[0], &_view->m_Projection[0]);
 	bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
-	p_DebugRenderer->begin(viewId, false);
+	p_DebugRenderers[_view->m_Name]->begin(viewId, false);
 }
 
 void harmony::DebugDrawStage::PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
-	p_DebugRenderer->end();
+	p_DebugRenderers[view.lock()->m_Name]->end();
 	bgfx::touch(viewId);
 	PipelineStage::PostUpdate(registry, view, viewId);
 
