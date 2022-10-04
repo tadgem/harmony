@@ -38,6 +38,8 @@ void harmony::PipelineStack::PreUpdate(entt::registry& registry, WeakRef<View> v
         }
 
         Ref<Pipeline> nextPipeline = m_Stack[nextIndex].lock();
+        // depth chaining is not working 
+        // could be related to view ordering
         if (!nextPipeline->HasDepth())
         {
             continue;
