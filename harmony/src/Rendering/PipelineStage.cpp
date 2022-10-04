@@ -142,7 +142,8 @@ harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& regist
 	// this needs to be moved to the Viewport or PipelineStack
 	bgfx::setViewFrameBuffer(viewId, fbh);
 	bgfx::setViewRect(viewId, 0, 0, bgfx::BackbufferRatio::Equal);
-
+	bgfx::setViewName(viewId, m_Name.c_str());
+	
 	Data data
 	{
 		fbh,
