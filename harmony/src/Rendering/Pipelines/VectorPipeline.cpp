@@ -1,68 +1,74 @@
 #include "Rendering/Pipelines/VectorPipeline.h"
+#include "Rendering/View.h"
 #include "Core/Program.h"
 harmony::VectorGraphicsStage::VectorGraphicsStage() : PipelineStage("VectorGraphicsStage", PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>())
 {
+	
 }
 
-void harmony::VectorGraphicsStage::Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
+harmony::PipelineStage::Data harmony::VectorGraphicsStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
     HARMONY_PROFILE_FUNCTION()
 
     p_Shader = Program::Get()->m_Renderer.GetShader("NanoVG");
     
 	Ref<View> _view = view.lock();
+	std::vector<bgfx::TextureHandle> fbAttachments = std::vector<bgfx::TextureHandle>();
+	std::map<Attachment::Type, Attachment> attachments = std::map<Attachment::Type, Attachment>();
+	fbAttachments.emplace_back(
+	bgfx::createTexture2D(
+			_view->m_Width
+		,	_view->m_Height
+		, false
+		, 1
+		, bgfx::TextureFormat::BGRA8
+		, BGFX_TEXTURE_RT
+	));
 
-	p_Attachments.emplace_back(
-		bgfx::createTexture2D(
-				_view->m_Width
-			,	_view->m_Height
-			, false
-			, 1
-			, bgfx::TextureFormat::BGRA8
-			, BGFX_TEXTURE_RT
-		));
+	Attachment a
+	{
+		fbAttachments[0],
+		Attachment::Type::RGBA8F
+	};
+	attachments.emplace(Attachment::Type::RGBA8F, a);
 
 	m_HasHDRAttachment = false;
 	m_HasDepthAttachment = false;
 
 	VectorGraphics::Get();
-	VectorGraphics::SetInstanceContext(nvgCreate(1, m_ViewId));
-	p_FrameBufferHandle = bgfx::createFrameBuffer(p_Attachments.size(), p_Attachments.data(), false);
-	bgfx::setViewRect(m_ViewId, 0, 0, bgfx::BackbufferRatio::Equal);
-	bgfx::setViewFrameBuffer(m_ViewId, p_FrameBufferHandle);
-	bgfx::setViewMode(m_ViewId, bgfx::ViewMode::Sequential);
-    bgfx::setViewName(m_ViewId, "NanoVG");
+	VectorGraphics::SetInstanceContext(nvgCreate(1, viewId));
+	bgfx::FrameBufferHandle fbh = bgfx::createFrameBuffer(fbAttachments.size(), fbAttachments.data(), false);
+	bgfx::setViewRect(viewId, 0, 0, bgfx::BackbufferRatio::Equal);
+	bgfx::setViewFrameBuffer(viewId, fbh);
+	bgfx::setViewMode(viewId, bgfx::ViewMode::Sequential);
+
+	s_InstanceCounter++;
+
+	bgfx::setViewName(viewId, "NanoVG");
+
+	return PipelineStage::Data{ fbh, attachments };
 }
 
-void harmony::VectorGraphicsStage::PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
+void harmony::VectorGraphicsStage::PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
 	Ref<View> _view = view.lock();
-	bgfx::setViewRect(m_ViewId, 0, 0, _view->m_Width, _view->m_Height);
+	bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
 	nvgBeginFrame(VectorGraphics::GetNVGContext() , float(_view->m_Width), float(_view->m_Width), 1.0f);
 }
 
-void harmony::VectorGraphicsStage::PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
+void harmony::VectorGraphicsStage::PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
 	nvgEndFrame(VectorGraphics::GetNVGContext());
-	bgfx::touch(m_ViewId);
-	PipelineStage::PostUpdate(registry, view, handle);
+	bgfx::touch(viewId);
+	PipelineStage::PostUpdate(registry, view, viewId);
 }
 
 void harmony::VectorGraphicsStage::Cleanup()
 {
 }
 
-bgfx::FrameBufferHandle harmony::VectorGraphicsStage::GetStageFinalFramebuffer()
-{
-	return bgfx::FrameBufferHandle();
-}
 
-harmony::VectorPipeline::VectorPipeline() : Pipeline(PipelineHandle::New("VectorGraphicsPipeline"))
+harmony::VectorPipeline::VectorPipeline() : Pipeline(PipelineHandle{ "VectorGraphicsPipeline" })
 {
 	AddPipelineStage<VectorGraphicsStage>();
-}
-
-bgfx::TextureHandle harmony::VectorPipeline::GetFinalImage()
-{
-	return nvgGetFramebufferTexture(VectorGraphics::GetNVGContext());
 }

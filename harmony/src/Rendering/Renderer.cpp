@@ -8,6 +8,7 @@
 #include "Core/Time.h"
 #include "Rendering/BuiltinShaders.h"
 #include "Rendering/Shapes.h"
+#include "Rendering/View.h"
 #if HARMONY_DEBUG
 #include <algorithm>
 #include "ImGui/imgui_bgfx.h"
@@ -20,11 +21,9 @@ harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetMa
     HARMONY_PROFILE_FUNCTION()
     p_CreatePipelineWindow = false;
     p_CreateShaderProgramWindow = false;
-    /*p_SelectedVertexAsset = AssetHandle();
-    p_SelectedFragmentAsset = AssetHandle();*/
 }
 
-void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex)
+harmony::WeakRef<harmony::ShaderProgram>  harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex)
 {
     Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(progName);
     Ref<BuiltInShaderStage> vs = CreateRef<BuiltInShaderStage>(vsName, ShaderStage::Type::Vertex, s_BuiltInShader[vsIndex]);
@@ -39,9 +38,11 @@ void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std:
     ShaderDataContainer dataContainer = ShaderDataContainer(prog);
     p_Shaders.emplace(prog, dataContainer);
     p_BuiltInShaders.emplace_back(prog);
+
+    return prog;
 }
 
-void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& csName, uint32_t csIndex)
+harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& csName, uint32_t csIndex)
 {
     Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(progName);
     Ref<BuiltInShaderStage> cs = CreateRef<BuiltInShaderStage>(csName, ShaderStage::Type::Compute, s_BuiltInShader[csIndex]);
@@ -53,13 +54,15 @@ void harmony::Renderer::AddBuiltInShader(const std::string& progName, const std:
     ShaderDataContainer dataContainer = ShaderDataContainer(prog);
     p_Shaders.emplace(prog, dataContainer);
     p_BuiltInShaders.emplace_back(prog);
+
+    return prog;
 }
 
 void harmony::Renderer::AddBuiltInShaders()
 {
+    p_PresentProgram = AddBuiltInShader("Present", "vs_present", "fs_present", 4, 5);
     AddBuiltInShader("TexturedMesh", "vs_simple_textured", "fs_simple_textured", 0, 1);
     AddBuiltInShader("Normal", "vs_normal", "fs_normal", 2, 3);
-    AddBuiltInShader("Present", "vs_present", "fs_present", 4, 5);
     AddBuiltInShader("NanoVG", "vs_nanovg_fill", "fs_nanovg_fill", 6, 7);
 }
 
@@ -92,10 +95,7 @@ void harmony::Renderer::RemoveView(WeakRef<View> view)
     }
     {
         Ref<View> _view = view.lock();
-        if (p_Views.find(_view) != p_Views.end())
-        {
-            p_Views.erase(_view);
-        }
+        p_Views.erase(_view);
     }
 }
 
@@ -142,16 +142,6 @@ void harmony::Renderer::Init()
 {
     PosColorTexCoord0Vertex::init();
     AddBuiltInShaders();
-    entt::registry tempRegistry;
-    for (auto& [view, stack] : p_Views)
-    {
-        for (int i = 0; i < stack.m_Stack.size(); i++)
-        {
-            Ref<Pipeline> pipeline = stack.m_Stack[i];
-            pipeline->Init(tempRegistry, view);
-        }
-        stack.Init(tempRegistry);
-    }
 }
 
 void harmony::Renderer::OnPreUpdate(entt::registry& registry)
@@ -167,8 +157,7 @@ void harmony::Renderer::OnPreUpdate(entt::registry& registry)
         Ref<View> view = m_ActiveViews[i].lock();
         view->OnPreUpdate(registry);
         PipelineStack& stack = p_Views[view];
-        
-        stack.PreUpdate(registry);
+        stack.PreUpdate(registry, m_ActiveViews[i]);
     }
 }
 
@@ -186,14 +175,25 @@ void harmony::Renderer::OnPostUpdate(entt::registry& registry)
         view->OnPostUpdate(registry);
         
         PipelineStack& stack = p_Views[view];
+        auto texturesToBlit = stack.PostUpdate(registry, m_ActiveViews[i]);
+        Ref<ShaderProgram> prog = p_PresentProgram.lock();
+        bgfx::setViewClear(stack.m_FinalImageViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000);
 
-        stack.PostUpdate(registry);
+        for (int i = 0; i < texturesToBlit.size(); i++)
+        {
+            bgfx::TextureHandle th = texturesToBlit[i];
+            bgfx::setTexture(0, prog->m_Uniforms[0].BgfxHandle, th);
+            // do this better
+            ScreenSpaceQuad(view->m_Width, view->m_Height);
+            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
+            bgfx::submit(stack.m_FinalImageViewId, prog->m_Handle);
+        }
     }
 }
 
 harmony::PipelineStack& harmony::Renderer::GetViewPipelineStack(const std::string& viewName)
 {
-    for (auto& [view, stack] : p_Views)
+    for (auto& [view , stack]: p_Views)
     {
         if (view->m_Name == viewName)
         {
@@ -202,7 +202,7 @@ harmony::PipelineStack& harmony::Renderer::GetViewPipelineStack(const std::strin
     }
     harmony::log::error("No pipeline stack with name : {}", viewName);
     // TODO: This is horrible, fix me
-    return p_Views.begin()->second;
+    return PipelineStack();
 }
 
 void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline)
@@ -215,12 +215,6 @@ void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipel
 
     Ref<View> view = viewWeakRef.lock();
 
-    if (p_Views.find(view) == p_Views.end())
-    {
-        harmony::log::error("Trying to add pipeline association to a view not managed by this View Manager.");
-        return;
-    }
-
     if (pipeline.expired())
     {
         harmony::log::error("Trying to add pipeline to stack but pipeline is expired");
@@ -228,20 +222,15 @@ void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipel
     }
 
     Ref<Pipeline> p = pipeline.lock();
-    entt::registry r;
-    p->Init(r, viewWeakRef);
-
-    p_Views[view].m_Stack.emplace_back(pipeline);
+    
+    p_Views[view].AddPipeline(pipeline, view);
 }
 
 void harmony::Renderer::RefreshViews()
 {
-    for (int i = 0; i < m_ActiveViews.size(); i++)
+    for (auto& [view, stack] :p_Views)
     {
-        Ref<View> view = m_ActiveViews[i].lock();
-        for (int p = 0; p < p_Views[view].m_Stack.size(); p++)
-        {
-        }
+
     }
 }
 
@@ -270,7 +259,7 @@ void harmony::Renderer::OnImGui()
         ImGui::Separator();
         if (ImGui::TreeNode("Pipelines"))
         {
-            for (auto& [id, pipeline] : p_Pipelines)
+            for (auto&  pipeline : p_Pipelines)
             {
                 ImGui::Text(pipeline->m_Name.c_str());
             }
@@ -284,60 +273,12 @@ void harmony::Renderer::OnImGui()
         ImGui::Text("Views");
         ImGui::Separator();
 
-        for (auto& [view, pipelines] : p_Views)
+        for (auto& [view , stack]: p_Views)
         {
             ImGui::Text(view->m_Name.c_str());
             if (ImGui::BeginCombo("Add Pipeline", ""))
             {
-                for (int i = 0; i < m_PipelinePrototypes.size(); i++)
-                {
-                    if (ImGui::Selectable(m_PipelinePrototypes[i]->m_Name.c_str()))
-                    {
-                        Ref<Pipeline> newPipeline = m_PipelinePrototypes[i]->Clone();
-                        AddPipeline(newPipeline);
-
-                        AddViewPipeline(view, newPipeline);
-
-                    }
-                }
                 ImGui::EndCombo();
-            }
-
-            if (ImGui::TreeNode("View Pipelines"))
-            {
-                bool shift = false;
-                int indexToShift = -1;
-                bool shiftRight = false;
-                for (int i = 0; i < pipelines.m_Stack.size(); i++)
-                {
-                    std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + std::to_string(i);
-                    std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + std::to_string(i);
-                    if (ImGui::Button(downArrowText.c_str()))
-                    {
-                        shift = true;
-                        indexToShift = i;
-                        shiftRight = true;
-                    }
-                    ImGui::SameLine();
-                    if (ImGui::Button(upArrowText.c_str()))
-                    {
-                        shift = true;
-                        indexToShift = i;
-                    }
-                    ImGui::SameLine();
-                    ImGui::Text(pipelines.m_Stack[i]->m_Name.c_str());
-                }
-
-                if (shift)
-                {
-                    int shiftDir = shiftRight ? 1 : -1;
-
-                    if (shiftDir + indexToShift < pipelines.m_Stack.size())
-                    {
-                        std::iter_swap(pipelines.m_Stack.begin() + indexToShift, pipelines.m_Stack.begin() + (indexToShift + shiftDir));
-                    }
-                }
-                ImGui::TreePop();
             }
 
             ImGui::Indent();
@@ -431,9 +372,9 @@ void harmony::Renderer::OnImGui()
 
                 if (canCreate)
                 {
-                    Ref<Pipeline> pipeline = CreateRef<Pipeline>(PipelineHandle::New(pipelineName));
+                    Ref<Pipeline> pipeline = CreateRef<Pipeline>(PipelineHandle{ pipelineName });
                     pipeline->AddPipelineStage<PipelineStage>(pipelineName + ".surface", PipelineStage::Type::PrimaryDraw, p_SelectedShaderProgram);
-                    AddPipeline(pipeline, true);
+                    AddPipeline(pipeline);
                     p_CreatePipelineWindow = false;
                 }
 
@@ -442,52 +383,10 @@ void harmony::Renderer::OnImGui()
         ImGui::End();
     }
 
-    for (auto& [view, pipelines] : p_Views)
+    for (auto& [view , stack]: p_Views)
     {
         view->OnImGui();
     }
-
-    //for (int i = 0; i < m_ActiveViews.size();i++)
-    //{
-    //    Ref<View> view = m_ActiveViews[i].lock();
-    //    if (ImGui::Begin(view->m_Name.c_str()))
-    //    {
-    //        bgfx::TextureHandle fbHandle = p_Views[view].GetStackFinalImage();
-    //        if (fbHandle.idx == bgfx::kInvalidHandle)
-    //        {
-    //            // harmony::log::warn("Renderer OnImGui : Invalid framebuffer handle for view {} pipeline {}", view->m_Name, p_Views[view][p]->m_Name);
-    //            continue;
-    //        }
-    //        if (!bgfx::isValid(fbHandle))
-    //        {
-    //            continue;
-    //        }
-    //        ImGui::Image(
-    //            fbHandle,
-    //            ImVec2(static_cast<float>(view->m_Width), static_cast<float>(view->m_Height))
-    //        );
-    //        ImGui::Separator();
-    //        for (int p = 0; p < p_Views[view].m_Stack.size(); p++)
-    //        {
-    //            bgfx::TextureHandle fbHandle = p_Views[view].m_Stack[p]->GetFinalImage();
-    //            if (fbHandle.idx == bgfx::kInvalidHandle)
-    //            {
-    //                // harmony::log::warn("Renderer OnImGui : Invalid framebuffer handle for view {} pipeline {}", view->m_Name, p_Views[view][p]->m_Name);
-    //                continue;
-    //            }
-    //            if (!bgfx::isValid(fbHandle))
-    //            {
-    //                continue;
-    //            }
-    //            ImGui::Image(
-    //                fbHandle,
-    //                ImVec2(static_cast<float>(view->m_Width), static_cast<float>(view->m_Height))
-    //            );
-    //        }
-
-    //    }
-    //    ImGui::End();
-    //}
 }
 
 
@@ -537,17 +436,16 @@ nlohmann::json harmony::Renderer::Serialize()
     }
 
     json["renderer"]["pipelines"] = nlohmann::json::array();
-    for (auto& [index, pipeline] : p_Pipelines)
+    for (auto& pipeline : p_Pipelines)
     {
         json["renderer"]["pipelines"].emplace_back(pipeline->Serialize());
     }
     json["renderer"]["views"] = nlohmann::json::array();
 
-    for (auto& [view, pipelineStack] : p_Views)
+    for (auto& [view, stack] : p_Views)
     {
         nlohmann::json viewJson;
         viewJson["view"] = view->Serialize();
-        viewJson["stack"] = pipelineStack.Serialize();
         json["renderer"]["views"].emplace_back(viewJson);
 
     }
@@ -612,27 +510,35 @@ void harmony::Renderer::Deserialize(nlohmann::json& json)
 //    return wr;
 //}
 
-void harmony::Renderer::AddPipeline(Ref<Pipeline> pipeline, bool makeClone)
+void harmony::Renderer::AddPipeline(Ref<Pipeline> pipeline)
 {
     if (pipeline)
     {
-        PipelineHandle handle = pipeline->m_Handle;
-        if (makeClone)
+        if (std::find(p_Pipelines.begin(), p_Pipelines.end(), pipeline) != p_Pipelines.end())
         {
-            m_PipelinePrototypes.push_back(pipeline->Clone());
-        }
-        if (p_Pipelines.find(handle.Index) != p_Pipelines.end())
-        {
-            harmony::log::error("Already have a pipeline with handle {} ", handle.Index);
+            harmony::log::error("Already have a pipeline with name {} ", pipeline->m_Name);
             return;
         }
-        p_Pipelines.emplace(handle.Index, pipeline);
+        p_Pipelines.emplace_back(pipeline);
 
     }
     else
     {
         harmony::log::error("Invalid pipeline provided.");
     }
+}
+
+harmony::WeakRef<harmony::Pipeline> harmony::Renderer::GetPipeline(const PipelineHandle& handle)
+{
+    
+    for (int i = 0; i < p_Pipelines.size(); i++)
+    {
+        if (p_Pipelines[i]->m_Handle == handle)
+        {
+            return p_Pipelines[i];
+        }
+    }
+    return WeakRef<Pipeline>();
 }
 
 void harmony::Renderer::ReloadShader(WeakRef<ShaderProgram> shader)
@@ -836,6 +742,3 @@ bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRe
     return vl;
 
 }
-
-
-

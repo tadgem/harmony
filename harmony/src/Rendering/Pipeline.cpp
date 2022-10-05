@@ -1,22 +1,26 @@
 #include "Rendering/Pipeline.h"
+#include "Rendering/PipelineStage.h"
+#include "Rendering/View.h"
 #include "Core/Log.hpp"
 harmony::Pipeline::Pipeline(const PipelineHandle& handle) : m_Handle(handle), m_Name(handle.Name)
 {
 }
 
-void harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view)
+std::vector<harmony::PipelineStage::Data> harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)
 {
+	std::vector<PipelineStage::Data> datas = std::vector<PipelineStage::Data>();
 	if (p_Stages.size() == 0)
 	{
-		return;
+		return datas;
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->Init(registry, view, m_Handle);
+		datas.emplace_back(p_Stages[i]->Init(registry, view, viewIds[i]));
 	}
+	return datas;
 }
 
-void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view)
+void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)
 {
 	Ref<View> _v = view.lock();
 	if (p_Stages.size() == 0)
@@ -25,15 +29,15 @@ void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view)
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		bgfx::setViewClear(p_Stages[i]->m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
+		bgfx::setViewClear(viewIds[i], BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->PreUpdate(registry, view, m_Handle);
+		p_Stages[i]->PreUpdate(registry, view, viewIds[i]);
 	}
 }
 
-void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view)
+void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)
 {
 	if (p_Stages.size() == 0)
 	{
@@ -41,11 +45,11 @@ void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view)
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->PostUpdate(registry, view, m_Handle);
+		p_Stages[i]->PostUpdate(registry, view, viewIds[i]);
 	}
 }
 
-void harmony::Pipeline::Cleanup(entt::registry& registry, WeakRef<View> view)
+void harmony::Pipeline::Cleanup(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)
 {
 	if (p_Stages.size() == 0)
 	{
@@ -57,72 +61,6 @@ void harmony::Pipeline::Cleanup(entt::registry& registry, WeakRef<View> view)
 	}
 }
 
-bgfx::TextureHandle harmony::Pipeline::GetFinalImage()
-{
-	if (p_Stages.size() == 0)
-	{
-		// harmony::log::warn("Pipeline with handle {} is empty!", m_Handle.Index);
-		return BGFX_INVALID_HANDLE;
-	}
-	bgfx::FrameBufferHandle fbToBlit = p_Stages[p_Stages.size() - 1]->GetStageFinalFramebuffer();
-
-	if (fbToBlit.idx == bgfx::kInvalidHandle)
-	{
-		return bgfx::TextureHandle();
-	}
-
-	return bgfx::getTexture(fbToBlit);
-}
-
-harmony::Ref<harmony::Pipeline> harmony::Pipeline::Clone()
-{
-	Ref<Pipeline> newPipeline =  CreateRef<Pipeline>(PipelineHandle::New(m_Handle.Name));
-
-	for (int i = 0; i < p_Stages.size(); i++)
-	{
-		Ref<PipelineStage> newStage = p_Stages[i]->Clone();
-		newPipeline->p_Stages.emplace_back(newStage);
-	}
-
-	return newPipeline;
-}
-
-bgfx::TextureHandle harmony::Pipeline::GetInitialDepth()
-{
-	for (int i = 0; i < p_Stages.size(); i++)
-	{
-		if (p_Stages[i]->m_HasDepthAttachment)
-		{
-			return bgfx::getTexture(p_Stages[i]->GetStageFinalFramebuffer(), 1);
-		}
-	}
-	
-	return bgfx::TextureHandle();
-}
-
-bgfx::TextureHandle harmony::Pipeline::GetFinalDepth()
-{
-	int index = p_Stages.size() - 1;
-
-	for (int index = p_Stages.size() - 1; index >= 0; index--)
-	{
-		if (p_Stages[index]->m_HasDepthAttachment)
-		{
-			return bgfx::getTexture(p_Stages[index]->GetStageFinalFramebuffer(), 1);
-		}
-	}
-
-	return bgfx::TextureHandle();
-}
-
-bgfx::ViewId harmony::Pipeline::GetFirstViewID()
-{
-	if (p_Stages.size() == 0)
-	{
-		return bgfx::ViewId();
-	}
-	return p_Stages[0]->m_ViewId;
-}
 
 uint32_t harmony::Pipeline::NumPipelineStages()
 {
@@ -162,11 +100,6 @@ void harmony::Pipeline::Deserialize(nlohmann::json& json)
 	m_Name = json["pipeline"]["name"];
 	m_Handle = json["pipeline"]["handle"] = m_Handle;
 
-	if (PipelineHandle::p_Counter < m_Handle.Index)
-	{
-		PipelineHandle::p_Counter = m_Handle.Index + 1;
-	}
-
 	auto pipelinesJson = json["pipeline"]["stages"];
 
 	for (int i = 0; i < pipelinesJson.size(); i++)
@@ -176,10 +109,19 @@ void harmony::Pipeline::Deserialize(nlohmann::json& json)
 	}
 }
 
-harmony::PipelineHandle harmony::PipelineHandle::New(const std::string& name)
+
+bool harmony::PipelineHandle::operator==(const PipelineHandle& other) const
 {
-	PipelineHandle handle{ p_Counter, name };
-	p_Counter++;
-	return handle;
+	return other.Name == Name;
+}
+
+bool harmony::PipelineHandle::operator!=(const PipelineHandle& other) const
+{
+	return other.Name != Name;
+}
+
+bool harmony::PipelineHandle::operator<(const PipelineHandle& other) const
+{
+	return other.Name.size() < Name.size();
 }
 

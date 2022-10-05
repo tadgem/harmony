@@ -6,6 +6,5 @@ namespace harmony
     struct ModelComponent
     {
         std::vector<BGFXMeshHandle> MeshHandles;
-        RenderState State;
     };
 };

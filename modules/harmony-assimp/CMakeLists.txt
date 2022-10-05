@@ -11,6 +11,11 @@ endif()
 add_library(harmony-assimp STATIC ${HEADER_FILES} ${HEADERPP_FILES} ${SRC_FILES})
 set_property(TARGET harmony-assimp PROPERTY CXX_STANDARD 17)
 
+# Set Options
+SET(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "Dont build assimp tools")
+SET(ASSIMP_BUILD_TESTS OFF CACHE BOOL "Dont build assimp tests")
+SET(ASSIMP_INSTALL OFF CACHE BOOL "Dont install assimp")
+
 add_subdirectory(${ROOT_DIR}/submodules/assimp ${CMAKE_CURRENT_BINARY_DIR}/assimp)
 
 set(HARMONY_ASSIMP_INCLUDES 

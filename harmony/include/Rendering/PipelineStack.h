@@ -1,39 +1,46 @@
 #pragma once
+#include <map>
 #include <vector>
 #include "Rendering/Pipeline.h"
-#include "Rendering/View.h"
-#include "Rendering/Shader.h"
 namespace harmony
 {
+    class View;
     class PipelineStack
     {
     public:
         PipelineStack(); 
-        PipelineStack(WeakRef<View> view, WeakRef<ShaderProgram> presentShader);
-        /// <summary>
-        /// Call after all pipelines have been rendered
-        /// </summary>
-        /// <returns></returns>
-        bgfx::TextureHandle GetStackFinalImage();
-        
-        void Init(entt::registry& registry);
-        void PreUpdate(entt::registry& registry);
-        void PostUpdate(entt::registry& registry);
-        void Cleanup(entt::registry& registry);
 
-        std::vector<Ref<Pipeline>> m_Stack;
+        bgfx::TextureHandle GetFinalImage();
 
-        nlohmann::json Serialize();
-        void Deserialize(nlohmann::json& json);
+        void AddPipeline(WeakRef<Pipeline> pipeline, WeakRef<View> view);
+        void RemovePipeline(WeakRef<Pipeline> pipeline);
+        void MoveUp(const PipelineHandle& pipelineHandle);
+        void MoveDown(const PipelineHandle& pipelineHandle);
+
+        void PreUpdate(entt::registry& registry, WeakRef<View> view);
+        std::vector<bgfx::TextureHandle> PostUpdate(entt::registry& registry, WeakRef<View> view);
+
+        nlohmann::json  Serialize();
+        void            Deserialize(nlohmann::json& json);
+
+        std::vector<WeakRef<Pipeline>> m_Stack;
+
+        bgfx::FrameBufferHandle     m_FinalFramebufferHandle;
+        bgfx::ViewId                m_FinalImageViewId;
 
     protected:
-        Ref<View> p_View;
-        bool p_Initialized;
+        void InitializePipeline(Ref<Pipeline> pipeline, WeakRef<View> view);
+        void SortStack();
+        void MovePipeline(const PipelineHandle& pipelineHandle, bool moveUp);
 
-        bgfx::FrameBufferHandle p_FinalFramebufferHandle;
-        bgfx::ViewId p_FinalImageViewId;
+        bgfx::TextureHandle GetPipelineInitialDepth(PipelineHandle& handle);
+        bgfx::TextureHandle GetPipelineFinalDepth(PipelineHandle& handle);
+
+        bool                        p_Initialized;
+
+        std::map<PipelineHandle, std::vector<bgfx::ViewId>>             p_StackViewIDs;
+        std::map<PipelineHandle, std::vector<PipelineStage::Data>>      p_StackData;
+
         
-        Ref<ShaderProgram> p_PresentProgram;
-        bgfx::UniformHandle p_TexHandle;
     };
 }

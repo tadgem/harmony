@@ -16,28 +16,11 @@
 #include "json.hpp"
 namespace harmony
 {
-    struct RenderState
-    {
-        bgfx::ViewId m_View = 0;
-        uint64_t m_State = BGFX_STATE_DEFAULT;
-        bgfx::ProgramHandle m_Program;
-    };
-
-    
-
+    class Viewport;
     class Renderer
     {   
     public:
         Renderer(AssetManager& assetManager);
-
-        void AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex);
-        void AddBuiltInShader(const std::string& progName, const std::string& vsName, uint32_t csIndex);
-        void AddBuiltInShaders();
- 
-        WeakRef<ShaderProgram> CreateShader(const std::string& name, WeakRef<ShaderStage> vertStage, WeakRef<ShaderStage> fragStage);
-        WeakRef<ShaderProgram> CreateShader(const std::string& name, WeakRef<ShaderStage> compStage);
-
-        WeakRef<ShaderProgram> BuildShader(const std::string name, WeakRef<ShaderStage> vertStage, WeakRef<ShaderStage> fragStage);
 
         template<typename T, typename ... Args>
         WeakRef<T> CreatePipeline(Args&& ... args)
@@ -46,16 +29,11 @@ namespace harmony
             Ref<T> derivedPipeline = CreateRef<T>(std::forward<Args>(args)...);
             Ref<Pipeline> pipeline = std::static_pointer_cast<T, Pipeline>(derivedPipeline);
             
-#if HARMONY_DEBUG
-            Ref<Pipeline> pipelinePrototype = derivedPipeline->Clone();
-
-            m_PipelinePrototypes.emplace_back(pipelinePrototype);
-#endif
 
             if (pipeline)
             {
                 PipelineHandle handle = pipeline->m_Handle;
-                if (p_Pipelines.find(handle.Index) != p_Pipelines.end())
+                if (p_Pipelines.find(handle) != p_Pipelines.end())
                 {
                     harmony::log::error("Already have a pipeline with handle {} ", handle.Index);
                     Ref<T> derivedExistingPipeline = std::static_pointer_cast<T, Pipeline>(p_Pipelines[handle.Index]);
@@ -65,7 +43,7 @@ namespace harmony
                     }
                     return WeakRef<T>();
                 }
-                p_Pipelines.emplace(handle.Index, pipeline);
+                p_Pipelines.emplace(handle, pipeline);
                 return GetWeakRef<T>(derivedPipeline);
             }
             else
@@ -75,69 +53,40 @@ namespace harmony
             }
         }
 
-#if HARMONY_DEBUG
         template<typename T, typename ... Args>
-        void CreatePipelinePrototype(Args&& ... args)
+        WeakRef<T> CreateView(Args&& ... args)
         {
-            static_assert(std::is_base_of<Pipeline, T>());
-            Ref<T> derivedPipeline = CreateRef<T>(std::forward<Args>(args)...);
-            Ref<Pipeline> pipeline = std::static_pointer_cast<T, Pipeline>(derivedPipeline);
-
-            m_PipelinePrototypes.emplace_back(pipeline);
+            static_assert(std::is_base_of<View, T>(), "Provided type is not a view!");
+            Ref<T> view = CreateRef<T>(std::forward<Args>(args)...);
+            p_Views.emplace(view, PipelineStack());
+            return GetWeakRef<T>(view);
         }
-#endif
-        void AddPipeline(Ref<Pipeline> pipeline, bool makeClone = false);
+
+        WeakRef<ShaderProgram>  AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex);
+        WeakRef<ShaderProgram>  AddBuiltInShader(const std::string& progName, const std::string& vsName, uint32_t csIndex);
+        void                    AddBuiltInShaders();
+        WeakRef<ShaderProgram>  BuildShader(const std::string name, WeakRef<ShaderStage> vertStage, WeakRef<ShaderStage> fragStage);
 
         void ReloadShader(WeakRef<ShaderProgram> shader);
         void ReloadAllShaders();
+        void RefreshShaderDataContainers();
 
         WeakRef<ShaderProgram>      GetShader(const std::string& name);
         std::vector<std::string>    GetShaderNames();
 
-        void RefreshShaderDataContainers();
-
+        // Global variables for shaders
+        // TODO: link to shader file includes..
         void AddUniform(const std::string name, WeakRef<float> value);
         void AddUniform(const std::string name, WeakRef<glm::vec2> value);
         void AddUniform(const std::string name, WeakRef<glm::vec3> value);
         void AddUniform(const std::string name, WeakRef<glm::mat3> value);
         void AddUniform(const std::string name, WeakRef<glm::mat4> value);
 
-
-#if HARMONY_DEBUG
-        void                OnImGui();
-        bool ShaderSelector(const std::string& selectorName, harmony::WeakRef<harmony::ShaderProgram>& prog);
-
-        PipelineHandle      p_SelectedPipelineHandle;
-        std::vector<Ref<Pipeline>> m_PipelinePrototypes;
-
-        AssetHandle p_SelectedVertexAsset;
-        AssetHandle p_SelectedFragmentAsset;
-
-        WeakRef<ShaderProgram> p_SelectedShaderProgram;
-
-        bool p_CreateShaderProgramWindow;
-        bool p_CreatePipelineWindow;
-
-        char p_ShaderNameInput[64]{ "" };
-        char p_PipelineNameInput[64]{ "" };
-#endif
+        void                AddPipeline(Ref<Pipeline> pipeline);
+        WeakRef<Pipeline>   GetPipeline(const PipelineHandle& handle);
 
         BGFXMeshHandle      SubmitMeshToGPU(WeakRef<Mesh> mesh);
         BGFXTextureHandle   SubmitTextureToGPU(WeakRef<Texture> textureWeakRef);
-
-        // Create and add a view
-        template<typename T, typename ... Args>
-        WeakRef<T> CreateView(Args&& ... args)
-        {
-            static_assert(std::is_base_of<View, T>(), "Provided type is not a view!");
-            Ref<T> view = CreateRef<T>(std::forward<Args>(args)...);
-            p_Views.emplace(view, PipelineStack(view, GetShader("Present")));
-            
-            entt::registry reg;
-
-            p_Views[view].Init(reg);
-            return GetWeakRef<T>(view);
-        }
 
         void                RemoveView(WeakRef<View> view);
         void                SetViewActive(WeakRef<View> viewWeakRef, bool active);
@@ -155,19 +104,35 @@ namespace harmony
         
         nlohmann::json      Serialize();
         void                Deserialize(nlohmann::json& json);
-    protected:
 #if HARMONY_DEBUG
+        void                OnImGui();
+        bool ShaderSelector(const std::string& selectorName, harmony::WeakRef<harmony::ShaderProgram>& prog);
+    protected:
+        PipelineHandle      p_SelectedPipelineHandle;
+
+        AssetHandle p_SelectedVertexAsset;
+        AssetHandle p_SelectedFragmentAsset;
+
+        WeakRef<ShaderProgram> p_SelectedShaderProgram;
+
+        bool p_CreateShaderProgramWindow;
+        bool p_CreatePipelineWindow;
+
+        char p_ShaderNameInput[64]{ "" };
+        char p_PipelineNameInput[64]{ "" };
 #endif
+    protected:
         static uint32_t p_ViewHandleCounter;
 
         bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
         AssetManager& p_AssetManager;
 
-        std::map<Ref<View>, PipelineStack>                  p_Views;
-        std::map<Ref<ShaderProgram>, ShaderDataContainer>   p_Shaders;
-        std::map<uint16_t, Ref<Pipeline>>                   p_Pipelines;
-        std::vector<WeakRef<ShaderProgram>>                 p_BuiltInShaders;
+        int s_PresentShaderIndex;
 
-        bgfx::ViewId p_CurrentView;
+        std::map<Ref<View>, PipelineStack>                  p_Views;
+        std::vector<Ref<Pipeline>>                          p_Pipelines;
+        std::map<Ref<ShaderProgram>, ShaderDataContainer>   p_Shaders;
+        std::vector<WeakRef<ShaderProgram>>                 p_BuiltInShaders;
+        WeakRef<ShaderProgram>                              p_PresentProgram;
     };
 };

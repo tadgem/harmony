@@ -10,17 +10,18 @@ namespace harmony
 
         VectorGraphicsStage();
 
-        virtual void Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
-        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
-        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
+        virtual PipelineStage::Data Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId) override;
+        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId) override;
+        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId) override;
         virtual void Cleanup() override;
-        virtual bgfx::FrameBufferHandle GetStageFinalFramebuffer() override;
+
+    private:
+        inline static uint32_t s_InstanceCounter = 0;
     };
 
     class VectorPipeline : public Pipeline
     {
     public:
         VectorPipeline();
-        virtual bgfx::TextureHandle GetFinalImage() override;
     };
 };

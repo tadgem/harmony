@@ -6,11 +6,9 @@
 
 harmony::DebugDrawStage::DebugDrawStage(GfxDebug::Channel channel) : PipelineStage("DebugDrawStage", PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>()), m_Channel(channel)
 {
-	p_RunPreFrame = false;
-	p_DebugRenderer = nullptr;
 }
 
-void harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
+harmony::PipelineStage::Data harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
 	if (view.expired())
 	{
@@ -18,48 +16,54 @@ void harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view,
 	}
 
 	Ref<View> _view = view.lock();
-
-	bgfx::TextureHandle fbtextures[] =
+	std::map<Attachment::Type, Attachment> attachments = std::map<Attachment::Type, Attachment>();
+	bgfx::TextureHandle fbtexture[] =
+	{ bgfx::createTexture2D(
+		_view->m_Width
+		, _view->m_Height
+		, false
+		, 1
+		, bgfx::TextureFormat::BGRA8
+		, BGFX_TEXTURE_RT
+	)
+	};
+	Attachment a
 	{
-		bgfx::createTexture2D(
-				_view->m_Width
-			, _view->m_Height
-			, false
-			, 1
-			, bgfx::TextureFormat::BGRA8
-			, BGFX_TEXTURE_RT
-			)
+		fbtexture[0],
+		Attachment::Type::RGBA8F
 	};
 
-	p_FrameBufferHandle = bgfx::createFrameBuffer(BX_COUNTOF(fbtextures), fbtextures, false);
-	bgfx::setViewFrameBuffer(m_ViewId, p_FrameBufferHandle);
-	bgfx::setViewRect(m_ViewId, 0, 0, bgfx::BackbufferRatio::Equal);
-	bgfx::setViewName(m_ViewId, "Debug Draw");
+	attachments.emplace(Attachment::Type::RGBA8F, a);
 
-	p_DebugRenderer = GfxDebug::Get()->AddViewChannel(m_Channel);
-	p_DebugRenderer->begin(m_ViewId, false);
-	p_RunPreFrame = true;
-}
+	bgfx::FrameBufferHandle fbh = bgfx::createFrameBuffer(BX_COUNTOF(fbtexture), fbtexture, false);
+	bgfx::setViewFrameBuffer(viewId, fbh);
+	bgfx::setViewRect(viewId, 0, 0, bgfx::BackbufferRatio::Equal);
+	bgfx::setViewName(viewId, "Debug Draw");
 
-void harmony::DebugDrawStage::PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
-{
-	bgfx::setViewClear(m_ViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
-	Ref<View> _view = view.lock();
-	bgfx::setViewTransform(m_ViewId, &_view->m_View[0], &_view->m_Projection[0]);
-	bgfx::setViewRect(m_ViewId, 0, 0, _view->m_Width, _view->m_Height);
-	p_DebugRenderer->begin(m_ViewId, false);
-	p_RunPreFrame = true;
-}
-
-void harmony::DebugDrawStage::PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle)
-{
-	if (!p_RunPreFrame)
+	p_DebugRenderers.emplace(_view->m_Name, GfxDebug::Get()->AddViewChannel(m_Channel));
+	PipelineStage::Data data
 	{
-		return;
-	}
-	p_DebugRenderer->end();
-	bgfx::touch(m_ViewId);
-	PipelineStage::PostUpdate(registry, view, handle);
+		fbh,
+		attachments
+	};
+
+	return data;
+}
+
+void harmony::DebugDrawStage::PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
+{
+	bgfx::setViewClear(viewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
+	Ref<View> _view = view.lock();
+	bgfx::setViewTransform(viewId, &_view->m_View[0], &_view->m_Projection[0]);
+	bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
+	p_DebugRenderers[_view->m_Name]->begin(viewId, false);
+}
+
+void harmony::DebugDrawStage::PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
+{
+	p_DebugRenderers[view.lock()->m_Name]->end();
+	bgfx::touch(viewId);
+	PipelineStage::PostUpdate(registry, view, viewId);
 
 }
 
@@ -68,13 +72,8 @@ void harmony::DebugDrawStage::Cleanup()
 
 }
 
-harmony::Ref<harmony::PipelineStage> harmony::DebugDrawStage::Clone()
-{
-	Ref <DebugDrawStage> newStage = CreateRef<DebugDrawStage>(m_Channel);
-	return newStage;
-}
 
-harmony::DebugDrawPipeline::DebugDrawPipeline(GfxDebug::Channel channel) : Pipeline(PipelineHandle::New("DebugDrawPipline"))
+harmony::DebugDrawPipeline::DebugDrawPipeline(GfxDebug::Channel channel) : Pipeline(PipelineHandle{ "DebugDrawPipline" })
 {
 	AddPipelineStage<DebugDrawStage>(channel);
 }

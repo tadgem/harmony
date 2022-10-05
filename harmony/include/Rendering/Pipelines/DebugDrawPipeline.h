@@ -1,6 +1,6 @@
 #pragma once
-
 #include "Rendering/Pipeline.h"
+#include "Rendering/PipelineStage.h"
 #include "Rendering/Debug/GfxDebug.h"
 namespace harmony
 {
@@ -8,14 +8,14 @@ namespace harmony
     {
     public:
         DebugDrawStage(GfxDebug::Channel channel);
-        virtual void Init(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
-        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
-        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, PipelineHandle handle) override;
+        virtual PipelineStage::Data Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId) override;
+        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId) override;
+        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId) override;
         virtual void Cleanup() override;
-        virtual Ref<PipelineStage> Clone() override;
+
         GfxDebug::Channel m_Channel;
         bool Active;
-        DebugDrawEncoder* p_DebugRenderer;
+        std::map<std::string,DebugDrawEncoder*> p_DebugRenderers;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(DebugDrawStage, m_Name, p_Shader, m_StageType, m_Channel)
     };

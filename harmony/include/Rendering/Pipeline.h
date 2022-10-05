@@ -2,11 +2,11 @@
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
 #include "Rendering/PipelineStage.h"
-#include "Rendering/View.h"
 #include "Core/Profile.hpp"
 #include "json.hpp"
 namespace harmony
 {
+    class View;
     class Pipeline
     {
     public:
@@ -25,29 +25,23 @@ namespace harmony
 
         }
 
-        virtual void Init(entt::registry& registry, WeakRef<View> view);
-        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view);
-        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view);
-        virtual void Cleanup(entt::registry& registry, WeakRef<View> view);
-
-        virtual bgfx::TextureHandle GetFinalImage();
+        virtual std::vector<PipelineStage::Data> Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
         
-        virtual Ref<Pipeline> Clone();
-        
-        bgfx::TextureHandle GetInitialDepth();
-        bgfx::TextureHandle GetFinalDepth();
-        bgfx::ViewId GetFirstViewID();
+        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
+        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
+        virtual void Cleanup(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
+                
         uint32_t NumPipelineStages();
-        PipelineHandle m_Handle;
-        std::string m_Name;
+
+        PipelineHandle    m_Handle;
+        std::string       m_Name;
 
         bool HasDepth();
 
-        nlohmann::json Serialize();
-        void Deserialize(nlohmann::json& json);
+        nlohmann::json  Serialize();
+        void            Deserialize(nlohmann::json& json);
 
     protected:
         std::vector<Ref<PipelineStage>> p_Stages;
-        bgfx::TextureHandle p_FinalImage;
     };
 };

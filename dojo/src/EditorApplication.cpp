@@ -79,26 +79,18 @@ void harmony::Editor::AddEditorPanels()
 void harmony::Editor::InitializePipelines()
 {
 	p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
-	p_RuntimeDebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Game);
-	p_TexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle::New("Editor Textured Mesh"));
-	p_NormalPipeline = CreateRef<Pipeline>(PipelineHandle::New("Editor Mesh Normals"));
-	p_RuntimeTexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle::New("Runtime Textured Mesh"));
-	p_RuntimeNormalPipeline = CreateRef<Pipeline>(PipelineHandle::New("Runtime Mesh Normals"));
+	p_TexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle{ "Textured Mesh" });
+	p_NormalPipeline = CreateRef<Pipeline>(PipelineHandle{ "Mesh Normals" });
 	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>();
 	
 	p_NormalPipeline->AddPipelineStage<PipelineStage>("NormalStage1", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
-	p_TexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage1", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
-	p_RuntimeNormalPipeline->AddPipelineStage<PipelineStage>("NormalStage2", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
-	p_RuntimeTexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage2", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
+	p_TexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
+	
 
-
-	m_Renderer.AddPipeline(p_DebugPipeline, true);
-	m_Renderer.AddPipeline(p_RuntimeDebugPipeline, true);
-	m_Renderer.AddPipeline(p_TexturedMeshPipeline, true);
-	m_Renderer.AddPipeline(p_NormalPipeline, true);
-	m_Renderer.AddPipeline(p_RuntimeTexturedMeshPipeline, true);
-	m_Renderer.AddPipeline(p_RuntimeNormalPipeline, true);
-	m_Renderer.AddPipeline(p_VectorGraphicsPipeline, true);
+	m_Renderer.AddPipeline(p_DebugPipeline);
+	m_Renderer.AddPipeline(p_TexturedMeshPipeline);
+	m_Renderer.AddPipeline(p_NormalPipeline);
+	m_Renderer.AddPipeline(p_VectorGraphicsPipeline);
 }
 
 void harmony::Editor::InitializeViews()
@@ -108,11 +100,12 @@ void harmony::Editor::InitializeViews()
 	m_Renderer.AddViewPipeline(editorViewWr, p_DebugPipeline);
 	m_Renderer.AddViewPipeline(editorViewWr, p_NormalPipeline);
 	m_Renderer.AddViewPipeline(editorViewWr, p_TexturedMeshPipeline);
+	m_Renderer.AddViewPipeline(editorViewWr, p_VectorGraphicsPipeline);
 	m_Renderer.SetViewActive(editorViewWr, true);
 
-	m_Renderer.AddViewPipeline(runtimeViewWr, p_RuntimeDebugPipeline);
-	m_Renderer.AddViewPipeline(runtimeViewWr, p_RuntimeNormalPipeline);
-	m_Renderer.AddViewPipeline(runtimeViewWr, p_RuntimeTexturedMeshPipeline);
+	m_Renderer.AddViewPipeline(runtimeViewWr, p_DebugPipeline);
+	m_Renderer.AddViewPipeline(runtimeViewWr, p_NormalPipeline);
+	m_Renderer.AddViewPipeline(runtimeViewWr, p_TexturedMeshPipeline);
 	m_Renderer.AddViewPipeline(runtimeViewWr, p_VectorGraphicsPipeline);
 	m_Renderer.SetViewActive(runtimeViewWr, true);
 
@@ -125,11 +118,9 @@ int harmony::Editor::OnEditUpdate()
 
 	HandleSDLEvent();
 
-	RunRendererPreUpdate();
-
 	ImGuiPreUpdate();
 
-	UpdateEditor();
+	RunRendererPreUpdate();
 
 	RunProgramComponentUpdate();
 
@@ -144,6 +135,8 @@ int harmony::Editor::OnEditUpdate()
 	RunProgramComponentRender();
 
 	Input::Get()->PostFrame();
+
+	UpdateEditor();
 
 	ImGuiPostUpdate();
 
@@ -167,8 +160,6 @@ int harmony::Editor::OnDebugUpdate()
 
 	ImGuiPreUpdate();
 
-	UpdateEditor();
-
 	RunProgramComponentUpdate();
 
 	RunSystemUpdate();
@@ -178,6 +169,8 @@ int harmony::Editor::OnDebugUpdate()
 	RunProgramComponentRender();
 
 	RunSystemRender();
+
+	UpdateEditor();
 
 	Input::Get()->PostFrame();
 
@@ -227,9 +220,6 @@ void harmony::Editor::OpenScene(uint32_t index)
 
 void harmony::Editor::UpdateEditor()
 {
-	GfxDebug::Get()->setColor(GfxDebug::Channel::Editor, 0xfffffff);
-	GfxDebug::Get()->drawGrid(GfxDebug::Channel::Editor, Axis::Enum::Y, bx::Vec3(0.0f, 0.0f, 0.0f), 1000);
-	
 	p_MainMenuBar.OnImGui();
 	GlobalDockspace();
 
@@ -250,6 +240,10 @@ void harmony::Editor::UpdateEditor()
 	{
 		return;
 	}
+	
+	//GfxDebug::Get()->setColor(GfxDebug::Channel::Editor, 0xfffffff);
+	//GfxDebug::Get()->drawGrid(GfxDebug::Channel::Editor, Axis::Enum::Y, bx::Vec3(0.0f, 0.0f, 0.0f), 1000);
+	
 }
 
 void harmony::Editor::GlobalDockspace()
