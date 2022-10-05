@@ -52,7 +52,7 @@ void harmony::PipelineStack::PreUpdate(entt::registry& registry, WeakRef<View> v
         // Get first view id of next pipeline
         bgfx::ViewId nextViewId = p_StackViewIDs[nextPipeline->m_Handle][0];
         // Get tex handles for this stage final depth & next stage initial depth texture
-        bgfx::TextureHandle srcTexture = GetPipelineFinalDepth(nextPipeline->m_Handle);
+        bgfx::TextureHandle srcTexture  = GetPipelineFinalDepth(pipeline->m_Handle);
         bgfx::TextureHandle destTexture = GetPipelineInitialDepth(nextPipeline->m_Handle);
         // this is blasphemy. Burn
         if (srcTexture.idx >=  4096 || destTexture.idx >= 4096)
@@ -63,7 +63,7 @@ void harmony::PipelineStack::PreUpdate(entt::registry& registry, WeakRef<View> v
             nextViewId,
             destTexture,
             0,
-           0,
+            0,
             srcTexture
         );
      }
