@@ -83,8 +83,14 @@ void harmony::Editor::InitializePipelines()
 	p_NormalPipeline = CreateRef<Pipeline>(PipelineHandle{ "Mesh Normals" });
 	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>();
 	
-	p_NormalPipeline->AddPipelineStage<PipelineStage>("NormalStage1", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("Normal"));
-	p_TexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage", PipelineStage::Type::PrimaryDraw, m_Renderer.GetShader("TexturedMesh"));
+	p_NormalPipeline->AddPipelineStage<PipelineStage>("NormalStage1",
+		PipelineStage::Type::PrimaryDraw,
+		m_Renderer.GetShader("Normal"),
+		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth16F));
+	p_TexturedMeshPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage",
+		PipelineStage::Type::PrimaryDraw, 
+		m_Renderer.GetShader("TexturedMesh"),
+		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth16F));
 	
 
 	m_Renderer.AddPipeline(p_DebugPipeline);
