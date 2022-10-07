@@ -198,11 +198,11 @@ namespace harmony {
 		bool GetGamepadButtonJustPressed(int gamepadIndex, Gamepad::Button button);
 		bool GetGamepadButtonJustReleased(int gamepadIndex, Gamepad::Button button);
 
-		float GetGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigger);
-		glm::vec2 GetGamepadStick(int gamepadIndex, Gamepad::Stick stick);
+		float		GetGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigger);
+		glm::vec2	GetGamepadStick(int gamepadIndex, Gamepad::Stick stick);
 
-		static Key GetKeyFromSDLKeycode(SDL_Keycode keyCode);
-		static Mouse::Button GetMouseButtonFromSDLKeycode(SDL_KeyCode keyCode);
+		static Key				GetKeyFromSDLKeycode(SDL_Keycode keyCode);
+		static Mouse::Button	GetMouseButtonFromSDLKeycode(SDL_KeyCode keyCode);
 
 		void PostFrame();
 		static Input* Get();

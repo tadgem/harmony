@@ -106,14 +106,13 @@ namespace harmony
         void                Deserialize(nlohmann::json& json);
 #if HARMONY_DEBUG
         void                OnImGui();
-        bool ShaderSelector(const std::string& selectorName, harmony::WeakRef<harmony::ShaderProgram>& prog);
+        bool                ShaderSelector(const std::string& selectorName, harmony::WeakRef<harmony::ShaderProgram>& prog);
     protected:
-        PipelineHandle      p_SelectedPipelineHandle;
-
         AssetHandle p_SelectedVertexAsset;
         AssetHandle p_SelectedFragmentAsset;
 
-        WeakRef<ShaderProgram> p_SelectedShaderProgram;
+        WeakRef<ShaderProgram>  p_SelectedShaderProgram;
+        PipelineHandle          p_SelectedPipelineHandle;
 
         bool p_CreateShaderProgramWindow;
         bool p_CreatePipelineWindow;
@@ -122,16 +121,15 @@ namespace harmony
         char p_PipelineNameInput[64]{ "" };
 #endif
     protected:
-        static uint32_t p_ViewHandleCounter;
-
         bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
-        AssetManager& p_AssetManager;
-
-        int s_PresentShaderIndex;
+        
+        static uint32_t p_ViewHandleCounter;
+        AssetManager&   p_AssetManager;
+        int             s_PresentShaderIndex;
 
         std::map<Ref<View>, PipelineStack>                  p_Views;
-        std::vector<Ref<Pipeline>>                          p_Pipelines;
         std::map<Ref<ShaderProgram>, ShaderDataContainer>   p_Shaders;
+        std::vector<Ref<Pipeline>>                          p_Pipelines;
         std::vector<WeakRef<ShaderProgram>>                 p_BuiltInShaders;
         WeakRef<ShaderProgram>                              p_PresentProgram;
     };

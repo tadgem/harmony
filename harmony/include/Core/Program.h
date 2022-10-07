@@ -179,7 +179,6 @@ namespace harmony
 		AssetManager	m_AssetManager;
 		Renderer		m_Renderer;
 		bgfx::Caps*		m_Capabilities;
-
 		Ref<Project>	m_Project;
 	};
 };

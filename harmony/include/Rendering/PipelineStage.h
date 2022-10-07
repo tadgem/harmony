@@ -31,7 +31,7 @@ namespace harmony
 
         bool operator==(const PipelineHandle& other) const;
         bool operator!=(const PipelineHandle& other) const;
-        bool operator<(const PipelineHandle& other)  const;
+        bool operator< (const PipelineHandle& other) const;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineHandle, Name)
     private:
@@ -81,9 +81,9 @@ namespace harmony
         bool m_HasHDRAttachment;
         bool m_HasDepthAttachment;
 
-        Type m_StageType;
-        Attachment::Type m_Attachments;
-        std::string m_Name;
+        Type                m_StageType;
+        Attachment::Type    m_Attachments;
+        std::string         m_Name;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStage, m_Name, m_StageType, p_Shader)
     protected:

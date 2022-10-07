@@ -15,9 +15,9 @@ namespace harmony
         virtual void Refresh() override;
 
     protected:
-        Ref<TileMapSystem> p_TileMapSystem;
-        entt::entity p_SelectedTileMapEntity;
+        Ref<TileMapSystem>  p_TileMapSystem;
+        WeakRef<Texture>    p_SelectedTexture;
+        entt::entity        p_SelectedTileMapEntity;
         std::vector<WeakRef<Texture>> p_AvailableTextures;
-        WeakRef<Texture> p_SelectedTexture;
     };
 };

@@ -10,10 +10,10 @@ namespace harmony
 {
 	struct ShaderUniform
 	{
-		bgfx::UniformHandle BgfxHandle{ UINT16_MAX };
-		std::string Name;
+		bgfx::UniformHandle		BgfxHandle{ UINT16_MAX };
+		std::string				Name;
 		bgfx::UniformType::Enum Type;
-		uint16_t ArraySize;
+		uint16_t				ArraySize;
 
 		bool Valid();
 
@@ -55,8 +55,8 @@ namespace harmony
 		std::string m_BinaryPath;
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderStage, m_Name, m_Type, m_Handle)
 
-		std::vector<bgfx::UniformInfo> m_UniformInfos;
-		bgfx::ShaderHandle m_ProgramHandle;
+		std::vector<bgfx::UniformInfo>	m_UniformInfos;
+		bgfx::ShaderHandle				m_ProgramHandle;
 
 
 	private:

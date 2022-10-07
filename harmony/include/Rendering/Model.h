@@ -18,7 +18,7 @@ namespace harmony
     public:
         Model(const std::string& name);
         std::string m_Name;
-        std::vector<AssetHandle> m_Meshes;
         ModelHandle m_ModelHandle;
+        std::vector<AssetHandle> m_Meshes;
     };
 };

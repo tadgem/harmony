@@ -23,11 +23,10 @@ namespace harmony
         nlohmann::json  Serialize();
         void            Deserialize(nlohmann::json& json);
 
-        std::vector<WeakRef<Pipeline>> m_Stack;
+        bgfx::FrameBufferHandle         m_FinalFramebufferHandle;
+        bgfx::ViewId                    m_FinalImageViewId;
 
-        bgfx::FrameBufferHandle     m_FinalFramebufferHandle;
-        bgfx::ViewId                m_FinalImageViewId;
-
+        std::vector<WeakRef<Pipeline>>  m_Stack;
     protected:
         void InitializePipeline(Ref<Pipeline> pipeline, WeakRef<View> view);
         void SortStack();
@@ -36,11 +35,9 @@ namespace harmony
         bgfx::TextureHandle GetPipelineInitialDepth(PipelineHandle& handle);
         bgfx::TextureHandle GetPipelineFinalDepth(PipelineHandle& handle);
 
-        bool                        p_Initialized;
-
         std::map<PipelineHandle, std::vector<bgfx::ViewId>>             p_StackViewIDs;
         std::map<PipelineHandle, std::vector<PipelineStage::Data>>      p_StackData;
 
-        
+        bool p_Initialized;        
     };
 }

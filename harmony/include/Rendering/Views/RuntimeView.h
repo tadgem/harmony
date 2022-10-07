@@ -21,7 +21,7 @@ namespace harmony
         virtual void            Deserialize(nlohmann::json& json) override;
         entt::entity CameraEntity;
     protected:
-        Program& p_Program;
-        Renderer& p_Renderer;
+        Program&    p_Program;
+        Renderer&   p_Renderer;
     };
 }
