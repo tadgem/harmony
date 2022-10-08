@@ -68,7 +68,7 @@ void harmony::VectorGraphicsStage::Cleanup()
 }
 
 
-harmony::VectorPipeline::VectorPipeline() : Pipeline(PipelineHandle{ "VectorGraphicsPipeline" })
+harmony::VectorPipeline::VectorPipeline() : Pipeline(PipelineHandle("VectorGraphicsPipeline"), Pipeline::Type::ScreenSpace)
 {
 	AddPipelineStage<VectorGraphicsStage>();
 }

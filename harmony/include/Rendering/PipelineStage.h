@@ -27,6 +27,9 @@ namespace harmony
     // TODO: do we need this
     struct PipelineHandle
     {
+    public:
+        PipelineHandle(std::string name);
+        PipelineHandle();
         std::string Name;
 
         bool operator==(const PipelineHandle& other) const;

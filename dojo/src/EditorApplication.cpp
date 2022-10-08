@@ -79,8 +79,8 @@ void harmony::Editor::AddEditorPanels()
 void harmony::Editor::InitializePipelines()
 {
 	p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
-	p_TexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle{ "Textured Mesh" });
-	p_NormalPipeline = CreateRef<Pipeline>(PipelineHandle{ "Mesh Normals" });
+	p_TexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle("Textured Mesh" ), Pipeline::Type::Surface);
+	p_NormalPipeline = CreateRef<Pipeline>(PipelineHandle("Mesh Normals" ), Pipeline::Type::Surface);
 	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>();
 	
 	p_NormalPipeline->AddPipelineStage<PipelineStage>("NormalStage1",

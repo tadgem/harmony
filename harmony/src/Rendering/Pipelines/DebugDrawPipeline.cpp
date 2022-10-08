@@ -72,7 +72,7 @@ void harmony::DebugDrawStage::Cleanup()
 }
 
 
-harmony::DebugDrawPipeline::DebugDrawPipeline(GfxDebug::Channel channel) : Pipeline(PipelineHandle{ "DebugDrawPipline" })
+harmony::DebugDrawPipeline::DebugDrawPipeline(GfxDebug::Channel channel) : Pipeline(PipelineHandle("DebugDrawPipline"), Pipeline::Type::ScreenSpace)
 {
 	AddPipelineStage<DebugDrawStage>(channel);
 }

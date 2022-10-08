@@ -2,7 +2,7 @@
 #include "Rendering/PipelineStage.h"
 #include "Rendering/View.h"
 #include "Core/Log.hpp"
-harmony::Pipeline::Pipeline(const PipelineHandle& handle) : m_Handle(handle), m_Name(handle.Name)
+harmony::Pipeline::Pipeline(const PipelineHandle& handle, Pipeline::Type pipelineType) : m_Handle(handle), m_Name(handle.Name), m_Type(pipelineType)
 {
 }
 
@@ -98,7 +98,7 @@ nlohmann::json harmony::Pipeline::Serialize()
 void harmony::Pipeline::Deserialize(nlohmann::json& json)
 {
 	m_Name = json["pipeline"]["name"];
-	m_Handle = json["pipeline"]["handle"] = m_Handle;
+	m_Handle = json["pipeline"]["handle"];
 
 	auto pipelinesJson = json["pipeline"]["stages"];
 

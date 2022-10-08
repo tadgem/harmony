@@ -12,7 +12,13 @@ harmony::PipelineStage::PipelineStage(const std::string& name, Type stageType, W
 harmony::PipelineStage::PipelineStage()
 {
 }
+harmony::PipelineHandle::PipelineHandle(std::string name) : Name(name)
+{
 
+}
+harmony::PipelineHandle::PipelineHandle()
+{
+}
 harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
 	if (view.expired())

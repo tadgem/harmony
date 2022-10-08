@@ -372,7 +372,7 @@ void harmony::Renderer::OnImGui()
 
                 if (canCreate)
                 {
-                    Ref<Pipeline> pipeline = CreateRef<Pipeline>(PipelineHandle{ pipelineName });
+                    Ref<Pipeline> pipeline = CreateRef<Pipeline>(PipelineHandle( pipelineName ), Pipeline::Type::Surface);
                     pipeline->AddPipelineStage<PipelineStage>(pipelineName + ".surface", PipelineStage::Type::PrimaryDraw, p_SelectedShaderProgram);
                     AddPipeline(pipeline);
                     p_CreatePipelineWindow = false;

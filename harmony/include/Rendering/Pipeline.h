@@ -10,7 +10,16 @@ namespace harmony
     class Pipeline
     {
     public:
-        Pipeline(const PipelineHandle& handle);
+
+        enum Type
+        {
+            Compute,
+            ScreenSpace,
+            Surface,
+            PostProcess
+        };
+
+        Pipeline(const PipelineHandle& handle, Type pipelineType);
 
         template<typename T, typename ... Args>
         WeakRef<T> AddPipelineStage(Args&& ... args)
@@ -26,20 +35,19 @@ namespace harmony
         }
 
         virtual std::vector<PipelineStage::Data> Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
-        
         virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
         virtual void Cleanup(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
                 
-        uint32_t NumPipelineStages();
-
-        PipelineHandle    m_Handle;
-        std::string       m_Name;
-
-        bool HasDepth();
+        uint32_t    NumPipelineStages();
+        bool        HasDepth();
 
         nlohmann::json  Serialize();
         void            Deserialize(nlohmann::json& json);
+
+        PipelineHandle      m_Handle;
+        std::string         m_Name;
+        Type          m_Type;
 
     protected:
         std::vector<Ref<PipelineStage>> p_Stages;
