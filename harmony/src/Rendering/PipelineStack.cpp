@@ -252,6 +252,15 @@ void harmony::PipelineStack::InitializePipeline(Ref<Pipeline> pipeline, WeakRef<
 
 void harmony::PipelineStack::SortStack()
 {
+    bool sorted = false;
+
+    while (!sorted)
+    {
+        // first must be compute
+        // then bg
+        // then surface
+        // then post process
+    }
 }
 
 void harmony::PipelineStack::MovePipeline(const PipelineHandle& pipelineHandle, bool moveUp)
