@@ -21,7 +21,6 @@ namespace harmony
         std::vector<bgfx::TextureHandle> PostUpdate(entt::registry& registry, WeakRef<View> view);
 
         nlohmann::json  Serialize();
-        void            Deserialize(nlohmann::json& json);
 
         bgfx::FrameBufferHandle         m_FinalFramebufferHandle;
         bgfx::ViewId                    m_FinalImageViewId;

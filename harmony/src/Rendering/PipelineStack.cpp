@@ -218,20 +218,11 @@ void harmony::PipelineStack::MoveDown(const PipelineHandle& pipelineHandle)
 nlohmann::json harmony::PipelineStack::Serialize()
 {
     auto json = nlohmann::json::array();
-    /*for (auto pipeline : m_Stack)
+    for (auto pipeline : m_Stack)
     {
-        json.emplace_back(pipeline->Serialize());
-    }*/
+        json.emplace_back(pipeline.lock()->m_Handle);
+    }
     return json;
-}
-
-void harmony::PipelineStack::Deserialize(nlohmann::json& json)
-{
-    /*for (int i = 0; i < json.size(); i++)
-    {
-        Ref<Pipeline> p = CreateRef<Pipeline>(PipelineHandle::New(""));
-        p->Deserialize(json[i]);
-    }*/
 }
 
 void harmony::PipelineStack::InitializePipeline(Ref<Pipeline> pipeline, WeakRef<View> view)

@@ -11,6 +11,10 @@ harmony::ShaderHotReload::ShaderHotReload(Program& prog) : p_Program(prog), p_Re
     std::string currentPath = std::filesystem::current_path().string();
     p_ShaderCompilerLocation = currentPath + "/shaderc" + PLATFORM_SHADER_COMPILER_EXECUTABLE;
 
+    if (!std::filesystem::exists(p_ShaderCompilerLocation))
+    {
+        harmony::log::error("ShaderHotReload : Failed to find shaderc executable at path : {}", p_ShaderCompilerLocation);
+    }
     p_RendererProfileMapping = {
         {"dx9", "s_3_0"},
         {"dx11", "s_5_0"},
@@ -21,7 +25,6 @@ harmony::ShaderHotReload::ShaderHotReload(Program& prog) : p_Program(prog), p_Re
         {"spv", "spirv"},
 
     };
-    int i = 1;
 }
 
 void harmony::ShaderHotReload::Init()

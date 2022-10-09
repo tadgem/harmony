@@ -115,7 +115,7 @@ void harmony::ShaderStage::LoadShaderBinary()
 	}
 	else
 	{
-		harmony::log::error("Failed to load shader binary at path : ", m_BinaryPath);
+		harmony::log::error("Failed to load shader binary at path : {}", m_BinaryPath);
 	}
 }
 

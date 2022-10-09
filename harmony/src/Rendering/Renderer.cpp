@@ -477,6 +477,7 @@ nlohmann::json harmony::Renderer::Serialize()
     {
         nlohmann::json viewJson;
         viewJson["view"] = view->Serialize();
+        viewJson["stack"] = stack.Serialize();
         json["renderer"]["views"].emplace_back(viewJson);
 
     }
@@ -492,54 +493,13 @@ nlohmann::json harmony::Renderer::Serialize()
         json["renderer"]["active_views"].emplace_back(view->Serialize());
     }
     
-
     return json;
 }
 
 void harmony::Renderer::Deserialize(nlohmann::json& json)
 {
+    harmony::log::info("Renderer : Deserializing Project Renderer Data");
 }
-
-//harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std::string& name, const std::string& vertName, const std::string& fragName)
-//{
-//    HARMONY_PROFILE_FUNCTION()
-//    Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
-//    Ref<ShaderStage> vertStage = CreateRef<ShaderStage>(vertName, ShaderStage::Type::Vertex);
-//    vertStage->LoadShaderBinary();
-//    p_LoadedStagePaths.emplace(vertStage->m_Path, vertStage);
-//    Ref<ShaderStage> fragStage = CreateRef<ShaderStage>(fragName, ShaderStage::Type::Fragment);
-//    fragStage->LoadShaderBinary();
-//    p_LoadedStagePaths.emplace(fragStage->m_Path, fragStage);
-//    prog->AddStage(ShaderStage::Type::Vertex, GetWeakRef<ShaderStage>(vertStage));
-//    prog->AddStage(ShaderStage::Type::Fragment, GetWeakRef<ShaderStage>(fragStage));
-//
-//    prog->Build();
-//
-//    auto wr = GetWeakRef<ShaderProgram>(prog);
-//
-//    ShaderDataContainer dataContainer = ShaderDataContainer(wr);
-//    p_Shaders.emplace(prog, dataContainer);
-//
-//    return wr;
-//}
-//
-//harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::LoadShader(const std::string& name, const std::string& computeName)
-//{
-//    HARMONY_PROFILE_FUNCTION()
-//    Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
-//    Ref<ShaderStage> compStage = CreateRef<ShaderStage>(computeName, ShaderStage::Type::Compute);
-//
-//    prog->AddStage(ShaderStage::Type::Compute, GetWeakRef<ShaderStage>(compStage));
-//
-//    prog->Build();
-//
-//    auto wr = GetWeakRef<ShaderProgram>(prog);
-//    ShaderDataContainer dataContainer = ShaderDataContainer(wr);
-//    
-//    p_Shaders.emplace(prog, dataContainer);
-//
-//    return wr;
-//}
 
 void harmony::Renderer::AddPipeline(Ref<Pipeline> pipeline)
 {
