@@ -250,16 +250,86 @@ void harmony::PipelineStack::InitializePipeline(Ref<Pipeline> pipeline, WeakRef<
     p_StackData[pipeline->m_Handle] = pipeline->Init(entt::registry(), view, p_StackViewIDs[pipeline->m_Handle]);
 }
 
+
 void harmony::PipelineStack::SortStack()
 {
     bool sorted = false;
+    int pipelineCounter = 0;
 
     while (!sorted)
     {
+        if (pipelineCounter >= m_Stack.size())
+        {
+            sorted = true;
+            continue;
+        }
+        bool hasPreviousPipeline = false;
+        bool hasNextPipeline = false;
+
+        // Get current pipeline
+        WeakRef<Pipeline> currentPipeline = m_Stack[pipelineCounter];
+        if (currentPipeline.expired())
+        {
+            harmony::log::error("Pipeline in stack is expired, cannot continue sorting.");
+            return;
+        }
+
+        // Get Prev. Pipeline (if exists)
+        WeakRef<Pipeline> previousPipeline  = WeakRef<Pipeline>();
+        if (pipelineCounter > 0)
+        {
+            previousPipeline = m_Stack[pipelineCounter - 1];
+            hasPreviousPipeline = true;
+        }
+
+        // Get Next. Pipeline (if exists)
+        WeakRef<Pipeline> nextPipeline      = WeakRef<Pipeline>();
+        if (pipelineCounter < (m_Stack.size() - 1))
+        {
+            nextPipeline = m_Stack[pipelineCounter + 1];
+            hasNextPipeline = true;
+        } 
+
+        // Perform sort
+        // Sort compute pipelines to bottom of stack
+        Pipeline::Type currentPipelineType = currentPipeline.lock()->m_Type;
+        PipelineHandle currentPipelineHandle = currentPipeline.lock()->m_Handle;
         // first must be compute
-        // then bg
-        // then surface
-        // then post process
+        if (currentPipelineType == Pipeline::Type::Compute)
+        {
+            if (hasPreviousPipeline)
+            {
+                if (previousPipeline.lock()->m_Type != Pipeline::Type::Compute)
+                {
+                    MoveDown(currentPipelineHandle);
+                    pipelineCounter--;
+                    continue;
+                }
+            }
+            else
+            {
+                pipelineCounter++;
+                continue;
+            }
+        }
+        // last must be post process
+        if (currentPipelineType == Pipeline::Type::PostProcess)
+        {
+            if (hasNextPipeline)
+            {
+                if (nextPipeline.lock()->m_Type != Pipeline::Type::PostProcess)
+                {
+                    MoveUp(currentPipelineHandle);
+                    pipelineCounter--;
+                    continue;
+                }
+            }
+            else
+            {
+                pipelineCounter++;
+                continue;
+            }
+        }
     }
 }
 
