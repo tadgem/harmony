@@ -272,19 +272,50 @@ void harmony::Renderer::OnImGui()
         ImGui::Separator();
         ImGui::Text("Views");
         ImGui::Separator();
-
+        int count = 0;
         for (auto& [view , stack]: p_Views)
         {
-            ImGui::Text(view->m_Name.c_str());
-            if (ImGui::BeginCombo("Add Pipeline", ""))
-            {
-                ImGui::EndCombo();
-            }
+            auto addPipelineNameHash = "Add Pipeline##" + std::to_string(count);
+            count++;
 
-            ImGui::Indent();
-            view->OnImGuiOptions();
-            ImGui::Unindent();
-            ImGui::Separator();
+            if (ImGui::TreeNode(view->m_Name.c_str()))
+            {
+                if (ImGui::BeginCombo(addPipelineNameHash.c_str(), ""))
+                {
+                    for (int i = 0; i < p_Pipelines.size(); i++)
+                    {
+                        if (ImGui::Selectable(p_Pipelines[i]->m_Name.c_str(), false))
+                        {
+                            AddViewPipeline(view, p_Pipelines[i]);
+                        }
+                    }
+                    ImGui::EndCombo();
+                }
+
+                if (ImGui::TreeNode("Stack"))
+                {
+                    for (int i = 0; i < stack.m_Stack.size(); i++)
+                    {
+                        std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + std::to_string(i);
+                        std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + std::to_string(i);
+                        if (ImGui::Button(downArrowText.c_str()))
+                        {
+                            stack.MoveUp(stack.m_Stack[i].lock()->m_Handle);
+                        }
+                        ImGui::SameLine();
+                        if (ImGui::Button(upArrowText.c_str()))
+                        {
+                            stack.MoveDown(stack.m_Stack[i].lock()->m_Handle);
+                        }
+                        ImGui::SameLine();
+                        ImGui::Text(stack.m_Stack[i].lock()->m_Name.c_str());
+                    }
+                    ImGui::TreePop();
+                }
+                ImGui::Separator();
+                view->OnImGuiOptions();
+                ImGui::TreePop();
+            }
         }
     }
     ImGui::End();

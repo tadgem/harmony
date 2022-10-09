@@ -163,7 +163,7 @@ void harmony::ShaderHotReload::OnChange(const std::string& path, const filewatch
 int harmony::ShaderHotReload::CompileShader(const std::string& shaderName)
 {
     std::string shaderRendererName = ShaderStage::GetShaderRendererName();
-    std::string outputPath = "assets/shaders/bin/" + shaderRendererName + "/" + shaderName + ".bin";
+    std::string outputPath = std::filesystem::current_path().string() + "//assets/shaders/bin/" + shaderRendererName + "/" + shaderName + ".bin";
     std::string input = "assets/shaders/" + shaderName + ".sc";
     std::string varyingDefPath = "assets/shaders/varying.def.sc";
     std::string includePath = "assets/shaders/include";
