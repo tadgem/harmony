@@ -330,6 +330,8 @@ void harmony::PipelineStack::SortStack()
                 continue;
             }
         }
+
+        pipelineCounter++;
     }
 }
 
