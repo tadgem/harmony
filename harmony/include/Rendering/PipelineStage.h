@@ -20,6 +20,16 @@ namespace harmony
 
         };
 
+        NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
+            {Unknown, "unknown"},
+            {RGBA8F, "rgba8"},
+            {RGBA16F, "rgba16"},
+            {RGBA32F, "rgba32"},
+            {Depth16F, "d16"},
+            {Depth24F, "d24"},
+            {Depth32F, "d32"}
+            })
+
         bgfx::TextureHandle m_Handle;
         Type                m_Type;
     };
@@ -48,6 +58,7 @@ namespace harmony
     public:
         enum Type : char
         {
+            Unknown,
             PrimaryDraw,
             SecondaryDraw,
             PostProcess, 
@@ -62,6 +73,7 @@ namespace harmony
         };
 
         NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
+            {Unknown, "unknown"},
             {PrimaryDraw, "primaryDraw"},
             {SecondaryDraw, "secondaryDraw"},
             {PostProcess, "postProcess"},

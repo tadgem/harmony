@@ -19,8 +19,11 @@
 harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetManager)
 {
     HARMONY_PROFILE_FUNCTION()
+#if HARMONY_DEBUG
     p_CreatePipelineWindow = false;
     p_CreateShaderProgramWindow = false;
+    p_SelectedPipelineType = 0;
+#endif
 }
 
 harmony::WeakRef<harmony::ShaderProgram>  harmony::Renderer::AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex)
@@ -380,8 +383,20 @@ void harmony::Renderer::OnImGui()
         ImGui::SetNextWindowSize(ImVec2(320, 180));
         if (ImGui::Begin("New Pipeline"))
         {
+            static std::string pipelineTypes[] = { "Compute", "ScreenSpace", "Surface", "PostProcess" };
             ImGui::Text("Basic Surface Pipeline");
             ImGui::InputText("Pipeline Name", p_PipelineNameInput, 64);
+            if (ImGui::BeginCombo("Pipeline Type", pipelineTypes[p_SelectedPipelineType].c_str()))
+            {
+                for (int i = 0; i < BX_COUNTOF(pipelineTypes); i++)
+                {
+                    if (ImGui::Selectable(pipelineTypes[i].c_str()))
+                    {
+                        p_SelectedPipelineType = i;
+                    }
+                }
+                ImGui::EndCombo();
+            }
             ShaderSelector("Choose Surface Shader", p_SelectedShaderProgram);
 
             if (ImGui::Button("Create Pipeline"))
@@ -440,6 +455,27 @@ bool harmony::Renderer::ShaderSelector(const std::string& selectorName, harmony:
     }
 
     return selectedAsset;
+
+}
+
+harmony::Pipeline::Type harmony::Renderer::GetPipelineTypeFromName(const std::string& type)
+{
+    if (type.find("Compute") < type.size())
+    {
+        return Pipeline::Type::Compute;
+    }
+    if (type.find("ScreenSpace") < type.size())
+    {
+        return Pipeline::Type::ScreenSpace;
+    }
+    if (type.find("Surface") < type.size())
+    {
+        return Pipeline::Type::Surface;
+    }
+    if (type.find("PostProcess") < type.size())
+    {
+        return Pipeline::Type::PostProcess;
+    }
 
 }
 #endif

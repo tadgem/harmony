@@ -13,11 +13,20 @@ namespace harmony
 
         enum Type
         {
+            Unknown, 
             Compute,
             ScreenSpace,
             Surface,
             PostProcess
         };
+
+        NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
+            {Unknown, "unknown"},
+            {ScreenSpace, "screenSpace"},
+            {Surface, "surface"},
+            {PostProcess, "postProcess"},
+            {Compute, "compute"}
+            })
 
         Pipeline(const PipelineHandle& handle, Type pipelineType);
 

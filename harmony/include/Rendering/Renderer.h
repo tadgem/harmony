@@ -107,6 +107,7 @@ namespace harmony
 #if HARMONY_DEBUG
         void                OnImGui();
         bool                ShaderSelector(const std::string& selectorName, harmony::WeakRef<harmony::ShaderProgram>& prog);
+        Pipeline::Type      GetPipelineTypeFromName(const std::string& type);
     protected:
         AssetHandle p_SelectedVertexAsset;
         AssetHandle p_SelectedFragmentAsset;
@@ -119,6 +120,8 @@ namespace harmony
 
         char p_ShaderNameInput[64]{ "" };
         char p_PipelineNameInput[64]{ "" };
+
+        int p_SelectedPipelineType;
 #endif
     protected:
         bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
