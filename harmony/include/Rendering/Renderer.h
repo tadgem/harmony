@@ -71,6 +71,7 @@ namespace harmony
         void ReloadAllShaders();
         void RefreshShaderDataContainers();
 
+        bool                        IsShaderLoaded(const std::string& name);
         WeakRef<ShaderProgram>      GetShader(const std::string& name);
         std::vector<std::string>    GetShaderNames();
 
@@ -103,11 +104,12 @@ namespace harmony
         std::vector<WeakRef<View>> m_ActiveViews;
         
         nlohmann::json      Serialize();
-        void                Deserialize(nlohmann::json& json);
+        void                Deserialize(AssetManager& am, nlohmann::json& json);
 #if HARMONY_DEBUG
         void                OnImGui();
         bool                ShaderSelector(const std::string& selectorName, harmony::WeakRef<harmony::ShaderProgram>& prog);
         Pipeline::Type      GetPipelineTypeFromName(const std::string& type);
+        bool                IsBuiltInShaderName(const std::string& name);
     protected:
         AssetHandle p_SelectedVertexAsset;
         AssetHandle p_SelectedFragmentAsset;

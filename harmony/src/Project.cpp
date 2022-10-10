@@ -24,7 +24,7 @@ void harmony::Project::Load(AssetManager& assetManager, Renderer& renderer)
 	}
 	std::filesystem::current_path(std::filesystem::path(m_ProjectDirectory));
 	assetManager.Deserialize(m_AssetManagerSerializationAttributes);
-	renderer.Deserialize(m_RendererSerializationAttributes);
+	renderer.Deserialize(assetManager, m_RendererSerializationAttributes);
 }
 
 void harmony::Project::Unload(AssetManager& assetManager)

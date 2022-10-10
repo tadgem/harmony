@@ -479,6 +479,25 @@ harmony::Pipeline::Type harmony::Renderer::GetPipelineTypeFromName(const std::st
 
 }
 #endif
+bool harmony::Renderer::IsBuiltInShaderName(const std::string& name)
+{
+    for (int i = 0; i < p_BuiltInShaders.size(); i++)
+    {
+        Ref<ShaderProgram> shader = p_BuiltInShaders[i].lock();
+
+        if (!shader)
+        {
+            harmony::log::error("Renderer : Invalid built in shader. This should never happen");
+            continue;
+        }
+
+        if (shader->m_Name == name)
+        {
+            return true;
+        }
+    }
+    return false;
+}
 
 bgfx::ViewId harmony::Renderer::GetViewID()
 {
@@ -532,9 +551,57 @@ nlohmann::json harmony::Renderer::Serialize()
     return json;
 }
 
-void harmony::Renderer::Deserialize(nlohmann::json& json)
+void harmony::Renderer::Deserialize(AssetManager& am, nlohmann::json& json)
 {
     harmony::log::info("Renderer : Deserializing Project Renderer Data");
+    for (auto shaderJson : json["renderer"]["shaders"])
+    {
+        auto dataJson = shaderJson["data"];
+        auto programJson = shaderJson["program"];
+
+        if (IsBuiltInShaderName(programJson["m_Name"]))
+        {
+            continue;
+        }
+
+        harmony::log::info("Renderer : Deserializing shader {}", programJson["m_Name"]);
+        harmony::log::info("{}", programJson.dump());
+
+        std::string shaderName = programJson["m_Name"];
+        if (IsShaderLoaded(shaderName))
+        {
+            continue;
+        }
+
+        std::vector<Ref<ShaderStage>> stages = std::vector<Ref<ShaderStage>>();
+
+        for (auto stageJson : programJson["m_Stages"])
+        {
+            harmony::log::info("Renderer : Stage Json {}", stageJson.dump());
+            AssetHandle assetHandle = stageJson[1]["m_Handle"];
+
+            if (am.IsPathLoaded(assetHandle.Path))
+            {
+                auto stage = am.GetAsset<ShaderStage>(assetHandle);
+                if (stage.expired())
+                {
+                    harmony::log::warn("Renderer : Shader Stage {} is supposedly loaded but cannot be found.", assetHandle.Path);
+                }
+                else
+                {
+                    stages.emplace_back(stage.lock());
+                }
+            }
+            else
+            {
+                auto handles = am.LoadAsset<ShaderStage>(assetHandle.Path);
+                auto stage = am.GetAsset<ShaderStage>(handles[0]);
+            }
+            // asset manager is loaded
+            // else load shader stage binary / source?
+        }
+
+    }
 }
 
 void harmony::Renderer::AddPipeline(Ref<Pipeline> pipeline)
@@ -616,6 +683,18 @@ void harmony::Renderer::ReloadAllShaders()
     {
         ReloadShader(shader);
     }
+}
+
+bool harmony::Renderer::IsShaderLoaded(const std::string& name)
+{
+    for (auto& [shader, data] : p_Shaders)
+    {
+        if (shader->m_Name == name)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::GetShader(const std::string& name)

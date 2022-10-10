@@ -40,6 +40,9 @@ harmony::Program::~Program()
 void harmony::Program::Init()
 {
 	HARMONY_PROFILE_FUNCTION()
+	
+	harmony::log::info("Harmony Engine");
+	
 	InitSDL();
 	InitBGFX();
 	InitImGui();
@@ -59,6 +62,27 @@ void harmony::Program::SetupBGFXCapabilities(bgfx::Init& init)
 	}
 
 	init.capabilities = caps;
+}
+
+std::string harmony::Program::GetVendorName(uint16_t vendorId)
+{
+	switch (vendorId)
+	{
+		case BGFX_PCI_ID_AMD:
+			return "AMD";
+		case BGFX_PCI_ID_NVIDIA:
+			return "NVIDIA";
+		case BGFX_PCI_ID_APPLE:
+			return "Apple";
+		case BGFX_PCI_ID_INTEL:
+			return "Intel";
+		case BGFX_PCI_ID_MICROSOFT:
+			return "Microsoft";
+		case BGFX_PCI_ID_SOFTWARE_RASTERIZER:
+			return "Software";
+		default:
+			return "Unknown";
+	}
 }
 
 void harmony::Program::ChangeWorkingDirectory(const std::string& directory)
@@ -152,6 +176,7 @@ void harmony::Program::InitBGFX()
 			"SDL_SysWMinfo could not be retrieved. SDL_Error: %s\n",
 			SDL_GetError());
 	}
+
 	bgfx::renderFrame(); // single threaded mode
 #endif
 
@@ -183,6 +208,7 @@ void harmony::Program::InitBGFX()
 	bgfx_init.platformData = pd;
 	bgfx_init.debug = true;
 	bgfx_init.callback = &p_DebugCallback;
+	
 
 	// SetupBGFXCapabilities(bgfx_init);
 	bgfx::init(bgfx_init);

@@ -64,6 +64,7 @@ namespace harmony
 
 		virtual void LoadBuiltInAssets();
 		virtual void SetupBGFXCapabilities(bgfx::Init& init);
+		std::string	 GetVendorName(uint16_t vendorId);
 
 		void ChangeWorkingDirectory(const std::string& directory);
 		void Cleanup();
