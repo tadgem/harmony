@@ -6,6 +6,7 @@
 #include "ECS/MaterialComponent.h"
 #include "Core/Log.hpp"
 #include "Core/Time.h"
+#include "Core/SerializationKeys.h"
 #include "Rendering/BuiltinShaders.h"
 #include "Rendering/Shapes.h"
 #include "Rendering/View.h"
@@ -247,7 +248,7 @@ void harmony::Renderer::OnImGui()
         ImGui::Text("Frametime : %f", Time::GetFrameTime());
         ImGui::Text("FPS : %f", 1.0 / Time::GetFrameTime());
         ImGui::Separator();
-        if (ImGui::TreeNode("Shaders"))
+        if (ImGui::TreeNode(sk_RendererShaderCollection.c_str()))
         {
             for (auto& [shader, data] : p_Shaders)
             {
@@ -260,7 +261,7 @@ void harmony::Renderer::OnImGui()
             p_CreateShaderProgramWindow = true;
         }
         ImGui::Separator();
-        if (ImGui::TreeNode("Pipelines"))
+        if (ImGui::TreeNode(sk_RendererPipelineCollection.c_str()))
         {
             for (auto&  pipeline : p_Pipelines)
             {
@@ -273,7 +274,7 @@ void harmony::Renderer::OnImGui()
             p_CreatePipelineWindow = true;
         }
         ImGui::Separator();
-        ImGui::Text("Views");
+        ImGui::Text(sk_RendererViewCollection.c_str());
         ImGui::Separator();
         int count = 0;
         for (auto& [view , stack]: p_Views)
@@ -510,43 +511,12 @@ nlohmann::json harmony::Renderer::Serialize()
 {
     auto json =  nlohmann::json();
 
-    json["renderer"] = nlohmann::json();
-    json["renderer"]["shaders"] = nlohmann::json::array();
-    for (auto& [shader, data] : p_Shaders)
-    {
-        nlohmann::json shaderJson;
-        shaderJson["program"] = *shader;
-        shaderJson["data"] = data;
-
-        json["renderer"]["shaders"].emplace_back(shaderJson);
-    }
-
-    json["renderer"]["pipelines"] = nlohmann::json::array();
-    for (auto& pipeline : p_Pipelines)
-    {
-        json["renderer"]["pipelines"].emplace_back(pipeline->Serialize());
-    }
-    json["renderer"]["views"] = nlohmann::json::array();
-
-    for (auto& [view, stack] : p_Views)
-    {
-        nlohmann::json viewJson;
-        viewJson["view"] = view->Serialize();
-        viewJson["stack"] = stack.Serialize();
-        json["renderer"]["views"].emplace_back(viewJson);
-
-    }
-    json["renderer"]["active_views"] = nlohmann::json::array();
-    for (WeakRef<View> viewWr : m_ActiveViews)
-    {
-        if (viewWr.expired())
-        {
-            continue;
-        }
-
-        Ref<View> view = viewWr.lock();
-        json["renderer"]["active_views"].emplace_back(view->Serialize());
-    }
+    json[sk_RendererName] = nlohmann::json();
+    json[sk_RendererName][sk_RendererShaderCollection] = SerializeShaders();
+    json[sk_RendererName][sk_RendererPipelineCollection] = SerializePipelines();
+    json[sk_RendererName][sk_RendererViewCollection] = SerializeViews();
+    json[sk_RendererName][sk_RendererActiveViewCollection] = SerializeActiveViews();
+    
     
     return json;
 }
@@ -554,10 +524,16 @@ nlohmann::json harmony::Renderer::Serialize()
 void harmony::Renderer::Deserialize(AssetManager& am, nlohmann::json& json)
 {
     harmony::log::info("Renderer : Deserializing Project Renderer Data");
-    for (auto shaderJson : json["renderer"]["shaders"])
+
+    DeserializeShaders(json, am);
+    DeserializePipelines(json, am);
+    DeserializeViews(json, am);
+    DeserializeActiveViews(json, am);
+
+    for (auto shaderJson : json[sk_RendererName][sk_RendererShaderCollection])
     {
-        auto dataJson = shaderJson["data"];
-        auto programJson = shaderJson["program"];
+        auto dataJson = shaderJson[sk_ShaderDataContainer];
+        auto programJson = shaderJson[sk_ShaderProgram];
 
         if (IsBuiltInShaderName(programJson["m_Name"]))
         {
@@ -847,4 +823,76 @@ bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRe
     vl.end();
     return vl;
 
+}
+
+nlohmann::json harmony::Renderer::SerializeShaders()
+{
+    auto json = nlohmann::json::array();
+    for (auto& [shader, data] : p_Shaders)
+    {
+        nlohmann::json shaderJson;
+        shaderJson[sk_ShaderProgram] = *shader;
+        shaderJson[sk_ShaderDataContainer] = data;
+
+        json.emplace_back(shaderJson);
+    }
+    return json;
+}
+
+nlohmann::json harmony::Renderer::SerializePipelines()
+{
+    auto json = nlohmann::json::array();
+    for (auto& pipeline : p_Pipelines)
+    {
+        json.emplace_back(pipeline->Serialize());
+    }
+    
+    return json;
+}
+
+nlohmann::json harmony::Renderer::SerializeViews()
+{
+    auto json = nlohmann::json::array();
+    for (auto& [view, stack] : p_Views)
+    {
+        nlohmann::json viewJson;
+        viewJson["view"] = view->Serialize();
+        viewJson["stack"] = stack.Serialize();
+        json.emplace_back(viewJson);
+
+    }
+
+    return json;
+}
+
+nlohmann::json harmony::Renderer::SerializeActiveViews()
+{
+    auto json = nlohmann::json::array();
+    for (WeakRef<View> viewWr : m_ActiveViews)
+    {
+        if (viewWr.expired())
+        {
+            continue;
+        }
+
+        Ref<View> view = viewWr.lock();
+        json.emplace_back(view->Serialize());
+    }
+    return json;
+}
+
+void harmony::Renderer::DeserializeShaders(nlohmann::json& json, AssetManager& am)
+{
+}
+
+void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager& am)
+{
+}
+
+void harmony::Renderer::DeserializeViews(nlohmann::json& json, AssetManager& am)
+{
+}
+
+void harmony::Renderer::DeserializeActiveViews(nlohmann::json& json, AssetManager& am)
+{
 }

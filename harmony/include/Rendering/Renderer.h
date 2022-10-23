@@ -126,8 +126,18 @@ namespace harmony
         int p_SelectedPipelineType;
 #endif
     protected:
-        bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
-        
+        bgfx::VertexLayout  BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
+            
+        nlohmann::json      SerializeShaders();
+        nlohmann::json      SerializePipelines();
+        nlohmann::json      SerializeViews();
+        nlohmann::json      SerializeActiveViews();
+
+        void                DeserializeShaders(nlohmann::json& json, AssetManager& am);
+        void                DeserializePipelines(nlohmann::json& json, AssetManager& am);
+        void                DeserializeViews(nlohmann::json& json, AssetManager& am);
+        void                DeserializeActiveViews(nlohmann::json& json, AssetManager& am);
+
         static uint32_t p_ViewHandleCounter;
         AssetManager&   p_AssetManager;
         int             s_PresentShaderIndex;
