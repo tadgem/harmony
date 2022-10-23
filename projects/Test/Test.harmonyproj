@@ -13,23 +13,13 @@
             },
             {
                 "Index": 0,
-                "Path": "vs_project",
-                "TypeHash": 14516182300149562688
+                "Path": "assets\\brick.png",
+                "TypeHash": 8904890124188850629
             },
             {
                 "Index": 0,
-                "Path": "vs_project.sc",
-                "TypeHash": 1675298709017154941
-            },
-            {
-                "Index": 0,
-                "Path": "fs_project",
-                "TypeHash": 14516182300149562688
-            },
-            {
-                "Index": 0,
-                "Path": "fs_project.sc",
-                "TypeHash": 1675298709017154941
+                "Path": "assets\\pikapng.png",
+                "TypeHash": 8904890124188850629
             },
             {
                 "Index": 0,
@@ -43,13 +33,23 @@
             },
             {
                 "Index": 0,
-                "Path": "assets\\pikapng.png",
-                "TypeHash": 8904890124188850629
+                "Path": "fs_project.sc",
+                "TypeHash": 1675298709017154941
             },
             {
                 "Index": 0,
-                "Path": "assets\\brick.png",
-                "TypeHash": 8904890124188850629
+                "Path": "fs_project",
+                "TypeHash": 14516182300149562688
+            },
+            {
+                "Index": 0,
+                "Path": "vs_project.sc",
+                "TypeHash": 1675298709017154941
+            },
+            {
+                "Index": 0,
+                "Path": "vs_project",
+                "TypeHash": 14516182300149562688
             }
         ]
     },
@@ -66,7 +66,7 @@
                     "width": 1024
                 },
                 {
-                    "entity": 7,
+                    "entity": 4294967295,
                     "fov": 75.0,
                     "height": 600,
                     "name": "RuntimeView",
@@ -170,60 +170,10 @@
                             }
                         ]
                     }
-                },
-                {
-                    "pipeline": {
-                        "handle": {
-                            "Name": "Project"
-                        },
-                        "name": "Project",
-                        "stages": [
-                            {
-                                "m_Name": "Project.surface",
-                                "m_StageType": 1,
-                                "p_Shader": {
-                                    "m_Name": "ProjectShader",
-                                    "m_Stages": [
-                                        [
-                                            0,
-                                            {
-                                                "m_Handle": {
-                                                    "Index": 0,
-                                                    "Path": "vs_project",
-                                                    "TypeHash": 14516182300149562688
-                                                },
-                                                "m_Name": "vs_project",
-                                                "m_Type": 0
-                                            }
-                                        ],
-                                        [
-                                            1,
-                                            {
-                                                "m_Handle": {
-                                                    "Index": 0,
-                                                    "Path": "fs_project",
-                                                    "TypeHash": 14516182300149562688
-                                                },
-                                                "m_Name": "fs_project",
-                                                "m_Type": 1
-                                            }
-                                        ]
-                                    ]
-                                }
-                            }
-                        ]
-                    }
                 }
             ],
             "shaders": [
                 {
-                    "data": {
-                        "m_Mat3Values": [],
-                        "m_Mat4Values": [],
-                        "m_ShaderName": "",
-                        "m_TextureValues": [],
-                        "m_Vec4Values": []
-                    },
                     "program": {
                         "m_Name": "Normal",
                         "m_Stages": [
@@ -236,60 +186,16 @@
                                 null
                             ]
                         ]
-                    }
-                },
-                {
-                    "data": {
+                    },
+                    "program-data": {
                         "m_Mat3Values": [],
                         "m_Mat4Values": [],
                         "m_ShaderName": "",
                         "m_TextureValues": [],
                         "m_Vec4Values": []
-                    },
-                    "program": {
-                        "m_Name": "Present",
-                        "m_Stages": [
-                            [
-                                0,
-                                null
-                            ],
-                            [
-                                1,
-                                null
-                            ]
-                        ]
                     }
                 },
                 {
-                    "data": {
-                        "m_Mat3Values": [],
-                        "m_Mat4Values": [],
-                        "m_ShaderName": "",
-                        "m_TextureValues": [],
-                        "m_Vec4Values": []
-                    },
-                    "program": {
-                        "m_Name": "TexturedMesh",
-                        "m_Stages": [
-                            [
-                                0,
-                                null
-                            ],
-                            [
-                                1,
-                                null
-                            ]
-                        ]
-                    }
-                },
-                {
-                    "data": {
-                        "m_Mat3Values": [],
-                        "m_Mat4Values": [],
-                        "m_ShaderName": "",
-                        "m_TextureValues": [],
-                        "m_Vec4Values": []
-                    },
                     "program": {
                         "m_Name": "NanoVG",
                         "m_Stages": [
@@ -302,44 +208,57 @@
                                 null
                             ]
                         ]
-                    }
-                },
-                {
-                    "data": {
+                    },
+                    "program-data": {
                         "m_Mat3Values": [],
                         "m_Mat4Values": [],
                         "m_ShaderName": "",
                         "m_TextureValues": [],
                         "m_Vec4Values": []
-                    },
+                    }
+                },
+                {
                     "program": {
-                        "m_Name": "ProjectShader",
+                        "m_Name": "TexturedMesh",
                         "m_Stages": [
                             [
                                 0,
-                                {
-                                    "m_Handle": {
-                                        "Index": 0,
-                                        "Path": "vs_project",
-                                        "TypeHash": 14516182300149562688
-                                    },
-                                    "m_Name": "vs_project",
-                                    "m_Type": 0
-                                }
+                                null
                             ],
                             [
                                 1,
-                                {
-                                    "m_Handle": {
-                                        "Index": 0,
-                                        "Path": "fs_project",
-                                        "TypeHash": 14516182300149562688
-                                    },
-                                    "m_Name": "fs_project",
-                                    "m_Type": 1
-                                }
+                                null
                             ]
                         ]
+                    },
+                    "program-data": {
+                        "m_Mat3Values": [],
+                        "m_Mat4Values": [],
+                        "m_ShaderName": "",
+                        "m_TextureValues": [],
+                        "m_Vec4Values": []
+                    }
+                },
+                {
+                    "program": {
+                        "m_Name": "Present",
+                        "m_Stages": [
+                            [
+                                0,
+                                null
+                            ],
+                            [
+                                1,
+                                null
+                            ]
+                        ]
+                    },
+                    "program-data": {
+                        "m_Mat3Values": [],
+                        "m_Mat4Values": [],
+                        "m_ShaderName": "",
+                        "m_TextureValues": [],
+                        "m_Vec4Values": []
                     }
                 }
             ],
@@ -357,13 +276,10 @@
                         },
                         {
                             "Name": "VectorGraphicsPipeline"
-                        },
-                        {
-                            "Name": "Project"
                         }
                     ],
                     "view": {
-                        "entity": 7,
+                        "entity": 4294967295,
                         "fov": 75.0,
                         "height": 600,
                         "name": "RuntimeView",
@@ -384,9 +300,6 @@
                         },
                         {
                             "Name": "VectorGraphicsPipeline"
-                        },
-                        {
-                            "Name": "Project"
                         }
                     ],
                     "view": {
