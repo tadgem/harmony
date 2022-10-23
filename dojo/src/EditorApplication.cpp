@@ -1,6 +1,5 @@
 #include "EditorApplication.h"
 #include "Rendering/Shapes.h"
-#include "ECS/MeshSystem.h"
 #include "ECS/MaterialSystem.h"
 #include "ECS/CameraSystem.h"
 #include "Core/Time.h"
@@ -57,7 +56,7 @@ void harmony::Editor::AddSystems()
 	p_TransformSystem = AddSystem<TransformSystem>().lock();
 	p_CameraSystem = AddSystem<CameraSystem>().lock();
 	AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
-	AddSystem<MeshSystem>(m_AssetManager);
+	p_MeshSystem = AddSystem<MeshSystem>(m_AssetManager).lock();
 	
 }
 
@@ -132,6 +131,7 @@ int harmony::Editor::OnEditUpdate()
 
 	if (p_ActiveScene)
 	{
+		p_MeshSystem->Update(p_ActiveScene->m_Registry);
 		p_TransformSystem->Update(p_ActiveScene->m_Registry);
 		p_CameraSystem->Update(p_ActiveScene->m_Registry);
 	}

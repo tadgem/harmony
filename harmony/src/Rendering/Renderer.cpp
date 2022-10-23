@@ -529,55 +529,6 @@ void harmony::Renderer::Deserialize(AssetManager& am, nlohmann::json& json)
     DeserializePipelines(json, am);
     DeserializeViews(json, am);
     DeserializeActiveViews(json, am);
-
-    for (auto shaderJson : json[sk_RendererName][sk_RendererShaderCollection])
-    {
-        auto dataJson = shaderJson[sk_ShaderDataContainer];
-        auto programJson = shaderJson[sk_ShaderProgram];
-
-        if (IsBuiltInShaderName(programJson["m_Name"]))
-        {
-            continue;
-        }
-
-        harmony::log::info("Renderer : Deserializing shader {}", programJson["m_Name"]);
-        harmony::log::info("{}", programJson.dump());
-
-        std::string shaderName = programJson["m_Name"];
-        if (IsShaderLoaded(shaderName))
-        {
-            continue;
-        }
-
-        std::vector<Ref<ShaderStage>> stages = std::vector<Ref<ShaderStage>>();
-
-        for (auto stageJson : programJson["m_Stages"])
-        {
-            harmony::log::info("Renderer : Stage Json {}", stageJson.dump());
-            AssetHandle assetHandle = stageJson[1]["m_Handle"];
-
-            if (am.IsPathLoaded(assetHandle.Path))
-            {
-                auto stage = am.GetAsset<ShaderStage>(assetHandle);
-                if (stage.expired())
-                {
-                    harmony::log::warn("Renderer : Shader Stage {} is supposedly loaded but cannot be found.", assetHandle.Path);
-                }
-                else
-                {
-                    stages.emplace_back(stage.lock());
-                }
-            }
-            else
-            {
-                auto handles = am.LoadAsset<ShaderStage>(assetHandle.Path);
-                auto stage = am.GetAsset<ShaderStage>(handles[0]);
-            }
-            // asset manager is loaded
-            // else load shader stage binary / source?
-        }
-
-    }
 }
 
 void harmony::Renderer::AddPipeline(Ref<Pipeline> pipeline)
@@ -856,8 +807,8 @@ nlohmann::json harmony::Renderer::SerializeViews()
     for (auto& [view, stack] : p_Views)
     {
         nlohmann::json viewJson;
-        viewJson["view"] = view->Serialize();
-        viewJson["stack"] = stack.Serialize();
+        viewJson[sk_View] = view->Serialize();
+        viewJson[sk_PipelineStack] = stack.Serialize();
         json.emplace_back(viewJson);
 
     }
@@ -883,6 +834,63 @@ nlohmann::json harmony::Renderer::SerializeActiveViews()
 
 void harmony::Renderer::DeserializeShaders(nlohmann::json& json, AssetManager& am)
 {
+    for (auto shaderJson : json[sk_RendererName][sk_RendererShaderCollection])
+    {
+        auto dataJson = shaderJson[sk_ShaderDataContainer];
+        auto programJson = shaderJson[sk_ShaderProgram];
+
+        if (IsBuiltInShaderName(programJson[sk_ShaderProgramName]))
+        {
+            continue;
+        }
+
+        harmony::log::info("Renderer : Deserializing shader {}", programJson[sk_ShaderProgramName]);
+        harmony::log::info("{}", programJson.dump());
+
+        std::string shaderName = programJson[sk_ShaderProgramName];
+        if (IsShaderLoaded(shaderName))
+        {
+            continue;
+        }
+
+        std::vector<Ref<ShaderStage>> stages = std::vector<Ref<ShaderStage>>();
+
+        for (auto stageJson : programJson[sk_ShaderProgramStages])
+        {
+            harmony::log::info("Renderer : Stage Json {}", stageJson.dump());
+            AssetHandle assetHandle = stageJson[1][sk_AssetHandle];
+
+            if (am.IsPathLoaded(assetHandle.Path))
+            {
+                auto stage = am.GetAsset<ShaderStage>(assetHandle);
+                if (stage.expired())
+                {
+                    harmony::log::warn("Renderer : Shader Stage {} is supposedly loaded but cannot be found.", assetHandle.Path);
+                }
+                else
+                {
+                    stages.emplace_back(stage.lock());
+                }
+            }
+            else
+            {
+                auto handles = am.LoadAsset<ShaderStage>(assetHandle.Path);
+                auto stage = am.GetAsset<ShaderStage>(handles[0]);
+
+                if (stage.expired())
+                {
+                    harmony::log::warn("Renderer : Shader Stage {} could not be loaded.", assetHandle.Path);
+                }
+                else
+                {
+                    stages.emplace_back(stage);
+                }
+            }
+        }
+
+        harmony::log::info("Renderer : Num loaded stages : {}", stages.size());
+
+    }
 }
 
 void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager& am)

@@ -60,6 +60,7 @@ namespace harmony
 		Ref<Pipeline> p_NormalPipeline;
 		Ref<Pipeline> p_VectorGraphicsPipeline;
 
+		Ref<MeshSystem> p_MeshSystem;
 		Ref<TransformSystem> p_TransformSystem;
 		Ref<CameraSystem> p_CameraSystem;
 		EditorMainMenuBar p_MainMenuBar;

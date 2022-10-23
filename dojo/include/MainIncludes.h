@@ -10,6 +10,7 @@
 #include "Assets/TextureAssetFactory.h"
 #include "Assets/ShaderStageBinaryAssetFactory.h"
 #include "ECS/TransformSystem.h"
+#include "ECS/MeshSystem.h"
 #include "ECS/TileMapSystemImGui.h"
 #include "EditorUtils.h"
 #include "EditorView.h"
