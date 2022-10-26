@@ -66,6 +66,7 @@ namespace harmony
         WeakRef<ShaderProgram>  AddBuiltInShader(const std::string& progName, const std::string& vsName, uint32_t csIndex);
         void                    AddBuiltInShaders();
         WeakRef<ShaderProgram>  BuildShader(const std::string name, WeakRef<ShaderStage> vertStage, WeakRef<ShaderStage> fragStage);
+        WeakRef<ShaderProgram>  BuildShader(const std::string name, WeakRef<ShaderStage> computeStage);
 
         void ReloadShader(WeakRef<ShaderProgram> shader);
         void ReloadAllShaders();
@@ -134,6 +135,7 @@ namespace harmony
         nlohmann::json      SerializeActiveViews();
 
         void                DeserializeShaders(nlohmann::json& json, AssetManager& am);
+
         void                DeserializePipelines(nlohmann::json& json, AssetManager& am);
         void                DeserializeViews(nlohmann::json& json, AssetManager& am);
         void                DeserializeActiveViews(nlohmann::json& json, AssetManager& am);

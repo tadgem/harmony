@@ -11,6 +11,8 @@ inline static std::string sk_RendererActiveViewCollection = "active_views";
 
 inline static std::string sk_ShaderProgram = "program";
 inline static std::string sk_ShaderProgramName = "m_Name";
+inline static std::string sk_ShaderStageName = "m_Name";
+inline static std::string sk_ShaderStageType = "m_Type";
 inline static std::string sk_ShaderProgramStages = "m_Stages";
 inline static std::string sk_ShaderDataContainer = "program-data";
 

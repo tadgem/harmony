@@ -88,6 +88,23 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::BuildShader(const st
     return GetWeakRef<ShaderProgram>(prog);
 }
 
+harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::BuildShader(const std::string name, WeakRef<ShaderStage> computeStage)
+{
+    Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
+    Ref<ShaderStage> cs = computeStage.lock();
+    
+    cs->LoadShaderBinary();
+    
+    prog->AddStage(ShaderStage::Type::Compute, cs);
+    
+    prog->Build();
+
+    ShaderDataContainer dataContainer = ShaderDataContainer(prog);
+    p_Shaders.emplace(prog, dataContainer);
+
+    return GetWeakRef<ShaderProgram>(prog);
+}
+
 uint32_t harmony::Renderer::p_ViewHandleCounter = 1;
 
 void harmony::Renderer::RemoveView(WeakRef<View> view)
@@ -853,12 +870,20 @@ void harmony::Renderer::DeserializeShaders(nlohmann::json& json, AssetManager& a
             continue;
         }
 
-        std::vector<Ref<ShaderStage>> stages = std::vector<Ref<ShaderStage>>();
+        std::map<ShaderStage::Type, Ref<ShaderStage>> stages = std::map<ShaderStage::Type, Ref<ShaderStage>>();
 
         for (auto stageJson : programJson[sk_ShaderProgramStages])
         {
             harmony::log::info("Renderer : Stage Json {}", stageJson.dump());
-            AssetHandle assetHandle = stageJson[1][sk_AssetHandle];
+            
+            const int StageTypeIndex = 0;
+            const int StageDataIndex = 1;
+            
+            auto stageDataJson = stageJson[StageDataIndex];
+
+            AssetHandle assetHandle = stageDataJson[sk_AssetHandle];
+            std::string stageName = stageDataJson[sk_ShaderStageName];
+            ShaderStage::Type stageType = stageDataJson[sk_ShaderStageType];
 
             if (am.IsPathLoaded(assetHandle.Path))
             {
@@ -869,7 +894,7 @@ void harmony::Renderer::DeserializeShaders(nlohmann::json& json, AssetManager& a
                 }
                 else
                 {
-                    stages.emplace_back(stage.lock());
+                    stages.emplace(stageType, stage.lock());
                 }
             }
             else
@@ -883,12 +908,22 @@ void harmony::Renderer::DeserializeShaders(nlohmann::json& json, AssetManager& a
                 }
                 else
                 {
-                    stages.emplace_back(stage);
+                    stages.emplace(stageType, stage);
                 }
             }
         }
 
-        harmony::log::info("Renderer : Num loaded stages : {}", stages.size());
+        if (stages.find(ShaderStage::Type::Compute) != stages.end())
+        {
+            harmony::log::info("Renderer : Loading compute shader {}", shaderName);
+            BuildShader(shaderName, stages[ShaderStage::Type::Compute]);
+        }
+
+        if (stages.find(ShaderStage::Type::Vertex) != stages.end() && stages.find(ShaderStage::Type::Fragment) != stages.end())
+        {
+            harmony::log::info("Renderer : Loading surface shader {}", shaderName);
+            BuildShader(shaderName, stages[ShaderStage::Type::Vertex], stages[ShaderStage::Type::Fragment]);
+        }
 
     }
 }
