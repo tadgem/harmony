@@ -259,12 +259,14 @@ void harmony::Renderer::OnImGui()
 {
     const std::string rendererTitle = std::string(ICON_FA_SLIDERS) + " Renderer";
 
+    ImGui::SetNextWindowSizeConstraints(ImVec2(300, 300), ImVec2(300, 300));
     if (ImGui::Begin(rendererTitle.c_str()))
     {
-        ImGui::Text("Frametime : %f", Time::GetFrameTime());
+        ImGui::Text("Frametime : %f, ", Time::GetFrameTime());
+        ImGui::SameLine();
         ImGui::Text("FPS : %f", 1.0 / Time::GetFrameTime());
         ImGui::Separator();
-        if (ImGui::TreeNode(sk_RendererShaderCollection.c_str()))
+        if (ImGui::TreeNode("[Shaders]"))
         {
             for (auto& shader : p_Shaders)
             {
@@ -277,7 +279,7 @@ void harmony::Renderer::OnImGui()
             p_CreateShaderProgramWindow = true;
         }
         ImGui::Separator();
-        if (ImGui::TreeNode(sk_RendererPipelineCollection.c_str()))
+        if (ImGui::TreeNode("[Pipelines]"))
         {
             for (auto&  pipeline : p_Pipelines)
             {
@@ -290,52 +292,53 @@ void harmony::Renderer::OnImGui()
             p_CreatePipelineWindow = true;
         }
         ImGui::Separator();
-        ImGui::Text(sk_RendererViewCollection.c_str());
-        ImGui::Separator();
-        int count = 0;
-        for (auto& [view , stack]: p_Views)
-        {
-            auto addPipelineNameHash = "Add Pipeline##" + std::to_string(count);
-            count++;
-
-            if (ImGui::TreeNode(view->m_Name.c_str()))
+        if (ImGui::TreeNode("[Views]")) {
+            int count = 0;
+            for (auto& [view, stack] : p_Views)
             {
-                if (ImGui::BeginCombo(addPipelineNameHash.c_str(), ""))
-                {
-                    for (int i = 0; i < p_Pipelines.size(); i++)
-                    {
-                        if (ImGui::Selectable(p_Pipelines[i]->m_Name.c_str(), false))
-                        {
-                            AddViewPipeline(view, p_Pipelines[i]);
-                        }
-                    }
-                    ImGui::EndCombo();
-                }
+                auto addPipelineNameHash = "Add Pipeline##" + std::to_string(count);
+                count++;
 
-                if (ImGui::TreeNode("Stack"))
+                if (ImGui::TreeNode(view->m_Name.c_str()))
                 {
-                    for (int i = 0; i < stack.m_Stack.size(); i++)
+                    if (ImGui::BeginCombo(addPipelineNameHash.c_str(), ""))
                     {
-                        std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + std::to_string(i);
-                        std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + std::to_string(i);
-                        if (ImGui::Button(downArrowText.c_str()))
+                        for (int i = 0; i < p_Pipelines.size(); i++)
                         {
-                            stack.MoveUp(stack.m_Stack[i].lock()->m_Handle);
+                            if (ImGui::Selectable(p_Pipelines[i]->m_Name.c_str(), false))
+                            {
+                                AddViewPipeline(view, p_Pipelines[i]);
+                            }
                         }
-                        ImGui::SameLine();
-                        if (ImGui::Button(upArrowText.c_str()))
-                        {
-                            stack.MoveDown(stack.m_Stack[i].lock()->m_Handle);
-                        }
-                        ImGui::SameLine();
-                        ImGui::Text(stack.m_Stack[i].lock()->m_Name.c_str());
+                        ImGui::EndCombo();
                     }
+
+                    if (ImGui::TreeNode("Stack"))
+                    {
+                        for (int i = 0; i < stack.m_Stack.size(); i++)
+                        {
+                            std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + std::to_string(i);
+                            std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + std::to_string(i);
+                            if (ImGui::Button(downArrowText.c_str()))
+                            {
+                                stack.MoveUp(stack.m_Stack[i].lock()->m_Handle);
+                            }
+                            ImGui::SameLine();
+                            if (ImGui::Button(upArrowText.c_str()))
+                            {
+                                stack.MoveDown(stack.m_Stack[i].lock()->m_Handle);
+                            }
+                            ImGui::SameLine();
+                            ImGui::Text(stack.m_Stack[i].lock()->m_Name.c_str());
+                        }
+                        ImGui::TreePop();
+                    }
+                    ImGui::Separator();
+                    view->OnImGuiOptions();
                     ImGui::TreePop();
                 }
-                ImGui::Separator();
-                view->OnImGuiOptions();
-                ImGui::TreePop();
             }
+            ImGui::TreePop();
         }
     }
     ImGui::End();
@@ -861,7 +864,6 @@ void harmony::Renderer::DeserializeShaders(nlohmann::json& json, AssetManager& a
         }
 
         harmony::log::info("Renderer : Deserializing shader {}", programJson[sk_ShaderProgramName]);
-        harmony::log::info("{}", programJson.dump());
 
         std::string shaderName = programJson[sk_ShaderProgramName];
         if (IsShaderLoaded(shaderName))
@@ -872,9 +874,7 @@ void harmony::Renderer::DeserializeShaders(nlohmann::json& json, AssetManager& a
         std::map<ShaderStage::Type, Ref<ShaderStage>> stages = std::map<ShaderStage::Type, Ref<ShaderStage>>();
 
         for (auto stageJson : programJson[sk_ShaderProgramStages])
-        {
-            harmony::log::info("Renderer : Stage Json {}", stageJson.dump());
-            
+        {            
             const int StageTypeIndex = 0;
             const int StageDataIndex = 1;
             
@@ -998,7 +998,6 @@ void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager&
 void harmony::Renderer::DeserializeViews(nlohmann::json& json, AssetManager& am)
 {
     auto viewsJson = json[sk_RendererName][sk_RendererViewCollection];
-    // harmony::log::info("Renderer : Views Json : {}", viewsJson.dump());
     harmony::log::info("Renderer : Deserializing Views");
 
     for (auto viewJson : viewsJson)
