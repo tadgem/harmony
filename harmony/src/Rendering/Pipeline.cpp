@@ -86,6 +86,7 @@ nlohmann::json harmony::Pipeline::Serialize()
 	json["pipeline"] = nlohmann::json();
 	json["pipeline"]["name"] = m_Name;
 	json["pipeline"]["stages"] = nlohmann::json::array();
+	json["pipeline"]["type"] = m_Type;
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
 		json["pipeline"]["stages"][i] = *p_Stages[i];
@@ -99,14 +100,8 @@ void harmony::Pipeline::Deserialize(nlohmann::json& json)
 {
 	m_Name = json["pipeline"]["name"];
 	m_Handle = json["pipeline"]["handle"];
-
+	m_Type = json["pipeline"]["type"];
 	auto pipelinesJson = json["pipeline"]["stages"];
-
-	for (int i = 0; i < pipelinesJson.size(); i++)
-	{
-		Ref<PipelineStage> stage = CreateRef<PipelineStage>(pipelinesJson[i]);
-		p_Stages.emplace_back(stage);
-	}
 }
 
 

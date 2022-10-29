@@ -2,7 +2,7 @@
 #include "entt.hpp"
 #include "json.hpp"
 #include "Core/Memory.h"
-#include "Rendering/Shader.h"
+#include "Rendering/ShaderDataContainer.h"
 namespace harmony
 {
 
@@ -52,7 +52,6 @@ namespace harmony
     };
 
     class View;
-
     class PipelineStage
     {
     public:
@@ -85,7 +84,6 @@ namespace harmony
             Type stageType,
             WeakRef<ShaderProgram> shader, 
             Attachment::Type attachments = (Attachment::Type)(Attachment::Type::RGBA8F | Attachment::Type::Depth16F));
-        PipelineStage();
 
         virtual Data Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
         virtual void PreUpdate(entt::registry& registry, WeakRef<View> view , bgfx::ViewId viewId);
@@ -100,8 +98,10 @@ namespace harmony
         Attachment::Type    m_Attachments;
         std::string         m_Name;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStage, m_Name, m_StageType, p_Shader)
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStage, m_Name, m_StageType, p_Shader, m_Attachments, p_PipelineStageData)
     protected:
-        WeakRef<ShaderProgram> p_Shader;
+        friend class Renderer;
+        WeakRef<ShaderProgram>      p_Shader;
+        ShaderDataContainer         p_PipelineStageData;
     };
 } 

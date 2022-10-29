@@ -5,13 +5,15 @@
 #include "ECS/MeshComponent.h"
 #include "ECS/TransformComponent.h"
 #include "Core/Log.hpp"
-harmony::PipelineStage::PipelineStage(const std::string& name, Type stageType, WeakRef<ShaderProgram> shader, Attachment::Type attachments) : m_Name(name), m_StageType(stageType), m_Attachments(attachments), p_Shader(shader)
+harmony::PipelineStage::PipelineStage(const std::string& name, Type stageType, WeakRef<ShaderProgram> shader, Attachment::Type attachments) : 
+	m_Name(name), 
+	m_StageType(stageType), 
+	m_Attachments(attachments), 
+	p_Shader(shader),
+	p_PipelineStageData(shader)
 {
 }
 
-harmony::PipelineStage::PipelineStage()
-{
-}
 harmony::PipelineHandle::PipelineHandle(std::string name) : Name(name)
 {
 

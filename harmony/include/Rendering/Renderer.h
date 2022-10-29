@@ -23,37 +23,6 @@ namespace harmony
         Renderer(AssetManager& assetManager);
 
         template<typename T, typename ... Args>
-        WeakRef<T> CreatePipeline(Args&& ... args)
-        {
-            static_assert(std::is_base_of<Pipeline, T>());
-            Ref<T> derivedPipeline = CreateRef<T>(std::forward<Args>(args)...);
-            Ref<Pipeline> pipeline = std::static_pointer_cast<T, Pipeline>(derivedPipeline);
-            
-
-            if (pipeline)
-            {
-                PipelineHandle handle = pipeline->m_Handle;
-                if (p_Pipelines.find(handle) != p_Pipelines.end())
-                {
-                    harmony::log::error("Already have a pipeline with handle {} ", handle.Index);
-                    Ref<T> derivedExistingPipeline = std::static_pointer_cast<T, Pipeline>(p_Pipelines[handle.Index]);
-                    if (derivedExistingPipeline)
-                    {
-                        return GetWeakRef<T>(derivedExistingPipeline);
-                    }
-                    return WeakRef<T>();
-                }
-                p_Pipelines.emplace(handle, pipeline);
-                return GetWeakRef<T>(derivedPipeline);
-            }
-            else
-            {
-                harmony::log::error("Failed to cast {} to a pipeline.", typeid(T).name());
-                return derivedPipeline;
-            }
-        }
-
-        template<typename T, typename ... Args>
         WeakRef<T> CreateView(Args&& ... args)
         {
             static_assert(std::is_base_of<View, T>(), "Provided type is not a view!");
@@ -145,7 +114,7 @@ namespace harmony
         int             s_PresentShaderIndex;
 
         std::map<Ref<View>, PipelineStack>                  p_Views;
-        std::map<Ref<ShaderProgram>, ShaderDataContainer>   p_Shaders;
+        std::vector<Ref<ShaderProgram>>                     p_Shaders;
         std::vector<Ref<Pipeline>>                          p_Pipelines;
         std::vector<WeakRef<ShaderProgram>>                 p_BuiltInShaders;
         WeakRef<ShaderProgram>                              p_PresentProgram;

@@ -39,8 +39,7 @@ harmony::WeakRef<harmony::ShaderProgram>  harmony::Renderer::AddBuiltInShader(co
 
     prog->Build();
 
-    ShaderDataContainer dataContainer = ShaderDataContainer(prog);
-    p_Shaders.emplace(prog, dataContainer);
+    p_Shaders.emplace_back(prog);
     p_BuiltInShaders.emplace_back(prog);
 
     return prog;
@@ -56,7 +55,7 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::AddBuiltInShader(con
     prog->Build();
 
     ShaderDataContainer dataContainer = ShaderDataContainer(prog);
-    p_Shaders.emplace(prog, dataContainer);
+    p_Shaders.emplace_back(prog);
     p_BuiltInShaders.emplace_back(prog);
 
     return prog;
@@ -83,7 +82,7 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::BuildShader(const st
     prog->Build();
 
     ShaderDataContainer dataContainer = ShaderDataContainer(prog);
-    p_Shaders.emplace(prog, dataContainer);
+    p_Shaders.emplace_back(prog);
 
     return GetWeakRef<ShaderProgram>(prog);
 }
@@ -100,7 +99,7 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::BuildShader(const st
     prog->Build();
 
     ShaderDataContainer dataContainer = ShaderDataContainer(prog);
-    p_Shaders.emplace(prog, dataContainer);
+    p_Shaders.emplace_back(prog);
 
     return GetWeakRef<ShaderProgram>(prog);
 }
@@ -267,7 +266,7 @@ void harmony::Renderer::OnImGui()
         ImGui::Separator();
         if (ImGui::TreeNode(sk_RendererShaderCollection.c_str()))
         {
-            for (auto& [shader, data] : p_Shaders)
+            for (auto& shader : p_Shaders)
             {
                 ImGui::Text(shader->m_Name.c_str());
             }
@@ -623,7 +622,7 @@ void harmony::Renderer::ReloadShader(WeakRef<ShaderProgram> shader)
 
 void harmony::Renderer::ReloadAllShaders()
 {
-    for (auto [shader, data] : p_Shaders)
+    for (auto shader : p_Shaders)
     {
         ReloadShader(shader);
     }
@@ -631,7 +630,7 @@ void harmony::Renderer::ReloadAllShaders()
 
 bool harmony::Renderer::IsShaderLoaded(const std::string& name)
 {
-    for (auto& [shader, data] : p_Shaders)
+    for (auto& shader : p_Shaders)
     {
         if (shader->m_Name == name)
         {
@@ -643,7 +642,7 @@ bool harmony::Renderer::IsShaderLoaded(const std::string& name)
 
 harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::GetShader(const std::string& name)
 {
-    for (auto& [shader, data] : p_Shaders)
+    for (auto& shader : p_Shaders)
     {
         if (shader->m_Name == name)
         {
@@ -656,7 +655,7 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::GetShader(const std:
 std::vector<std::string> harmony::Renderer::GetShaderNames()
 {
     std::vector<std::string> shaders = std::vector<std::string>();
-    for (auto& [shader, data] : p_Shaders)
+    for (auto& shader : p_Shaders)
     {
         shaders.push_back(shader->m_Name);
     }
@@ -796,11 +795,10 @@ bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRe
 nlohmann::json harmony::Renderer::SerializeShaders()
 {
     auto json = nlohmann::json::array();
-    for (auto& [shader, data] : p_Shaders)
+    for (auto& shader : p_Shaders)
     {
         nlohmann::json shaderJson;
         shaderJson[sk_ShaderProgram] = *shader;
-        shaderJson[sk_ShaderDataContainer] = data;
 
         json.emplace_back(shaderJson);
     }
@@ -930,6 +928,69 @@ void harmony::Renderer::DeserializeShaders(nlohmann::json& json, AssetManager& a
 
 void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager& am)
 {
+    for (auto pipelineJson : json[sk_RendererName][sk_RendererPipelineCollection])
+    {
+        auto stagesJson = pipelineJson[sk_PipelineObject][sk_PipelineStages];
+        std::string pipelineName = pipelineJson[sk_PipelineObject][sk_PipelineName];
+        PipelineHandle pipelineHandle{ pipelineName };
+        Pipeline::Type pipelineType = pipelineJson[sk_PipelineObject][sk_PipelineType];
+        bool pipelineLoaded = false;
+
+        for (int i = 0; i < p_Pipelines.size(); i++)
+        {
+            if (p_Pipelines[i]->m_Handle == pipelineHandle)
+            {
+                pipelineLoaded = true;
+                break;
+            }
+        }
+
+        if (pipelineLoaded)
+        {
+            continue;
+        }
+
+        Ref<Pipeline> newPipeline = CreateRef<Pipeline>(pipelineHandle, pipelineType);
+        
+        harmony::log::info("Renderer : Creating serialized pipeline : {}", newPipeline->m_Name);
+
+        bool pipelineCreationSuccessful = true;
+
+        for (auto stageJson : stagesJson)
+        {
+            std::string stageName = stageJson[sk_PipelineStageName];
+            std::string stageShaderName = stageJson[sk_PipelineStageShader][sk_ShaderProgramName];
+            
+            Attachment::Type stageAttachments = stageJson[sk_PipelineStageAttachments];
+            PipelineStage::Type stageType = stageJson[sk_PipelineStageType];
+            ShaderDataContainer stageData = stageJson[sk_PipelineStageData];
+
+            WeakRef<ShaderProgram> stageShader = GetShader(stageShaderName);
+
+            if (stageShader.expired())
+            {
+                harmony::log::warn("Renderer : Cannot deserialize pipeline stage {}, stage shader is not loaded! : {}", stageName, stageShaderName);
+                pipelineCreationSuccessful = false;
+                break;
+            }
+
+            stageData.UpdateShader(stageShader, am);
+
+            Ref<PipelineStage> pipelineStage = newPipeline->AddPipelineStage<PipelineStage>(stageName, stageType, stageShader, stageAttachments).lock();
+            pipelineStage->p_PipelineStageData = stageData;
+        }
+
+        if (pipelineCreationSuccessful)
+        {
+            p_Pipelines.emplace_back(newPipeline);
+        }
+        else
+        {
+            harmony::log::error("Renderer : Failed to deserialize pipeline : {}", pipelineName);
+        }
+
+
+    }
 }
 
 void harmony::Renderer::DeserializeViews(nlohmann::json& json, AssetManager& am)
