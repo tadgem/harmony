@@ -822,7 +822,7 @@ nlohmann::json harmony::Renderer::SerializeViews()
     for (auto& [view, stack] : p_Views)
     {
         nlohmann::json viewJson;
-        viewJson[sk_View] = view->Serialize();
+        viewJson[sk_ViewData] = view->Serialize();
         viewJson[sk_PipelineStack] = stack.Serialize();
         json.emplace_back(viewJson);
 
@@ -849,6 +849,7 @@ nlohmann::json harmony::Renderer::SerializeActiveViews()
 
 void harmony::Renderer::DeserializeShaders(nlohmann::json& json, AssetManager& am)
 {
+    harmony::log::info("Renderer : Deserializing Shaders");
     for (auto shaderJson : json[sk_RendererName][sk_RendererShaderCollection])
     {
         auto dataJson = shaderJson[sk_ShaderDataContainer];
@@ -928,6 +929,7 @@ void harmony::Renderer::DeserializeShaders(nlohmann::json& json, AssetManager& a
 
 void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager& am)
 {
+    harmony::log::info("Renderer : Deserializing Pipelines");
     for (auto pipelineJson : json[sk_RendererName][sk_RendererPipelineCollection])
     {
         auto stagesJson = pipelineJson[sk_PipelineObject][sk_PipelineStages];
@@ -995,8 +997,42 @@ void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager&
 
 void harmony::Renderer::DeserializeViews(nlohmann::json& json, AssetManager& am)
 {
+    auto viewsJson = json[sk_RendererName][sk_RendererViewCollection];
+    // harmony::log::info("Renderer : Views Json : {}", viewsJson.dump());
+    harmony::log::info("Renderer : Deserializing Views");
+
+    for (auto viewJson : viewsJson)
+    {
+        auto viewDataJson = viewJson[sk_ViewData];
+        auto pipelineStackJson = viewJson[sk_PipelineStack];
+
+        std::string viewName = viewDataJson[sk_ViewName];
+        for (auto& [view, stack] : p_Views)
+        {
+            if (view->m_Name == viewName)
+            {
+                view->Deserialize(viewDataJson);
+                int stackIndex = 0;
+                for (auto pipelineHandleJson : pipelineStackJson)
+                {
+                    PipelineHandle handle = pipelineHandleJson;
+                    WeakRef<Pipeline> pipeline = GetPipeline(handle);
+
+                    if (pipeline.expired())
+                    {
+                        harmony::log::warn("Renderer : Failed to add pipeline with handle {} to view {}, pipeline was not found!", handle.Name, viewName);
+                        continue;
+                    }
+
+                    stack.AddPipelineAtIndex(pipeline, view, stackIndex);
+                    stackIndex++;
+                }                
+            }
+        }
+    }
 }
 
 void harmony::Renderer::DeserializeActiveViews(nlohmann::json& json, AssetManager& am)
 {
+    harmony::log::info("Renderer : Deserializing Active Views");
 }

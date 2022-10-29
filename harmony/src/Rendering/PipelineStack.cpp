@@ -168,6 +168,35 @@ void harmony::PipelineStack::AddPipeline(WeakRef<Pipeline> pipeline, WeakRef<Vie
     }
 }
 
+void harmony::PipelineStack::AddPipelineAtIndex(WeakRef<Pipeline> pipeline, WeakRef<View> view, int index)
+{
+    AddPipeline(pipeline, view);
+    if (index < 0)
+    {
+        return;
+    }
+
+    if (index >= m_Stack.size())
+    {
+        return;
+    }
+    Ref<Pipeline> p = pipeline.lock();
+    int pipelineIndex = GetPipelineIndex(pipeline);
+    while (pipelineIndex != index)
+    {
+        if (pipelineIndex < index)
+        {
+            MoveUp(p->m_Handle);
+        }
+        else
+        {
+            MoveDown(p->m_Handle);
+        }
+        pipelineIndex = GetPipelineIndex(pipeline);
+    }
+
+}
+
 void harmony::PipelineStack::RemovePipeline(WeakRef<Pipeline> pipeline)
 {
     Ref<Pipeline> p = pipeline.lock();
@@ -203,6 +232,26 @@ void harmony::PipelineStack::RemovePipeline(WeakRef<Pipeline> pipeline)
         p_StackViewIDs.erase(p->m_Handle);
         SortStack();
     }
+}
+
+int harmony::PipelineStack::GetPipelineIndex(WeakRef<Pipeline> pipeline)
+{
+    int index = -1;
+    
+    if (pipeline.expired())
+    {
+        return index;
+    }
+
+    for (int i = 0; i < m_Stack.size(); i++)
+    {
+        if (m_Stack[i].lock() == pipeline.lock())
+        {
+            index = i;
+        }
+    }
+
+    return index;
 }
 
 void harmony::PipelineStack::MoveUp(const PipelineHandle& pipelineHandle)

@@ -12,10 +12,12 @@ namespace harmony
 
         bgfx::TextureHandle GetFinalImage();
 
-        void AddPipeline(WeakRef<Pipeline> pipeline, WeakRef<View> view);
-        void RemovePipeline(WeakRef<Pipeline> pipeline);
-        void MoveUp(const PipelineHandle& pipelineHandle);
-        void MoveDown(const PipelineHandle& pipelineHandle);
+        void    AddPipeline(WeakRef<Pipeline> pipeline, WeakRef<View> view);
+        void    AddPipelineAtIndex(WeakRef<Pipeline> pipeline, WeakRef<View> view, int index);
+        void    RemovePipeline(WeakRef<Pipeline> pipeline);
+        int     GetPipelineIndex(WeakRef<Pipeline> pipeline);
+        void    MoveUp(const PipelineHandle& pipelineHandle);
+        void    MoveDown(const PipelineHandle& pipelineHandle);
 
         void PreUpdate(entt::registry& registry, WeakRef<View> view);
         std::vector<bgfx::TextureHandle> PostUpdate(entt::registry& registry, WeakRef<View> view);
