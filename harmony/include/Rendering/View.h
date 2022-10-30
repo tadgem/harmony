@@ -31,6 +31,7 @@ namespace harmony
 
         virtual void            OnPreUpdate(entt::registry& registry);
         virtual void            OnPostUpdate(entt::registry& registry);
+        virtual void            OnResized(uint32_t w, uint32_t h);
         virtual nlohmann::json  Serialize();
         virtual void            Deserialize(nlohmann::json& json);
 
@@ -50,5 +51,7 @@ namespace harmony
         glm::mat4       m_Projection;
         float           m_FOV;
         ProjectionType  m_ProjectionType;
+    protected:
+        bool p_Resized;
     };
 };

@@ -12,7 +12,8 @@ harmony::View::View(const std::string& name) :
 	m_Height(g_InitialHeight),
 	m_Name(name),
 	m_FOV(harmony::g_DefaultFOV),
-	m_ProjectionType(harmony::ProjectionType::Perspective)
+	m_ProjectionType(harmony::ProjectionType::Perspective),
+	p_Resized(false)
 {
 }
 
@@ -22,6 +23,13 @@ void harmony::View::OnPreUpdate(entt::registry& registry)
 
 void harmony::View::OnPostUpdate(entt::registry& registry)
 {
+}
+
+void harmony::View::OnResized(uint32_t w, uint32_t h)
+{
+	p_Resized = true;
+	m_Width = w;
+	m_Height = h;
 }
 
 void harmony::View::OnImGui()
