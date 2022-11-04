@@ -18,6 +18,7 @@ namespace harmony
         int     GetPipelineIndex(WeakRef<Pipeline> pipeline);
         void    MoveUp(const PipelineHandle& pipelineHandle);
         void    MoveDown(const PipelineHandle& pipelineHandle);
+        void    OnViewResized(WeakRef<View> view);
 
         void PreUpdate(entt::registry& registry, WeakRef<View> view);
         std::vector<bgfx::TextureHandle> PostUpdate(entt::registry& registry, WeakRef<View> view);

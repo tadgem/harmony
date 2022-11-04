@@ -15,6 +15,10 @@ harmony::View::View(const std::string& name) :
 	m_ProjectionType(harmony::ProjectionType::Perspective),
 	p_Resized(false)
 {
+#if HARMONY_DEBUG
+	m_ImGuiWindowWidth = 0;
+	m_ImGuiWindowHeight = 0;
+#endif
 }
 
 void harmony::View::OnPreUpdate(entt::registry& registry)
@@ -31,31 +35,46 @@ void harmony::View::OnResized(uint32_t w, uint32_t h)
 	m_Width = w;
 	m_Height = h;
 }
-
+#if HARMONY_DEBUG
 void harmony::View::OnImGui()
 {
-    
+	ImVec2 dim = ImGui::GetWindowContentRegionMax();
+	uint32_t currentWidth = static_cast<uint32_t>(dim.x);
+	uint32_t currentHeight = static_cast<uint32_t>(dim.y);
+
+	if (m_ImGuiWindowWidth == 0 || m_ImGuiWindowHeight == 0)
+	{
+		m_ImGuiWindowWidth = currentWidth;
+		m_ImGuiWindowHeight = currentHeight;
+	}
+
+	if (currentWidth != m_ImGuiWindowWidth || currentHeight != m_ImGuiWindowHeight)
+	{
+		OnResized(currentWidth, currentHeight);
+		m_ImGuiWindowWidth = currentWidth;
+		m_ImGuiWindowHeight = currentHeight;
+	}
 }
 
 void harmony::View::OnImGuiOptions()
 {
 
 }
-
+#endif
 bool harmony::View::operator==(const View& other)
 {
-	return	other.m_Name == m_Name &&
-		other.m_Width == m_Width &&
-		other.m_Height == m_Height &&
-		other.m_ProjectionType == m_ProjectionType;
+	return	other.m_Name			== m_Name &&
+			other.m_Width			== m_Width &&
+			other.m_Height			== m_Height &&
+			other.m_ProjectionType	== m_ProjectionType;
 }
 
 bool harmony::View::operator!=(const View& other)
 {
-	return	other.m_Name != m_Name ||
-		other.m_Width != m_Width ||
-		other.m_Height != m_Height ||
-		other.m_ProjectionType != m_ProjectionType;
+	return	other.m_Name			!= m_Name ||
+			other.m_Width			!= m_Width ||
+			other.m_Height			!= m_Height ||
+			other.m_ProjectionType	!= m_ProjectionType;
 }
 
 bool harmony::View::operator<(const View& other)

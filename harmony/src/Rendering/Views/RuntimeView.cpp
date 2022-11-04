@@ -38,6 +38,7 @@ void harmony::RuntimeView::OnImGui()
 	PipelineStack& stack = p_Renderer.GetViewPipelineStack("RuntimeView");
 	if (ImGui::Begin(runteimeViewTitle.c_str()))
 	{
+		View::OnImGui();
 		bgfx::TextureHandle finalImageHandle = stack.GetFinalImage();
 		if (!bgfx::isValid(finalImageHandle))
 		{

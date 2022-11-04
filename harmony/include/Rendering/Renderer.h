@@ -104,7 +104,6 @@ namespace harmony
         nlohmann::json      SerializeActiveViews();
 
         void                DeserializeShaders(nlohmann::json& json, AssetManager& am);
-
         void                DeserializePipelines(nlohmann::json& json, AssetManager& am);
         void                DeserializeViews(nlohmann::json& json, AssetManager& am);
         void                DeserializeActiveViews(nlohmann::json& json, AssetManager& am);

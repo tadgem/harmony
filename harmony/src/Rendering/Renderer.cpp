@@ -175,8 +175,14 @@ void harmony::Renderer::OnPreUpdate(entt::registry& registry)
         }
 
         Ref<View> view = m_ActiveViews[i].lock();
-        view->OnPreUpdate(registry);
         PipelineStack& stack = p_Views[view];
+
+        if (view->p_Resized)
+        {
+            stack.OnViewResized(view);
+        }
+
+        view->OnPreUpdate(registry);
         stack.PreUpdate(registry, m_ActiveViews[i]);
     }
 }

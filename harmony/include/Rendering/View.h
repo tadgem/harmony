@@ -38,6 +38,9 @@ namespace harmony
 #if HARMONY_DEBUG
         virtual void OnImGui();
         virtual void OnImGuiOptions();
+
+        uint32_t        m_ImGuiWindowWidth;
+        uint32_t        m_ImGuiWindowHeight;
 #endif
 
         bool operator==(const View& other);
@@ -52,6 +55,7 @@ namespace harmony
         float           m_FOV;
         ProjectionType  m_ProjectionType;
     protected:
+        friend class Renderer;
         bool p_Resized;
     };
 };

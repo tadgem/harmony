@@ -154,7 +154,7 @@ void harmony::PipelineStack::AddPipeline(WeakRef<Pipeline> pipeline, WeakRef<Vie
         return;
     }
 
-    if (p_StackViewIDs.find(p->m_Handle) == p_StackViewIDs.end())
+    if (p_StackData.find(p->m_Handle) == p_StackData.end())
     {
         // add pipeline
         m_Stack.push_back(pipeline);
@@ -230,6 +230,11 @@ void harmony::PipelineStack::RemovePipeline(WeakRef<Pipeline> pipeline)
         }
 
         p_StackViewIDs.erase(p->m_Handle);
+        for (auto& data : p_StackData[p->m_Handle])
+        {
+            bgfx::destroy(data.m_FramebufferHandle);
+        }
+        p_StackData.erase(p->m_Handle);
         SortStack();
     }
 }
@@ -290,6 +295,37 @@ void harmony::PipelineStack::InitializePipeline(Ref<Pipeline> pipeline, WeakRef<
     p_StackData[pipeline->m_Handle] = pipeline->Init(entt::registry(), view, p_StackViewIDs[pipeline->m_Handle]);
 }
 
+void harmony::PipelineStack::OnViewResized(WeakRef<View> view)
+{
+    if (view.expired())
+    {
+        harmony::log::error("PipelineStack : Cannot resize, view is expired.");
+        return;
+    }
+
+    p_Initialized = false;
+    bgfx::destroy(m_FinalFramebufferHandle);
+
+    Ref<View> v = view.lock();
+    std::vector<WeakRef<Pipeline>> stackCopy = std::vector<WeakRef<Pipeline>>();
+
+    for (int i = 0; i < m_Stack.size(); i++)
+    {
+        stackCopy.push_back(m_Stack[i]);
+    }
+
+    for (int i = 0; i < stackCopy.size(); i++)
+    {
+        RemovePipeline(stackCopy[i]);
+    }
+
+    for (int i = 0; i < stackCopy.size(); i++)
+    {
+        AddPipelineAtIndex(stackCopy[i], view, i);
+    }
+
+
+}
 
 void harmony::PipelineStack::SortStack()
 {
