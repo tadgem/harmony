@@ -12,6 +12,11 @@ file(GLOB_RECURSE CORE_HEADER_FILES include/*.h)
 file(GLOB_RECURSE CORE_HEADERPP_FILES include/*.hpp)
 get_filename_component(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
+set(BGFX_BUILD_EXAMPLES OFF)
+set(SDL2_DISABLE_SDL2MAIN    ON)
+set(SDL2_DISABLE_INSTALL     ON)
+set(SDL2_DISABLE_UNINSTALL   ON)
+
 add_subdirectory(${ROOT_DIR}/submodules/glm ${CMAKE_CURRENT_BINARY_DIR}/glm)
 add_subdirectory(${ROOT_DIR}/submodules/bgfx ${CMAKE_CURRENT_BINARY_DIR}/bgfx)
 add_subdirectory(${ROOT_DIR}/submodules/sdl ${CMAKE_CURRENT_BINARY_DIR}/sdl)
