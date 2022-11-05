@@ -46,3 +46,7 @@ imgui.ini
 */.vs
 */out
 *CMakeSettings.json
+.vs/VSWorkspaceState.json
+.vs/slnx.sqlite
+.vs/ProjectSettings.json
+.vs/CMakeWorkspaceSettings.json
