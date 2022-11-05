@@ -11,7 +11,6 @@
 #include "Core/Log.hpp"
 #include "Core/Profile.hpp"
 #include "entt.hpp"
-#include "Core/FileWatcher.hpp"
 #include  "ImGui/imgui.h"
 
 namespace harmony {
@@ -143,11 +142,6 @@ namespace harmony {
         std::vector<Ref<AssetFactory>>                      p_AssetFactories;
         std::unordered_map<size_t, std::string>             p_AssetTypeNames;
         std::vector<std::string>                            p_LoadedPaths;
-#if HARMONY_DEBUG
-        std::vector<filewatch::FileWatch<std::string>*> p_AssetFileWatchers;
-        void OnAssetChanged(const std::string& path, const filewatch::Event change_type, Ref<AssetFactory> factory);
-
-#endif
         entt::registry p_AssetRegistry;
     };
 }

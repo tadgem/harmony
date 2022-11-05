@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/ProgramComponent.h"
-#include "Core/FileWatcher.hpp"
+#include "FileWatcher.hpp"
 #include "Assets/Asset.h"
 #include "bx/platform.h"
 #include "Rendering/Shader.h"

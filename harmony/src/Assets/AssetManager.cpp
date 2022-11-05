@@ -149,15 +149,6 @@ harmony::Ref<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory(size_
 	return factory;
 }
 
-#if HARMONY_DEBUG
-void harmony::AssetManager::OnAssetChanged(const std::string& path, const filewatch::Event change_type, Ref<AssetFactory> factory)
-{
-	factory->UnloadAssetData(path, p_AssetRegistry);
-	factory->LoadAssetData(path,  p_AssetRegistry);
-}
-
-#endif
-
 bool harmony::AssetManager::AddAssetFactory(Ref<AssetFactory> assetFactory)
 {
 	if (std::find(p_AssetFactories.begin(), p_AssetFactories.end(), assetFactory) == p_AssetFactories.end())
