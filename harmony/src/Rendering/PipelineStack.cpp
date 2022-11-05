@@ -292,7 +292,8 @@ void harmony::PipelineStack::InitializePipeline(Ref<Pipeline> pipeline, WeakRef<
         p_StackViewIDs[pipeline->m_Handle].emplace_back(Renderer::GetViewID());
     }
     
-    p_StackData[pipeline->m_Handle] = pipeline->Init(entt::registry(), view, p_StackViewIDs[pipeline->m_Handle]);
+    entt::registry reg = entt::registry();
+    p_StackData[pipeline->m_Handle] = pipeline->Init(reg, view, p_StackViewIDs[pipeline->m_Handle]);
 }
 
 void harmony::PipelineStack::OnViewResized(WeakRef<View> view)

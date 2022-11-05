@@ -1,11 +1,11 @@
 #pragma once
 #include <functional>
-
+#include <vector>
 namespace harmony
 {
     class FSM
     {
-    protected:
+    public:
         const unsigned char MAX_TRANSITIONS_PER_PROCESS = 8;
         class State
         {
