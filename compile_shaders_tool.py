@@ -31,9 +31,19 @@ shaderc_location    = 'tools/bgfx-shaderc/bin/'
 renderers               = ['dx9', 'dx11','pssl','metal','glsl','essl', 'spv']
 renderer_shader_profile = ['s_3_0', 's_5_0', 'pssl', 'metal', '430', '300_es', 'spirv']
 
+current_os = platform.system()
+
+def run_command(command):
+    global current_os
+
+    if(current_os == 'Windows'):
+        subprocess.call(command)
+    else:
+        os.system(command)
+
 def build_shaderc_path():
     global shaderc_location
-    current_os = platform.system()
+    global current_os
     
     if(current_os == 'Windows'):
         if(os.path.isfile(shaderc_location + "shaderc-win")):
@@ -112,13 +122,13 @@ def OnCompileShader(sender, app_data, user_data):
     global current_shader_stage_selection
     global current_platform_selection
     command = build_compile_command(current_shader_stage_selection, current_platform_selection)
-    os.system(command)
+    run_command(command)
 
 def OnCompileShaderAllPlatform(sender, app_data, user_data):
     global current_shader_stage_selection
     for renderer in range(len(renderers)):
         command = build_compile_command(current_shader_stage_selection, renderer)
-        os.system(command)
+        run_command(command)
 
 def OnSelectedShaderType(sender, app_data, user_data):
     global current_shader_stage_selection
@@ -132,7 +142,7 @@ def OnBuildEmbeddedShader(sender, app_data, user_data):
     global current_shader_stage_selection
     for renderer in range(len(renderers)):
         command = build_bintoexe_command(current_shader_stage_selection, renderer)
-        os.system(command)
+        run_command(command)
     binary_array_strings = []
     binary_array_strings.append('#pragma once')
     for dir in os.listdir('./shaders/bin'):
