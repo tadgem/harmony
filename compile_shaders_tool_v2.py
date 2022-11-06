@@ -183,7 +183,7 @@ def shader_tool():
 
     dpg.add_combo(shader_stages, label='Shader Type', default_value=shader_stages[current_shader_stage_selection], callback=OnSelectedShaderType)
     dpg.add_separator()
-    dpg.add_combo(shader_stages, label='Renderer', default_value=renderers[current_platform_selection], callback=OnSelectedRenderer)
+    dpg.add_combo(renderers, label='Renderer', default_value=renderers[current_platform_selection], callback=OnSelectedRenderer)
 
     dpg.add_button(label='Compile Shader', callback=OnCompileShader)
     dpg.add_button(label='Compile Shader (All Platforms)', callback=OnCompileShaderAllPlatform)
