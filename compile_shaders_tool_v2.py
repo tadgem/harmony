@@ -13,21 +13,22 @@ class ShaderStage(Enum):
     Fragment = 2
     Compute = 3
 
-shader_stages = ['Vertex', 'Fragment', 'Compute']
-shader_types = ['v','f', 'c']
-shader_name = ''
-dx_shader_types = ['v', 'p', 'c']
-current_shader_stage_selection = 0
-current_platform_selection = 0
+shader_stages   = ['Vertex', 'Fragment', 'Compute']
+shader_types    = ['v','f', 'c']
+dx_shader_types = ['v','p', 'c']
+shader_name     = ''
 
-source_path = 'shaders/vs_normal.sc'
-include_path = 'shaders/include'
-output_path = 'shaders/bin/'
-varying_def_path = 'shaders/varying.def.sc'
+current_shader_stage_selection  = 0
+current_platform_selection      = 0
 
-shaderc_location = 'tools/bgfx-shaderc/bin/'
+source_path         = 'shaders/vs_normal.sc'
+include_path        = 'shaders/include'
+output_path         = 'shaders/bin/'
+varying_def_path    = 'shaders/varying.def.sc'
 
-renderers = ['dx9', 'dx11','pssl','metal','glsl','essl', 'spv']
+shaderc_location    = 'tools/bgfx-shaderc/bin/'
+
+renderers               = ['dx9', 'dx11','pssl','metal','glsl','essl', 'spv']
 renderer_shader_profile = ['s_3_0', 's_5_0', 'pssl', 'metal', '430', '300_es', 'spirv']
 
 def build_shaderc_path():
@@ -111,27 +112,27 @@ def OnCompileShader(sender, app_data, user_data):
     global current_shader_stage_selection
     global current_platform_selection
     command = build_compile_command(current_shader_stage_selection, current_platform_selection)
-    subprocess.call(command)
+    os.system(command)
 
 def OnCompileShaderAllPlatform(sender, app_data, user_data):
     global current_shader_stage_selection
     for renderer in range(len(renderers)):
         command = build_compile_command(current_shader_stage_selection, renderer)
-        subprocess.call(command)
+        os.system(command)
 
 def OnSelectedShaderType(sender, app_data, user_data):
     global current_shader_stage_selection
-    current_shader_stage_selection = app_data
+    current_shader_stage_selection = shader_stages.index(app_data)
 
 def OnSelectedRenderer(sender, app_data, user_data):
     global current_platform_selection
-    current_platform_selection = app_data
+    current_platform_selection = renderers.index(app_data)
 
 def OnBuildEmbeddedShader(sender, app_data, user_data):
     global current_shader_stage_selection
     for renderer in range(len(renderers)):
         command = build_bintoexe_command(current_shader_stage_selection, renderer)
-        subprocess.call(command)
+        os.system(command)
     binary_array_strings = []
     binary_array_strings.append('#pragma once')
     for dir in os.listdir('./shaders/bin'):
@@ -203,4 +204,5 @@ def main():
     dpg.destroy_context()
 
 if __name__ == '__main__':
+    print("Working Directory : " + os.getcwd())
     main()
