@@ -8,27 +8,6 @@ import sys
 import platform
 import dearpygui.dearpygui as dpg
 
-# >>> platform.system()
-# 'Linux'
-# The output of platform.system() is as follows:
-# Linux: Linux
-# Mac: Darwin
-# Windows: Windows
-
-shaderc_location = 'tools/bgfx-shaderc/bin/'
-current_os = platform.system()
-
-if(current_os == 'Linux'):
-    shaderc_location += 'shaderc-ubuntu'
-elif(current_os == 'Windows'):
-    shaderc_location += 'shaderc-win.exe'
-elif(current_os == 'Darwin'):
-    shaderc_location += 'shaderc-osx'
-else:
-    print('Unknown platform :(')
-
-print('shaderc Location : ' + shaderc_location)
-
 class ShaderStage(Enum):
     Vertex = 1
     Fragment = 2
@@ -46,8 +25,34 @@ include_path = 'shaders/include'
 output_path = 'shaders/bin/'
 varying_def_path = 'shaders/varying.def.sc'
 
+shaderc_location = 'tools/bgfx-shaderc/bin/'
+
 renderers = ['dx9', 'dx11','pssl','metal','glsl','essl', 'spv']
 renderer_shader_profile = ['s_3_0', 's_5_0', 'pssl', 'metal', '430', '300_es', 'spirv']
+
+def build_shaderc_path():
+    global shaderc_location
+    current_os = platform.system()
+    
+    if(current_os == 'Windows'):
+        if(os.path.isfile(shaderc_location + "shaderc-win")):
+            try:
+                os.rename(shaderc_location + "shaderc-win", shaderc_location + "shaderc-win.exe")
+            except WindowsError:
+                os.remove(shaderc_location + "shaderc-win.exe")
+                os.rename(shaderc_location + "shaderc-win", shaderc_location + "shaderc-win.exe")
+
+    if(current_os == 'Linux'):
+        shaderc_location += 'shaderc-ubuntu'
+    elif(current_os == 'Windows'):
+        shaderc_location += 'shaderc-win.exe'
+    elif(current_os == 'Darwin'):
+        shaderc_location += 'shaderc-osx'
+    else:
+        print('Unknown platform :(')
+    
+
+    print('shaderc Location : ' + shaderc_location)
 
 def build_output_path(platform):
     base = output_path + renderers[platform] + '/'
@@ -159,7 +164,7 @@ def OnBuildEmbeddedShader(sender, app_data, user_data):
         if(os.path.isdir(renderer_dir)):
             os.rmdir('./shaders/bin/' + dir)
 
-def shader_tool_v2():
+def shader_tool():
     global source_path
     global include_path
     global output_path
@@ -185,12 +190,13 @@ def shader_tool_v2():
     dpg.add_button(label='Build Embedded Shader', callback=OnBuildEmbeddedShader)
                 
 def main():
+    build_shaderc_path()
     dpg.create_context()
     dpg.create_viewport()
     dpg.setup_dearpygui()
 
     with dpg.window(label='Harmony Shader Tool'):
-        shader_tool_v2()
+        shader_tool()
 
     dpg.show_viewport()
     dpg.start_dearpygui()
