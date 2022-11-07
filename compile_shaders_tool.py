@@ -29,7 +29,7 @@ varying_def_path    = 'shaders/varying.def.sc'
 shaderc_location    = 'tools/bgfx-shaderc/bin/'
 
 renderers               = ['dx9', 'dx11','pssl','metal','glsl','essl', 'spv']
-renderer_shader_profile = ['s_3_0', 's_5_0', 'pssl', 'metal', '430', '300_es', 'spirv']
+renderer_shader_profile = ['s_3_0', 's_5_0', 'pssl', 'metal --platform osx', '430', '300_es', 'spirv']
 
 current_os = platform.system()
 

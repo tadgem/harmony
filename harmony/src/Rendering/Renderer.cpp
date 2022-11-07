@@ -228,7 +228,8 @@ harmony::PipelineStack& harmony::Renderer::GetViewPipelineStack(const std::strin
     }
     harmony::log::error("No pipeline stack with name : {}", viewName);
     // TODO: This is horrible, fix me
-    return PipelineStack();
+    auto emptyStack = PipelineStack();
+    return emptyStack;
 }
 
 void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline)
