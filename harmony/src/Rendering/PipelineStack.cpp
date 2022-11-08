@@ -229,10 +229,13 @@ void harmony::PipelineStack::RemovePipeline(WeakRef<Pipeline> pipeline)
             m_Stack.erase(m_Stack.begin() + indexToRemove);
         }
 
-        p_StackViewIDs.erase(p->m_Handle);
         for (auto& data : p_StackData[p->m_Handle])
         {
             bgfx::destroy(data.m_FramebufferHandle);
+            for (auto& [type, attachment] :data.m_Attachments)
+            {
+                bgfx::destroy(attachment.m_Handle);
+            }
         }
         p_StackData.erase(p->m_Handle);
         SortStack();
@@ -281,17 +284,19 @@ nlohmann::json harmony::PipelineStack::Serialize()
 
 void harmony::PipelineStack::InitializePipeline(Ref<Pipeline> pipeline, WeakRef<View> view)
 {
-    p_StackViewIDs.emplace(pipeline->m_Handle, std::vector<bgfx::ViewId>());
-
-    int numViewsRequired = pipeline->NumPipelineStages();
-
-    harmony::log::info("Generating {} ViewIds for Pipeline {}", numViewsRequired, pipeline->m_Name);
-
-    for (int i = 0; i < numViewsRequired; i++)
+    if (p_StackViewIDs.find(pipeline->m_Handle) == p_StackViewIDs.end())
     {
-        p_StackViewIDs[pipeline->m_Handle].emplace_back(Renderer::GetViewID());
+        p_StackViewIDs.emplace(pipeline->m_Handle, std::vector<bgfx::ViewId>());
+
+        int numViewsRequired = pipeline->NumPipelineStages();
+
+        harmony::log::info("Generating {} ViewIds for Pipeline {}", numViewsRequired, pipeline->m_Name);
+
+        for (int i = 0; i < numViewsRequired; i++)
+        {
+            p_StackViewIDs[pipeline->m_Handle].emplace_back(Renderer::GetViewID());
+        }
     }
-    
     entt::registry reg = entt::registry();
     p_StackData[pipeline->m_Handle] = pipeline->Init(reg, view, p_StackViewIDs[pipeline->m_Handle]);
 }
