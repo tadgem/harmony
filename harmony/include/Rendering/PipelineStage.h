@@ -88,7 +88,7 @@ namespace harmony
         virtual Data Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
         virtual void PreUpdate(entt::registry& registry, WeakRef<View> view , bgfx::ViewId viewId);
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
-        virtual void Cleanup();     
+        virtual void Cleanup(WeakRef<View> view, bgfx::ViewId viewId);
 
 
         bool m_HasHDRAttachment;

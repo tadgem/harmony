@@ -66,7 +66,7 @@ void harmony::DebugDrawStage::PostUpdate(entt::registry& registry, WeakRef<View>
 
 }
 
-void harmony::DebugDrawStage::Cleanup()
+void harmony::DebugDrawStage::Cleanup(WeakRef<View> view, bgfx::ViewId viewId)
 {
 
 }

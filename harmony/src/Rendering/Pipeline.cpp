@@ -57,7 +57,7 @@ void harmony::Pipeline::Cleanup(entt::registry& registry, WeakRef<View> view, st
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		p_Stages[i]->Cleanup();
+		p_Stages[i]->Cleanup(view, viewIds[i]);
 	}
 }
 

@@ -63,7 +63,7 @@ void harmony::VectorGraphicsStage::PostUpdate(entt::registry& registry, WeakRef<
 	PipelineStage::PostUpdate(registry, view, viewId);
 }
 
-void harmony::VectorGraphicsStage::Cleanup()
+void harmony::VectorGraphicsStage::Cleanup(WeakRef<View> view, bgfx::ViewId viewId)
 {
 }
 

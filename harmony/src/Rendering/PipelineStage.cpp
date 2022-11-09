@@ -196,6 +196,6 @@ void harmony::PipelineStage::PostUpdate(entt::registry& registry, WeakRef<View> 
 	
 }
 
-void harmony::PipelineStage::Cleanup()
+void harmony::PipelineStage::Cleanup(WeakRef<View> view, bgfx::ViewId viewId)
 {
 }
