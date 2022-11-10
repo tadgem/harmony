@@ -3,6 +3,7 @@
 #if HARMONY_DEBUG
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_bgfx.h"
+#include "Core/Input.h"
 #endif
 
 harmony::View::View(const std::string& name) : 
@@ -38,7 +39,7 @@ void harmony::View::OnResized(uint32_t w, uint32_t h)
 #if HARMONY_DEBUG
 void harmony::View::OnImGui()
 {
-	ImVec2 dim = ImGui::GetWindowContentRegionMax();
+	ImVec2 dim = ImGui::GetContentRegionAvail();
 	uint32_t currentWidth = static_cast<uint32_t>(dim.x);
 	uint32_t currentHeight = static_cast<uint32_t>(dim.y);
 
@@ -47,9 +48,13 @@ void harmony::View::OnImGui()
 		m_ImGuiWindowWidth = currentWidth;
 		m_ImGuiWindowHeight = currentHeight;
 	}
-
+	
 	if (currentWidth != m_ImGuiWindowWidth || currentHeight != m_ImGuiWindowHeight)
 	{
+		if (Input::Get()->GetMouseButton(Mouse::Button::Left))
+		{
+			return;
+		}
 		OnResized(currentWidth, currentHeight);
 		m_ImGuiWindowWidth = currentWidth;
 		m_ImGuiWindowHeight = currentHeight;

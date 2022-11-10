@@ -130,6 +130,7 @@ void harmony::EditorView::OnImGui()
 	PipelineStack& stack = p_Renderer.GetViewPipelineStack("Editor");
 	if (ImGui::Begin(editorViewTitle.c_str(), (bool*)0, ImGuiWindowFlags_NoScrollbar))
 	{
+		View::OnImGui();
 		bgfx::TextureHandle finalImageHandle = stack.GetFinalImage();
 		if (!bgfx::isValid(finalImageHandle))
 		{
