@@ -57,10 +57,10 @@ void harmony::RuntimeView::OnImGui()
 
 	Ref<Scene> scene = p_Program.GetActiveScene().lock();
 
-	const std::string runteimeViewTitle = std::string(ICON_FA_PLAY_CIRCLE) + " Runtime";
+	const std::string runtimeViewTitle = std::string(ICON_FA_PLAY_CIRCLE) + " Runtime";
 	glm::mat4 mat = glm::mat4(1.0);
 	PipelineStack& stack = p_Renderer.GetViewPipelineStack("RuntimeView");
-	if (ImGui::Begin(runteimeViewTitle.c_str()))
+	if (ImGui::Begin(runtimeViewTitle.c_str(), (bool*)0, ImGuiWindowFlags_NoScrollbar))
 	{
 		View::OnImGui();
 		bgfx::TextureHandle finalImageHandle = stack.GetFinalImage();
@@ -71,7 +71,7 @@ void harmony::RuntimeView::OnImGui()
 		}
 		ImGui::Image(
 			finalImageHandle,
-			ImVec2(static_cast<float>(m_Width), static_cast<float>(m_Height))
+			ImGui::GetContentRegionAvail()
 		);
 
 	}

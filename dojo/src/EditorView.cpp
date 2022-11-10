@@ -147,7 +147,7 @@ void harmony::EditorView::OnImGui()
 	
 		ImGui::Image(
 			finalImageHandle,
-			ImGui::GetWindowSize()
+			ImGui::GetContentRegionAvail()
 		);
 
 		if (ImGui::IsWindowFocused())
