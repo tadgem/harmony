@@ -27,6 +27,7 @@ namespace harmony
 
 		DebugDrawEncoder*	AddViewChannel(Channel channel);
 		void				RemoveViewChannel(Channel channel, DebugDrawEncoder* renderer);
+
 		//void begin(Channel channel,uint16_t _viewId, bool _depthTestLess = true, bgfx::Encoder* _encoder = NULL);
 		//void end(Channel channel);
 		void push(Channel channel);

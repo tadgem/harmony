@@ -180,6 +180,7 @@ void harmony::Renderer::OnPreUpdate(entt::registry& registry)
         if (view->p_Resized)
         {
             stack.OnViewResized(view);
+            view->p_Resized = false;
         }
 
         view->OnPreUpdate(registry);

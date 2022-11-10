@@ -33,7 +33,7 @@ DebugDrawEncoder* harmony::GfxDebug::AddViewChannel(Channel channel)
 void harmony::GfxDebug::RemoveViewChannel(Channel channel, DebugDrawEncoder* renderer)
 {
     int indexToRemove = -1;
-    for (int i = 0; i < i < p_DebugRenderers[channel].size(); i++)
+    for (int i = 0; i < p_DebugRenderers[channel].size(); i++)
     {
         if (p_DebugRenderers[channel][i] == renderer)
         {
@@ -43,7 +43,8 @@ void harmony::GfxDebug::RemoveViewChannel(Channel channel, DebugDrawEncoder* ren
 
     if (indexToRemove >= 0)
     {
-        p_DebugRenderers[channel].erase(p_DebugRenderers[channel].begin());
+        p_DebugRenderers[channel].erase(p_DebugRenderers[channel].begin() + indexToRemove);
+        delete renderer;
         renderer = nullptr;
     }
 

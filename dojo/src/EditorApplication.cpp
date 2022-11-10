@@ -80,7 +80,7 @@ void harmony::Editor::InitializePipelines()
 	p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
 	p_TexturedMeshPipeline = CreateRef<Pipeline>(PipelineHandle("Textured Mesh" ), Pipeline::Type::Surface);
 	p_NormalPipeline = CreateRef<Pipeline>(PipelineHandle("Mesh Normals" ), Pipeline::Type::Surface);
-	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>();
+	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>(VectorGraphics::Layer::One);
 	
 	p_NormalPipeline->AddPipelineStage<PipelineStage>("NormalStage1",
 		PipelineStage::Type::PrimaryDraw,
@@ -235,11 +235,6 @@ void harmony::Editor::UpdateEditor()
 	for (int i = 0; i < p_Panels.size(); i++)
 	{
 		p_Panels[i]->OnImGui();
-	}
-
-	if (VectorGraphics::GetNVGContext() == nullptr)
-	{
-		return;
 	}
 
 	if (!p_ActiveScene)

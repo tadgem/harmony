@@ -14,7 +14,7 @@ namespace harmony
 
         void    AddPipeline(WeakRef<Pipeline> pipeline, WeakRef<View> view);
         void    AddPipelineAtIndex(WeakRef<Pipeline> pipeline, WeakRef<View> view, int index);
-        void    RemovePipeline(WeakRef<Pipeline> pipeline);
+        void    RemovePipeline(WeakRef<Pipeline> pipeline, WeakRef<View> view);
         int     GetPipelineIndex(WeakRef<Pipeline> pipeline);
         void    MoveUp(const PipelineHandle& pipelineHandle);
         void    MoveDown(const PipelineHandle& pipelineHandle);
@@ -41,5 +41,6 @@ namespace harmony
         std::map<PipelineHandle, std::vector<PipelineStage::Data>>      p_StackData;
 
         bool p_Initialized;        
+        bgfx::TextureHandle p_FinalFramebufferAttachment;
     };
 }

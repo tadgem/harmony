@@ -131,7 +131,7 @@ void harmony::PipelineStack::AddPipeline(WeakRef<Pipeline> pipeline, WeakRef<Vie
     if (!p_Initialized)
     {
         Ref<View> _view = view.lock();
-        bgfx::TextureHandle textureHandle = bgfx::createTexture2D(
+        p_FinalFramebufferAttachment = bgfx::createTexture2D(
             _view->m_Width
             , _view->m_Height
             , false
@@ -140,7 +140,7 @@ void harmony::PipelineStack::AddPipeline(WeakRef<Pipeline> pipeline, WeakRef<Vie
             , BGFX_TEXTURE_RT
         );
         std::vector<bgfx::TextureHandle> attachments = std::vector<bgfx::TextureHandle>();
-        attachments.emplace_back(textureHandle);
+        attachments.emplace_back(p_FinalFramebufferAttachment);
         m_FinalFramebufferHandle = bgfx::createFrameBuffer(attachments.size(), attachments.data(), false);
         bgfx::setViewFrameBuffer(m_FinalImageViewId, m_FinalFramebufferHandle);
         bgfx::setViewName(m_FinalImageViewId, _view->m_Name.c_str());
@@ -197,7 +197,7 @@ void harmony::PipelineStack::AddPipelineAtIndex(WeakRef<Pipeline> pipeline, Weak
 
 }
 
-void harmony::PipelineStack::RemovePipeline(WeakRef<Pipeline> pipeline)
+void harmony::PipelineStack::RemovePipeline(WeakRef<Pipeline> pipeline, WeakRef<View> view)
 {
     Ref<Pipeline> p = pipeline.lock();
 
@@ -224,10 +224,6 @@ void harmony::PipelineStack::RemovePipeline(WeakRef<Pipeline> pipeline)
             }
         }
 
-        if (indexToRemove >= 0)
-        {
-            m_Stack.erase(m_Stack.begin() + indexToRemove);
-        }
 
         for (auto& data : p_StackData[p->m_Handle])
         {
@@ -238,6 +234,13 @@ void harmony::PipelineStack::RemovePipeline(WeakRef<Pipeline> pipeline)
             }
         }
         p_StackData.erase(p->m_Handle);
+        
+        if (indexToRemove >= 0)
+        {
+            entt::registry reg = entt::registry();
+            m_Stack[indexToRemove].lock()->Cleanup(reg, view, p_StackViewIDs[p->m_Handle]);
+            m_Stack.erase(m_Stack.begin() + indexToRemove);
+        }
         SortStack();
     }
 }
@@ -311,6 +314,7 @@ void harmony::PipelineStack::OnViewResized(WeakRef<View> view)
 
     p_Initialized = false;
     bgfx::destroy(m_FinalFramebufferHandle);
+    bgfx::destroy(p_FinalFramebufferAttachment);
 
     Ref<View> v = view.lock();
     std::vector<WeakRef<Pipeline>> stackCopy = std::vector<WeakRef<Pipeline>>();
@@ -322,14 +326,13 @@ void harmony::PipelineStack::OnViewResized(WeakRef<View> view)
 
     for (int i = 0; i < stackCopy.size(); i++)
     {
-        RemovePipeline(stackCopy[i]);
+        RemovePipeline(stackCopy[i], view);
     }
 
     for (int i = 0; i < stackCopy.size(); i++)
     {
         AddPipelineAtIndex(stackCopy[i], view, i);
     }
-
 
 }
 

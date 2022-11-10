@@ -68,7 +68,15 @@ void harmony::DebugDrawStage::PostUpdate(entt::registry& registry, WeakRef<View>
 
 void harmony::DebugDrawStage::Cleanup(WeakRef<View> view, bgfx::ViewId viewId)
 {
+	Ref<View> _view = view.lock();
+	if (p_DebugRenderers.find(_view->m_Name) == p_DebugRenderers.end())
+	{
+		return;
+	}
 
+	DebugDrawEncoder* debugEncoder = p_DebugRenderers[_view->m_Name];
+	GfxDebug::Get()->RemoveViewChannel(m_Channel, debugEncoder);
+	p_DebugRenderers.erase(_view->m_Name);
 }
 
 

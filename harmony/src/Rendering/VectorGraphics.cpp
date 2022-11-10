@@ -2,6 +2,14 @@
 
 VectorGraphics::VectorGraphics()
 {
+    p_VectorRenderers.emplace(Layer::One, std::vector<NVGcontext*>());
+    p_VectorRenderers.emplace(Layer::Two, std::vector<NVGcontext*>());
+    p_VectorRenderers.emplace(Layer::Three, std::vector<NVGcontext*>());
+    p_VectorRenderers.emplace(Layer::Four, std::vector<NVGcontext*>());
+    p_VectorRenderers.emplace(Layer::Five, std::vector<NVGcontext*>());
+    p_VectorRenderers.emplace(Layer::Six, std::vector<NVGcontext*>());
+    p_VectorRenderers.emplace(Layer::Seven, std::vector<NVGcontext*>());
+    p_VectorRenderers.emplace(Layer::Eight, std::vector<NVGcontext*>());
 }
 
 VectorGraphics* VectorGraphics::Get()
@@ -14,27 +22,29 @@ VectorGraphics* VectorGraphics::Get()
     return p_Instance;
 }
 
-void VectorGraphics::SetInstanceContext(NVGcontext* context)
+NVGcontext* VectorGraphics::AddViewLayer(Layer layer, bgfx::ViewId viewId)
 {
-    if (p_Instance)
-    {
-        if (p_Instance->s_VectorGraphicsContext)
-        {
-            return;
-        }
-        p_Instance->s_VectorGraphicsContext = context;
-    }
+    NVGcontext* renderer = nvgCreate(s_UseEdgeAA, viewId);
+    p_VectorRenderers[layer].emplace_back(renderer);
 
+    return renderer;
 }
 
-NVGcontext* VectorGraphics::GetNVGContext()
+void VectorGraphics::RemoveViewLayer(Layer layer, NVGcontext* renderer)
 {
-    if (p_Instance)
+    int indexToRemove = -1;
+    for (int i = 0; i < p_VectorRenderers[layer].size(); i++)
     {
-        if (p_Instance->s_VectorGraphicsContext)
+        if (p_VectorRenderers[layer][i] == renderer)
         {
-            return p_Instance->s_VectorGraphicsContext;
+            indexToRemove = i;
         }
     }
-    return nullptr;
+
+    if (indexToRemove >= 0)
+    {
+        p_VectorRenderers[layer].erase(p_VectorRenderers[layer].begin() + indexToRemove);
+        nvgDelete(renderer);
+        renderer = nullptr;
+    }
 }
