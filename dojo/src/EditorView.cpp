@@ -217,17 +217,17 @@ void harmony::EditorView::OnImGui()
 			ImGui::End();
 			return;	
 		}
-		if (Input::Get()->GetKeyJustPressed(Key::W))
+		if (Input::Get()->GetKey(Key::W))
 		{
 			p_Op = ImGuizmo::OPERATION::TRANSLATE;
 		}
 
-		if (Input::Get()->GetKeyJustPressed(Key::R))
+		if (Input::Get()->GetKey(Key::R))
 		{
 			p_Op = ImGuizmo::OPERATION::ROTATE;
 		}
 
-		if (Input::Get()->GetKeyJustPressed(Key::S))
+		if (Input::Get()->GetKey(Key::S))
 		{
 			p_Op = ImGuizmo::OPERATION::SCALE;
 		}

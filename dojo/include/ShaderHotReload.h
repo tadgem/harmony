@@ -23,6 +23,7 @@ namespace harmony
 
     protected:
         void OnChange(const std::string& path, const filewatch::Event change_type);
+        void ReloadTrackedShaders();
         Program& p_Program;
         Renderer& p_Renderer;
         std::string p_ShaderCompilerLocation;
@@ -34,9 +35,11 @@ namespace harmony
         std::map<std::string, Ref<ShaderStage>> p_LoadedShaderBinaries;
         std::map<std::string, std::string> p_RendererProfileMapping;
 #if BX_PLATFORM_WINDOWS
-        const std::string PLATFORM_SHADER_COMPILER_EXECUTABLE = ".exe";
+        const std::string PLATFORM_SHADER_COMPILER_EXECUTABLE = "-win.exe";
+#elif BX_PLATFORM_OSX
+        const std::string PLATFORM_SHADER_COMPILER_EXECUTABLE = "-osx";
 #elif BX_PLATFORM_LINUX
-        const std::string PLATFORM_SHADER_COMPILER_EXECUTABLE = "";
+        const std::string PLATFORM_SHADER_COMPILER_EXECUTABLE = "-osx";
 #endif
 
 

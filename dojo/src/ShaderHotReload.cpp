@@ -9,7 +9,7 @@
 harmony::ShaderHotReload::ShaderHotReload(Program& prog) : p_Program(prog), p_Renderer(prog.m_Renderer)
 {
     std::string currentPath = std::filesystem::current_path().string();
-    p_ShaderCompilerLocation = currentPath + "/shaderc" + PLATFORM_SHADER_COMPILER_EXECUTABLE;
+    p_ShaderCompilerLocation = currentPath + "/../../tools/bgfx-shaderc/bin/shaderc" + PLATFORM_SHADER_COMPILER_EXECUTABLE;
 
     if (!std::filesystem::exists(p_ShaderCompilerLocation))
     {
@@ -42,18 +42,8 @@ void harmony::ShaderHotReload::Init()
         );
     }
 
-    auto sourceHandles = p_Program.m_AssetManager.GetLoadedAssets<ShaderSourceAsset>();
-    auto binaryHandles = p_Program.m_AssetManager.GetLoadedAssets<ShaderStage>();
-
-    for (auto handle : sourceHandles)
-    {
-        p_LoadedShaderSources.emplace(handle.Path, p_Program.m_AssetManager.GetAsset<ShaderSourceAsset>(handle).lock());
-    }
-
-    for (auto handle : binaryHandles)
-    {
-        p_LoadedShaderBinaries.emplace(handle.Path, p_Program.m_AssetManager.GetAsset<ShaderStage>(handle).lock());
-    }
+    ReloadTrackedShaders();
+    
 }
 
 void harmony::ShaderHotReload::Update()
@@ -80,6 +70,7 @@ void harmony::ShaderHotReload::FromJson(const nlohmann::json& json)
 void harmony::ShaderHotReload::OnChange(const std::string& path, const filewatch::Event change_type)
 {
     harmony::log::info("ShaderHotReload : Path : {} Change Type : {}", path);
+    ReloadTrackedShaders();
     // ignore changes to include shader files
     if (path.find("include") < path.size())
     {
@@ -161,6 +152,24 @@ void harmony::ShaderHotReload::OnChange(const std::string& path, const filewatch
     }
 
 
+}
+
+void harmony::ShaderHotReload::ReloadTrackedShaders()
+{
+    auto sourceHandles = p_Program.m_AssetManager.GetLoadedAssets<ShaderSourceAsset>();
+    auto binaryHandles = p_Program.m_AssetManager.GetLoadedAssets<ShaderStage>();
+
+    p_LoadedShaderSources.clear();
+    for (auto handle : sourceHandles)
+    {
+        p_LoadedShaderSources.emplace(handle.Path, p_Program.m_AssetManager.GetAsset<ShaderSourceAsset>(handle).lock());
+    }
+
+    p_LoadedShaderBinaries.clear();
+    for (auto handle : binaryHandles)
+    {
+        p_LoadedShaderBinaries.emplace(handle.Path, p_Program.m_AssetManager.GetAsset<ShaderStage>(handle).lock());
+    }
 }
 
 int harmony::ShaderHotReload::CompileShader(const std::string& shaderName)

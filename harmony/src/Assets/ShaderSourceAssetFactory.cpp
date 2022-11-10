@@ -26,10 +26,26 @@ void harmony::ShaderSourceAssetFactory::LoadAssetData(const std::string& path, e
 	{
 		type = ShaderStage::Type::Compute;
 	}
+	auto cleanIndex1 = path.find_last_of("\\");
+	auto cleanIndex2 = path.find_last_of("/");
+	std::string cleanPath;
+	if (cleanIndex1 <= path.size())
+	{
+		auto size = path.size() - cleanIndex1;
+		cleanPath = path.substr(cleanIndex1 + 1, size);
+	}
+	else if (cleanIndex2 <= path.size())
+	{
+		auto size = path.size() - cleanIndex2;
+		cleanPath = path.substr(cleanIndex2 + 1, size);
+	}
+	else
+	{
+		cleanPath = path;
+	}
+	Ref<ShaderSourceAsset> sourceAsset = CreateRef<ShaderSourceAsset>(cleanPath, type);
 
-	Ref<ShaderSourceAsset> sourceAsset = CreateRef<ShaderSourceAsset>(path, type);
-
-	AssetHandle handle{ path, 0, GetTypeHash<ShaderSourceAsset>() };
+	AssetHandle handle{ cleanPath, 0, GetTypeHash<ShaderSourceAsset>() };
 	AssetComponent<ShaderSourceAsset> sourceComponent{ sourceAsset, handle };
 
 	entt::entity e = registry.create();

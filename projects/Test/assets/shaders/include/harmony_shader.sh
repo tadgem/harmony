@@ -1,7 +1,7 @@
 /*
     Harmony Shader Lib
 */
-
+#include "bgfx_shader.sh"
 struct DirectionalLight
 {
     vec4 Direction;
