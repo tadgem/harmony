@@ -16,6 +16,7 @@ namespace harmony
         float Speed;
         bool Focussed = true;
 
+        void UpdateProjection(glm::mat4 projection);
         void Update();
     };
 
@@ -25,6 +26,7 @@ namespace harmony
 
         EditorView(Program& program, Ref<ScenePanel> scenePanel );
 		virtual void OnPreUpdate(entt::registry& registry) override;
+        virtual void OnResized(uint32_t w, uint32_t h) override;
 #if HARMONY_DEBUG
         virtual void OnImGui() override;
         virtual void OnImGuiOptions() override;

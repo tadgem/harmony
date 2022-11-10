@@ -24,6 +24,11 @@ harmony::DebugCamera::DebugCamera()
 	Focussed = false;
 }
 
+void harmony::DebugCamera::UpdateProjection(glm::mat4 projection)
+{
+	Projection = projection;
+}
+
 void harmony::DebugCamera::Update()
 {
 	
@@ -87,10 +92,6 @@ void harmony::DebugCamera::Update()
 	{
 		Euler.y -= 360.0f;
 	}
-
-	Projection = glm::mat4(1.0);
-
-	Projection = glm::perspectiveFov(glm::radians(FOV), static_cast<float>(Program::p_WindowWidth), static_cast<float>(Program::p_WindowHeight), NearClipPlane, FarClipPlane);
 	
 	glm::quat qPitch = glm::angleAxis(glm::radians(-Euler.x), glm::vec3(1, 0, 0));
 	glm::quat qYaw = glm::angleAxis(glm::radians(Euler.y), glm::vec3(0, 1, 0));
@@ -114,6 +115,12 @@ void harmony::EditorView::OnPreUpdate(entt::registry& registry)
 	Camera.Update();
 	m_View = Camera.View;
 	m_Projection = Camera.Projection;
+}
+void harmony::EditorView::OnResized(uint32_t w, uint32_t h)
+{
+	View::OnResized(w, h);
+	glm::mat4 proj = glm::perspectiveFov(glm::radians(Camera.FOV), static_cast<float>(m_Width), static_cast<float>(m_Height), Camera.NearClipPlane, Camera.FarClipPlane);
+	Camera.UpdateProjection(proj);
 }
 #if HARMONY_DEBUG
 void harmony::EditorView::OnImGui()

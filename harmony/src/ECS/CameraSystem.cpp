@@ -22,20 +22,18 @@ void harmony::CameraSystem::Update(entt::registry& registry)
 
     for (auto [entity, t,  c] : view.each())
     {
-        c.Cam.Projection = glm::mat4(1.0);
-        c.Cam.Projection = glm::perspectiveFov(glm::radians(c.Cam.FOV), static_cast<float>(Program::p_WindowWidth), static_cast<float>(Program::p_WindowHeight),  c.Cam.NearClipPlane, c.Cam.FarClipPlane);
-
-        glm::quat qPitch = glm::angleAxis(glm::radians(-t.Euler.x), glm::vec3(1, 0, 0));
-        glm::quat qYaw = glm::angleAxis(glm::radians(t.Euler.y), glm::vec3(0, 1, 0));
-        glm::quat rot = qPitch * qYaw;
-        rot = glm::normalize(rot);
-        glm::mat4 rotate = glm::mat4_cast(rot);
+        glm::quat qPitch    = glm::angleAxis(glm::radians(-t.Euler.x), glm::vec3(1, 0, 0));
+        glm::quat qYaw      = glm::angleAxis(glm::radians( t.Euler.y), glm::vec3(0, 1, 0));
+        glm::quat rot       = glm::normalize(qPitch * qYaw);
+        
+        glm::mat4 rotate    = glm::mat4_cast(rot);
         glm::mat4 translate = glm::mat4(1.0f);
-        translate = glm::translate(translate, -t.Position);
+        translate           = glm::translate(translate, -t.Position);
 
-        c.Cam.View = rotate * translate;        
+        c.Cam.View = rotate * translate;
+
 #ifdef  HARMONY_DEBUG
-        glm::mat4 viewProj = c.Cam.Projection * c.Cam.View;
+        glm::mat4 viewProj  = c.Cam.Projection * c.Cam.View;
         GfxDebug::Get()->setColor(GfxDebug::Channel::Editor, 0xaaffffff);
         GfxDebug::Get()->drawFrustum(GfxDebug::Channel::Editor, &viewProj[0]);
 #endif 

@@ -12,6 +12,7 @@ namespace harmony
         RuntimeView(Program& prog);
 
         virtual void OnPreUpdate(entt::registry& registry) override;
+        virtual void OnResized(uint32_t w, uint32_t h);
 #if HARMONY_DEBUG
         virtual void OnImGui() override;
         virtual void OnImGuiOptions() override;
