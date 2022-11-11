@@ -17,3 +17,6 @@
 [submodule "submodules/jolt"]
 	path = submodules/jolt
 	url = https://github.com/jrouwe/JoltPhysics.git
+[submodule "submodules/efsw"]
+	path = submodules/efsw
+	url = https://github.com/SpartanJ/efsw.git

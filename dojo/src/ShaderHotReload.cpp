@@ -25,6 +25,13 @@ harmony::ShaderHotReload::ShaderHotReload(Program& prog) : p_Program(prog), p_Re
         {"spv", "spirv"},
 
     };
+
+    p_FileWatcher = new efsw::FileWatcher();
+}
+
+harmony::ShaderHotReload::~ShaderHotReload()
+{
+    delete p_FileWatcher;
 }
 
 void harmony::ShaderHotReload::Init()
@@ -34,12 +41,17 @@ void harmony::ShaderHotReload::Init()
         std::string projDirectory = p_Program.m_Project->m_ProjectDirectory;
         std::string shadersDirectory = projDirectory + "\\assets\\shaders";
 
-        p_FileWatcher = new filewatch::FileWatch<std::string>(
+        efsw::FileWatchListener* listener = this;
+
+        /*p_FileWatcher = new filewatch::FileWatch<std::string>(
             shadersDirectory,
             [&](const std::string& path, const filewatch::Event change_type) {
                 OnChange(path, change_type);
             }
-        );
+        );*/
+
+        p_DirectoryWatchID = p_FileWatcher->addWatch(shadersDirectory, listener, true);
+        p_FileWatcher->watch();
     }
 
     ReloadTrackedShaders();
@@ -56,6 +68,7 @@ void harmony::ShaderHotReload::Render()
 
 void harmony::ShaderHotReload::Cleanup()
 {
+    p_FileWatcher->removeWatch(p_DirectoryWatchID);
 }
 
 nlohmann::json harmony::ShaderHotReload::ToJson()
@@ -67,45 +80,45 @@ void harmony::ShaderHotReload::FromJson(const nlohmann::json& json)
 {
 }
 
-void harmony::ShaderHotReload::OnChange(const std::string& path, const filewatch::Event change_type)
+void harmony::ShaderHotReload::OnChange(const std::string& filename, const std::string& directory, efsw::Action action)
 {
-    harmony::log::info("ShaderHotReload : Path : {} Change Type : {}", path);
+    harmony::log::info("ShaderHotReload : Path : {} Change Type : {}", filename);
     ReloadTrackedShaders();
     // ignore changes to include shader files
-    if (path.find("include") < path.size())
+    if (filename.find("include") < filename.size())
     {
         return;
     }
     // varying def is only a concern of shaderc
-    if (path.find("varying.def.sc") < path.size())
+    if (filename.find("varying.def.sc") < filename.size())
     {
         return;
     }
-    if (change_type == filewatch::Event::added)
+    if (action == efsw::Actions::Add)
     {
-        if (path.find(".sc") < path.size())
+        if (filename.find(".sc") < filename.size())
         {
-            auto handle = p_Program.m_AssetManager.LoadAsset<ShaderSourceAsset>(path);
+            auto handle = p_Program.m_AssetManager.LoadAsset<ShaderSourceAsset>(filename);
             Ref<ShaderSourceAsset> source = p_Program.m_AssetManager.GetAsset<ShaderSourceAsset>(handle[0]).lock();
-            size_t lastIndex = path.find(".sc");
-            std::string shaderName = path.substr(0, lastIndex);
+            size_t lastIndex = filename.find(".sc");
+            std::string shaderName = filename.substr(0, lastIndex);
             if (CompileShader(shaderName) == 0)
             {
-                p_LoadedShaderSources.emplace(path, source);
+                p_LoadedShaderSources.emplace(filename, source);
             }
             else
             {
-                harmony::log::error("Failed to compile shader : {}", path);
+                harmony::log::error("Failed to compile shader : {}", filename);
             }
         }
-        if (path.find(".bin") < path.size())
+        if (filename.find(".bin") < filename.size())
         {
-            size_t firstIndex = path.find_last_of("\\");
-            size_t lastIndex = path.find(".bin");
-            std::string shaderName = path.substr(firstIndex + 1, lastIndex - (firstIndex + 1));
+            size_t firstIndex = filename.find_last_of("\\");
+            size_t lastIndex = filename.find(".bin");
+            std::string shaderName = filename.substr(firstIndex + 1, lastIndex - (firstIndex + 1));
 
             std::string rendererName = ShaderStage::GetShaderRendererName();
-            if (path.find(rendererName) < path.size())
+            if (filename.find(rendererName) < filename.size())
             {
                 auto handle = p_Program.m_AssetManager.LoadAsset<ShaderStage>(shaderName);
                 Ref<ShaderStage> stage = p_Program.m_AssetManager.GetAsset<ShaderStage>(handle[0]).lock();
@@ -113,33 +126,32 @@ void harmony::ShaderHotReload::OnChange(const std::string& path, const filewatch
             }
         }
     }
-    if (change_type == filewatch::Event::modified)
+    if (action == efsw::Actions::Modified)
     {
-        if (path.find(".sc") < path.size())
+        if (filename.find(".sc") < filename.size())
         {
             // Update shader text...
-            std::string newText = Utils::LoadStringFromPath("assets/shaders" + path);
-            if (p_LoadedShaderSources.find(path) == p_LoadedShaderSources.end())
+            std::string newText = Utils::LoadStringFromPath("assets/shaders" + filename);
+            if (p_LoadedShaderSources.find(filename) == p_LoadedShaderSources.end())
             {
                 harmony::log::warn("shader not being tracked by hot reload.");
                 return;
             }
             // recompile shader
-            size_t lastIndex = path.find(".sc");
-            std::string shaderName = path.substr(0, lastIndex);
+            size_t lastIndex = filename.find(".sc");
+            std::string shaderName = filename.substr(0, lastIndex);
             if (CompileShader(shaderName) > 0)
             {
-                harmony::log::error("Failed to compile shader : {}", path);
+                harmony::log::error("Failed to compile shader : {}", filename);
             }
         }
-        if (path.find(".bin") < path.size())
+        if (filename.find(".bin") < filename.size())
         {
             std::string rendererName = ShaderStage::GetShaderRendererName();
-            if (path.find(rendererName) < path.size())
+            if (directory.find(rendererName) < directory.size())
             {
-                size_t firstIndex = path.find_last_of("\\");
-                size_t lastIndex = path.find(".bin");
-                std::string shaderName = path.substr(firstIndex + 1, lastIndex - (firstIndex + 1));
+                size_t lastIndex = filename.find(".bin");
+                std::string shaderName = filename.substr(0, lastIndex);
 
                 if (p_LoadedShaderBinaries.find(shaderName) != p_LoadedShaderBinaries.end())
                 {
@@ -264,4 +276,9 @@ int harmony::ShaderHotReload::CompileShader(const std::string& shaderName)
     harmony::log::info("ShaderHotReload : final compile command for input file {} : {}", shaderName, compileCommand);
     return system(compileCommand.c_str());
 
+}
+
+void harmony::ShaderHotReload::handleFileAction(efsw::WatchID watchid, const std::string& dir, const std::string& filename, efsw::Action action, std::string oldFilename)
+{
+    OnChange(filename, dir, action);
 }

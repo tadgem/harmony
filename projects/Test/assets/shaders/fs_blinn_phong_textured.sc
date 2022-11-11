@@ -2,7 +2,7 @@ $input v_texcoord0
 
 #include "harmony_shader.sh"
 
-#define MAX_NUM_LIGHTS 16
+#define MAX_NUM_LIGHTS 32
 
 uniform DirectionalLight s_DirLight;
 uniform PointLight       s_PointLights[MAX_NUM_LIGHTS];

@@ -20,6 +20,7 @@ get_filename_component(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
 add_subdirectory(${ROOT_DIR}/harmony ${CMAKE_CURRENT_BINARY_DIR}/harmony)
 add_subdirectory(${ROOT_DIR}/modules/harmony-assimp ${CMAKE_CURRENT_BINARY_DIR}/harmony-assimp)
+add_subdirectory(${ROOT_DIR}/submodules/efsw ${CMAKE_CURRENT_BINARY_DIR}/efsw)
 
-target_include_directories(Dojo PRIVATE ${HARMONY_CORE_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR}/include ${HARMONY_ASSIMP_INCLUDES} ${ROOT_DIR}/submodules/assimp/include)
-target_link_libraries(Dojo harmony-core harmony-assimp)
+target_include_directories(Dojo PRIVATE ${HARMONY_CORE_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR}/include ${HARMONY_ASSIMP_INCLUDES} ${ROOT_DIR}/submodules/assimp/include ${ROOT_DIR}/submodules/efsw/include)
+target_link_libraries(Dojo harmony-core harmony-assimp efsw)
