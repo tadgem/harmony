@@ -20,3 +20,6 @@
 [submodule "submodules/efsw"]
 	path = submodules/efsw
 	url = https://github.com/SpartanJ/efsw.git
+[submodule "submodules/sdl"]
+	path = submodules/sdl
+	url = https://github.com/libsdl-org/SDL.git
