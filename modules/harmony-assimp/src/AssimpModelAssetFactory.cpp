@@ -23,8 +23,8 @@ static std::string AssimpToSTD(aiString str)
 
 harmony::AssimpModelAssetFactory::AssimpModelAssetFactory(Renderer& renderer) : harmony::AssetFactory(), p_Renderer(renderer)
 {
-	size_t modelTypeHash = GetTypeHash<Model>();
-	size_t meshTypeHash = GetTypeHash<Mesh>();
+	std::string modelTypeHash = GetTypeHash<Model>();
+	std::string meshTypeHash = GetTypeHash<Mesh>();
 
 	m_Capabilities.AssetTypeHashes.push_back(modelTypeHash);
 	m_Capabilities.AssetTypeHashes.push_back(meshTypeHash);

@@ -32,7 +32,10 @@ void harmony::RuntimeView::OnResized(uint32_t w, uint32_t h)
 	}
 
 	Ref<Scene> scene = p_Program.GetActiveScene().lock();
-
+	if (!scene->m_Registry.valid(CameraEntity))
+	{
+		return;
+	}
 	if (scene->m_Registry.any_of<CameraComponent>(CameraEntity))
 	{
 		CameraComponent& c = scene->m_Registry.get<CameraComponent>(CameraEntity);

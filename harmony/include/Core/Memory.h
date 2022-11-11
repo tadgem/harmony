@@ -8,9 +8,9 @@
 namespace harmony {
 
 	template <typename T>
-	static size_t GetTypeHash()
+	static std::string GetTypeHash()
 	{
-		return typeid(T).hash_code();
+		return typeid(T).name();
 	}
 
 	/// <summary>

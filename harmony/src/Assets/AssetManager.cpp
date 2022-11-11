@@ -31,7 +31,7 @@ bool harmony::AssetManager::IsPathLoaded(const std::string path)
 
 	return false;
 }
-std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::string& path, size_t typeHash)
+std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::string& path, std::string typeHash)
 {
 	std::string cleanPath = path;
 	auto project = Program::Get()->m_Project;
@@ -57,7 +57,7 @@ std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::st
 	return GetAssetsAtPath(cleanPath);
 }
 
-void harmony::AssetManager::UnloadAsset(AssetHandle& handle, size_t typeHash)
+void harmony::AssetManager::UnloadAsset(AssetHandle& handle, std::string typeHash)
 {
 	auto builtin = handle.Path.find("builtin");
 	if (builtin >= 0 && builtin < handle.Path.size())
@@ -122,7 +122,7 @@ void harmony::AssetManager::Deserialize(nlohmann::json& json)
 	}
 }
 
-harmony::Ref<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory(size_t typeHash)
+harmony::Ref<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory(std::string typeHash)
 {
 	Ref<AssetFactory> factory = nullptr;
 	for (int i = 0; i < p_AssetFactories.size(); i++)

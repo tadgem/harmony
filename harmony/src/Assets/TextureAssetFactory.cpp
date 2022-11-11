@@ -5,7 +5,7 @@
 #include "Core/Log.hpp"
 harmony::TextureAssetFactory::TextureAssetFactory(Renderer& renderer) : p_Renderer(renderer)
 {
-    size_t textureTypeHash = GetTypeHash<Texture>();
+    std::string textureTypeHash = GetTypeHash<Texture>();
 
     m_Capabilities.AssetTypeHashes.push_back(textureTypeHash);
 }

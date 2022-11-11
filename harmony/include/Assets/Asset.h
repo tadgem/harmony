@@ -6,11 +6,11 @@ namespace harmony
     struct AssetHandle
     {
         AssetHandle();
-        AssetHandle(std::string path, uint32_t index, size_t typeHash);
+        AssetHandle(std::string path, uint32_t index, std::string typeHash);
 
         std::string Path;
         uint32_t Index;
-        size_t TypeHash;
+        std::string TypeHash;
 
         bool operator==(AssetHandle other);
 

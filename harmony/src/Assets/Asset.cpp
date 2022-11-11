@@ -8,10 +8,10 @@ harmony::AssetHandle::AssetHandle()
 {
 	Path = "";
 	Index = UINT32_MAX;
-	TypeHash = 0;
+	TypeHash = "";
 }
 
-harmony::AssetHandle::AssetHandle(std::string path, uint32_t index, size_t typeHash)
+harmony::AssetHandle::AssetHandle(std::string path, uint32_t index, std::string typeHash)
 {
 	Path = path;
 	Index = index;

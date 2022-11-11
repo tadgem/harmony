@@ -578,7 +578,7 @@ void harmony::Program::SaveScene(const std::string& path)
 	{
 		std::string projectDir = m_Project->m_ProjectDirectory;
 		size_t pos = cleanPath.find(projectDir);
-		if (pos != std::string::npos)
+		if (pos != std::string::npos && projectDir.length() > 0)
 		{
 			cleanPath.erase(pos, projectDir.length() + 1);
 		}
@@ -589,7 +589,15 @@ void harmony::Program::SaveScene(const std::string& path)
 	Utils::SaveJsonToPath(sceneJson, cleanPath);
 
 	auto it = std::find(m_Project->m_SerializedScenes.begin(), m_Project->m_SerializedScenes.end(), cleanPath);
-	if (it->empty())
+	int findIndex = -1;
+	for (int i = 0; i < m_Project->m_SerializedScenes.size(); i++)
+	{
+		if (m_Project->m_SerializedScenes[i] == cleanPath)
+		{
+			findIndex = i;
+		}
+	}
+	if (findIndex < 0)
 	{
 		m_Project->m_SerializedScenes.push_back(path);
 	}

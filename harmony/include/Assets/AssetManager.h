@@ -38,15 +38,15 @@ namespace harmony {
             return false;
         }
 
-        std::vector<AssetHandle>LoadAsset(const std::string& path, size_t typeHash);
+        std::vector<AssetHandle>LoadAsset(const std::string& path, std::string typeHash);
         template<typename T>
         std::vector<AssetHandle>LoadAsset(const std::string& path)
         {
-            size_t typeHash = typeid(T).hash_code();
+            std::string typeHash = GetTypeHash<T>();
 
             return LoadAsset(path, typeHash);
         }
-        void UnloadAsset(AssetHandle& handle, size_t typeHash);
+        void UnloadAsset(AssetHandle& handle, std::string typeHash);
         template<typename T>
         void UnloadAsset(AssetHandle& handle)
         {
@@ -138,7 +138,7 @@ namespace harmony {
 
 #endif
     protected:
-        Ref<AssetFactory> GetAssetFactory(size_t typeHash);
+        Ref<AssetFactory> GetAssetFactory(std::string typeHash);
         std::vector<Ref<AssetFactory>>                      p_AssetFactories;
         std::unordered_map<size_t, std::string>             p_AssetTypeNames;
         std::vector<std::string>                            p_LoadedPaths;
