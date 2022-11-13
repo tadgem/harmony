@@ -107,20 +107,20 @@ harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& regist
 	{
 		bgfx::TextureFormat::Enum format = bgfx::TextureFormat::Unknown;
 		Attachment::Type type = Attachment::Type::Unknown;
-		if (m_Attachments && Attachment::Type::Depth16F)
+		if (m_Attachments & Attachment::Type::Depth32F)
 		{
-			format = bgfx::TextureFormat::D16F;
-			type = Attachment::Type::Depth16F;
+			format = bgfx::TextureFormat::D32F;
+			type = Attachment::Type::Depth32F;
 		}
-		else if (m_Attachments && Attachment::Type::Depth24F)
+		else if (m_Attachments & Attachment::Type::Depth24F)
 		{
 			format = bgfx::TextureFormat::D24F;
 			type = Attachment::Type::Depth24F;
 		}
-		else if (m_Attachments && Attachment::Type::Depth32F)
+		else if (m_Attachments & Attachment::Type::Depth16F)
 		{
-			format = bgfx::TextureFormat::D32F;
-			type = Attachment::Type::Depth32F;
+			format = bgfx::TextureFormat::D16F;
+			type = Attachment::Type::Depth16F;
 		}
 		else
 		{
