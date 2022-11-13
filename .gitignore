@@ -50,3 +50,4 @@ imgui.ini
 .vs/slnx.sqlite
 .vs/ProjectSettings.json
 .vs/CMakeWorkspaceSettings.json
+*.DS_Store

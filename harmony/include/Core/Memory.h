@@ -3,13 +3,82 @@
 #include <memory>
 #include <functional>
 #include <regex>
+#include <stdio.h>
+#include <ctype.h>
+#include <string>
 #include "json.hpp"
 
 namespace harmony {
 #ifdef __APPLE__ || __unix__ || __unix
 	static std::string ParseUnixTypeName(const std::string& typeName)
 	{
-		return std::string();
+        bool    parseNs = false;
+        int     nameSize = -1;
+        std::vector<std::string>    separatedNames      = std::vector<std::string>();
+        std::vector<char>           numericAccumulator  = std::vector<char>();
+        std::vector<char>           typeNameAccumulator = std::vector<char>();
+        
+        for(int i = 0; i < typeName.size(); i++)
+        {
+            char c = typeName[i];
+            if(nameSize < 0)
+            {
+                if(!parseNs && c == 'N')
+                {
+                    parseNs = true;
+                    continue;
+                }
+                
+                if(isdigit(c))
+                {
+                    numericAccumulator.emplace_back(c);
+                    continue;
+                }
+                
+                if(c == 'E' && i == (typeName.size() - 1))
+                {
+                    continue;
+                }
+                
+                std::string finalSizeString = std::string(numericAccumulator.begin(), numericAccumulator.end());
+                nameSize = std::stoi(finalSizeString);
+                numericAccumulator.clear();
+                if(nameSize > 0)
+                {
+                    typeNameAccumulator.emplace_back(c);
+                    continue;
+                }
+            }
+            
+            if(typeNameAccumulator.size() < nameSize)
+            {
+                typeNameAccumulator.emplace_back(c);
+                continue;
+            }
+            else
+            {
+                std::string name = std::string(typeNameAccumulator.begin(), typeNameAccumulator.end());
+                separatedNames.emplace_back(name);
+                typeNameAccumulator.clear();
+                nameSize = -1;
+                parseNs = false;
+                numericAccumulator.emplace_back(c);
+                continue;
+            }
+            
+        }
+        std::string finalTypeName = std::string();
+        
+        for(int i = 0; i < separatedNames.size(); i++)
+        {
+            finalTypeName += separatedNames[i];
+            if(i != (separatedNames.size() - 1))
+            {
+                finalTypeName += "::";
+            }
+        }
+        
+        return finalTypeName;
 	}
 #endif
 
