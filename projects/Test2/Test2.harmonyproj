@@ -3,22 +3,22 @@
         "assets": [
             {
                 "Index": 0,
-                "Path": "assets\\brick.png",
+                "Path": "assets/brick.png",
                 "TypeHash": "harmony::Texture"
             },
             {
                 "Index": 0,
-                "Path": "assets\\pikapng.png",
+                "Path": "assets/pikapng.png",
                 "TypeHash": "harmony::Texture"
             },
             {
                 "Index": 0,
-                "Path": "assets\\black skull.fbx",
+                "Path": "assets/black skull.fbx",
                 "TypeHash": "harmony::Model"
             },
             {
                 "Index": 0,
-                "Path": "assets\\black skull.fbx",
+                "Path": "assets/black skull.fbx",
                 "TypeHash": "harmony::Mesh"
             },
             {

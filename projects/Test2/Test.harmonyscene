@@ -189,7 +189,7 @@
                             {
                                 "Handle": {
                                     "Index": 0,
-                                    "Path": "assets\\brick.png",
+                                    "Path": "assets/brick.png",
                                     "TypeHash": "harmony::Texture"
                                 }
                             }
@@ -220,7 +220,7 @@
                 "CastShadow": false,
                 "MeshAsset": {
                     "Index": 0,
-                    "Path": "assets\\black skull.fbx",
+                    "Path": "assets/black skull.fbx",
                     "TypeHash": "harmony::Mesh"
                 }
             },
