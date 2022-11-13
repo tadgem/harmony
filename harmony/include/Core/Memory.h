@@ -6,8 +6,7 @@
 #include "json.hpp"
 
 namespace harmony {
-
-#ifdef __APPLE__ || (defined(__unix__) || defined(__unix)
+#ifdef __APPLE__ || __unix__ || __unix
 	static std::string ParseUnixTypeName(const std::string& typeName)
 	{
 		return std::string();
