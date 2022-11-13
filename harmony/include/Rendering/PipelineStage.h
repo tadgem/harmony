@@ -113,7 +113,7 @@ namespace harmony
             const std::string& name, 
             Type stageType,
             WeakRef<ShaderProgram> shader, 
-            Attachment::Type attachments = (Attachment::Type)(Attachment::Type::RGBA8F | Attachment::Type::Depth16F));
+            Attachment::Type attachments = (Attachment::Type)(Attachment::Type::RGBA8F | Attachment::Type::Depth32F));
 
         virtual Data Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
         virtual void PreUpdate(entt::registry& registry, WeakRef<View> view , bgfx::ViewId viewId);
