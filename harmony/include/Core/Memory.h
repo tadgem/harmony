@@ -2,17 +2,37 @@
 
 #include <memory>
 #include <functional>
+#include <regex>
 #include "json.hpp"
 
-
 namespace harmony {
+
+#ifdef __APPLE__ || (defined(__unix__) || defined(__unix)
+	static std::string ParseUnixTypeName(const std::string& typeName)
+	{
+		return std::string();
+	}
+#endif
 
 	template <typename T>
 	static std::string GetTypeHash()
 	{
-		return typeid(T).name();
+		std::string typeName = typeid(T).name();
+#ifdef _WIN32
+		std::regex regex("((class )|(struct )|(enum ))(.*)");
+		auto begin = std::sregex_iterator(typeName.begin(), typeName.end(), regex);
+		auto end = std::sregex_iterator();
+		for (std::sregex_iterator i = begin; i != end; ++i) {
+			std::smatch match = *i;
+			std::string match_str = match[match.size() - 1];
+			typeName = match_str;
+		}
+#endif
+#ifdef __APPLE__ || (defined(__unix__) || defined(__unix)
+		typeName = ParseUnixTypeName(typeName);
+#endif
+		return typeName;
 	}
-
 	/// <summary>
 	/// Reference counting pointer
 	/// Systems owning objects should create a Ref
@@ -28,7 +48,7 @@ namespace harmony {
 
 	/// <summary>
 	/// Weak Pointer to a Ref
-	/// Systems which need access to an object but do not own it
+	/// Systems which need access to an object but do not own it+
 	/// should be passed a weak reference.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
