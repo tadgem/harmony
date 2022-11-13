@@ -50,7 +50,7 @@ namespace harmony {
         template<typename T>
         void UnloadAsset(AssetHandle& handle)
         {
-            size_t typeHash = typeid(T).hash_code();
+            std::string typeHash = GetTypeHash<T>();
             UnloadAsset(handle, typeHash);
         }
         bool IsPathLoaded(const std::string path);
