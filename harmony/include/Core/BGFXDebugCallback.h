@@ -18,7 +18,7 @@ namespace harmony
 			BX_UNUSED(_filePath, _line);
 
 			// Something unexpected happened, inform user and bail out.
-			harmony::log::error("BGFX : Fatal error: 0x%08x: %s", _code, _str);
+			harmony::log::error("BGFX : Fatal error : {}", _str);
 			abort();
 		}
 

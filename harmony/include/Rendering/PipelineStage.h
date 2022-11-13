@@ -10,15 +10,45 @@ namespace harmony
     {
         enum Type
         {
-            Unknown = 0,
-            RGBA8F = 1,
-            RGBA16F = 2,
-            RGBA32F = 4,
-            Depth16F = 8,
-            Depth24F = 16,
-            Depth32F = 32,
+            Unknown = 1,
+            RGBA8F = 2,
+            RGBA16F = 4,
+            RGBA32F = 8,
+            Depth16F = 16,
+            Depth24F = 32,
+            Depth32F = 64,
 
         };
+
+        friend Type operator|(Type a, Type b)
+        {
+            return static_cast<Type>(static_cast<int>(a) | static_cast<int>(b));
+        }
+        friend Type operator&(Type a, Type b)
+        {
+            return static_cast<Type>(static_cast<int>(a) & static_cast<int>(b));
+        }
+        friend Type operator^(Type a, Type b)
+        {
+            return static_cast<Type>(static_cast<int>(a) ^ static_cast<int>(b));
+        }
+        friend Type& operator|=(Type& a, Type b)
+        {
+            return (Type&)((int&)a |= (int)b);
+        }
+        friend Type& operator&=(Type& a, Type b)
+        {
+            return (Type&)((int&)a &= (int)b);
+        }
+        friend Type& operator^=(Type& a, Type b)
+        {
+            return (Type&)((int&)a ^= (int)b);
+        }
+        friend Type operator~(Type a)
+        {
+            return static_cast<Type>(~static_cast<int>(a));
+        }
+
 
         NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
             {Unknown, "unknown"},

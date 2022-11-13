@@ -4,49 +4,17 @@
 #include "Core/Input.h"
 #include "Core/Log.hpp"
 
-harmony::DebugDrawStage::DebugDrawStage(GfxDebug::Channel channel) : PipelineStage("DebugDrawStage", PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>(), harmony::Attachment::Type::RGBA16F), m_Channel(channel)
+harmony::DebugDrawStage::DebugDrawStage(GfxDebug::Channel channel) : PipelineStage("DebugDrawStage", PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>()), m_Channel(channel)
 {
 }
 
 harmony::PipelineStage::Data harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
-	if (view.expired())
-	{
-		harmony::log::error("trying to run pipeline init for view that does not exist.");
-	}
-
+	auto data = PipelineStage::Init(registry, view, viewId);
 	Ref<View> _view = view.lock();
-	std::map<Attachment::Type, Attachment> attachments = std::map<Attachment::Type, Attachment>();
-	bgfx::TextureHandle fbtexture[] =
-	{ bgfx::createTexture2D(
-		_view->m_Width
-		, _view->m_Height
-		, false
-		, 1
-		, bgfx::TextureFormat::BGRA8
-		, BGFX_TEXTURE_RT
-	)
-	};
-	Attachment a
-	{
-		fbtexture[0],
-		Attachment::Type::RGBA8F
-	};
-
-	attachments.emplace(Attachment::Type::RGBA8F, a);
-
-	bgfx::FrameBufferHandle fbh = bgfx::createFrameBuffer(BX_COUNTOF(fbtexture), fbtexture, false);
-	bgfx::setViewFrameBuffer(viewId, fbh);
-	bgfx::setViewRect(viewId, 0, 0, bgfx::BackbufferRatio::Equal);
-	bgfx::setViewName(viewId, "Debug Draw");
 
 	p_DebugRenderers.emplace(_view->m_Name, GfxDebug::Get()->AddViewChannel(m_Channel));
-	PipelineStage::Data data
-	{
-		fbh,
-		attachments
-	};
-
+	
 	return data;
 }
 

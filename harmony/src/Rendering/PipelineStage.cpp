@@ -50,12 +50,12 @@ harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& regist
 	{
 		bgfx::TextureFormat::Enum format = bgfx::TextureFormat::Unknown;
 		Attachment::Type type = Attachment::Type::Unknown;
-		if (m_Attachments && Attachment::Type::RGBA16F)
+		if (m_Attachments & Attachment::Type::RGBA16F)
 		{
 			format = bgfx::TextureFormat::RGBA16F;
 			type = Attachment::Type::RGBA16F;
 		}
-		else if (m_Attachments && Attachment::Type::RGBA32F)
+		else if (m_Attachments & Attachment::Type::RGBA32F)
 		{
 			format = bgfx::TextureFormat::RGBA32F;
 			type = Attachment::Type::RGBA32F;
