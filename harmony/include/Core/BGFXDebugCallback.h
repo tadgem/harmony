@@ -3,6 +3,7 @@
 #include <bx/file.h>
 #include <bx/string.h>
 #include <bx/debug.h>
+#include "Core/Log.hpp"
 
 namespace harmony
 {
@@ -17,15 +18,13 @@ namespace harmony
 			BX_UNUSED(_filePath, _line);
 
 			// Something unexpected happened, inform user and bail out.
-			bx::debugPrintf("Fatal error: 0x%08x: %s", _code, _str);
-
-			// Must terminate, continuing will cause crash anyway.
+			harmony::log::error("BGFX : Fatal error: 0x%08x: %s", _code, _str);
 			abort();
 		}
 
 		virtual void traceVargs(const char* _filePath, uint16_t _line, const char* _format, va_list _argList) override
 		{
-			// bx::debugPrintfVargs(_format, _argList);
+			harmony::log::trace("BGFX : Trace : ", _format, _argList);
 		}
 
 		virtual void profilerBegin(const char* /*_name*/, uint32_t /*_abgr*/, const char* /*_filePath*/, uint16_t /*_line*/) override
