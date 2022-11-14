@@ -9,7 +9,8 @@
 #include "json.hpp"
 
 namespace harmony {
-#ifdef __APPLE__ || __unix__ || __unix
+#if defined(__APPLE__)||defined(__unix__)||defined(__unix)
+
 	static std::string ParseUnixTypeName(const std::string& typeName)
 	{
         bool    parseNs = false;
@@ -96,7 +97,7 @@ namespace harmony {
 			typeName = match_str;
 		}
 #endif
-#ifdef __APPLE__ || (defined(__unix__) || defined(__unix)
+#if defined(__APPLE__)||defined(__unix__)||defined(__unix)
 		typeName = ParseUnixTypeName(typeName);
 #endif
 		return typeName;

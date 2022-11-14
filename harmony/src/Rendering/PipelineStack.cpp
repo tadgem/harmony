@@ -29,7 +29,7 @@ void harmony::PipelineStack::PreUpdate(entt::registry& registry, WeakRef<View> v
             harmony::log::warn("Pipeline {} is expired.", p);
             continue;
         }
-        pipeline->PreUpdate(registry, view, p_StackViewIDs[pipeline->m_Handle]);
+        pipeline->PreUpdate(registry, view, p_StackViewIDs[pipeline->m_Handle], p_StackData[pipeline->m_Handle] );
 
         int nextIndex = p + 1;
         if (nextIndex >= m_Stack.size())
@@ -78,7 +78,7 @@ std::vector<bgfx::TextureHandle>  harmony::PipelineStack::PostUpdate(entt::regis
             harmony::log::warn("Pipeline {} is expired.", p);
             continue;
         }
-        pipeline->PostUpdate(registry, view, p_StackViewIDs[pipeline->m_Handle]);
+        pipeline->PostUpdate(registry, view, p_StackViewIDs[pipeline->m_Handle], p_StackData[pipeline->m_Handle]);
     }
     
     Ref<View> _view = view.lock();
@@ -95,32 +95,32 @@ std::vector<bgfx::TextureHandle>  harmony::PipelineStack::PostUpdate(entt::regis
         }
         // Get final image of this pipeline
         auto ph = pipeline->m_Handle;
-        int count = p_StackData[ph].size();
-        
-        PipelineStage::Data& data = p_StackData[ph][count - 1];
-        bgfx::TextureHandle th = BGFX_INVALID_HANDLE;
+        for (auto& data : p_StackData[ph])
+        {
+            bgfx::TextureHandle th = BGFX_INVALID_HANDLE;
 
-        if (data.m_Attachments.find(Attachment::Type::RGBA8F)!= data.m_Attachments.end())
-        {
-            th = data.m_Attachments[Attachment::Type::RGBA8F].m_Handle;
-        }
-        if (data.m_Attachments.find(Attachment::Type::RGBA16F) != data.m_Attachments.end())
-        {
-            th = data.m_Attachments[Attachment::Type::RGBA16F].m_Handle;
-        }
-        if (data.m_Attachments.find(Attachment::Type::RGBA32F) != data.m_Attachments.end())
-        {
-            th = data.m_Attachments[Attachment::Type::RGBA32F].m_Handle;
-        }
+            if (data.m_Attachments.find(Attachment::Type::RGBA8F) != data.m_Attachments.end())
+            {
+                th = data.m_Attachments[Attachment::Type::RGBA8F].m_Handle;
+            }
+            if (data.m_Attachments.find(Attachment::Type::RGBA16F) != data.m_Attachments.end())
+            {
+                th = data.m_Attachments[Attachment::Type::RGBA16F].m_Handle;
+            }
+            if (data.m_Attachments.find(Attachment::Type::RGBA32F) != data.m_Attachments.end())
+            {
+                th = data.m_Attachments[Attachment::Type::RGBA32F].m_Handle;
+            }
 
-        if (th.idx == bgfx::kInvalidHandle)
-        {
-            harmony::log::warn("Pipeline {} has no colour attachments.", p);
-            continue;
-        }
-        // bind & draw w/ present shader
+            if (th.idx == bgfx::kInvalidHandle)
+            {
+                harmony::log::warn("Pipeline {} has no colour attachments.", p);
+                continue;
+            }
+            // bind & draw w/ present shader
 
-        texturesToBlit.push_back(th);
+            texturesToBlit.push_back(th);
+        }       
     }
 
     return texturesToBlit;

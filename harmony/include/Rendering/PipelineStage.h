@@ -71,6 +71,7 @@ namespace harmony
         PipelineHandle(std::string name);
         PipelineHandle();
         std::string Name;
+        uint32_t Index;
 
         bool operator==(const PipelineHandle& other) const;
         bool operator!=(const PipelineHandle& other) const;
@@ -78,6 +79,7 @@ namespace harmony
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineHandle, Name)
     private:
+        inline static uint32_t s_InstanceCounter = 0;
         friend class Pipeline;
     };
 
@@ -99,6 +101,7 @@ namespace harmony
             bgfx::FrameBufferHandle m_FramebufferHandle;
             std::map<Attachment::Type, Attachment> m_Attachments;
 
+            Attachment::Type GetDepthType();
         };
 
         NLOHMANN_JSON_SERIALIZE_ENUM(Type, {

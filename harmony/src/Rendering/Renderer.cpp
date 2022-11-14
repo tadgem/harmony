@@ -325,8 +325,9 @@ void harmony::Renderer::OnImGui()
                     {
                         for (int i = 0; i < stack.m_Stack.size(); i++)
                         {
-                            std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + std::to_string(i);
-                            std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + std::to_string(i);
+                            std::string indexString = std::to_string(i);
+                            std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + indexString;
+                            std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + indexString;
                             if (ImGui::Button(downArrowText.c_str()))
                             {
                                 stack.MoveUp(stack.m_Stack[i].lock()->m_Handle);
@@ -337,7 +338,8 @@ void harmony::Renderer::OnImGui()
                                 stack.MoveDown(stack.m_Stack[i].lock()->m_Handle);
                             }
                             ImGui::SameLine();
-                            ImGui::Text(stack.m_Stack[i].lock()->m_Name.c_str());
+                            std::string pipelineName = stack.m_Stack[i].lock()->m_Name.c_str() + ' : ' + indexString;
+                            ImGui::Text(pipelineName.c_str());
                         }
                         ImGui::TreePop();
                     }
@@ -968,13 +970,15 @@ void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager&
 
         for (auto stageJson : stagesJson)
         {
+            auto dump = stageJson.dump();
+            harmony::log::debug("Renderer : Stage Json {}", dump);
             std::string stageName = stageJson[sk_PipelineStageName];
-            std::string stageShaderName = stageJson[sk_PipelineStageShader][sk_ShaderProgramName];
             
             Attachment::Type stageAttachments = stageJson[sk_PipelineStageAttachments];
             PipelineStage::Type stageType = stageJson[sk_PipelineStageType];
             ShaderDataContainer stageData = stageJson[sk_PipelineStageData];
 
+            std::string stageShaderName = stageJson[sk_PipelineStageShader][sk_ShaderProgramName];
             WeakRef<ShaderProgram> stageShader = GetShader(stageShaderName);
 
             if (stageShader.expired())

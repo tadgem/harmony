@@ -44,8 +44,8 @@ namespace harmony
         }
 
         virtual std::vector<PipelineStage::Data> Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
-        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
-        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
+        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineStage::Data> data);
+        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineStage::Data> data);
         virtual void Cleanup(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
                 
         uint32_t    NumPipelineStages();

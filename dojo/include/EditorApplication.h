@@ -56,8 +56,7 @@ namespace harmony
 		Ref<EditorView> p_EditorView;
 
 		Ref<Pipeline> p_DebugPipeline;
-		Ref<Pipeline> p_TexturedMeshPipeline;
-		Ref<Pipeline> p_NormalPipeline;
+		Ref<Pipeline> p_ForwardPipeline;
 		Ref<Pipeline> p_VectorGraphicsPipeline;
 
 		Ref<MeshSystem> p_MeshSystem;

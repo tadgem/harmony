@@ -590,16 +590,26 @@ void harmony::Program::SaveScene(const std::string& path)
 
 	auto it = std::find(m_Project->m_SerializedScenes.begin(), m_Project->m_SerializedScenes.end(), cleanPath);
 	int findIndex = -1;
+	int removeIndex = -1;
 	for (int i = 0; i < m_Project->m_SerializedScenes.size(); i++)
 	{
 		if (m_Project->m_SerializedScenes[i] == cleanPath)
 		{
 			findIndex = i;
 		}
+
+		if (m_Project->m_SerializedScenes[i] == path)
+		{
+			removeIndex = i;
+		}
+	}
+	if (removeIndex > 0)
+	{
+		m_Project->m_SerializedScenes.erase(m_Project->m_SerializedScenes.begin() + removeIndex);
 	}
 	if (findIndex < 0)
 	{
-		m_Project->m_SerializedScenes.push_back(path);
+		m_Project->m_SerializedScenes.push_back(cleanPath);
 	}
 }
 

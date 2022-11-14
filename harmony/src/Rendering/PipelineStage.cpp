@@ -14,12 +14,13 @@ harmony::PipelineStage::PipelineStage(const std::string& name, Type stageType, W
 {
 }
 
-harmony::PipelineHandle::PipelineHandle(std::string name) : Name(name)
+harmony::PipelineHandle::PipelineHandle(std::string name) : Name(name), Index(s_InstanceCounter)
 {
-
+	s_InstanceCounter++;
 }
-harmony::PipelineHandle::PipelineHandle()
+harmony::PipelineHandle::PipelineHandle() : Index(s_InstanceCounter)
 {
+	s_InstanceCounter++;
 }
 harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
@@ -198,4 +199,22 @@ void harmony::PipelineStage::PostUpdate(entt::registry& registry, WeakRef<View> 
 
 void harmony::PipelineStage::Cleanup(WeakRef<View> view, bgfx::ViewId viewId)
 {
+}
+
+harmony::Attachment::Type harmony::PipelineStage::Data::GetDepthType()
+{
+	if (m_Attachments.find(Attachment::Type::Depth16F) != m_Attachments.end())
+	{
+		return Attachment::Type::Depth16F;
+	}
+	if (m_Attachments.find(Attachment::Type::Depth24F) != m_Attachments.end())
+	{
+		return Attachment::Type::Depth24F;
+	}
+	if (m_Attachments.find(Attachment::Type::Depth32F) != m_Attachments.end())
+	{
+		return Attachment::Type::Depth32F;
+	}
+
+	return Attachment::Type::Unknown;
 }
