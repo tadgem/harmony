@@ -338,7 +338,7 @@ void harmony::Renderer::OnImGui()
                                 stack.MoveDown(stack.m_Stack[i].lock()->m_Handle);
                             }
                             ImGui::SameLine();
-                            std::string pipelineName = stack.m_Stack[i].lock()->m_Name.c_str() + ' : ' + indexString;
+                            std::string pipelineName = stack.m_Stack[i].lock()->m_Name + " : " + indexString;
                             ImGui::Text(pipelineName.c_str());
                         }
                         ImGui::TreePop();
