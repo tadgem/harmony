@@ -84,7 +84,7 @@ namespace harmony
 		void ImGuiPreUpdate();
 		void ImGuiPostUpdate();
 		void SetStyle();
-
+		void ListCapabilities();
 		std::string							p_AppName;
 		std::string							p_LoadedProjectPath;
 		std::vector<Ref<ProgramComponent>>	p_ProgramComponents;

@@ -198,8 +198,6 @@ void harmony::Program::InitBGFX()
 	pd.nwh = (void*)"#canvas";
 #endif
 
-	m_Capabilities = (bgfx::Caps*)bgfx::getCaps();
-
 	bgfx::Init bgfx_init;
 	bgfx_init.type = bgfx::RendererType::Count; // auto choose renderer
 	bgfx_init.resolution.width = p_WindowWidth;
@@ -225,9 +223,24 @@ void harmony::Program::InitBGFX()
 
 	bgfx::setDebug(bgfxDebugFlags);
 
-	harmony::log::info("Successfully initialized BGFX");
-}
+	harmony::log::info("Program : BGFX : Successfully initialized");
+	
+	m_Capabilities = (bgfx::Caps*)bgfx::getCaps();
+	ListCapabilities();
 
+}
+void harmony::Program::ListCapabilities()
+{
+	harmony::log::info("Program : BGFX : Capabilities");
+	harmony::log::info("Program : BGFX : Alpha To Coverage? : {}", m_Capabilities->supported && BGFX_CAPS_ALPHA_TO_COVERAGE);
+	harmony::log::info("Program : BGFX : Support Compute? : {}", m_Capabilities->supported && BGFX_CAPS_COMPUTE);
+	harmony::log::info("Program : BGFX : Blend Independent? : {}", m_Capabilities->supported && BGFX_CAPS_BLEND_INDEPENDENT);
+	harmony::log::info("Program : BGFX : Draw Indirect? : {}", m_Capabilities->supported && BGFX_CAPS_DRAW_INDIRECT);
+	harmony::log::info("Program : BGFX : Texture Blit? : {}", m_Capabilities->supported && BGFX_CAPS_TEXTURE_BLIT);
+	harmony::log::info("Program : BGFX : Texture Direct Access? : {}", m_Capabilities->supported && BGFX_CAPS_TEXTURE_DIRECT_ACCESS);
+	harmony::log::info("Program : BGFX : Texture Readback? : {}", m_Capabilities->supported && BGFX_CAPS_TEXTURE_READ_BACK);
+	harmony::log::info("Program : BGFX : Image R/W? : {}", m_Capabilities->supported && BGFX_CAPS_IMAGE_RW);
+}
 void harmony::Program::SetStyle()
 {
 	// Photoshop style by Derydoca from ImThemes
