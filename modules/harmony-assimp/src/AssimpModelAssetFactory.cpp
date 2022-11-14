@@ -195,7 +195,7 @@ void harmony::AssimpModelAssetFactory::LoadAssetData(const std::string& path, en
 	//
 	if (scene == nullptr)
 	{
-		harmony::log::error("AssimpModelAssetFactory : Failed to load asset at path : ", path);
+		harmony::log::error("AssimpModelAssetFactory : Failed to load asset at path : {}", path);
 		return;
 	}
 	//

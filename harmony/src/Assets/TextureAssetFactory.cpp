@@ -17,7 +17,7 @@ void harmony::TextureAssetFactory::LoadAssetData(const std::string& path, entt::
         
     if (data.size() == 0)
     {
-        harmony::log::error("TextureAssetFactory : Failed to load texture data at path : ", path);
+        harmony::log::error("TextureAssetFactory : Failed to load texture data at path : {}", path);
         return;
     }
     
@@ -25,7 +25,7 @@ void harmony::TextureAssetFactory::LoadAssetData(const std::string& path, entt::
     
     if (imageContainer == NULL)
     {
-        harmony::log::error("TextureAssetFactory : Failed to create image container for texture data at path : ", path);
+        harmony::log::error("TextureAssetFactory : Failed to create image container for texture data at path : {}", path);
     }
     
     Ref<Texture> textureAsset = CreateRef<Texture>(path, imageContainer);
