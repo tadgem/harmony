@@ -1,1 +1,251 @@
-{"m_Name":"Test","m_NumEntities":5,"p_Entities":[{"m_Handle":0},{"m_Handle":1},{"m_Handle":2},{"m_Handle":3},{"m_Handle":4}],"p_SystemSerializationAttributes":{"harmony::CameraComponent":{"1":{"Cam":{"Aspect":1.3329999446868896,"FOV":64.0,"FarClipPlane":500.0,"NearClipPlane":0.009999999776482582,"Type":0}}},"harmony::MaterialComponent":{"0":{"Data":{"m_Mat3Values":[],"m_Mat4Values":[],"m_ShaderName":"Normal","m_TextureValues":[],"m_Vec4Values":[]}},"2":{"Data":{"m_Mat3Values":[],"m_Mat4Values":[],"m_ShaderName":"TexturedMesh","m_TextureValues":[[{"Name":"s_texColor","Type":0},{"Handle":{"Index":0,"Path":"assets\\brick.png","TypeHash":"harmony::Texture"}}]],"m_Vec4Values":[]}},"3":{"Data":{"m_Mat3Values":[],"m_Mat4Values":[],"m_ShaderName":"Normal","m_TextureValues":[],"m_Vec4Values":[]}},"4":{"Data":{"m_Mat3Values":[],"m_Mat4Values":[],"m_ShaderName":"TexturedMesh","m_TextureValues":[[{"Name":"s_texColor","Type":0},{"Handle":{"Index":0,"Path":"assets\\pikapng.png","TypeHash":"harmony::Texture"}}]],"m_Vec4Values":[]}}},"harmony::MeshComponent":{"0":{"CastShadow":false,"MeshAsset":{"Index":0,"Path":"builtin/Cube","TypeHash":"harmony::Mesh"}},"2":{"CastShadow":false,"MeshAsset":{"Index":0,"Path":"builtin/Cube","TypeHash":"harmony::Mesh"}},"3":{"CastShadow":false,"MeshAsset":{"Index":0,"Path":"assets\\black skull.fbx","TypeHash":"harmony::Mesh"}},"4":{"CastShadow":false,"MeshAsset":{"Index":0,"Path":"builtin/Cube","TypeHash":"harmony::Mesh"}}},"harmony::TransformSystem":{"0":{"Euler":{"x":0.0,"y":0.0,"z":0.0},"Position":{"x":0.0,"y":0.0,"z":0.0},"Rotation":{"w":1.0,"x":0.0,"y":0.0,"z":0.0},"Scale":{"x":1.0,"y":1.0,"z":1.0}},"1":{"Euler":{"x":0.0,"y":93.177001953125,"z":0.0},"Position":{"x":-6.245999813079834,"y":-0.3440000116825104,"z":-0.8927500247955322},"Rotation":{"w":0.6872333288192749,"x":0.0,"y":0.7264367938041687,"z":0.0},"Scale":{"x":1.0,"y":1.0,"z":0.0010000000474974513}},"2":{"Euler":{"x":0.0,"y":0.0,"z":0.0},"Position":{"x":-4.217169761657715,"y":-1.1372106075286865,"z":-2.052881956100464},"Rotation":{"w":1.0,"x":0.0,"y":0.0,"z":0.0},"Scale":{"x":2.372641086578369,"y":0.18392768502235413,"z":3.796454668045044}},"3":{"Euler":{"x":0.0,"y":0.0,"z":0.0},"Position":{"x":2.420106887817383,"y":0.0,"z":0.0},"Rotation":{"w":1.0,"x":0.0,"y":0.0,"z":0.0},"Scale":{"x":0.030000030994415283,"y":0.030000030994415283,"z":0.030000030994415283}},"4":{"Euler":{"x":0.0,"y":0.0,"z":0.0},"Position":{"x":-1.6065926551818848,"y":0.0,"z":0.0},"Rotation":{"w":1.0,"x":0.0,"y":0.0,"z":0.0},"Scale":{"x":0.6599999666213989,"y":0.6599999666213989,"z":0.6599999666213989}}}}}
+{
+    "m_Name": "Test",
+    "m_NumEntities": 5,
+    "p_Entities": [
+        {
+            "m_Handle": 0
+        },
+        {
+            "m_Handle": 1
+        },
+        {
+            "m_Handle": 2
+        },
+        {
+            "m_Handle": 3
+        },
+        {
+            "m_Handle": 4
+        }
+    ],
+    "p_SystemSerializationAttributes": {
+        "harmony::CameraComponent": {
+            "1": {
+                "Cam": {
+                    "Aspect": 1.3329999446868896,
+                    "FOV": 64.0,
+                    "FarClipPlane": 500.0,
+                    "NearClipPlane": 0.009999999776482582,
+                    "Type": 0
+                }
+            }
+        },
+        "harmony::MaterialComponent": {
+            "0": {
+                "Data": {
+                    "m_Mat3Values": [],
+                    "m_Mat4Values": [],
+                    "m_ShaderName": "Normal",
+                    "m_TextureValues": [],
+                    "m_Vec4Values": []
+                }
+            },
+            "2": {
+                "Data": {
+                    "m_Mat3Values": [],
+                    "m_Mat4Values": [],
+                    "m_ShaderName": "TexturedMesh",
+                    "m_TextureValues": [
+                        [
+                            {
+                                "Name": "s_texColor",
+                                "Type": 0
+                            },
+                            {
+                                "Handle": {
+                                    "Index": 0,
+                                    "Path": "assets/brick.png",
+                                    "TypeHash": "harmony::Texture"
+                                }
+                            }
+                        ]
+                    ],
+                    "m_Vec4Values": []
+                }
+            },
+            "3": {
+                "Data": {
+                    "m_Mat3Values": [],
+                    "m_Mat4Values": [],
+                    "m_ShaderName": "Normal",
+                    "m_TextureValues": [],
+                    "m_Vec4Values": []
+                }
+            },
+            "4": {
+                "Data": {
+                    "m_Mat3Values": [],
+                    "m_Mat4Values": [],
+                    "m_ShaderName": "TexturedMesh",
+                    "m_TextureValues": [
+                        [
+                            {
+                                "Name": "s_texColor",
+                                "Type": 0
+                            },
+                            {
+                                "Handle": {
+                                    "Index": 0,
+                                    "Path": "assets/pikapng.png",
+                                    "TypeHash": "harmony::Texture"
+                                }
+                            }
+                        ]
+                    ],
+                    "m_Vec4Values": []
+                }
+            }
+        },
+        "harmony::MeshComponent": {
+            "0": {
+                "CastShadow": false,
+                "MeshAsset": {
+                    "Index": 0,
+                    "Path": "builtin/Cube",
+                    "TypeHash": "harmony::Mesh"
+                }
+            },
+            "2": {
+                "CastShadow": false,
+                "MeshAsset": {
+                    "Index": 0,
+                    "Path": "builtin/Cube",
+                    "TypeHash": "harmony::Mesh"
+                }
+            },
+            "3": {
+                "CastShadow": false,
+                "MeshAsset": {
+                    "Index": 0,
+                    "Path": "assets/black skull.fbx",
+                    "TypeHash": "harmony::Mesh"
+                }
+            },
+            "4": {
+                "CastShadow": false,
+                "MeshAsset": {
+                    "Index": 0,
+                    "Path": "builtin/Cube",
+                    "TypeHash": "harmony::Mesh"
+                }
+            }
+        },
+        "harmony::TransformSystem": {
+            "0": {
+                "Euler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "w": 1.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "1": {
+                "Euler": {
+                    "x": 0.0,
+                    "y": 93.177001953125,
+                    "z": 0.0
+                },
+                "Position": {
+                    "x": -6.245999813079834,
+                    "y": -0.3440000116825104,
+                    "z": -0.8927500247955322
+                },
+                "Rotation": {
+                    "w": 0.6872333288192749,
+                    "x": 0.0,
+                    "y": 0.7264367938041687,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 0.0010000000474974513
+                }
+            },
+            "2": {
+                "Euler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Position": {
+                    "x": -4.217169761657715,
+                    "y": -1.1372106075286865,
+                    "z": -2.052881956100464
+                },
+                "Rotation": {
+                    "w": 1.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 2.372641086578369,
+                    "y": 0.18392768502235413,
+                    "z": 3.796454668045044
+                }
+            },
+            "3": {
+                "Euler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Position": {
+                    "x": 2.420106887817383,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "w": 1.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 0.030000030994415283,
+                    "y": 0.030000030994415283,
+                    "z": 0.030000030994415283
+                }
+            },
+            "4": {
+                "Euler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Position": {
+                    "x": -1.6065926551818848,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "w": 1.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 0.6599999666213989,
+                    "y": 0.6599999666213989,
+                    "z": 0.6599999666213989
+                }
+            }
+        }
+    }
+}
