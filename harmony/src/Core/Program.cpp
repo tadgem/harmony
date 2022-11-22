@@ -3,10 +3,10 @@
 #include "Core/Log.hpp"
 #include "Core/Time.h"
 #include "Core/Input.h"
-#include "SDL_syswm.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
 #include "bx/timer.h"
+#include "SDL_syswm.h"
 #if HARMONY_DEBUG
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_bgfx.h"
@@ -117,10 +117,16 @@ void harmony::Program::InitSDL()
 	p_WindowWidth	= rect.w;
 	p_WindowHeight	= rect.h - 24;
 
+	SDL_WindowFlags windowFlags = static_cast<SDL_WindowFlags>(SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+
 	// TODO: Add window resizing.
 	p_Window = SDL_CreateWindow(
-		"Harmony", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, p_WindowWidth,
-		p_WindowHeight, SDL_WINDOW_SHOWN);
+		"Harmony", 
+		SDL_WINDOWPOS_CENTERED, 
+		SDL_WINDOWPOS_CENTERED, 
+		p_WindowWidth,
+		p_WindowHeight, 
+		windowFlags);
 
 	if (p_Window == nullptr) {
 		harmony::log::error("Window could not be created. SDL_Error: ", SDL_GetError());
@@ -128,41 +134,6 @@ void harmony::Program::InitSDL()
 	}
 	harmony::log::info("SDL Initialized successfully");
 }
-
-static void* sdlNativeWindowHandle(SDL_Window* _window)
-	{
-		SDL_SysWMinfo wmi;
-		SDL_VERSION(&wmi.version);
-		if (!SDL_GetWindowWMInfo(_window, &wmi) )
-		{
-			return NULL;
-		}
-
-#	if BX_PLATFORM_LINUX || BX_PLATFORM_BSD
-#		if ENTRY_CONFIG_USE_WAYLAND
-		wl_egl_window *win_impl = (wl_egl_window*)SDL_GetWindowData(_window, "wl_egl_window");
-		if(!win_impl)
-		{
-			int width, height;
-			SDL_GetWindowSize(_window, &width, &height);
-			struct wl_surface* surface = wmi.info.wl.surface;
-			if(!surface)
-				return nullptr;
-			win_impl = wl_egl_window_create(surface, width, height);
-			SDL_SetWindowData(_window, "wl_egl_window", win_impl);
-		}
-		return (void*)(uintptr_t)win_impl;
-#		else
-		return (void*)wmi.info.x11.window;
-#		endif
-#	elif BX_PLATFORM_OSX || BX_PLATFORM_IOS
-		return wmi.info.cocoa.window;
-#	elif BX_PLATFORM_WINDOWS
-		return wmi.info.win.window;
-#   elif BX_PLATFORM_ANDROID
-		return wmi.info.android.window;
-#	endif // BX_PLATFORM_
-	}
 
 void harmony::Program::InitBGFX()
 {
@@ -212,7 +183,6 @@ void harmony::Program::InitBGFX()
 	bgfx::init(bgfx_init);
 
 	uint32_t bgfxDebugFlags = 0;
-
 #ifdef HARMONY_DEBUG
 	bgfxDebugFlags |= BGFX_DEBUG_TEXT;
 #endif
@@ -220,7 +190,6 @@ void harmony::Program::InitBGFX()
 	bgfxDebugFlags |= BGFX_DEBUG_STATS;
 	bgfxDebugFlags |= BGFX_DEBUG_PROFILER;
 #endif
-
 	bgfx::setDebug(bgfxDebugFlags);
 
 	harmony::log::info("Program : BGFX : Successfully initialized");
@@ -339,6 +308,7 @@ void harmony::Program::InitImGui()
 	p_ImGuiAllocator = new bx::DefaultAllocator();
 	
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 	imguiCreate(18.0f, p_ImGuiAllocator);
 
@@ -455,7 +425,7 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 
 void harmony::Program::ImGuiPreUpdate()
 {
-	bgfx::setViewClear((bgfx::ViewId)255, BGFX_CLEAR_COLOR, 0x00000000);
+	bgfx::setViewClear((bgfx::ViewId)BGFX_MAIN_WINDOW_IMGUI_VIEW_ID, BGFX_CLEAR_COLOR, 0x00000000);
 	ImGui::NewFrame();
 	ImGui_ImplSDL2_NewFrame(p_Window);
 	ImGuizmo::BeginFrame();
@@ -463,8 +433,11 @@ void harmony::Program::ImGuiPreUpdate()
 
 void harmony::Program::ImGuiPostUpdate()
 {
-	ImGui::Render();
 	imguiEndFrame();
+
+	ImGui::UpdatePlatformWindows();
+	ImGui::RenderPlatformWindowsDefault();
+
 }
 
 void harmony::Program::Run()

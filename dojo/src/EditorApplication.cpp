@@ -197,7 +197,7 @@ void harmony::Editor::Run()
 	InitializePipelines();
 	InitializeViews();
 #if HARMONY_DEBUG && BX_PLATFORM_WINDOWS
-	// LoadProject("../../projects/Test2/Test2.harmonyproj");
+	LoadProject("../../projects/Test3/Test3.harmonyproj");
 #endif
 	
 	PreRunInit();

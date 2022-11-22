@@ -12,6 +12,8 @@
 #define IMGUI_MBUT_RIGHT  0x02
 #define IMGUI_MBUT_MIDDLE 0x04
 
+inline static const uint32_t BGFX_MAIN_WINDOW_IMGUI_VIEW_ID = 0;
+
 inline uint32_t imguiRGBA(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a = 255)
 {
 	return 0
@@ -29,6 +31,7 @@ void imguiDestroy();
 
 void imguiBeginFrame(int32_t _mx, int32_t _my, uint8_t _button, int32_t _scroll, uint16_t _width, uint16_t _height, int _inputChar = -1, bgfx::ViewId _view = 255);
 void imguiEndFrame();
+static void imguiRenderDraws(ImDrawData* draw_data, int view, int width, int height);
 
 namespace entry { class AppI; }
 void showExampleDialog(entry::AppI* _app, const char* _errorText = NULL);

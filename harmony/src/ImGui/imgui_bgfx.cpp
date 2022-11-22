@@ -36,7 +36,9 @@
 #include "ImGui/icons_font_awesome.ttf.h"
 #include "ImGui/icons_kenney.h"
 #include "ImGui/icons_font_awesome.h"
-
+#include "SDL.h"
+#include "SDL_syswm.h"
+#include "ImGui/imgui_bgfx.h"
 static const bgfx::EmbeddedShader s_embeddedShaders[] =
 {
 	BGFX_EMBEDDED_SHADER(vs_ocornut_imgui),
@@ -63,8 +65,122 @@ static FontRangeMerge s_fontRangeMerge[] =
 static void* memAlloc(size_t _size, void* _userData);
 static void memFree(void* _ptr, void* _userData);
 
+struct ImGuiViewportDataSDL
+{
+	SDL_Window* Window;
+	bgfx::ViewId ViewID;
+};
+
+static void* sdlNativeWindowHandle(SDL_Window* _window)
+{
+	SDL_SysWMinfo wmi;
+	SDL_VERSION(&wmi.version);
+	if (!SDL_GetWindowWMInfo(_window, &wmi))
+	{
+		return NULL;
+	}
+
+#	if BX_PLATFORM_LINUX || BX_PLATFORM_BSD
+#		if ENTRY_CONFIG_USE_WAYLAND
+	wl_egl_window* win_impl = (wl_egl_window*)SDL_GetWindowData(_window, "wl_egl_window");
+	if (!win_impl)
+	{
+		int width, height;
+		SDL_GetWindowSize(_window, &width, &height);
+		struct wl_surface* surface = wmi.info.wl.surface;
+		if (!surface)
+			return nullptr;
+		win_impl = wl_egl_window_create(surface, width, height);
+		SDL_SetWindowData(_window, "wl_egl_window", win_impl);
+	}
+	return (void*)(uintptr_t)win_impl;
+#		else
+	return (void*)wmi.info.x11.window;
+#		endif
+#	elif BX_PLATFORM_OSX || BX_PLATFORM_IOS
+	return wmi.info.cocoa.window;
+#	elif BX_PLATFORM_WINDOWS
+	return wmi.info.win.window;
+#   elif BX_PLATFORM_ANDROID
+	return wmi.info.android.window;
+#	endif // BX_PLATFORM_
+}
+
+
 struct OcornutImguiContext
 {
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// . . U . .  // Create swap chain, frame buffers etc. (called after Platform_CreateWindow)
+
+	static void renderer_create_window(ImGuiViewport* vp) {
+		ImGuiViewportDataSDL* data = (ImGuiViewportDataSDL*)vp->PlatformUserData;
+
+		void* native_handle = sdlNativeWindowHandle(data->Window);
+
+		bgfx::FrameBufferHandle handle = bgfx::createFrameBuffer(
+			native_handle,
+			uint16_t(vp->Size.x),
+			uint16_t(vp->Size.y));
+
+		vp->RendererUserData = (void*)(uintptr_t)handle.idx;
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// N . U . D  // Destroy swap chain, frame buffers etc. (called before Platform_DestroyWindow)
+
+	static void renderer_destroy_window(ImGuiViewport* vp) {
+		ImGuiViewportDataSDL* data = (ImGuiViewportDataSDL*)vp->PlatformUserData;
+
+
+		bgfx::FrameBufferHandle handle = { (uint16_t)(uintptr_t)vp->RendererUserData };
+
+		bgfx::destroy(handle);
+
+		// Flush destruction of swap chain before destroying window!
+		bgfx::frame();
+		bgfx::frame();
+
+		vp->RendererUserData = nullptr;
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// . . U . .  // Resize swap chain, frame buffers etc. (called after Platform_SetWindowSize)
+
+	static void renderer_set_window_size(ImGuiViewport* vp, ImVec2 size) {
+		ImGuiViewportDataSDL* data = (ImGuiViewportDataSDL*)vp->PlatformUserData;
+		renderer_destroy_window(vp);
+		renderer_create_window(vp);
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// . . . R .  // (Optional) Clear framebuffer, setup render target, then render the viewport->DrawData. 'render_arg' is the value passed to RenderPlatformWindowsDefault().
+
+	static void renderer_render_window(ImGuiViewport* vp, void* render_arg) {
+		ImGuiViewportDataSDL* data = (ImGuiViewportDataSDL*)vp->PlatformUserData;
+
+		int display_w, display_h;
+		SDL_GetWindowSize(data->Window, &display_w, &display_h);
+
+		bgfx::FrameBufferHandle handle = { (uint16_t)(uintptr_t)vp->RendererUserData };
+
+		bgfx::setViewFrameBuffer(BGFX_MAIN_WINDOW_IMGUI_VIEW_ID, handle);
+		bgfx::setViewRect(BGFX_MAIN_WINDOW_IMGUI_VIEW_ID, 0, 0, uint16_t(display_w), uint16_t(display_h));
+
+		bgfx::setViewClear(BGFX_MAIN_WINDOW_IMGUI_VIEW_ID
+			, BGFX_CLEAR_COLOR
+			, 0xff00ffff
+			, 1.0f
+			, 0
+		);
+
+		// Set render states.
+		bgfx::setState(BGFX_STATE_DEFAULT);
+
+		imguiRenderDraws(vp->DrawData, BGFX_MAIN_WINDOW_IMGUI_VIEW_ID, display_w, display_h);
+
+		bgfx::touch(BGFX_MAIN_WINDOW_IMGUI_VIEW_ID);
+	}
+
 	void render(ImDrawData* _drawData)
 	{
 		// Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
@@ -198,7 +314,7 @@ struct OcornutImguiContext
 			m_allocator = &allocator;
 		}
 
-		m_viewId = 255;
+		m_viewId = BGFX_MAIN_WINDOW_IMGUI_VIEW_ID;
 		m_lastScroll = 0;
 		m_last = bx::getHPCounter();
 
@@ -212,9 +328,17 @@ struct OcornutImguiContext
 		io.DeltaTime   = 1.0f / 60.0f;
 		io.IniFilename = NULL;
 
+		ImGuiPlatformIO& platform_io = ImGui::GetPlatformIO();
+		platform_io.Renderer_CreateWindow = renderer_create_window;
+		platform_io.Renderer_DestroyWindow = renderer_destroy_window;
+		platform_io.Renderer_SetWindowSize = renderer_set_window_size;
+		platform_io.Renderer_RenderWindow = renderer_render_window;
+		platform_io.Renderer_SwapBuffers = nullptr;
+
 		setupStyle(true);
 
 		io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;
+		io.BackendFlags |= ImGuiBackendFlags_RendererHasViewports;
 
 
 		bgfx::RendererType::Enum type = bgfx::getRendererType();
@@ -336,7 +460,7 @@ struct OcornutImguiContext
 			io.AddInputCharacter(_inputChar);
 		}
 
-		io.DisplaySize = ImVec2( (float)_width, (float)_height);
+		// io.DisplaySize = ImVec2( (float)_width, (float)_height);
 
 		const int64_t now = bx::getHPCounter();
 		const int64_t frameTime = now - m_last;
@@ -426,7 +550,13 @@ void imguiEndFrame()
 	s_ctx.endFrame();
 }
 
+void imguiRenderDraws(ImDrawData* draw_data, int view, int width, int height) {
+	bgfx::ViewId old_view = s_ctx.m_viewId;
 
+	s_ctx.m_viewId = view;
+	s_ctx.render(draw_data);
+	s_ctx.m_viewId = old_view;
+}
 
 BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4505); // error C4505: '' : unreferenced local function has been removed
 BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wunused-function"); // warning: 'int rect_width_compare(const void*, const void*)' defined but not used
