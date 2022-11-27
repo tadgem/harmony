@@ -4,7 +4,7 @@
  */
 
 #pragma once
-
+#include <vector>
 #include <bgfx/bgfx.h>
 #include <ImGui/imgui.h>
 
@@ -12,7 +12,8 @@
 #define IMGUI_MBUT_RIGHT  0x02
 #define IMGUI_MBUT_MIDDLE 0x04
 
-inline static const uint32_t BGFX_MAIN_WINDOW_IMGUI_VIEW_ID = 0;
+inline static const uint32_t BGFX_MAIN_WINDOW_IMGUI_VIEW_ID = 255;
+inline static std::vector<uint32_t> BGFX_SUB_WINDOW_IMGUI_VIEW_IDS = std::vector<uint32_t>();
 
 inline uint32_t imguiRGBA(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a = 255)
 {

@@ -39,6 +39,8 @@
 #include "SDL.h"
 #include "SDL_syswm.h"
 #include "ImGui/imgui_bgfx.h"
+#include <algorithm>
+#include <vector>
 static const bgfx::EmbeddedShader s_embeddedShaders[] =
 {
 	BGFX_EMBEDDED_SHADER(vs_ocornut_imgui),
@@ -123,6 +125,19 @@ struct OcornutImguiContext
 			uint16_t(vp->Size.y));
 
 		vp->RendererUserData = (void*)(uintptr_t)handle.idx;
+
+		uint32_t newWindowId = BGFX_MAIN_WINDOW_IMGUI_VIEW_ID - 1;
+
+		while (std::find(
+			BGFX_SUB_WINDOW_IMGUI_VIEW_IDS.begin(),
+			BGFX_SUB_WINDOW_IMGUI_VIEW_IDS.end(),
+			newWindowId) != BGFX_SUB_WINDOW_IMGUI_VIEW_IDS.end())
+		{
+			newWindowId--;
+		}
+
+		data->ViewID = (bgfx::ViewId)newWindowId;
+		BGFX_SUB_WINDOW_IMGUI_VIEW_IDS.emplace_back(newWindowId);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,6 +156,16 @@ struct OcornutImguiContext
 		bgfx::frame();
 
 		vp->RendererUserData = nullptr;
+
+		uint32_t viewId = data->ViewID;
+		auto begin = BGFX_SUB_WINDOW_IMGUI_VIEW_IDS.begin();
+		auto end = BGFX_SUB_WINDOW_IMGUI_VIEW_IDS.end();
+		auto elementIt = std::find(begin, end, viewId);
+
+		if (elementIt != end)
+		{
+			BGFX_SUB_WINDOW_IMGUI_VIEW_IDS.erase(elementIt);
+		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -163,10 +188,10 @@ struct OcornutImguiContext
 
 		bgfx::FrameBufferHandle handle = { (uint16_t)(uintptr_t)vp->RendererUserData };
 
-		bgfx::setViewFrameBuffer(BGFX_MAIN_WINDOW_IMGUI_VIEW_ID, handle);
-		bgfx::setViewRect(BGFX_MAIN_WINDOW_IMGUI_VIEW_ID, 0, 0, uint16_t(display_w), uint16_t(display_h));
+		bgfx::setViewFrameBuffer(data->ViewID, handle);
+		bgfx::setViewRect(data->ViewID, 0, 0, uint16_t(display_w), uint16_t(display_h));
 
-		bgfx::setViewClear(BGFX_MAIN_WINDOW_IMGUI_VIEW_ID
+		bgfx::setViewClear(data->ViewID
 			, BGFX_CLEAR_COLOR
 			, 0xff00ffff
 			, 1.0f
@@ -176,9 +201,9 @@ struct OcornutImguiContext
 		// Set render states.
 		bgfx::setState(BGFX_STATE_DEFAULT);
 
-		imguiRenderDraws(vp->DrawData, BGFX_MAIN_WINDOW_IMGUI_VIEW_ID, display_w, display_h);
+		imguiRenderDraws(vp->DrawData, data->ViewID, display_w, display_h);
 
-		bgfx::touch(BGFX_MAIN_WINDOW_IMGUI_VIEW_ID);
+		bgfx::touch(data->ViewID);
 	}
 
 	void render(ImDrawData* _drawData)
