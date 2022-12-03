@@ -30,7 +30,10 @@ namespace harmony {
 		void InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents, std::vector<glm::vec2> uvs);
 		void InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents,std::vector<glm::vec3> bitangents, std::vector<glm::vec2> uvs);
 
+		// build float array to submit mesh to GPU
 		void BuildBGFXData();
+
+		void Bind();
 
 		void Release();
 
@@ -54,6 +57,7 @@ namespace harmony {
 		std::vector<float> m_BGFXData;
 
 		uint64_t m_Id;
-
+	private:
+		inline static const uint16_t p_Stream = 0;
     };
 };

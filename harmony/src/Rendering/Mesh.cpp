@@ -136,3 +136,9 @@ void harmony::Mesh::BuildBGFXData()
 	m_Tangents.clear();
 	m_Bitangents.clear();
 }
+
+void harmony::Mesh::Bind()
+{
+	bgfx::setVertexBuffer(p_Stream, m_Handle.m_VBH);
+	bgfx::setIndexBuffer(m_Handle.m_IBH);
+}

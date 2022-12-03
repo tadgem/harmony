@@ -15,6 +15,7 @@ harmony::ShaderHotReload::ShaderHotReload(Program& prog) : p_Program(prog), p_Re
     {
         harmony::log::error("ShaderHotReload : Failed to find shaderc executable at path : {}", p_ShaderCompilerLocation);
     }
+
     p_RendererProfileMapping = {
         {"dx9", "s_3_0"},
         {"dx11", "s_5_0"},
@@ -23,7 +24,6 @@ harmony::ShaderHotReload::ShaderHotReload(Program& prog) : p_Program(prog), p_Re
         {"glsl", "430"},
         {"essl", "300_es"},
         {"spv", "spirv"},
-
     };
 
     p_FileWatcher = new efsw::FileWatcher();
@@ -42,13 +42,6 @@ void harmony::ShaderHotReload::Init()
         std::string shadersDirectory = projDirectory + "\\assets\\shaders";
 
         efsw::FileWatchListener* listener = this;
-
-        /*p_FileWatcher = new filewatch::FileWatch<std::string>(
-            shadersDirectory,
-            [&](const std::string& path, const filewatch::Event change_type) {
-                OnChange(path, change_type);
-            }
-        );*/
 
         p_DirectoryWatchID = p_FileWatcher->addWatch(shadersDirectory, listener, true);
         p_FileWatcher->watch();
@@ -82,7 +75,7 @@ void harmony::ShaderHotReload::FromJson(const nlohmann::json& json)
 
 void harmony::ShaderHotReload::OnChange(const std::string& filename, const std::string& directory, efsw::Action action)
 {
-    harmony::log::info("ShaderHotReload : Path : {} Change Type : {}", filename);
+    harmony::log::info("ShaderHotReload : Path : {}, Change Type : TODO", filename);
     ReloadTrackedShaders();
     // ignore changes to include shader files
     if (filename.find("include") < filename.size())
