@@ -6,6 +6,7 @@
 #include "Rendering/Framebuffer.h"
 #include "Rendering/Pipeline.h"
 #include "Rendering/PipelineStack.h"
+#include "Rendering/PipelineStageRenderer.h"
 #include "Rendering/Mesh.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Shader.h"
@@ -45,16 +46,10 @@ namespace harmony
         WeakRef<ShaderProgram>      GetShader(const std::string& name);
         std::vector<std::string>    GetShaderNames();
 
-        // Global variables for shaders
-        // TODO: link to shader file includes..
-        void AddUniform(const std::string name, WeakRef<float> value);
-        void AddUniform(const std::string name, WeakRef<glm::vec2> value);
-        void AddUniform(const std::string name, WeakRef<glm::vec3> value);
-        void AddUniform(const std::string name, WeakRef<glm::mat3> value);
-        void AddUniform(const std::string name, WeakRef<glm::mat4> value);
-
         void                AddPipeline(Ref<Pipeline> pipeline);
         WeakRef<Pipeline>   GetPipeline(const PipelineHandle& handle);
+
+        void                AddPipelineStageRenderer(Ref<PipelineStageRenderer> renderer);
 
         BGFXMeshHandle      SubmitMeshToGPU(WeakRef<Mesh> mesh);
         BGFXTextureHandle   SubmitTextureToGPU(WeakRef<Texture> textureWeakRef);
@@ -70,11 +65,10 @@ namespace harmony
                 
         PipelineStack&      GetViewPipelineStack(const std::string& viewName);
         static bgfx::ViewId GetViewID();
-    
-        std::vector<WeakRef<View>> m_ActiveViews;
-        
+            
         nlohmann::json      Serialize();
         void                Deserialize(AssetManager& am, nlohmann::json& json);
+
 #if HARMONY_DEBUG
         void                OnImGui();
         bool                ShaderSelector(const std::string& selectorName, harmony::WeakRef<harmony::ShaderProgram>& prog);
@@ -95,6 +89,7 @@ namespace harmony
 
         int p_SelectedPipelineType;
 #endif
+        std::vector<WeakRef<View>> m_ActiveViews;
     protected:
         bgfx::VertexLayout  BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
             
@@ -115,6 +110,7 @@ namespace harmony
         std::map<Ref<View>, PipelineStack>                  p_Views;
         std::vector<Ref<ShaderProgram>>                     p_Shaders;
         std::vector<Ref<Pipeline>>                          p_Pipelines;
+        std::vector<Ref<PipelineStageRenderer>>             p_PipelineStageRenderers;
         std::vector<WeakRef<ShaderProgram>>                 p_BuiltInShaders;
         WeakRef<ShaderProgram>                              p_PresentProgram;
     };

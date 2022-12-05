@@ -591,6 +591,17 @@ harmony::WeakRef<harmony::Pipeline> harmony::Renderer::GetPipeline(const Pipelin
     return WeakRef<Pipeline>();
 }
 
+void harmony::Renderer::AddPipelineStageRenderer(Ref<PipelineStageRenderer> renderer)
+{
+    auto it = std::find(p_PipelineStageRenderers.begin(), p_PipelineStageRenderers.end(), renderer);
+
+    if (it == p_PipelineStageRenderers.end())
+    {
+        p_PipelineStageRenderers.push_back(renderer);
+        return;
+    }
+}
+
 void harmony::Renderer::ReloadShader(WeakRef<ShaderProgram> shader)
 {
     if (shader.expired())
@@ -676,10 +687,6 @@ std::vector<std::string> harmony::Renderer::GetShaderNames()
 }
 
 void harmony::Renderer::RefreshShaderDataContainers()
-{
-}
-
-void harmony::Renderer::AddUniform(const std::string name, WeakRef<float> value)
 {
 }
 
