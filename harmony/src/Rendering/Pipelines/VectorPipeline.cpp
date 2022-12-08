@@ -2,7 +2,7 @@
 #include "Rendering/View.h"
 #include "Core/Program.h"
 harmony::VectorGraphicsStage::VectorGraphicsStage(VectorGraphics::Layer layer) 
-	:	PipelineStage("VectorGraphicsStage", PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>(), harmony::Attachment::Type::RGBA16F),
+	:	PipelineStage("VectorGraphicsStage", PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>(), WeakRef<PipelineStageRenderer>(), harmony::Attachment::Type::RGBA16F),
 		m_Layer(layer)
 {
 	

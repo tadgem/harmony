@@ -84,6 +84,7 @@ namespace harmony
     };
 
     class View;
+    class PipelineStageRenderer;
     class PipelineStage
     {
     public:
@@ -112,10 +113,11 @@ namespace harmony
             {Compute, "compute"}
             })
 
-        PipelineStage(
-            const std::string& name, 
+            PipelineStage(
+            const std::string& name,
             Type stageType,
-            WeakRef<ShaderProgram> shader, 
+            WeakRef<ShaderProgram> shader,
+            WeakRef<PipelineStageRenderer> stageRenderer,
             Attachment::Type attachments = (Attachment::Type)(Attachment::Type::RGBA8F | Attachment::Type::Depth32F));
 
         virtual Data Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
@@ -134,7 +136,8 @@ namespace harmony
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStage, m_Name, m_StageType, p_Shader, m_Attachments, p_PipelineStageData)
     protected:
         friend class Renderer;
-        WeakRef<ShaderProgram>      p_Shader;
-        ShaderDataContainer         p_PipelineStageData;
+        WeakRef<ShaderProgram>          p_Shader;
+        WeakRef<PipelineStageRenderer>  p_Renderer;
+        ShaderDataContainer             p_PipelineStageData;
     };
 } 

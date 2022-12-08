@@ -4,7 +4,7 @@
 #include "Core/Input.h"
 #include "Core/Log.hpp"
 
-harmony::DebugDrawStage::DebugDrawStage(GfxDebug::Channel channel) : PipelineStage("DebugDrawStage", PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>()), m_Channel(channel)
+harmony::DebugDrawStage::DebugDrawStage(GfxDebug::Channel channel) : PipelineStage("DebugDrawStage", PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>(), WeakRef<PipelineStageRenderer>()), m_Channel(channel)
 {
 }
 

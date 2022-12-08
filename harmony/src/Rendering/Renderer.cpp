@@ -10,6 +10,7 @@
 #include "Rendering/BuiltinShaders.h"
 #include "Rendering/Shapes.h"
 #include "Rendering/View.h"
+#include "Rendering/PipelineStageRenderer.h"
 #if HARMONY_DEBUG
 #include <algorithm>
 #include "ImGui/imgui_bgfx.h"
@@ -449,7 +450,7 @@ void harmony::Renderer::OnImGui()
                 if (canCreate)
                 {
                     Ref<Pipeline> pipeline = CreateRef<Pipeline>(PipelineHandle( pipelineName ), Pipeline::Type::Surface);
-                    pipeline->AddPipelineStage<PipelineStage>(pipelineName + ".surface", PipelineStage::Type::PrimaryDraw, p_SelectedShaderProgram);
+                    pipeline->AddPipelineStage<PipelineStage>(pipelineName + ".surface", PipelineStage::Type::PrimaryDraw, p_SelectedShaderProgram, GetPipelineStageRenderer("MeshRenderer"));
                     AddPipeline(pipeline);
                     p_CreatePipelineWindow = false;
                 }
@@ -600,6 +601,18 @@ void harmony::Renderer::AddPipelineStageRenderer(Ref<PipelineStageRenderer> rend
         p_PipelineStageRenderers.push_back(renderer);
         return;
     }
+}
+
+harmony::WeakRef<harmony::PipelineStageRenderer> harmony::Renderer::GetPipelineStageRenderer(const std::string& name)
+{
+    for (int i = 0; i < p_PipelineStageRenderers.size(); i++)
+    {
+        if (p_PipelineStageRenderers[i]->m_Name == name)
+        {
+            return p_PipelineStageRenderers[i];
+        }
+    }
+    return WeakRef<PipelineStageRenderer>();
 }
 
 void harmony::Renderer::ReloadShader(WeakRef<ShaderProgram> shader)
@@ -997,7 +1010,7 @@ void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager&
 
             stageData.UpdateShader(stageShader, am);
 
-            Ref<PipelineStage> pipelineStage = newPipeline->AddPipelineStage<PipelineStage>(stageName, stageType, stageShader, stageAttachments).lock();
+            Ref<PipelineStage> pipelineStage = newPipeline->AddPipelineStage<PipelineStage>(stageName, stageType, stageShader, GetPipelineStageRenderer("MeshRenderer"), stageAttachments).lock();
             pipelineStage->p_PipelineStageData = stageData;
         }
 

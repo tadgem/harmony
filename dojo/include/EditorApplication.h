@@ -28,6 +28,7 @@ namespace harmony
 		void AddAssetFactories();
 		void AddProgramComponents();
 		void AddSystems();
+		void AddPipelineStageRenderers();
 
 		void AddEditorPanels();
 

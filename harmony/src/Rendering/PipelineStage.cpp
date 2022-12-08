@@ -1,15 +1,17 @@
 #include "Rendering/PipelineStage.h"
+#include "Rendering/PipelineStageRenderer.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/View.h"
 #include "ECS/MaterialComponent.h"
 #include "ECS/MeshComponent.h"
 #include "ECS/TransformComponent.h"
 #include "Core/Log.hpp"
-harmony::PipelineStage::PipelineStage(const std::string& name, Type stageType, WeakRef<ShaderProgram> shader, Attachment::Type attachments) : 
+harmony::PipelineStage::PipelineStage(const std::string& name, Type stageType, WeakRef<ShaderProgram> shader, WeakRef<PipelineStageRenderer> stageRenderer, Attachment::Type attachments) :
 	m_Name(name), 
 	m_StageType(stageType), 
 	m_Attachments(attachments), 
 	p_Shader(shader),
+	p_Renderer(stageRenderer),
 	p_PipelineStageData(shader)
 {
 }
@@ -171,25 +173,9 @@ void harmony::PipelineStage::PreUpdate(entt::registry& registry, WeakRef<View> v
 	bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
 
 	Ref<ShaderProgram> pipelineShader = p_Shader.lock();
+	Ref<PipelineStageRenderer> pipelineRenderer = p_Renderer.lock();
 
-	auto drawables = registry.view<MeshComponent, MaterialComponent, TransformComponent>();
-	for (auto [e, mesh, material, transform] : drawables.each())
-	{
-		if (material.Data.m_Shader.lock() == pipelineShader)
-		{
-			bool vbhValid = mesh.MeshHandle.m_VBH.idx <= 4096;
-			bool ibhValid = mesh.MeshHandle.m_IBH.idx <= 4096;
-			if (!vbhValid || !ibhValid)
-			{
-				continue;
-			}
-			material.Data.SetContainerUniforms();
-			bgfx::setTransform(&transform.Model[0]);
-			bgfx::setVertexBuffer(0, mesh.MeshHandle.m_VBH);
-			bgfx::setIndexBuffer(mesh.MeshHandle.m_IBH);
-			bgfx::submit(viewId, pipelineShader->m_Handle);
-		}
-	}
+	pipelineRenderer->Draw(registry, pipelineShader, viewId);
 }
 
 void harmony::PipelineStage::PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)

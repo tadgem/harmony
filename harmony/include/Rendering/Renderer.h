@@ -32,42 +32,43 @@ namespace harmony
             return GetWeakRef<T>(view);
         }
 
-        WeakRef<ShaderProgram>  AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex);
-        WeakRef<ShaderProgram>  AddBuiltInShader(const std::string& progName, const std::string& vsName, uint32_t csIndex);
-        void                    AddBuiltInShaders();
-        WeakRef<ShaderProgram>  BuildShader(const std::string name, WeakRef<ShaderStage> vertStage, WeakRef<ShaderStage> fragStage);
-        WeakRef<ShaderProgram>  BuildShader(const std::string name, WeakRef<ShaderStage> computeStage);
+        WeakRef<ShaderProgram>          AddBuiltInShader(const std::string& progName, const std::string& vsName, const std::string& fsName, uint32_t vsIndex, uint32_t fsIndex);
+        WeakRef<ShaderProgram>          AddBuiltInShader(const std::string& progName, const std::string& vsName, uint32_t csIndex);
+        void                            AddBuiltInShaders();
+        WeakRef<ShaderProgram>          BuildShader(const std::string name, WeakRef<ShaderStage> vertStage, WeakRef<ShaderStage> fragStage);
+        WeakRef<ShaderProgram>          BuildShader(const std::string name, WeakRef<ShaderStage> computeStage);
 
-        void ReloadShader(WeakRef<ShaderProgram> shader);
-        void ReloadAllShaders();
-        void RefreshShaderDataContainers();
+        void                            ReloadShader(WeakRef<ShaderProgram> shader);
+        void                            ReloadAllShaders();
+        void                            RefreshShaderDataContainers();
 
-        bool                        IsShaderLoaded(const std::string& name);
-        WeakRef<ShaderProgram>      GetShader(const std::string& name);
-        std::vector<std::string>    GetShaderNames();
+        bool                            IsShaderLoaded(const std::string& name);
+        WeakRef<ShaderProgram>          GetShader(const std::string& name);
+        std::vector<std::string>        GetShaderNames();
 
-        void                AddPipeline(Ref<Pipeline> pipeline);
-        WeakRef<Pipeline>   GetPipeline(const PipelineHandle& handle);
+        void                            AddPipeline(Ref<Pipeline> pipeline);
+        WeakRef<Pipeline>               GetPipeline(const PipelineHandle& handle);
 
-        void                AddPipelineStageRenderer(Ref<PipelineStageRenderer> renderer);
+        void                            AddPipelineStageRenderer(Ref<PipelineStageRenderer> renderer);
+        WeakRef<PipelineStageRenderer>  GetPipelineStageRenderer(const std::string& name);
 
-        BGFXMeshHandle      SubmitMeshToGPU(WeakRef<Mesh> mesh);
-        BGFXTextureHandle   SubmitTextureToGPU(WeakRef<Texture> textureWeakRef);
+        BGFXMeshHandle                  SubmitMeshToGPU(WeakRef<Mesh> mesh);
+        BGFXTextureHandle               SubmitTextureToGPU(WeakRef<Texture> textureWeakRef);
 
-        void                RemoveView(WeakRef<View> view);
-        void                SetViewActive(WeakRef<View> viewWeakRef, bool active);
-        void                AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline);
-        void                RefreshViews();
+        void                            RemoveView(WeakRef<View> view);
+        void                            SetViewActive(WeakRef<View> viewWeakRef, bool active);
+        void                            AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline);
+        void                            RefreshViews();
 
-        void                Init();
-        void                OnPreUpdate(entt::registry& registry);
-        void                OnPostUpdate(entt::registry& registry);
+        void                            Init();
+        void                            OnPreUpdate(entt::registry& registry);
+        void                            OnPostUpdate(entt::registry& registry);
                 
-        PipelineStack&      GetViewPipelineStack(const std::string& viewName);
-        static bgfx::ViewId GetViewID();
+        PipelineStack&                  GetViewPipelineStack(const std::string& viewName);
+        static bgfx::ViewId             GetViewID();
             
-        nlohmann::json      Serialize();
-        void                Deserialize(AssetManager& am, nlohmann::json& json);
+        nlohmann::json                  Serialize();
+        void                            Deserialize(AssetManager& am, nlohmann::json& json);
 
 #if HARMONY_DEBUG
         void                OnImGui();

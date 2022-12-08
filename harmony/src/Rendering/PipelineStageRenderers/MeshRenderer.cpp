@@ -3,7 +3,7 @@
 #include "ECS/MaterialComponent.h"
 #include "ECS/TransformComponent.h"
 
-harmony::MeshRenderer::MeshRenderer()
+harmony::MeshRenderer::MeshRenderer() : PipelineStageRenderer("MeshRenderer")
 {
 }
 
@@ -20,6 +20,12 @@ void harmony::MeshRenderer::Draw(entt::registry& scene, Ref<ShaderProgram> shade
 		{
 			continue;
 		}
+
+		if (material.Data.m_Shader.lock() != shader)
+		{
+			continue;
+		}
+
 		material.Data.SetContainerUniforms();
 		bgfx::setTransform(&transform.Model[0]);
 		bgfx::setVertexBuffer(0, mesh.MeshHandle.m_VBH);

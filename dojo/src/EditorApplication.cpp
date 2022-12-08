@@ -6,6 +6,7 @@
 #include "Core/Input.h"
 #include "ShaderHotReload.h"
 #include "Rendering/Views/RuntimeView.h"
+#include "Rendering/PipelineStageRenderers/MeshRenderer.h"
 #include "Assets/ShaderSourceAssetFactory.h"
 harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*this)
 {
@@ -13,6 +14,7 @@ harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*t
 	AddAssetFactories();
 	AddProgramComponents();
 	AddSystems();
+	AddPipelineStageRenderers();
 
 	AddEditorPanels();
 
@@ -60,6 +62,11 @@ void harmony::Editor::AddSystems()
 	
 }
 
+void harmony::Editor::AddPipelineStageRenderers()
+{
+	m_Renderer.AddPipelineStageRenderer(CreateRef<MeshRenderer>());
+}
+
 void harmony::Editor::AddEditorPanels()
 {
 	p_ScenePanel = CreateRef<ScenePanel>(*this);
@@ -84,10 +91,12 @@ void harmony::Editor::InitializePipelines()
 	p_ForwardPipeline->AddPipelineStage<PipelineStage>("NormalStage1",
 		PipelineStage::Type::PrimaryDraw,
 		m_Renderer.GetShader("Normal"),
+		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
 		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F));
 	p_ForwardPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage",
 		PipelineStage::Type::PrimaryDraw, 
 		m_Renderer.GetShader("TexturedMesh"),
+		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
 		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F));
 	
 
