@@ -11,6 +11,7 @@
 #include "Rendering/Shapes.h"
 #include "Rendering/View.h"
 #include "Rendering/PipelineStageRenderer.h"
+#include "Rendering/ShaderDataSource.h"
 #if HARMONY_DEBUG
 #include <algorithm>
 #include "ImGui/imgui_bgfx.h"
@@ -701,6 +702,28 @@ std::vector<std::string> harmony::Renderer::GetShaderNames()
 
 void harmony::Renderer::RefreshShaderDataContainers()
 {
+}
+
+void harmony::Renderer::AddShaderDataSource(Ref<ShaderDataSource> dataSource)
+{
+    if (std::find(p_ShaderDataSources.begin(), p_ShaderDataSources.end(), dataSource) != p_ShaderDataSources.end())
+    {
+        harmony::log::warn("Renderer : Trying to add a shader data source that the renderer has already been provided.");
+        return;
+    }
+    p_ShaderDataSources.emplace_back(dataSource);
+}
+
+harmony::WeakRef<harmony::ShaderDataSource> harmony::Renderer::GetShaderDataSource(const std::string& name)
+{
+    for (int i = 0; i < p_ShaderDataSources.size(); i++)
+    {
+        if (p_ShaderDataSources[i]->m_Name == name)
+        {
+            return p_ShaderDataSources[i];
+        }
+    }
+    return WeakRef<ShaderDataSource>();
 }
 
 harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(WeakRef<Mesh> mesh)

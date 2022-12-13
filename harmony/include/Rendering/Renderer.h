@@ -18,6 +18,7 @@
 namespace harmony
 {
     class Viewport;
+    class ShaderDataSource;
     class Renderer
     {   
     public:
@@ -51,6 +52,9 @@ namespace harmony
 
         void                            AddPipelineStageRenderer(Ref<PipelineStageRenderer> renderer);
         WeakRef<PipelineStageRenderer>  GetPipelineStageRenderer(const std::string& name);
+
+        void                            AddShaderDataSource(Ref<ShaderDataSource> dataSource);
+        WeakRef<ShaderDataSource>       GetShaderDataSource(const std::string& name);
 
         BGFXMeshHandle                  SubmitMeshToGPU(WeakRef<Mesh> mesh);
         BGFXTextureHandle               SubmitTextureToGPU(WeakRef<Texture> textureWeakRef);
@@ -112,7 +116,10 @@ namespace harmony
         std::vector<Ref<ShaderProgram>>                     p_Shaders;
         std::vector<Ref<Pipeline>>                          p_Pipelines;
         std::vector<Ref<PipelineStageRenderer>>             p_PipelineStageRenderers;
+        std::vector<Ref<ShaderDataSource>>                  p_ShaderDataSources;
         std::vector<WeakRef<ShaderProgram>>                 p_BuiltInShaders;
+
+        // Misc & Helpers
         WeakRef<ShaderProgram>                              p_PresentProgram;
     };
 };
