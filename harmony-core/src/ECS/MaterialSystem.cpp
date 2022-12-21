@@ -1,7 +1,7 @@
 #include "ECS/MaterialSystem.h"
 #include "ECS/MaterialComponent.h"
 
-harmony::MaterialSystem::MaterialSystem(Renderer& renderer, AssetManager& assetManager) : System(GetTypeHash<MaterialComponent>()), p_Renderer(renderer), p_AssetManager(assetManager)
+harmony::MaterialSystem::MaterialSystem(Renderer& renderer, AssetManager& assetManager) : System(GetTypeHash<MaterialSystem>()), p_Renderer(renderer), p_AssetManager(assetManager)
 {
 }
 

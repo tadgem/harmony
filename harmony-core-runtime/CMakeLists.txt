@@ -12,14 +12,17 @@ endif()
 add_library(harmony-core-runtime STATIC ${HEADER_FILES} ${HEADERPP_FILES} ${SRC_FILES})
 set_property(TARGET harmony-core-runtime PROPERTY CXX_STANDARD 17)
 
-set(HARMONY_RUNTIME_INCLUDES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/include 
-    ${HARMONY_CORE_INCLUDES} 
-    CACHE INTERNAL "")
 
 get_filename_component(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
 add_subdirectory(${ROOT_DIR}/harmony-core ${CMAKE_CURRENT_BINARY_DIR}/harmony)
+add_subdirectory(${ROOT_DIR}/modules/harmony-assimp ${CMAKE_CURRENT_BINARY_DIR}/harmony-assimp)
 
-target_include_directories(harmony-core-runtime PUBLIC ${HARMONY_RUNTIME_INCLUDES})
-target_link_libraries(harmony-core-runtime harmony-core)
+set(HARMONY_CORE_RUNTIME_INCLUDES 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${ROOT_DIR}/submodules/assimp/include  
+    ${HARMONY_CORE_INCLUDES} 
+    CACHE INTERNAL "")
+
+target_include_directories(harmony-core-runtime PUBLIC ${HARMONY_CORE_RUNTIME_INCLUDES})
+target_link_libraries(harmony-core-runtime harmony-core harmony-assimp)

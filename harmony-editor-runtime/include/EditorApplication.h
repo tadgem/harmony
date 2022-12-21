@@ -1,13 +1,14 @@
 #pragma once
-#include "Core/Program.h"
+#include "RuntimeProgram.h"
 #include "Core/FSM.h"
 #include "EditorPanel.h"
 #include "EditorMenu.h"
-#include "MainIncludes.h"
+
 namespace harmony
 {
 	class CameraSystem;
-	class Editor : public Program
+	class EditorView;
+	class Editor : public RuntimeProgram
 	{
 	public:
 
@@ -24,46 +25,42 @@ namespace harmony
 		};
 
 		Editor();
-		void AddAssetTypeNames();
-		void AddAssetFactories();
-		void AddProgramComponents();
-		void AddSystems();
-		void AddPipelineStageRenderers();
 
-		void AddEditorPanels();
+		virtual void	AddAssetTypeNames() override;
+		virtual void	AddAssetFactories() override;
+		virtual void	AddProgramComponents() override;
+		virtual void	AddSystems() override;
+		virtual void	AddPipelineStageRenderers() override;
+		virtual void	InitializePipelines() override;
+		virtual void	InitializeViews() override;
+		
+		void 			AddEditorPanels();
 
-		void InitializePipelines();
-		void InitializeViews();
 
-		int OnEditUpdate();
-		void OnEditExit();
+		int 			OnEditUpdate();
+		void 			OnEditExit();
 
-		int OnDebugUpdate();
-		void OnDebugExit();
+		int 			OnDebugUpdate();
+		void 			OnDebugExit();
 
-		virtual void Run() override;
+		virtual void 	Run() override;
 
-		virtual void LoadScene(const std::string& path) override;
-		virtual void OpenScene(uint32_t index) override;
-		void UpdateEditor();
-		void GlobalDockspace();
+		virtual void 	LoadScene(const std::string& path) override;
+		virtual void 	OpenScene(uint32_t index) override;
+		void 			UpdateEditor();
+		void 			GlobalDockspace();
 
 		virtual void LoadBuiltInAssets() override;
 
 		FSM m_EditorFSM;
+
 	protected:		
 		std::vector<Ref<Panel>> p_Panels;
-		Ref<ScenePanel> p_ScenePanel;
-		Ref<EditorView> p_EditorView;
 
-		Ref<Pipeline> p_DebugPipeline;
-		Ref<Pipeline> p_ForwardPipeline;
-		Ref<Pipeline> p_VectorGraphicsPipeline;
+		Ref<ScenePanel> 		p_ScenePanel;
+		Ref<EditorView> 		p_EditorView;
+		EditorMainMenuBar 		p_MainMenuBar;
 
-		Ref<MeshSystem> p_MeshSystem;
-		Ref<TransformSystem> p_TransformSystem;
-		Ref<CameraSystem> p_CameraSystem;
-		EditorMainMenuBar p_MainMenuBar;
 	private:
 		std::string p_LoadedScenePath;
 	};

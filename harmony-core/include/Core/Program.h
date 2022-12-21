@@ -29,7 +29,7 @@ namespace harmony
 	class Program
 	{
 	public:
-		Program(std::string name);
+		Program(const std::string& name);
 		~Program();
 		void Init();
 		virtual void Run();
@@ -144,15 +144,16 @@ namespace harmony
 				return GetWeakRef<T>(nullptr);
 			}
 		}
+
 		template<typename T>
 		WeakRef<T> GetSystem()
 		{
 			HARMONY_PROFILE_FUNCTION()
-			static_assert(std::is_base_of<System, T>("Not a system"));
+			static_assert(std::is_base_of<System, T>(), "Not a system");
 			int index = -1;
 			for (int i = 0; i < p_ECSSystems.size(); i++)
 			{
-				if (typeid(T).hash_code() == typeid(p_ECSSystems[i]).hash_code())
+				if (GetTypeHash<T>() == p_ECSSystems[i]->m_TypeHash)
 				{
 					index = i;
 				}
@@ -160,11 +161,11 @@ namespace harmony
 
 			if (index >= 0)
 			{
-				return GetWeakRef<T>(p_ECSSystems[index]);
+				return std::static_pointer_cast<T, System>(p_ECSSystems[index]);
 			}
 			else
 			{
-				return GetWeakRef<T>(nullptr);
+				return WeakRef<T>();
 			}
 		}
 

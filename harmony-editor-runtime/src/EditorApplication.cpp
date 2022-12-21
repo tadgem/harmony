@@ -8,7 +8,9 @@
 #include "Rendering/Views/RuntimeView.h"
 #include "Rendering/PipelineStageRenderers/MeshRenderer.h"
 #include "Assets/ShaderSourceAssetFactory.h"
-harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*this)
+#include "AssimpModelAssetFactory.h"
+#include "EditorView.h"
+harmony::Editor::Editor() : harmony::RuntimeProgram("Harmony Editor"), p_MainMenuBar(*this)
 {
 	AddAssetTypeNames();
 	AddAssetFactories();
@@ -18,10 +20,10 @@ harmony::Editor::Editor() : harmony::Program("Harmony Editor"), p_MainMenuBar(*t
 
 	AddEditorPanels();
 
-	m_EditorFSM.AddState(Mode::Edit,		[&]() {return OnEditUpdate(); });
+	m_EditorFSM.AddState(Mode::Edit, [&]() {return OnEditUpdate(); });
 	m_EditorFSM.AddStateExit(Mode::Edit, [&]() {OnEditExit(); });
-	
-	m_EditorFSM.AddState(Mode::Debug, 		[&]() {return OnDebugUpdate(); });
+
+	m_EditorFSM.AddState(Mode::Debug, [&]() {return OnDebugUpdate(); });
 	m_EditorFSM.AddStateExit(Mode::Debug, [&]() {OnDebugExit(); });
 
 	m_EditorFSM.AddTrigger(Trigger::Play, Mode::Edit, Mode::Debug);
@@ -59,7 +61,7 @@ void harmony::Editor::AddSystems()
 	p_CameraSystem = AddSystem<CameraSystem>().lock();
 	AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
 	p_MeshSystem = AddSystem<MeshSystem>(m_AssetManager).lock();
-	
+
 }
 
 void harmony::Editor::AddPipelineStageRenderers()
@@ -71,16 +73,16 @@ void harmony::Editor::AddEditorPanels()
 {
 	p_ScenePanel = CreateRef<ScenePanel>(*this);
 	p_Panels.emplace_back(p_ScenePanel);
-	
+
 	Ref<AssetManagerPanel> assetManagerPanel = CreateRef<AssetManagerPanel>(*this);
 	p_Panels.emplace_back(assetManagerPanel);
-	
+
 	Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, p_ScenePanel);
 	inspector->AddComponentUI<TransformComponentUI>();
 	inspector->AddComponentUI<MeshComponentUI>(m_AssetManager);
 	inspector->AddComponentUI<MaterialComponentUI>(m_Renderer, m_AssetManager);
 	inspector->AddComponentUI<CameraComponentUI>(m_Renderer);
-	
+
 	p_Panels.emplace_back(inspector);
 }
 
@@ -89,18 +91,18 @@ void harmony::Editor::InitializePipelines()
 	p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
 	p_ForwardPipeline = CreateRef<Pipeline>(PipelineHandle("Forward Pipeline"), Pipeline::Type::Surface);
 	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>(VectorGraphics::Layer::One);
-	
+
 	p_ForwardPipeline->AddPipelineStage<PipelineStage>("NormalStage1",
 		PipelineStage::Type::PrimaryDraw,
 		m_Renderer.GetShader("Normal"),
 		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
 		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F));
 	p_ForwardPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage",
-		PipelineStage::Type::PrimaryDraw, 
+		PipelineStage::Type::PrimaryDraw,
 		m_Renderer.GetShader("TexturedMesh"),
 		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
 		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F));
-	
+
 
 	m_Renderer.AddPipeline(p_DebugPipeline);
 	m_Renderer.AddPipeline(p_ForwardPipeline);
@@ -203,14 +205,14 @@ void harmony::Editor::Run()
 {
 	HARMONY_PROFILE_FUNCTION()
 
-	Init();
+		Init();
 	m_Renderer.Init();
 	InitializePipelines();
 	InitializeViews();
 #if HARMONY_DEBUG && BX_PLATFORM_WINDOWS
 	LoadProject("../../projects/Test3/Test3.harmonyproj");
 #endif
-	
+
 	PreRunInit();
 
 	while (p_Run)
@@ -248,10 +250,10 @@ void harmony::Editor::UpdateEditor()
 	{
 		return;
 	}
-	
+
 	//GfxDebug::Get()->setColor(GfxDebug::Channel::Editor, 0xfffffff);
 	//GfxDebug::Get()->drawGrid(GfxDebug::Channel::Editor, Axis::Enum::Y, bx::Vec3(0.0f, 0.0f, 0.0f), 1000);
-	
+
 }
 
 void harmony::Editor::GlobalDockspace()

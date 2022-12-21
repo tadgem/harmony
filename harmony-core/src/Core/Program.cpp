@@ -15,7 +15,7 @@
 #include "ImGui/backends/imgui_impl_sdl.h"
 #include "ImGui/robotomono_regular.ttf.h"
 #endif
-harmony::Program::Program(std::string name) : p_AppName(name), m_Renderer(m_AssetManager)
+harmony::Program::Program(const std::string& name) : p_AppName(name), m_Renderer(m_AssetManager)
 {
 	HARMONY_PROFILE_FUNCTION()
 	if(s_Instance != nullptr)

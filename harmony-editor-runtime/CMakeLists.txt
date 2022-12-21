@@ -12,19 +12,17 @@ endif()
 add_library(harmony-editor-runtime STATIC ${HEADER_FILES} ${HEADERPP_FILES} ${SRC_FILES})
 set_property(TARGET harmony-editor-runtime PROPERTY CXX_STANDARD 17)
 
-set(HARMONY_EDITOR_INCLUDES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/include 
-    ${HARMONY_CORE_INCLUDES} 
-    ${HARMONY_ASSIMP_INCLUDES} 
-    ${ROOT_DIR}/submodules/assimp/include 
-    ${ROOT_DIR}/submodules/efsw/include
-    CACHE INTERNAL "")
-
 get_filename_component(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
-add_subdirectory(${ROOT_DIR}/harmony-core ${CMAKE_CURRENT_BINARY_DIR}/harmony)
-add_subdirectory(${ROOT_DIR}/modules/harmony-assimp ${CMAKE_CURRENT_BINARY_DIR}/harmony-assimp)
+add_subdirectory(${ROOT_DIR}/harmony-core-runtime ${CMAKE_CURRENT_BINARY_DIR}/harmony-core-runtime)
 add_subdirectory(${ROOT_DIR}/submodules/efsw ${CMAKE_CURRENT_BINARY_DIR}/efsw)
 
+set(HARMONY_EDITOR_INCLUDES 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include 
+    ${ROOT_DIR}/submodules/efsw/include
+    ${HARMONY_CORE_RUNTIME_INCLUDES} 
+    ${HARMONY_ASSIMP_INCLUDES} 
+    CACHE INTERNAL "")
+
 target_include_directories(harmony-editor-runtime PUBLIC ${HARMONY_EDITOR_INCLUDES})
-target_link_libraries(harmony-editor-runtime harmony-core harmony-assimp efsw)
+target_link_libraries(harmony-editor-runtime harmony-core-runtime efsw)

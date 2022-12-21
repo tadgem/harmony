@@ -8,7 +8,7 @@
 #include "Rendering/Debug/GfxDebug.h"
 #endif
 
-harmony::CameraSystem::CameraSystem() : System(GetTypeHash<CameraComponent>())
+harmony::CameraSystem::CameraSystem() : System(GetTypeHash<CameraSystem>())
 {
 }
 
