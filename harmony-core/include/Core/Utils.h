@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "json.hpp"
+#include "ThirdParty/json.hpp"
 namespace harmony
 {
     class Utils

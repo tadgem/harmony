@@ -70,8 +70,9 @@ void harmony::Editor::AddPipelineStageRenderers()
 void harmony::Editor::AddEditorPanels()
 {
 	p_ScenePanel = CreateRef<ScenePanel>(*this);
-	Ref<AssetManagerPanel> assetManagerPanel = CreateRef<AssetManagerPanel>(*this);
 	p_Panels.emplace_back(p_ScenePanel);
+	
+	Ref<AssetManagerPanel> assetManagerPanel = CreateRef<AssetManagerPanel>(*this);
 	p_Panels.emplace_back(assetManagerPanel);
 	
 	Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, p_ScenePanel);
@@ -79,6 +80,7 @@ void harmony::Editor::AddEditorPanels()
 	inspector->AddComponentUI<MeshComponentUI>(m_AssetManager);
 	inspector->AddComponentUI<MaterialComponentUI>(m_Renderer, m_AssetManager);
 	inspector->AddComponentUI<CameraComponentUI>(m_Renderer);
+	
 	p_Panels.emplace_back(inspector);
 }
 

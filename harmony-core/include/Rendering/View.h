@@ -1,8 +1,8 @@
 #pragma once
 #include "Core/Memory.h"
-#include "entt.hpp"
+#include "ThirdParty/entt.hpp"
 #include "glm/glm.hpp"
-#include "json.hpp"
+#include "ThirdParty/json.hpp"
 #include "bgfx/bgfx.h"
 #include "Rendering/PipelineStack.h"
 

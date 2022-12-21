@@ -10,7 +10,7 @@
 #include "Core/Memory.h"
 #include "Core/Log.hpp"
 #include "Core/Profile.hpp"
-#include "entt.hpp"
+#include "ThirdParty/entt.hpp"
 #include  "ImGui/imgui.h"
 
 namespace harmony {

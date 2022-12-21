@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/Memory.h"
-#include "entt.hpp"
+#include "ThirdParty/entt.hpp"
 namespace harmony
 {
     class ShaderProgram;

@@ -3,7 +3,7 @@
 #include "Core/Memory.h"
 #include "Rendering/PipelineStage.h"
 #include "Core/Profile.hpp"
-#include "json.hpp"
+#include "ThirdParty/json.hpp"
 namespace harmony
 {
     class View;

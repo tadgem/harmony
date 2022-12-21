@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string>
-#include "json.hpp"
+#include "ThirdParty/json.hpp"
 
 namespace harmony {
 #if defined(__APPLE__)||defined(__unix__)||defined(__unix)

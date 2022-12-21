@@ -2,7 +2,7 @@
 #include "Core/Memory.h"
 #include "Core/Scene.h"
 #include "Core/Program.h"
-#include "entt.hpp"
+#include "ThirdParty/entt.hpp"
 
 namespace harmony
 {

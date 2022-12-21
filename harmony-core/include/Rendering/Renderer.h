@@ -14,7 +14,7 @@
 #include "Assets/AssetManager.h"
 #include "Assets/Asset.h"
 #include "glm/glm.hpp"
-#include "json.hpp"
+#include "ThirdParty/json.hpp"
 namespace harmony
 {
     class Viewport;

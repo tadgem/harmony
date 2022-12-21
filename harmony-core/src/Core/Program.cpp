@@ -7,6 +7,7 @@
 #include "bgfx/platform.h"
 #include "bx/timer.h"
 #include "SDL_syswm.h"
+
 #if HARMONY_DEBUG
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_bgfx.h"
@@ -34,7 +35,6 @@ harmony::Program::Program(std::string name) : p_AppName(name), m_Renderer(m_Asse
 harmony::Program::~Program()
 {
 	HARMONY_PROFILE_FUNCTION()
-	Cleanup();
 }
 
 void harmony::Program::Init()

@@ -1,5 +1,5 @@
 #pragma once
-#include "entt.hpp"
+#include "ThirdParty/entt.hpp"
 #include "Core/Memory.h"
 #include "Core/Profile.hpp"
 #include "Assets/Asset.h"

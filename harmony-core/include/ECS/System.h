@@ -1,6 +1,6 @@
 #pragma once
-#include "entt.hpp"
-#include "json.hpp"
+#include "ThirdParty/entt.hpp"
+#include "ThirdParty/json.hpp"
 
 namespace harmony
 {

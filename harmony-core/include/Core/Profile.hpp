@@ -2,7 +2,7 @@
 #include <string>
 #include <fstream>
 #include <thread>
-#include "json.hpp"
+#include "ThirdParty/json.hpp"
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 

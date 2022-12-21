@@ -591,7 +591,7 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wtype-limits"); // warning: comparison 
 #define STBTT_malloc(_size, _userData) memAlloc(_size, _userData)
 #define STBTT_free(_ptr, _userData) memFree(_ptr, _userData)
 #define STB_RECT_PACK_IMPLEMENTATION
-#include <stb_rect_pack.h>
+#include <ThirdParty/stb_rect_pack.h>
 #define STB_TRUETYPE_IMPLEMENTATION
-#include <stb_truetype.h>
+#include <ThirdParty/stb_truetype.h>
 BX_PRAGMA_DIAGNOSTIC_POP();

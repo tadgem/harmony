@@ -3,7 +3,7 @@
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
 #include "Rendering/Shader.h"
-#include "entt.hpp"
+#include "ThirdParty/entt.hpp"
 
 
 namespace harmony {

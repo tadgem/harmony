@@ -1,7 +1,7 @@
 #pragma once
 #include "Rendering/nanovg/nanovg.h"
 #include "bgfx/bgfx.h"
-#include "json.hpp"
+#include "ThirdParty/json.hpp"
 
 class VectorGraphics
 {

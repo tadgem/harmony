@@ -1,6 +1,6 @@
 #pragma once
-#include "entt.hpp"
-#include "json.hpp"
+#include "ThirdParty/entt.hpp"
+#include "ThirdParty/json.hpp"
 #include "Core/Memory.h"
 #include "Rendering/ShaderDataContainer.h"
 namespace harmony

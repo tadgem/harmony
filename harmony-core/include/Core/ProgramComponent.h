@@ -1,5 +1,5 @@
 #pragma once
-#include "json.hpp"
+#include "ThirdParty/json.hpp"
 
 namespace harmony
 {

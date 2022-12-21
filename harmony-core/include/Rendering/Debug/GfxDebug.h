@@ -1,7 +1,7 @@
 #pragma once
 #include "Rendering/Debug/debugdraw/debugdraw.h"
 #include "Rendering/View.h"
-#include "json.hpp"
+#include "ThirdParty/json.hpp"
 namespace harmony
 {
 	class GfxDebug

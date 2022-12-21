@@ -1,6 +1,6 @@
 #pragma once
-#include "entt.hpp"
-#include "json.hpp"
+#include "ThirdParty/entt.hpp"
+#include "ThirdParty/json.hpp"
 #include "ECS/Entity.h"
 #include "ECS/System.h"
 #include "Core/Memory.h"

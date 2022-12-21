@@ -1,5 +1,5 @@
 #include "Assets/TextureAssetFactory.h"
-#include "stb_image.h"
+#include "ThirdParty/stb_image.h"
 #include "Rendering/Texture.h"
 #include "Core/Utils.h"
 #include "Core/Log.hpp"

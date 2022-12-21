@@ -1,7 +1,7 @@
 #pragma once
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
-#include "json.hpp"
+#include "ThirdParty/json.hpp"
 #include "Core/Profile.hpp"
 #include "Rendering/ShaderDataContainer.h"
 
