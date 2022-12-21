@@ -2,8 +2,6 @@
 
 int main()
 {
-	using namespace harmony;
-	Editor app;
-	
+	harmony::Editor app;
 	app.Run();
 }
