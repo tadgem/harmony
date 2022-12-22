@@ -101,6 +101,18 @@ void harmony::Editor::InitializeViews()
 	p_EditorView = editorViewWr.lock();
 }
 
+void harmony::Editor::SaveProject()
+{
+	Program::SaveProject();
+	SaveImGuiSettings();
+}
+
+void harmony::Editor::LoadProject(const std::string& path)
+{
+	Program::LoadProject(path);
+	LoadImGuiSettings();
+}
+
 int harmony::Editor::OnEditUpdate()
 {
 	UpdateTimeVariables();
@@ -184,8 +196,9 @@ void harmony::Editor::Run()
 	m_Renderer.Init();
 	InitializePipelines();
 	InitializeViews();
-
 	PreRunInit();
+
+	SetStyle();
 
 	while (p_Run)
 	{
@@ -197,7 +210,7 @@ void harmony::Editor::Run(const std::string& projectPath)
 {
 	HARMONY_PROFILE_FUNCTION()
 
-		Init();
+	Init();
 	m_Renderer.Init();
 	InitializePipelines();
 	InitializeViews();
@@ -205,6 +218,8 @@ void harmony::Editor::Run(const std::string& projectPath)
 	LoadProject(projectPath);
 
 	PreRunInit();
+
+	SetStyle();
 
 	while (p_Run)
 	{

@@ -33,8 +33,9 @@ namespace harmony
 		~Program();
 		void Init();
 		virtual void Run();
-
+		virtual void Run(const std::string& projectPath);
 		virtual void CreateProject(const std::string& name, const std::string& path);
+
 		virtual void SaveProject();
 		virtual void LoadProject(const std::string& path);
 		virtual void CloseActiveProject();
@@ -76,6 +77,8 @@ namespace harmony
 		void PreRunInit();
 		void UpdateTimeVariables();
 
+		void RunProgramLoop();
+
 		void ResizeApplicationWindow(int w, int h);
 		
 		void HandleSDLEvent();
@@ -85,6 +88,12 @@ namespace harmony
 		void ImGuiPostUpdate();
 		void SetStyle();
 		void ListCapabilities();
+
+		void SaveImGuiSettings();
+		void LoadImGuiSettings();
+
+		void UpdateProjectDirectory(const std::string& path);
+
 		std::string							p_AppName;
 		std::string							p_LoadedProjectPath;
 		std::vector<Ref<ProgramComponent>>	p_ProgramComponents;

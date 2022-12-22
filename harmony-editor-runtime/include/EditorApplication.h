@@ -34,6 +34,9 @@ namespace harmony
 		virtual void	InitializePipelines() override;
 		virtual void	InitializeViews() override;
 		
+		virtual void	SaveProject() override;
+		virtual void	LoadProject(const std::string& path) override;
+
 		void 			AddEditorPanels();
 
 

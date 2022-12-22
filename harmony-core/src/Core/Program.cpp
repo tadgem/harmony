@@ -210,6 +210,7 @@ void harmony::Program::ListCapabilities()
 	harmony::log::info("Program : BGFX : Texture Readback? : {}", m_Capabilities->supported && BGFX_CAPS_TEXTURE_READ_BACK);
 	harmony::log::info("Program : BGFX : Image R/W? : {}", m_Capabilities->supported && BGFX_CAPS_IMAGE_RW);
 }
+
 void harmony::Program::SetStyle()
 {
 	// Photoshop style by Derydoca from ImThemes
@@ -300,6 +301,7 @@ void harmony::Program::SetStyle()
 	style.Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.5860000252723694f);
 	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.5860000252723694f);
 }
+
 void harmony::Program::InitImGui()
 {
 	HARMONY_PROFILE_FUNCTION()
@@ -328,7 +330,6 @@ void harmony::Program::PreRunInit()
 
 	RunSystemInit();
 	LoadBuiltInAssets();
-	SetStyle();
 }
 
 void harmony::Program::UpdateTimeVariables()
@@ -440,24 +441,18 @@ void harmony::Program::ImGuiPostUpdate()
 
 }
 
-void harmony::Program::Run()
+void harmony::Program::RunProgramLoop()
 {
-	HARMONY_PROFILE_FUNCTION()
-
-	PreRunInit();
-
 	while (p_Run)
 	{
 		UpdateTimeVariables();
-		
+
 		HandleSDLEvent();
 
 		RunRendererPreUpdate();
 
-		ImGuiPreUpdate();
-
 		RunProgramComponentUpdate();
-		
+
 		RunSystemUpdate();
 
 		RunRendererPostUpdate();
@@ -468,10 +463,26 @@ void harmony::Program::Run()
 
 		Input::Get()->PostFrame();
 
-		ImGuiPostUpdate();
-
 		bgfx::frame();
 	}
+}
+
+void harmony::Program::Run()
+{
+	HARMONY_PROFILE_FUNCTION()
+
+	PreRunInit();
+	RunProgramLoop();
+	
+}
+
+void harmony::Program::Run(const std::string& projectPath)
+{
+	HARMONY_PROFILE_FUNCTION()
+
+	PreRunInit();
+	LoadProject(projectPath);
+	RunProgramLoop();
 }
 
 void harmony::Program::CreateProject(const std::string& name, const std::string& path)
@@ -490,10 +501,11 @@ void harmony::Program::SaveProject()
 		harmony::log::warn("Program::SaveProject : cannot save project, as there is no active project.");
 		return;
 	}
+
 	m_Project->UpdateProjectComponentSerializationAttributes(p_ProgramComponents);
 	m_Project->UpdateRendererSerializationAttributes(m_Renderer);
 	m_Project->UpdateProjectAssetsSerializationAttributes(m_AssetManager);
-	m_Project->Save();
+
 	nlohmann::json projectJson = *m_Project;
 	Utils::SaveJsonToPath(projectJson, p_LoadedProjectPath);
 }
@@ -502,16 +514,15 @@ void harmony::Program::LoadProject(const std::string& path)
 {
 	HARMONY_PROFILE_FUNCTION()
 	CloseActiveProject();
+
 	nlohmann::json projectJson = Utils::LoadJsonFromPath(path);
 	m_Project = CreateRef<Project>(projectJson);
 		
-	std::string directory = Utils::GetFilePathDirectory(path);
-	ChangeWorkingDirectory(directory);
-	directory = GetWorkingDirectory();
-	harmony::log::info("Current working directory : {}", directory);
+	UpdateProjectDirectory(path);
+	
+	m_AssetManager.Deserialize(m_Project->m_AssetManagerSerializationAttributes);
+	m_Renderer.Deserialize(m_AssetManager, m_Project->m_RendererSerializationAttributes);
 
-	m_Project->m_ProjectDirectory = directory;
-	m_Project->Load(m_AssetManager, m_Renderer);
 	p_LoadedProjectPath = path;
 
 	RunProgramComponentInit();
@@ -531,6 +542,8 @@ void harmony::Program::CloseActiveProject()
 	{
 		p_ProgramComponents[i]->Refresh();
 	}
+
+	m_AssetManager.UnloadAllAssets();
 
 	m_Project.reset();
 	m_Project = nullptr;
@@ -758,4 +771,29 @@ void harmony::Program::RunRendererPostUpdate()
 std::string harmony::Program::GetWorkingDirectory()
 {
 	return std::filesystem::current_path().string();
+}
+
+void harmony::Program::SaveImGuiSettings()
+{
+	m_Project->m_ImGuiIniPath = m_Project->m_ProjectName + "_ImGui.ini";
+	ImGui::SaveIniSettingsToDisk(m_Project->m_ImGuiIniPath.c_str());
+}
+
+void harmony::Program::LoadImGuiSettings()
+{
+	m_Project->m_ImGuiIniPath = m_Project->m_ProjectName + "_ImGui.ini";
+	if (std::filesystem::exists(m_Project->m_ImGuiIniPath))
+	{
+		ImGui::LoadIniSettingsFromDisk(m_Project->m_ImGuiIniPath.c_str());
+	}
+}
+
+void harmony::Program::UpdateProjectDirectory(const std::string& path)
+{
+	std::string directory = Utils::GetFilePathDirectory(path);
+	ChangeWorkingDirectory(directory);
+	directory = GetWorkingDirectory();
+	harmony::log::info("Current working directory : {}", directory);
+
+	m_Project->m_ProjectDirectory = directory;
 }
