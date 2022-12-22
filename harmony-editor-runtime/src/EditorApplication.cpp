@@ -23,8 +23,8 @@ harmony::Editor::Editor() : harmony::RuntimeProgram("Harmony Editor"), p_MainMen
 	m_EditorFSM.AddState(Mode::Edit, [&]() {return OnEditUpdate(); });
 	m_EditorFSM.AddStateExit(Mode::Edit, [&]() {OnEditExit(); });
 
-	m_EditorFSM.AddState(Mode::Debug, [&]() {return OnDebugUpdate(); });
-	m_EditorFSM.AddStateExit(Mode::Debug, [&]() {OnDebugExit(); });
+	m_EditorFSM.AddState(Mode::Debug, [&]() {return OnRuntimeUpdate(); });
+	m_EditorFSM.AddStateExit(Mode::Debug, [&]() {OnRuntimeExit(); });
 
 	m_EditorFSM.AddTrigger(Trigger::Play, Mode::Edit, Mode::Debug);
 	m_EditorFSM.AddTrigger(Trigger::Stop, Mode::Debug, Mode::Edit);
@@ -35,38 +35,34 @@ harmony::Editor::Editor() : harmony::RuntimeProgram("Harmony Editor"), p_MainMen
 
 void harmony::Editor::AddAssetTypeNames()
 {
-	m_AssetManager.AddAssetTypeName<Mesh>();
-	m_AssetManager.AddAssetTypeName<Model>();
-	m_AssetManager.AddAssetTypeName<Texture>();
+	RuntimeProgram::AddAssetTypeNames();
 	m_AssetManager.AddAssetTypeName<ShaderSourceAsset>();
-	m_AssetManager.AddAssetTypeName<ShaderStage>();
 }
 
 void harmony::Editor::AddAssetFactories()
 {
-	m_AssetManager.AddAssetFactory(CreateRef<TextureAssetFactory>(m_Renderer));
-	m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>(m_Renderer));
-	m_AssetManager.AddAssetFactory(CreateRef<ShaderStageBinaryAssetFactory>(m_Renderer));
+	RuntimeProgram::AddAssetFactories();
 	m_AssetManager.AddAssetFactory(CreateRef<ShaderSourceAssetFactory>());
 }
 
 void harmony::Editor::AddProgramComponents()
 {
+	RuntimeProgram::AddProgramComponents();
 	AddProgramComponent<ShaderHotReload>(*this);
 }
 
 void harmony::Editor::AddSystems()
 {
-	p_TransformSystem = AddSystem<TransformSystem>().lock();
-	p_CameraSystem = AddSystem<CameraSystem>().lock();
-	AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
-	p_MeshSystem = AddSystem<MeshSystem>(m_AssetManager).lock();
+	RuntimeProgram::AddSystems();
+	p_TransformSystem	= GetSystem<TransformSystem>().lock();
+	p_CameraSystem		= GetSystem<CameraSystem>().lock();
+	p_MeshSystem		= GetSystem<MeshSystem>().lock();
 
 }
 
 void harmony::Editor::AddPipelineStageRenderers()
 {
-	m_Renderer.AddPipelineStageRenderer(CreateRef<MeshRenderer>());
+	RuntimeProgram::AddPipelineStageRenderers();
 }
 
 void harmony::Editor::AddEditorPanels()
@@ -88,40 +84,19 @@ void harmony::Editor::AddEditorPanels()
 
 void harmony::Editor::InitializePipelines()
 {
-	p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
-	p_ForwardPipeline = CreateRef<Pipeline>(PipelineHandle("Forward Pipeline"), Pipeline::Type::Surface);
-	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>(VectorGraphics::Layer::One);
+	RuntimeProgram::InitializePipelines();
 
-	p_ForwardPipeline->AddPipelineStage<PipelineStage>("NormalStage1",
-		PipelineStage::Type::PrimaryDraw,
-		m_Renderer.GetShader("Normal"),
-		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
-		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F));
-	p_ForwardPipeline->AddPipelineStage<PipelineStage>("TexturedMeshStage",
-		PipelineStage::Type::PrimaryDraw,
-		m_Renderer.GetShader("TexturedMesh"),
-		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
-		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F));
-
-
-	m_Renderer.AddPipeline(p_DebugPipeline);
-	m_Renderer.AddPipeline(p_ForwardPipeline);
-	m_Renderer.AddPipeline(p_VectorGraphicsPipeline);
 }
 
 void harmony::Editor::InitializeViews()
 {
+	RuntimeProgram::InitializeViews();
+
 	auto editorViewWr = m_Renderer.CreateView<EditorView>(*this, p_ScenePanel);
-	auto runtimeViewWr = m_Renderer.CreateView<RuntimeView>(*this);
 	m_Renderer.AddViewPipeline(editorViewWr, p_DebugPipeline);
 	m_Renderer.AddViewPipeline(editorViewWr, p_ForwardPipeline);
 	m_Renderer.AddViewPipeline(editorViewWr, p_VectorGraphicsPipeline);
 	m_Renderer.SetViewActive(editorViewWr, true);
-
-	m_Renderer.AddViewPipeline(runtimeViewWr, p_DebugPipeline);
-	m_Renderer.AddViewPipeline(runtimeViewWr, p_ForwardPipeline);
-	m_Renderer.AddViewPipeline(runtimeViewWr, p_VectorGraphicsPipeline);
-	m_Renderer.SetViewActive(runtimeViewWr, true);
 
 	p_EditorView = editorViewWr.lock();
 }
@@ -165,7 +140,7 @@ void harmony::Editor::OnEditExit()
 	SaveScene(p_LoadedScenePath);
 }
 
-int harmony::Editor::OnDebugUpdate()
+int harmony::Editor::OnRuntimeUpdate()
 {
 	UpdateTimeVariables();
 
@@ -190,13 +165,13 @@ int harmony::Editor::OnDebugUpdate()
 	Input::Get()->PostFrame();
 
 	ImGuiPostUpdate();
-
+	  
 	bgfx::frame();
 
 	return FSM::NO_TRIGGER;
 }
 
-void harmony::Editor::OnDebugExit()
+void harmony::Editor::OnRuntimeExit()
 {
 	LoadScene(p_LoadedScenePath);
 }
@@ -205,13 +180,29 @@ void harmony::Editor::Run()
 {
 	HARMONY_PROFILE_FUNCTION()
 
+	Init();
+	m_Renderer.Init();
+	InitializePipelines();
+	InitializeViews();
+
+	PreRunInit();
+
+	while (p_Run)
+	{
+		m_EditorFSM.Process();
+	}
+}
+
+void harmony::Editor::Run(const std::string& projectPath)
+{
+	HARMONY_PROFILE_FUNCTION()
+
 		Init();
 	m_Renderer.Init();
 	InitializePipelines();
 	InitializeViews();
-#if HARMONY_DEBUG && BX_PLATFORM_WINDOWS
-	LoadProject("../../projects/Test3/Test3.harmonyproj");
-#endif
+
+	LoadProject(projectPath);
 
 	PreRunInit();
 

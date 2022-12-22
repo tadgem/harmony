@@ -18,9 +18,11 @@ namespace harmony
 		virtual void InitializePipelines();
 		virtual void InitializeViews();
 
-		Ref<Pipeline> 			p_DebugPipeline;
+		virtual int	 OnRuntimeUpdate();
+
 		Ref<Pipeline> 			p_ForwardPipeline;
 		Ref<Pipeline> 			p_VectorGraphicsPipeline;
+		Ref<Pipeline>			p_DebugPipeline;
 
 		Ref<MeshSystem> 		p_MeshSystem;
 		Ref<TransformSystem> 	p_TransformSystem;

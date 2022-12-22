@@ -40,10 +40,11 @@ namespace harmony
 		int 			OnEditUpdate();
 		void 			OnEditExit();
 
-		int 			OnDebugUpdate();
-		void 			OnDebugExit();
+		virtual int		OnRuntimeUpdate() override;
+		void 			OnRuntimeExit();
 
 		virtual void 	Run() override;
+		void			Run(const std::string& projectPath);
 
 		virtual void 	LoadScene(const std::string& path) override;
 		virtual void 	OpenScene(uint32_t index) override;

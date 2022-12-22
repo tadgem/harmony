@@ -1,6 +1,7 @@
 #include "RuntimeProgram.h"
 #include "AssimpModelAssetFactory.h"
 #include "Rendering/Views/RuntimeView.h"
+#include "Core/FSM.h"
 
 harmony::RuntimeProgram::RuntimeProgram(const std::string& name) : Program(name)
 {
@@ -42,9 +43,9 @@ void harmony::RuntimeProgram::AddPipelineStageRenderers()
 
 void harmony::RuntimeProgram::InitializePipelines()
 {
-	p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Game);
-	p_ForwardPipeline = CreateRef<Pipeline>(PipelineHandle("Forward Pipeline"), Pipeline::Type::Surface);
-	p_VectorGraphicsPipeline = CreateRef<VectorPipeline>(VectorGraphics::Layer::One);
+	p_ForwardPipeline			= CreateRef<Pipeline>(PipelineHandle("Forward Pipeline"), Pipeline::Type::Surface);
+	p_VectorGraphicsPipeline	= CreateRef<VectorPipeline>(VectorGraphics::Layer::One);
+	p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
 
 	p_ForwardPipeline->AddPipelineStage<PipelineStage>("NormalStage1",
 		PipelineStage::Type::PrimaryDraw,
@@ -57,7 +58,6 @@ void harmony::RuntimeProgram::InitializePipelines()
 		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
 		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F));
 
-
 	m_Renderer.AddPipeline(p_DebugPipeline);
 	m_Renderer.AddPipeline(p_ForwardPipeline);
 	m_Renderer.AddPipeline(p_VectorGraphicsPipeline);
@@ -67,8 +67,30 @@ void harmony::RuntimeProgram::InitializeViews()
 {
 	auto runtimeViewWr = m_Renderer.CreateView<RuntimeView>(*this);
 
-	m_Renderer.AddViewPipeline(runtimeViewWr, p_DebugPipeline);
 	m_Renderer.AddViewPipeline(runtimeViewWr, p_ForwardPipeline);
 	m_Renderer.AddViewPipeline(runtimeViewWr, p_VectorGraphicsPipeline);
 	m_Renderer.SetViewActive(runtimeViewWr, true);
+}
+
+int harmony::RuntimeProgram::OnRuntimeUpdate()
+{
+	UpdateTimeVariables();
+
+	HandleSDLEvent();
+
+	RunRendererPreUpdate();
+
+	RunProgramComponentUpdate();
+
+	RunSystemUpdate();
+
+	RunRendererPostUpdate();
+
+	RunProgramComponentRender();
+
+	RunSystemRender();
+
+	bgfx::frame();
+
+	return FSM::NO_TRIGGER;
 }
