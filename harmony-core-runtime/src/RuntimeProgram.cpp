@@ -27,7 +27,7 @@ void harmony::RuntimeProgram::Run()
 
 	PreRunInit();
 
-	SetStyle();
+	p_RuntimeView->OnResized(p_WindowWidth, p_WindowHeight);
 
 	while (p_Run)
 	{
@@ -47,8 +47,9 @@ void harmony::RuntimeProgram::Run(const std::string& projectPath)
 
 	LoadProject(projectPath);
 	OpenScene(0);
-	
-	SetStyle();
+
+	ResizeApplicationWindow(p_WindowWidth, p_WindowHeight);
+	p_RuntimeView->OnResized(p_WindowWidth, p_WindowHeight);
 
 	while (p_Run)
 	{
@@ -149,14 +150,32 @@ int harmony::RuntimeProgram::OnRuntimeUpdate()
 	return FSM::NO_TRIGGER;
 }
 
-void harmony::RuntimeProgram::PresentRuntimeImage()
+void harmony::RuntimeProgram::LoadBuiltInAssets()
 {
-	bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_DEPTH);
-	bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_COLOR);
+	AssetHandle cubeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Cube", CreateRef<Cube>(1.0f));
+	Ref<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
+	m_Renderer.SubmitMeshToGPU(cube);
+	AssetHandle planeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Plane", CreateRef<Plane>(1.0f));
+	Ref<Mesh> plane = m_AssetManager.GetAsset<Mesh>(planeHandle).lock();
+	m_Renderer.SubmitMeshToGPU(plane);	
+}
+
+void harmony::RuntimeProgram::ResizeApplicationWindow(int w, int h)
+{
+	HARMONY_PROFILE_FUNCTION()
+
+	Program::ResizeApplicationWindow(w, h);
 	bgfx::setViewRect(p_PresentViewId, 0, 0, p_WindowWidth, p_WindowHeight);
 
+	p_RuntimeView->OnResized(p_WindowWidth, p_WindowHeight);
+}
+
+void harmony::RuntimeProgram::PresentRuntimeImage()
+{
+	bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_COLOR, 0);
+	bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_DEPTH, 0, 1.0f);
 	auto stack = m_Renderer.GetViewPipelineStack(p_RuntimeView->m_Name);
-	bgfx::setTexture(0, m_Renderer.p_PresentProgramTextureHandle, stack.GetFinalImage());
+	bgfx::setTexture(0, m_Renderer.p_PresentProgramTextureHandle, stack.GetFinalImage(), BGFX_SAMPLER_POINT);
 	ScreenSpaceQuad(static_cast<float>(p_WindowWidth), static_cast<float>(p_WindowHeight));
 	bgfx::submit(p_PresentViewId, m_Renderer.p_PresentProgram.lock()->m_Handle);
 }

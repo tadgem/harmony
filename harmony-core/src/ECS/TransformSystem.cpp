@@ -2,6 +2,7 @@
 #include "ECS/TransformComponent.h"
 #include "Core/Memory.h"
 #include "Core/Profile.hpp"
+#include "Core/Time.h"
 harmony::TransformSystem::TransformSystem() : System(GetTypeHash<TransformSystem>())
 {
 }
@@ -39,6 +40,7 @@ void harmony::TransformSystem::Update(entt::registry& registry)
 
 	for (auto [entity, transform] : transformView.each())
 	{
+        transform.Euler.y += Time::GetFrameTime() * 3.0f;
 		modelMatrix = glm::mat4(1.0);
 		modelMatrix = glm::translate(modelMatrix, transform.Position);
 

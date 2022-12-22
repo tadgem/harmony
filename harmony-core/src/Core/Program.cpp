@@ -25,6 +25,7 @@ harmony::Program::Program(const std::string& name) : p_AppName(name), m_Renderer
 	}
 	s_Instance = this;
 	p_Run = true;
+	p_ResizedThisFrame = false;
 	m_Project = nullptr;
 	using std::filesystem::current_path;
 
@@ -351,16 +352,13 @@ void harmony::Program::ResizeApplicationWindow(int w, int h)
 	p_WindowHeight	= static_cast<uint16_t>(h);
 	SDL_SetWindowSize(p_Window, w, h);
 	ImGui::GetIO().DisplaySize = ImVec2(p_WindowWidth, p_WindowHeight);
-	for (uint16_t i = 0; i < m_Capabilities->limits.maxViews; i++)
-	{
-		bgfx::setViewRect(i, 0, 0, bgfx::BackbufferRatio::Equal);
-	}
 	bgfx::reset(p_WindowWidth, p_WindowHeight);
 }
 
 void harmony::Program::HandleSDLEvent()
 {
 	SDL_Event sdlEvent;
+	p_ResizedThisFrame = false;
 
 	while (SDL_PollEvent(&sdlEvent))
 	{
@@ -375,7 +373,11 @@ void harmony::Program::HandleSDLEvent()
 		{
 			if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED)
 			{
-				ResizeApplicationWindow(sdlEvent.window.data1, sdlEvent.window.data2);
+				if (!p_ResizedThisFrame)
+				{
+					ResizeApplicationWindow(sdlEvent.window.data1, sdlEvent.window.data2);
+					p_ResizedThisFrame = true;
+				}
 			}
 		}
 		HandleInputEvent(sdlEvent);

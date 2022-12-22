@@ -79,7 +79,7 @@ namespace harmony
 
 		void RunProgramLoop();
 
-		void ResizeApplicationWindow(int w, int h);
+		virtual void ResizeApplicationWindow(int w, int h);
 		
 		void HandleSDLEvent();
 		void HandleInputEvent(SDL_Event& event);
@@ -100,6 +100,7 @@ namespace harmony
 		std::vector<Ref<System>>			p_ECSSystems;
 		Ref<Scene>							p_ActiveScene;
 		bool p_Run;
+		bool p_ResizedThisFrame;
 
 
 		SDL_Window*				p_Window;

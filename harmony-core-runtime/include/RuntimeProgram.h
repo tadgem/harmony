@@ -24,6 +24,8 @@ namespace harmony
 
 		virtual int	 OnRuntimeUpdate();
 
+		virtual void LoadBuiltInAssets();
+		virtual void ResizeApplicationWindow(int w, int h) override;
 		void PresentRuntimeImage();
 
 		Ref<Pipeline> 			p_ForwardPipeline;
