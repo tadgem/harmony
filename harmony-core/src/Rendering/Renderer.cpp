@@ -66,6 +66,7 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::AddBuiltInShader(con
 void harmony::Renderer::AddBuiltInShaders()
 {
     p_PresentProgram = AddBuiltInShader("Present", "vs_present", "fs_present", 4, 5);
+    p_PresentProgramTextureHandle = p_PresentProgram.lock()->m_Uniforms[0].BgfxHandle;
     AddBuiltInShader("TexturedMesh", "vs_simple_textured", "fs_simple_textured", 0, 1);
     AddBuiltInShader("Normal", "vs_normal", "fs_normal", 2, 3);
     AddBuiltInShader("NanoVG", "vs_nanovg_fill", "fs_nanovg_fill", 6, 7);

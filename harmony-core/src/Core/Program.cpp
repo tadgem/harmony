@@ -481,7 +481,6 @@ void harmony::Program::Run(const std::string& projectPath)
 	HARMONY_PROFILE_FUNCTION()
 
 	PreRunInit();
-	LoadProject(projectPath);
 	RunProgramLoop();
 }
 

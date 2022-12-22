@@ -51,6 +51,11 @@ std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::st
 		return GetAssetsAtPath(cleanPath);
 	}
 	Ref<AssetFactory> factory = GetAssetFactory(typeHash);
+	if (!factory)
+	{
+		harmony::log::error("AssetManager : No factory for asset with type hash {}, skipping.", typeHash);
+		return std::vector<AssetHandle>();
+	}
 	factory->LoadAssetData(cleanPath, p_AssetRegistry);
 	p_LoadedPaths.emplace_back(cleanPath);
 

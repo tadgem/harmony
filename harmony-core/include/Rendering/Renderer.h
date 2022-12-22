@@ -121,5 +121,9 @@ namespace harmony
 
         // Misc & Helpers
         WeakRef<ShaderProgram>                              p_PresentProgram;
+        bgfx::UniformHandle                                 p_PresentProgramTextureHandle;
+
+        friend class Program;
+        friend class RuntimeProgram;
     };
 };

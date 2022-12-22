@@ -26,6 +26,7 @@ void harmony::Scene::Deserialize(std::vector<Ref<System>>& systems)
 			if (systems[i]->m_TypeHash == systemTypeHash)
 			{
 				systems[i]->DeserializeSystem(m_Registry, json);
+				break;
 			}
 		}
 	}

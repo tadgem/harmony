@@ -71,7 +71,10 @@ void harmony::CameraSystem::DeserializeSystem(entt::registry& registry, nlohmann
         nlohmann::json transformJson = entry.value();
         CameraComponent cc;
         transformJson.get_to<CameraComponent>(cc);
-
+        if (registry.any_of<CameraComponent>(e))
+        {
+            registry.remove<CameraComponent>(e);
+        }
         registry.emplace<CameraComponent>(e, cc);
     }
 }

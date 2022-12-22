@@ -1,11 +1,59 @@
 #include "RuntimeProgram.h"
 #include "AssimpModelAssetFactory.h"
 #include "Rendering/Views/RuntimeView.h"
+#include "Rendering/Shapes.h"
 #include "Core/FSM.h"
 
 harmony::RuntimeProgram::RuntimeProgram(const std::string& name) : Program(name)
 {
+	AddAssetTypeNames();
+	AddAssetFactories();
+	AddProgramComponents();
+	AddSystems();
+	AddPipelineStageRenderers();
 
+	// TODO: Need some way of tracking max view ids.
+	p_PresentViewId = (bgfx::ViewId)255;
+}
+
+void harmony::RuntimeProgram::Run()
+{
+	HARMONY_PROFILE_FUNCTION()
+
+	Init();
+	m_Renderer.Init();
+	InitializePipelines();
+	InitializeViews();
+
+	PreRunInit();
+
+	SetStyle();
+
+	while (p_Run)
+	{
+		OnRuntimeUpdate();
+	}
+}
+
+void harmony::RuntimeProgram::Run(const std::string& projectPath)
+{
+	Init();
+	m_Renderer.Init();
+	InitializePipelines();
+	InitializeViews();
+
+
+	PreRunInit();
+
+	LoadProject(projectPath);
+	OpenScene(0);
+	
+	SetStyle();
+
+	while (p_Run)
+	{
+		OnRuntimeUpdate();
+	}
 }
 
 void harmony::RuntimeProgram::AddAssetTypeNames()
@@ -70,7 +118,11 @@ void harmony::RuntimeProgram::InitializeViews()
 	m_Renderer.AddViewPipeline(runtimeViewWr, p_ForwardPipeline);
 	m_Renderer.AddViewPipeline(runtimeViewWr, p_VectorGraphicsPipeline);
 	m_Renderer.SetViewActive(runtimeViewWr, true);
+
+	p_RuntimeView = runtimeViewWr.lock();
 }
+
+
 
 int harmony::RuntimeProgram::OnRuntimeUpdate()
 {
@@ -84,13 +136,27 @@ int harmony::RuntimeProgram::OnRuntimeUpdate()
 
 	RunSystemUpdate();
 
-	RunRendererPostUpdate();
+	RunRendererPostUpdate(); 
 
 	RunProgramComponentRender();
 
 	RunSystemRender();
 
+	PresentRuntimeImage();
+
 	bgfx::frame();
 
 	return FSM::NO_TRIGGER;
+}
+
+void harmony::RuntimeProgram::PresentRuntimeImage()
+{
+	bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_DEPTH);
+	bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_COLOR);
+	bgfx::setViewRect(p_PresentViewId, 0, 0, p_WindowWidth, p_WindowHeight);
+
+	auto stack = m_Renderer.GetViewPipelineStack(p_RuntimeView->m_Name);
+	bgfx::setTexture(0, m_Renderer.p_PresentProgramTextureHandle, stack.GetFinalImage());
+	ScreenSpaceQuad(static_cast<float>(p_WindowWidth), static_cast<float>(p_WindowHeight));
+	bgfx::submit(p_PresentViewId, m_Renderer.p_PresentProgram.lock()->m_Handle);
 }

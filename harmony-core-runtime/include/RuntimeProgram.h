@@ -5,10 +5,14 @@
 
 namespace harmony
 {
+	class RuntimeView;
     class RuntimeProgram : public Program
     {
     public:
         RuntimeProgram(const std::string& name);
+
+		virtual void Run();
+		virtual void Run(const std::string& projectPath);
 
 		virtual void AddAssetTypeNames();
 		virtual void AddAssetFactories();
@@ -20,12 +24,17 @@ namespace harmony
 
 		virtual int	 OnRuntimeUpdate();
 
+		void PresentRuntimeImage();
+
 		Ref<Pipeline> 			p_ForwardPipeline;
 		Ref<Pipeline> 			p_VectorGraphicsPipeline;
 		Ref<Pipeline>			p_DebugPipeline;
+		Ref<RuntimeView>		p_RuntimeView;
 
 		Ref<MeshSystem> 		p_MeshSystem;
 		Ref<TransformSystem> 	p_TransformSystem;
 		Ref<CameraSystem> 		p_CameraSystem;
+
+		bgfx::ViewId			p_PresentViewId;
     };
 }
