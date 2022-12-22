@@ -40,7 +40,6 @@ void harmony::TransformSystem::Update(entt::registry& registry)
 
 	for (auto [entity, transform] : transformView.each())
 	{
-        transform.Euler.y += Time::GetFrameTime() * 3.0f;
 		modelMatrix = glm::mat4(1.0);
 		modelMatrix = glm::translate(modelMatrix, transform.Position);
 
