@@ -15,7 +15,7 @@ set_property(TARGET harmony-editor-runtime PROPERTY CXX_STANDARD 17)
 get_filename_component(TEMP_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 get_filename_component(ROOT_DIR ${TEMP_DIR} DIRECTORY)
 
-add_subdirectory(${ROOT_DIR}/harmony-core-runtime ${CMAKE_CURRENT_BINARY_DIR}/harmony-core-runtime)
+add_subdirectory(${ROOT_DIR}/harmony-runtime ${CMAKE_CURRENT_BINARY_DIR}/harmony-runtime)
 add_subdirectory(${ROOT_DIR}/submodules/efsw ${CMAKE_CURRENT_BINARY_DIR}/efsw)
 
 set(HARMONY_EDITOR_INCLUDES 
@@ -26,4 +26,4 @@ set(HARMONY_EDITOR_INCLUDES
     CACHE INTERNAL "")
 
 target_include_directories(harmony-editor-runtime PUBLIC ${HARMONY_EDITOR_INCLUDES})
-target_link_libraries(harmony-editor-runtime harmony-core-runtime efsw)
+target_link_libraries(harmony-editor-runtime harmony-runtime efsw)
