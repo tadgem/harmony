@@ -15,7 +15,7 @@ endif()
 
 get_filename_component(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
-add_subdirectory(${ROOT_DIR}/harmony-editor-runtime ${CMAKE_CURRENT_BINARY_DIR}/harmony-editor-runtime)
+add_subdirectory(${ROOT_DIR}/templates/harmony-editor-runtime ${CMAKE_CURRENT_BINARY_DIR}/harmony-editor-runtime)
 
 target_include_directories(harmony-dojo PRIVATE ${HARMONY_EDITOR_INCLUDES})
 
