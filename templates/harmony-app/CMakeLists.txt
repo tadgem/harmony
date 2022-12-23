@@ -12,7 +12,8 @@ else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error")
 endif()
 
-get_filename_component(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
+get_filename_component(TEMP_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
+get_filename_component(ROOT_DIR ${TEMP_DIR} DIRECTORY)
 
 add_subdirectory(${ROOT_DIR}/harmony-core-runtime ${CMAKE_CURRENT_BINARY_DIR}/harmony-core-runtime)
 
