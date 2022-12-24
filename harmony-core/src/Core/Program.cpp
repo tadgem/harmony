@@ -27,10 +27,6 @@ harmony::Program::Program(const std::string& name) : p_AppName(name), m_Renderer
 	p_Run = true;
 	p_ResizedThisFrame = false;
 	m_Project = nullptr;
-	using std::filesystem::current_path;
-
-	std::filesystem::path path = std::filesystem::current_path();
-	harmony::log::info("Current Working Directory : {}", path.string());
 }
 
 harmony::Program::~Program()
@@ -43,6 +39,11 @@ void harmony::Program::Init()
 	HARMONY_PROFILE_FUNCTION()
 	
 	harmony::log::info("Harmony Engine");
+
+	using std::filesystem::current_path;
+
+	std::filesystem::path path = std::filesystem::current_path();
+	harmony::log::info("Current Working Directory : {}", path.string());
 	
 	InitSDL();
 	InitBGFX();
@@ -119,10 +120,9 @@ void harmony::Program::InitSDL()
 	p_WindowHeight	= rect.h - 24;
 
 	SDL_WindowFlags windowFlags = static_cast<SDL_WindowFlags>(SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-
 	// TODO: Add window resizing.
 	p_Window = SDL_CreateWindow(
-		"Harmony", 
+		p_AppName.c_str(),
 		SDL_WINDOWPOS_CENTERED, 
 		SDL_WINDOWPOS_CENTERED, 
 		p_WindowWidth,
@@ -133,6 +133,9 @@ void harmony::Program::InitSDL()
 		harmony::log::error("Window could not be created. SDL_Error: ", SDL_GetError());
 		return;
 	}
+	SDL_DisplayMode* mode;
+	SDL_GetWindowDisplayMode(p_Window, mode);
+	SDL_SetWindowDisplayMode(p_Window, mode);
 	harmony::log::info("SDL Initialized successfully");
 }
 
@@ -379,6 +382,7 @@ void harmony::Program::HandleSDLEvent()
 					p_ResizedThisFrame = true;
 				}
 			}
+
 		}
 		HandleInputEvent(sdlEvent);
 	}

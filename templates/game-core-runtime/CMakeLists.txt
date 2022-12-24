@@ -14,7 +14,7 @@ set_property(TARGET game-core-runtime PROPERTY CXX_STANDARD 17)
 
 get_filename_component(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
-add_subdirectory(${ROOT_DIR}/harmony-core-runtime ${CMAKE_CURRENT_BINARY_DIR}/harmony-core-runtime)
+add_subdirectory(${ROOT_DIR}/harmony-runtime ${CMAKE_CURRENT_BINARY_DIR}/harmony-runtime)
 
 set(GAME_CORE_RUNTIME_INCLUDES 
     ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -22,4 +22,4 @@ set(GAME_CORE_RUNTIME_INCLUDES
     CACHE INTERNAL "")
 
 target_include_directories(game-core-runtime PUBLIC ${GAME_CORE_RUNTIME_INCLUDES})
-target_link_libraries(game-core-runtime harmony-core-runtime)
+target_link_libraries(game-core-runtime harmony-runtime)

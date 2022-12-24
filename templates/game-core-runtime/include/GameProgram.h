@@ -9,6 +9,6 @@ namespace harmony
         public:
         GameProgram();
 
-        inline static const std::string GameName = "Game"
+        inline static const std::string GameName = "Game";
     };
 }
