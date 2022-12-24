@@ -133,9 +133,6 @@ void harmony::Program::InitSDL()
 		harmony::log::error("Window could not be created. SDL_Error: ", SDL_GetError());
 		return;
 	}
-	SDL_DisplayMode* mode;
-	SDL_GetWindowDisplayMode(p_Window, mode);
-	SDL_SetWindowDisplayMode(p_Window, mode);
 	harmony::log::info("SDL Initialized successfully");
 }
 

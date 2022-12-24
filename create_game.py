@@ -49,6 +49,7 @@ def main():
 
     new_program_name = f"{name}Program"
     game_core_runtime_includes = f"{name.upper()}_CORE_RUNTIME_INCLUDES";
+    game_editor_includes = f"{name.upper()}_EDITOR_INCLUDES";
     # Game Core Runtime
     game_program_header_name = core_runtime_dst + "/include/" + new_program_name + ".h"
     game_program_cpp_name = core_runtime_dst + "/src/" + new_program_name + ".cpp"
@@ -66,10 +67,26 @@ def main():
     # Game App
     game_app_cpp_name = app_dst + "/main.cpp"
     inplace_change(game_app_cpp_name, "Runtime", name)
-    inplace_change(f"{app_dst}/CMakeLists.txt", "harmony-app", f"{name}-app")
+    inplace_change(f"{app_dst}/CMakeLists.txt", "harmony-app", app_dst)
     inplace_change(f"{app_dst}/CMakeLists.txt", "HARMONY_CORE_RUNTIME_INCLUDES", game_core_runtime_includes)
     inplace_change(f"{app_dst}/CMakeLists.txt", "harmony-runtime", core_runtime_dst)
     inplace_change(f"{app_dst}/CMakeLists.txt", cmake_dir_helper, cmake_dir_helper_replacement)
+
+    # Editor Runtime
+    inplace_change(f"{editor_runtime_dst}/CMakeLists.txt", template_editor_runtime_target_name, editor_runtime_dst)
+    inplace_change(f"{editor_runtime_dst}/CMakeLists.txt", "HARMONY_CORE_RUNTIME_INCLUDES", game_core_runtime_includes)
+    inplace_change(f"{editor_runtime_dst}/CMakeLists.txt", "HARMONY_EDITOR_INCLUDES", game_editor_includes)
+    inplace_change(f"{editor_runtime_dst}/CMakeLists.txt", "harmony-runtime", core_runtime_dst)
+    inplace_change(f"{editor_runtime_dst}/include/EditorApplication.h", "RuntimeProgram", new_program_name)
+    inplace_change(f"{editor_runtime_dst}/src/EditorApplication.cpp", "RuntimeProgram", new_program_name)
+    inplace_change(f"{editor_runtime_dst}/CMakeLists.txt", cmake_dir_helper, cmake_dir_helper_replacement)
+
+    # Dojo
+    inplace_change(f"{editor_dst}/CMakeLists.txt", template_editor_target_name, editor_dst)
+    inplace_change(f"{editor_dst}/CMakeLists.txt", template_editor_runtime_target_name, editor_runtime_dst)
+    inplace_change(f"{editor_dst}/CMakeLists.txt", "HARMONY_EDITOR_INCLUDES", game_editor_includes)
+    inplace_change(f"{editor_dst}/CMakeLists.txt", cmake_dir_helper, cmake_dir_helper_replacement)
+    inplace_change(f"{editor_dst}/CMakeLists.txt", "${ROOT_DIR}/templates/", "${ROOT_DIR}/")
 
 if __name__ == "__main__":
     main()

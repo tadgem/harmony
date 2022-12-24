@@ -10,7 +10,7 @@
 #include "Assets/ShaderSourceAssetFactory.h"
 #include "AssimpModelAssetFactory.h"
 #include "EditorView.h"
-harmony::Editor::Editor() : harmony::RuntimeProgram("Harmony Editor"), p_MainMenuBar(*this)
+harmony::Editor::Editor() : harmony::RuntimeProgram(), p_MainMenuBar(*this)
 {
 	AddAssetTypeNames();
 	AddAssetFactories();
