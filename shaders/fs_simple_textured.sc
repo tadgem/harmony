@@ -1,4 +1,4 @@
-$input v_texcoord0
+$input v_texcoord0, v_normal
 
 /*
  * Copyright 2011-2022 Branimir Karadzic. All rights reserved.
