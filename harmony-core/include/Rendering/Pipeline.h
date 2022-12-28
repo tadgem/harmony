@@ -59,6 +59,7 @@ namespace harmony
         Type          m_Type;
 
     protected:
+        friend class Renderer;
         std::vector<Ref<PipelineStage>> p_Stages;
     };
 };

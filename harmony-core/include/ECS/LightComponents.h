@@ -1,21 +1,27 @@
 #pragma once
 #include "glm.hpp"
 
-struct DirectionalLight
-{
-	glm::vec4 Direction;
-	glm::vec4 Colour;
-};
+namespace harmony {
+	struct DirectionalLight
+	{
+		glm::vec4 Diffuse;
+		glm::vec4 Ambient;
+	};
 
-struct PointLight
-{
-	glm::vec4 Position;
-	glm::vec4 Colour;
+	struct PointLight
+	{
+		glm::vec4 Diffuse;
+		glm::vec4 Ambient;
 
-	float Radius;
-};
+		float Radius;
+	};
 
-struct SpotLight : PointLight
-{
+	struct SpotLight : PointLight
+	{
+		glm::vec4 Diffuse;
+		glm::vec4 Ambient;
 
-};
+		float Radius;
+		float Angle;
+	};
+}

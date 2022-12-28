@@ -74,10 +74,14 @@ void harmony::Editor::AddEditorPanels()
 	p_Panels.emplace_back(assetManagerPanel);
 
 	Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, p_ScenePanel);
+	
 	inspector->AddComponentUI<TransformComponentUI>();
 	inspector->AddComponentUI<MeshComponentUI>(m_AssetManager);
 	inspector->AddComponentUI<MaterialComponentUI>(m_Renderer, m_AssetManager);
 	inspector->AddComponentUI<CameraComponentUI>(m_Renderer);
+	inspector->AddComponentUI<DirectionalLightComponentUI>();
+	inspector->AddComponentUI<PointLightComponentUI>();
+	inspector->AddComponentUI<SpotLightComponentUI>();
 
 	p_Panels.emplace_back(inspector);
 }
@@ -85,7 +89,6 @@ void harmony::Editor::AddEditorPanels()
 void harmony::Editor::InitializePipelines()
 {
 	RuntimeProgram::InitializePipelines();
-
 }
 
 void harmony::Editor::InitializeViews()

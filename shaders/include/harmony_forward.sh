@@ -52,6 +52,7 @@ vec3 BlinnPhong_Point(int lightIdx, vec3 position, vec3 normal, vec3 materialAmb
     float   sDotN      = max(dot(s, normal), 0.0);
     vec3    diffuse    = materialDiffuse * sDotN;
     vec3    spec       = vec3(0.0, 0.0, 0.0);
+    
     if(sDotN > 0.0)
     {
         vec3 v = normalize(-position);

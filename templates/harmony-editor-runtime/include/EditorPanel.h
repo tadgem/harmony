@@ -66,6 +66,36 @@ namespace harmony
 
     };
 
+    class DirectionalLightComponentUI : public ComponentUI
+    {
+    public:
+        DirectionalLightComponentUI();
+
+        virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
+        virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
+        virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+    };
+
+    class PointLightComponentUI : public ComponentUI
+    {
+    public:
+        PointLightComponentUI();
+
+        virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
+        virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
+        virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+    };
+
+    class SpotLightComponentUI : public ComponentUI
+    {
+    public:
+        SpotLightComponentUI();
+
+        virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
+        virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
+        virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+    };
+
     class MeshComponentUI : public ComponentUI
     {
     public:
