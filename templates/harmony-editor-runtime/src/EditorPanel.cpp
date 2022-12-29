@@ -204,7 +204,7 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 		return;
 	}
 	MaterialComponent& mc = registry.get<MaterialComponent>(entity);
-	WeakRef<ShaderProgram> shaderWr = mc.Data.m_Shader;
+	WeakRef<ShaderProgram> shaderWr = p_Renderer.GetShader(mc.Data.m_ShaderName);
 	std::string sn = "Shader Name : ";
 	
 	if (shaderWr.expired() == false)
@@ -217,19 +217,19 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 	ImGui::Separator();
 	if (p_Renderer.ShaderSelector("Select Shader", shaderWr))
 	{
-		mc.Data.UpdateShader(shaderWr, p_AssetManager);
+		mc.Data.UpdateContainer(shaderWr, p_AssetManager);
 	}
 	ImGui::Text("Shader Variables");
 	if (ImGui::TreeNode("Data"))
 	{
 		ImGui::Text("Vec4");
-		for (auto& [key, v] : mc.Data.m_Vec4Values)
+		for (auto& [key, v] : mc.Data.m_Vec4Overrides)
 		{
 			ImGui::DragFloat4(key.Name.c_str(), &v[0]);
 		}
 		ImGui::Separator();
 		ImGui::Text("Textures");
-		for (auto& [key, handle] : mc.Data.m_TextureValues)
+		for (auto& [key, handle] : mc.Data.m_TextureOverrides)
 		{
 			std::string textureName = "Tex : " + handle.Handle.Path;
 			ImGui::Text(textureName.c_str());
@@ -242,13 +242,13 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 		}
 		ImGui::Separator();
 		ImGui::Text("Mat3");
-		for (auto& [key, v] : mc.Data.m_Mat3Values)
+		for (auto& [key, v] : mc.Data.m_Mat3Overrides)
 		{
 			ImGui::Text(key.Name.c_str());
 		}
 		ImGui::Separator();
 		ImGui::Text("Mat4");
-		for (auto& [key, v] : mc.Data.m_Mat4Values)
+		for (auto& [key, v] : mc.Data.m_Mat4Overrides)
 		{
 			ImGui::Text(key.Name.c_str());
 		}

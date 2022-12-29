@@ -11,8 +11,7 @@ harmony::PipelineStage::PipelineStage(const std::string& name, Type stageType, W
 	m_StageType(stageType), 
 	m_Attachments(attachments), 
 	p_Shader(shader),
-	p_Renderer(stageRenderer),
-	p_PipelineStageData(shader)
+	p_Renderer(stageRenderer)
 {
 }
 

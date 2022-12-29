@@ -2,7 +2,7 @@
 #include "ThirdParty/entt.hpp"
 #include "ThirdParty/json.hpp"
 #include "Core/Memory.h"
-#include "Rendering/ShaderDataContainer.h"
+#include "Rendering/Shader.h"
 namespace harmony
 {
 
@@ -133,11 +133,10 @@ namespace harmony
         Attachment::Type    m_Attachments;
         std::string         m_Name;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStage, m_Name, m_StageType, p_Shader, m_Attachments, p_PipelineStageData)
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStage, m_Name, m_StageType, p_Shader, m_Attachments)
     protected:
         friend class Renderer;
         WeakRef<ShaderProgram>          p_Shader;
         WeakRef<PipelineStageRenderer>  p_Renderer;
-        ShaderDataContainer             p_PipelineStageData;
     };
 } 

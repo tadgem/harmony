@@ -21,12 +21,7 @@ void harmony::MeshRenderer::Draw(entt::registry& scene, Ref<ShaderProgram> shade
 			continue;
 		}
 
-		if (material.Data.m_Shader.lock() != shader)
-		{
-			continue;
-		}
-
-		material.Data.SetContainerUniforms();
+		material.Data.SetOverrides();
 		bgfx::setTransform(&transform.Model[0]);
 		bgfx::setVertexBuffer(0, mesh.MeshHandle.m_VBH);
 		bgfx::setIndexBuffer(mesh.MeshHandle.m_IBH);

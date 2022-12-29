@@ -56,7 +56,6 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::AddBuiltInShader(con
 
     prog->Build();
 
-    ShaderDataContainer dataContainer = ShaderDataContainer(prog);
     p_Shaders.emplace_back(prog);
     p_BuiltInShaders.emplace_back(prog);
 
@@ -70,6 +69,7 @@ void harmony::Renderer::AddBuiltInShaders()
     AddBuiltInShader("TexturedMesh", "vs_simple_textured", "fs_simple_textured", 0, 1);
     AddBuiltInShader("Normal", "vs_normal", "fs_normal", 2, 3);
     AddBuiltInShader("NanoVG", "vs_nanovg_fill", "fs_nanovg_fill", 6, 7);
+    AddBuiltInShader("BlinnPhongTextured", "vs_blinn_phong_textured", "fs_blinn_phong_textured", 8, 9);
 }
 
 harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::BuildShader(const std::string name, WeakRef<ShaderStage> vertStage, WeakRef<ShaderStage> fragStage)
@@ -84,7 +84,6 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::BuildShader(const st
 
     prog->Build();
 
-    ShaderDataContainer dataContainer = ShaderDataContainer(prog);
     p_Shaders.emplace_back(prog);
 
     return GetWeakRef<ShaderProgram>(prog);
@@ -101,7 +100,6 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::BuildShader(const st
     
     prog->Build();
 
-    ShaderDataContainer dataContainer = ShaderDataContainer(prog);
     p_Shaders.emplace_back(prog);
 
     return GetWeakRef<ShaderProgram>(prog);
@@ -292,9 +290,15 @@ void harmony::Renderer::OnImGui()
         ImGui::Separator();
         if (ImGui::TreeNode("[Pipelines]"))
         {
-            for (auto&  pipeline : p_Pipelines)
+            for (auto& pipeline : p_Pipelines)
             {
                 ImGui::Text(pipeline->m_Name.c_str());
+                ImGui::Indent();
+                for (int i = 0; i < pipeline->NumPipelineStages(); i++)
+                {
+                    ImGui::Text(pipeline->p_Stages[i]->m_Name.c_str());
+                }
+                ImGui::Unindent();
             }
             ImGui::TreePop();
         }
@@ -1020,7 +1024,6 @@ void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager&
             
             Attachment::Type stageAttachments = stageJson[sk_PipelineStageAttachments];
             PipelineStage::Type stageType = stageJson[sk_PipelineStageType];
-            ShaderDataContainer stageData = stageJson[sk_PipelineStageData];
 
             std::string stageShaderName = stageJson[sk_PipelineStageShader][sk_ShaderProgramName];
             WeakRef<ShaderProgram> stageShader = GetShader(stageShaderName);
@@ -1032,10 +1035,7 @@ void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager&
                 break;
             }
 
-            stageData.UpdateShader(stageShader, am);
-
             Ref<PipelineStage> pipelineStage = newPipeline->AddPipelineStage<PipelineStage>(stageName, stageType, stageShader, GetPipelineStageRenderer("MeshRenderer"), stageAttachments).lock();
-            pipelineStage->p_PipelineStageData = stageData;
         }
 
         if (pipelineCreationSuccessful)

@@ -10,7 +10,6 @@
 #include "Rendering/Mesh.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Shader.h"
-#include "Rendering/ShaderDataContainer.h"
 #include "Assets/AssetManager.h"
 #include "Assets/Asset.h"
 #include "glm/glm.hpp"
