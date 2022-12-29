@@ -141,6 +141,16 @@ void harmony::ShaderDataOverride::UpdateOverrides(WeakRef<ShaderProgram> shaderW
 		{
 			if (m_AvailableOverrides[i].Name == uniformName)
 			{
+				WeakRef<Texture> texWr = am.GetAsset<Texture>(val.Handle);
+
+				if (texWr.expired())
+				{
+					continue;
+				}
+				Ref<Texture> tex = texWr.lock();
+				val.BgfxHandle = tex->m_TextureHandle.BgfxHandle;
+				val.Handle = tex->m_TextureHandle.Handle;
+				val.Info = tex->m_TextureHandle.Info;
 				m_TextureOverrides.emplace(m_AvailableOverrides[i], val);
 				shader->AddUniformOverride(m_AvailableOverrides[i]);
 				break;

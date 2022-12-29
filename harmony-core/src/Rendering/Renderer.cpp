@@ -472,7 +472,6 @@ void harmony::Renderer::OnImGui()
     }
 }
 
-
 bool harmony::Renderer::ShaderSelector(const std::string& selectorName, harmony::WeakRef<harmony::ShaderProgram>& prog)
 {
     bool selectedAsset = false;

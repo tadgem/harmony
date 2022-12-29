@@ -238,6 +238,9 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 				WeakRef<Texture> texWr = p_AssetManager.GetAsset<Texture>(handle.Handle);
 				Ref<Texture> tex = texWr.lock();
 				handle.BgfxHandle = tex->m_TextureHandle.BgfxHandle;
+				handle.Handle = tex->m_TextureHandle.Handle;
+				handle.Info = tex->m_TextureHandle.Info;
+
 			}
 		}
 		ImGui::Separator();
