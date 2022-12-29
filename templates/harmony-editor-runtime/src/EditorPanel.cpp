@@ -217,7 +217,7 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 	ImGui::Separator();
 	if (p_Renderer.ShaderSelector("Select Shader", shaderWr))
 	{
-		mc.Data.UpdateContainer(shaderWr, p_AssetManager);
+		mc.Data.UpdateOverrides(shaderWr, p_AssetManager);
 	}
 	ImGui::Text("Shader Variables");
 	if (ImGui::TreeNode("Data"))

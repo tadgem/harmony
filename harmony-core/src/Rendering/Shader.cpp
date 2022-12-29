@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Rendering/Shader.h"
 #include "Core/Profile.hpp"
 #include "Core/Log.hpp"
@@ -6,7 +7,6 @@
 #include <bx/readerwriter.h>
 #include <bx/string.h>
 #include <bx/commandline.h>
-
 harmony::ShaderProgram::ShaderProgram(const std::string& name) : m_Name(name), m_Handle(BGFX_INVALID_HANDLE)
 {
 }
@@ -71,7 +71,7 @@ void harmony::ShaderProgram::GetUniforms()
 		Ref<ShaderStage> stage = s.lock();
 		bgfx::UniformHandle uniforms[64];
 		uint16_t stageUniformCount = bgfx::getShaderUniforms(stage->m_ProgramHandle, &uniforms[0], 64);
-
+		uint16_t samplerCount = 0;
 		for (uint16_t i = 0; i < stageUniformCount; i++)
 		{
 			bgfx::UniformInfo info;
@@ -105,7 +105,11 @@ void harmony::ShaderProgram::GetUniforms()
 
 			if (uniform.Type == bgfx::UniformType::Sampler)
 			{
-				m_TextureValues.emplace(uniform, BGFXTextureHandle());
+				auto textureHandle = BGFXTextureHandle();
+				textureHandle.SamplerSlot = samplerCount;
+				samplerCount++;
+
+				m_TextureValues.emplace(uniform, textureHandle);
 				continue;
 			}
 		}
@@ -113,7 +117,7 @@ void harmony::ShaderProgram::GetUniforms()
 }
 
 
-void harmony::ShaderProgram::UpdateContainer(AssetManager& am)
+void harmony::ShaderProgram::UpdateUniforms(AssetManager& am)
 {
 	std::map<std::string, glm::vec4> vec4s;
 	std::map<std::string, glm::mat3> mat3s;
@@ -210,14 +214,37 @@ void harmony::ShaderProgram::UpdateContainer(AssetManager& am)
 	}
 }
 
-void harmony::ShaderProgram::SetContainerUniforms()
+void harmony::ShaderProgram::AddUniformOverride(ShaderUniform& uniform)
 {
-	uint8_t textureCount = 0;
+	if (std::find(m_ActiveUniformOverrides.begin(), m_ActiveUniformOverrides.end(), uniform) == m_ActiveUniformOverrides.end())
+	{
+		m_ActiveUniformOverrides.emplace_back(uniform);
+		return;
+	}
+	harmony::log::warn("ShaderProgram : Uniform {} already marked as overriden for this shader.", uniform.Name);
+}
 
+void harmony::ShaderProgram::RemoveUniformOverride(ShaderUniform& uniform)
+{
+	auto it = std::find(m_ActiveUniformOverrides.begin(), m_ActiveUniformOverrides.end(), uniform);
+	if (it == m_ActiveUniformOverrides.end())
+	{
+		harmony::log::warn("ShaderProgram : Uniform {} not marked as overriden for this shader.", uniform.Name);
+		return;
+	}
+	m_ActiveUniformOverrides.erase(it);
+}
+
+void harmony::ShaderProgram::SetUniforms()
+{
 	if (m_Vec4Values.size() > 0)
 	{
 		for (auto& [handle, value] : m_Vec4Values)
 		{
+			if (IsOverridenUniform(handle))
+			{
+				continue;
+			}
 			bgfx::setUniform(handle.BgfxHandle, &value[0]);
 		}
 	}
@@ -226,6 +253,10 @@ void harmony::ShaderProgram::SetContainerUniforms()
 	{
 		for (auto& [handle, value] : m_Mat3Values)
 		{
+			if (IsOverridenUniform(handle))
+			{
+				continue;
+			}
 			bgfx::setUniform(handle.BgfxHandle, &value[0]);
 		}
 	}
@@ -233,6 +264,10 @@ void harmony::ShaderProgram::SetContainerUniforms()
 	{
 		for (auto& [handle, value] : m_Mat4Values)
 		{
+			if (IsOverridenUniform(handle))
+			{
+				continue;
+			}
 			bgfx::setUniform(handle.BgfxHandle, &value[0]);
 		}
 	}
@@ -241,8 +276,11 @@ void harmony::ShaderProgram::SetContainerUniforms()
 	{
 		for (auto& [handle, value] : m_TextureValues)
 		{
-			bgfx::setTexture(textureCount, handle.BgfxHandle, value.BgfxHandle);
-			textureCount++;
+			if (IsOverridenUniform(handle))
+			{
+				continue;
+			}
+			bgfx::setTexture(value.SamplerSlot, handle.BgfxHandle, value.BgfxHandle);
 		}
 	}
 }
@@ -273,6 +311,16 @@ void harmony::ShaderProgram::UpdateUniform(ShaderUniform& uniform)
 		m_TextureValues.emplace(uniform, BGFXTextureHandle());;
 		break;
 	}
+}
+
+bool harmony::ShaderProgram::IsOverridenUniform(const ShaderUniform& uniform)
+{
+	return std::find
+	(
+		m_ActiveUniformOverrides.begin(),
+		m_ActiveUniformOverrides.end(),
+		uniform
+	) != m_ActiveUniformOverrides.end();
 }
 
 harmony::ShaderStage::ShaderStage(const std::string& name, const Type& shaderType) 

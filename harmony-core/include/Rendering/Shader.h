@@ -1,13 +1,12 @@
 #pragma once
-
-#include "bgfx/bgfx.h"
-#include "bgfx/embedded_shader.h"
 #include "bx/readerwriter.h"
 #include "bx/file.h"
-#include "Assets/Asset.h"
+#include "bgfx/bgfx.h"
+#include "bgfx/embedded_shader.h"
 #include "Core/Memory.h"
-#include "Rendering/Texture.h"
+#include "Assets/Asset.h"
 #include "Assets/AssetManager.h"
+#include "Rendering/Texture.h"
 #include "Rendering/ShaderUniform.h"
 
 namespace harmony
@@ -71,25 +70,31 @@ namespace harmony
 		void Build();
 		void Destroy();
 		void GetUniforms();
-		void UpdateContainer(AssetManager& am);
+		void SetUniforms();
+		void UpdateUniforms(AssetManager& am);
 
-		std::string m_Name;
-		std::unordered_map<ShaderStage::Type, WeakRef<ShaderStage>> m_Stages;
-		std::vector<ShaderUniform> m_Uniforms;
+		void AddUniformOverride(ShaderUniform& uniform);
+		void RemoveUniformOverride(ShaderUniform& uniform);
+
+
+		bgfx::ProgramHandle			m_Handle;
+
+		std::string					m_Name;
+		std::vector<ShaderUniform>	m_Uniforms;
+		std::vector<ShaderUniform>	m_ActiveUniformOverrides;
 		
-		std::map<ShaderUniform, glm::vec4> m_Vec4Values;
-		std::map<ShaderUniform, glm::mat3> m_Mat3Values;
-		std::map<ShaderUniform, glm::mat4> m_Mat4Values;
-		std::map<ShaderUniform, BGFXTextureHandle> m_TextureValues;
+		std::map<ShaderUniform, glm::vec4>			m_Vec4Values;
+		std::map<ShaderUniform, glm::mat3>			m_Mat3Values;
+		std::map<ShaderUniform, glm::mat4>			m_Mat4Values;
+		std::map<ShaderUniform, BGFXTextureHandle>	m_TextureValues;
+		
+		std::unordered_map<ShaderStage::Type, WeakRef<ShaderStage>> m_Stages;
 
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderProgram, m_Name, m_Stages, m_Vec4Values, m_Mat3Values, m_Mat4Values, m_TextureValues)
-
-		bgfx::ProgramHandle m_Handle;
-
 	protected:
-
-		void SetContainerUniforms();
 		void Clear();
 		void UpdateUniform(ShaderUniform& uniform);
+
+		bool IsOverridenUniform(const ShaderUniform& uniform);
 	};
 };

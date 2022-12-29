@@ -98,6 +98,19 @@ namespace harmony
         bool operator<(const ShaderUniform& o)  const {
             return BgfxHandle.idx < o.BgfxHandle.idx;
         }
+
+        bool operator==(const ShaderUniform& o) const
+        {
+            return  BgfxHandle.idx == o.BgfxHandle.idx &&
+                    Type == o.Type;
+        }
+
+        bool operator!=(const ShaderUniform& o) const
+        {
+            return  BgfxHandle.idx != o.BgfxHandle.idx ||
+                    Type != o.Type;
+        }
+
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderUniform, Name, Type)
     };
 }

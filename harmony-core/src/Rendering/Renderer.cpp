@@ -705,10 +705,6 @@ std::vector<std::string> harmony::Renderer::GetShaderNames()
     return shaders;
 }
 
-void harmony::Renderer::RefreshShaderDataContainers()
-{
-}
-
 void harmony::Renderer::AddShaderDataSource(Ref<ShaderDataSource> dataSource)
 {
     if (std::find(p_ShaderDataSources.begin(), p_ShaderDataSources.end(), dataSource) != p_ShaderDataSources.end())
