@@ -1,6 +1,8 @@
 #include "Rendering/ShaderDataSources/BlinnPhongDataSource.h"
 #include "ECS/LightComponents.h"
+#include "ECS/TransformComponent.h"
 #include "Rendering/Shader.h"
+#include "Core/Utils.h"
 #include <bit>
 harmony::BlinnPhongDataSource::BlinnPhongDataSource() : ShaderDataSource("BlinnPhong"), p_UniformsCollected(false)
 {
@@ -14,18 +16,25 @@ void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry& registry, Ref<Sh
 		GetShaderUniforms(shader);
 	}
 
-	auto dirLightView		= registry.view<DirectionalLight>();
-	auto pointLightView	= registry.view<PointLight>();
-	auto spotLightView	= registry.view<SpotLight>();
+	auto dirLightView		= registry.view<DirectionalLight, TransformComponent>();
+	auto pointLightView	= registry.view<PointLight, TransformComponent>();
+	auto spotLightView	= registry.view<SpotLight, TransformComponent>();
 
 	unsigned int dirLightActive		= 0;
 	unsigned int numPointLights		= 0;
 	unsigned int numSpotLights		= 0;
 
 	// Update uniform vals;
+	for (auto& [entity, dl, t] : dirLightView.each())
+	{
+		
+	}
 
 	// Light params
-	float dla = reinterpret_cast<float>(dirLightActive);
+	m_LightParams.x = Utils::GetIntAsFloat(dirLightActive);
+	m_LightParams.y = Utils::GetIntAsFloat(numPointLights);
+	m_LightParams.z = Utils::GetIntAsFloat(numSpotLights);
+
 	bgfx::setUniform(m_LightParamsUniform, &m_LightParams[0]);
 
 	// Directional Light

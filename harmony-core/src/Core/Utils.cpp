@@ -84,3 +84,19 @@ void harmony::Utils::SaveJsonToPath(nlohmann::json& json, const std::string& pat
 	SaveStringToPath(jsonContent, path);
 
 }
+
+float harmony::Utils::GetIntAsFloat(int i)
+{
+	float f;
+	memcpy(&f, &i, sizeof(float));
+
+	return f;
+}
+
+float harmony::Utils::GetUintAsFloat(unsigned int i)
+{
+	float f;
+	memcpy(&f, &i, sizeof(float));
+
+	return f;
+}
