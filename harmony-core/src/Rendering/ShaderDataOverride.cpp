@@ -56,6 +56,8 @@ void harmony::ShaderDataOverride::UpdateOverrides(WeakRef<ShaderProgram> shaderW
 
 	Ref<ShaderProgram> shader = shaderWr.lock();
 
+	m_ShaderName = shader->m_Name;
+
 	m_AvailableOverrides.clear();
 	for (int i = 0; i < shader->m_Uniforms.size(); i++)
 	{

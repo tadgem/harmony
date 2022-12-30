@@ -222,6 +222,39 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 	ImGui::Text("Shader Variables");
 	if (ImGui::TreeNode("Data"))
 	{
+		if (ImGui::TreeNode("Available Overrides"))
+		{
+			for (ShaderUniform& uniform : mc.Data.m_AvailableOverrides)
+			{
+				ImGui::Text(uniform.Name.c_str());
+				ImGui::SameLine();
+				if (ImGui::Button("Override"))
+				{
+					if (uniform.Type == bgfx::UniformType::Vec4)
+					{
+						mc.Data.AddVec4Override(uniform, glm::vec4(0.0));
+					}
+
+					if (uniform.Type == bgfx::UniformType::Mat3)
+					{
+						mc.Data.AddMat3Override(uniform, glm::mat3(0.0));
+					}
+
+					if (uniform.Type == bgfx::UniformType::Mat4)
+					{
+						mc.Data.AddMat4Override(uniform, glm::mat4(0.0));
+					}
+
+					if (uniform.Type == bgfx::UniformType::Sampler)
+					{
+						mc.Data.AddTextureOverride(uniform, BGFXTextureHandle());
+					}
+				}
+			}
+			ImGui::TreePop();
+
+		}
+
 		ImGui::Text("Vec4");
 		for (auto& [key, v] : mc.Data.m_Vec4Overrides)
 		{
