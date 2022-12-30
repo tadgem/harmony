@@ -111,6 +111,9 @@ namespace harmony
                     Type != o.Type;
         }
 
+        operator bgfx::UniformHandle& () { return BgfxHandle; }
+        operator bgfx::UniformHandle() const { return BgfxHandle; }
+
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderUniform, Name, Type)
     };
 }
