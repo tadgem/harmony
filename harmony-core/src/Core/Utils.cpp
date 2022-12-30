@@ -100,3 +100,24 @@ float harmony::Utils::GetUintAsFloat(unsigned int i)
 
 	return f;
 }
+
+glm::vec3 harmony::Utils::CalculateVec3Radians(glm::vec3 eulerDegrees)
+{
+	return glm::vec3(glm::radians(eulerDegrees.x), glm::radians(eulerDegrees.y), glm::radians(eulerDegrees.z));
+}
+
+glm::vec3 harmony::Utils::CalculateVec3Degrees(glm::vec3 eulerRadians)
+{
+	return glm::vec3(glm::degrees(eulerRadians.x), glm::degrees(eulerRadians.y), glm::degrees(eulerRadians.z));
+}
+
+glm::quat harmony::Utils::CalculateRotationQuat(glm::vec3 eulerDegrees)
+{
+	glm::vec3 eulerRadians = CalculateVec3Radians(eulerDegrees);
+
+	glm::quat xRotation = glm::angleAxis(eulerRadians.x, glm::vec3(1, 0, 0));
+	glm::quat yRotation = glm::angleAxis(eulerRadians.y, glm::vec3(0, 1, 0));
+	glm::quat zRotation = glm::angleAxis(eulerRadians.z, glm::vec3(0, 0, 1));
+
+	return zRotation * yRotation * xRotation;
+}

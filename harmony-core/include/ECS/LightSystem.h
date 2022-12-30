@@ -7,6 +7,8 @@ namespace harmony
 	{
 	public:
 
+		LightSystem();
+
 		virtual void Init(entt::registry& registry) override;
 		virtual void Update(entt::registry& registry) override;
 		virtual void Render(entt::registry& registry) override;

@@ -88,34 +88,39 @@ vec3 BlinnPhong_Point(int lightIdx, vec3 position, vec3 normal, vec3 materialAmb
 
 vec3 BlinnPhong_Spot(int lightIdx, vec3 position, vec3 normal, vec3 materialAmbient, vec3 materialDiffuse, vec3 materialSpecular, float shininess)
 {
-    vec3    ambient    = SpotLights_Ambient[lightIdx].xyz * materialAmbient;
-    vec3    diffuse    = vec3(0.0, 0.0, 0.0);
-    vec3    spec       = vec3(0.0, 0.0, 0.0);
     vec3    slDir      = SpotLights_Position[lightIdx].xyz - position;
     vec3    s          = normalize(slDir);
 
     float cosAngle     = dot(-s, normalize(SpotLights_Direction[lightIdx].xyz));
     float angle        = acos(cosAngle);
-    float range        = 0.0;
+    float   theta      = dot(slDir, normalize(-SpotLights_Direction[lightIdx].xyz ));
 
     if(angle < SpotLights_Params[lightIdx].y)
     {
-        range   = pow(cosAngle, SpotLights_Params[lightIdx].x);
-        float sDotN = max(dot(s, normal), 0.0);
-        diffuse    = materialDiffuse * sDotN;
-        if(sDotN > 0.0)
-        {
-            vec3 v = normalize(-position);
-            vec3 h = normalize(v + s);
-            spec =  materialSpecular * pow(max(dot(h, normal), 0.0), shininess);
-        }
+        vec3 ambient    = SpotLights_Ambient[lightIdx].xyz * materialAmbient;
+
+        vec3    norm    = normalize(normal);
+        float   diff    = max(dot(norm, slDir), 0.0);
+        vec3    diffuse = SpotLights_Diffuse[lightIdx].xyz * diff * materialDiffuse; 
+        
+        vec3    viewPos = vec3(u_view[3][0], u_view[3][1], u_view[3][2]);
+        vec3    viewDir = normalize(viewPos - position);
+        vec3    reflectDir = reflect(-slDir, norm);  
+        float   spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+        vec3    specular = SpotLights_Diffuse[lightIdx].xyz * spec * materialSpecular;
+
+        float   range     = SpotLights_Params[lightIdx].x;
+        float   intensity = SpotLights_Params[lightIdx].z;
+        float   attenuation = BlinnPhong_Attenuation(range, length(slDir));
+
+        diffuse     *= attenuation;
+        specular    *= attenuation;
+
+        return (ambient + diffuse + specular) * intensity;
+
     }
-
-    float attenuation = BlinnPhong_Attenuation(range, length(slDir));
-
-    ambient     *= attenuation;
-    diffuse     *= attenuation;
-    spec        *= attenuation;
-
-    return ambient + range * SpotLights_Diffuse[lightIdx].xyz  * (diffuse + spec);
+    else
+    {
+        return SpotLights_Ambient[lightIdx].xyz * materialAmbient;
+    }
 }

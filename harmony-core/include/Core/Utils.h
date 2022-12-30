@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 #include "ThirdParty/json.hpp"
+#include "glm.hpp"
+#include "glm/gtc/quaternion.hpp"
+
 namespace harmony
 {
     class Utils
@@ -17,6 +20,11 @@ namespace harmony
         static void TrimString(std::string& str);
         static float GetIntAsFloat(int i);
         static float GetUintAsFloat(unsigned int i);
+
+        static glm::vec3 CalculateVec3Radians(glm::vec3 eulerDegrees);
+        static glm::vec3 CalculateVec3Degrees(glm::vec3 eulerRadians);
+        static glm::quat CalculateRotationQuat(glm::vec3 eulerDegrees);
+
         static std::string GetBgfxRendererName();
     };
 };

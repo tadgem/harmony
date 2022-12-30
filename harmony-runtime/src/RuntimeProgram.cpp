@@ -4,6 +4,8 @@
 #include "Rendering/ShaderDataSources/BlinnPhongDataSource.h"
 #include "Rendering/Shapes.h"
 #include "Core/FSM.h"
+#include "ECS/LightSystem.h"
+
 harmony::RuntimeProgram::RuntimeProgram(const std::string& name) : Program(name)
 {
 	AddAssetTypeNames();
@@ -83,6 +85,7 @@ void harmony::RuntimeProgram::AddSystems()
 	AddSystem<CameraSystem>();
 	AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
 	AddSystem<MeshSystem>(m_AssetManager);
+	AddSystem<LightSystem>();
 }
 
 void harmony::RuntimeProgram::AddPipelineStageRenderers()

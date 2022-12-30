@@ -3,7 +3,7 @@
 #include "ECS/TransformComponent.h"
 #include "Rendering/Shader.h"
 #include "Core/Utils.h"
-#include <bit>
+
 harmony::BlinnPhongDataSource::BlinnPhongDataSource() : ShaderDataSource("BlinnPhong"), p_UniformsCollected(false)
 {
 }
@@ -44,11 +44,11 @@ void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry& registry, Ref<Sh
 
 	for (auto& [entity, sl, t] : spotLightView.each())
 	{
-		m_SpotLightAmbient[numSpotLights] = sl.Ambient;
-		m_SpotLightDiffuse[numSpotLights] = sl.Diffuse;
-		m_SpotLightPosition[numSpotLights] = glm::vec4(t.Position, 0.0f);
-		m_SpotLightPosition[numSpotLights] = glm::vec4(t.Forward, 0.0f);
-		m_SpotLightParams[numSpotLights] = glm::vec4(sl.Radius, sl.Angle, 0.0, 0.0);
+		m_SpotLightAmbient[numSpotLights]	= sl.Ambient;
+		m_SpotLightDiffuse[numSpotLights]	= sl.Diffuse;
+		m_SpotLightPosition[numSpotLights]	= glm::vec4(t.Position, 0.0f);
+		m_SpotLightDirection[numSpotLights]	= glm::vec4(t.Forward, 0.0f);
+		m_SpotLightParams[numSpotLights]	= glm::vec4(sl.Radius, sl.Angle, sl.Intensity, 0.0);
 		numSpotLights++;
 	}
 

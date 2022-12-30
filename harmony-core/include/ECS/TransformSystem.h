@@ -18,9 +18,6 @@ namespace harmony
         virtual void Refresh() override;
 
     protected:
-        glm::vec3 CalculateVec3Radians(glm::vec3 eulerDegrees);
-        glm::vec3 CalculateVec3Degrees(glm::vec3 eulerRadians);
-        glm::quat CalculateRotationQuat(glm::vec3 eulerDegrees);
 
         void CalculateDirectionVectors(glm::vec3 eulerDegrees, TransformComponent& transform);
     };
