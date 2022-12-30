@@ -38,7 +38,7 @@ void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry& registry, Ref<Sh
 		m_PointLightAmbient[numPointLights]		= pl.Ambient;
 		m_PointLightDiffuse[numPointLights]		= pl.Diffuse;
 		m_PointLightPosition[numPointLights]	= glm::vec4(t.Position, 0.0f);
-		m_PointLightParams[numPointLights]		= glm::vec4(pl.Radius, 0.0, 0.0, 0.0);
+		m_PointLightParams[numPointLights]		= glm::vec4(pl.Radius, pl.Intensity, 0.0, 0.0);
 		numPointLights++;
 	}
 
@@ -57,25 +57,36 @@ void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry& registry, Ref<Sh
 	m_LightParams.y = Utils::GetIntAsFloat(numPointLights);
 	m_LightParams.z = Utils::GetIntAsFloat(numSpotLights);
 
+	if (dirLightActive == 0 && numPointLights == 0 && numSpotLights == 0)
+	{
+		return;
+	}
 	bgfx::setUniform(m_LightParamsUniform, &m_LightParams[0]);
 
-	// Directional Light
-	bgfx::setUniform(m_DirectionalLightAmbientUniform, &m_DirectionalLightAmbient[0]);
-	bgfx::setUniform(m_DirectionalLightDiffuseUniform, &m_DirectionalLightDiffuse[0]);
-	bgfx::setUniform(m_DirectionalLightDirectionUniform, &m_DirectionalLightDirection[0]);
-
-	// Point Light
-	bgfx::setUniform(m_PointLightAmbientArrayUniform,	&m_PointLightAmbient[0],	m_PointLightAmbientArrayUniform.ArraySize);
-	bgfx::setUniform(m_PointLightDiffuseArrayUniform,	&m_PointLightDiffuse[0],	m_PointLightDiffuseArrayUniform.ArraySize);
-	bgfx::setUniform(m_PointLightPositionArrayUniform,	&m_PointLightPosition[0],	m_PointLightPositionArrayUniform.ArraySize);
-	bgfx::setUniform(m_PointLightParamsArrayUniform,		&m_PointLightParams[0],	m_PointLightParamsArrayUniform.ArraySize);
-
-	// Spot Light	
-	bgfx::setUniform(m_SpotLightAmbientArrayUniform,		&m_SpotLightAmbient[0],	m_SpotLightAmbientArrayUniform.ArraySize);
-	bgfx::setUniform(m_SpotLightDiffuseArrayUniform,		&m_SpotLightDiffuse[0],	m_SpotLightDiffuseArrayUniform.ArraySize);
-	bgfx::setUniform(m_SpotLightPositionArrayUniform,	&m_SpotLightPosition[0],	m_SpotLightPositionArrayUniform.ArraySize);
-	bgfx::setUniform(m_SpotLightDirectionArrayUniform,	&m_SpotLightDirection[0],	m_SpotLightDirectionArrayUniform.ArraySize);
-	bgfx::setUniform(m_SpotLightParamsArrayUniform,		&m_SpotLightParams[0],	m_SpotLightParamsArrayUniform.ArraySize);
+	if (dirLightActive)
+	{
+		// Directional Light
+		bgfx::setUniform(m_DirectionalLightAmbientUniform, &m_DirectionalLightAmbient[0]);
+		bgfx::setUniform(m_DirectionalLightDiffuseUniform, &m_DirectionalLightDiffuse[0]);
+		bgfx::setUniform(m_DirectionalLightDirectionUniform, &m_DirectionalLightDirection[0]);
+	}
+	if (numPointLights > 0)
+	{
+		// Point Light
+		bgfx::setUniform(m_PointLightAmbientArrayUniform, &m_PointLightAmbient[0], m_PointLightAmbientArrayUniform.ArraySize);
+		bgfx::setUniform(m_PointLightDiffuseArrayUniform, &m_PointLightDiffuse[0], m_PointLightDiffuseArrayUniform.ArraySize);
+		bgfx::setUniform(m_PointLightPositionArrayUniform, &m_PointLightPosition[0], m_PointLightPositionArrayUniform.ArraySize);
+		bgfx::setUniform(m_PointLightParamsArrayUniform, &m_PointLightParams[0], m_PointLightParamsArrayUniform.ArraySize);
+	}
+	if (numSpotLights > 0)
+	{
+		// Spot Light	
+		bgfx::setUniform(m_SpotLightAmbientArrayUniform, &m_SpotLightAmbient[0], m_SpotLightAmbientArrayUniform.ArraySize);
+		bgfx::setUniform(m_SpotLightDiffuseArrayUniform, &m_SpotLightDiffuse[0], m_SpotLightDiffuseArrayUniform.ArraySize);
+		bgfx::setUniform(m_SpotLightPositionArrayUniform, &m_SpotLightPosition[0], m_SpotLightPositionArrayUniform.ArraySize);
+		bgfx::setUniform(m_SpotLightDirectionArrayUniform, &m_SpotLightDirection[0], m_SpotLightDirectionArrayUniform.ArraySize);
+		bgfx::setUniform(m_SpotLightParamsArrayUniform, &m_SpotLightParams[0], m_SpotLightParamsArrayUniform.ArraySize);
+	}
 }
 
 void harmony::BlinnPhongDataSource::OnPostUpdate(entt::registry& registry, Ref<ShaderProgram> shader)

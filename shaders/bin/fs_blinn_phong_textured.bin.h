@@ -338,10 +338,10 @@ static const uint8_t fs_blinn_phong_textured_dx11[5337] =
 	0x3f, 0x3e, 0x00, 0x00, 0x01, 0x00, 0x00, 0xc0, 0x12,                                           // ?>.......
 };
 
-static const uint8_t fs_blinn_phong_textured_dx9[1] =
-{
-	0x00
-};
+
+extern const uint8_t* fs_blinn_phong_textured_dx9;
+
+extern const uint32_t fs_blinn_phong_textured_dx9_size;
 
 static const uint8_t fs_blinn_phong_textured_essl[13676] =
 {

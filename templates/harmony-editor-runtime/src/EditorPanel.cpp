@@ -443,6 +443,7 @@ void harmony::PointLightComponentUI::OnComponentImGui(entt::registry& registry, 
 	ImGui::ColorEdit4("Diffuse", &pl.Diffuse[0]);
 	ImGui::ColorEdit4("Ambient", &pl.Ambient[0]);
 	ImGui::SliderFloat("Range", &pl.Radius, 0.0f, 5000.0f);
+	ImGui::SliderFloat("Intensity", &pl.Intensity, 0.0f, 5000.0f);
 }
 
 void harmony::PointLightComponentUI::AddComponent(entt::registry& registry, entt::entity entity)

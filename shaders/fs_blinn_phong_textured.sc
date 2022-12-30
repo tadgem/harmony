@@ -1,4 +1,4 @@
-$input v_texcoord0, v_normal, v_position
+$input v_texcoord0, v_normal, v_fragPosition
 
 #include "harmony_forward.sh"
 
@@ -15,17 +15,17 @@ void main()
 
     if(DirectionalLight_Active > 0)
     {
-        output += BlinnPhong_Directional(v_position, v_normal, ambient, diffuse, spec, shininess);
+        output += BlinnPhong_Directional(v_fragPosition, v_normal, ambient, diffuse, spec, shininess);
     }
 
     for(int i = 0; i < PointLights_NumActive; i++)
     {
-        output += BlinnPhong_Point(i, v_position, v_normal, ambient, diffuse, spec, shininess);
+        output += BlinnPhong_Point(i, v_fragPosition, v_normal, ambient, diffuse, spec, shininess);
     }
 
     for(int i = 0; i < SpotLights_NumActive; i++)
     {
-        output += BlinnPhong_Spot(i, v_position, v_normal, ambient, diffuse, spec, shininess);
+        output += BlinnPhong_Spot(i, v_fragPosition, v_normal, ambient, diffuse, spec, shininess);
     }
 
     gl_FragColor = vec4(output, 1.0);

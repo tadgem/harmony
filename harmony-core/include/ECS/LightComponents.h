@@ -14,6 +14,7 @@ namespace harmony {
 		glm::vec4 Ambient;
 
 		float Radius;
+		float Intensity;
 	};
 
 	struct SpotLight : PointLight
