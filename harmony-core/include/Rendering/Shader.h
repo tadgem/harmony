@@ -1,28 +1,16 @@
 #pragma once
-
-#include "bgfx/bgfx.h"
-#include "bgfx/embedded_shader.h"
-#include "Assets/Asset.h"
-#include "Core/Memory.h"
 #include "bx/readerwriter.h"
 #include "bx/file.h"
+#include "bgfx/bgfx.h"
+#include "bgfx/embedded_shader.h"
+#include "Core/Memory.h"
+#include "Assets/Asset.h"
+#include "Assets/AssetManager.h"
+#include "Rendering/Texture.h"
+#include "Rendering/ShaderUniform.h"
+
 namespace harmony
 {
-	struct ShaderUniform
-	{
-		bgfx::UniformHandle		BgfxHandle{ UINT16_MAX };
-		std::string				Name;
-		bgfx::UniformType::Enum Type;
-		uint16_t				ArraySize;
-
-		bool Valid();
-
-		bool operator<(const ShaderUniform& o)  const {
-			return BgfxHandle.idx < o.BgfxHandle.idx;
-		}
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderUniform, Name, Type)
-	};
-
 	class ShaderStage : public Asset
 	{
 	public:
@@ -58,7 +46,6 @@ namespace harmony
 		std::vector<bgfx::UniformInfo>	m_UniformInfos;
 		bgfx::ShaderHandle				m_ProgramHandle;
 
-
 	private:
 		bx::FileReader _reader;
 	};
@@ -83,15 +70,31 @@ namespace harmony
 		void Build();
 		void Destroy();
 		void GetUniforms();
+		void SetUniforms();
+		void UpdateUniforms(AssetManager& am);
 
-		std::string m_Name;
+		void AddUniformOverride(ShaderUniform& uniform);
+		void RemoveUniformOverride(ShaderUniform& uniform);
+
+
+		bgfx::ProgramHandle			m_Handle;
+
+		std::string					m_Name;
+		std::vector<ShaderUniform>	m_Uniforms;
+		std::vector<ShaderUniform>	m_ActiveUniformOverrides;
+		
+		std::map<ShaderUniform, glm::vec4>			m_Vec4Values;
+		std::map<ShaderUniform, glm::mat3>			m_Mat3Values;
+		std::map<ShaderUniform, glm::mat4>			m_Mat4Values;
+		std::map<ShaderUniform, BGFXTextureHandle>	m_TextureValues;
+		
 		std::unordered_map<ShaderStage::Type, WeakRef<ShaderStage>> m_Stages;
-		std::vector<ShaderUniform> m_Uniforms;
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderProgram, m_Name, m_Stages)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderProgram, m_Name, m_Stages, m_Vec4Values, m_Mat3Values, m_Mat4Values, m_TextureValues)
+	protected:
+		void Clear();
+		void UpdateUniform(ShaderUniform& uniform);
 
-		static constexpr uint16_t g_MaxUniforms = 16;
-
-		bgfx::ProgramHandle m_Handle;
+		bool IsOverridenUniform(const ShaderUniform& uniform);
 	};
 };

@@ -10,7 +10,6 @@
 #include "Rendering/Mesh.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Shader.h"
-#include "Rendering/ShaderDataContainer.h"
 #include "Assets/AssetManager.h"
 #include "Assets/Asset.h"
 #include "glm/glm.hpp"
@@ -27,7 +26,7 @@ namespace harmony
         template<typename T, typename ... Args>
         WeakRef<T> CreateView(Args&& ... args)
         {
-            static_assert(std::is_base_of<View, T>(), "Provided type is not a view!");
+            static_assert(std::is_base_of<View, T>(), "Renderer : Provided type is not a view!");
             Ref<T> view = CreateRef<T>(std::forward<Args>(args)...);
             p_Views.emplace(view, PipelineStack());
             return GetWeakRef<T>(view);
@@ -41,7 +40,6 @@ namespace harmony
 
         void                            ReloadShader(WeakRef<ShaderProgram> shader);
         void                            ReloadAllShaders();
-        void                            RefreshShaderDataContainers();
 
         bool                            IsShaderLoaded(const std::string& name);
         WeakRef<ShaderProgram>          GetShader(const std::string& name);

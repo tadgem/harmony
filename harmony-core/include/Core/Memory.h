@@ -181,4 +181,15 @@ namespace nlohmann {
 			}
 		}
 	};
+
+	template <typename T>
+	struct adl_serializer<harmony::Ref<T>> {
+		static void to_json(json& j, const harmony::Ref<T>& opt) {
+			j = *opt;
+		}
+
+		static void from_json(const json& j, harmony::Ref<T>& opt) {
+			*opt.get() = j;
+		}
+	};
 }

@@ -36,19 +36,19 @@
         "harmony::MaterialSystem": {
             "0": {
                 "Data": {
-                    "m_Mat3Values": [],
-                    "m_Mat4Values": [],
+                    "m_Mat3Overrides": [],
+                    "m_Mat4Overrides": [],
                     "m_ShaderName": "Normal",
-                    "m_TextureValues": [],
-                    "m_Vec4Values": []
+                    "m_TextureOverrides": [],
+                    "m_Vec4Overrides": []
                 }
             },
             "2": {
                 "Data": {
-                    "m_Mat3Values": [],
-                    "m_Mat4Values": [],
+                    "m_Mat3Overrides": [],
+                    "m_Mat4Overrides": [],
                     "m_ShaderName": "TexturedMesh",
-                    "m_TextureValues": [
+                    "m_TextureOverrides": [
                         [
                             {
                                 "Name": "s_texColor",
@@ -63,24 +63,38 @@
                             }
                         ]
                     ],
-                    "m_Vec4Values": []
+                    "m_Vec4Overrides": []
                 }
             },
             "3": {
                 "Data": {
-                    "m_Mat3Values": [],
-                    "m_Mat4Values": [],
-                    "m_ShaderName": "Normal",
-                    "m_TextureValues": [],
-                    "m_Vec4Values": []
+                    "m_Mat3Overrides": [],
+                    "m_Mat4Overrides": [],
+                    "m_ShaderName": "BlinnPhongTextured",
+                    "m_TextureOverrides": [
+                        [
+                            {
+                                "Name": "s_texColor",
+                                "Type": 0
+                            },
+                            {
+                                "Handle": {
+                                    "Index": 0,
+                                    "Path": "assets/brick.png",
+                                    "TypeHash": "harmony::Texture"
+                                }
+                            }
+                        ]
+                    ],
+                    "m_Vec4Overrides": []
                 }
             },
             "4": {
                 "Data": {
-                    "m_Mat3Values": [],
-                    "m_Mat4Values": [],
+                    "m_Mat3Overrides": [],
+                    "m_Mat4Overrides": [],
                     "m_ShaderName": "TexturedMesh",
-                    "m_TextureValues": [
+                    "m_TextureOverrides": [
                         [
                             {
                                 "Name": "s_texColor",
@@ -95,15 +109,15 @@
                             }
                         ]
                     ],
-                    "m_Vec4Values": []
+                    "m_Vec4Overrides": []
                 }
             },
             "5": {
                 "Data": {
-                    "m_Mat3Values": [],
-                    "m_Mat4Values": [],
+                    "m_Mat3Overrides": [],
+                    "m_Mat4Overrides": [],
                     "m_ShaderName": "TexturedMesh",
-                    "m_TextureValues": [
+                    "m_TextureOverrides": [
                         [
                             {
                                 "Name": "s_texColor",
@@ -118,7 +132,7 @@
                             }
                         ]
                     ],
-                    "m_Vec4Values": []
+                    "m_Vec4Overrides": []
                 }
             }
         },
@@ -218,7 +232,7 @@
                     "z": 0.0
                 },
                 "Position": {
-                    "x": 1.7450940608978271,
+                    "x": 0.8048572540283203,
                     "y": -2.3166403770446777,
                     "z": -2.052881956100464
                 },
@@ -242,7 +256,7 @@
                 },
                 "Position": {
                     "x": 2.420106887817383,
-                    "y": 0.0,
+                    "y": 0.095253586769104,
                     "z": 0.0
                 },
                 "Rotation": {

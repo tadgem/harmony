@@ -1,17 +1,15 @@
 #pragma once
-#include "Core/Memory.h"
-#include "Rendering/Shader.h"
-#include "Rendering/Texture.h"
-#include "glm/glm.hpp"
+#include <string>
+#include "bgfx/bgfx.h"
+#include "ThirdParty/json.hpp"
+#include "glm.hpp"
 #include "glm/gtc/quaternion.hpp"
-#include "Assets/AssetManager.h"
-
 
 namespace glm
 {
     inline void to_json(nlohmann::json& j, const glm::vec2& v)
     {
-        j = nlohmann::json{ {"x", v.x}, {"y", v.y}};
+        j = nlohmann::json{ {"x", v.x}, {"y", v.y} };
     }
     inline void from_json(const nlohmann::json& j, glm::vec2& v)
     {
@@ -42,7 +40,7 @@ namespace glm
     inline void to_json(nlohmann::json& j, const glm::mat3& v)
     {
         j = nlohmann::json{ {"0", v[0]}, {"1", v[1]}, {"2", v[2]},
-                            {"3", v[3]}, {"4", v[4]}, {"5", v[5]}, 
+                            {"3", v[3]}, {"4", v[4]}, {"5", v[5]},
                             {"6", v[6]}, {"7", v[7]}, {"8", v[8]},
         };
     }
@@ -62,7 +60,7 @@ namespace glm
     {
         j = nlohmann::json{ {"row0", v[0]}, {"row1", v[1]}, {"row2", v[2]}, {"row3", v[3]}
         };
-        
+
     }
     inline void from_json(const nlohmann::json& j, glm::mat4& v)
     {
@@ -86,33 +84,36 @@ namespace glm
         j.at("w").get_to(v.w);
     }
 }
-
 namespace harmony
 {
-    class ShaderDataContainer
+    struct ShaderUniform
     {
-    public:
-        ShaderDataContainer();
-        ShaderDataContainer(WeakRef<ShaderProgram> shaderProgram);
+        bgfx::UniformHandle		BgfxHandle{ UINT16_MAX };
+        std::string				Name;
+        bgfx::UniformType::Enum Type;
+        uint16_t				ArraySize;
 
-        std::map<ShaderUniform, glm::vec4> m_Vec4Values;
-        std::map<ShaderUniform, glm::mat3> m_Mat3Values;
-        std::map<ShaderUniform, glm::mat4> m_Mat4Values;
-        std::map<ShaderUniform, BGFXTextureHandle> m_TextureValues;
+        bool Valid();
 
-        void UpdateShader(WeakRef<ShaderProgram> newShader, AssetManager& am);
-        void UpdateContainer(AssetManager& am);
-        void SetContainerUniforms();
-        void Clear();
+        bool operator<(const ShaderUniform& o)  const {
+            return BgfxHandle.idx < o.BgfxHandle.idx;
+        }
 
-        WeakRef<ShaderProgram> m_Shader;
-        std::string m_ShaderName;
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderDataContainer, m_Vec4Values, m_Mat3Values, m_Mat4Values, m_TextureValues, m_ShaderName)
-    protected:
-        
-        bool ReturnIfNull();
-        void UpdateUniform(ShaderUniform& uniform);
-        
-        uint16_t p_ShaderUniformCount;
+        bool operator==(const ShaderUniform& o) const
+        {
+            return  BgfxHandle.idx == o.BgfxHandle.idx &&
+                    Type == o.Type;
+        }
+
+        bool operator!=(const ShaderUniform& o) const
+        {
+            return  BgfxHandle.idx != o.BgfxHandle.idx ||
+                    Type != o.Type;
+        }
+
+        operator bgfx::UniformHandle& () { return BgfxHandle; }
+        operator bgfx::UniformHandle() const { return BgfxHandle; }
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderUniform, Name, Type)
     };
-};
+}

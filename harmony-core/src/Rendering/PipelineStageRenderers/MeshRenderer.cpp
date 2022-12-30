@@ -14,19 +14,20 @@ void harmony::MeshRenderer::Draw(entt::registry& scene, Ref<ShaderProgram> shade
 	for (auto [e, mesh, material, transform] : drawables.each())
 	{		
 		// Fix this please.
-		bool vbhValid = mesh.MeshHandle.m_VBH.idx <= 4096;
-		bool ibhValid = mesh.MeshHandle.m_IBH.idx <= 4096;
+		bool vbhValid = mesh.MeshHandle.m_VBH.idx <= 8192;
+		bool ibhValid = mesh.MeshHandle.m_IBH.idx <= 8192;
+		
 		if (!vbhValid || !ibhValid)
 		{
 			continue;
 		}
 
-		if (material.Data.m_Shader.lock() != shader)
+		if (shader->m_Name != material.Data.m_ShaderName)
 		{
 			continue;
 		}
 
-		material.Data.SetContainerUniforms();
+		material.Data.SetOverrides();
 		bgfx::setTransform(&transform.Model[0]);
 		bgfx::setVertexBuffer(0, mesh.MeshHandle.m_VBH);
 		bgfx::setIndexBuffer(mesh.MeshHandle.m_IBH);

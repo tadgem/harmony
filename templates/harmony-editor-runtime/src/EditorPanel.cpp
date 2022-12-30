@@ -3,6 +3,7 @@
 #include "ECS/TransformComponent.h";
 #include "ECS/MeshComponent.h";
 #include "ECS/MaterialComponent.h";
+#include "ECS/LightComponents.h";
 #include "Rendering/Model.h"
 #include "ImGui/icons_font_awesome.h"
 #include "ImGui/ImGuiFileDialog.h"
@@ -203,7 +204,7 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 		return;
 	}
 	MaterialComponent& mc = registry.get<MaterialComponent>(entity);
-	WeakRef<ShaderProgram> shaderWr = mc.Data.m_Shader;
+	WeakRef<ShaderProgram> shaderWr = p_Renderer.GetShader(mc.Data.m_ShaderName);
 	std::string sn = "Shader Name : ";
 	
 	if (shaderWr.expired() == false)
@@ -216,19 +217,19 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 	ImGui::Separator();
 	if (p_Renderer.ShaderSelector("Select Shader", shaderWr))
 	{
-		mc.Data.UpdateShader(shaderWr, p_AssetManager);
+		mc.Data.UpdateOverrides(shaderWr, p_AssetManager);
 	}
 	ImGui::Text("Shader Variables");
 	if (ImGui::TreeNode("Data"))
 	{
 		ImGui::Text("Vec4");
-		for (auto& [key, v] : mc.Data.m_Vec4Values)
+		for (auto& [key, v] : mc.Data.m_Vec4Overrides)
 		{
 			ImGui::DragFloat4(key.Name.c_str(), &v[0]);
 		}
 		ImGui::Separator();
 		ImGui::Text("Textures");
-		for (auto& [key, handle] : mc.Data.m_TextureValues)
+		for (auto& [key, handle] : mc.Data.m_TextureOverrides)
 		{
 			std::string textureName = "Tex : " + handle.Handle.Path;
 			ImGui::Text(textureName.c_str());
@@ -237,17 +238,20 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 				WeakRef<Texture> texWr = p_AssetManager.GetAsset<Texture>(handle.Handle);
 				Ref<Texture> tex = texWr.lock();
 				handle.BgfxHandle = tex->m_TextureHandle.BgfxHandle;
+				handle.Handle = tex->m_TextureHandle.Handle;
+				handle.Info = tex->m_TextureHandle.Info;
+
 			}
 		}
 		ImGui::Separator();
 		ImGui::Text("Mat3");
-		for (auto& [key, v] : mc.Data.m_Mat3Values)
+		for (auto& [key, v] : mc.Data.m_Mat3Overrides)
 		{
 			ImGui::Text(key.Name.c_str());
 		}
 		ImGui::Separator();
 		ImGui::Text("Mat4");
-		for (auto& [key, v] : mc.Data.m_Mat4Values)
+		for (auto& [key, v] : mc.Data.m_Mat4Overrides)
 		{
 			ImGui::Text(key.Name.c_str());
 		}
@@ -386,4 +390,101 @@ void harmony::CameraComponentUI::AddComponent(entt::registry& registry, entt::en
 bool harmony::CameraComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
 	return RegistryHasComponent<CameraComponent>(registry, entity);
+}
+
+harmony::DirectionalLightComponentUI::DirectionalLightComponentUI() : ComponentUI("Directional Light")
+{
+}
+
+void harmony::DirectionalLightComponentUI::OnComponentImGui(entt::registry& registry, entt::entity entity)
+{
+	if (registry.valid(entity) == false)
+	{
+		return;
+	}
+	if (RegistryHasComponent<DirectionalLight>(registry, entity) == false)
+	{
+		return;
+	}
+
+	DirectionalLight& dl	= registry.get<DirectionalLight>(entity);
+
+	ImGui::ColorEdit4("Diffuse", &dl .Diffuse[0]);
+	ImGui::ColorEdit4("Ambient", &dl.Ambient[0]);
+}
+
+void harmony::DirectionalLightComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
+{
+	registry.emplace<DirectionalLight>(entity);
+}
+
+bool harmony::DirectionalLightComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
+{
+	return registry.any_of<DirectionalLight>(entity);
+}
+
+harmony::PointLightComponentUI::PointLightComponentUI() : ComponentUI("Point Light")
+{
+}
+
+void harmony::PointLightComponentUI::OnComponentImGui(entt::registry& registry, entt::entity entity)
+{
+	if (registry.valid(entity) == false)
+	{
+		return;
+	}
+	if (RegistryHasComponent<PointLight>(registry, entity) == false)
+	{
+		return;
+	}
+
+	PointLight& pl = registry.get<PointLight>(entity);
+
+	ImGui::ColorEdit4("Diffuse", &pl.Diffuse[0]);
+	ImGui::ColorEdit4("Ambient", &pl.Ambient[0]);
+	ImGui::SliderFloat("Range", &pl.Radius, 0.0f, 5000.0f);
+	ImGui::SliderFloat("Intensity", &pl.Intensity, 0.0f, 5000.0f);
+}
+
+void harmony::PointLightComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
+{
+	registry.emplace<PointLight>(entity);
+}
+
+bool harmony::PointLightComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
+{
+	return registry.any_of<PointLight>(entity);
+}
+
+harmony::SpotLightComponentUI::SpotLightComponentUI() : ComponentUI("Spot Light")
+{
+}
+
+void harmony::SpotLightComponentUI::OnComponentImGui(entt::registry& registry, entt::entity entity)
+{
+	if (registry.valid(entity) == false)
+	{
+		return;
+	}
+	if (RegistryHasComponent<SpotLight>(registry, entity) == false)
+	{
+		return;
+	}
+
+	SpotLight& sl = registry.get<SpotLight>(entity);
+
+	ImGui::ColorEdit4("Diffuse", &sl.Diffuse[0]);
+	ImGui::ColorEdit4("Ambient", &sl.Ambient[0]);
+	ImGui::SliderFloat("Range", &sl.Radius, 0.0f, 5000.0f);
+	ImGui::SliderFloat("Angle", &sl.Angle, 0.0f, 360.0f);
+}
+
+void harmony::SpotLightComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
+{
+	registry.emplace<SpotLight>(entity);
+}
+
+bool harmony::SpotLightComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
+{
+	return registry.any_of<SpotLight>(entity);
 }

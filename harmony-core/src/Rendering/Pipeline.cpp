@@ -31,6 +31,7 @@ void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view, 
 	{
 		bgfx::setViewClear(viewIds[i], BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
 	}
+
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
 		p_Stages[i]->PreUpdate(registry, view, viewIds[i]);

@@ -11,8 +11,7 @@ harmony::PipelineStage::PipelineStage(const std::string& name, Type stageType, W
 	m_StageType(stageType), 
 	m_Attachments(attachments), 
 	p_Shader(shader),
-	p_Renderer(stageRenderer),
-	p_PipelineStageData(shader)
+	p_Renderer(stageRenderer)
 {
 }
 
@@ -172,15 +171,25 @@ void harmony::PipelineStage::PreUpdate(entt::registry& registry, WeakRef<View> v
 	bgfx::setViewTransform(viewId, &_view->m_View[0], &_view->m_Projection[0]);
 	bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
 
-	Ref<ShaderProgram> pipelineShader = p_Shader.lock();
-	Ref<PipelineStageRenderer> pipelineRenderer = p_Renderer.lock();
+	Ref<ShaderProgram>			pipelineShader		= p_Shader.lock();
+	Ref<PipelineStageRenderer>	pipelineRenderer	= p_Renderer.lock();
 
+	for (Ref<ShaderDataSource>& source : p_DataSources)
+	{
+		source->OnPreUpdate(registry, pipelineShader);
+	}
+
+	// Per instance uniforms should be handled by material.
 	pipelineRenderer->Draw(registry, pipelineShader, viewId);
 }
 
 void harmony::PipelineStage::PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
-	
+	Ref<ShaderProgram>			pipelineShader = p_Shader.lock();
+	for (Ref<ShaderDataSource>& source : p_DataSources)
+	{
+		source->OnPostUpdate(registry, pipelineShader);
+	}
 }
 
 void harmony::PipelineStage::Cleanup(WeakRef<View> view, bgfx::ViewId viewId)

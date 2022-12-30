@@ -15,7 +15,8 @@ namespace harmony
         static std::string GetFilePathDirectory(const std::string& path);
         static int EncodeRGBA(char r, char g, char b, char a);
         static void TrimString(std::string& str);
-
+        static float GetIntAsFloat(int i);
+        static float GetUintAsFloat(unsigned int i);
         static std::string GetBgfxRendererName();
     };
 };
