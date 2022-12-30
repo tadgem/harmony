@@ -174,15 +174,22 @@ void harmony::PipelineStage::PreUpdate(entt::registry& registry, WeakRef<View> v
 	Ref<ShaderProgram>			pipelineShader		= p_Shader.lock();
 	Ref<PipelineStageRenderer>	pipelineRenderer	= p_Renderer.lock();
 
-	// Set global shader uniforms.
-	pipelineShader->SetUniforms();
+	for (Ref<ShaderDataSource>& source : p_DataSources)
+	{
+		source->OnPreUpdate(registry, pipelineShader);
+	}
+
 	// Per instance uniforms should be handled by material.
 	pipelineRenderer->Draw(registry, pipelineShader, viewId);
 }
 
 void harmony::PipelineStage::PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
-	
+	Ref<ShaderProgram>			pipelineShader = p_Shader.lock();
+	for (Ref<ShaderDataSource>& source : p_DataSources)
+	{
+		source->OnPostUpdate(registry, pipelineShader);
+	}
 }
 
 void harmony::PipelineStage::Cleanup(WeakRef<View> view, bgfx::ViewId viewId)

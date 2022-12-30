@@ -1,9 +1,9 @@
 #include "RuntimeProgram.h"
 #include "AssimpModelAssetFactory.h"
 #include "Rendering/Views/RuntimeView.h"
+#include "Rendering/ShaderDataSources/BlinnPhongDataSource.h"
 #include "Rendering/Shapes.h"
 #include "Core/FSM.h"
-
 harmony::RuntimeProgram::RuntimeProgram(const std::string& name) : Program(name)
 {
 	AddAssetTypeNames();
@@ -113,6 +113,8 @@ void harmony::RuntimeProgram::InitializePipelines()
 		m_Renderer.GetShader("BlinnPhongTextured"),
 		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
 		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F)).lock();
+
+	blinnPhongStage->AddDataSource<BlinnPhongDataSource>();
 
 	m_Renderer.AddPipeline(p_DebugPipeline);
 	m_Renderer.AddPipeline(p_ForwardPipeline);

@@ -27,7 +27,29 @@ void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry& registry, Ref<Sh
 	// Update uniform vals;
 	for (auto& [entity, dl, t] : dirLightView.each())
 	{
-		
+		m_DirectionalLightAmbient	= dl.Ambient;
+		m_DirectionalLightDiffuse	= dl.Diffuse;
+		m_DirectionalLightDirection = glm::vec4(t.Forward, 0.0);
+		dirLightActive = 1;
+	}
+
+	for (auto& [entity, pl, t] : pointLightView.each())
+	{
+		m_PointLightAmbient[numPointLights]		= pl.Ambient;
+		m_PointLightDiffuse[numPointLights]		= pl.Diffuse;
+		m_PointLightPosition[numPointLights]	= glm::vec4(t.Position, 0.0f);
+		m_PointLightParams[numPointLights]		= glm::vec4(pl.Radius, 0.0, 0.0, 0.0);
+		numPointLights++;
+	}
+
+	for (auto& [entity, sl, t] : spotLightView.each())
+	{
+		m_SpotLightAmbient[numSpotLights] = sl.Ambient;
+		m_SpotLightDiffuse[numSpotLights] = sl.Diffuse;
+		m_SpotLightPosition[numSpotLights] = glm::vec4(t.Position, 0.0f);
+		m_SpotLightPosition[numSpotLights] = glm::vec4(t.Forward, 0.0f);
+		m_SpotLightParams[numSpotLights] = glm::vec4(sl.Radius, sl.Angle, 0.0, 0.0);
+		numSpotLights++;
 	}
 
 	// Light params

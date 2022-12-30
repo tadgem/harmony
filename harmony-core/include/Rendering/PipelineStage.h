@@ -1,8 +1,9 @@
 #pragma once
+#include "Core/Memory.h"
 #include "ThirdParty/entt.hpp"
 #include "ThirdParty/json.hpp"
-#include "Core/Memory.h"
 #include "Rendering/Shader.h"
+#include "Rendering/ShaderDataSource.h"
 namespace harmony
 {
 
@@ -105,6 +106,20 @@ namespace harmony
             Attachment::Type GetDepthType();
         };
 
+
+        template<typename T, typename ... Args>
+        WeakRef<T> AddDataSource(Args&& ... args)
+        {
+            HARMONY_PROFILE_FUNCTION()
+                static_assert(std::is_base_of<ShaderDataSource, T>());
+
+            Ref<T> source = CreateRef<T>(std::forward<Args>(args)...);
+
+            p_DataSources.emplace_back(source);
+            return GetWeakRef<T>(source);
+
+        }
+
         NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
             {Unknown, "unknown"},
             {PrimaryDraw, "primaryDraw"},
@@ -136,7 +151,8 @@ namespace harmony
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStage, m_Name, m_StageType, p_Shader, m_Attachments)
     protected:
         friend class Renderer;
-        WeakRef<ShaderProgram>          p_Shader;
-        WeakRef<PipelineStageRenderer>  p_Renderer;
+        WeakRef<ShaderProgram>              p_Shader;
+        WeakRef<PipelineStageRenderer>      p_Renderer;
+        std::vector<Ref<ShaderDataSource>>  p_DataSources;
     };
 } 
