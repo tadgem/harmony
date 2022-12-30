@@ -96,11 +96,11 @@ vec3 BlinnPhong_Spot(int lightIdx, vec3 position, vec3 normal, vec3 materialAmbi
 
     float cosAngle     = dot(-s, normalize(SpotLights_Direction[lightIdx].xyz));
     float angle        = acos(cosAngle);
-    float spotScale    = 0.0;
+    float range        = 0.0;
 
     if(angle < SpotLights_Params[lightIdx].y)
     {
-        spotScale   = pow(cosAngle, SpotLights_Params[lightIdx].x);
+        range   = pow(cosAngle, SpotLights_Params[lightIdx].x);
         float sDotN = max(dot(s, normal), 0.0);
         diffuse    = materialDiffuse * sDotN;
         if(sDotN > 0.0)
@@ -111,5 +111,11 @@ vec3 BlinnPhong_Spot(int lightIdx, vec3 position, vec3 normal, vec3 materialAmbi
         }
     }
 
-    return ambient + spotScale * SpotLights_Diffuse[lightIdx].xyz  * (diffuse + spec);
+    float attenuation = BlinnPhong_Attenuation(range, length(slDir));
+
+    ambient     *= attenuation;
+    diffuse     *= attenuation;
+    spec        *= attenuation;
+
+    return ambient + range * SpotLights_Diffuse[lightIdx].xyz  * (diffuse + spec);
 }
