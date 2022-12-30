@@ -9,7 +9,7 @@ namespace harmony
     class RuntimeProgram : public Program
     {
     public:
-        RuntimeProgram(const std::string& name);
+        RuntimeProgram(const std::string& name = "Runtime App");
 
 		virtual void Run();
 		virtual void Run(const std::string& projectPath);
