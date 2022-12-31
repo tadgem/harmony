@@ -8,6 +8,7 @@
 #include "ImGui/icons_font_awesome.h"
 #include "ImGui/ImGuiFileDialog.h"
 #include "Assets/ShaderSourceAsset.h"
+#include "Assets/FontAsset.h"
 #include "ECS/CameraComponent.h"
 harmony::ScenePanel::ScenePanel(Program& program) : p_Prog(program)
 {
@@ -376,6 +377,23 @@ void harmony::AssetManagerPanel::OnImGui()
 				ImGui::Text(stageHandles[i].Path.c_str());
 			}
 			ImGui::TreePop();
+		}
+
+		ImGui::Separator();
+		const std::string fontAssetTitle = std::string(ICON_FA_FONT) + " Fonts";
+		ImGui::Text(fontAssetTitle.c_str());
+		std::vector<AssetHandle> fontHandles = p_AssetManager.GetLoadedAssets<FontAsset>();
+		if (ImGui::TreeNode("Fonts")) {
+			for (int i = 0; i < fontHandles.size(); i++)
+			{
+				ImGui::Text(fontHandles[i].Path.c_str());
+			}
+			ImGui::TreePop();
+			if (ImGui::Button("Load Font"))
+			{
+				ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Source", ".ttf", ".");
+				p_SelectedTypeHash = GetTypeHash<FontAsset>();
+			}
 		}
 		ImGui::Unindent();
 	}

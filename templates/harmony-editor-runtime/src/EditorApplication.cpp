@@ -133,6 +133,13 @@ int harmony::Editor::OnEditUpdate()
 		p_MeshSystem->Update(p_ActiveScene->m_Registry);
 		p_TransformSystem->Update(p_ActiveScene->m_Registry);
 		p_CameraSystem->Update(p_ActiveScene->m_Registry);
+
+
+		VectorGraphics::Get()->FontSize(VectorGraphics::One, 20.0f);
+		VectorGraphics::Get()->FontFace(VectorGraphics::One, "carbontype");
+		VectorGraphics::Get()->FontBlur(VectorGraphics::One, 0);
+		VectorGraphics::Get()->FillColor(VectorGraphics::One, nvgRGBA(220, 220, 220, 160));
+		VectorGraphics::Get()->Text(VectorGraphics::One, 0.0f, 30.0f, "carbontype");
 	}
 
 	RunRendererPostUpdate();

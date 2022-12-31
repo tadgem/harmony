@@ -9,6 +9,7 @@
 #include "SDL_syswm.h"
 
 #if HARMONY_DEBUG
+#include "Rendering/VectorGraphics.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_bgfx.h"
 #include "ImGui/ImGuizmo.h"
@@ -676,6 +677,8 @@ void harmony::Program::RunProgramComponentUpdate()
 	{
 		p_ProgramComponents[i]->Update();
 	}
+
+	
 }
 
 void harmony::Program::RunProgramComponentRender()

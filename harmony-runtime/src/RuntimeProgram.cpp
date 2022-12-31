@@ -1,5 +1,6 @@
 #include "RuntimeProgram.h"
 #include "AssimpModelAssetFactory.h"
+#include "Assets/FontAssetFactory.h"
 #include "Rendering/Views/RuntimeView.h"
 #include "Rendering/ShaderDataSources/BlinnPhongDataSource.h"
 #include "Rendering/Shapes.h"
@@ -72,6 +73,7 @@ void harmony::RuntimeProgram::AddAssetFactories()
 	m_AssetManager.AddAssetFactory(CreateRef<TextureAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<ShaderStageBinaryAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>(m_Renderer));
+	m_AssetManager.AddAssetFactory(CreateRef<FontAssetFactory>());
 }
 
 void harmony::RuntimeProgram::AddProgramComponents()
