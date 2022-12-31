@@ -110,6 +110,6 @@ void harmony::VectorGraphics::Text(Layer layer, float x, float y, const char* st
 {
     for (NVGcontext* context : p_VectorRenderers[layer])
     {
-        nvgText(context,x,y,str, "");
+        nvgText(context,x,y,str, NULL);
     }
 }

@@ -90,7 +90,7 @@ namespace harmony
 		
 		std::unordered_map<ShaderStage::Type, WeakRef<ShaderStage>> m_Stages;
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderProgram, m_Name, m_Stages, m_Vec4Values, m_Mat3Values, m_Mat4Values, m_TextureValues)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderProgram, m_Name, m_Stages)
 	protected:
 		void Clear();
 		void UpdateUniform(ShaderUniform& uniform);

@@ -854,6 +854,7 @@ nlohmann::json harmony::Renderer::SerializeShaders()
     for (auto& shader : p_Shaders)
     {
         nlohmann::json shaderJson;
+
         shaderJson[sk_ShaderProgram] = *shader;
 
         json.emplace_back(shaderJson);
