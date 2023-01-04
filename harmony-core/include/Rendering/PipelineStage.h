@@ -8,6 +8,7 @@
 #include "Rendering/ShaderDataSource.h"
 namespace harmony
 {
+    class View;
     class PipelineStage
     {
     public:
@@ -28,6 +29,7 @@ namespace harmony
             Attachment::Type GetDepthType();
         };
 
+        PipelineStage(const std::string& name, Type pipelineStageType, Attachment::Type attachments);
 
         template<typename T, typename ... Args>
         WeakRef<T> AddDataSource(Args&& ... args)
@@ -49,6 +51,15 @@ namespace harmony
             {PostProcess, "postProcess"},
             {Compute, "compute"}
             })
+
+        virtual Data Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
+        virtual void Cleanup(WeakRef<View> view, bgfx::ViewId viewId);
+        bool m_HasHDRAttachment;
+        bool m_HasDepthAttachment;
+
+        Type                m_StageType;
+        Attachment::Type    m_Attachments;
+        std::string         m_Name;
 
     protected:
         std::vector<Ref<ShaderDataSource>>  p_DataSources;
