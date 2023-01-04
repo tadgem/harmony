@@ -9,6 +9,7 @@
 namespace harmony
 {
     class View;
+    class PipelineStageRenderer;
     class PipelineStage
     {
     public:
@@ -29,7 +30,12 @@ namespace harmony
             Attachment::Type GetDepthType();
         };
 
-        PipelineStage(const std::string& name, Type pipelineStageType, Attachment::Type attachments);
+        PipelineStage(
+            const std::string& name, 
+            Type pipelineStageType, 
+            Attachment::Type attachments,
+            WeakRef<ShaderProgram> shader,
+            WeakRef<PipelineStageRenderer> stageRenderer);
 
         template<typename T, typename ... Args>
         WeakRef<T> AddDataSource(Args&& ... args)
@@ -57,9 +63,11 @@ namespace harmony
         bool m_HasHDRAttachment;
         bool m_HasDepthAttachment;
 
-        Type                m_StageType;
-        Attachment::Type    m_Attachments;
-        std::string         m_Name;
+        Type                                m_StageType;
+        Attachment::Type                    m_Attachments;
+        std::string                         m_Name;
+        WeakRef<ShaderProgram>              p_Shader;
+        WeakRef<PipelineStageRenderer>      p_Renderer;
 
     protected:
         std::vector<Ref<ShaderDataSource>>  p_DataSources;

@@ -1,7 +1,8 @@
 #include "Rendering/PipelineStage.h"
 #include "Rendering/View.h"
 
-harmony::PipelineStage::PipelineStage(const std::string& name, Type pipelineStageType, Attachment::Type attachments) : m_Name(name), m_StageType(pipelineStageType), m_Attachments(attachments)
+harmony::PipelineStage::PipelineStage(const std::string& name, Type pipelineStageType, Attachment::Type attachments, WeakRef<ShaderProgram> shader,	WeakRef<PipelineStageRenderer> stageRenderer) 
+	: m_Name(name), m_StageType(pipelineStageType), m_Attachments(attachments), p_Shader(shader), p_Renderer(stageRenderer)
 {
 }
 

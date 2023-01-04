@@ -6,9 +6,7 @@
 #include "ECS/MeshComponent.h"
 #include "ECS/TransformComponent.h"
 #include "Core/Log.hpp"
-harmony::PipelineDrawStage::PipelineDrawStage(const std::string& name, Type stageType, WeakRef<ShaderProgram> shader, WeakRef<PipelineStageRenderer> stageRenderer, Attachment::Type attachments) : PipelineStage(name, stageType , attachments), 
-	p_Shader(shader),
-	p_Renderer(stageRenderer)
+harmony::PipelineDrawStage::PipelineDrawStage(const std::string& name, Type stageType, WeakRef<ShaderProgram> shader, WeakRef<PipelineStageRenderer> stageRenderer, Attachment::Type attachments) : PipelineStage(name, stageType , attachments, shader, stageRenderer)
 {
 }
 

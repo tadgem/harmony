@@ -3,7 +3,7 @@
 
 namespace harmony
 {
-    class PipelineStageRenderer;
+
     class PipelineDrawStage : public PipelineStage
     {
     public:
@@ -21,7 +21,5 @@ namespace harmony
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineDrawStage, m_Name, m_StageType, p_Shader, m_Attachments)
     protected:
         friend class Renderer;
-        WeakRef<ShaderProgram>              p_Shader;
-        WeakRef<PipelineStageRenderer>      p_Renderer;
     };
 } 
