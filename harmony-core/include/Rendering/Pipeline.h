@@ -1,7 +1,7 @@
 #pragma once
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
-#include "Rendering/PipelineStage.h"
+#include "Rendering/PipelineDrawStage.h"
 #include "Core/Profile.hpp"
 #include "ThirdParty/json.hpp"
 namespace harmony
@@ -34,7 +34,7 @@ namespace harmony
         WeakRef<T> AddPipelineStage(Args&& ... args)
         {
             HARMONY_PROFILE_FUNCTION()
-            static_assert(std::is_base_of<PipelineStage, T>());
+            static_assert(std::is_base_of<PipelineDrawStage, T>());
 
             Ref<T> stage = CreateRef<T>(std::forward<Args>(args)...);
 
@@ -43,23 +43,23 @@ namespace harmony
 
         }
 
-        virtual std::vector<PipelineStage::Data> Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
-        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineStage::Data> data);
-        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineStage::Data> data);
+        virtual std::vector<PipelineDrawStage::Data> Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
+        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineDrawStage::Data> data);
+        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineDrawStage::Data> data);
         virtual void Cleanup(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
                 
-        uint32_t    NumPipelineStages();
-        bool        HasDepth();
+        uint32_t            NumPipelineStages();
+        bool                HasDepth();
 
-        nlohmann::json  Serialize();
-        void            Deserialize(nlohmann::json& json);
+        nlohmann::json      Serialize();
+        void                Deserialize(nlohmann::json& json);
 
         PipelineHandle      m_Handle;
         std::string         m_Name;
-        Type          m_Type;
+        Type                m_Type;
 
     protected:
         friend class Renderer;
-        std::vector<Ref<PipelineStage>> p_Stages;
+        std::vector<Ref<PipelineDrawStage>> p_Stages;
     };
 };

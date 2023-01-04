@@ -38,7 +38,7 @@ namespace harmony
         bgfx::TextureHandle GetPipelineFinalDepth(PipelineHandle& handle);
 
         std::map<PipelineHandle, std::vector<bgfx::ViewId>>             p_StackViewIDs;
-        std::map<PipelineHandle, std::vector<PipelineStage::Data>>      p_StackData;
+        std::map<PipelineHandle, std::vector<PipelineDrawStage::Data>>      p_StackData;
 
         bool p_Initialized;        
         bgfx::TextureHandle p_FinalFramebufferAttachment;

@@ -1,14 +1,14 @@
 #pragma once
 #include "Rendering/Pipeline.h"
-#include "Rendering/PipelineStage.h"
+#include "Rendering/PipelineDrawStage.h"
 #include "Rendering/Debug/GfxDebug.h"
 namespace harmony
 {
-    class DebugDrawStage : public PipelineStage
+    class DebugDrawStage : public PipelineDrawStage
     {
     public:
         DebugDrawStage(GfxDebug::Channel channel);
-        virtual PipelineStage::Data Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId) override;
+        virtual PipelineDrawStage::Data Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId) override;
         virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId) override;
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId) override;
         virtual void Cleanup(WeakRef<View> view, bgfx::ViewId viewId) override;

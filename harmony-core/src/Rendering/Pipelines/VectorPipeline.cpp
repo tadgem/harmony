@@ -2,13 +2,13 @@
 #include "Rendering/View.h"
 #include "Core/Program.h"
 harmony::VectorGraphicsStage::VectorGraphicsStage(VectorGraphics::Layer layer) 
-	:	PipelineStage("VectorGraphicsStage", PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>(), WeakRef<PipelineStageRenderer>(), harmony::Attachment::Type::RGBA16F),
+	:	PipelineDrawStage("VectorGraphicsStage", PipelineDrawStage::Type::PrimaryDraw, WeakRef<ShaderProgram>(), WeakRef<PipelineStageRenderer>(), harmony::Attachment::Type::RGBA16F),
 		m_Layer(layer)
 {
 	
 }
 
-harmony::PipelineStage::Data harmony::VectorGraphicsStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
+harmony::PipelineDrawStage::Data harmony::VectorGraphicsStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
     HARMONY_PROFILE_FUNCTION()
 
@@ -46,7 +46,7 @@ harmony::PipelineStage::Data harmony::VectorGraphicsStage::Init(entt::registry& 
 	bgfx::setViewMode(viewId, bgfx::ViewMode::Sequential);
 	bgfx::setViewName(viewId, "NanoVG");
 
-	return PipelineStage::Data{ fbh, attachments };
+	return PipelineDrawStage::Data{ fbh, attachments };
 }
 
 void harmony::VectorGraphicsStage::PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
@@ -61,7 +61,7 @@ void harmony::VectorGraphicsStage::PostUpdate(entt::registry& registry, WeakRef<
 	Ref<View> _view = view.lock();
 	nvgEndFrame(p_VectorRenderers[_view->m_Name]);
 	bgfx::touch(viewId);
-	PipelineStage::PostUpdate(registry, view, viewId);
+	PipelineDrawStage::PostUpdate(registry, view, viewId);
 }
 
 void harmony::VectorGraphicsStage::Cleanup(WeakRef<View> view, bgfx::ViewId viewId)

@@ -1,14 +1,14 @@
 #include "Rendering/Pipeline.h"
-#include "Rendering/PipelineStage.h"
+#include "Rendering/PipelineDrawStage.h"
 #include "Rendering/View.h"
 #include "Core/Log.hpp"
 harmony::Pipeline::Pipeline(const PipelineHandle& handle, Pipeline::Type pipelineType) : m_Handle(handle), m_Name(handle.Name), m_Type(pipelineType)
 {
 }
 
-std::vector<harmony::PipelineStage::Data> harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)
+std::vector<harmony::PipelineDrawStage::Data> harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)
 {
-	std::vector<PipelineStage::Data> datas = std::vector<PipelineStage::Data>();
+	std::vector<PipelineDrawStage::Data> datas = std::vector<PipelineDrawStage::Data>();
 	if (p_Stages.size() == 0)
 	{
 		return datas;
@@ -20,7 +20,7 @@ std::vector<harmony::PipelineStage::Data> harmony::Pipeline::Init(entt::registry
 	return datas;
 }
 
-void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineStage::Data> data)
+void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineDrawStage::Data> data)
 {
 	Ref<View> _v = view.lock();
 	if (p_Stages.size() == 0)
@@ -74,7 +74,7 @@ void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view, 
 	}
 }
 
-void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineStage::Data> data)
+void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineDrawStage::Data> data)
 {
 	if (p_Stages.size() == 0)
 	{
@@ -106,7 +106,7 @@ uint32_t harmony::Pipeline::NumPipelineStages()
 
 bool harmony::Pipeline::HasDepth()
 {
-	for (Ref<PipelineStage> pipeline : p_Stages)
+	for (Ref<PipelineDrawStage> pipeline : p_Stages)
 	{
 		if (pipeline->m_HasDepthAttachment)
 		{
@@ -140,20 +140,3 @@ void harmony::Pipeline::Deserialize(nlohmann::json& json)
 	m_Type = json["pipeline"]["type"];
 	auto pipelinesJson = json["pipeline"]["stages"];
 }
-
-
-bool harmony::PipelineHandle::operator==(const PipelineHandle& other) const
-{
-	return other.Name == Name;
-}
-
-bool harmony::PipelineHandle::operator!=(const PipelineHandle& other) const
-{
-	return other.Name != Name;
-}
-
-bool harmony::PipelineHandle::operator<(const PipelineHandle& other) const
-{
-	return Index < other.Index;
-}
-

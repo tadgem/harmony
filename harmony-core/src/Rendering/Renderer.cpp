@@ -456,7 +456,7 @@ void harmony::Renderer::OnImGui()
                 if (canCreate)
                 {
                     Ref<Pipeline> pipeline = CreateRef<Pipeline>(PipelineHandle( pipelineName ), Pipeline::Type::Surface);
-                    pipeline->AddPipelineStage<PipelineStage>(pipelineName + ".surface", PipelineStage::Type::PrimaryDraw, p_SelectedShaderProgram, GetPipelineStageRenderer("MeshRenderer"));
+                    pipeline->AddPipelineStage<PipelineDrawStage>(pipelineName + ".surface", PipelineDrawStage::Type::PrimaryDraw, p_SelectedShaderProgram, GetPipelineStageRenderer("MeshRenderer"));
                     AddPipeline(pipeline);
                     p_CreatePipelineWindow = false;
                 }
@@ -1019,7 +1019,7 @@ void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager&
             std::string stageName = stageJson[sk_PipelineStageName];
             
             Attachment::Type stageAttachments = stageJson[sk_PipelineStageAttachments];
-            PipelineStage::Type stageType = stageJson[sk_PipelineStageType];
+            PipelineDrawStage::Type stageType = stageJson[sk_PipelineStageType];
 
             std::string stageShaderName = stageJson[sk_PipelineStageShader][sk_ShaderProgramName];
             WeakRef<ShaderProgram> stageShader = GetShader(stageShaderName);
@@ -1031,7 +1031,7 @@ void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager&
                 break;
             }
 
-            Ref<PipelineStage> pipelineStage = newPipeline->AddPipelineStage<PipelineStage>(stageName, stageType, stageShader, GetPipelineStageRenderer("MeshRenderer"), stageAttachments).lock();
+            Ref<PipelineDrawStage> pipelineStage = newPipeline->AddPipelineStage<PipelineDrawStage>(stageName, stageType, stageShader, GetPipelineStageRenderer("MeshRenderer"), stageAttachments).lock();
         }
 
         if (pipelineCreationSuccessful)

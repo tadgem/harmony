@@ -4,13 +4,13 @@
 #include "Core/Input.h"
 #include "Core/Log.hpp"
 
-harmony::DebugDrawStage::DebugDrawStage(GfxDebug::Channel channel) : PipelineStage("DebugDrawStage", PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>(), WeakRef<PipelineStageRenderer>()), m_Channel(channel)
+harmony::DebugDrawStage::DebugDrawStage(GfxDebug::Channel channel) : PipelineDrawStage("DebugDrawStage", PipelineDrawStage::Type::PrimaryDraw, WeakRef<ShaderProgram>(), WeakRef<PipelineStageRenderer>()), m_Channel(channel)
 {
 }
 
-harmony::PipelineStage::Data harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
+harmony::PipelineDrawStage::Data harmony::DebugDrawStage::Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
-	auto data = PipelineStage::Init(registry, view, viewId);
+	auto data = PipelineDrawStage::Init(registry, view, viewId);
 	Ref<View> _view = view.lock();
 
 	p_DebugRenderers.emplace(_view->m_Name, GfxDebug::Get()->AddViewChannel(m_Channel));
@@ -30,7 +30,7 @@ void harmony::DebugDrawStage::PreUpdate(entt::registry& registry, WeakRef<View> 
 void harmony::DebugDrawStage::PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
 	p_DebugRenderers[view.lock()->m_Name]->end();
-	PipelineStage::PostUpdate(registry, view, viewId);
+	PipelineDrawStage::PostUpdate(registry, view, viewId);
 
 }
 
