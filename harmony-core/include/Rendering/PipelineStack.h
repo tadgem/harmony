@@ -5,6 +5,7 @@
 namespace harmony
 {
     class View;
+    class PostProcessStage;
     class PipelineStack
     {
     public:
@@ -12,33 +13,46 @@ namespace harmony
 
         bgfx::TextureHandle GetFinalImage();
 
-        void    AddPipeline(WeakRef<Pipeline> pipeline, WeakRef<View> view);
-        void    AddPipelineAtIndex(WeakRef<Pipeline> pipeline, WeakRef<View> view, int index);
-        void    RemovePipeline(WeakRef<Pipeline> pipeline, WeakRef<View> view);
-        int     GetPipelineIndex(WeakRef<Pipeline> pipeline);
-        void    MoveUp(const PipelineHandle& pipelineHandle);
-        void    MoveDown(const PipelineHandle& pipelineHandle);
+        void    AddPipeline         (WeakRef<Pipeline> pipeline, WeakRef<View> view);
+        void    AddPipelineAtIndex  (WeakRef<Pipeline> pipeline, WeakRef<View> view, int index);
+        void    RemovePipeline      (WeakRef<Pipeline> pipeline, WeakRef<View> view);
+        int     GetPipelineIndex    (WeakRef<Pipeline> pipeline);
+        void    MovePipelineUp      (const PipelineHandle& pipelineHandle);
+        void    MovePipelineDown    (const PipelineHandle& pipelineHandle);
+
+        void    AddPostProcessStage         (WeakRef<PostProcessStage> postProcessStage, WeakRef<View> view);
+        void    AddPostProcessStageAtIndex  (WeakRef<PostProcessStage> postProcessStage, WeakRef<View> view, int index);
+        void    RemovePostProcessStage      (WeakRef<PostProcessStage> postProcessStage, WeakRef<View> view);
+        int     GetPostProcessStageIndex    (WeakRef<PostProcessStage> postProcessStage);
+        void    MovePostProcessStageUp      (const std::string& stageName);
+        void    MovePostProcessStageDown    (const std::string& stageName);
+
         void    OnViewResized(WeakRef<View> view);
 
-        void PreUpdate(entt::registry& registry, WeakRef<View> view);
-        std::vector<bgfx::TextureHandle> PostUpdate(entt::registry& registry, WeakRef<View> view);
+        void                                PreUpdate(entt::registry& registry, WeakRef<View> view);
+        std::vector<bgfx::TextureHandle>    PostUpdate(entt::registry& registry, WeakRef<View> view);
 
         nlohmann::json  Serialize();
 
-        bgfx::FrameBufferHandle         m_FinalFramebufferHandle;
-        bgfx::ViewId                    m_FinalImageViewId;
+        bgfx::FrameBufferHandle                         m_FinalFramebufferHandle;
+        bgfx::ViewId                                    m_FinalImageViewId;
 
-        std::vector<WeakRef<Pipeline>>  m_Stack;
+        std::vector<WeakRef<Pipeline>>                  m_PipelineStack;
+        std::vector<WeakRef<PostProcessStage>>          m_PostProcessPipelineStack;
     protected:
-        void InitializePipeline(Ref<Pipeline> pipeline, WeakRef<View> view);
-        void SortStack();
-        void MovePipeline(const PipelineHandle& pipelineHandle, bool moveUp);
+        void InitializeStack            (WeakRef<View> view);
+        void InitializePipeline         (Ref<Pipeline> pipeline, WeakRef<View> view);
+        void InitializePostProcessStage (Ref<PostProcessStage> stage, WeakRef<View> view);
+        void SortPipelineStack();
+        void SortPostProcessStack();
+        void MovePipeline           (const PipelineHandle& pipelineHandle, bool moveUp);
+        void MovePostProcessPipeline(const std::string& postProcessStageName, bool moveUp);
 
-        bgfx::TextureHandle GetPipelineInitialDepth(PipelineHandle& handle);
-        bgfx::TextureHandle GetPipelineFinalDepth(PipelineHandle& handle);
+        bgfx::TextureHandle GetPipelineInitialDepth (PipelineHandle& handle);
+        bgfx::TextureHandle GetPipelineFinalDepth   (PipelineHandle& handle);
 
-        std::map<PipelineHandle, std::vector<bgfx::ViewId>>             p_StackViewIDs;
-        std::map<PipelineHandle, std::vector<PipelineDrawStage::Data>>      p_StackData;
+        std::map<std::string, std::vector<bgfx::ViewId>>                 p_StackViewIDs;
+        std::map<std::string, std::vector<PipelineStage::Data>>          p_StackData;
 
         bool p_Initialized;        
         bgfx::TextureHandle p_FinalFramebufferAttachment;

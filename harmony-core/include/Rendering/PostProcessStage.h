@@ -3,11 +3,11 @@
 
 namespace harmony
 {
-    class PipelinePostProcessStage : public PipelineStage
+    class PostProcessStage : public PipelineStage
     {
     public:
 
-        PipelinePostProcessStage(
+        PostProcessStage(
             const std::string& name,
             Type stageType,
             WeakRef<ShaderProgram> shader,

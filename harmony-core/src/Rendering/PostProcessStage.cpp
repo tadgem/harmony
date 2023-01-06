@@ -1,10 +1,10 @@
-#include "Rendering/PipelinePostProcessStage.h"
+#include "Rendering/PostProcessStage.h"
 #include "Rendering/View.h"
-harmony::PipelinePostProcessStage::PipelinePostProcessStage(const std::string& name, Type stageType, WeakRef<ShaderProgram> shader, WeakRef<PipelineStageRenderer> stageRenderer, Attachment::Type attachments) : PipelineStage(name, stageType, attachments, shader, stageRenderer)
+harmony::PostProcessStage::PostProcessStage(const std::string& name, Type stageType, WeakRef<ShaderProgram> shader, WeakRef<PipelineStageRenderer> stageRenderer, Attachment::Type attachments) : PipelineStage(name, stageType, attachments, shader, stageRenderer)
 {
 }
 
-void harmony::PipelinePostProcessStage::PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId, PipelineStage::Data data)
+void harmony::PostProcessStage::PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId, PipelineStage::Data data)
 {
 	Ref<View> _view = view.lock();
 
@@ -23,7 +23,7 @@ void harmony::PipelinePostProcessStage::PreUpdate(entt::registry& registry, Weak
 	// TODO how do we pass data here, should this be a source?
 }
 
-void harmony::PipelinePostProcessStage::PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId, PipelineStage::Data data)
+void harmony::PostProcessStage::PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId, PipelineStage::Data data)
 {
 	Ref<ShaderProgram>			pipelineShader = p_Shader.lock();
 	for (Ref<ShaderDataSource>& source : p_DataSources)

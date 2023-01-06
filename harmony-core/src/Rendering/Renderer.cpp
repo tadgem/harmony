@@ -330,22 +330,22 @@ void harmony::Renderer::OnImGui()
 
                     if (ImGui::TreeNode("Stack"))
                     {
-                        for (int i = 0; i < stack.m_Stack.size(); i++)
+                        for (int i = 0; i < stack.m_PipelineStack.size(); i++)
                         {
                             std::string indexString = std::to_string(i);
                             std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + indexString;
                             std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + indexString;
                             if (ImGui::Button(downArrowText.c_str()))
                             {
-                                stack.MoveUp(stack.m_Stack[i].lock()->m_Handle);
+                                stack.MovePipelineUp(stack.m_PipelineStack[i].lock()->m_Handle);
                             }
                             ImGui::SameLine();
                             if (ImGui::Button(upArrowText.c_str()))
                             {
-                                stack.MoveDown(stack.m_Stack[i].lock()->m_Handle);
+                                stack.MovePipelineDown(stack.m_PipelineStack[i].lock()->m_Handle);
                             }
                             ImGui::SameLine();
-                            std::string pipelineName = stack.m_Stack[i].lock()->m_Name + " : " + indexString;
+                            std::string pipelineName = stack.m_PipelineStack[i].lock()->m_Name + " : " + indexString;
                             ImGui::Text(pipelineName.c_str());
                         }
                         ImGui::TreePop();
