@@ -9,7 +9,7 @@
 harmony::ShaderHotReload::ShaderHotReload(Program& prog) : p_Program(prog), p_Renderer(prog.m_Renderer)
 {
     std::string currentPath = std::filesystem::current_path().string();
-    p_ShaderCompilerLocation = currentPath + "/../../tools/bgfx-shaderc/bin/shaderc" + PLATFORM_SHADER_COMPILER_EXECUTABLE;
+    p_ShaderCompilerLocation = currentPath + "/../../../tools/bgfx-shaderc/bin/shaderc" + PLATFORM_SHADER_COMPILER_EXECUTABLE;
 
     if (!std::filesystem::exists(p_ShaderCompilerLocation))
     {
@@ -111,7 +111,7 @@ void harmony::ShaderHotReload::OnChange(const std::string& filename, const std::
             std::string shaderName = filename.substr(firstIndex + 1, lastIndex - (firstIndex + 1));
 
             std::string rendererName = ShaderStage::GetShaderRendererName();
-            if (filename.find(rendererName) < filename.size())
+            if (directory.find(rendererName) < directory.size())
             {
                 auto handle = p_Program.m_AssetManager.LoadAsset<ShaderStage>(shaderName);
                 Ref<ShaderStage> stage = p_Program.m_AssetManager.GetAsset<ShaderStage>(handle[0]).lock();

@@ -124,7 +124,7 @@ private:
 	bool m_Stopped;
 };
 
-#ifdef HARMONY_PROFILE
+#if 1
 #define HARMONY_PROFILE_BEGIN_SESSION(name, filepath) Instrumentor::Get().BeginSession(name, filepath);
 #define HARMONY_PROFILE_SCOPE(name) InstrumentationTimer timer##__LINE__(name);
 #define HARMONY_PROFILE_FUNCTION() HARMONY_PROFILE_SCOPE(__FUNCSIG__)
