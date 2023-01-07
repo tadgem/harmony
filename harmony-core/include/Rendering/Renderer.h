@@ -60,6 +60,7 @@ namespace harmony
         void                            RemoveView(WeakRef<View> view);
         void                            SetViewActive(WeakRef<View> viewWeakRef, bool active);
         void                            AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline);
+        void                            AddViewPostProcessStage(WeakRef<View> viewWeakRef, WeakRef<PostProcessStage> stage);
         void                            RefreshViews();
 
         void                            Init();
@@ -116,6 +117,7 @@ namespace harmony
         std::map<Ref<View>, PipelineStack>                  p_Views;
         std::vector<Ref<ShaderProgram>>                     p_Shaders;
         std::vector<Ref<Pipeline>>                          p_Pipelines;
+        std::vector<Ref<PostProcessStage>>                  p_PostProcessStages;
         std::vector<Ref<PipelineStageRenderer>>             p_PipelineStageRenderers;
         std::vector<Ref<ShaderDataSource>>                  p_ShaderDataSources;
         std::vector<WeakRef<ShaderProgram>>                 p_BuiltInShaders;

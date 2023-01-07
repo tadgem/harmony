@@ -246,6 +246,27 @@ void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipel
     p_Views[view].AddPipeline(pipeline, view);
 }
 
+void harmony::Renderer::AddViewPostProcessStage(WeakRef<View> viewWeakRef, WeakRef<PostProcessStage> stage)
+{
+    if (viewWeakRef.expired())
+    {
+        harmony::log::error("Trying to add pipeline association to a view which is expired.");
+        return;
+    }
+
+    Ref<View> view = viewWeakRef.lock();
+
+    if (stage.expired())
+    {
+        harmony::log::error("Trying to add pipeline to stack but pipeline is expired");
+        return;
+    }
+
+    Ref<PostProcessStage> s = stage.lock();
+
+    p_Views[view].AddPostProcessStage(s, view);
+}
+
 void harmony::Renderer::RefreshViews()
 {
     for (auto& [view, stack] :p_Views)
@@ -266,20 +287,22 @@ void harmony::Renderer::OnImGui()
         ImGui::SameLine();
         ImGui::Text("FPS : %f", 1.0 / Time::GetFrameTime());
         ImGui::Separator();
-        if (ImGui::TreeNode("[Shaders]"))
+        if(ImGui::CollapsingHeader("[Shaders]", ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Framed))
         {
+            ImGui::Indent();
             for (auto& shader : p_Shaders)
             {
                 ImGui::Text(shader->m_Name.c_str());
             }
-            ImGui::TreePop();
-        }
-        if (ImGui::Button("Create Shader"))
-        {
-            p_CreateShaderProgramWindow = true;
+            ImGui::Unindent();
+            ImGui::Separator();
+            if (ImGui::Button("Create Shader"))
+            {
+                p_CreateShaderProgramWindow = true;
+            }
         }
         ImGui::Separator();
-        if (ImGui::TreeNode("[Pipelines]"))
+        if (ImGui::CollapsingHeader("[Pipelines]"))
         {
             for (auto& pipeline : p_Pipelines)
             {
@@ -291,22 +314,21 @@ void harmony::Renderer::OnImGui()
                 }
                 ImGui::Unindent();
             }
-            ImGui::TreePop();
-        }
-        if (ImGui::Button("Create Pipeline"))
-        {
-            p_CreatePipelineWindow = true;
+            if (ImGui::Button("Create Pipeline"))
+            {
+                p_CreatePipelineWindow = true;
+            }
         }
         ImGui::Separator();
-        if (ImGui::TreeNode("[Views]")) {
+        if (ImGui::CollapsingHeader("[Views]")) {
             int count = 0;
+            ImGui::Indent();
             for (auto& [view, stack] : p_Views)
             {
-                auto addPipelineNameHash = "Add Pipeline##" + std::to_string(count);
-                count++;
-
-                if (ImGui::TreeNode(view->m_Name.c_str()))
+                if (ImGui::CollapsingHeader(view->m_Name.c_str()))
                 {
+                    auto addPipelineNameHash = "Add Draw Pipeline##" + std::to_string(count);
+                    count++;
                     if (ImGui::BeginCombo(addPipelineNameHash.c_str(), ""))
                     {
                         for (int i = 0; i < p_Pipelines.size(); i++)
@@ -319,8 +341,24 @@ void harmony::Renderer::OnImGui()
                         ImGui::EndCombo();
                     }
 
-                    if (ImGui::TreeNode("Stack"))
+                    auto addPostProcessNameHash = "Add Post Process Stage##" + std::to_string(count);
+                    count++;
+                    if (ImGui::BeginCombo(addPostProcessNameHash.c_str(), ""))
                     {
+                        for (int i = 0; i < p_PostProcessStages.size(); i++)
+                        {
+                            if (ImGui::Selectable(p_PostProcessStages[i]->m_Name.c_str(), false))
+                            {
+                                AddViewPostProcessStage(view, p_PostProcessStages[i]);
+                            }
+                        }
+                        ImGui::EndCombo();
+                    }
+                    ImGui::Indent();
+                    if (ImGui::CollapsingHeader("Stack"))
+                    {
+                        ImGui::Text("Draw Pipelines");
+                        ImGui::Indent();
                         for (int i = 0; i < stack.m_PipelineStack.size(); i++)
                         {
                             std::string indexString = std::to_string(i);
@@ -339,14 +377,36 @@ void harmony::Renderer::OnImGui()
                             std::string pipelineName = stack.m_PipelineStack[i].lock()->m_Name + " : " + indexString;
                             ImGui::Text(pipelineName.c_str());
                         }
-                        ImGui::TreePop();
+                        ImGui::Unindent();
+                        ImGui::Text("Post Process Stages");
+                        ImGui::Indent();
+                        for (int i = 0; i < stack.m_PostProcessPipelineStack.size(); i++)
+                        {
+                            std::string indexString = std::to_string(i);
+                            std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + indexString;
+                            std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + indexString;
+                            if (ImGui::Button(downArrowText.c_str()))
+                            {
+                                stack.MovePostProcessStageUp(stack.m_PostProcessPipelineStack[i].lock()->m_Name);
+                            }
+                            ImGui::SameLine();
+                            if (ImGui::Button(upArrowText.c_str()))
+                            {
+                                stack.MovePostProcessStageDown(stack.m_PostProcessPipelineStack[i].lock()->m_Name);
+                            }
+                            ImGui::SameLine();
+                            std::string pipelineName = stack.m_PostProcessPipelineStack[i].lock()->m_Name + " : " + indexString;
+                            ImGui::Text(pipelineName.c_str());
+                        }
+                        ImGui::Unindent();
                     }
                     ImGui::Separator();
+                    
+                    ImGui::Unindent();
                     view->OnImGuiOptions();
-                    ImGui::TreePop();
                 }
             }
-            ImGui::TreePop();
+            ImGui::Unindent();
         }
     }
     ImGui::End();
