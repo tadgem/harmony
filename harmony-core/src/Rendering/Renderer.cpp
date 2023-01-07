@@ -328,8 +328,10 @@ void harmony::Renderer::OnImGui()
             {
                 if (ImGui::CollapsingHeader(view->m_Name.c_str()))
                 {
-                    auto addPipelineNameHash = "Add Draw Pipeline##" + std::to_string(count);
+                    auto addPipelineNameHash = "##combo" + std::to_string(count);
                     count++;
+                    ImGui::Text("Add Pipeline");
+                    ImGui::SameLine();
                     if (ImGui::BeginCombo(addPipelineNameHash.c_str(), ""))
                     {
                         for (int i = 0; i < p_Pipelines.size(); i++)
@@ -342,8 +344,10 @@ void harmony::Renderer::OnImGui()
                         ImGui::EndCombo();
                     }
 
-                    auto addPostProcessNameHash = "Add Post Process Stage##" + std::to_string(count);
+                    auto addPostProcessNameHash = "##combo" + std::to_string(count);
                     count++;
+                    ImGui::Text("Add Post Process Stage");
+                    ImGui::SameLine();
                     if (ImGui::BeginCombo(addPostProcessNameHash.c_str(), ""))
                     {
                         for (int i = 0; i < p_PostProcessStages.size(); i++)
