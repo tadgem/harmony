@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Rendering/Pipeline.h"
 #include "Rendering/PipelineDrawStage.h"
 #include "Rendering/View.h"
@@ -18,6 +19,17 @@ std::vector<harmony::PipelineDrawStage::Data> harmony::Pipeline::Init(entt::regi
 		datas.emplace_back(p_Stages[i]->Init(registry, view, viewIds[i]));
 	}
 	return datas;
+}
+
+void harmony::Pipeline::AddPipelineStage(Ref<PipelineDrawStage> stage)
+{
+	if (std::find(p_Stages.begin(), p_Stages.end(), stage) != p_Stages.end())
+	{
+		harmony::log::warn("Pipeline : {} : already contains stage : {}", m_Name, stage->m_Name);
+		return;
+	}
+
+	p_Stages.emplace_back(stage);
 }
 
 void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineDrawStage::Data> data)

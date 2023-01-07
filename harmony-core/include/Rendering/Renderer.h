@@ -45,6 +45,12 @@ namespace harmony
         WeakRef<ShaderProgram>          GetShader(const std::string& name);
         std::vector<std::string>        GetShaderNames();
 
+        void                            AddPipelineDrawStage(Ref<PipelineDrawStage> drawStage);
+        WeakRef<PipelineDrawStage>      GetPipelineDrawStage(const std::string& name);
+
+        void                            AddPostProcessStage(Ref<PostProcessStage> postProcessStage);
+        WeakRef<PostProcessStage>       GetPostProcessStage(const std::string& name);
+
         void                            AddPipeline(Ref<Pipeline> pipeline);
         WeakRef<Pipeline>               GetPipeline(const PipelineHandle& handle);
 
@@ -87,6 +93,7 @@ namespace harmony
 
         bool p_CreateShaderProgramWindow;
         bool p_CreatePipelineWindow;
+        bool p_CreatePipelineStageWindow;
 
         char p_ShaderNameInput[64]{ "" };
         char p_PipelineNameInput[64]{ "" };
@@ -117,6 +124,7 @@ namespace harmony
         std::map<Ref<View>, PipelineStack>                  p_Views;
         std::vector<Ref<ShaderProgram>>                     p_Shaders;
         std::vector<Ref<Pipeline>>                          p_Pipelines;
+        std::vector<Ref<PipelineDrawStage>>                 p_PipelineDrawStages;
         std::vector<Ref<PostProcessStage>>                  p_PostProcessStages;
         std::vector<Ref<PipelineStageRenderer>>             p_PipelineStageRenderers;
         std::vector<Ref<ShaderDataSource>>                  p_ShaderDataSources;

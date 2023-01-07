@@ -19,6 +19,8 @@ namespace harmony
 		virtual void AddProgramComponents();
 		virtual void AddSystems();
 		virtual void AddPipelineStageRenderers();
+		virtual void AddPipelineDrawStages();
+		virtual void AddPostProcessStages();
 		virtual void InitializePipelines();
 		virtual void InitializeViews();
 

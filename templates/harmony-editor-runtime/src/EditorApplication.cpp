@@ -204,6 +204,10 @@ void harmony::Editor::Run()
 
 	Init();
 	m_Renderer.Init();
+
+	AddPipelineDrawStages();
+	AddPostProcessStages();
+
 	InitializePipelines();
 	InitializeViews();
 	PreRunInit();
@@ -222,6 +226,10 @@ void harmony::Editor::Run(const std::string& projectPath)
 
 	Init();
 	m_Renderer.Init();
+
+	AddPipelineDrawStages();
+	AddPostProcessStages();
+
 	InitializePipelines();
 	InitializeViews();
 

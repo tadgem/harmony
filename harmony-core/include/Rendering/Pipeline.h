@@ -43,6 +43,7 @@ namespace harmony
 
         }
 
+        virtual void AddPipelineStage(Ref<PipelineDrawStage> stage);
         virtual std::vector<PipelineDrawStage::Data> Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
         virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineDrawStage::Data> data);
         virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineDrawStage::Data> data);

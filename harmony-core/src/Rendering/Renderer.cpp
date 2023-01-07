@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Rendering/Renderer.h"
 #include "Core/Profile.hpp"
 #include "bgfx/platform.h"
@@ -13,9 +14,9 @@
 #include "Rendering/PipelineStageRenderer.h"
 #include "Rendering/ShaderDataSource.h"
 #include "Rendering/PostProcessStage.h"
+#include "Rendering/PipelineDrawStage.h"
 
 #if HARMONY_DEBUG
-#include <algorithm>
 #include "ImGui/imgui_bgfx.h"
 #include "ImGui/imgui.h"
 #include "ImGui/icons_font_awesome.h"
@@ -753,6 +754,54 @@ std::vector<std::string> harmony::Renderer::GetShaderNames()
         shaders.push_back(shader->m_Name);
     }
     return shaders;
+}
+
+void harmony::Renderer::AddPipelineDrawStage(Ref<PipelineDrawStage> drawStage)
+{
+    if (std::find(p_PipelineDrawStages.begin(), p_PipelineDrawStages.end(), drawStage) != p_PipelineDrawStages.end())
+    {
+        harmony::log::warn("Renderer : AddPipelineDrawStage : Draw Stage {} instance already managed by renderer", drawStage->m_Name);
+        return;
+    }
+
+    p_PipelineDrawStages.emplace_back(drawStage);
+}
+
+harmony::WeakRef<harmony::PipelineDrawStage> harmony::Renderer::GetPipelineDrawStage(const std::string& name)
+{
+    for (int i = 0; i < p_PipelineDrawStages.size(); i++)
+    {
+        if (p_PipelineDrawStages[i]->m_Name == name)
+        {
+            return p_PipelineDrawStages[i];
+        }
+    }
+
+    return WeakRef<PipelineDrawStage>();
+}
+
+void harmony::Renderer::AddPostProcessStage(Ref<PostProcessStage> postProcessStage)
+{
+    if (std::find(p_PostProcessStages.begin(), p_PostProcessStages.end(), postProcessStage) != p_PostProcessStages.end())
+    {
+        harmony::log::warn("Renderer : AddPostProcessStage : Post Process Stage {} instance already managed by renderer", postProcessStage->m_Name);
+        return;
+    }
+
+    p_PostProcessStages.emplace_back(postProcessStage);
+}
+
+harmony::WeakRef<harmony::PostProcessStage> harmony::Renderer::GetPostProcessStage(const std::string& name)
+{
+    for (int i = 0; i < p_PostProcessStages.size(); i++)
+    {
+        if (p_PostProcessStages[i]->m_Name == name)
+        {
+            return p_PostProcessStages[i];
+        }
+    }
+
+    return WeakRef<PostProcessStage>();
 }
 
 void harmony::Renderer::AddShaderDataSource(Ref<ShaderDataSource> dataSource)

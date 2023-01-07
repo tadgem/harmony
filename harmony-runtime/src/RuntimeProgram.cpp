@@ -25,6 +25,10 @@ void harmony::RuntimeProgram::Run()
 
 	Init();
 	m_Renderer.Init();
+	
+	AddPipelineDrawStages();
+	AddPostProcessStages();
+
 	InitializePipelines();
 	InitializeViews();
 
@@ -40,11 +44,15 @@ void harmony::RuntimeProgram::Run()
 
 void harmony::RuntimeProgram::Run(const std::string& projectPath)
 {
+	HARMONY_PROFILE_FUNCTION()
 	Init();
 	m_Renderer.Init();
+
+	AddPipelineDrawStages();
+	AddPostProcessStages();
+
 	InitializePipelines();
 	InitializeViews();
-
 
 	PreRunInit();
 
@@ -95,31 +103,52 @@ void harmony::RuntimeProgram::AddPipelineStageRenderers()
 	m_Renderer.AddPipelineStageRenderer(CreateRef<MeshRenderer>());
 }
 
+void harmony::RuntimeProgram::AddPipelineDrawStages()
+{
+	Ref<PipelineDrawStage> normalStage = CreateRef<PipelineDrawStage>(
+		"NormalStage",
+		PipelineDrawStage::Type::PrimaryDraw,
+		m_Renderer.GetShader("Normal"),
+		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
+		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F)
+	);
+
+	Ref<PipelineDrawStage> texturedMeshStage = CreateRef<PipelineDrawStage>(
+		"TexturedMeshStage",
+		PipelineDrawStage::Type::PrimaryDraw,
+		m_Renderer.GetShader("TexturedMesh"),
+		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
+		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F)
+		);
+
+	Ref<PipelineDrawStage> blinnPhongStage = CreateRef<PipelineDrawStage>(
+		"BlinnPhongTextured",
+		PipelineDrawStage::Type::PrimaryDraw,
+		m_Renderer.GetShader("BlinnPhongTextured"),
+		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
+		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F)
+		);
+	blinnPhongStage->AddDataSource<BlinnPhongDataSource>();
+
+	m_Renderer.AddPipelineDrawStage(normalStage);
+	m_Renderer.AddPipelineDrawStage(texturedMeshStage);
+	m_Renderer.AddPipelineDrawStage(blinnPhongStage);
+}
+
+void harmony::RuntimeProgram::AddPostProcessStages()
+{
+
+}
+
 void harmony::RuntimeProgram::InitializePipelines()
 {
 	p_ForwardPipeline			= CreateRef<Pipeline>(PipelineHandle("Forward Pipeline"), Pipeline::Type::Surface);
 	p_VectorGraphicsPipeline	= CreateRef<VectorPipeline>(VectorGraphics::Layer::One);
-	p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
+	p_DebugPipeline				= CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
 
-	p_ForwardPipeline->AddPipelineStage<PipelineDrawStage>("NormalStage1",
-		PipelineDrawStage::Type::PrimaryDraw,
-		m_Renderer.GetShader("Normal"),
-		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
-		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F));
-
-	p_ForwardPipeline->AddPipelineStage<PipelineDrawStage>("TexturedMeshStage",
-		PipelineDrawStage::Type::PrimaryDraw,
-		m_Renderer.GetShader("TexturedMesh"),
-		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
-		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F));
-
-	Ref<PipelineDrawStage> blinnPhongStage =  p_ForwardPipeline->AddPipelineStage<PipelineDrawStage>("BlinnPhongTextured",
-		PipelineDrawStage::Type::PrimaryDraw,
-		m_Renderer.GetShader("BlinnPhongTextured"),
-		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
-		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F)).lock();
-
-	blinnPhongStage->AddDataSource<BlinnPhongDataSource>();
+	p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("NormalStage").lock());
+	p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("TexturedMeshStage").lock());
+	p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("BlinnPhongTextured").lock());
 
 	m_Renderer.AddPipeline(p_DebugPipeline);
 	m_Renderer.AddPipeline(p_ForwardPipeline);
