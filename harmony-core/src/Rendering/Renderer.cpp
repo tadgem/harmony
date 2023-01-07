@@ -200,18 +200,17 @@ void harmony::Renderer::OnPostUpdate(entt::registry& registry)
         }
 
         Ref<View> view = m_ActiveViews[i].lock();
-        view->OnPostUpdate(registry);
         
         PipelineStack& stack = p_Views[view];
-        auto texturesToBlit = stack.PostUpdate(registry, m_ActiveViews[i]);
         Ref<ShaderProgram> prog = p_PresentProgram.lock();
+        view->OnPostUpdate(registry);
+        auto texturesToBlit = stack.PostUpdate(registry, m_ActiveViews[i]);
         bgfx::setViewClear(stack.m_FinalImageViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000);
 
         for (int i = 0; i < texturesToBlit.size(); i++)
         {
-            bgfx::TextureHandle th = texturesToBlit[i];
-            bgfx::setTexture(0, prog->m_Uniforms[0].BgfxHandle, th);
             // do this better
+            bgfx::setTexture(0, prog->m_Uniforms[0].BgfxHandle, texturesToBlit[i]);
             ScreenSpaceQuad(view->m_Width, view->m_Height);
             bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
             bgfx::submit(stack.m_FinalImageViewId, prog->m_Handle);

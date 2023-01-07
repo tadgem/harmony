@@ -7,8 +7,9 @@
 
 harmony::PipelineStack::PipelineStack()
 {
-    p_Initialized = false;
-    m_FinalImageViewId = Renderer::GetViewID();
+    p_Initialized                   = false;
+    m_FinalImageViewId              = Renderer::GetViewID();
+    p_PipelineStackAccumulationView = Renderer::GetViewID();
 }
 
 bgfx::TextureHandle harmony::PipelineStack::GetFinalImage()
@@ -238,9 +239,11 @@ int harmony::PipelineStack::GetPipelineIndex(WeakRef<Pipeline> pipeline)
         return index;
     }
 
+    Ref<Pipeline> p = pipeline.lock();
+
     for (int i = 0; i < m_PipelineStack.size(); i++)
     {
-        if (m_PipelineStack[i].lock() == pipeline.lock())
+        if (m_PipelineStack[i].lock() == p)
         {
             index = i;
         }
@@ -276,7 +279,6 @@ void harmony::PipelineStack::AddPostProcessStage(WeakRef<PostProcessStage> postP
         m_PostProcessPipelineStack.push_back(postProcessStage);
         // create view ids
         InitializePostProcessStage(stage, view);
-        SortPostProcessStack();
     }
     else
     {
@@ -292,7 +294,7 @@ void harmony::PipelineStack::AddPostProcessStageAtIndex(WeakRef<PostProcessStage
         return;
     }
 
-    if (index >= m_PipelineStack.size())
+    if (index >= m_PostProcessPipelineStack.size())
     {
         return;
     }
@@ -315,19 +317,82 @@ void harmony::PipelineStack::AddPostProcessStageAtIndex(WeakRef<PostProcessStage
 
 void harmony::PipelineStack::RemovePostProcessStage(WeakRef<PostProcessStage> postProcessStage, WeakRef<View> view)
 {
+    Ref<PostProcessStage> p = postProcessStage.lock();
+    
+    if (!p)
+    {
+        harmony::log::warn("Post process stage is expired, cannot remove from the stack.");
+        return;
+    }
+    if (p_StackViewIDs.find(p->m_Name) == p_StackViewIDs.end())
+    {
+        harmony::log::warn("Pipeline : {} not in the stack.", p->m_Name);
+        return;
+    }
+    else
+    {
+        int indexToRemove = -1;
+
+        for (int i = 0; i < m_PostProcessPipelineStack.size(); i++)
+        {
+            if (m_PostProcessPipelineStack[i].lock() == p)
+            {
+                indexToRemove = i;
+                break;
+            }
+        }
+
+
+        for (auto& data : p_StackData[p->m_Name])
+        {
+            bgfx::destroy(data.m_FramebufferHandle);
+            for (auto& [type, attachment] : data.m_Attachments)
+            {
+                bgfx::destroy(attachment.m_Handle);
+            }
+        }
+        p_StackData.erase(p->m_Name);
+
+        if (indexToRemove >= 0)
+        {
+            entt::registry reg = entt::registry();
+            // potentially an issue here.
+            m_PostProcessPipelineStack[indexToRemove].lock()->Cleanup(view, p_StackViewIDs[p->m_Name][0]);
+            m_PostProcessPipelineStack.erase(m_PostProcessPipelineStack.begin() + indexToRemove);
+        }
+    }
 }
 
 int harmony::PipelineStack::GetPostProcessStageIndex(WeakRef<PostProcessStage> postProcessStage)
 {
-    return 0;
+    int index = -1;
+
+    if (postProcessStage.expired())
+    {
+        return index;
+    }
+
+    Ref<PostProcessStage> stage = postProcessStage.lock();
+
+    for (int i = 0; i < m_PostProcessPipelineStack.size(); i++)
+    {
+        if (m_PostProcessPipelineStack[i].lock() == stage)
+        {
+            index = i;
+        }
+    }
+
+    return index;
 }
 
 void harmony::PipelineStack::MovePostProcessStageUp(const std::string& stageName)
 {
+    MovePostProcessStage(stageName, true);
 }
 
 void harmony::PipelineStack::MovePostProcessStageDown(const std::string& stageName)
 {
+    MovePostProcessStage(stageName, false);
 }
 
 nlohmann::json harmony::PipelineStack::Serialize()
@@ -345,7 +410,25 @@ void harmony::PipelineStack::InitializeStack(WeakRef<View> view)
     if (!p_Initialized)
     {
         Ref<View> _view = view.lock();
-        p_FinalFramebufferAttachment = bgfx::createTexture2D(
+        std::vector<bgfx::TextureHandle> attachments = std::vector<bgfx::TextureHandle>();
+
+        p_PipelineStackAccumulationAttachment   = bgfx::createTexture2D(
+            _view->m_Width
+            , _view->m_Height
+            , false
+            , 1
+            , s_AccumulationBufferFormat
+            , BGFX_TEXTURE_RT
+        );
+
+        attachments.emplace_back(p_PipelineStackAccumulationAttachment);
+        p_PipelineStackAccumulationFB = bgfx::createFrameBuffer(attachments.size(), attachments.data(), false);
+        bgfx::setViewFrameBuffer(p_PipelineStackAccumulationView, p_PipelineStackAccumulationFB);
+        bgfx::setViewName(p_PipelineStackAccumulationView, _view->m_Name.c_str());
+        bgfx::setViewRect(p_PipelineStackAccumulationView, 0, 0, (uint16_t)_view->m_Width, (uint16_t)_view->m_Height);
+        attachments.clear();
+
+        p_FinalFramebufferAttachment    = bgfx::createTexture2D(
             _view->m_Width
             , _view->m_Height
             , false
@@ -353,7 +436,6 @@ void harmony::PipelineStack::InitializeStack(WeakRef<View> view)
             , bgfx::TextureFormat::BGRA8
             , BGFX_TEXTURE_RT
         );
-        std::vector<bgfx::TextureHandle> attachments = std::vector<bgfx::TextureHandle>();
         attachments.emplace_back(p_FinalFramebufferAttachment);
         m_FinalFramebufferHandle = bgfx::createFrameBuffer(attachments.size(), attachments.data(), false);
         bgfx::setViewFrameBuffer(m_FinalImageViewId, m_FinalFramebufferHandle);
@@ -384,6 +466,25 @@ void harmony::PipelineStack::InitializePipeline(Ref<Pipeline> pipeline, WeakRef<
 
 void harmony::PipelineStack::InitializePostProcessStage(Ref<PostProcessStage> stage, WeakRef<View> view)
 {
+    if (p_StackViewIDs.find(stage->m_Name) == p_StackViewIDs.end())
+    {
+        p_StackViewIDs.emplace(stage->m_Name, std::vector<bgfx::ViewId>());
+
+        int numViewsRequired = 1;
+
+        harmony::log::info("Generating {} ViewIds for Pipeline {}", numViewsRequired, stage->m_Name);
+
+        for (int i = 0; i < numViewsRequired; i++)
+        {
+            p_StackViewIDs[stage->m_Name].emplace_back(Renderer::GetViewID());
+        }
+    }
+    entt::registry reg = entt::registry();
+    p_StackData[stage->m_Name] = std::vector<PipelineStage::Data>();
+
+    PipelineStage::Data data = stage->Init(reg, view, p_StackViewIDs[stage->m_Name][0]);
+
+    p_StackData[stage->m_Name].emplace_back(data);
 }
 
 void harmony::PipelineStack::OnViewResized(WeakRef<View> view)
@@ -502,10 +603,6 @@ void harmony::PipelineStack::SortPipelineStack()
     }
 }
 
-void harmony::PipelineStack::SortPostProcessStack()
-{
-}
-
 void harmony::PipelineStack::MovePipeline(const PipelineHandle& pipelineHandle, bool moveUp)
 {
     int shiftDir = moveUp ? 1 : -1;
@@ -532,8 +629,30 @@ void harmony::PipelineStack::MovePipeline(const PipelineHandle& pipelineHandle, 
     }
 }
 
-void harmony::PipelineStack::MovePostProcessPipeline(const std::string& postProcessStageName, bool moveUp)
+void harmony::PipelineStack::MovePostProcessStage(const std::string& postProcessStageName, bool moveUp)
 {
+    int shiftDir = moveUp ? 1 : -1;
+    int indexToShift = -1;
+
+    for (int i = 0; i < m_PostProcessPipelineStack.size(); i++)
+    {
+        if (m_PostProcessPipelineStack[i].lock()->m_Name == postProcessStageName)
+        {
+            indexToShift = i;
+            break;
+        }
+    }
+
+    if (indexToShift < 0)
+    {
+        harmony::log::warn("Post Process Stage {} is not in the stack!", postProcessStageName);
+        return;
+    }
+
+    if (shiftDir + indexToShift < m_PostProcessPipelineStack.size())
+    {
+        std::iter_swap(m_PostProcessPipelineStack.begin() + indexToShift, m_PostProcessPipelineStack.begin() + (indexToShift + shiftDir));
+    }
 }
 
 bgfx::TextureHandle harmony::PipelineStack::GetPipelineInitialDepth(PipelineHandle& handle)

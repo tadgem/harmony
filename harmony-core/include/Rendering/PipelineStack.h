@@ -44,9 +44,8 @@ namespace harmony
         void InitializePipeline         (Ref<Pipeline> pipeline, WeakRef<View> view);
         void InitializePostProcessStage (Ref<PostProcessStage> stage, WeakRef<View> view);
         void SortPipelineStack();
-        void SortPostProcessStack();
         void MovePipeline           (const PipelineHandle& pipelineHandle, bool moveUp);
-        void MovePostProcessPipeline(const std::string& postProcessStageName, bool moveUp);
+        void MovePostProcessStage   (const std::string& postProcessStageName, bool moveUp);
 
         bgfx::TextureHandle GetPipelineInitialDepth (PipelineHandle& handle);
         bgfx::TextureHandle GetPipelineFinalDepth   (PipelineHandle& handle);
@@ -55,6 +54,12 @@ namespace harmony
         std::map<std::string, std::vector<PipelineStage::Data>>          p_StackData;
 
         bool p_Initialized;        
-        bgfx::TextureHandle p_FinalFramebufferAttachment;
+        bgfx::TextureHandle     p_FinalFramebufferAttachment;
+
+        bgfx::ViewId            p_PipelineStackAccumulationView;
+        bgfx::TextureHandle     p_PipelineStackAccumulationAttachment;
+        bgfx::FrameBufferHandle p_PipelineStackAccumulationFB;
+
+        inline static const bgfx::TextureFormat::Enum s_AccumulationBufferFormat = bgfx::TextureFormat::RGBA16F;
     };
 }
