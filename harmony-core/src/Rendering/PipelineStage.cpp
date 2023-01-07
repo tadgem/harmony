@@ -166,3 +166,16 @@ harmony::Attachment::Type harmony::PipelineStage::Data::GetDepthType()
 
 	return Attachment::Type::Unknown;
 }
+
+harmony::Attachment::Type harmony::PipelineStage::Data::GetColorType()
+{
+	if (m_Attachments.find(Attachment::Type::RGBA16F) != m_Attachments.end())
+	{
+		return Attachment::Type::RGBA16F;
+	}
+	if (m_Attachments.find(Attachment::Type::RGBA32F) != m_Attachments.end())
+	{
+		return Attachment::Type::RGBA32F;
+	}
+	return Attachment::Type::Unknown;
+}

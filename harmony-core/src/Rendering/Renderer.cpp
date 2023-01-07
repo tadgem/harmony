@@ -12,6 +12,8 @@
 #include "Rendering/View.h"
 #include "Rendering/PipelineStageRenderer.h"
 #include "Rendering/ShaderDataSource.h"
+#include "Rendering/PostProcessStage.h"
+
 #if HARMONY_DEBUG
 #include <algorithm>
 #include "ImGui/imgui_bgfx.h"
@@ -199,22 +201,12 @@ void harmony::Renderer::OnPostUpdate(entt::registry& registry)
             continue;
         }
 
-        Ref<View> view = m_ActiveViews[i].lock();
-        
-        PipelineStack& stack = p_Views[view];
+        Ref<View> view          = m_ActiveViews[i].lock();
         Ref<ShaderProgram> prog = p_PresentProgram.lock();
-        view->OnPostUpdate(registry);
-        auto texturesToBlit = stack.PostUpdate(registry, m_ActiveViews[i]);
-        bgfx::setViewClear(stack.m_FinalImageViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000);
+        PipelineStack& stack    = p_Views[view];
 
-        for (int i = 0; i < texturesToBlit.size(); i++)
-        {
-            // do this better
-            bgfx::setTexture(0, prog->m_Uniforms[0].BgfxHandle, texturesToBlit[i]);
-            ScreenSpaceQuad(view->m_Width, view->m_Height);
-            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
-            bgfx::submit(stack.m_FinalImageViewId, prog->m_Handle);
-        }
+        HandleStackPipelineAccumulation(view, stack, prog, registry);
+        HandleStackPostProcess(view, stack, prog, registry);
     }
 }
 
@@ -1085,4 +1077,58 @@ void harmony::Renderer::DeserializeViews(nlohmann::json& json, AssetManager& am)
 void harmony::Renderer::DeserializeActiveViews(nlohmann::json& json, AssetManager& am)
 {
     harmony::log::info("Renderer : Deserializing Active Views");
+}
+
+void harmony::Renderer::HandleStackPipelineAccumulation(Ref<View> view, PipelineStack& stack, Ref<ShaderProgram> textureProg, entt::registry& registry)
+{
+    view->OnPostUpdate(registry);
+    auto texturesToBlit = stack.PostUpdate(registry, view);
+
+    bgfx::setViewClear(stack.m_PipelineStackAccumulationView, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000);
+
+    for (int i = 0; i < texturesToBlit.size(); i++)
+    {
+        // do this better
+        bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, texturesToBlit[i]);
+        ScreenSpaceQuad(view->m_Width, view->m_Height);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
+        bgfx::submit(stack.m_PipelineStackAccumulationView, textureProg->m_Handle);
+    }
+}
+
+void harmony::Renderer::HandleStackPostProcess(Ref<View> view, PipelineStack& stack, Ref<ShaderProgram> textureProg, entt::registry& registry)
+{
+    PipelineStage::Data data;
+
+    // Initialize with final result from draw pipelines.
+    data.m_FramebufferHandle = stack.m_PipelineStackAccumulationFB;
+
+    Attachment colourAttachment{ stack.m_PipelineStackAccumulationAttachment, stack.s_AccumulationBufferFormat };
+    Attachment depthAttachment{ stack.GetFinalDepth(),  Attachment::Depth32F };
+
+    data.m_Attachments.emplace(colourAttachment.m_Type, colourAttachment);
+    data.m_Attachments.emplace(depthAttachment.m_Type, depthAttachment);
+
+    for (int i = 0; i < stack.m_PostProcessPipelineStack.size(); i++)
+    {
+        WeakRef<PostProcessStage> stage = stack.m_PostProcessPipelineStack[i];
+        if (stage.expired())
+        {
+            harmony::log::warn("Renderer : HandleStackPostProcess : View : {} : Invalid stage in post process", view->m_Name);
+            continue;
+        }
+
+        Ref<PostProcessStage> s = stage.lock();
+
+        s->PostUpdate(registry, view, stack.p_StackViewIDs[s->m_Name][0], data);
+
+        data = stack.p_StackData[s->m_Name][0];
+
+    }
+
+    bgfx::setViewClear(stack.m_FinalImageViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000);
+    bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, data.m_Attachments[data.GetColorType()].m_Handle);
+    ScreenSpaceQuad(view->m_Width, view->m_Height);
+    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
+    bgfx::submit(stack.m_FinalImageViewId, textureProg->m_Handle);
 }

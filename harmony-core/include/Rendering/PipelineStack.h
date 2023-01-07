@@ -12,6 +12,7 @@ namespace harmony
         PipelineStack(); 
 
         bgfx::TextureHandle GetFinalImage();
+        bgfx::TextureHandle GetFinalDepth();
 
         void    AddPipeline         (WeakRef<Pipeline> pipeline, WeakRef<View> view);
         void    AddPipelineAtIndex  (WeakRef<Pipeline> pipeline, WeakRef<View> view, int index);
@@ -35,11 +36,21 @@ namespace harmony
         nlohmann::json  Serialize();
 
         bgfx::FrameBufferHandle                         m_FinalFramebufferHandle;
+        bgfx::FrameBufferHandle                         m_PipelineStackAccumulationFB;
         bgfx::ViewId                                    m_FinalImageViewId;
+        bgfx::ViewId                                    m_PipelineStackAccumulationView;
+        bgfx::TextureHandle                             m_FinalFramebufferAttachment;
+        bgfx::TextureHandle                             m_PipelineStackAccumulationAttachment;
 
         std::vector<WeakRef<Pipeline>>                  m_PipelineStack;
         std::vector<WeakRef<PostProcessStage>>          m_PostProcessPipelineStack;
+        
+        inline static const Attachment::Type s_AccumulationBufferFormat = Attachment::RGBA16F;
+
+    
     protected:
+        friend class Renderer;
+
         void InitializeStack            (WeakRef<View> view);
         void InitializePipeline         (Ref<Pipeline> pipeline, WeakRef<View> view);
         void InitializePostProcessStage (Ref<PostProcessStage> stage, WeakRef<View> view);
@@ -54,12 +65,6 @@ namespace harmony
         std::map<std::string, std::vector<PipelineStage::Data>>          p_StackData;
 
         bool p_Initialized;        
-        bgfx::TextureHandle     p_FinalFramebufferAttachment;
 
-        bgfx::ViewId            p_PipelineStackAccumulationView;
-        bgfx::TextureHandle     p_PipelineStackAccumulationAttachment;
-        bgfx::FrameBufferHandle p_PipelineStackAccumulationFB;
-
-        inline static const bgfx::TextureFormat::Enum s_AccumulationBufferFormat = bgfx::TextureFormat::RGBA16F;
     };
 }

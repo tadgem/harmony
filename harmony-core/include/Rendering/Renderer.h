@@ -106,6 +106,9 @@ namespace harmony
         void                DeserializeViews(nlohmann::json& json, AssetManager& am);
         void                DeserializeActiveViews(nlohmann::json& json, AssetManager& am);
 
+        void                HandleStackPipelineAccumulation (Ref<View> view, PipelineStack& stack, Ref<ShaderProgram> textureProg, entt::registry& registry);
+        void                HandleStackPostProcess          (Ref<View> view, PipelineStack& stack, Ref<ShaderProgram> textureProg, entt::registry& registry);
+
         static uint32_t p_ViewHandleCounter;
         AssetManager&   p_AssetManager;
         int             s_PresentShaderIndex;

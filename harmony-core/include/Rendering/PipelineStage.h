@@ -28,6 +28,7 @@ namespace harmony
             std::map<Attachment::Type, Attachment> m_Attachments;
 
             Attachment::Type GetDepthType();
+            Attachment::Type GetColorType();
         };
 
         PipelineStage(
