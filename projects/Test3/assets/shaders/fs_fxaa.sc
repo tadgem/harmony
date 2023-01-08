@@ -21,12 +21,7 @@ vec3 fxaa(vec2 uv, vec2 add)
     vec3 rgbNE = texture2D(u_color, uv + vec2(1,0)*add).xyz;
     vec3 rgbSW = texture2D(u_color, uv + vec2(0,1)*add).xyz;
     vec3 rgbSE = texture2D(u_color, uv + vec2(1,1)*add).xyz;
-    vec3 rgbM  = texture2D(u_color, uv, 0.0).xyz;
-    //textureLod(tex, uv.zw, 0.0).xyz;
-    // vec3 rgbNE = textureLod(tex, uv.zw + vec2(1,0)*rcpFrame.xy, 0.0).xyz;
-    // vec3 rgbSW = textureLod(tex, uv.zw + vec2(0,1)*rcpFrame.xy, 0.0).xyz;
-    // vec3 rgbSE = textureLod(tex, uv.zw + vec2(1,1)*rcpFrame.xy, 0.0).xyz;
-    // vec3 rgbM  = textureLod(tex, uv.xy, 0.0).xyz;
+    vec3 rgbM  = texture2D(u_color, uv).xyz;
 
     vec3 luma = vec3(0.299, 0.587, 0.114);
     float lumaNW = dot(rgbNW, luma);
@@ -70,7 +65,15 @@ void main()
 {
     vec2 resolution = vec2(u_post_process_params.x, u_post_process_params.y);
     vec2 add = vec2(1.0, 1.0) / resolution;
-    vec4 pixelColor = vec4(fxaa(v_texcoord0, add), 1.0);
-    //vec4 pixelColor = texture2D(u_color, v_texcoord0);
+    vec4 pixelColor = texture2D(u_color, v_texcoord0);
+    
+    // FXAA
+    pixelColor = vec4(fxaa(v_texcoord0, add), 1.0);
+    
+    // Sepia
+    pixelColor = sepia(pixelColor);
+
+    // Posterize
+    pixelColor = posterize(pixelColor,10);
     gl_FragColor = pixelColor;
 }

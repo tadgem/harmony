@@ -10,7 +10,7 @@ harmony::ShaderHotReload::ShaderHotReload(Program& prog) : p_Program(prog), p_Re
 {
     std::string currentPath = std::filesystem::current_path().string();
     p_ShaderCompilerLocation = currentPath + "/../../../tools/bgfx-shaderc/bin/shaderc" + PLATFORM_SHADER_COMPILER_EXECUTABLE;
-
+    p_Initialized = false;
     if (!std::filesystem::exists(p_ShaderCompilerLocation))
     {
         harmony::log::error("ShaderHotReload : Failed to find shaderc executable at path : {}", p_ShaderCompilerLocation);
@@ -46,13 +46,21 @@ void harmony::ShaderHotReload::Init()
         p_DirectoryWatchID = p_FileWatcher->addWatch(shadersDirectory, listener, true);
         p_FileWatcher->watch();
     }
-
-    ReloadTrackedShaders();
     
+    ReloadTrackedShaders();
 }
 
 void harmony::ShaderHotReload::Update()
 {
+    if (!p_Initialized)
+    {
+        //
+        //for (auto& [key, handle] : p_LoadedShaderSources)
+        //{
+        //    std::string cleanName = key.substr(0, key.size() - 3);
+        //    CompileShader(cleanName);
+        //}
+    }
 }
 
 void harmony::ShaderHotReload::Render()
@@ -76,7 +84,6 @@ void harmony::ShaderHotReload::FromJson(const nlohmann::json& json)
 void harmony::ShaderHotReload::OnChange(const std::string& filename, const std::string& directory, efsw::Action action)
 {
     harmony::log::info("ShaderHotReload : Path : {}, Change Type : TODO", filename);
-    ReloadTrackedShaders();
     // ignore changes to include shader files
     if (filename.find("include") < filename.size())
     {
@@ -174,12 +181,6 @@ void harmony::ShaderHotReload::ReloadTrackedShaders()
     for (auto handle : binaryHandles)
     {
         p_LoadedShaderBinaries.emplace(handle.Path, p_Program.m_AssetManager.GetAsset<ShaderStage>(handle).lock());
-    }
-
-    for (auto handle : p_LoadedShaderSources)
-    {
-        std::string cleanName = handle.first.substr(0, handle.first.size() - 3);
-        CompileShader(cleanName);
     }
 }
 

@@ -41,6 +41,8 @@ namespace harmony
         efsw::FileWatcher* p_FileWatcher;
         efsw::WatchID p_DirectoryWatchID;
 
+        bool p_Initialized;
+
 #if BX_PLATFORM_WINDOWS
         const std::string PLATFORM_SHADER_COMPILER_EXECUTABLE = "-win.exe";
 #elif BX_PLATFORM_OSX
