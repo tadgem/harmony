@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Memory.h"
 #include "ThirdParty/entt.hpp"
+#include "ThirdParty/json.hpp"
 #include "Rendering/ShaderUniform.h"
 
 namespace harmony
@@ -14,6 +15,8 @@ namespace harmony
         virtual void OnPreUpdate(entt::registry& registry, Ref<ShaderProgram> shader);
         virtual void OnPostUpdate(entt::registry& registry, Ref<ShaderProgram> shader);
 
-        const std::string m_Name;
+        std::string m_Name;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderDataSource, m_Name);
     };
 }

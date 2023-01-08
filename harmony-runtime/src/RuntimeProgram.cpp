@@ -26,6 +26,7 @@ void harmony::RuntimeProgram::Run()
 	Init();
 	m_Renderer.Init();
 	
+	AddShaderDataSources();
 	AddPipelineDrawStages();
 	AddPostProcessStages();
 
@@ -48,6 +49,7 @@ void harmony::RuntimeProgram::Run(const std::string& projectPath)
 	Init();
 	m_Renderer.Init();
 
+	AddShaderDataSources();
 	AddPipelineDrawStages();
 	AddPostProcessStages();
 
@@ -128,8 +130,9 @@ void harmony::RuntimeProgram::AddPipelineDrawStages()
 		m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
 		(Attachment::Type)(Attachment::Type::RGBA16F | Attachment::Type::Depth32F)
 		);
-	blinnPhongStage->AddDataSource<BlinnPhongDataSource>();
 
+
+	blinnPhongStage->AddShaderDataSource(m_Renderer.GetShaderDataSource("BlinnPhong"));
 	m_Renderer.AddPipelineDrawStage(normalStage);
 	m_Renderer.AddPipelineDrawStage(texturedMeshStage);
 	m_Renderer.AddPipelineDrawStage(blinnPhongStage);
@@ -138,6 +141,12 @@ void harmony::RuntimeProgram::AddPipelineDrawStages()
 void harmony::RuntimeProgram::AddPostProcessStages()
 {
 
+}
+
+void harmony::RuntimeProgram::AddShaderDataSources()
+{
+	Ref<BlinnPhongDataSource> blinnPhong = CreateRef<BlinnPhongDataSource>();
+	m_Renderer.AddShaderDataSource(blinnPhong);
 }
 
 void harmony::RuntimeProgram::InitializePipelines()

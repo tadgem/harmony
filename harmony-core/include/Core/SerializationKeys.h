@@ -6,6 +6,10 @@ inline static std::string sk_AssetHandle = "m_Handle";
 inline static std::string sk_RendererName = "renderer";
 inline static std::string sk_RendererShaderCollection = "shaders";
 inline static std::string sk_RendererPipelineCollection = "pipelines";
+inline static std::string sk_RendererDrawStageCollection = "draw-stages";
+inline static std::string sk_RendererPostProcessStageCollection = "post-process-stages";
+inline static std::string sk_RendererStageRendererCollection = "pipeline-stage-renderers";
+inline static std::string sk_RendererShaderDataSourceCollection = "shader-data-sources";
 inline static std::string sk_RendererViewCollection = "views";
 inline static std::string sk_RendererActiveViewCollection = "active_views";
 
@@ -23,6 +27,7 @@ inline static std::string sk_PipelineStageName = "m_Name";
 inline static std::string sk_PipelineStageType = "m_StageType";
 inline static std::string sk_PipelineStageData = "p_PipelineStageData";
 inline static std::string sk_PipelineStageShader = "p_Shader";
+inline static std::string sk_PipelineStageRenderer = "p_Renderer";
 inline static std::string sk_PipelineStageAttachments = "m_Attachments";
 
 inline static std::string sk_ViewData = "view";

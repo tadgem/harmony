@@ -112,11 +112,19 @@ namespace harmony
             
         nlohmann::json      SerializeShaders();
         nlohmann::json      SerializePipelines();
+        nlohmann::json      SerializePipelineDrawStages();
+        nlohmann::json      SerializePostProcessStages();
+        nlohmann::json      SerializePipelineStageRenderers();
+        nlohmann::json      SerializeShaderDataSources();
         nlohmann::json      SerializeViews();
         nlohmann::json      SerializeActiveViews();
 
         void                DeserializeShaders(nlohmann::json& json, AssetManager& am);
         void                DeserializePipelines(nlohmann::json& json, AssetManager& am);
+        void                DeserializePipelineDrawStages(nlohmann::json& json, AssetManager& am);
+        void                DeserializePostProcessStages(nlohmann::json& json, AssetManager& am);
+        void                DeserializePipelineStageRenderers(nlohmann::json& json, AssetManager& am);
+        void                DeserializeShaderDataSources(nlohmann::json& json, AssetManager& am);
         void                DeserializeViews(nlohmann::json& json, AssetManager& am);
         void                DeserializeActiveViews(nlohmann::json& json, AssetManager& am);
 

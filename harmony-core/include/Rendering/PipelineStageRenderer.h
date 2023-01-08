@@ -4,7 +4,7 @@
 #include "Core/Memory.h"
 #include "Rendering/Shader.h"
 #include "ThirdParty/entt.hpp"
-
+#include "ThirdParty/json.hpp"
 
 namespace harmony {
 	class Drawable;
@@ -17,6 +17,8 @@ namespace harmony {
 		// the correct derivative of drawable.
 		virtual void Draw(entt::registry& scene, Ref<ShaderProgram> shader, bgfx::ViewId viewId) {}
 
-		const std::string m_Name;
+		std::string m_Name;
+
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStageRenderer, m_Name);
 	};
 };

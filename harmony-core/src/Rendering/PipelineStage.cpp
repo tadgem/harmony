@@ -1,5 +1,7 @@
 #include "Rendering/PipelineStage.h"
+#include "Rendering/PipelineStageRenderer.h"
 #include "Rendering/View.h"
+#include "Core/SerializationKeys.h"
 
 harmony::PipelineStage::PipelineStage(const std::string& name, Type pipelineStageType, Attachment::Type attachments, WeakRef<ShaderProgram> shader,	WeakRef<PipelineStageRenderer> stageRenderer) 
 	: m_Name(name), m_StageType(pipelineStageType), m_Attachments(attachments), p_Shader(shader), p_Renderer(stageRenderer)
@@ -148,6 +150,34 @@ harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& regist
 
 void harmony::PipelineStage::Cleanup(WeakRef<View> view, bgfx::ViewId viewId)
 {
+}
+
+void harmony::PipelineStage::AddShaderDataSource(WeakRef<ShaderDataSource> source)
+{
+	if (std::find(p_DataSources.begin(), p_DataSources.end(), source) != p_DataSources.end())
+	{
+		harmony::log::warn("Data Source : {} : already provided to pipeline stage {}", source.lock()->m_Name, m_Name);
+		return;
+	}
+
+	p_DataSources.emplace_back(source);
+}
+
+nlohmann::json harmony::PipelineStage::Serialize()
+{
+	nlohmann::json j;
+	j[sk_PipelineStageName] = m_Name;
+	j[sk_PipelineStageAttachments] = m_Attachments;
+	j[sk_PipelineStageType] = m_StageType;
+	j[sk_PipelineStageShader] = p_Shader;
+	j[sk_PipelineStageRenderer] = p_Renderer;
+	return j;
+}
+void harmony::PipelineStage::Deserialize(nlohmann::json j)
+{
+	m_Name = j[sk_PipelineStageName];
+	m_Attachments = j[sk_PipelineStageAttachments];
+	m_StageType = j[sk_PipelineStageType];
 }
 harmony::Attachment::Type harmony::PipelineStage::Data::GetDepthType()
 {

@@ -714,11 +714,14 @@ nlohmann::json harmony::Renderer::Serialize()
     auto json =  nlohmann::json();
 
     json[sk_RendererName] = nlohmann::json();
-    json[sk_RendererName][sk_RendererShaderCollection] = SerializeShaders();
-    json[sk_RendererName][sk_RendererPipelineCollection] = SerializePipelines();
-    json[sk_RendererName][sk_RendererViewCollection] = SerializeViews();
-    json[sk_RendererName][sk_RendererActiveViewCollection] = SerializeActiveViews();
-    
+    json[sk_RendererName][sk_RendererShaderCollection]              = SerializeShaders();
+    json[sk_RendererName][sk_RendererPipelineCollection]            = SerializePipelines();
+    json[sk_RendererName][sk_RendererDrawStageCollection]           = SerializePipelineDrawStages();
+    json[sk_RendererName][sk_RendererPostProcessStageCollection]    = SerializePostProcessStages();
+    json[sk_RendererName][sk_RendererStageRendererCollection]       = SerializePipelineStageRenderers();
+    json[sk_RendererName][sk_RendererShaderDataSourceCollection]    = SerializeShaderDataSources();
+    json[sk_RendererName][sk_RendererViewCollection]                = SerializeViews();
+    json[sk_RendererName][sk_RendererActiveViewCollection]          = SerializeActiveViews();
     
     return json;
 }
@@ -729,6 +732,10 @@ void harmony::Renderer::Deserialize(AssetManager& am, nlohmann::json& json)
 
     DeserializeShaders(json, am);
     DeserializePipelines(json, am);
+    DeserializePipelineDrawStages(json, am);
+    DeserializePostProcessStages(json, am);
+    DeserializePipelineStageRenderers(json, am);
+    DeserializeShaderDataSources(json, am);
     DeserializeViews(json, am);
     DeserializeActiveViews(json, am);
 }
@@ -1088,6 +1095,50 @@ nlohmann::json harmony::Renderer::SerializePipelines()
     return json;
 }
 
+nlohmann::json harmony::Renderer::SerializePipelineDrawStages()
+{
+    auto json = nlohmann::json::array();
+    for (auto& drawStage : p_PipelineDrawStages)
+    {
+        json.emplace_back(drawStage->Serialize());
+    }
+
+    return json;
+}
+
+nlohmann::json harmony::Renderer::SerializePostProcessStages()
+{
+    auto json = nlohmann::json::array();
+    for (auto& ppStage : p_PostProcessStages)
+    {
+        json.emplace_back(ppStage->Serialize());
+    }
+
+    return json;
+}
+
+nlohmann::json harmony::Renderer::SerializePipelineStageRenderers()
+{
+    auto json = nlohmann::json::array();
+    for (auto& renderer : p_PipelineStageRenderers)
+    {
+        json.emplace_back(renderer);
+    }
+
+    return json;
+}
+
+nlohmann::json harmony::Renderer::SerializeShaderDataSources()
+{
+    auto json = nlohmann::json::array();
+    for (auto& source : p_ShaderDataSources)
+    {
+        json.emplace_back(source);
+    }
+
+    return json;
+}
+
 nlohmann::json harmony::Renderer::SerializeViews()
 {
     auto json = nlohmann::json::array();
@@ -1260,6 +1311,22 @@ void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager&
 
 
     }
+}
+
+void harmony::Renderer::DeserializePipelineDrawStages(nlohmann::json& json, AssetManager& am)
+{
+}
+
+void harmony::Renderer::DeserializePostProcessStages(nlohmann::json& json, AssetManager& am)
+{
+}
+
+void harmony::Renderer::DeserializePipelineStageRenderers(nlohmann::json& json, AssetManager& am)
+{
+}
+
+void harmony::Renderer::DeserializeShaderDataSources(nlohmann::json& json, AssetManager& am)
+{
 }
 
 void harmony::Renderer::DeserializeViews(nlohmann::json& json, AssetManager& am)

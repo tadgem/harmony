@@ -38,18 +38,6 @@ namespace harmony
             WeakRef<ShaderProgram> shader,
             WeakRef<PipelineStageRenderer> stageRenderer);
 
-        template<typename T, typename ... Args>
-        WeakRef<T> AddDataSource(Args&& ... args)
-        {
-            HARMONY_PROFILE_FUNCTION()
-                static_assert(std::is_base_of<ShaderDataSource, T>());
-
-            Ref<T> source = CreateRef<T>(std::forward<Args>(args)...);
-
-            p_DataSources.emplace_back(source);
-            return GetWeakRef<T>(source);
-
-        }
 
         NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
             {Unknown, "unknown"},
@@ -61,6 +49,12 @@ namespace harmony
 
         virtual Data Init(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId);
         virtual void Cleanup(WeakRef<View> view, bgfx::ViewId viewId);
+
+        virtual void AddShaderDataSource(WeakRef<ShaderDataSource> source);
+
+        virtual nlohmann::json  Serialize();
+        virtual void            Deserialize(nlohmann::json json);
+
         bool m_HasHDRAttachment;
         bool m_HasDepthAttachment;
 
@@ -71,6 +65,6 @@ namespace harmony
         WeakRef<PipelineStageRenderer>      p_Renderer;
 
     protected:
-        std::vector<Ref<ShaderDataSource>>  p_DataSources;
+        std::vector<WeakRef<ShaderDataSource>>  p_DataSources;
     };
 }
