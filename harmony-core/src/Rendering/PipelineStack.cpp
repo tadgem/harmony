@@ -532,20 +532,33 @@ void harmony::PipelineStack::OnViewResized(WeakRef<View> view)
 
     Ref<View> v = view.lock();
     std::vector<WeakRef<Pipeline>> stackCopy = std::vector<WeakRef<Pipeline>>();
-
+    std::vector<WeakRef<PostProcessStage>> ppStackCopy = std::vector<WeakRef<PostProcessStage>>();
     for (int i = 0; i < m_PipelineStack.size(); i++)
     {
         stackCopy.push_back(m_PipelineStack[i]);
     }
-
+    for (int i = 0; i < m_PostProcessPipelineStack.size(); i++)
+    {
+        ppStackCopy.push_back(m_PostProcessPipelineStack[i]);
+    }
     for (int i = 0; i < stackCopy.size(); i++)
     {
         RemovePipeline(stackCopy[i], view);
     }
 
+    for (int i = 0; i < ppStackCopy.size(); i++)
+    {
+        RemovePostProcessStage(ppStackCopy[i], view);
+    }
+
     for (int i = 0; i < stackCopy.size(); i++)
     {
         AddPipelineAtIndex(stackCopy[i], view, i);
+    }
+
+    for (int i = 0; i < ppStackCopy.size(); i++)
+    {
+        AddPostProcessStageAtIndex(ppStackCopy[i], view, i);
     }
 
 }

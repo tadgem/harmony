@@ -17,15 +17,35 @@ void harmony::PostProcessStage::PostUpdate(entt::registry& registry, WeakRef<Vie
 	{
 		source->OnPostUpdate(registry, s);
 	}
-
-	// set colour and depth attachment
-	bgfx::UniformHandle colourAttachmentUniform	= s->m_Uniforms[0].BgfxHandle;
-	bgfx::UniformHandle depthAttachmentUniform; 
 	bool hasDepth = false;
-	if (s->m_Uniforms.size() > 1)
+	bool hasParams = false;
+	int numSamplers = 0;
+
+	bgfx::UniformHandle colourAttachmentUniform;
+	bgfx::UniformHandle depthAttachmentUniform;
+	bgfx::UniformHandle postProcessParamsUniform;
+
+	for (int i = 0; i < s->m_Uniforms.size(); i++)
 	{
-		depthAttachmentUniform = s->m_Uniforms[1].BgfxHandle;
-		hasDepth = true;
+		if (s->m_Uniforms[i].Type == bgfx::UniformType::Vec4)
+		{
+			hasParams = true;
+			postProcessParamsUniform = s->m_Uniforms[i].BgfxHandle;
+		}
+		if (s->m_Uniforms[i].Type == bgfx::UniformType::Sampler)
+		{
+			if (numSamplers == 0)
+			{
+				colourAttachmentUniform = s->m_Uniforms[i].BgfxHandle;
+			}
+			if (numSamplers == 1)
+			{
+				hasDepth = true;
+				numSamplers++;
+				depthAttachmentUniform = s->m_Uniforms[i].BgfxHandle;
+			}
+
+		}
 	}
 
 	Attachment::Type colourType = data.GetColorType();
@@ -57,7 +77,11 @@ void harmony::PostProcessStage::PostUpdate(entt::registry& registry, WeakRef<Vie
 			bgfx::setTexture(1, depthAttachmentUniform, depthAttachment);
 		}
 	}
-
+	glm::vec4 params(v->m_Width, v->m_Height, 0, 0);
+	if (hasParams)
+	{
+		bgfx::setUniform(postProcessParamsUniform, &params[0]);
+	}
 	ScreenSpaceQuad(v->m_Width, v->m_Height);
 	bgfx::submit(viewId, s->m_Handle);
 }
