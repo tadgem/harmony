@@ -1296,7 +1296,7 @@ void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager&
                 pipelineCreationSuccessful = false;
                 break;
             }
-
+            // TODO : Change me to use the serialized pipeline stage renderer.
             Ref<PipelineDrawStage> pipelineStage = newPipeline->AddPipelineStage<PipelineDrawStage>(stageName, stageType, stageShader, GetPipelineStageRenderer("MeshRenderer"), stageAttachments).lock();
         }
 
@@ -1319,6 +1319,35 @@ void harmony::Renderer::DeserializePipelineDrawStages(nlohmann::json& json, Asse
 
 void harmony::Renderer::DeserializePostProcessStages(nlohmann::json& json, AssetManager& am)
 {
+    harmony::log::info("Renderer : Deserializing Post Process Stages");
+    for (auto postProcessJson : json[sk_RendererName][sk_RendererPostProcessStageCollection])
+    {
+        harmony::log::info("dad!");
+        std::string name = postProcessJson[sk_PipelineStageName];
+        std::string shaderName = postProcessJson[sk_PipelineStageShader][sk_ShaderProgramName];
+        
+        WeakRef<ShaderProgram> shader = GetShader(shaderName);
+
+        if (shader.expired())
+        {
+            harmony::log::warn("Renderer : Could not deserialize Post Process Stage : {} : Could not find shader with name : {}", name, shaderName);
+            continue;
+        }
+
+        PipelineStage::Type type = postProcessJson[sk_PipelineStageType];
+        Attachment::Type attachments = postProcessJson[sk_PipelineStageAttachments];
+
+        Ref<PostProcessStage> stage = CreateRef<PostProcessStage>(
+            name, 
+            type,
+            shader,
+            WeakRef<PipelineStageRenderer>(),
+            attachments
+        );
+
+        AddPostProcessStage(stage);
+    }
+
 }
 
 void harmony::Renderer::DeserializePipelineStageRenderers(nlohmann::json& json, AssetManager& am)
@@ -1346,7 +1375,7 @@ void harmony::Renderer::DeserializeViews(nlohmann::json& json, AssetManager& am)
             {
                 view->Deserialize(viewDataJson);
                 int stackIndex = 0;
-                for (auto pipelineHandleJson : pipelineStackJson)
+                for (auto pipelineHandleJson : pipelineStackJson[sk_PipelineStackPipelines])
                 {
                     PipelineHandle handle = pipelineHandleJson;
                     WeakRef<Pipeline> pipeline = GetPipeline(handle);
@@ -1359,7 +1388,22 @@ void harmony::Renderer::DeserializeViews(nlohmann::json& json, AssetManager& am)
 
                     stack.AddPipelineAtIndex(pipeline, view, stackIndex);
                     stackIndex++;
-                }                
+                }
+                for (auto postProcess : pipelineStackJson[sk_PipelineStackPostProcessStages])
+                {
+                    std::string name = postProcess[sk_PipelineStageName];
+                    WeakRef<PostProcessStage> pipeline = GetPostProcessStage(name);
+
+                    if (pipeline.expired())
+                    {
+                        harmony::log::warn("Renderer : Failed to add post process stage with name {} to view {}, pipeline was not found!", name, viewName);
+                        continue;
+                    }
+
+                    stack.AddPostProcessStageAtIndex(pipeline, view, stackIndex);
+                    stackIndex++;
+                }
+                stackIndex = 0;
             }
         }
     }

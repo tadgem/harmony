@@ -14,6 +14,8 @@ harmony::RuntimeProgram::RuntimeProgram(const std::string& name) : Program(name)
 	AddProgramComponents();
 	AddSystems();
 	AddPipelineStageRenderers();
+	AddShaderDataSources();
+	AddPostProcessStages();
 
 	// TODO: Need some way of tracking max view ids.
 	p_PresentViewId = (bgfx::ViewId)255;
@@ -26,9 +28,7 @@ void harmony::RuntimeProgram::Run()
 	Init();
 	m_Renderer.Init();
 	
-	AddShaderDataSources();
 	AddPipelineDrawStages();
-	AddPostProcessStages();
 
 	InitializePipelines();
 	InitializeViews();
@@ -49,9 +49,7 @@ void harmony::RuntimeProgram::Run(const std::string& projectPath)
 	Init();
 	m_Renderer.Init();
 
-	AddShaderDataSources();
 	AddPipelineDrawStages();
-	AddPostProcessStages();
 
 	InitializePipelines();
 	InitializeViews();

@@ -1,4 +1,5 @@
 #include "Core/Log.hpp"
+#include "Core/SerializationKeys.h"
 #include "Rendering/PipelineStack.h"
 #include "Rendering/Shapes.h"
 #include "Rendering/Renderer.h"
@@ -428,12 +429,23 @@ void harmony::PipelineStack::MovePostProcessStageDown(const std::string& stageNa
 
 nlohmann::json harmony::PipelineStack::Serialize()
 {
-    auto json = nlohmann::json::array();
+    nlohmann::json j;
+    auto pipelinesJson = nlohmann::json::array();
     for (auto pipeline : m_PipelineStack)
     {
-        json.emplace_back(pipeline.lock()->m_Handle);
+        pipelinesJson.emplace_back(pipeline.lock()->m_Handle);
     }
-    return json;
+
+    auto postProcessJson = nlohmann::json::array();
+    for (auto pipeline : m_PostProcessPipelineStack)
+    {
+        postProcessJson.emplace_back(pipeline.lock()->Serialize());
+    }
+
+
+    j[sk_PipelineStackPipelines] = pipelinesJson;
+    j[sk_PipelineStackPostProcessStages] = postProcessJson;
+    return j;
 }
 
 void harmony::PipelineStack::InitializeStack(WeakRef<View> view)

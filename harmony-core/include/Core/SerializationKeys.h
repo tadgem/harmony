@@ -29,6 +29,8 @@ inline static std::string sk_PipelineStageData = "p_PipelineStageData";
 inline static std::string sk_PipelineStageShader = "p_Shader";
 inline static std::string sk_PipelineStageRenderer = "p_Renderer";
 inline static std::string sk_PipelineStageAttachments = "m_Attachments";
+inline static std::string sk_PipelineStackPipelines = "pipelines";
+inline static std::string sk_PipelineStackPostProcessStages = "post-process-stages";
 
 inline static std::string sk_ViewData = "view";
 inline static std::string sk_ViewName = "name";

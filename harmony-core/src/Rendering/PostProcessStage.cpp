@@ -13,9 +13,11 @@ void harmony::PostProcessStage::PreUpdate(entt::registry& registry, WeakRef<View
 void harmony::PostProcessStage::PostUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId, PipelineStage::Data data)
 {
 	Ref<ShaderProgram>			s = p_Shader.lock();
-	for (Ref<ShaderDataSource>& source : p_DataSources)
+	for (WeakRef<ShaderDataSource>& source : p_DataSources)
 	{
-		source->OnPostUpdate(registry, s);
+		if (source.expired()) continue;
+		auto src = source.lock();
+		src->OnPostUpdate(registry, s);
 	}
 	bool hasDepth = false;
 	bool hasParams = false;
@@ -56,9 +58,11 @@ void harmony::PostProcessStage::PostUpdate(entt::registry& registry, WeakRef<Vie
 		return;
 	}
 
-	for (Ref<ShaderDataSource>& source : p_DataSources)
+	for (WeakRef<ShaderDataSource>& source : p_DataSources)
 	{
-		source->OnPreUpdate(registry, s);
+		if (source.expired()) continue;
+		auto src = source.lock();
+		src->OnPreUpdate(registry, s);
 	}
 
 	Ref<View> v = view.lock();

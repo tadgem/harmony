@@ -154,12 +154,19 @@ void harmony::PipelineStage::Cleanup(WeakRef<View> view, bgfx::ViewId viewId)
 
 void harmony::PipelineStage::AddShaderDataSource(WeakRef<ShaderDataSource> source)
 {
-	if (std::find(p_DataSources.begin(), p_DataSources.end(), source) != p_DataSources.end())
+	if (source.expired()) return;
+	for (int i = 0; i < p_DataSources.size(); i++)
 	{
-		harmony::log::warn("Data Source : {} : already provided to pipeline stage {}", source.lock()->m_Name, m_Name);
-		return;
+		if (p_DataSources[i].expired())
+		{
+			continue;
+		}
+		if (p_DataSources[i].lock() == source.lock())
+		{
+			harmony::log::warn("PipelineStage : Stage {} already has data source : {}", m_Name, source.lock()->m_Name);
+			return;
+		}
 	}
-
 	p_DataSources.emplace_back(source);
 }
 
@@ -169,8 +176,16 @@ nlohmann::json harmony::PipelineStage::Serialize()
 	j[sk_PipelineStageName] = m_Name;
 	j[sk_PipelineStageAttachments] = m_Attachments;
 	j[sk_PipelineStageType] = m_StageType;
-	j[sk_PipelineStageShader] = p_Shader;
-	j[sk_PipelineStageRenderer] = p_Renderer;
+	j[sk_PipelineStageShader] = *p_Shader.lock();
+
+	if (p_Renderer.expired())
+	{
+		j[sk_PipelineStageRenderer] = nlohmann::json();
+	}
+	else
+	{
+		j[sk_PipelineStageRenderer] = *p_Renderer.lock();
+	}
 	return j;
 }
 void harmony::PipelineStage::Deserialize(nlohmann::json j)
