@@ -82,23 +82,29 @@ namespace harmony
 #if HARMONY_DEBUG
         void                OnImGui();
         bool                ShaderSelector(const std::string& selectorName, harmony::WeakRef<harmony::ShaderProgram>& prog);
+        bool                PipelineStageRendererSelector(const std::string& selectorName, harmony::WeakRef<harmony::PipelineStageRenderer> renderer);
         Pipeline::Type      GetPipelineTypeFromName(const std::string& type);
         bool                IsBuiltInShaderName(const std::string& name);
     protected:
         AssetHandle p_SelectedVertexAsset;
         AssetHandle p_SelectedFragmentAsset;
 
-        WeakRef<ShaderProgram>  p_SelectedShaderProgram;
-        PipelineHandle          p_SelectedPipelineHandle;
+        WeakRef<ShaderProgram>          p_SelectedShaderProgram;
+        WeakRef<PipelineStageRenderer>  p_SelectedRenderer;
+        PipelineHandle                  p_SelectedPipelineHandle;
 
         bool p_CreateShaderProgramWindow;
         bool p_CreatePipelineWindow;
-        bool p_CreatePipelineStageWindow;
+        bool p_CreateDrawStageWindow;
+        bool p_CreatePostProcessStageWindow;
 
         char p_ShaderNameInput[64]{ "" };
         char p_PipelineNameInput[64]{ "" };
+        char p_PipelineDrawStageNameInput[64]{ "" };
+        char p_PipelinePostProcessStageNameInput[64]{ "" };
 
         int p_SelectedPipelineType;
+        int p_SelectedPipelineDrawStageType;
 #endif
         std::vector<WeakRef<View>> m_ActiveViews;
     protected:

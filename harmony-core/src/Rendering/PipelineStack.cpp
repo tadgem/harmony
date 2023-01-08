@@ -29,7 +29,7 @@ bgfx::TextureHandle harmony::PipelineStack::GetFinalDepth()
     }
 
     Ref<Pipeline> pipeline;
-
+    Ref<Pipeline> selectedPipeline;
     for (int p = 0; p < m_PipelineStack.size(); p++)
     {
         pipeline = m_PipelineStack[p].lock();
@@ -41,13 +41,14 @@ bgfx::TextureHandle harmony::PipelineStack::GetFinalDepth()
 
         if (pipeline->HasDepth())
         {
+            selectedPipeline = pipeline;
             continue;
         }
 
         break;
     }
 
-    return GetPipelineFinalDepth(pipeline->m_Handle);
+    return GetPipelineFinalDepth(selectedPipeline->m_Handle);
 
 }
 

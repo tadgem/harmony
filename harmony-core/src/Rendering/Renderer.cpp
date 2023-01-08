@@ -28,7 +28,10 @@ harmony::Renderer::Renderer(AssetManager& assetManager) : p_AssetManager(assetMa
 #if HARMONY_DEBUG
     p_CreatePipelineWindow = false;
     p_CreateShaderProgramWindow = false;
+    p_CreatePostProcessStageWindow = false;
+    p_CreateDrawStageWindow = false;
     p_SelectedPipelineType = 0;
+    p_SelectedPipelineDrawStageType = 0;
 #endif
 }
 
@@ -303,6 +306,35 @@ void harmony::Renderer::OnImGui()
             }
         }
         ImGui::Separator();
+        if (ImGui::CollapsingHeader("[DrawStages]", ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Framed))
+        {
+            ImGui::Indent();
+            for (auto& stage : p_PipelineDrawStages)
+            {
+                ImGui::Text(stage->m_Name.c_str());
+            }
+            ImGui::Unindent();
+            ImGui::Separator();
+            if (ImGui::Button("Create Draw Stage"))
+            {
+                p_CreateDrawStageWindow = true;
+            }
+        }
+
+        if (ImGui::CollapsingHeader("[PostProcessStages]", ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Framed))
+        {
+            ImGui::Indent();
+            for (auto& stage : p_PostProcessStages)
+            {
+                ImGui::Text(stage->m_Name.c_str());
+            }
+            ImGui::Unindent();
+            ImGui::Separator();
+            if (ImGui::Button("Create Post Process Stage"))
+            {
+                p_CreatePostProcessStageWindow = true;
+            }
+        }
         if (ImGui::CollapsingHeader("[Pipelines]"))
         {
             for (auto& pipeline : p_Pipelines)
@@ -522,6 +554,65 @@ void harmony::Renderer::OnImGui()
         ImGui::End();
     }
 
+    if (p_CreateDrawStageWindow)
+    {
+        ImGui::SetNextWindowSize(ImVec2(320, 180));
+        if (ImGui::Begin("New Draw Stage"))
+        {
+            ImGui::InputText("Name", &p_PipelineDrawStageNameInput[0], 64);
+            PipelineStageRendererSelector("Stage Renderer", p_SelectedRenderer);
+            ShaderSelector("Stage Shader", p_SelectedShaderProgram);
+            if (ImGui::Button("Build"))
+            {
+                std::string name = std::string(p_PipelineDrawStageNameInput);
+                Utils::TrimString(name);
+                Ref<PipelineDrawStage> stage = CreateRef<PipelineDrawStage>(
+                    name,
+                    PipelineStage::Type::PrimaryDraw, // TODO: Make selectable
+                    p_SelectedShaderProgram,
+                    p_SelectedRenderer
+                );
+                AddPipelineDrawStage(stage);
+                p_CreateDrawStageWindow = false;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel"))
+            {
+                p_CreateDrawStageWindow = false;
+            }
+        }
+        ImGui::End();
+    }
+
+    if (p_CreatePostProcessStageWindow)
+    {
+        ImGui::SetNextWindowSize(ImVec2(320, 180));
+        if (ImGui::Begin("New Post Process Draw Stage"))
+        {
+            ImGui::InputText("Name", &p_PipelinePostProcessStageNameInput[0], 64);
+            ShaderSelector("Stage Shader", p_SelectedShaderProgram);
+            if (ImGui::Button("Build"))
+            {
+                std::string name = std::string(p_PipelinePostProcessStageNameInput);
+                Utils::TrimString(name);
+                Ref<PostProcessStage> stage = CreateRef<PostProcessStage>(
+                    name,
+                    PipelineStage::Type::PostProcess, // TODO: Make selectable
+                    p_SelectedShaderProgram,
+                    WeakRef<PipelineStageRenderer>()
+                    );
+                AddPostProcessStage(stage);
+                p_CreatePostProcessStageWindow = false;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel"))
+            {
+                p_CreatePostProcessStageWindow = false;
+            }
+        }
+        ImGui::End();
+    }
+
     for (auto& [view , stack]: p_Views)
     {
         view->OnImGui();
@@ -548,6 +639,26 @@ bool harmony::Renderer::ShaderSelector(const std::string& selectorName, harmony:
 
     return selectedAsset;
 
+}
+
+bool harmony::Renderer::PipelineStageRendererSelector(const std::string& selectorName, harmony::WeakRef<harmony::PipelineStageRenderer> renderer)
+{
+    bool selectedAsset = false;
+
+    if (ImGui::BeginCombo(selectorName.c_str(), ""))
+    {
+        for (int i = 0; i < p_PipelineStageRenderers.size(); i++)
+        {
+            if (ImGui::Selectable(p_PipelineStageRenderers[i]->m_Name.c_str()))
+            {
+                renderer = p_PipelineStageRenderers[i];
+                selectedAsset = true;
+            }
+        }
+        ImGui::EndCombo();
+    }
+
+    return selectedAsset;
 }
 
 harmony::Pipeline::Type harmony::Renderer::GetPipelineTypeFromName(const std::string& type)

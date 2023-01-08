@@ -66,6 +66,7 @@ void harmony::ShaderProgram::Destroy()
 
 void harmony::ShaderProgram::GetUniforms()
 {
+	m_Uniforms.clear();
 	for (auto [type, s] : m_Stages)
 	{
 		Ref<ShaderStage> stage = s.lock();
@@ -83,7 +84,10 @@ void harmony::ShaderProgram::GetUniforms()
 			uniform.Type = info.type;
 			uniform.ArraySize = info.num;
 
-			m_Uniforms.emplace_back(uniform);
+			if (std::find(m_Uniforms.begin(), m_Uniforms.end(), uniform) == m_Uniforms.end())
+			{
+				m_Uniforms.emplace_back(uniform);
+			}
 
 			if (uniform.Type == bgfx::UniformType::Vec4)
 			{
