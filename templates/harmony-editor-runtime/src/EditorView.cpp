@@ -22,6 +22,7 @@ harmony::DebugCamera::DebugCamera()
 	Speed = 10.0f;
 	Type = ProjectionType::Perspective;
 	Focussed = false;
+	ShowCursor = true;
 }
 
 void harmony::DebugCamera::UpdateProjection(glm::mat4 projection)
@@ -36,9 +37,11 @@ void harmony::DebugCamera::Update()
 	{
 		if (Input::Get()->GetMouseButton(Mouse::Button::Right))
 		{
-			ImGui::SetMouseCursor(ImGuiMouseCursor_None);
-			SDL_ShowCursor(SDL_DISABLE);
-			
+			if (ShowCursor)
+			{
+				SDL_SetRelativeMouseMode(SDL_TRUE);
+				ShowCursor = false;
+			}
 			if (Input::Get()->GetKey(Key::W))
 			{
 				Position += MathsUtils::CalculateForwardVector(Rotation) * (float)Time::GetFrameTime() * Speed;
@@ -74,7 +77,14 @@ void harmony::DebugCamera::Update()
 				Euler.y += mouseVelocity.x * Time::GetFrameTime() * 180.0f * 180.0f;
 			}
 		}
-	
+		else
+		{
+			if (!ShowCursor)
+			{
+				SDL_SetRelativeMouseMode(SDL_FALSE);
+				ShowCursor = true;
+			}
+		}
 	}
 	if (Euler.x < -90.0f)
 	{

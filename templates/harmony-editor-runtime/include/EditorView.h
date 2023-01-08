@@ -15,6 +15,7 @@ namespace harmony
         glm::quat Rotation;
         float Speed;
         bool Focussed = true;
+        bool ShowCursor = true;
 
         void UpdateProjection(glm::mat4 projection);
         void Update();

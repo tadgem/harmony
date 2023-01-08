@@ -175,6 +175,12 @@ void harmony::ShaderHotReload::ReloadTrackedShaders()
     {
         p_LoadedShaderBinaries.emplace(handle.Path, p_Program.m_AssetManager.GetAsset<ShaderStage>(handle).lock());
     }
+
+    for (auto handle : p_LoadedShaderSources)
+    {
+        std::string cleanName = handle.first.substr(0, handle.first.size() - 3);
+        CompileShader(cleanName);
+    }
 }
 
 int harmony::ShaderHotReload::CompileShader(const std::string& shaderName)
