@@ -87,9 +87,21 @@ void harmony::EntityInspectorPanel::OnImGui()
 			}
 			if (ImGui::TreeNode(p_ComponentUIProviders[i]->GetComponentName().c_str()))
 			{
+				ImGui::SameLine();
+				std::string buttonText = std::string(ICON_FA_BOMB) + "##" + std::to_string(i);
+
+				if (ImGui::Button(buttonText.c_str()))
+				{
+					p_ComponentUIProviders[i]->RemoveComponent(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity);
+					ImGui::TreePop();
+					ImGui::Separator();
+					continue;
+				}
+
 				p_ComponentUIProviders[i]->OnComponentImGui(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity);
 				ImGui::TreePop();
 			}
+			
 			ImGui::Separator();
 		}
 		ImGui::Separator();
@@ -142,6 +154,14 @@ bool harmony::TransformComponentUI::HasComponent(entt::registry& registry, entt:
 	return RegistryHasComponent<TransformComponent>(registry, entity);
 }
 
+void harmony::TransformComponentUI::RemoveComponent(entt::registry& registry, entt::entity entity)
+{
+	if (HasComponent(registry, entity))
+	{
+		registry.remove<TransformComponent>(entity);
+	}
+}
+
 harmony::ComponentUI::ComponentUI(const std::string name): p_ComponentName(name)
 {
 }
@@ -184,6 +204,14 @@ void harmony::MeshComponentUI::OnComponentImGui(entt::registry& registry, entt::
 void harmony::MeshComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
 {
 	registry.emplace<MeshComponent>(entity);
+}
+
+void harmony::MeshComponentUI::RemoveComponent(entt::registry& registry, entt::entity entity)
+{
+	if (HasComponent(registry, entity))
+	{
+		registry.remove<MeshComponent>(entity);
+	}
 }
 
 bool harmony::MeshComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
@@ -299,6 +327,14 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 void harmony::MaterialComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
 {
 	registry.emplace<MaterialComponent>(entity);
+}
+
+void harmony::MaterialComponentUI::RemoveComponent(entt::registry& registry, entt::entity entity)
+{
+	if (HasComponent(registry, entity))
+	{
+		registry.remove<MaterialComponent>(entity);
+	}
 }
 
 bool harmony::MaterialComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
@@ -439,6 +475,14 @@ void harmony::CameraComponentUI::AddComponent(entt::registry& registry, entt::en
 	registry.emplace<CameraComponent>(entity);
 }
 
+void harmony::CameraComponentUI::RemoveComponent(entt::registry& registry, entt::entity entity)
+{
+	if (HasComponent(registry, entity))
+	{
+		registry.remove<CameraComponent>(entity);
+	}
+}
+
 bool harmony::CameraComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
 	return RegistryHasComponent<CameraComponent>(registry, entity);
@@ -468,6 +512,14 @@ void harmony::DirectionalLightComponentUI::OnComponentImGui(entt::registry& regi
 void harmony::DirectionalLightComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
 {
 	registry.emplace<DirectionalLight>(entity);
+}
+
+void harmony::DirectionalLightComponentUI::RemoveComponent(entt::registry& registry, entt::entity entity)
+{
+	if (HasComponent(registry, entity))
+	{
+		registry.remove<DirectionalLight>(entity);
+	}
 }
 
 bool harmony::DirectionalLightComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
@@ -503,6 +555,14 @@ void harmony::PointLightComponentUI::AddComponent(entt::registry& registry, entt
 	registry.emplace<PointLight>(entity);
 }
 
+void harmony::PointLightComponentUI::RemoveComponent(entt::registry& registry, entt::entity entity)
+{
+	if (HasComponent(registry, entity))
+	{
+		registry.remove<PointLight>(entity);
+	}
+}
+
 bool harmony::PointLightComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
 	return registry.any_of<PointLight>(entity);
@@ -535,6 +595,14 @@ void harmony::SpotLightComponentUI::OnComponentImGui(entt::registry& registry, e
 void harmony::SpotLightComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
 {
 	registry.emplace<SpotLight>(entity);
+}
+
+void harmony::SpotLightComponentUI::RemoveComponent(entt::registry& registry, entt::entity entity)
+{
+	if (HasComponent(registry, entity))
+	{
+		registry.remove<SpotLight>(entity);
+	}
 }
 
 bool harmony::SpotLightComponentUI::HasComponent(entt::registry& registry, entt::entity entity)

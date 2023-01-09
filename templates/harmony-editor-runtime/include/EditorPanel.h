@@ -43,6 +43,7 @@ namespace harmony
         virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) = 0;
         const std::string& GetComponentName();
         virtual void AddComponent(entt::registry& registry, entt::entity entity) = 0;
+        virtual void RemoveComponent(entt::registry& registry, entt::entity entity) = 0;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) = 0;
 
         template<typename T>
@@ -63,6 +64,7 @@ namespace harmony
         virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
 
     };
 
@@ -73,6 +75,7 @@ namespace harmony
 
         virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
     };
 
@@ -83,6 +86,7 @@ namespace harmony
 
         virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
     };
 
@@ -93,6 +97,7 @@ namespace harmony
 
         virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
     };
 
@@ -102,6 +107,7 @@ namespace harmony
         MeshComponentUI(AssetManager& am);
         virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
 
     protected:
@@ -114,6 +120,7 @@ namespace harmony
         MaterialComponentUI(Renderer& r, AssetManager& am);
         virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
 
     protected:
@@ -127,6 +134,7 @@ namespace harmony
         CameraComponentUI(Renderer& r);
         virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
 
     protected:
