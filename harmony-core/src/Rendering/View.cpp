@@ -45,7 +45,7 @@ void harmony::View::OnImGui()
 
 	if (currentWidth != m_ImGuiWindowWidth || currentHeight != m_ImGuiWindowHeight)
 	{
-		if (Input::Get()->GetMouseButton(Mouse::Button::Left))
+		if (Input::GetMouseButton(Mouse::Button::Left))
 		{
 			return;
 		}

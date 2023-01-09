@@ -338,16 +338,7 @@ void harmony::Input::PostFrame()
 
 }
 
-harmony::Input* harmony::Input::Get()
-{
-	if (p_Instance == nullptr)
-	{
-		p_Instance = new Input();
-	}
-	return p_Instance;
-}
-
-harmony::Input::Input()
+void harmony::Input::Init()
 {
 	for (int i = 0; i < g_NumGamepads; i++)
 	{
@@ -399,13 +390,5 @@ harmony::Input::Input()
 		Mouse::Button mouseButton = static_cast<Mouse::Button>(button);
 		p_MouseState.CurrentFrameButtonState.emplace(mouseButton, false);
 		p_MouseState.PreviousFrameButtonState.emplace(mouseButton, false);
-	}
-}
-
-harmony::Input::~Input()
-{
-	if (p_Instance)
-	{
-		delete p_Instance;
 	}
 }

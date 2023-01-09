@@ -24,6 +24,7 @@ harmony::Program::Program(const std::string& name) : p_AppName(name), m_Renderer
 		harmony::log::error("Trying to create new application instance but an application already exists!");
 		return;
 	}
+	Input::Init();
 	s_Instance = this;
 	p_Run = true;
 	p_ResizedThisFrame = false;
@@ -487,7 +488,7 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 		SDL_KeyboardEvent keyEvent = event.key;
 		SDL_Keysym keySym = keyEvent.keysym;
 		Key key = Input::GetKeyFromSDLKeycode(keySym.sym);
-		Input::Get()->UpdateKey(key, true);
+		Input::UpdateKey(key, true);
 	}
 
 	if (event.type == SDL_KEYUP)
@@ -495,28 +496,28 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 		SDL_KeyboardEvent keyEvent = event.key;
 		SDL_Keysym keySym = keyEvent.keysym;
 		Key key = Input::GetKeyFromSDLKeycode(keySym.sym);
-		Input::Get()->UpdateKey(key, false);
+		Input::UpdateKey(key, false);
 	}
 
 	if (event.type == SDL_MOUSEMOTION)
 	{
 		SDL_MouseMotionEvent motionEvent = event.motion;
 		glm::vec2 currentPosition = glm::vec2(motionEvent.x, motionEvent.y);
-		Input::Get()->UpdateMousePosition(currentPosition);
+		Input::UpdateMousePosition(currentPosition);
 	}
 
 	if (event.type == SDL_MOUSEBUTTONDOWN)
 	{
 		SDL_MouseButtonEvent buttonEvent = event.button;
 		Mouse::Button button = buttonEvent.button == 3 ? Mouse::Button::Right : Mouse::Button::Left;
-		Input::Get()->UpdateMouseButton(button, true);
+		Input::UpdateMouseButton(button, true);
 	}
 
 	if (event.type == SDL_MOUSEBUTTONUP)
 	{
 		SDL_MouseButtonEvent buttonEvent = event.button;
 		Mouse::Button button = buttonEvent.button == 3 ? Mouse::Button::Right : Mouse::Button::Left;
-		Input::Get()->UpdateMouseButton(button, false);
+		Input::UpdateMouseButton(button, false);
 	}
 	// Mouse
 }
@@ -558,7 +559,7 @@ void harmony::Program::RunProgramLoop()
 
 		RunSystemRender();
 
-		Input::Get()->PostFrame();
+		Input::PostFrame();
 
 		bgfx::frame();
 	}

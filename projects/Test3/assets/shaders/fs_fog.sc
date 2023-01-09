@@ -15,10 +15,10 @@ void main()
     vec4 pixelColor = texture2D(u_color, v_texcoord0);
     vec4 fogColor = vec4(0.43, 0.2, 0.2, 1.0);
 
-    float fogDistance = 1.0;
+    float fogDistance = 0.00;
 
     vec4 depthColor = texture2D(u_depth_att, v_texcoord0);
-    // Y = (X-A)/(B-A) * (D-C) + C
+    // todo: change 300 to far clip plane distance
     float depth = (1.0 - depthColor.x) * 300.0;
 
     float fogFactor = (depth - fogDistance);

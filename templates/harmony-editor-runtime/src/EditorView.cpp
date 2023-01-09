@@ -35,39 +35,39 @@ void harmony::DebugCamera::Update()
 	
 	if (Focussed)
 	{
-		if (Input::Get()->GetMouseButton(Mouse::Button::Right))
+		if (Input::GetMouseButton(Mouse::Button::Right))
 		{
 			if (ShowCursor)
 			{
 				SDL_SetRelativeMouseMode(SDL_TRUE);
 				ShowCursor = false;
 			}
-			if (Input::Get()->GetKey(Key::W))
+			if (Input::GetKey(Key::W))
 			{
 				Position += MathsUtils::CalculateForwardVector(Rotation) * (float)Time::GetFrameTime() * Speed;
 			}
-			if (Input::Get()->GetKey(Key::S))
+			if (Input::GetKey(Key::S))
 			{
 				Position -= MathsUtils::CalculateForwardVector(Rotation) * (float)Time::GetFrameTime() * Speed;
 			}
-			if (Input::Get()->GetKey(Key::A))
+			if (Input::GetKey(Key::A))
 			{
 				Position -= MathsUtils::CalculateRightVector(Rotation) * (float)Time::GetFrameTime() * Speed;
 			}
-			if (Input::Get()->GetKey(Key::D))
+			if (Input::GetKey(Key::D))
 			{
 				Position += MathsUtils::CalculateRightVector(Rotation) * (float)Time::GetFrameTime() * Speed;
 			}
-			if (Input::Get()->GetKey(Key::Q))
+			if (Input::GetKey(Key::Q))
 			{
 				Position -= MathsUtils::CalculateUpVector(Rotation) * (float)Time::GetFrameTime() * Speed;
 			}
-			if (Input::Get()->GetKey(Key::E))
+			if (Input::GetKey(Key::E))
 			{
 				Position += MathsUtils::CalculateUpVector(Rotation) * (float)Time::GetFrameTime() * Speed;
 			}
 
-			glm::vec2 mouseVelocity = Input::Get()->GetMouseVelocity();
+			glm::vec2 mouseVelocity = Input::GetMouseVelocity();
 			
 			float magnitude = glm::length(mouseVelocity);
 
@@ -222,22 +222,22 @@ void harmony::EditorView::OnImGui()
 				matrixScale,
 				&tc.Model[0][0]);
 		}
-		if (Input::Get()->GetMouseButton(Mouse::Button::Right))
+		if (Input::GetMouseButton(Mouse::Button::Right))
 		{
 			ImGui::End();
 			return;	
 		}
-		if (Input::Get()->GetKey(Key::W))
+		if (Input::GetKey(Key::W))
 		{
 			p_Op = ImGuizmo::OPERATION::TRANSLATE;
 		}
 
-		if (Input::Get()->GetKey(Key::R))
+		if (Input::GetKey(Key::R))
 		{
 			p_Op = ImGuizmo::OPERATION::ROTATE;
 		}
 
-		if (Input::Get()->GetKey(Key::S))
+		if (Input::GetKey(Key::S))
 		{
 			p_Op = ImGuizmo::OPERATION::SCALE;
 		}

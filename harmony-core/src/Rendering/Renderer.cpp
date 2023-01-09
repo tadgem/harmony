@@ -396,6 +396,7 @@ void harmony::Renderer::OnImGui()
                     {
                         ImGui::Text("Draw Pipelines");
                         ImGui::Indent();
+                        int lastIndex = -1;
                         for (int i = 0; i < stack.m_PipelineStack.size(); i++)
                         {
                             std::string indexString = std::to_string(i);
@@ -413,13 +414,15 @@ void harmony::Renderer::OnImGui()
                             ImGui::SameLine();
                             std::string pipelineName = stack.m_PipelineStack[i].lock()->m_Name + " : " + indexString;
                             ImGui::Text(pipelineName.c_str());
+                            lastIndex = i;
                         }
+                        lastIndex += 1;
                         ImGui::Unindent();
                         ImGui::Text("Post Process Stages");
                         ImGui::Indent();
                         for (int i = 0; i < stack.m_PostProcessPipelineStack.size(); i++)
                         {
-                            std::string indexString = std::to_string(i);
+                            std::string indexString = std::to_string(lastIndex + i);
                             std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + indexString;
                             std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + indexString;
                             if (ImGui::Button(downArrowText.c_str()))
@@ -432,7 +435,7 @@ void harmony::Renderer::OnImGui()
                                 stack.MovePostProcessStageDown(stack.m_PostProcessPipelineStack[i].lock()->m_Name);
                             }
                             ImGui::SameLine();
-                            std::string pipelineName = stack.m_PostProcessPipelineStack[i].lock()->m_Name + " : " + indexString;
+                            std::string pipelineName = stack.m_PostProcessPipelineStack[i].lock()->m_Name + " : " + std::to_string(i);
                             ImGui::Text(pipelineName.c_str());
                         }
                         ImGui::Unindent();
@@ -1440,7 +1443,7 @@ void harmony::Renderer::HandleStackPostProcess(Ref<View> view, PipelineStack& st
     data.m_FramebufferHandle = stack.m_PipelineStackAccumulationFB;
 
     Attachment colourAttachment{ stack.m_PipelineStackAccumulationAttachment, stack.s_AccumulationBufferFormat };
-    Attachment depthAttachment{ stack.GetFinalDepth(),  Attachment::Depth32F };
+    Attachment depthAttachment{ stack.GetFinalDepth(),  Attachment::Depth16F };
 
     data.m_Attachments.emplace(colourAttachment.m_Type, colourAttachment);
     data.m_Attachments.emplace(depthAttachment.m_Type, depthAttachment);
@@ -1459,7 +1462,7 @@ void harmony::Renderer::HandleStackPostProcess(Ref<View> view, PipelineStack& st
         s->PostUpdate(registry, view, stack.p_StackViewIDs[s->m_Name][0], data);
 
         data = stack.p_StackData[s->m_Name][0];
-
+        data.m_Attachments[Attachment::Depth16F] = depthAttachment;
     }
 
     bgfx::setViewClear(stack.m_FinalImageViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000);

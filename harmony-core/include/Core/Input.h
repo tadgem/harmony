@@ -168,52 +168,50 @@ namespace harmony {
 	class Input
 	{
 	public:
-		void UpdateMouseScroll(float val);
-		void UpdateMousePosition(glm::vec2 mousePosition);
-		void UpdateMouseButton(Mouse::Button button, bool active);
+		static void UpdateMouseScroll(float val);
+		static void UpdateMousePosition(glm::vec2 mousePosition);
+		static void UpdateMouseButton(Mouse::Button button, bool active);
 
-		void UpdateKey(Key key, bool active);
+		static void UpdateKey(Key key, bool active);
 
-		void UpdateGamepadButton(int gamepadIndex, Gamepad::Button button, bool active);
-		void UpdateGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigger, float value);
-		void UpdateGamepadStick(int gamepadIndex, Gamepad::Stick stick, glm::vec2 value);
+		static void UpdateGamepadButton(int gamepadIndex, Gamepad::Button button, bool active);
+		static void UpdateGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigger, float value);
+		static void UpdateGamepadStick(int gamepadIndex, Gamepad::Stick stick, glm::vec2 value);
 
-		void		OnControllerConnected(uint8_t index);
-		void		OnControllerDisconnected(uint8_t index);
+		static void		OnControllerConnected(uint8_t index);
+		static void		OnControllerDisconnected(uint8_t index);
 
-		glm::vec2	GetMousePosition();
-		glm::vec2	GetMousePositionLastFrame();
-		glm::vec2	GetMouseVelocity();
-		glm::vec2	GetMouseVelocityLastFrame();
+		static glm::vec2	GetMousePosition();
+		static glm::vec2	GetMousePositionLastFrame();
+		static glm::vec2	GetMouseVelocity();
+		static glm::vec2	GetMouseVelocityLastFrame();
 
-		bool		GetMouseButton(Mouse::Button button);
-		bool		GetMouseButtonJustPressed(Mouse::Button button);
-		bool		GetMouseButtonJustReleased(Mouse::Button button);
+		static bool		GetMouseButton(Mouse::Button button);
+		static bool		GetMouseButtonJustPressed(Mouse::Button button);
+		static bool		GetMouseButtonJustReleased(Mouse::Button button);
 
-		bool GetKey(Key key);
-		bool GetKeyJustPressed(Key key);
-		bool GetKeyJustReleased(Key key);
+		static bool GetKey(Key key);
+		static bool GetKeyJustPressed(Key key);
+		static bool GetKeyJustReleased(Key key);
 
-		bool GetGamepadButton(int gamepadIndex, Gamepad::Button button);
-		bool GetGamepadButtonJustPressed(int gamepadIndex, Gamepad::Button button);
-		bool GetGamepadButtonJustReleased(int gamepadIndex, Gamepad::Button button);
+		static bool GetGamepadButton(int gamepadIndex, Gamepad::Button button);
+		static bool GetGamepadButtonJustPressed(int gamepadIndex, Gamepad::Button button);
+		static bool GetGamepadButtonJustReleased(int gamepadIndex, Gamepad::Button button);
 
-		float		GetGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigger);
-		glm::vec2	GetGamepadStick(int gamepadIndex, Gamepad::Stick stick);
+		static float		GetGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigger);
+		static glm::vec2	GetGamepadStick(int gamepadIndex, Gamepad::Stick stick);
 
 		static Key				GetKeyFromSDLKeycode(SDL_Keycode keyCode);
 		static Mouse::Button	GetMouseButtonFromSDLKeycode(SDL_KeyCode keyCode);
 
-		void PostFrame();
-		static Input* Get();
-		~Input();
-		const uint8_t g_NumGamepads = 4;
+		static void Init();
+		static void PostFrame();
+
+		static const uint8_t g_NumGamepads = 4;
 	private:
-		Input();
-		inline static Input* p_Instance = nullptr;
 		
-		KeyboardState p_KeyboardState;
-		MouseState p_MouseState;
-		std::vector<GamepadState> p_GamepadStates;
+		inline static KeyboardState p_KeyboardState;
+		inline static MouseState p_MouseState;
+		inline static std::vector<GamepadState> p_GamepadStates;
 	};
 };

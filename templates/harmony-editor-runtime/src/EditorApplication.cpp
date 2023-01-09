@@ -146,7 +146,7 @@ int harmony::Editor::OnEditUpdate()
 
 	RunProgramComponentRender();
 
-	Input::Get()->PostFrame();
+	Input::PostFrame();
 
 	UpdateEditor();
 
@@ -184,7 +184,7 @@ int harmony::Editor::OnRuntimeUpdate()
 
 	UpdateEditor();
 
-	Input::Get()->PostFrame();
+	Input::PostFrame();
 
 	ImGuiPostUpdate();
 	  
