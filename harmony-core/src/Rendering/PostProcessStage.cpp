@@ -39,6 +39,8 @@ void harmony::PostProcessStage::PostUpdate(entt::registry& registry, WeakRef<Vie
 			if (numSamplers == 0)
 			{
 				colourAttachmentUniform = s->m_Uniforms[i].BgfxHandle;
+				numSamplers++;
+				continue;
 			}
 			if (numSamplers == 1)
 			{

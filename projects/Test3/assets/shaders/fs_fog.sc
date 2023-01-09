@@ -15,14 +15,13 @@ void main()
     vec4 pixelColor = texture2D(u_color, v_texcoord0);
     vec4 fogColor = vec4(0.43, 0.2, 0.2, 1.0);
 
-    float fogMaxDist = 0.91;
-    float fogMinDist = 0.9;
+    float fogDistance = 1.0;
 
     vec4 depthColor = texture2D(u_depth_att, v_texcoord0);
+    // Y = (X-A)/(B-A) * (D-C) + C
+    float depth = (1.0 - depthColor.x) * 300.0;
 
-    float d = (depthColor.x) * 255.0;
-
-    float fogFactor = (fogMinDist - d) / (fogMinDist - fogMaxDist);
+    float fogFactor = (depth - fogDistance);
     fogFactor = clamp(fogFactor, 0.0, 1.0);
 
     vec4 color = mix(fogColor, pixelColor, fogFactor);

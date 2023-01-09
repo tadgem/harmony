@@ -1315,6 +1315,7 @@ void harmony::Renderer::DeserializePipelines(nlohmann::json& json, AssetManager&
 
 void harmony::Renderer::DeserializePipelineDrawStages(nlohmann::json& json, AssetManager& am)
 {
+    harmony::log::info("TODO : Deserialize pipeline draw stages.");
 }
 
 void harmony::Renderer::DeserializePostProcessStages(nlohmann::json& json, AssetManager& am)
@@ -1322,7 +1323,6 @@ void harmony::Renderer::DeserializePostProcessStages(nlohmann::json& json, Asset
     harmony::log::info("Renderer : Deserializing Post Process Stages");
     for (auto postProcessJson : json[sk_RendererName][sk_RendererPostProcessStageCollection])
     {
-        harmony::log::info("dad!");
         std::string name = postProcessJson[sk_PipelineStageName];
         std::string shaderName = postProcessJson[sk_PipelineStageShader][sk_ShaderProgramName];
         
@@ -1352,6 +1352,7 @@ void harmony::Renderer::DeserializePostProcessStages(nlohmann::json& json, Asset
 
 void harmony::Renderer::DeserializePipelineStageRenderers(nlohmann::json& json, AssetManager& am)
 {
+    harmony::log::info("TODO : Deserialize pipeline stage renderers.");
 }
 
 void harmony::Renderer::DeserializeShaderDataSources(nlohmann::json& json, AssetManager& am)
