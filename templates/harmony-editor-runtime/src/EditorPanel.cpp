@@ -98,6 +98,7 @@ void harmony::EntityInspectorPanel::OnImGui()
 			for (int i = 0; i < p_ComponentUIProviders.size(); i++)
 			{
 				//p_ComponentUIProviders[i]->OnComponentImGui(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity);
+				if (p_ComponentUIProviders[i]->HasComponent(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity)) continue;
 				if (ImGui::Selectable(p_ComponentUIProviders[i]->GetComponentName().c_str()))
 				{
 					p_ComponentUIProviders[i]->AddComponent(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity);
