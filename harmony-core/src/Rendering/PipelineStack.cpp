@@ -49,6 +49,11 @@ bgfx::TextureHandle harmony::PipelineStack::GetFinalDepth()
         break;
     }
 
+    if (!selectedPipeline)
+    {
+        return bgfx::TextureHandle();
+    }
+
     return GetPipelineFinalDepth(selectedPipeline->m_Handle);
 
 }

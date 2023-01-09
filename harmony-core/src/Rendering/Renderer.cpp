@@ -420,6 +420,7 @@ void harmony::Renderer::OnImGui()
                         ImGui::Unindent();
                         ImGui::Text("Post Process Stages");
                         ImGui::Indent();
+                        int indexToRemove = -1;
                         for (int i = 0; i < stack.m_PostProcessPipelineStack.size(); i++)
                         {
                             std::string indexString = std::to_string(lastIndex + i);
@@ -437,6 +438,16 @@ void harmony::Renderer::OnImGui()
                             ImGui::SameLine();
                             std::string pipelineName = stack.m_PostProcessPipelineStack[i].lock()->m_Name + " : " + std::to_string(i);
                             ImGui::Text(pipelineName.c_str());
+                            std::string binText = std::string(ICON_FA_TRASH) + "##" + indexString;
+                            ImGui::SameLine();
+                            if (ImGui::Button(binText.c_str()))
+                            {
+                                indexToRemove = i;
+                            }
+                        }
+                        if (indexToRemove >= 0)
+                        {
+                            stack.RemovePostProcessStage(stack.m_PostProcessPipelineStack[indexToRemove], view);
                         }
                         ImGui::Unindent();
                     }

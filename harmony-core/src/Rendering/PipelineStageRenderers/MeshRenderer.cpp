@@ -10,7 +10,7 @@ harmony::MeshRenderer::MeshRenderer() : PipelineStageRenderer("MeshRenderer")
 void harmony::MeshRenderer::Draw(entt::registry& scene, Ref<ShaderProgram> shader, bgfx::ViewId viewId)
 {
 	auto drawables = scene.view<MeshComponent, MaterialComponent, TransformComponent>();
-
+	bool hasDrawn = false;
 	for (auto [e, mesh, material, transform] : drawables.each())
 	{		
 		// Fix this please.
@@ -32,6 +32,12 @@ void harmony::MeshRenderer::Draw(entt::registry& scene, Ref<ShaderProgram> shade
 		bgfx::setVertexBuffer(0, mesh.MeshHandle.m_VBH);
 		bgfx::setIndexBuffer(mesh.MeshHandle.m_IBH);
 		bgfx::submit(viewId, shader->m_Handle);
-		
+
+		hasDrawn = true;
+	}
+
+	if (!hasDrawn)
+	{
+		bgfx::touch(viewId);
 	}
 }
