@@ -37,6 +37,7 @@ namespace harmony
 		Ref<RuntimeView>		p_RuntimeView;
 
 		Ref<MeshSystem> 		p_MeshSystem;
+		Ref<LightSystem> 		p_LightSystem;
 		Ref<TransformSystem> 	p_TransformSystem;
 		Ref<CameraSystem> 		p_CameraSystem;
 

@@ -2,6 +2,11 @@
 #include "ECS/LightSystem.h"
 #include "ECS/LightComponents.h"
 
+#if HARMONY_DEBUG
+#include "ECS/TransformComponent.h"
+#include "Rendering/Debug/GfxDebug.h"
+#endif
+
 harmony::LightSystem::LightSystem() : System(GetTypeHash<LightSystem>())
 {
 
@@ -13,6 +18,24 @@ void harmony::LightSystem::Init(entt::registry& registry)
 
 void harmony::LightSystem::Update(entt::registry& registry)
 {
+#if HARMONY_DEBUG
+    auto dlView = registry.view<DirectionalLight>();
+    auto plView = registry.view<PointLight, TransformComponent>();
+    auto slView = registry.view<SpotLight, TransformComponent>();
+    GfxDebug::Get()->setWireframe(GfxDebug::Editor, true);
+    for (auto& [e, p, t] : plView.each())
+    {
+        GfxDebug::Get()->drawOrb(GfxDebug::Editor, t.Position.x, t.Position.y, t.Position.z, p.Radius);
+    }
+
+    for (auto& [e, s, t] : slView.each())
+    {
+        bx::Vec3 from(t.Position.x, t.Position.y, t.Position.z);
+        glm::vec3 _to = t.Position + (t.Forward * s.Radius);
+        bx::Vec3 to(_to.x, _to.y, _to.z);
+        GfxDebug::Get()->drawCone(GfxDebug::Editor, to, from, s.Angle * s.Radius);
+    }
+#endif
 }
 
 void harmony::LightSystem::Render(entt::registry& registry)

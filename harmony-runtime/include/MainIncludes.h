@@ -14,3 +14,4 @@
 #include "ECS/TileMapSystemImGui.h"
 #include "ECS/CameraSystem.h"
 #include "ECS/MaterialSystem.h"
+#include "ECS/LightSystem.h"

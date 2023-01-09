@@ -57,7 +57,7 @@ void harmony::Editor::AddSystems()
 	p_TransformSystem	= GetSystem<TransformSystem>().lock();
 	p_CameraSystem		= GetSystem<CameraSystem>().lock();
 	p_MeshSystem		= GetSystem<MeshSystem>().lock();
-
+	p_LightSystem		= GetSystem<LightSystem>().lock();
 }
 
 void harmony::Editor::AddPipelineStageRenderers()
@@ -133,7 +133,7 @@ int harmony::Editor::OnEditUpdate()
 		p_MeshSystem->Update(p_ActiveScene->m_Registry);
 		p_TransformSystem->Update(p_ActiveScene->m_Registry);
 		p_CameraSystem->Update(p_ActiveScene->m_Registry);
-
+		p_LightSystem->Update(p_ActiveScene->m_Registry);
 
 		VectorGraphics::Get()->FontSize(VectorGraphics::One, 20.0f);
 		VectorGraphics::Get()->FontFace(VectorGraphics::One, "carbontype");
