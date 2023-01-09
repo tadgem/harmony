@@ -19,10 +19,17 @@ void harmony::LightSystem::Init(entt::registry& registry)
 void harmony::LightSystem::Update(entt::registry& registry)
 {
 #if HARMONY_DEBUG
-    auto dlView = registry.view<DirectionalLight>();
+    auto dlView = registry.view<DirectionalLight, TransformComponent>();
     auto plView = registry.view<PointLight, TransformComponent>();
     auto slView = registry.view<SpotLight, TransformComponent>();
     GfxDebug::Get()->setWireframe(GfxDebug::Editor, true);
+    
+    for (auto& [e, dl, t] : dlView.each())
+    {
+        auto b = bx::Vec3(0.0f, 0.0f, 0.0f);
+        auto end = bx::Vec3(b.x + t.Forward.x, b.y + t.Forward.y, b.z + t.Forward.z);
+        GfxDebug::Get()->drawCylinder(GfxDebug::Editor, b, end, 1.0f);
+    }
     for (auto& [e, p, t] : plView.each())
     {
         GfxDebug::Get()->drawOrb(GfxDebug::Editor, t.Position.x, t.Position.y, t.Position.z, p.Radius);
