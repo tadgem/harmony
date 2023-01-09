@@ -21,6 +21,7 @@ void harmony::RuntimeView::OnPreUpdate(entt::registry& registry)
 		CameraComponent& component = registry.get<CameraComponent>(CameraEntity);
 		m_View = component.Cam.View;
 		m_Projection = component.Cam.Projection;
+		component.Cam.Type = Camera::Perspective;
 	}
 }
 void harmony::RuntimeView::OnResized(uint32_t w, uint32_t h)
@@ -43,6 +44,8 @@ void harmony::RuntimeView::OnResized(uint32_t w, uint32_t h)
 		{
 			c.Cam.Projection = glm::mat4(1.0);
 			c.Cam.Projection = glm::perspectiveFov(glm::radians(c.Cam.FOV), static_cast<float>(m_Width), static_cast<float>(m_Height), c.Cam.NearClipPlane, c.Cam.FarClipPlane);
+			c.Cam.Width = w;
+			c.Cam.Height = h;
 		}
 	}
 	

@@ -27,6 +27,8 @@ namespace harmony
             bgfx::FrameBufferHandle m_FramebufferHandle;
             std::map<Attachment::Type, Attachment> m_Attachments;
 
+            void Clear();
+
             Attachment::Type GetDepthType();
             Attachment::Type GetColorType();
         };

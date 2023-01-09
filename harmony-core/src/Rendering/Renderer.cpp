@@ -275,7 +275,7 @@ void harmony::Renderer::RefreshViews()
 {
     for (auto& [view, stack] :p_Views)
     {
-
+        stack.OnViewResized(view);
     }
 }
 

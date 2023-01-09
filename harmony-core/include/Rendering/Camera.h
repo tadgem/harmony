@@ -19,7 +19,11 @@ namespace harmony
         float FOV;
         float NearClipPlane, FarClipPlane;
         float Aspect;
-        ProjectionType Type;
+
+        uint32_t Width = 1280;
+        uint32_t Height = 720;
+
+        ProjectionType Type = ProjectionType::Perspective;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(Camera, FOV, NearClipPlane, FarClipPlane, Aspect, Type);
     };

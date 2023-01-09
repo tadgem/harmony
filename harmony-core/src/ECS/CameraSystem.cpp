@@ -31,10 +31,10 @@ void harmony::CameraSystem::Update(entt::registry& registry)
         translate           = glm::translate(translate, -t.Position);
 
         c.Cam.View = rotate * translate;
-
+        c.Cam.Projection = glm::perspectiveFov(glm::radians(c.Cam.FOV), static_cast<float>(c.Cam.Width), static_cast<float>(c.Cam.Height), c.Cam.NearClipPlane, c.Cam.FarClipPlane);
 #ifdef  HARMONY_DEBUG
         glm::mat4 viewProj  = c.Cam.Projection * c.Cam.View;
-        GfxDebug::Get()->setColor(GfxDebug::Channel::Editor, 0xaaffffff);
+        GfxDebug::Get()->setColor(GfxDebug::Channel::Editor, 0xffffffff);
         GfxDebug::Get()->drawFrustum(GfxDebug::Channel::Editor, &viewProj[0]);
 #endif 
 

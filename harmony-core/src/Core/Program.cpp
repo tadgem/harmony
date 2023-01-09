@@ -714,7 +714,6 @@ void harmony::Program::LoadScene(const std::string& path)
 	CloseActiveScene();
 	nlohmann::json sceneJson = Utils::LoadJsonFromPath(path);
 	p_ActiveScene = CreateRef<Scene>(sceneJson);
-
 	p_ActiveScene->Deserialize(p_ECSSystems);
 }
 
@@ -739,11 +738,11 @@ void harmony::Program::CloseActiveScene()
 	{
 		p_ECSSystems[i]->Refresh();
 	}
-
+	p_ActiveScene->m_Registry.clear();
 	p_ActiveScene.reset();
 	p_ActiveScene = nullptr;
 
-
+	m_Renderer.RefreshViews();
 }
 
 harmony::WeakRef<harmony::Scene> harmony::Program::GetActiveScene()

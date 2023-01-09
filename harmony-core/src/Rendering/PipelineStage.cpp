@@ -49,7 +49,7 @@ harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& regist
 		}
 		else
 		{
-			harmony::log::error("Invalid attachment format specified, defaulting to RGBA16F");
+			harmony::log::warn("PipelineStage : {} : Invalid attachment format specified, defaulting to RGBA16F", m_Name);
 			format = bgfx::TextureFormat::RGBA16F;
 			type = Attachment::Type::RGBA16F;
 		}
@@ -111,7 +111,7 @@ harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& regist
 		}
 		else
 		{
-			harmony::log::error("Invalid depth attachment format specified, defaulting to D16F");
+			harmony::log::warn("PipelineStage : {} : Invalid depth attachment format specified, defaulting to D16F", m_Name);
 			format = bgfx::TextureFormat::D16F;
 			type = Attachment::Type::Depth16F;
 		}
@@ -193,6 +193,15 @@ void harmony::PipelineStage::Deserialize(nlohmann::json j)
 	m_Name = j[sk_PipelineStageName];
 	m_Attachments = j[sk_PipelineStageAttachments];
 	m_StageType = j[sk_PipelineStageType];
+}
+void harmony::PipelineStage::Data::Clear()
+{
+	bgfx::destroy(m_FramebufferHandle);
+	for (auto& [type, attachment] : m_Attachments)
+	{
+		bgfx::destroy(attachment.m_Handle);
+	}
+	m_Attachments.clear();
 }
 harmony::Attachment::Type harmony::PipelineStage::Data::GetDepthType()
 {

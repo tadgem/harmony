@@ -258,7 +258,8 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry& registry, en
 			{
 				ImGui::Text(uniform.Name.c_str());
 				ImGui::SameLine();
-				if (ImGui::Button("Override"))
+				std::string overrideText = "Override" + std::string("##") + std::to_string(uniform.BgfxHandle.idx);
+				if (ImGui::Button(overrideText.c_str()))
 				{
 					if (uniform.Type == bgfx::UniformType::Vec4)
 					{
@@ -472,7 +473,14 @@ void harmony::CameraComponentUI::OnComponentImGui(entt::registry& registry, entt
 
 void harmony::CameraComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
 {
-	registry.emplace<CameraComponent>(entity);
+	CameraComponent& c = registry.emplace<CameraComponent>(entity);
+	c.Cam.Width = 1280;
+	c.Cam.Height = 720;
+	c.Cam.Type = Camera::Perspective;
+	c.Cam.FOV = 75.0f;
+	c.Cam.Aspect = 1.333f;
+	c.Cam.NearClipPlane = 0.01f;
+	c.Cam.FarClipPlane = 30.0f;
 }
 
 void harmony::CameraComponentUI::RemoveComponent(entt::registry& registry, entt::entity entity)

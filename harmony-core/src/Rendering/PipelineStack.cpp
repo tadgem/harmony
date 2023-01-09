@@ -15,7 +15,7 @@ harmony::PipelineStack::PipelineStack()
 
 bgfx::TextureHandle harmony::PipelineStack::GetFinalImage()
 {
-    if (!p_Initialized)
+    if (!p_Initialized || m_FinalFramebufferHandle.idx >= 65534)
     {
         return bgfx::TextureHandle();
     }
@@ -278,6 +278,7 @@ int harmony::PipelineStack::GetPipelineIndex(WeakRef<Pipeline> pipeline)
         if (m_PipelineStack[i].lock() == p)
         {
             index = i;
+            break;
         }
     }
 
@@ -411,6 +412,7 @@ int harmony::PipelineStack::GetPostProcessStageIndex(WeakRef<PostProcessStage> p
         if (m_PostProcessPipelineStack[i].lock() == stage)
         {
             index = i;
+            break;
         }
     }
 
@@ -539,8 +541,29 @@ void harmony::PipelineStack::OnViewResized(WeakRef<View> view)
     }
 
     p_Initialized = false;
+    bgfx::setViewClear(m_FinalImageViewId, BGFX_CLEAR_COLOR, 0);
+    bgfx::setViewClear(m_PipelineStackAccumulationView, BGFX_CLEAR_COLOR, 0);
+
+    for (auto [name, viewIds] : p_StackViewIDs)
+    {
+        for (int i = 0; i < viewIds.size(); i++)
+        {
+            bgfx::setViewClear(viewIds[i], BGFX_CLEAR_COLOR, 0);
+        }
+    }
+
     bgfx::destroy(m_FinalFramebufferHandle);
     bgfx::destroy(m_FinalFramebufferAttachment);
+
+    for (auto [name, datas] : p_StackData)
+    {
+        for (int i = 0; i < datas.size(); i++)
+        {
+            datas[i].Clear();
+        }
+    }
+
+    p_StackData.clear();
 
     Ref<View> v = view.lock();
     std::vector<WeakRef<Pipeline>> stackCopy = std::vector<WeakRef<Pipeline>>();

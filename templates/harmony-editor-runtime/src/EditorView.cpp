@@ -131,6 +131,8 @@ void harmony::EditorView::OnResized(uint32_t w, uint32_t h)
 	View::OnResized(w, h);
 	glm::mat4 proj = glm::perspectiveFov(glm::radians(Camera.FOV), static_cast<float>(m_Width), static_cast<float>(m_Height), Camera.NearClipPlane, Camera.FarClipPlane);
 	Camera.UpdateProjection(proj);
+	Camera.Width = w;
+	Camera.Height = h;
 }
 #if HARMONY_DEBUG
 void harmony::EditorView::OnImGui()
