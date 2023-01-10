@@ -43,10 +43,10 @@ namespace harmony {
 		void				FontFace(Layer layer, const char* font);
 		void				FontSize(Layer layer, float size);
 		void				FontBlur(Layer layer, int blur);
-
 		void				FillColor(Layer layer, NVGcolor color);
-
 		void				Text(Layer layer,float x, float y, const char* str);
+
+
 	protected:
 		std::map <Layer, std::vector< NVGcontext*>> p_VectorRenderers;
 		std::map < std::string, std::vector<uint8_t>> p_FontDatas;

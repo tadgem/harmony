@@ -5,6 +5,15 @@
 
 harmony::LuaScriptHotReload::LuaScriptHotReload(Program& prog, Ref<LuaProgramComponent> luaPc) : p_Program(prog)
 {
+    p_FileWatcher = nullptr;
+}
+
+harmony::LuaScriptHotReload::~LuaScriptHotReload()
+{
+    if (p_FileWatcher)
+    {
+        delete p_FileWatcher;
+    }
 }
 
 void harmony::LuaScriptHotReload::Init()
@@ -14,12 +23,11 @@ void harmony::LuaScriptHotReload::Init()
         std::string projDirectory = p_Program.m_Project->m_ProjectDirectory;
         std::string shadersDirectory = projDirectory + "\\assets\\scripts";
 
-        p_FileWatcher = new filewatch::FileWatch<std::string>(
-            shadersDirectory,
-            [&](const std::string& path, const filewatch::Event change_type) {
-                OnChange(path, change_type);
-            }
-        );
+        efsw::FileWatchListener* listener = this;
+
+        // TODO : Need to restructure so only 1 watcher and handlers for various asset types.
+        /*p_DirectoryWatchID = p_FileWatcher->addWatch(shadersDirectory, listener, true);
+        p_FileWatcher->watch();*/
     }
 
     auto sourceHandles = p_Program.m_AssetManager.GetLoadedAssets<LuaScriptAsset>();
@@ -50,13 +58,12 @@ void harmony::LuaScriptHotReload::FromJson(const nlohmann::json& json)
 {
 }
 
-void harmony::LuaScriptHotReload::OnChange(const std::string& path, const filewatch::Event change_type)
+void harmony::LuaScriptHotReload::OnChange(const std::string& filename, const std::string& directory, efsw::Action action)
 {
-    harmony::log::info("LuaScriptHotReload : Path : {} Change Type : {}", path);
-    if (change_type == filewatch::Event::added)
-    {
-    }
-    if (change_type == filewatch::Event::modified)
-    {
-    }
+    harmony::log::info("LuaScriptHotReload : Path : {}, Change Type : TODO", filename);
+}
+
+void harmony::LuaScriptHotReload::handleFileAction(efsw::WatchID watchid, const std::string& dir, const std::string& filename, efsw::Action action, std::string oldFilename)
+{
+    OnChange(filename, dir, action);
 }

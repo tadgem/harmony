@@ -6,7 +6,7 @@
 #include <ImGui/imgui.h>
 #include <ImGui/imgui_internal.h>
 #include <string>
-#include <sol/sol.hpp>
+#include <sol.hpp>
 
 namespace sol_ImGui
 {
@@ -1462,12 +1462,6 @@ namespace sol_ImGui
 	inline void EndPopup()																				{ ImGui::EndPopup(); }
 	inline void OpenPopup(const std::string& str_id)													{ ImGui::OpenPopup(str_id.c_str()); }
 	inline void OpenPopup(const std::string& str_id, int popup_flags)									{ ImGui::OpenPopup(str_id.c_str(), static_cast<ImGuiPopupFlags>(popup_flags)); }
-	[[deprecated("Use OpenPopupOnItemClick instead.")]]
-	inline void OpenPopupContextItem()																	{ return ImGui::OpenPopupContextItem(); }
-	[[deprecated("Use OpenPopupOnItemClick instead.")]]
-	inline void OpenPopupContextItem(const std::string& str_id)											{ return ImGui::OpenPopupContextItem(str_id.c_str()); }
-	[[deprecated("Use OpenPopupOnItemClick instead.")]]
-	inline void OpenPopupContextItem(const std::string& str_id, int popup_flags)						{ return ImGui::OpenPopupContextItem(str_id.c_str(), static_cast<ImGuiPopupFlags>(popup_flags)); }
 	inline void OpenPopupOnItemClick() { return ImGui::OpenPopupOnItemClick(); }
 	inline void OpenPopupOnItemClick(const std::string& str_id) { return ImGui::OpenPopupOnItemClick(str_id.c_str()); }
 	inline void OpenPopupOnItemClick(const std::string& str_id, int popup_flags) { return ImGui::OpenPopupOnItemClick(str_id.c_str(), static_cast<ImGuiPopupFlags>(popup_flags)); }
@@ -1619,11 +1613,6 @@ namespace sol_ImGui
 
 	// Inputs Utilities: Keyboard
 	inline int GetKeyIndex(int imgui_key)																{ return ImGui::GetKeyIndex(static_cast<ImGuiKey>(imgui_key)); }
-	inline bool IsKeyDown(int user_key_index)															{ return ImGui::IsKeyDown(user_key_index); }
-	inline bool IsKeyPressed(int user_key_index)														{ return ImGui::IsKeyPressed(user_key_index); }
-	inline bool IsKeyPressed(int user_key_index, bool repeat)											{ return ImGui::IsKeyPressed(user_key_index, repeat); }
-	inline bool IsKeyReleased(int user_key_index)														{ return ImGui::IsKeyReleased(user_key_index); }
-	inline int GetKeyPressedAmount(int key_index, float repeat_delay, float rate)						{ return ImGui::GetKeyPressedAmount(key_index, repeat_delay, rate); }
 	inline void CaptureKeyboardFromApp()																{ ImGui::CaptureKeyboardFromApp(); }
 	inline void CaptureKeyboardFromApp(bool want_capture_keyboard_value)								{ ImGui::CaptureKeyboardFromApp(want_capture_keyboard_value); }
 
@@ -2791,19 +2780,6 @@ namespace sol_ImGui
 		ImGui.set_function("ColorConvertHSVtoRGB"			, ColorConvertHSVtoRGB);
 #pragma endregion Color Utilities
 
-#pragma region Inputs Utilities: Keyboard
-		ImGui.set_function("GetKeyIndex"					, GetKeyIndex);
-		ImGui.set_function("IsKeyDown"						, IsKeyDown);
-		ImGui.set_function("IsKeyPressed"					, sol::overload(
-																sol::resolve<bool(int)>(IsKeyPressed),
-																sol::resolve<bool(int, bool)>(IsKeyPressed)
-															));
-		ImGui.set_function("IsKeyReleased"					, IsKeyReleased);
-		ImGui.set_function("CaptureKeyboardFromApp"			, sol::overload(
-																sol::resolve<void()>(CaptureKeyboardFromApp),
-																sol::resolve<void(bool)>(CaptureKeyboardFromApp)
-															));
-#pragma endregion Inputs Utilities: Keyboard
 
 #pragma region Inputs Utilities: Mouse
 		ImGui.set_function("IsMouseDown"					, IsMouseDown);

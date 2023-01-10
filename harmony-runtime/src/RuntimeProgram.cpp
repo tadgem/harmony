@@ -6,6 +6,9 @@
 #include "Rendering/Shapes.h"
 #include "Core/FSM.h"
 #include "ECS/LightSystem.h"
+#include "LuaProgramComponent.h"
+#include "LuaSystem.h";
+#include "LuaScriptAssetFactory.h";
 
 harmony::RuntimeProgram::RuntimeProgram(const std::string& name) : Program(name)
 {
@@ -82,11 +85,13 @@ void harmony::RuntimeProgram::AddAssetFactories()
 	m_AssetManager.AddAssetFactory(CreateRef<ShaderStageBinaryAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<FontAssetFactory>());
+	m_AssetManager.AddAssetFactory(CreateRef<LuaScriptAssetFactory>());
+
 }
 
 void harmony::RuntimeProgram::AddProgramComponents()
 {
-	
+	p_LuaProgramComponent = AddProgramComponent<LuaProgramComponent>().lock();
 }
 
 void harmony::RuntimeProgram::AddSystems()
@@ -96,6 +101,7 @@ void harmony::RuntimeProgram::AddSystems()
 	AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
 	AddSystem<MeshSystem>(m_AssetManager);
 	AddSystem<LightSystem>();
+	AddSystem<LuaSystem>(p_LuaProgramComponent);
 }
 
 void harmony::RuntimeProgram::AddPipelineStageRenderers()

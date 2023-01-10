@@ -6,6 +6,7 @@
 namespace harmony
 {
 	class RuntimeView;
+	class LuaProgramComponent;
     class RuntimeProgram : public Program
     {
     public:
@@ -31,15 +32,17 @@ namespace harmony
 		virtual void ResizeApplicationWindow(int w, int h) override;
 		void PresentRuntimeImage();
 
-		Ref<Pipeline> 			p_ForwardPipeline;
-		Ref<Pipeline> 			p_VectorGraphicsPipeline;
-		Ref<Pipeline>			p_DebugPipeline;
-		Ref<RuntimeView>		p_RuntimeView;
+		Ref<Pipeline> 				p_ForwardPipeline;
+		Ref<Pipeline> 				p_VectorGraphicsPipeline;
+		Ref<Pipeline>				p_DebugPipeline;
+		Ref<RuntimeView>			p_RuntimeView;
 
-		Ref<MeshSystem> 		p_MeshSystem;
-		Ref<LightSystem> 		p_LightSystem;
-		Ref<TransformSystem> 	p_TransformSystem;
-		Ref<CameraSystem> 		p_CameraSystem;
+		Ref<LuaProgramComponent>	p_LuaProgramComponent;
+
+		Ref<MeshSystem> 			p_MeshSystem;
+		Ref<LightSystem> 			p_LightSystem;
+		Ref<TransformSystem> 		p_TransformSystem;
+		Ref<CameraSystem> 			p_CameraSystem;
 
 		bgfx::ViewId			p_PresentViewId;
     };

@@ -14,32 +14,26 @@ NVGcolor rgb(unsigned char r, unsigned char g, unsigned char b)
 
 void beginPath()
 {
-	nvgBeginPath(VectorGraphics::GetNVGContext());
 }
 
 void rect(float x, float y, float w, float h)
 {
-	nvgRect(VectorGraphics::GetNVGContext(), x, y, w, h);
 }
 
 void circle(float cx, float cy, float r)
 {
-	nvgCircle(VectorGraphics::GetNVGContext(), cx, cy, r);
 }
 
 void pathWinding(int dir)
 {
-	nvgPathWinding(VectorGraphics::GetNVGContext(), dir);
 }
 
 void fillColor(NVGcolor color)
 {
-	nvgFillColor(VectorGraphics::GetNVGContext(), color);
 }
 
 void fill(NVGcolor color)
 {
-	nvgFill(VectorGraphics::GetNVGContext());
 }
 
 void harmony::InitNanoVG(sol::state& state)
@@ -58,7 +52,20 @@ void harmony::InitNanoVG(sol::state& state)
 		"image", &NVGpaint::image
 		);
 
+
 	// enums
+
+	nvg.new_enum("layer",
+		"one", VectorGraphics::Layer::One,
+		"two", VectorGraphics::Layer::Two,
+		"three", VectorGraphics::Layer::Three,
+		"four", VectorGraphics::Layer::Four,
+		"five", VectorGraphics::Layer::Five,
+		"six", VectorGraphics::Layer::Six,
+		"seven", VectorGraphics::Layer::Seven,
+		"8", VectorGraphics::Layer::Eight
+	);
+
 	nvg.new_enum("winding", "ccw", NVG_CCW, "cw", NVG_CW);
 	nvg.new_enum("solidity", "solid", NVG_SOLID, "hole", NVG_HOLE);
 	nvg.new_enum("lineCap", 

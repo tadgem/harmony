@@ -5,7 +5,7 @@
 
 harmony::LuaScriptAssetFactory::LuaScriptAssetFactory()
 {
-	size_t luaScriptTypeHash = GetTypeHash<LuaScriptAsset>();
+	auto luaScriptTypeHash = GetTypeHash<LuaScriptAsset>();
 
 	m_Capabilities.AssetTypeHashes.push_back(luaScriptTypeHash);
 }

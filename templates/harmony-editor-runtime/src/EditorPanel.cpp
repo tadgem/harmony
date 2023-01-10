@@ -10,6 +10,8 @@
 #include "Assets/ShaderSourceAsset.h"
 #include "Assets/FontAsset.h"
 #include "ECS/CameraComponent.h"
+#include "LuaComponent.h"
+
 harmony::ScenePanel::ScenePanel(Program& program) : p_Prog(program)
 {
 }
@@ -433,6 +435,23 @@ void harmony::AssetManagerPanel::OnImGui()
 				p_SelectedTypeHash = GetTypeHash<FontAsset>();
 			}
 		}
+
+		ImGui::Separator();
+		const std::string luaScriptAssetTitle = std::string(ICON_FA_FILE_TEXT_O) + " Lua Scripts";
+		ImGui::Text(luaScriptAssetTitle.c_str());
+		std::vector<AssetHandle> luaHandles = p_AssetManager.GetLoadedAssets<LuaScriptAsset>();
+		if (ImGui::TreeNode("Lua Scripts")) {
+			for (int i = 0; i < luaHandles.size(); i++)
+			{
+				ImGui::Text(luaHandles[i].Path.c_str());
+			}
+			ImGui::TreePop();
+			if (ImGui::Button("Load Script"))
+			{
+				ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Script", ".lua", ".");
+				p_SelectedTypeHash = GetTypeHash<LuaScriptAsset>();
+			}
+		}
 		ImGui::Unindent();
 	}
 	ImGui::End();
@@ -586,7 +605,7 @@ void harmony::SpotLightComponentUI::OnComponentImGui(entt::registry& registry, e
 	{
 		return;
 	}
-	if (RegistryHasComponent<SpotLight>(registry, entity) == false)
+	if (HasComponent(registry, entity) == false)
 	{
 		return;
 	}
@@ -616,4 +635,48 @@ void harmony::SpotLightComponentUI::RemoveComponent(entt::registry& registry, en
 bool harmony::SpotLightComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
 	return registry.any_of<SpotLight>(entity);
+}
+
+harmony::LuaScriptComponentUI::LuaScriptComponentUI(AssetManager& am) : ComponentUI("Lua Scripts"), p_AssetManager(am)
+{
+}
+
+void harmony::LuaScriptComponentUI::OnComponentImGui(entt::registry& registry, entt::entity entity)
+{
+	if (registry.valid(entity) == false)
+	{
+		return;
+	}
+	if (HasComponent(registry, entity) == false)
+	{
+		return;
+	}
+	AssetHandle ah;
+	LuaComponent& lc = registry.get<LuaComponent>(entity);
+
+	std::string luaPath = "Lua Script Asset: " + lc.m_LuaScriptAsset.m_Handle.Path;
+	ImGui::Text(luaPath.c_str());
+	if (p_AssetManager.AssetTypeSelector<LuaScriptAsset>("Lua Script", ah))
+	{
+		// oh lord please help me no
+		lc.m_LuaScriptAsset = *p_AssetManager.GetAsset<LuaScriptAsset>(ah).lock();
+	}
+}
+
+void harmony::LuaScriptComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
+{
+	registry.emplace<LuaComponent>(entity);
+}
+
+void harmony::LuaScriptComponentUI::RemoveComponent(entt::registry& registry, entt::entity entity)
+{
+	if (HasComponent(registry, entity))
+	{
+		registry.remove<LuaComponent>(entity);
+	}
+}
+
+bool harmony::LuaScriptComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
+{
+	return registry.any_of<LuaComponent>(entity);
 }

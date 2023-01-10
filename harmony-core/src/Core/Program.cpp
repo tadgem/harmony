@@ -738,6 +738,7 @@ void harmony::Program::CloseActiveScene()
 	{
 		p_ECSSystems[i]->Refresh();
 	}
+
 	p_ActiveScene->m_Registry.clear();
 	p_ActiveScene.reset();
 	p_ActiveScene = nullptr;

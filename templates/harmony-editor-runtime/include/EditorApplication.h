@@ -44,9 +44,11 @@ namespace harmony
 		void 			OnEditExit();
 
 		virtual int		OnRuntimeUpdate() override;
+		void 			OnRuntimeEntry();
 		void 			OnRuntimeExit();
 
 		virtual void 	Run() override;
+		virtual void	Init() override;
 		void			Run(const std::string& projectPath);
 
 		virtual void 	LoadScene(const std::string& path) override;

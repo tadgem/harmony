@@ -52,6 +52,7 @@ void harmony::EditorMainMenuBar::MenuBar()
 						if (ImGui::MenuItem(sceneName.c_str()))
 						{
 							p_Prog.OpenScene(i);
+							break;
 						}
 					}
 				}

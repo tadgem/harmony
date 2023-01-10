@@ -5,6 +5,7 @@
 #include "Core/Time.h"
 #include "Core/Input.h"
 #include "ShaderHotReload.h"
+#include "LuaScriptHotReload.h"
 #include "Rendering/Views/RuntimeView.h"
 #include "Rendering/PipelineStageRenderers/MeshRenderer.h"
 #include "Assets/ShaderSourceAssetFactory.h"
@@ -19,41 +20,26 @@ harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*th
 	AddPipelineStageRenderers();
 
 	AddEditorPanels();
-
-	m_EditorFSM.AddState(Mode::Edit, [&]() {return OnEditUpdate(); });
-	m_EditorFSM.AddStateExit(Mode::Edit, [&]() {OnEditExit(); });
-
-	m_EditorFSM.AddState(Mode::Debug, [&]() {return OnRuntimeUpdate(); });
-	m_EditorFSM.AddStateExit(Mode::Debug, [&]() {OnRuntimeExit(); });
-
-	m_EditorFSM.AddTrigger(Trigger::Play, Mode::Edit, Mode::Debug);
-	m_EditorFSM.AddTrigger(Trigger::Stop, Mode::Debug, Mode::Edit);
-
-	m_EditorFSM.SetStartingState(Mode::Edit);
-
 }
 
 void harmony::Editor::AddAssetTypeNames()
 {
-	RuntimeProgram::AddAssetTypeNames();
 	m_AssetManager.AddAssetTypeName<ShaderSourceAsset>();
 }
 
 void harmony::Editor::AddAssetFactories()
 {
-	RuntimeProgram::AddAssetFactories();
 	m_AssetManager.AddAssetFactory(CreateRef<ShaderSourceAssetFactory>());
 }
 
 void harmony::Editor::AddProgramComponents()
 {
-	RuntimeProgram::AddProgramComponents();
 	AddProgramComponent<ShaderHotReload>(*this);
+	AddProgramComponent<LuaScriptHotReload>(*this, p_LuaProgramComponent);
 }
 
 void harmony::Editor::AddSystems()
 {
-	RuntimeProgram::AddSystems();
 	p_TransformSystem	= GetSystem<TransformSystem>().lock();
 	p_CameraSystem		= GetSystem<CameraSystem>().lock();
 	p_MeshSystem		= GetSystem<MeshSystem>().lock();
@@ -62,7 +48,6 @@ void harmony::Editor::AddSystems()
 
 void harmony::Editor::AddPipelineStageRenderers()
 {
-	RuntimeProgram::AddPipelineStageRenderers();
 }
 
 void harmony::Editor::AddEditorPanels()
@@ -82,6 +67,7 @@ void harmony::Editor::AddEditorPanels()
 	inspector->AddComponentUI<DirectionalLightComponentUI>();
 	inspector->AddComponentUI<PointLightComponentUI>();
 	inspector->AddComponentUI<SpotLightComponentUI>();
+	inspector->AddComponentUI<LuaScriptComponentUI>(m_AssetManager);
 
 	p_Panels.emplace_back(inspector);
 }
@@ -193,6 +179,11 @@ int harmony::Editor::OnRuntimeUpdate()
 	return FSM::NO_TRIGGER;
 }
 
+void harmony::Editor::OnRuntimeEntry()
+{
+	RunSystemInit();
+}
+
 void harmony::Editor::OnRuntimeExit()
 {
 	LoadScene(p_LoadedScenePath);
@@ -218,6 +209,23 @@ void harmony::Editor::Run()
 	{
 		m_EditorFSM.Process();
 	}
+}
+
+void harmony::Editor::Init()
+{
+	Program::Init();
+
+	m_EditorFSM.AddState(Mode::Edit, [this]() {return OnEditUpdate(); });
+	m_EditorFSM.AddStateExit(Mode::Edit, [this]() {OnEditExit(); });
+
+	m_EditorFSM.AddState(Mode::Debug, [this]() {return OnRuntimeUpdate(); });
+	m_EditorFSM.AddStateExit(Mode::Debug, [this]() {OnRuntimeExit(); });
+	m_EditorFSM.AddStateEntry(Mode::Debug, [this]() {OnRuntimeEntry(); });
+
+	m_EditorFSM.AddTrigger(Trigger::Play, Mode::Edit, Mode::Debug);
+	m_EditorFSM.AddTrigger(Trigger::Stop, Mode::Debug, Mode::Edit);
+
+	m_EditorFSM.SetStartingState(Mode::Edit);
 }
 
 void harmony::Editor::Run(const std::string& projectPath)
