@@ -12,6 +12,12 @@
 #include "EditorView.h"
 harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this)
 {
+	AddAssetTypeNames();
+	AddAssetFactories();
+	AddProgramComponents();
+	AddSystems();
+	AddPipelineStageRenderers();
+
 	AddEditorPanels();
 
 	m_EditorFSM.AddState(Mode::Edit, [&]() {return OnEditUpdate(); });

@@ -11,6 +11,7 @@ void harmony::LuaSystem::Init(entt::registry& registry)
 {
     auto view = registry.view<LuaComponent>();
 
+    sol::state& state = p_LuaProgramComponent->p_State;
 
     for (auto [entity, lua] : view.each())
     {
