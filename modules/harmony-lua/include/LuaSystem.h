@@ -4,11 +4,12 @@
 
 namespace harmony
 {
+    class AssetManager;
     class LuaProgramComponent;
     class LuaSystem : public System
     {
     public:
-        LuaSystem(Ref<LuaProgramComponent> luaPc);
+        LuaSystem(AssetManager& am, Ref<LuaProgramComponent> luaPc);
 
         virtual void Init(entt::registry& registry) override;
         virtual void Update(entt::registry& registry) override;
@@ -20,5 +21,6 @@ namespace harmony
 
     protected:
         Ref<LuaProgramComponent> p_LuaProgramComponent;
+        AssetManager& p_AssetManager;
     };
 }

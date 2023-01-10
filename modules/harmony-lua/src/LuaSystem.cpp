@@ -2,8 +2,9 @@
 #include "LuaProgramComponent.h"
 #include "LuaScriptAsset.h"
 #include "LuaComponent.h"
+#include "Assets/AssetManager.h"
 
-harmony::LuaSystem::LuaSystem(Ref<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaComponent>()), p_LuaProgramComponent(luaPc)
+harmony::LuaSystem::LuaSystem(AssetManager& am, Ref<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaComponent>()), p_LuaProgramComponent(luaPc), p_AssetManager(am)
 {
 }
 
@@ -73,11 +74,31 @@ void harmony::LuaSystem::Cleanup(entt::registry& registry)
 
 nlohmann::json harmony::LuaSystem::SerializeSystem(entt::registry& registry)
 {
-    return nlohmann::json();
+    nlohmann::json j;
+
+    auto view = registry.view<LuaComponent>();
+
+    for (auto [e, lua] : view.each())
+    {
+        j[GetEntityKey(e)] = lua;
+    }
+
+    return j;
 }
 
 void harmony::LuaSystem::DeserializeSystem(entt::registry& registry, nlohmann::json systemJson)
 {
+    for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++)
+    {
+        entt::entity e = GetEntityFromKey(entry.key());
+        nlohmann::json luaJson = entry.value();
+        LuaComponent lc;
+        luaJson.get_to<LuaComponent>(lc);
+
+        auto luaWr = p_AssetManager.GetAsset<LuaScriptAsset>(lc.m_LuaScriptAsset.m_Handle);
+        lc.m_LuaScriptAsset = *luaWr.lock();
+        registry.emplace<LuaComponent>(e, lc);
+    }
 }
 
 void harmony::LuaSystem::Refresh()

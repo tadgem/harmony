@@ -660,6 +660,7 @@ void harmony::LuaScriptComponentUI::OnComponentImGui(entt::registry& registry, e
 	{
 		// oh lord please help me no
 		lc.m_LuaScriptAsset = *p_AssetManager.GetAsset<LuaScriptAsset>(ah).lock();
+		lc.m_LuaScriptAsset.m_Handle = ah;
 	}
 }
 
