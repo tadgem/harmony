@@ -181,6 +181,18 @@ void harmony::RuntimeProgram::InitializeViews()
 
 
 
+void harmony::RuntimeProgram::LoadScene(const std::string& path)
+{
+	Program::LoadScene(path);
+	RunSystemInit();
+}
+
+void harmony::RuntimeProgram::OpenScene(uint32_t index)
+{
+	Program::OpenScene(index);
+	RunSystemInit();
+}
+
 int harmony::RuntimeProgram::OnRuntimeUpdate()
 {
 	UpdateTimeVariables();

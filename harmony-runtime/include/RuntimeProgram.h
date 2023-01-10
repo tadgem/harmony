@@ -26,6 +26,9 @@ namespace harmony
 		virtual void InitializePipelines();
 		virtual void InitializeViews();
 
+		virtual void LoadScene(const std::string& path) override;
+		virtual void OpenScene(uint32_t index) override;
+
 		virtual int	 OnRuntimeUpdate();
 
 		virtual void LoadBuiltInAssets();

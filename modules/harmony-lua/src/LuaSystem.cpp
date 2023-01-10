@@ -94,9 +94,12 @@ void harmony::LuaSystem::DeserializeSystem(entt::registry& registry, nlohmann::j
         nlohmann::json luaJson = entry.value();
         LuaComponent lc;
         luaJson.get_to<LuaComponent>(lc);
+        AssetHandle ah = lc.m_LuaScriptAsset.m_Handle;
 
         auto luaWr = p_AssetManager.GetAsset<LuaScriptAsset>(lc.m_LuaScriptAsset.m_Handle);
         lc.m_LuaScriptAsset = *luaWr.lock();
+
+        lc.m_LuaScriptAsset.m_Handle = ah;
         registry.emplace<LuaComponent>(e, lc);
     }
 }
