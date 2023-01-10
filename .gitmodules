@@ -10,10 +10,6 @@
 [submodule "submodules/lua-cmake"]
 	path = submodules/lua-cmake
 	url = https://github.com/lubgr/lua-cmake.git
-[submodule "submodules/sol2"]
-	path = submodules/sol2
-	url = https://github.com/ThePhD/sol2.git
-	branch = main
 [submodule "submodules/jolt"]
 	path = submodules/jolt
 	url = https://github.com/jrouwe/JoltPhysics.git
