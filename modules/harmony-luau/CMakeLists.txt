@@ -17,19 +17,17 @@ get_filename_component(TEMP_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 get_filename_component(ROOT_DIR ${TEMP_DIR} DIRECTORY)
 
 
-add_subdirectory(${ROOT_DIR}/submodules/luau ${CMAKE_CURRENT_BINARY_DIR}/lua)
-add_subdirectory(${ROOT_DIR}/submodules/sol2 ${CMAKE_CURRENT_BINARY_DIR}/sol2)
+add_subdirectory(${ROOT_DIR}/submodules/luau ${CMAKE_CURRENT_BINARY_DIR}/luau)
 
 set(HARMONY_LUAU_INCLUDES 
 ${CMAKE_CURRENT_SOURCE_DIR}/include 
 ${HARMONY_CORE_INCLUDES}
 ${ROOT_DIR}/submodules/luau/Compiler/include
 ${ROOT_DIR}/submodules/luau/VM/include 
-${ROOT_DIR}/submodules/sol2/include 
 CACHE INTERNAL "")
 
 target_include_directories(harmony-luau PUBLIC ${HARMONY_LUAU_INCLUDES})
-target_link_libraries(harmony-luau harmony-core Luau.Compiler Luau.VM sol2)
+target_link_libraries(harmony-luau harmony-core Luau.Compiler Luau.VM)
 if (MSVC)
   target_compile_options(harmony-luau PRIVATE /bigobj)
 endif()

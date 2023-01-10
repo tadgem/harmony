@@ -6,6 +6,7 @@
 #include "Rendering/Shapes.h"
 #include "Core/FSM.h"
 #include "ECS/LightSystem.h"
+#include "LuaProgramComponent.h"
 
 harmony::RuntimeProgram::RuntimeProgram(const std::string& name) : Program(name)
 {
@@ -86,7 +87,7 @@ void harmony::RuntimeProgram::AddAssetFactories()
 
 void harmony::RuntimeProgram::AddProgramComponents()
 {
-	
+	AddProgramComponent<LuaProgramComponent>();
 }
 
 void harmony::RuntimeProgram::AddSystems()
