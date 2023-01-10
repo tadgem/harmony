@@ -63,7 +63,7 @@ void harmony::InitNanoVG(sol::state& state)
 		"five", VectorGraphics::Layer::Five,
 		"six", VectorGraphics::Layer::Six,
 		"seven", VectorGraphics::Layer::Seven,
-		"8", VectorGraphics::Layer::Eight
+		"eight", VectorGraphics::Layer::Eight
 	);
 
 	nvg.new_enum("winding", "ccw", NVG_CCW, "cw", NVG_CW);

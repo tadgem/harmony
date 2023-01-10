@@ -15,6 +15,7 @@ void harmony::LuaSystem::Init(entt::registry& registry)
     sol::state& state = p_LuaProgramComponent->p_State;
     for (auto [entity, lua] : view.each())
     {
+        state["this_entity"] = p_CurrentEntity;
         state.do_string(lua.m_LuaScriptAsset.m_Script, lua.m_LuaScriptAsset.m_Name);
 
         sol::function startFx   = state["start"];
@@ -48,6 +49,8 @@ void harmony::LuaSystem::Update(entt::registry& registry)
     sol::state& state = p_LuaProgramComponent->p_State;
     for (auto [entity, lua] : view.each())
     {
+        p_CurrentEntity = entity;
+        state["this_entity"] = p_CurrentEntity;
         if (lua.m_HasUpdate)
         {
             lua.m_Update();
@@ -65,6 +68,7 @@ void harmony::LuaSystem::Cleanup(entt::registry& registry)
     sol::state& state = p_LuaProgramComponent->p_State;
     for (auto [entity, lua] : view.each())
     {
+        state["this_entity"] = p_CurrentEntity;
         if (lua.m_HasCleanup)
         {
             lua.m_Cleanup();

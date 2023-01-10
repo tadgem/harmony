@@ -22,5 +22,6 @@ namespace harmony
     protected:
         Ref<LuaProgramComponent> p_LuaProgramComponent;
         AssetManager& p_AssetManager;
+        entt::entity p_CurrentEntity;
     };
 }
