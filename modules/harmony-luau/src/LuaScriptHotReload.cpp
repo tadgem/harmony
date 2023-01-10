@@ -13,13 +13,6 @@ void harmony::LuaScriptHotReload::Init()
     {
         std::string projDirectory = p_Program.m_Project->m_ProjectDirectory;
         std::string shadersDirectory = projDirectory + "\\assets\\scripts";
-
-        p_FileWatcher = new filewatch::FileWatch<std::string>(
-            shadersDirectory,
-            [&](const std::string& path, const filewatch::Event change_type) {
-                OnChange(path, change_type);
-            }
-        );
     }
 
     auto sourceHandles = p_Program.m_AssetManager.GetLoadedAssets<LuaScriptAsset>();
@@ -48,15 +41,4 @@ nlohmann::json harmony::LuaScriptHotReload::ToJson()
 
 void harmony::LuaScriptHotReload::FromJson(const nlohmann::json& json)
 {
-}
-
-void harmony::LuaScriptHotReload::OnChange(const std::string& path, const filewatch::Event change_type)
-{
-    harmony::log::info("LuaScriptHotReload : Path : {} Change Type : {}", path);
-    if (change_type == filewatch::Event::added)
-    {
-    }
-    if (change_type == filewatch::Event::modified)
-    {
-    }
 }
