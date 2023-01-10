@@ -20,6 +20,3 @@
 [submodule "submodules/sdl"]
 	path = submodules/sdl
 	url = https://github.com/libsdl-org/SDL.git
-[submodule "submodules/luau"]
-	path = submodules/luau
-	url = https://github.com/Roblox/luau.git
