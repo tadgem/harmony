@@ -7,6 +7,9 @@
 [submodule "submodules/assimp"]
 	path = submodules/assimp
 	url = https://github.com/tadgem/assimp.git
+[submodule "submodules/lua-cmake"]
+	path = submodules/lua-cmake
+	url = https://github.com/lubgr/lua-cmake.git
 [submodule "submodules/sol2"]
 	path = submodules/sol2
 	url = https://github.com/ThePhD/sol2.git
