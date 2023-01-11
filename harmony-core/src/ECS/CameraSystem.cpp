@@ -23,7 +23,7 @@ void harmony::CameraSystem::Update(entt::registry& registry)
     for (auto [entity, t,  c] : view.each())
     {
         glm::quat qPitch    = glm::angleAxis(glm::radians(-t.Euler.x), glm::vec3(1, 0, 0));
-        glm::quat qYaw      = glm::angleAxis(glm::radians( t.Euler.y), glm::vec3(0, 1, 0));
+        glm::quat qYaw      = glm::angleAxis(glm::radians( -t.Euler.y), glm::vec3(0, 1, 0));
         glm::quat rot       = glm::normalize(qPitch * qYaw);
         
         glm::mat4 rotate    = glm::mat4_cast(rot);

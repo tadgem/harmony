@@ -15,17 +15,17 @@ namespace harmony
 		LuaScriptEntity();
 		LuaScriptEntity(Scene* scene, entt::entity entity);
 
-		TransformComponent	GetTransform();
-		void				SetTransform(TransformComponent t);
+		TransformComponent*	GetTransform();
+		void				SetTransform(TransformComponent* t);
 
-		MeshComponent		GetMesh();
-		void				SetMesh(MeshComponent m);
+		MeshComponent*		GetMesh();
+		void				SetMesh(MeshComponent* m);
 
-		CameraComponent		GetCamera();
-		void				SetCamera(CameraComponent c);
+		CameraComponent*		GetCamera();
+		void				SetCamera(CameraComponent* c);
 
-		MaterialComponent	GetMaterial();
-		void				SetMaterial(MaterialComponent c);
+		MaterialComponent*	GetMaterial();
+		void				SetMaterial(MaterialComponent* c);
 
 		bool Valid();
 	protected:

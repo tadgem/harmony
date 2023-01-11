@@ -64,6 +64,8 @@ namespace harmony
         BGFXTextureHandle               SubmitTextureToGPU(WeakRef<Texture> textureWeakRef);
 
         void                            RemoveView(WeakRef<View> view);
+        WeakRef<View>                   GetView(const std::string& name);
+
         void                            SetViewActive(WeakRef<View> viewWeakRef, bool active);
         void                            AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline);
         void                            AddViewPostProcessStage(WeakRef<View> viewWeakRef, WeakRef<PostProcessStage> stage);

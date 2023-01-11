@@ -14,7 +14,6 @@ void harmony::LuaProgramComponent::Init()
     p_State.open_libraries(sol::lib::base, sol::lib::package);
     sol_ImGui::Init(p_State); 
     harmony::InitNanoVG(p_State);
-    harmony::InitGLM(p_State);
     harmony::InitHarmony(p_State);
 }
 

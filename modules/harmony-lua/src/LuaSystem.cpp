@@ -30,7 +30,7 @@ void harmony::LuaSystem::Update(entt::registry& registry)
     {
         p_CurrentEntity = entity;
         state["this_entity"] = entity;
-        if (lua.m_HasUpdate)
+        if (lua.m_HasUpdate && lua.m_Update)
         {
             try {
                 auto result = lua.m_Update();
@@ -62,7 +62,7 @@ void harmony::LuaSystem::Cleanup(entt::registry& registry)
     {
         p_CurrentEntity = entity;
         state["this_entity"] = entity;
-        if (lua.m_HasCleanup)
+        if (lua.m_HasCleanup && lua.m_Cleanup)
         {
             auto result = lua.m_Cleanup();
             if (!result.valid())
@@ -160,7 +160,15 @@ void harmony::LuaSystem::UpdateScripts(WeakRef<Scene> scene)
 
 void harmony::LuaSystem::InitEntityScript(entt::entity e, entt::registry& r, sol::state& state, LuaComponent& lua)
 {
-    state.do_string(lua.m_LuaScriptAsset.m_Script, lua.m_LuaScriptAsset.m_Name);
+    auto compilationResult = state.do_string(lua.m_LuaScriptAsset.m_Script, lua.m_LuaScriptAsset.m_Name);
+
+    if (!compilationResult.valid())
+    {
+        sol::error err = compilationResult;
+        std::string what = err.what();
+        std::string entityStr = std::to_string((uint32_t)e);
+        harmony::log::error("LuaSystem : InitEntityScript : Error : {} : in compiling file for Entity : {} : Script : {}", what, entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
+    }
 
     sol::function startFx = state["start"];
     sol::function updateFx = state["update"];
@@ -184,7 +192,7 @@ void harmony::LuaSystem::InitEntityScript(entt::entity e, entt::registry& r, sol
         lua.m_Cleanup = cleanupFx;
     }
 
-    if (lua.m_HasStart)
+    if (lua.m_HasStart && lua.m_Start)
     {
         sol::protected_function_result result = lua.m_Start();
         if (!result.valid())

@@ -1,10 +1,63 @@
 #include "LuaHarmony.hpp"
 #include "Core/Program.h"
 #include "Core/Input.h"
+#include "Core/Time.h"
 #include "ECS/TransformSystem.h"
 #include "ECS/TransformComponent.h"
 #include "LuaSystem.h"
 #include "LuaScriptEntity.h"
+#include "Rendering/Views/RuntimeView.h"
+#include "glm.hpp"
+#include "glm/detail/type_mat3x3.hpp"
+
+glm::vec2 lua_Vec2Multiply(glm::vec2& a, glm::vec2& b)
+{
+	return a * b;
+}
+
+glm::vec2 lua_Vec2Add(glm::vec2& a, glm::vec2& b)
+{
+	return a + b;
+}
+
+glm::vec2 lua_Vec2Subtract(glm::vec2& a, glm::vec2& b)
+{
+	return a - b;
+}
+
+glm::vec3 lua_Vec3Multiply(glm::vec3& a, glm::vec3& b)
+{
+	return a * b;
+}
+
+glm::vec3 lua_Vec3Add(glm::vec3& a, glm::vec3& b)
+{
+	return a + b;
+}
+glm::vec3 lua_Vec3Subtract(glm::vec3& a, glm::vec3& b)
+{
+	return a - b;
+}
+
+glm::vec3 lua_Vec4Multiply(glm::vec3& a, glm::vec3& b)
+{
+	return a * b;
+}
+
+glm::vec3 lua_Vec4Add(glm::vec3& a, glm::vec3& b)
+{
+	return a + b;
+}
+
+glm::vec4 lua_Vec4Subtract(glm::vec4& a, glm::vec4& b)
+{
+	return a - b;
+}
+
+float lua_Abs(float v)
+{
+	return glm::abs(v);
+}
 
 harmony::Scene* lua_GetActiveScene()
 {
@@ -14,6 +67,16 @@ harmony::Scene* lua_GetActiveScene()
 		return nullptr;
 	}
 	return sceneWr.lock().get();
+}
+
+harmony::Renderer* lua_GetRenderer()
+{
+	auto prog = harmony::Program::Get();
+	if (prog)
+	{
+		return &prog->m_Renderer;
+	}
+	return nullptr;
 }
 
 harmony::LuaScriptEntity lua_GetEntity()
@@ -34,29 +97,72 @@ void lua_OpenScene(uint32_t index)
 	harmony::Program::Get()->OpenScene(index);
 }
 
+harmony::View* lua_GetView(const std::string& viewName)
+{
+	auto r = lua_GetRenderer();
+	if (r)
+	{
+		auto vwr = r->GetView(viewName);
+		if (!vwr.expired())
+		{
+			auto v = vwr.lock();
+			return v.get();
+		}
+	}
+	return nullptr;
+}
 
-harmony::Entity lua_AddEntity()
+harmony::LuaScriptEntity lua_AddEntity()
 {
 	auto scene = lua_GetActiveScene();
 	if (scene)
 	{
 		return harmony::LuaScriptEntity(scene, scene->AddEntity().m_Handle);
 	}
-	return harmony::Entity();
+	return harmony::LuaScriptEntity();
+}
+
+harmony::LuaScriptEntity lua_GetViewEntity(harmony::View* view)
+{
+	harmony::RuntimeView* rtv = static_cast<harmony::RuntimeView*>(view);
+	auto scene = lua_GetActiveScene();
+	entt::entity cameraEntity =  rtv->CameraEntity;
+
+	if (view && rtv && scene)
+	{
+		return harmony::LuaScriptEntity(scene, cameraEntity);
+	}
+	return harmony::LuaScriptEntity();
 }
 
 void harmony::InitHarmony(sol::state& state)
 {
 	sol::table h = state.create_named_table("harmony");
-
-	InitHarmonyInput(state, h);
+	sol::table i = state.create_named_table("input");
+	sol::table t = state.create_named_table("time");
+	sol::table m = state.create_named_table("math");
+	InitGLM(state, m);
+	InitHarmonyTime(state, t);
+	InitHarmonyRendering(state, h);
+	InitHarmonyInput(state, i);
 	InitHarmonyECS(state, h);
 }
-	
+
+
+// script 'Modules'
 
 void harmony::InitHarmonyAssets(sol::state& state, sol::table& h)
 {
 	h.new_usertype<harmony::AssetHandle>("assetHandle", "path", &AssetHandle::Path, "index", &AssetHandle::Index, "typeHash", &AssetHandle::TypeHash);
+}
+
+void harmony::InitHarmonyRendering(sol::state& state, sol::table& h)
+{
+	auto viewDef = h.new_usertype<harmony::View>("view", "width", &harmony::View::m_Width, "height", &harmony::View::m_Height);
+	auto rendererDef = h.new_usertype<harmony::Renderer>("renderer");
+	h["GetRenderer"] = &lua_GetRenderer;
+	h["GetView"] = &lua_GetView;
+	h["GetViewEntity"] = &lua_GetViewEntity;
 }
 
 void harmony::InitHarmonyInput(sol::state& state, sol::table& h)
@@ -169,28 +275,25 @@ void harmony::InitHarmonyInput(sol::state& state, sol::table& h)
 		"Left", Left,
 		"Right", Right
 	);
+
 	// gamepad
-	state.set_function("Input.GetGamepadButton", harmony::Input::GetGamepadButton);
-	state.set_function("Input.GetGamepadButtonJustPressed", harmony::Input::GetGamepadButtonJustPressed);
-	state.set_function("Input.GetGamepadButtonJustReleased", harmony::Input::GetGamepadButtonJustReleased);
+	h["GetGamepadButton"] = harmony::Input::GetGamepadButton;
+	h["GetGamepadButtonJustPressed"] = harmony::Input::GetGamepadButtonJustPressed;
+	h["GetGamepadButtonJustReleased"] = harmony::Input::GetGamepadButtonJustReleased;
+	h["GetGamepadTrigger"] = &harmony::Input::GetGamepadTrigger;
+	h["GetGamepadStick"] = &harmony::Input::GetGamepadStick;
 
-	state.set_function("Input.GetGamepadTrigger", &harmony::Input::GetGamepadTrigger);
-	state.set_function("Input.GetGamepadStick", &harmony::Input::GetGamepadStick);
-
-	// keyboard
-	state.set_function("Input.GetKey", &harmony::Input::GetKey);
-	state.set_function("Input.GetKeyJustPressed", &harmony::Input::GetKeyJustPressed);
-	state.set_function("Input.GetKeyJustReleased", &harmony::Input::GetKeyJustReleased);
-
-	// mouse
-	state.set_function("Input.GetMousePosition", &harmony::Input::GetMousePosition);
-	state.set_function("Input.GetMousePositionLastFrame", &harmony::Input::GetMousePositionLastFrame);
-	state.set_function("Input.GetMouseVelocity", &harmony::Input::GetMouseVelocity);
-	state.set_function("Input.GetMouseVelocityLastFrame", &harmony::Input::GetMouseVelocityLastFrame);
-
-	state.set_function("Input.GetMouseButton", &harmony::Input::GetMouseButton);
-	state.set_function("Input.GetMouseButtonJustPressed", &harmony::Input::GetMouseButtonJustPressed);
-	state.set_function("Input.GetMouseButtonJustReleased", &harmony::Input::GetMouseButtonJustReleased);
+	h["GetKey"] = &harmony::Input::GetKey;
+	h["GetKeyJustPressed"] = &harmony::Input::GetKeyJustPressed;
+	h["GetKeyJustReleased"] = &harmony::Input::GetKeyJustReleased;
+	
+	h["GetMousePosition"] = &harmony::Input::GetMousePosition;
+	h["GetMousePositionLastFrame"] = &harmony::Input::GetMousePositionLastFrame;
+	h["GetMouseVelocity"] = &harmony::Input::GetMouseVelocity;
+	h["GetMouseVelocityLastFrame"] = &harmony::Input::GetMouseVelocityLastFrame;
+	h["GetMouseButton"] = &harmony::Input::GetMouseButton;
+	h["GetMouseButtonJustPressed"] = &harmony::Input::GetMouseButtonJustPressed;
+	h["GetMouseButtonJustReleased"] = &harmony::Input::GetMouseButtonJustReleased;
 
 }
 
@@ -202,10 +305,13 @@ void harmony::InitHarmonyECS(sol::state& state, sol::table& h)
 	auto registryDef		= h.new_usertype<entt::registry>("registry");
 	auto sceneDef			= h.new_usertype<harmony::Scene>("scene", "name", &harmony::Scene::m_Name, "registry", &harmony::Scene::m_Registry);
 
-	h.new_usertype<harmony::TransformComponent>("transform", 
-		"position", &TransformComponent::Position, 
-		"euler", &TransformComponent::Euler, 
-		"scale",&TransformComponent::Scale
+	h.new_usertype<harmony::TransformComponent>("transform",
+		"position", &TransformComponent::Position,
+		"euler", &TransformComponent::Euler,
+		"scale", &TransformComponent::Scale,
+		"forward", &TransformComponent::Forward,
+		"right", &TransformComponent::Right,
+		"up", &TransformComponent::Up
 		);
 
 	h.new_usertype<harmony::MeshComponent>("mesh",
@@ -261,4 +367,31 @@ void harmony::InitHarmonyECS(sol::state& state, sol::table& h)
 
 	entityDef["GetMaterial"] = &harmony::LuaScriptEntity::GetMaterial;
 	entityDef["SetMaterial"] = &harmony::LuaScriptEntity::SetMaterial;
+}
+
+void harmony::InitHarmonyTime(sol::state& state, sol::table& h)
+{
+	h["GetFrameTime"]			= &Time::GetFrameTime;
+	h["GetFrameTimeUnscaled"]	= &Time::GetFrameTimeUnscaled;
+	h["GetTimeScale"]			= &Time::GetTimeScale;
+	h["GetTimescale"]			= &Time::SetTimeScale;
+}
+
+void harmony::InitGLM(sol::state& state, sol::table& h)
+{
+	auto vec2type = h.new_usertype<glm::vec2>("vec2", "x", &glm::vec2::x, "y", &glm::vec2::y);
+	auto vec3type = h.new_usertype<glm::vec3>("vec3", "x", &glm::vec3::x, "y", &glm::vec3::y, "z", &glm::vec3::z);
+	auto vec4type = h.new_usertype<glm::vec4>("vec4", "x", &glm::vec4::x, "y", &glm::vec4::y, "z", &glm::vec4::z, "z", &glm::vec4::w);
+
+	h["addVec2"] = lua_Vec2Add;
+	h["subVec2"] = lua_Vec2Subtract;
+	h["mulVec2"] = lua_Vec2Multiply;
+	h["addVec3"] = lua_Vec3Add;
+	h["subVec3"] = lua_Vec3Subtract;
+	h["mulVec3"] = lua_Vec3Multiply;
+	h["addVec4"] = lua_Vec4Add;
+	h["subVec4"] = lua_Vec4Subtract;
+	h["mulVec4"] = lua_Vec4Multiply;
+
+	h["abs"] = lua_Abs;
 }

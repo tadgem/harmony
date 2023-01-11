@@ -55,7 +55,7 @@ namespace harmony
 		virtual void 	OpenScene(uint32_t index) override;
 		void 			UpdateEditor();
 		void 			GlobalDockspace();
-
+		void			SetRunningStyle();
 		virtual void LoadBuiltInAssets() override;
 
 		FSM m_EditorFSM;

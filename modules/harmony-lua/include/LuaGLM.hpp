@@ -4,5 +4,4 @@
 
 namespace harmony
 {
-    void InitGLM(sol::state& state);
 }

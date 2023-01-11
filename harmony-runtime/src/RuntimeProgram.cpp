@@ -38,6 +38,8 @@ void harmony::RuntimeProgram::Run()
 
 	PreRunInit();
 
+	SDL_SetRelativeMouseMode(SDL_TRUE);
+
 	p_RuntimeView->OnResized(p_WindowWidth, p_WindowHeight);
 
 	while (p_Run)
@@ -58,6 +60,8 @@ void harmony::RuntimeProgram::Run(const std::string& projectPath)
 	InitializeViews();
 
 	PreRunInit();
+
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	LoadProject(projectPath);
 	OpenScene(0);

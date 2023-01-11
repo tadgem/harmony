@@ -116,7 +116,7 @@ void harmony::TransformSystem::CalculateDirectionVectors(glm::vec3 eulerDegrees,
     up.y                = glm::cos(eulerRadians.x);
     up.z                = glm::sin(eulerRadians.x) * glm::cos(eulerRadians.y);
 
-    transform.Forward   = forward;
+    transform.Forward   = Utils::CalculateVec3Degrees(forward);
     transform.Right     = Utils::CalculateVec3Degrees(right);
     transform.Up        = Utils::CalculateVec3Degrees(up);
 
