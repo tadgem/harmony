@@ -8,6 +8,7 @@ namespace harmony
     {
     public:
         Entity();
+        Entity(entt::entity handle);
         entt::entity m_Handle;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(Entity, m_Handle)

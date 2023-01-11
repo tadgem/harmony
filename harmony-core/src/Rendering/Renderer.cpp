@@ -113,6 +113,18 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::BuildShader(const st
 
 uint32_t harmony::Renderer::p_ViewHandleCounter = 1;
 
+harmony::WeakRef<harmony::View> harmony::Renderer::GetView(const std::string& name)
+{
+    for (auto& [view, stack] : p_Views)
+    {
+        if (view->m_Name == name)
+        {
+            return view;
+        }
+    }
+    return WeakRef<View>();
+}
+
 void harmony::Renderer::RemoveView(WeakRef<View> view)
 {
     if (view.expired())

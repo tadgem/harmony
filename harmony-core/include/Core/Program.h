@@ -31,7 +31,7 @@ namespace harmony
 	public:
 		Program(const std::string& name);
 		~Program();
-		void Init();
+		virtual void Init();
 		virtual void Run();
 		virtual void Run(const std::string& projectPath);
 		virtual void CreateProject(const std::string& name, const std::string& path);

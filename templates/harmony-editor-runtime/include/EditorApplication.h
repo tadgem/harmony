@@ -44,16 +44,18 @@ namespace harmony
 		void 			OnEditExit();
 
 		virtual int		OnRuntimeUpdate() override;
+		void 			OnRuntimeEntry();
 		void 			OnRuntimeExit();
 
 		virtual void 	Run() override;
+		virtual void	Init() override;
 		void			Run(const std::string& projectPath);
 
 		virtual void 	LoadScene(const std::string& path) override;
 		virtual void 	OpenScene(uint32_t index) override;
 		void 			UpdateEditor();
 		void 			GlobalDockspace();
-
+		void			SetRunningStyle();
 		virtual void LoadBuiltInAssets() override;
 
 		FSM m_EditorFSM;

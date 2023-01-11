@@ -6,6 +6,9 @@
 #include "Rendering/Shapes.h"
 #include "Core/FSM.h"
 #include "ECS/LightSystem.h"
+#include "LuaProgramComponent.h"
+#include "LuaSystem.h";
+#include "LuaScriptAssetFactory.h";
 
 harmony::RuntimeProgram::RuntimeProgram(const std::string& name) : Program(name)
 {
@@ -35,6 +38,8 @@ void harmony::RuntimeProgram::Run()
 
 	PreRunInit();
 
+	SDL_SetRelativeMouseMode(SDL_TRUE);
+
 	p_RuntimeView->OnResized(p_WindowWidth, p_WindowHeight);
 
 	while (p_Run)
@@ -55,6 +60,8 @@ void harmony::RuntimeProgram::Run(const std::string& projectPath)
 	InitializeViews();
 
 	PreRunInit();
+
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	LoadProject(projectPath);
 	OpenScene(0);
@@ -82,11 +89,13 @@ void harmony::RuntimeProgram::AddAssetFactories()
 	m_AssetManager.AddAssetFactory(CreateRef<ShaderStageBinaryAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>(m_Renderer));
 	m_AssetManager.AddAssetFactory(CreateRef<FontAssetFactory>());
+	m_AssetManager.AddAssetFactory(CreateRef<LuaScriptAssetFactory>());
+
 }
 
 void harmony::RuntimeProgram::AddProgramComponents()
 {
-	
+	p_LuaProgramComponent = AddProgramComponent<LuaProgramComponent>().lock();
 }
 
 void harmony::RuntimeProgram::AddSystems()
@@ -96,6 +105,7 @@ void harmony::RuntimeProgram::AddSystems()
 	AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
 	AddSystem<MeshSystem>(m_AssetManager);
 	AddSystem<LightSystem>();
+	p_LuaSystem = AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent).lock();
 }
 
 void harmony::RuntimeProgram::AddPipelineStageRenderers()
@@ -174,6 +184,18 @@ void harmony::RuntimeProgram::InitializeViews()
 }
 
 
+
+void harmony::RuntimeProgram::LoadScene(const std::string& path)
+{
+	Program::LoadScene(path);
+	RunSystemInit();
+}
+
+void harmony::RuntimeProgram::OpenScene(uint32_t index)
+{
+	Program::OpenScene(index);
+	RunSystemInit();
+}
 
 int harmony::RuntimeProgram::OnRuntimeUpdate()
 {

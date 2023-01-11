@@ -6,6 +6,8 @@
 namespace harmony
 {
 	class RuntimeView;
+	class LuaProgramComponent;
+	class LuaSystem;
     class RuntimeProgram : public Program
     {
     public:
@@ -25,21 +27,27 @@ namespace harmony
 		virtual void InitializePipelines();
 		virtual void InitializeViews();
 
+		virtual void LoadScene(const std::string& path) override;
+		virtual void OpenScene(uint32_t index) override;
+
 		virtual int	 OnRuntimeUpdate();
 
 		virtual void LoadBuiltInAssets();
 		virtual void ResizeApplicationWindow(int w, int h) override;
 		void PresentRuntimeImage();
 
-		Ref<Pipeline> 			p_ForwardPipeline;
-		Ref<Pipeline> 			p_VectorGraphicsPipeline;
-		Ref<Pipeline>			p_DebugPipeline;
-		Ref<RuntimeView>		p_RuntimeView;
+		Ref<Pipeline> 				p_ForwardPipeline;
+		Ref<Pipeline> 				p_VectorGraphicsPipeline;
+		Ref<Pipeline>				p_DebugPipeline;
+		Ref<RuntimeView>			p_RuntimeView;
 
-		Ref<MeshSystem> 		p_MeshSystem;
-		Ref<LightSystem> 		p_LightSystem;
-		Ref<TransformSystem> 	p_TransformSystem;
-		Ref<CameraSystem> 		p_CameraSystem;
+		Ref<LuaProgramComponent>	p_LuaProgramComponent;
+		Ref<LuaSystem>				p_LuaSystem;
+
+		Ref<MeshSystem> 			p_MeshSystem;
+		Ref<LightSystem> 			p_LightSystem;
+		Ref<TransformSystem> 		p_TransformSystem;
+		Ref<CameraSystem> 			p_CameraSystem;
 
 		bgfx::ViewId			p_PresentViewId;
     };

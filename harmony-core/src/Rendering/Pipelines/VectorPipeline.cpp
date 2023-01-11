@@ -41,7 +41,7 @@ harmony::PipelineDrawStage::Data harmony::VectorGraphicsStage::Init(entt::regist
 	p_VectorRenderers.emplace(_view->m_Name, nvgRenderer);
 
 	bgfx::FrameBufferHandle fbh = bgfx::createFrameBuffer(fbAttachments.size(), fbAttachments.data(), false);
-	bgfx::setViewRect(viewId, 0, 0, bgfx::BackbufferRatio::Equal);
+	bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
 	bgfx::setViewFrameBuffer(viewId, fbh);
 	bgfx::setViewMode(viewId, bgfx::ViewMode::Sequential);
 	bgfx::setViewName(viewId, "NanoVG");
@@ -53,6 +53,7 @@ void harmony::VectorGraphicsStage::PreUpdate(entt::registry& registry, WeakRef<V
 {
 	Ref<View> _view = view.lock();
 	bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
+	bgfx::setViewTransform(viewId, &_view->m_View[0], &_view->m_Projection[0]);
 	nvgBeginFrame(p_VectorRenderers[_view->m_Name], float(_view->m_Width), float(_view->m_Width), 1.0f);
 }
 

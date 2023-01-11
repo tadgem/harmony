@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/ProgramComponent.h"
-#include "sol/sol.hpp"
+#include "sol.hpp"
 namespace harmony
 {
     class LuaProgramComponent : public ProgramComponent
