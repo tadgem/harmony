@@ -14,6 +14,7 @@ harmony::Scene::Scene(const std::string& name) : m_Name(name)
 void harmony::Scene::Deserialize(std::vector<Ref<System>>& systems)
 {
 	HARMONY_PROFILE_FUNCTION()
+	m_Registry.clear();
 	for (int i = 0; i < p_Entities.size(); i++)
 	{
 		m_Registry.create(p_Entities[i].m_Handle);
