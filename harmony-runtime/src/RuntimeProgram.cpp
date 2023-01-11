@@ -101,7 +101,7 @@ void harmony::RuntimeProgram::AddSystems()
 	AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
 	AddSystem<MeshSystem>(m_AssetManager);
 	AddSystem<LightSystem>();
-	AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent);
+	p_LuaSystem = AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent).lock();
 }
 
 void harmony::RuntimeProgram::AddPipelineStageRenderers()

@@ -9,7 +9,7 @@ end
 function update()
     -- print("TestLua : Update")
     t = e:GetTransform()
-    t.position.y = t.position.y + 0.03;
+    t.position.y = t.position.y - 0.002;
     e:SetTransform(t)
 end
 

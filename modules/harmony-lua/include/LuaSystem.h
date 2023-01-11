@@ -1,11 +1,15 @@
 #pragma once
 #include "ECS/System.h"
 #include "Core/Memory.h"
+#include "sol.hpp"
+
 
 namespace harmony
 {
     class AssetManager;
     class LuaProgramComponent;
+    class LuaComponent;
+    class Scene;
     class LuaSystem : public System
     {
     public:
@@ -20,6 +24,9 @@ namespace harmony
         virtual void Refresh() override;
 
         entt::entity GetCurrentEntity();
+        void UpdateScripts(WeakRef<Scene> scene);
+
+        void InitEntityScript(entt::entity e, entt::registry& r, sol::state& state, LuaComponent& lua);
 
     protected:
         Ref<LuaProgramComponent> p_LuaProgramComponent;

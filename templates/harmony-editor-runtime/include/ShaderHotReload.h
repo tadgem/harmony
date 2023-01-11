@@ -1,9 +1,8 @@
 #pragma once
-#include "Core/ProgramComponent.h"
+#include "AssetHotReload.h"
 #include "Assets/Asset.h"
 #include "bx/platform.h"
 #include "Rendering/Shader.h"
-#include "efsw/efsw.hpp"
 
 namespace harmony
 {
@@ -11,17 +10,12 @@ namespace harmony
     class Renderer;
     class ShaderSourceAsset;
 
-    class ShaderHotReload : public ProgramComponent, public efsw::FileWatchListener
+    class ShaderHotReload : public AssetHotReloadProvider
     {
     public:
         ShaderHotReload(Program& prog);
         ~ShaderHotReload();
         virtual void Init() override;
-        virtual void Update() override;
-        virtual void Render() override;
-        virtual void Cleanup() override;
-        virtual nlohmann::json ToJson() override;
-        virtual void FromJson(const nlohmann::json& json) override;
 
     protected:
         Program& p_Program;
@@ -32,8 +26,7 @@ namespace harmony
         void ReloadTrackedShaders();
         
         void OnChange(const std::string& filename, const std::string& directory, efsw::Action action);
-        void handleFileAction(efsw::WatchID watchid, const std::string& dir, const std::string& filename, efsw::Action action, std::string oldFilename) override;
-
+        
         std::map<std::string , Ref<ShaderSourceAsset>> p_LoadedShaderSources;
         std::map<std::string, Ref<ShaderStage>> p_LoadedShaderBinaries;
         std::map<std::string, std::string> p_RendererProfileMapping;

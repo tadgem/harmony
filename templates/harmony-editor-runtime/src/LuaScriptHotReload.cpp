@@ -2,68 +2,100 @@
 #include "LuaProgramComponent.h"
 #include "Core/Memory.h"
 #include "Core/Program.h"
+#include "LuaScriptAsset.h"
+#include "LuaSystem.h"
 
-harmony::LuaScriptHotReload::LuaScriptHotReload(Program& prog, Ref<LuaProgramComponent> luaPc) : p_Program(prog)
+
+harmony::LuaScriptHotReload::LuaScriptHotReload(Program& prog, Ref<LuaSystem> luaSystem) : AssetHotReloadProvider("LuaScript"),  p_Program(prog), p_LuaSystem(luaSystem)
 {
-    p_FileWatcher = nullptr;
 }
 
 harmony::LuaScriptHotReload::~LuaScriptHotReload()
 {
-    if (p_FileWatcher)
-    {
-        delete p_FileWatcher;
-    }
+    
 }
 
 void harmony::LuaScriptHotReload::Init()
 {
-    if (p_Program.m_Project)
-    {
-        std::string projDirectory = p_Program.m_Project->m_ProjectDirectory;
-        std::string shadersDirectory = projDirectory + "\\assets\\scripts";
-
-        efsw::FileWatchListener* listener = this;
-
-        // TODO : Need to restructure so only 1 watcher and handlers for various asset types.
-        /*p_DirectoryWatchID = p_FileWatcher->addWatch(shadersDirectory, listener, true);
-        p_FileWatcher->watch();*/
-    }
-
     auto sourceHandles = p_Program.m_AssetManager.GetLoadedAssets<LuaScriptAsset>();
     for (auto handle : sourceHandles)
     {
         p_LoadedScriptSources.emplace(handle.Path, p_Program.m_AssetManager.GetAsset<LuaScriptAsset>(handle).lock());
     }
+    ReloadLuaScripts();
 }
 
-void harmony::LuaScriptHotReload::Update()
+void harmony::LuaScriptHotReload::ReloadLuaScripts()
 {
+    auto scriptHandles = p_Program.m_AssetManager.GetLoadedAssets<LuaScriptAsset>();
+
+    p_LoadedScriptSources.clear();
+    for (auto handle : scriptHandles)
+    {
+        p_LoadedScriptSources.emplace(handle.Path, p_Program.m_AssetManager.GetAsset<LuaScriptAsset>(handle).lock());
+        p_LoadedScriptSources[handle.Path]->m_Handle = handle;
+    }
 }
 
-void harmony::LuaScriptHotReload::Render()
-{
-}
-
-void harmony::LuaScriptHotReload::Cleanup()
-{
-}
-
-nlohmann::json harmony::LuaScriptHotReload::ToJson()
-{
-	return nlohmann::json();
-}
-
-void harmony::LuaScriptHotReload::FromJson(const nlohmann::json& json)
-{
-}
 
 void harmony::LuaScriptHotReload::OnChange(const std::string& filename, const std::string& directory, efsw::Action action)
 {
-    harmony::log::info("LuaScriptHotReload : Path : {}, Change Type : TODO", filename);
+    //harmony::log::info("LuaScriptHotReload : Path : {}, Change Type : TODO", filename);
+
+    if (action == efsw::Actions::Add)
+    {
+        if (filename.find(".lua") < filename.size())
+        {
+        }
+        // add lua script
+    }
+    if (action == efsw::Actions::Modified)
+    {
+        if (filename.find(".lua") < filename.size())
+        {
+            if (!p_Program.m_Project)
+            {
+                return;
+            }
+
+            std::string cleanPath = GetCleanFileName(filename, directory);
+            // Update shader text...
+            std::string newText = Utils::LoadStringFromPath(directory + std::string("/") + filename);
+
+            if (p_LoadedScriptSources.find(cleanPath) == p_LoadedScriptSources.end())
+            {
+                harmony::log::warn("LuaScriptHotRelaod : script not being tracked by hot reload. {}", filename);
+                return;
+            }
+
+            AssetHandle& h = p_LoadedScriptSources[cleanPath]->m_Handle;
+            auto luaWr = p_Program.m_AssetManager.GetAsset<LuaScriptAsset>(h);
+            if (luaWr.expired())
+            {
+                harmony::log::warn("LuaScriptHotReload : could not find script in asset registry : {}", cleanPath);
+                return;
+            }
+
+            luaWr.lock()->m_Script = newText;
+
+            p_LuaSystem->UpdateScripts(p_Program.GetActiveScene());
+        }
+    }
 }
 
-void harmony::LuaScriptHotReload::handleFileAction(efsw::WatchID watchid, const std::string& dir, const std::string& filename, efsw::Action action, std::string oldFilename)
+std::string harmony::LuaScriptHotReload::GetCleanFileName(const std::string& filename, const std::string& directory)
 {
-    OnChange(filename, dir, action);
+    std::string projDirectory = p_Program.m_Project->m_ProjectDirectory;
+    std::string fullFileDirectory = directory;
+
+    if (projDirectory.find("\\") < projDirectory.size())
+    {
+        fullFileDirectory += "\\" + filename;
+    }
+    else
+    {
+        fullFileDirectory += "/" + filename;
+    }
+
+    return fullFileDirectory.substr(fullFileDirectory.find(projDirectory) + projDirectory.size() + 1, fullFileDirectory.size());
 }
