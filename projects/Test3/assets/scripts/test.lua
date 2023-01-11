@@ -8,10 +8,9 @@ end
 
 function update()
     -- print("TestLua : Update")
-    ent = harmony.GetEntity()
-    v = ent.GetPosition()
-    v.y = v.y + 0.03;
-    ent.SetPosition(v)
+    t = e:GetTransform()
+    t.position.y = t.position.y + 0.03;
+    e:SetTransform(t)
 end
 
 function cleanup()

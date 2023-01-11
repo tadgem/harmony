@@ -4,12 +4,24 @@
 #include "ECS/TransformSystem.h"
 #include "ECS/TransformComponent.h"
 #include "LuaSystem.h"
-harmony::Entity lua_GetEntity()
+#include "LuaScriptEntity.h"
+
+harmony::Scene* lua_GetActiveScene()
+{
+	auto sceneWr = harmony::Program::Get()->GetActiveScene();
+	if (sceneWr.expired())
+	{
+		return nullptr;
+	}
+	return sceneWr.lock().get();
+}
+
+harmony::LuaScriptEntity lua_GetEntity()
 {
 	auto lwr = harmony::Program::Get()->GetSystem<harmony::LuaSystem>();
-	if (lwr.expired()) return harmony::Entity();
+	if (lwr.expired()) return harmony::LuaScriptEntity();
 
-	return harmony::Entity(lwr.lock()->GetCurrentEntity() );
+	return harmony::LuaScriptEntity(lua_GetActiveScene(), lwr.lock()->GetCurrentEntity() );
 }
 
 void lua_LoadScene(const std::string& path)
@@ -22,117 +34,33 @@ void lua_OpenScene(uint32_t index)
 	harmony::Program::Get()->OpenScene(index);
 }
 
-harmony::Scene* lua_GetActiveScene()
-{
-	auto sceneWr = harmony::Program::Get()->GetActiveScene();
-	if (sceneWr.expired())
-	{
-		return nullptr;
-	}
-	return sceneWr.lock().get();
-}
 
 harmony::Entity lua_AddEntity()
 {
 	auto scene = lua_GetActiveScene();
 	if (scene)
 	{
-		return scene->AddEntity();
+		return harmony::LuaScriptEntity(scene, scene->AddEntity().m_Handle);
 	}
 	return harmony::Entity();
-}
-
-glm::vec3 lua_GetEntityPosition()
-{
-	auto e = lua_GetEntity();
-	auto scene = lua_GetActiveScene();
-	if (scene)
-	{
-		if (scene->m_Registry.any_of<harmony::TransformComponent>(e.m_Handle))
-		{
-			auto t = scene->m_Registry.get<harmony::TransformComponent>(e.m_Handle);
-			return t.Position;
-		}
-	}
-	return glm::vec3();
-}
-
-void lua_SetEntityPosition(glm::vec3 position)
-{
-	auto e = lua_GetEntity();
-	auto scene = lua_GetActiveScene();
-	if (scene)
-	{
-		if (scene->m_Registry.any_of<harmony::TransformComponent>(e.m_Handle))
-		{
-			auto& t = scene->m_Registry.get<harmony::TransformComponent>(e.m_Handle);
-			t.Position = position;
-		}
-	}
-}
-
-glm::vec3 lua_GetEntityEuler()
-{
-	auto e = lua_GetEntity();
-	auto scene = lua_GetActiveScene();
-	if (scene)
-	{
-		if (scene->m_Registry.any_of<harmony::TransformComponent>(e.m_Handle))
-		{
-			auto t = scene->m_Registry.get<harmony::TransformComponent>(e.m_Handle);
-			return t.Euler;
-		}
-	}
-	return glm::vec3();
-}
-
-void lua_SetEntityEuler(glm::vec3 euler)
-{
-	auto e = lua_GetEntity();
-	auto scene = lua_GetActiveScene();
-	if (scene)
-	{
-		if (scene->m_Registry.any_of<harmony::TransformComponent>(e.m_Handle))
-		{
-			auto& t = scene->m_Registry.get<harmony::TransformComponent>(e.m_Handle);
-			t.Euler = euler;
-		}
-	}
-}
-
-glm::vec3 lua_GetEntityScale()
-{
-	auto e = lua_GetEntity();
-	auto scene = lua_GetActiveScene();
-	if (scene)
-	{
-		if (scene->m_Registry.any_of<harmony::TransformComponent>(e.m_Handle))
-		{
-			auto t = scene->m_Registry.get<harmony::TransformComponent>(e.m_Handle);
-			return t.Scale;
-		}
-	}
-	return glm::vec3();
-}
-
-void lua_SetEntityScale(glm::vec3 scale)
-{
-	auto e = lua_GetEntity();
-	auto scene = lua_GetActiveScene();
-	if (scene)
-	{
-		if (scene->m_Registry.any_of<harmony::TransformComponent>(e.m_Handle))
-		{
-			auto& t = scene->m_Registry.get<harmony::TransformComponent>(e.m_Handle);
-			t.Scale = scale;
-		}
-	}
 }
 
 void harmony::InitHarmony(sol::state& state)
 {
 	sol::table h = state.create_named_table("harmony");
 
+	InitHarmonyInput(state, h);
+	InitHarmonyECS(state, h);
+}
+	
+
+void harmony::InitHarmonyAssets(sol::state& state, sol::table& h)
+{
+	h.new_usertype<harmony::AssetHandle>("assetHandle", "path", &AssetHandle::Path, "index", &AssetHandle::Index, "typeHash", &AssetHandle::TypeHash);
+}
+
+void harmony::InitHarmonyInput(sol::state& state, sol::table& h)
+{
 	h.new_enum("gamePadButton",
 		"FaceNorth", harmony::Gamepad::Button::FaceNorth,
 		"FaceEast", harmony::Gamepad::Button::FaceEast,
@@ -147,7 +75,7 @@ void harmony::InitHarmony(sol::state& state)
 		"Home", harmony::Gamepad::Button::Home,
 		"Back", harmony::Gamepad::Button::Select,
 		"Start", harmony::Gamepad::Button::Start
-		);
+	);
 
 	h.new_enum("gamePadStick",
 		"LS", harmony::Gamepad::Stick::LS,
@@ -240,27 +168,97 @@ void harmony::InitHarmony(sol::state& state)
 		"Down", Down,
 		"Left", Left,
 		"Right", Right
-		);
+	);
+	// gamepad
+	state.set_function("Input.GetGamepadButton", harmony::Input::GetGamepadButton);
+	state.set_function("Input.GetGamepadButtonJustPressed", harmony::Input::GetGamepadButtonJustPressed);
+	state.set_function("Input.GetGamepadButtonJustReleased", harmony::Input::GetGamepadButtonJustReleased);
 
+	state.set_function("Input.GetGamepadTrigger", &harmony::Input::GetGamepadTrigger);
+	state.set_function("Input.GetGamepadStick", &harmony::Input::GetGamepadStick);
+
+	// keyboard
+	state.set_function("Input.GetKey", &harmony::Input::GetKey);
+	state.set_function("Input.GetKeyJustPressed", &harmony::Input::GetKeyJustPressed);
+	state.set_function("Input.GetKeyJustReleased", &harmony::Input::GetKeyJustReleased);
+
+	// mouse
+	state.set_function("Input.GetMousePosition", &harmony::Input::GetMousePosition);
+	state.set_function("Input.GetMousePositionLastFrame", &harmony::Input::GetMousePositionLastFrame);
+	state.set_function("Input.GetMouseVelocity", &harmony::Input::GetMouseVelocity);
+	state.set_function("Input.GetMouseVelocityLastFrame", &harmony::Input::GetMouseVelocityLastFrame);
+
+	state.set_function("Input.GetMouseButton", &harmony::Input::GetMouseButton);
+	state.set_function("Input.GetMouseButtonJustPressed", &harmony::Input::GetMouseButtonJustPressed);
+	state.set_function("Input.GetMouseButtonJustReleased", &harmony::Input::GetMouseButtonJustReleased);
+
+}
+
+void harmony::InitHarmonyECS(sol::state& state, sol::table& h)
+{
 	// High level
 	auto entityHandleDef	= h.new_usertype<entt::entity>("entity_handle");
-	auto entityDef		= h.new_usertype<harmony::Entity>("entity", "handle", &harmony::Entity::m_Handle);
+	auto entityDef		= h.new_usertype<harmony::LuaScriptEntity>("entity", "handle", &harmony::Entity::m_Handle);
 	auto registryDef		= h.new_usertype<entt::registry>("registry");
 	auto sceneDef			= h.new_usertype<harmony::Scene>("scene", "name", &harmony::Scene::m_Name, "registry", &harmony::Scene::m_Registry);
+
+	h.new_usertype<harmony::TransformComponent>("transform", 
+		"position", &TransformComponent::Position, 
+		"euler", &TransformComponent::Euler, 
+		"scale",&TransformComponent::Scale
+		);
+
+	h.new_usertype<harmony::MeshComponent>("mesh",
+		"asset", &MeshComponent::MeshAsset,
+		"castShadow", &MeshComponent::CastShadow
+		);
+
+	h.new_usertype<harmony::MaterialComponent>("material");
+
+	h.new_usertype<harmony::Camera>("camera", 
+		"fov", &harmony::Camera::FOV, 
+		"nearClip", &harmony::Camera::NearClipPlane, 
+		"farClip", &harmony::Camera::FarClipPlane);
+
+	h.new_usertype<harmony::CameraComponent>("cameraComponent",
+		"cam", &harmony::CameraComponent::Cam);
+
+	h.new_usertype<harmony::DirectionalLight>("directionalLight", 
+		"diffuse", &harmony::DirectionalLight::Diffuse, 
+		"ambient", &harmony::DirectionalLight::Ambient
+		);
+
+	h.new_usertype<harmony::PointLight>("pointLight", 
+		"diffuse", &harmony::PointLight::Diffuse, 
+		"ambient", &harmony::PointLight::Ambient, 
+		"radius", &harmony::PointLight::Radius, 
+		"intensity", &harmony::PointLight::Intensity
+		);
+
+	h.new_usertype<harmony::SpotLight>("spotLight",
+		"diffuse", &harmony::SpotLight::Diffuse,
+		"ambient", &harmony::SpotLight::Ambient,
+		"radius", &harmony::SpotLight::Radius,
+		"angle", &harmony::SpotLight::Angle ,
+		"intensity", &harmony::SpotLight::Intensity
+		);
 
 	h.set_function("LoadScene", lua_LoadScene);
 	h.set_function("OpenScene", lua_OpenScene);
 	h.set_function("GetScene", lua_GetActiveScene);
 	h.set_function("GetEntity", lua_GetEntity);
 
-	h.set_function("Input.GetKey", harmony::Input::GetGamepadButton);
-
 	sceneDef["AddEntity"] = lua_AddEntity;
 
-	entityDef["GetPosition"]	= lua_GetEntityPosition;
-	entityDef["SetPosition"]	= lua_SetEntityPosition;
-	entityDef["GetEuler"]		= lua_GetEntityEuler;
-	entityDef["SetEuler"]		= lua_SetEntityEuler;
-	entityDef["GetScale"]		= lua_GetEntityScale;
-	entityDef["SetScale"]		= lua_SetEntityScale;
+	entityDef["GetTransform"] = &harmony::LuaScriptEntity::GetTransform;
+	entityDef["SetTransform"] = &harmony::LuaScriptEntity::SetTransform;
+
+	entityDef["GetCamera"] = &harmony::LuaScriptEntity::GetCamera;
+	entityDef["SetCamera"] = &harmony::LuaScriptEntity::SetCamera;
+
+	entityDef["GetMesh"] = &harmony::LuaScriptEntity::GetMesh;
+	entityDef["SetMesh"] = &harmony::LuaScriptEntity::SetMesh;
+
+	entityDef["GetMaterial"] = &harmony::LuaScriptEntity::GetMaterial;
+	entityDef["SetMaterial"] = &harmony::LuaScriptEntity::SetMaterial;
 }

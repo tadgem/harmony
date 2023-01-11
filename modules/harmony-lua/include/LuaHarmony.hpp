@@ -5,4 +5,8 @@
 namespace harmony
 {
     void InitHarmony(sol::state& state);
+
+    void InitHarmonyAssets(sol::state& state, sol::table& h);
+    void InitHarmonyInput(sol::state& state, sol::table& h);
+    void InitHarmonyECS(sol::state& state, sol::table& h);
 }
