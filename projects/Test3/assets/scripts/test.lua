@@ -3,14 +3,15 @@ e = nil
 
 function start()
     print("TestLua : Start")
-    e = this_entity
-    scene = harmony.GetScene()
-    scene.AddEntity()
-    print(t.position.x)
+    e = harmony.GetEntity()
 end
 
 function update()
     -- print("TestLua : Update")
+    ent = harmony.GetEntity()
+    v = ent.GetPosition()
+    v.y = v.y + 0.03;
+    ent.SetPosition(v)
 end
 
 function cleanup()

@@ -19,6 +19,8 @@ namespace harmony
         virtual void DeserializeSystem(entt::registry& registry, nlohmann::json systemJson) override;
         virtual void Refresh() override;
 
+        entt::entity GetCurrentEntity();
+
     protected:
         Ref<LuaProgramComponent> p_LuaProgramComponent;
         AssetManager& p_AssetManager;
