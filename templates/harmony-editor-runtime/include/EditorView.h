@@ -16,6 +16,7 @@ namespace harmony
         float Speed;
         bool Focussed = true;
         bool ShowCursor = true;
+        bool Enabled = true;
 
         void UpdateProjection(glm::mat4 projection);
         void Update();

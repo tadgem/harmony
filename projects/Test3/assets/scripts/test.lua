@@ -33,19 +33,25 @@ function update()
 
     m = input.GetMouseVelocity()
 
+    flatRight   = t.right
+    flatForward = t.forward
+
+    flatRight.y     = 0.0
+    flatForward.y   = 0.0
+
     if input.GetKey(input.key.W) then
-        t.position = math.addVec3(t.position, math.mulVec3(t.forward, neg))
+        t.position = math.addVec3(t.position, math.mulVec3(flatForward, neg))
     end
     if input.GetKey(input.key.S) then
-        t.position = math.addVec3(t.position, math.mulVec3(t.forward, pos))
+        t.position = math.addVec3(t.position, math.mulVec3(flatForward, pos))
     end
 
     if input.GetKey(input.key.D) then
-        t.position = math.addVec3(t.position, math.mulVec3(t.right, pos))
+        t.position = math.addVec3(t.position, math.mulVec3(flatRight, pos))
     end
 
     if input.GetKey(input.key.A) then
-        t.position = math.addVec3(t.position, math.mulVec3(t.right, neg))
+        t.position = math.addVec3(t.position, math.mulVec3(flatRight, neg))
     end
 
     mx = math.abs(m.x)

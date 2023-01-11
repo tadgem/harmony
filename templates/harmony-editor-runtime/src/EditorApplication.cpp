@@ -187,16 +187,14 @@ void harmony::Editor::OnRuntimeEntry()
 {
 	SetRunningStyle();
 	RunSystemInit();
-	SDL_SetRelativeMouseMode(SDL_TRUE);
-	SDL_SetWindowMouseGrab(p_Window, SDL_TRUE);
+	p_EditorView->Camera.Focussed = false;
 }
 
 void harmony::Editor::OnRuntimeExit()
 {
 	SetStyle();
 	LoadScene(p_LoadedScenePath);
-	SDL_SetRelativeMouseMode(SDL_FALSE);
-	SDL_SetWindowMouseGrab(p_Window, SDL_FALSE);
+	p_EditorView->Camera.Focussed = true;
 }
 
 void harmony::Editor::Run()

@@ -33,7 +33,7 @@ void harmony::DebugCamera::UpdateProjection(glm::mat4 projection)
 void harmony::DebugCamera::Update()
 {
 	
-	if (Focussed)
+	if (Focussed && Enabled)
 	{
 		if (Input::GetMouseButton(Mouse::Button::Right))
 		{
