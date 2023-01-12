@@ -114,12 +114,12 @@ namespace harmony {
 
 
         template<typename T>
-        bool AssetTypeSelector(const std::string& selectorName, harmony::AssetHandle& handle)
+        bool AssetTypeSelector(const std::string& selectorName, harmony::AssetHandle& handle, const std::string& preview = "")
         {
             static_assert(std::is_base_of<Asset, T>());
             bool selectedAsset = false;
             std::vector<harmony::AssetHandle> assets = GetLoadedAssets<T>();
-            if (ImGui::BeginCombo(selectorName.c_str(), ""))
+            if (ImGui::BeginCombo(selectorName.c_str(), preview.c_str()))
             {
                 for (int i = 0; i < assets.size(); i++)
                 {

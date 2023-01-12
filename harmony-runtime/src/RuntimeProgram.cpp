@@ -9,6 +9,7 @@
 #include "LuaProgramComponent.h"
 #include "LuaSystem.h";
 #include "LuaScriptAssetFactory.h";
+#include "ECS/SimpleCollisionSystem.h"
 
 harmony::RuntimeProgram::RuntimeProgram(const std::string& name) : Program(name)
 {
@@ -106,6 +107,7 @@ void harmony::RuntimeProgram::AddSystems()
 	AddSystem<MeshSystem>(m_AssetManager);
 	AddSystem<LightSystem>();
 	p_LuaSystem = AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent).lock();
+	p_SimpleCollisionSystem = AddSystem<SimpleCollisionSystem>(m_AssetManager).lock();
 }
 
 void harmony::RuntimeProgram::AddPipelineStageRenderers()

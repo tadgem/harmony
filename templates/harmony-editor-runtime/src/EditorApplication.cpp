@@ -11,6 +11,8 @@
 #include "Assets/ShaderSourceAssetFactory.h"
 #include "AssimpModelAssetFactory.h"
 #include "EditorView.h"
+#include "ECS/SimpleCollisionSystem.h"
+
 harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this)
 {
 	AddAssetTypeNames();
@@ -48,6 +50,7 @@ void harmony::Editor::AddSystems()
 	p_CameraSystem		= GetSystem<CameraSystem>().lock();
 	p_MeshSystem		= GetSystem<MeshSystem>().lock();
 	p_LightSystem		= GetSystem<LightSystem>().lock();
+
 }
 
 void harmony::Editor::AddPipelineStageRenderers()
@@ -72,6 +75,7 @@ void harmony::Editor::AddEditorPanels()
 	inspector->AddComponentUI<PointLightComponentUI>();
 	inspector->AddComponentUI<SpotLightComponentUI>();
 	inspector->AddComponentUI<LuaScriptComponentUI>(m_AssetManager);
+	inspector->AddComponentUI<AABBComponentUI>(m_AssetManager);
 
 	p_Panels.emplace_back(inspector);
 }
@@ -124,6 +128,7 @@ int harmony::Editor::OnEditUpdate()
 		p_TransformSystem->Update(p_ActiveScene->m_Registry);
 		p_CameraSystem->Update(p_ActiveScene->m_Registry);
 		p_LightSystem->Update(p_ActiveScene->m_Registry);
+		p_SimpleCollisionSystem->Update(p_ActiveScene->m_Registry);
 
 		VectorGraphics::Get()->FontSize(VectorGraphics::One, 20.0f);
 		VectorGraphics::Get()->FontFace(VectorGraphics::One, "carbontype");
@@ -265,12 +270,14 @@ void harmony::Editor::LoadScene(const std::string& path)
 {
 	Program::LoadScene(path);
 	p_LoadedScenePath = path;
+	p_SimpleCollisionSystem->Init(p_ActiveScene->m_Registry);
 }
 
 void harmony::Editor::OpenScene(uint32_t index)
 {
 	Program::OpenScene(index);
 	p_LoadedScenePath = m_Project->m_SerializedScenes[index];
+	p_SimpleCollisionSystem->Init(p_ActiveScene->m_Registry);
 }
 
 void harmony::Editor::UpdateEditor()

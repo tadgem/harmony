@@ -1,5 +1,6 @@
 #pragma once
 #include "Assets/Asset.h"
+#include "Collision/CollisionShapes.h"
 #define GLM_FORCE_PURE
 #define GLM_ENABLE_EXPERIMENTAL
 #include "glm.hpp"
@@ -32,9 +33,6 @@ namespace harmony {
 
 		// build float array to submit mesh to GPU
 		void BuildBGFXData();
-
-		void Bind();
-
 		void Release();
 
 		bool m_HasNormals;
@@ -46,6 +44,7 @@ namespace harmony {
 
 		bool m_SubmittedToGpu;
 		BGFXMeshHandle m_Handle;
+		AABB m_AABB;
 
 		std::vector<unsigned int> m_Indices;
 		std::vector<glm::vec3> m_Positions;
@@ -59,5 +58,6 @@ namespace harmony {
 		uint64_t m_Id;
 	private:
 		inline static const uint16_t p_Stream = 0;
+
     };
 };

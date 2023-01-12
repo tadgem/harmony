@@ -11,6 +11,8 @@
 #include "Assets/FontAsset.h"
 #include "ECS/CameraComponent.h"
 #include "LuaComponent.h"
+#include "ECS/SimpleCollisionSystem.h"
+#include "ECS/SimpleCollisionComponent.h"
 
 harmony::ScenePanel::ScenePanel(Program& program) : p_Prog(program)
 {
@@ -680,4 +682,47 @@ void harmony::LuaScriptComponentUI::RemoveComponent(entt::registry& registry, en
 bool harmony::LuaScriptComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
 	return registry.any_of<LuaComponent>(entity);
+}
+
+
+harmony::AABBComponentUI::AABBComponentUI(AssetManager& am) : ComponentUI("AABB"), p_AssetManager(am)
+{
+}
+
+void harmony::AABBComponentUI::OnComponentImGui(entt::registry& registry, entt::entity entity)
+{
+	if (registry.valid(entity) == false)
+	{
+		return;
+	}
+	if (HasComponent(registry, entity) == false)
+	{
+		return;
+	}
+
+	AABBComponent& aabb = registry.get<AABBComponent>(entity);
+
+	AssetHandle ah;
+	if (p_AssetManager.AssetTypeSelector<Mesh>("Mesh Asset", ah, aabb.m_MeshHandle.Path))
+	{
+		aabb.m_MeshHandle = ah;
+	}
+}
+
+void harmony::AABBComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
+{
+	registry.emplace<AABBComponent>(entity);
+}
+
+void harmony::AABBComponentUI::RemoveComponent(entt::registry& registry, entt::entity entity)
+{
+	if (HasComponent(registry, entity))
+	{
+		registry.remove<AABBComponent>(entity);
+	}
+}
+
+bool harmony::AABBComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
+{
+	return registry.any_of<AABBComponent>(entity);
 }

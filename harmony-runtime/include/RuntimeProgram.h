@@ -8,6 +8,7 @@ namespace harmony
 	class RuntimeView;
 	class LuaProgramComponent;
 	class LuaSystem;
+	class SimpleCollisionSystem;
     class RuntimeProgram : public Program
     {
     public:
@@ -43,6 +44,7 @@ namespace harmony
 
 		Ref<LuaProgramComponent>	p_LuaProgramComponent;
 		Ref<LuaSystem>				p_LuaSystem;
+		Ref<SimpleCollisionSystem>  p_SimpleCollisionSystem;
 
 		Ref<MeshSystem> 			p_MeshSystem;
 		Ref<LightSystem> 			p_LightSystem;

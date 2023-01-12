@@ -1,0 +1,1 @@
+#include "ECS/SimpleCollisionComponent.h"

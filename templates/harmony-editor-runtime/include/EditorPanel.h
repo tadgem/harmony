@@ -154,6 +154,19 @@ namespace harmony
         AssetManager& p_AssetManager;
     };
 
+    class AABBComponentUI : public ComponentUI
+    {
+    public:
+        AABBComponentUI(AssetManager& am);
+        virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
+        virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
+        virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+
+    protected:
+        AssetManager& p_AssetManager;
+    };
+
 
     class EntityInspectorPanel : public Panel
     {

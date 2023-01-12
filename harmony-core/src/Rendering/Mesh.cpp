@@ -96,8 +96,22 @@ void harmony::Mesh::BuildBGFXData()
 {
 	HARMONY_PROFILE_FUNCTION()
 	m_BGFXData.clear();
+
+	glm::vec3 min = glm::vec3(0.0);
+	glm::vec3 max = glm::vec3(0.0);
+
 	for (unsigned int i = 0; i < m_NumVerts; i++)
 	{
+		if (m_Positions[i].x > max.x) max.x = m_Positions[i].x;
+		if (m_Positions[i].x < min.x) min.x = m_Positions[i].x;
+
+		if (m_Positions[i].y > max.y) max.y = m_Positions[i].y;
+		if (m_Positions[i].y < min.y) min.y = m_Positions[i].y;
+
+		if (m_Positions[i].z > max.z) max.z = m_Positions[i].z;
+		if (m_Positions[i].z < min.z) min.z = m_Positions[i].z;
+
+
 		m_BGFXData.push_back(m_Positions[i].x);
 		m_BGFXData.push_back(m_Positions[i].y);
 		m_BGFXData.push_back(m_Positions[i].z);
@@ -130,15 +144,13 @@ void harmony::Mesh::BuildBGFXData()
 		}
 	}
 
+	glm::vec3 center = (min + max) / 2.0f;
+
+	m_AABB = AABB{ center, min , max };
+
 	m_Positions.clear();
 	m_Normals.clear();
 	m_UVs.clear();
 	m_Tangents.clear();
 	m_Bitangents.clear();
-}
-
-void harmony::Mesh::Bind()
-{
-	bgfx::setVertexBuffer(p_Stream, m_Handle.m_VBH);
-	bgfx::setIndexBuffer(m_Handle.m_IBH);
 }
