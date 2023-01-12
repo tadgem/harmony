@@ -1446,15 +1446,43 @@ void harmony::Renderer::HandleStackPipelineAccumulation(Ref<View> view, Pipeline
     view->OnPostUpdate(registry);
     auto texturesToBlit = stack.PostUpdate(registry, view);
 
-    bgfx::setViewClear(stack.m_PipelineStackAccumulationView, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000);
+    bgfx::setViewClear(stack.m_PipelineStackAccumulationView, BGFX_CLEAR_COLOR, 0x00000000);
 
-    for (int i = 0; i < texturesToBlit.size(); i++)
+    bool touchNoPostProcess = true;
+    auto noPostProcess = std::vector<bgfx::TextureHandle>();
+    for(auto& [th, postProcess] : texturesToBlit)
     {
+        bgfx::TextureHandle h{ th };
         // do this better
-        bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, texturesToBlit[i]);
-        ScreenSpaceQuad(view->m_Width, view->m_Height);
-        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
-        bgfx::submit(stack.m_PipelineStackAccumulationView, textureProg->m_Handle);
+        if (postProcess)
+        {
+            bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, h);
+            ScreenSpaceQuad(view->m_Width, view->m_Height);
+            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
+            bgfx::submit(stack.m_PipelineStackAccumulationView, textureProg->m_Handle);
+        }
+        else
+        {
+            noPostProcess.emplace_back(h);
+            touchNoPostProcess = false;
+        }
+    }
+
+    bgfx::setViewClear(stack.m_PipelineStackNoPostProcessView, BGFX_CLEAR_COLOR, 0x00000000);
+    if (touchNoPostProcess)
+    {
+        bgfx::touch(stack.m_PipelineStackNoPostProcessView);
+    }
+    else
+    {
+        for (auto th : noPostProcess)
+        {
+            bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, th);
+            ScreenSpaceQuad(view->m_Width, view->m_Height);
+            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
+
+            bgfx::submit(stack.m_PipelineStackNoPostProcessView, textureProg->m_Handle);
+        }
     }
 }
 
@@ -1488,9 +1516,16 @@ void harmony::Renderer::HandleStackPostProcess(Ref<View> view, PipelineStack& st
         data.m_Attachments[Attachment::Depth16F] = depthAttachment;
     }
 
+    // post processing image drawn first
     bgfx::setViewClear(stack.m_FinalImageViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000);
     bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, data.m_Attachments[data.GetColorType()].m_Handle);
     ScreenSpaceQuad(view->m_Width, view->m_Height);
-    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
+    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ADD);
+    bgfx::submit(stack.m_FinalImageViewId, textureProg->m_Handle);
+
+    // next pipelines with no post processing drawn on top
+    bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, stack.m_PipelineStackNoPostProcessAttachment);
+    ScreenSpaceQuad(view->m_Width, view->m_Height);
+    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ADD);
     bgfx::submit(stack.m_FinalImageViewId, textureProg->m_Handle);
 }

@@ -76,4 +76,5 @@ void harmony::VectorGraphicsStage::Cleanup(WeakRef<View> view, bgfx::ViewId view
 harmony::VectorPipeline::VectorPipeline(VectorGraphics::Layer layer) : Pipeline(PipelineHandle("VectorGraphicsPipeline"), Pipeline::Type::ScreenSpace)
 {
 	AddPipelineStage<VectorGraphicsStage>(layer);
+	m_PostProcess = false;
 }

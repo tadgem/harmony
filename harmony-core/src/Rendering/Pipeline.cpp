@@ -3,7 +3,7 @@
 #include "Rendering/PipelineDrawStage.h"
 #include "Rendering/View.h"
 #include "Core/Log.hpp"
-harmony::Pipeline::Pipeline(const PipelineHandle& handle, Pipeline::Type pipelineType) : m_Handle(handle), m_Name(handle.Name), m_Type(pipelineType)
+harmony::Pipeline::Pipeline(const PipelineHandle& handle, Pipeline::Type pipelineType) : m_Handle(handle), m_Name(handle.Name), m_Type(pipelineType), m_PostProcess(true)
 {
 }
 

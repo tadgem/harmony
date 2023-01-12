@@ -31,16 +31,19 @@ namespace harmony
         void    OnViewResized(WeakRef<View> view);
 
         void                                PreUpdate(entt::registry& registry, WeakRef<View> view);
-        std::vector<bgfx::TextureHandle>    PostUpdate(entt::registry& registry, WeakRef<View> view);
+        std::map<uint16_t,bool>  PostUpdate(entt::registry& registry, WeakRef<View> view);
 
         nlohmann::json  Serialize();
 
         bgfx::FrameBufferHandle                         m_FinalFramebufferHandle;
         bgfx::FrameBufferHandle                         m_PipelineStackAccumulationFB;
+        bgfx::FrameBufferHandle                         m_PipelineStackNoPostProcessFB;
         bgfx::ViewId                                    m_FinalImageViewId;
         bgfx::ViewId                                    m_PipelineStackAccumulationView;
+        bgfx::ViewId                                    m_PipelineStackNoPostProcessView;
         bgfx::TextureHandle                             m_FinalFramebufferAttachment;
         bgfx::TextureHandle                             m_PipelineStackAccumulationAttachment;
+        bgfx::TextureHandle                             m_PipelineStackNoPostProcessAttachment;
 
         std::vector<WeakRef<Pipeline>>                  m_PipelineStack;
         std::vector<WeakRef<PostProcessStage>>          m_PostProcessPipelineStack;
