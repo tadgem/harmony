@@ -97,8 +97,10 @@ void harmony::Program::ChangeWorkingDirectory(const std::string& directory)
 void harmony::Program::Cleanup()
 {
 	HARMONY_PROFILE_FUNCTION()
+#if HARMONY_DEBUG && !__WINRT__
 	ImGui_ImplSDL2_Shutdown();
 	imguiDestroy();
+#endif
 		
 	RunSystemCleanup();
 	RunProgramComponentCleanup();
@@ -156,8 +158,10 @@ void harmony::Program::InitBGFX()
 
 	bgfx::PlatformData pd{};
 
-#if BX_PLATFORM_WINDOWS
+#if BX_PLATFORM_WINDOWS 
 	pd.nwh = wmi.info.win.window;
+#elif BX_PLATFORM_WINRT
+	pd.nwh = wmi.info.winrt.window;
 #elif BX_PLATFORM_OSX
 	pd.nwh = wmi.info.cocoa.window;
 #elif BX_PLATFORM_LINUX
@@ -182,7 +186,9 @@ void harmony::Program::InitBGFX()
 	bgfx_init.debug = true;
 	bgfx_init.callback = &p_DebugCallback;
 	
-
+#if BX_PLATFORM_WINRT
+	bgfx_init.type = bgfx::RendererType::Direct3D11;
+#endif
 	// SetupBGFXCapabilities(bgfx_init);
 	bgfx::init(bgfx_init);
 
@@ -368,7 +374,9 @@ void harmony::Program::HandleSDLEvent()
 
 	while (SDL_PollEvent(&sdlEvent))
 	{
+#if HARMONY_DEBUG && !__WINRT__
 		ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
+#endif
 		if (sdlEvent.type == SDL_QUIT)
 		{
 			p_Run = false;
@@ -435,19 +443,22 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 
 void harmony::Program::ImGuiPreUpdate()
 {
+#if HARMONY_DEBUG && !__WINRT__
 	bgfx::setViewClear((bgfx::ViewId)BGFX_MAIN_WINDOW_IMGUI_VIEW_ID, BGFX_CLEAR_COLOR, 0x00000000);
 	ImGui::NewFrame();
 	ImGui_ImplSDL2_NewFrame(p_Window);
 	ImGuizmo::BeginFrame();
+#endif
 }
 
 void harmony::Program::ImGuiPostUpdate()
 {
+#if HARMONY_DEBUG && !__WINRT__
 	imguiEndFrame();
 
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
-
+#endif
 }
 
 void harmony::Program::RunProgramLoop()

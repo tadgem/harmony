@@ -24,7 +24,7 @@ void harmony::SimpleCollisionSystem::Init(entt::registry& registry)
 			continue;
 		}
 		auto m = mesh.lock();
-		aabb.aabb = m->m_AABB;
+		aabb.m_Original = m->m_AABB;
 	}
 }
 
@@ -33,12 +33,12 @@ void harmony::SimpleCollisionSystem::Update(entt::registry& registry)
 	auto view = registry.view<TransformComponent, AABBComponent>();
 	for (auto& [e, t, aabb] : view.each())
 	{
-		AABB trans = aabb.aabb;
-		Collision::UpdateAABB(trans, glm::mat3(glm::transpose(t.Model)), t.Position);
+		aabb.m_Frame = aabb.m_Original;
+		Collision::UpdateAABB(aabb.m_Frame, glm::mat3(glm::transpose(t.Model)), t.Position);
 #if HARMONY_DEBUG
 		bx::Aabb bgfxAABB;
-		bgfxAABB.max = bx::Vec3(trans.Max.x, trans.Max.y, trans.Max.z);
-		bgfxAABB.min = bx::Vec3(trans.Min.x, trans.Min.y, trans.Min.z);
+		bgfxAABB.max = bx::Vec3(aabb.m_Frame.Max.x, aabb.m_Frame.Max.y, aabb.m_Frame.Max.z);
+		bgfxAABB.min = bx::Vec3(aabb.m_Frame.Min.x, aabb.m_Frame.Min.y, aabb.m_Frame.Min.z);
 		GfxDebug::Get()->draw(GfxDebug::Editor, bgfxAABB);
 #endif
 
