@@ -146,7 +146,7 @@ void harmony::Mesh::BuildBGFXData()
 
 	glm::vec3 center = (min + max) / 2.0f;
 
-	m_AABB = AABB{ center, min , max };
+	m_AABB = AABB{  min , max };
 
 	m_Positions.clear();
 	m_Normals.clear();

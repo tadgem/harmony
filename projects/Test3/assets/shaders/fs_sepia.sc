@@ -13,5 +13,7 @@ SAMPLER2D(u_depth_att, 1);
 void main()
 {
     vec4 pixelColor = texture2D(u_color, v_texcoord0);
-    gl_FragColor = sepia(pixelColor);
+    vec4 sepiaColor = sepia(pixelColor);
+    vec4 outputColor = mix(sepiaColor, pixelColor, 0.2);
+    gl_FragColor = outputColor;
 }

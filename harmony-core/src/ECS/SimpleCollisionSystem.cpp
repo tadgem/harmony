@@ -33,12 +33,12 @@ void harmony::SimpleCollisionSystem::Update(entt::registry& registry)
 	auto view = registry.view<TransformComponent, AABBComponent>();
 	for (auto& [e, t, aabb] : view.each())
 	{
+		AABB trans = aabb.aabb;
+		Collision::UpdateAABB(trans, glm::mat3(glm::transpose(t.Model)), t.Position);
 #if HARMONY_DEBUG
-		AABB original = aabb.aabb;
-		Collision::UpdateAABB(original, glm::mat3(glm::transpose(t.Model)), t.Position);
 		bx::Aabb bgfxAABB;
-		bgfxAABB.max = bx::Vec3(original.Max.x, original.Max.y, original.Max.z);
-		bgfxAABB.min = bx::Vec3(original.Min.x, original.Min.y, original.Min.z);
+		bgfxAABB.max = bx::Vec3(trans.Max.x, trans.Max.y, trans.Max.z);
+		bgfxAABB.min = bx::Vec3(trans.Min.x, trans.Min.y, trans.Min.z);
 		GfxDebug::Get()->draw(GfxDebug::Editor, bgfxAABB);
 #endif
 

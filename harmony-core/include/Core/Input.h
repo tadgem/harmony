@@ -128,7 +128,8 @@ namespace harmony {
 		Up,
 		Down,
 		Left,
-		Right
+		Right,
+		Escape
 
 	};
 

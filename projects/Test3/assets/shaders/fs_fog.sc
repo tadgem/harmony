@@ -13,7 +13,7 @@ SAMPLER2D(u_depth_att, 1);
 void main()
 {
     vec4 pixelColor = texture2D(u_color, v_texcoord0);
-    vec4 fogColor = vec4(0.43, 0.2, 0.2, 1.0);
+    vec4 fogColor = vec4(0.03, 0.03, 0.03, 1.0);
 
     float fogDistance = 0.0;
 

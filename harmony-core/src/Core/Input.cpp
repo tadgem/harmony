@@ -253,6 +253,8 @@ harmony::Key harmony::Input::GetKeyFromSDLKeycode(SDL_Keycode keyCode)
 		return Key::Left;
 	case SDLK_RIGHT:
 		return Key::Right;
+	case SDLK_ESCAPE:
+		return Key::Escape;
 	default:
 		harmony::log::error("Unknown key passed.");
 		return Key::End;
@@ -375,7 +377,7 @@ void harmony::Input::Init()
 		}
 	}
 
-	for (int button = Key::A; button != Key::Right; button++)
+	for (int button = Key::A; button != Key::Escape; button++)
 	{
 		Key key= static_cast<Key>(button);
 		p_KeyboardState.CurrentFrameKeyState.emplace(key, false);

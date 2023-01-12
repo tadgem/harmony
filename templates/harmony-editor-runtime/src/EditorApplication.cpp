@@ -116,6 +116,12 @@ int harmony::Editor::OnEditUpdate()
 
 	HandleSDLEvent();
 
+	if (Input::GetKey(Key::F5))
+	{
+		m_EditorFSM.Trigger(Trigger::Play);
+	}
+
+
 	ImGuiPreUpdate();
 
 	RunRendererPreUpdate();
@@ -163,6 +169,11 @@ int harmony::Editor::OnRuntimeUpdate()
 
 	HandleSDLEvent();
 
+	if (Input::GetKey(Key::Escape))
+	{
+		m_EditorFSM.Trigger(Trigger::Stop);
+	}
+
 	RunRendererPreUpdate();
 
 	ImGuiPreUpdate();
@@ -193,6 +204,7 @@ void harmony::Editor::OnRuntimeEntry()
 	SetRunningStyle();
 	RunSystemInit();
 	p_EditorView->Camera.Focussed = false;
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 }
 
 void harmony::Editor::OnRuntimeExit()
@@ -200,6 +212,7 @@ void harmony::Editor::OnRuntimeExit()
 	SetStyle();
 	LoadScene(p_LoadedScenePath);
 	p_EditorView->Camera.Focussed = true;
+	SDL_SetRelativeMouseMode(SDL_FALSE);
 }
 
 void harmony::Editor::Run()
