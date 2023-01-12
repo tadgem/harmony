@@ -8,9 +8,10 @@
 
 harmony::PipelineStack::PipelineStack()
 {
-    p_Initialized                   = false;
-    m_FinalImageViewId              = Renderer::GetViewID();
-    m_PipelineStackAccumulationView = Renderer::GetViewID();
+    p_Initialized                       = false;
+    m_FinalImageViewId                  = Renderer::GetViewID();
+    m_PipelineStackAccumulationView     = Renderer::GetViewID();
+    m_PipelineStackNoPostProcessView    = Renderer::GetViewID();
 }
 
 bgfx::TextureHandle harmony::PipelineStack::GetFinalImage()
@@ -107,7 +108,7 @@ void harmony::PipelineStack::PreUpdate(entt::registry& registry, WeakRef<View> v
      }
 }
 
-std::vector<bgfx::TextureHandle>  harmony::PipelineStack::PostUpdate(entt::registry& registry, WeakRef<View> view)
+std::map<uint16_t, bool>  harmony::PipelineStack::PostUpdate(entt::registry& registry, WeakRef<View> view)
 {
     for (int p = 0; p < m_PipelineStack.size(); p++)
     {
@@ -122,7 +123,7 @@ std::vector<bgfx::TextureHandle>  harmony::PipelineStack::PostUpdate(entt::regis
     
     Ref<View> _view = view.lock();
 
-    std::vector<bgfx::TextureHandle> texturesToBlit = std::vector<bgfx::TextureHandle>();
+    std::map<uint16_t, bool> texturesToBlit = std::map<uint16_t, bool>();
 
     for (int p = 0; p < m_PipelineStack.size(); p++)
     {
@@ -158,7 +159,7 @@ std::vector<bgfx::TextureHandle>  harmony::PipelineStack::PostUpdate(entt::regis
             }
             // bind & draw w/ present shader
 
-            texturesToBlit.push_back(th);
+            texturesToBlit.emplace(th.idx, pipeline->m_PostProcess);
         }       
     }
 
@@ -471,11 +472,31 @@ void harmony::PipelineStack::InitializeStack(WeakRef<View> view)
             , BGFX_TEXTURE_RT | BGFX_TEXTURE_BLIT_DST
         );
 
+        std::string stackAccumulationViewName = _view->m_Name + "-accumulate";
+
         attachments.emplace_back(m_PipelineStackAccumulationAttachment);
         m_PipelineStackAccumulationFB = bgfx::createFrameBuffer(attachments.size(), attachments.data(), false);
         bgfx::setViewFrameBuffer(m_PipelineStackAccumulationView, m_PipelineStackAccumulationFB);
-        bgfx::setViewName(m_PipelineStackAccumulationView, _view->m_Name.c_str());
+        bgfx::setViewName(m_PipelineStackAccumulationView, stackAccumulationViewName.c_str());
         bgfx::setViewRect(m_PipelineStackAccumulationView, 0, 0, (uint16_t)_view->m_Width, (uint16_t)_view->m_Height);
+        attachments.clear();
+
+        m_PipelineStackNoPostProcessAttachment = bgfx::createTexture2D(
+            _view->m_Width
+            , _view->m_Height
+            , false
+            , 1
+            , bgfx::TextureFormat::RGBA16F // TODO Link to s_AccumulationBufferFormat.
+            , BGFX_TEXTURE_RT | BGFX_TEXTURE_BLIT_DST
+        );
+
+        std::string stackNoPostProcessViewName = _view->m_Name + "-no-post-process";
+
+        attachments.emplace_back(m_PipelineStackNoPostProcessAttachment);
+        m_PipelineStackNoPostProcessFB = bgfx::createFrameBuffer(attachments.size(), attachments.data(), false);
+        bgfx::setViewFrameBuffer(m_PipelineStackNoPostProcessView, m_PipelineStackNoPostProcessFB);
+        bgfx::setViewName(m_PipelineStackNoPostProcessView, stackNoPostProcessViewName.c_str());
+        bgfx::setViewRect(m_PipelineStackNoPostProcessView, 0, 0, (uint16_t)_view->m_Width, (uint16_t)_view->m_Height);
         attachments.clear();
 
         m_FinalFramebufferAttachment    = bgfx::createTexture2D(
@@ -487,9 +508,12 @@ void harmony::PipelineStack::InitializeStack(WeakRef<View> view)
             , BGFX_TEXTURE_RT
         );
         attachments.emplace_back(m_FinalFramebufferAttachment);
+
+        std::string stackFinalViewName = _view->m_Name + "-final";
+
         m_FinalFramebufferHandle = bgfx::createFrameBuffer(attachments.size(), attachments.data(), false);
         bgfx::setViewFrameBuffer(m_FinalImageViewId, m_FinalFramebufferHandle);
-        bgfx::setViewName(m_FinalImageViewId, _view->m_Name.c_str());
+        bgfx::setViewName(m_FinalImageViewId, stackFinalViewName.c_str());
         bgfx::setViewRect(m_FinalImageViewId, 0, 0, (uint16_t)_view->m_Width, (uint16_t)_view->m_Height);
         p_Initialized = true;
     }

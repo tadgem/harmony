@@ -14,6 +14,6 @@ void main()
 {
     vec4 pixelColor = texture2D(u_color, v_texcoord0);
     vec4 sepiaColor = sepia(pixelColor);
-    vec4 outputColor = mix(sepiaColor, pixelColor, 0.2);
+    vec4 outputColor = mix(sepiaColor, pixelColor, 0.5);
     gl_FragColor = outputColor;
 }

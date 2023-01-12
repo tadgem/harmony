@@ -20,7 +20,7 @@ void main()
 
     for(int i = 0; i < PointLights_NumActive; i++)
     {
-        output += BlinnPhong_Point(i, v_fragPosition, v_fragNormal, ambient, diffuse, spec, shininess);
+        output += BlinnPhong_Point(i, v_fragPosition, v_normal, ambient, diffuse, spec, shininess);
     }
 
     for(int i = 0; i < SpotLights_NumActive; i++)

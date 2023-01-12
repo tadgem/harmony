@@ -58,6 +58,7 @@ namespace harmony
         PipelineHandle      m_Handle;
         std::string         m_Name;
         Type                m_Type;
+        bool                m_PostProcess;
 
     protected:
         friend class Renderer;
