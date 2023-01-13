@@ -14,7 +14,7 @@ harmony::SimpleCollisionSystem::SimpleCollisionSystem(AssetManager& am) : System
 
 void harmony::SimpleCollisionSystem::Init(entt::registry& registry)
 {
-	auto view = registry.view<TransformComponent, AABBComponent>();
+	auto view = registry.view<TransformComponent, AABBColliderComponent>();
 	for (auto& [e, t, aabb] : view.each())
 	{
 		auto mesh = p_AssetManager.GetAsset<Mesh>(aabb.m_MeshHandle);
@@ -30,7 +30,7 @@ void harmony::SimpleCollisionSystem::Init(entt::registry& registry)
 
 void harmony::SimpleCollisionSystem::Update(entt::registry& registry)
 {
-	auto view = registry.view<TransformComponent, AABBComponent>();
+	auto view = registry.view<TransformComponent, AABBColliderComponent>();
 	for (auto& [e, t, aabb] : view.each())
 	{
 		aabb.m_Frame = aabb.m_Original;
@@ -57,7 +57,7 @@ nlohmann::json harmony::SimpleCollisionSystem::SerializeSystem(entt::registry& r
 {
 	nlohmann::json j;
 
-	auto view = registry.view<AABBComponent>();
+	auto view = registry.view<AABBColliderComponent>();
 
 	for (auto [e, aabb] : view.each())
 	{
@@ -75,10 +75,10 @@ void harmony::SimpleCollisionSystem::DeserializeSystem(entt::registry& registry,
 	{
 		entt::entity e = GetEntityFromKey(entry.key());
 		nlohmann::json aabb = entry.value();
-		AABBComponent c;
-		aabb.get_to<AABBComponent>(c);
+		AABBColliderComponent c;
+		aabb.get_to<AABBColliderComponent>(c);
 
-		registry.emplace<AABBComponent>(e, c);
+		registry.emplace<AABBColliderComponent>(e, c);
 	}
 }
 

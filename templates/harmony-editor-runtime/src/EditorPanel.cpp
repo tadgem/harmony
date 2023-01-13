@@ -700,7 +700,7 @@ void harmony::AABBComponentUI::OnComponentImGui(entt::registry& registry, entt::
 		return;
 	}
 
-	AABBComponent& aabb = registry.get<AABBComponent>(entity);
+	AABBColliderComponent& aabb = registry.get<AABBColliderComponent>(entity);
 
 	AssetHandle ah;
 	if (p_AssetManager.AssetTypeSelector<Mesh>("Mesh Asset", ah, aabb.m_MeshHandle.Path))
@@ -711,18 +711,18 @@ void harmony::AABBComponentUI::OnComponentImGui(entt::registry& registry, entt::
 
 void harmony::AABBComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
 {
-	registry.emplace<AABBComponent>(entity);
+	registry.emplace<AABBColliderComponent>(entity);
 }
 
 void harmony::AABBComponentUI::RemoveComponent(entt::registry& registry, entt::entity entity)
 {
 	if (HasComponent(registry, entity))
 	{
-		registry.remove<AABBComponent>(entity);
+		registry.remove<AABBColliderComponent>(entity);
 	}
 }
 
 bool harmony::AABBComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
-	return registry.any_of<AABBComponent>(entity);
+	return registry.any_of<AABBColliderComponent>(entity);
 }

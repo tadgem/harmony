@@ -110,3 +110,23 @@ void harmony::Collision::UpdateAABB(AABB& aabb, glm::mat3 matrix, glm::vec3 posi
     aabb.Min.z = Bmin[2];  
     aabb.Max.z = Bmax[2];
 }
+
+bool harmony::Collision::Intersects(AABB& a, AABB& b)
+{
+    return false;
+}
+
+bool harmony::Collision::Intersects(Sphere& a, Sphere& b)
+{
+    return false;
+}
+
+bool harmony::Collision::Intersects(AABB& a, Sphere& b)
+{
+    return false;
+}
+
+bool harmony::Collision::Intersects(Sphere& a, AABB& b)
+{
+    return Intersects(b,a);
+}

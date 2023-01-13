@@ -8,5 +8,10 @@ namespace harmony
 	public:
 
 		static void UpdateAABB(AABB& aabb, glm::mat3 matrix, glm::vec3 position);
+		// Intersection Tests
+		static bool Intersects(AABB& a, AABB& b);
+		static bool Intersects(Sphere& a, Sphere& b);
+		static bool Intersects(AABB& a, Sphere& b);
+		static bool Intersects(Sphere& a, AABB& b);
 	};
 }

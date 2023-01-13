@@ -5,7 +5,7 @@
 #include "ThirdParty/json.hpp"
 #include "ThirdParty/entt.hpp"
 namespace harmony {
-	struct AABBComponent
+	struct AABBColliderComponent
 	{
 		AABB m_Original;
 		AABB m_Frame;
@@ -14,6 +14,15 @@ namespace harmony {
 
 		AssetHandle m_MeshHandle;
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(AABBComponent, m_MeshHandle)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(AABBColliderComponent, m_MeshHandle)
+	};
+
+	struct SphereColliderComponent
+	{
+		Sphere m_Original;
+
+		std::vector<entt::entity> m_Colliders;
+
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(SphereColliderComponent, m_Original)
 	};
 }
