@@ -789,7 +789,7 @@ void harmony::Program::CloseActiveScene()
 	p_ActiveScene.reset();
 	p_ActiveScene = nullptr;
 
-	m_Renderer.RefreshViews();
+	// m_Renderer.RefreshViews();
 }
 
 harmony::WeakRef<harmony::Scene> harmony::Program::GetActiveScene()

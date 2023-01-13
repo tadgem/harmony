@@ -19,10 +19,10 @@ namespace harmony {
 
 	struct SphereColliderComponent
 	{
-		Sphere m_Original;
+		float m_Radius;
 
 		std::vector<entt::entity> m_Colliders;
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(SphereColliderComponent, m_Original)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(SphereColliderComponent, m_Radius)
 	};
 }

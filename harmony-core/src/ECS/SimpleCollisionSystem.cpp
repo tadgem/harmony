@@ -30,8 +30,8 @@ void harmony::SimpleCollisionSystem::Init(entt::registry& registry)
 
 void harmony::SimpleCollisionSystem::Update(entt::registry& registry)
 {
-	auto view = registry.view<TransformComponent, AABBColliderComponent>();
-	for (auto& [e, t, aabb] : view.each())
+	auto aabbView = registry.view<TransformComponent, AABBColliderComponent>();
+	for (auto& [e, t, aabb] : aabbView.each())
 	{
 		aabb.m_Frame = aabb.m_Original;
 		Collision::UpdateAABB(aabb.m_Frame, glm::mat3(glm::transpose(t.Model)), t.Position);
@@ -41,8 +41,9 @@ void harmony::SimpleCollisionSystem::Update(entt::registry& registry)
 		bgfxAABB.min = bx::Vec3(aabb.m_Frame.Min.x, aabb.m_Frame.Min.y, aabb.m_Frame.Min.z);
 		GfxDebug::Get()->draw(GfxDebug::Editor, bgfxAABB);
 #endif
-
 	}
+
+	auto sphereView = registry.view<TransformComponent, SphereColliderComponent>();
 }
 
 void harmony::SimpleCollisionSystem::Render(entt::registry& registry)
