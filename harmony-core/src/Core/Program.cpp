@@ -115,13 +115,13 @@ void harmony::Program::InitSDL()
 {
 	HARMONY_PROFILE_FUNCTION()
 	// init SDL window
-	Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_EVENTS;
+	Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK;
 	SDL_Init(flags);
 	
 	SDL_Rect rect;
 	SDL_GetDisplayUsableBounds(0, &rect);
 	p_WindowWidth	= rect.w;
-	p_WindowHeight	= rect.h - 24;
+	p_WindowHeight	= rect.h;
 
 	SDL_WindowFlags windowFlags = static_cast<SDL_WindowFlags>(SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 	// TODO: Add window resizing.
@@ -393,9 +393,36 @@ void harmony::Program::HandleSDLEvent()
 					p_ResizedThisFrame = true;
 				}
 			}
+			continue;
 
 		}
 		HandleInputEvent(sdlEvent);
+	}
+}
+
+harmony::Gamepad::Stick GetStickFromSDL(SDL_GameControllerAxis& sdlAxis)
+{
+	switch (sdlAxis)
+	{
+	case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTX:
+		return harmony::Gamepad::LS;
+	case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTY:
+		return harmony::Gamepad::LS;
+	case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_RIGHTX:
+		return harmony::Gamepad::RS;
+	case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_RIGHTY:
+		return harmony::Gamepad::RS;
+	}
+}
+
+harmony::Gamepad::Trigger GetTriggerFromSDL(SDL_GameControllerAxis& sdlAxis)
+{
+	switch (sdlAxis)
+	{
+	case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERLEFT:
+		return harmony::Gamepad::LT;
+	case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
+		return harmony::Gamepad::RT;
 	}
 }
 
@@ -408,6 +435,7 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 		SDL_Keysym keySym = keyEvent.keysym;
 		Key key = Input::GetKeyFromSDLKeycode(keySym.sym);
 		Input::UpdateKey(key, true);
+		return;
 	}
 
 	if (event.type == SDL_KEYUP)
@@ -416,13 +444,16 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 		SDL_Keysym keySym = keyEvent.keysym;
 		Key key = Input::GetKeyFromSDLKeycode(keySym.sym);
 		Input::UpdateKey(key, false);
+		return;
 	}
 
+	// Mouse
 	if (event.type == SDL_MOUSEMOTION)
 	{
 		SDL_MouseMotionEvent motionEvent = event.motion;
 		glm::vec2 currentPosition = glm::vec2(motionEvent.xrel, motionEvent.yrel);
 		Input::UpdateMousePosition(Input::GetMousePosition() + currentPosition);
+		return;
 	}
 
 	if (event.type == SDL_MOUSEBUTTONDOWN)
@@ -430,6 +461,7 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 		SDL_MouseButtonEvent buttonEvent = event.button;
 		Mouse::Button button = buttonEvent.button == 3 ? Mouse::Button::Right : Mouse::Button::Left;
 		Input::UpdateMouseButton(button, true);
+		return;
 	}
 
 	if (event.type == SDL_MOUSEBUTTONUP)
@@ -437,8 +469,48 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 		SDL_MouseButtonEvent buttonEvent = event.button;
 		Mouse::Button button = buttonEvent.button == 3 ? Mouse::Button::Right : Mouse::Button::Left;
 		Input::UpdateMouseButton(button, false);
+		return;
 	}
-	// Mouse
+
+	if (event.type == SDL_CONTROLLERDEVICEADDED)
+	{
+		SDL_ControllerDeviceEvent d = event.cdevice;
+		SDL_GameControllerOpen(d.which);
+	}
+
+	if (event.type == SDL_CONTROLLERDEVICEREMOVED)
+	{
+		SDL_ControllerDeviceEvent d = event.cdevice;
+		// SDL_GameControllerClose(d.which);
+	}
+	
+	if (event.type == SDL_CONTROLLERAXISMOTION)
+	{
+		SDL_ControllerAxisEvent axisEvent = event.caxis;
+		int index = axisEvent.which;
+		SDL_GameControllerAxis axis = (SDL_GameControllerAxis)axisEvent.axis;
+		float value = (float)axisEvent.value / 32767.0f;
+
+		if (axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT || axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT)
+		{
+			Input::UpdateGamepadTrigger(index, GetTriggerFromSDL(axis), value);
+		}
+		if (axis == SDL_CONTROLLER_AXIS_LEFTX ||
+			axis == SDL_CONTROLLER_AXIS_RIGHTX)
+		{
+			glm::vec2 current = Input::GetGamepadStick(index, GetStickFromSDL(axis));
+			current.x = value;
+			Input::UpdateGamepadStick(index, GetStickFromSDL(axis), current);
+		}
+		if (axis == SDL_CONTROLLER_AXIS_LEFTY ||
+			axis == SDL_CONTROLLER_AXIS_RIGHTY)
+		{
+			glm::vec2 current = Input::GetGamepadStick(index, GetStickFromSDL(axis));
+			current.y = value;
+			Input::UpdateGamepadStick(index, GetStickFromSDL(axis), current);
+		}
+
+	}
 }
 
 void harmony::Program::ImGuiPreUpdate()

@@ -1,6 +1,6 @@
-#if __WINRT__
 #include "SDL_main.h"
 #include "RuntimeProgram.h"
+#if __WINRT__
 int SDL_main(int argc, char* argv[])
 {
 	harmony::RuntimeProgram app;
@@ -14,7 +14,6 @@ int main()
 	SDL_WinRTRunApp(SDL_main, NULL);
 }
 #else
-#include "RuntimeProgram.h"
 int main()
 {
 	harmony::RuntimeProgram app;

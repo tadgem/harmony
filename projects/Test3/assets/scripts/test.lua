@@ -1,9 +1,9 @@
 
 e = nil 
-speed = 0.15
+speed = 0.33
 rotationBase = 180.0
-rotationMulti = 100.0;
-rotationThreshold = 0.002
+rotationMulti = 1.0;
+rotationThreshold = 0.0
 
 limitX = 60
 lowerLimitX = 0.0 - limitX
@@ -28,40 +28,25 @@ function update()
     viewEntity = harmony.GetViewEntity(view)
     t = viewEntity:GetTransform()
     
-    pos = getMovementVector(1.0)
-    neg = getMovementVector(-1.0)
-
-    m = input.GetMouseVelocity()
-
     flatRight   = t.right
     flatForward = t.forward
 
     flatRight.y     = 0.0
     flatForward.y   = 0.0
 
-    if input.GetKey(input.key.W) then
-        t.position = math.addVec3(t.position, math.mulVec3(flatForward, neg))
-    end
-    if input.GetKey(input.key.S) then
-        t.position = math.addVec3(t.position, math.mulVec3(flatForward, pos))
-    end
+    ls = input.GetGamepadStick(0, input.gamePadStick.LS)
+    rs = input.GetGamepadStick(0, input.gamePadStick.RS)
 
-    if input.GetKey(input.key.D) then
-        t.position = math.addVec3(t.position, math.mulVec3(flatRight, pos))
-    end
+    forwardVec = getMovementVector(ls.y)
+    rightVec = getMovementVector(ls.x)
 
-    if input.GetKey(input.key.A) then
-        t.position = math.addVec3(t.position, math.mulVec3(flatRight, neg))
-    end
+    t.position = math.addVec3(t.position, math.mulVec3(flatForward, forwardVec))
+    t.position = math.addVec3(t.position, math.mulVec3(flatRight, rightVec))
+    
+    r = deltaTime * rotationBase * rotationMulti;
 
-    mx = math.abs(m.x)
-    my = math.abs(m.y)
-
-    if my > rotationThreshold or mx > rotationThreshold  then
-        r = deltaTime * rotationBase * rotationMulti;
-        t.euler.x = t.euler.x - m.y * r
-        t.euler.y = t.euler.y - m.x * r
-    end
+    t.euler.x = t.euler.x - rs.y * r
+    t.euler.y = t.euler.y - rs.x * r
     
     if t.euler.x > limitX then
         t.euler.x = limitX;
