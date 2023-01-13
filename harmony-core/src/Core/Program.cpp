@@ -405,13 +405,13 @@ harmony::Gamepad::Stick GetStickFromSDL(SDL_GameControllerAxis& sdlAxis)
 	switch (sdlAxis)
 	{
 	case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTX:
-		return harmony::Gamepad::LS;
+		return harmony::Gamepad::Stick::LS;
 	case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_LEFTY:
-		return harmony::Gamepad::LS;
+		return harmony::Gamepad::Stick::LS;
 	case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_RIGHTX:
-		return harmony::Gamepad::RS;
+		return harmony::Gamepad::Stick::RS;
 	case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_RIGHTY:
-		return harmony::Gamepad::RS;
+		return harmony::Gamepad::Stick::RS;
 	}
 }
 
@@ -420,9 +420,46 @@ harmony::Gamepad::Trigger GetTriggerFromSDL(SDL_GameControllerAxis& sdlAxis)
 	switch (sdlAxis)
 	{
 	case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERLEFT:
-		return harmony::Gamepad::LT;
+		return harmony::Gamepad::Trigger::LT;
 	case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
-		return harmony::Gamepad::RT;
+		return harmony::Gamepad::Trigger::RT;
+	}
+}
+
+harmony::Gamepad::Button GetButtonFromSDL(uint8_t sdlButton)
+{
+	switch (sdlButton)
+	{
+		case SDL_CONTROLLER_BUTTON_A:
+			return harmony::Gamepad::Button::FaceSouth;
+		case SDL_CONTROLLER_BUTTON_B:
+			return harmony::Gamepad::Button::FaceEast;
+		case SDL_CONTROLLER_BUTTON_X:
+			return harmony::Gamepad::Button::FaceWest;
+		case SDL_CONTROLLER_BUTTON_Y:
+			return harmony::Gamepad::Button::FaceNorth;
+		case SDL_CONTROLLER_BUTTON_DPAD_UP:
+			return harmony::Gamepad::Button::Up;
+		case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+			return harmony::Gamepad::Button::Down;
+		case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+			return harmony::Gamepad::Button::Left;
+		case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+			return harmony::Gamepad::Button::Right;
+		case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+			return harmony::Gamepad::Button::RightBumper;
+		case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+			return harmony::Gamepad::Button::LeftBumper;
+		case SDL_CONTROLLER_BUTTON_LEFTSTICK:
+			return harmony::Gamepad::Button::LS;
+		case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
+			return harmony::Gamepad::Button::RS;
+		case SDL_CONTROLLER_BUTTON_START:
+			return harmony::Gamepad::Button::Start;
+		case SDL_CONTROLLER_BUTTON_BACK:
+			return harmony::Gamepad::Button::Select;
+		default:
+			return harmony::Gamepad::Button::Invalid;
 	}
 }
 
@@ -509,7 +546,22 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 			current.y = value;
 			Input::UpdateGamepadStick(index, GetStickFromSDL(axis), current);
 		}
+	}
 
+	if (event.type == SDL_CONTROLLERBUTTONDOWN)
+	{
+		SDL_ControllerButtonEvent buttonEvent = event.cbutton;
+		
+		Input::UpdateGamepadButton(buttonEvent.which, GetButtonFromSDL(buttonEvent.button), true);
+		return;
+	}
+
+	if (event.type == SDL_CONTROLLERBUTTONUP)
+	{
+		SDL_ControllerButtonEvent buttonEvent = event.cbutton;
+
+		Input::UpdateGamepadButton(buttonEvent.which, GetButtonFromSDL(buttonEvent.button), false);
+		return;
 	}
 }
 

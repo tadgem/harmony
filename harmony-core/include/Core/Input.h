@@ -9,8 +9,9 @@ namespace harmony {
 
 	namespace Gamepad
 	{
-		enum Button
+		enum class Button
 		{
+			Invalid = -1,
 			FaceNorth,
 			FaceSouth,
 			FaceEast,
@@ -23,17 +24,21 @@ namespace harmony {
 			LeftBumper,
 			Home,
 			Select,
-			Start
-		};
-
-		enum Stick
-		{
+			Start,
 			LS,
 			RS
 		};
 
-		enum Trigger
+		enum class Stick
 		{
+			Invalid = -1,
+			LS,
+			RS
+		};
+
+		enum class Trigger
+		{
+			Invalid = -1,
 			LT,
 			RT
 		};
@@ -41,8 +46,9 @@ namespace harmony {
 	};
 	namespace Mouse
 	{
-		enum Button
+		enum class Button
 		{
+			Invalid = -1,
 			Left,
 			Middle,
 			Right,
@@ -53,8 +59,9 @@ namespace harmony {
 
 	};
 
-	enum Key
+	enum class Key
 	{
+		Invalid = -1,
 		A,
 		B,
 		C,

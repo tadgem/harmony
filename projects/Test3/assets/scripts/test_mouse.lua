@@ -40,7 +40,7 @@ function update()
     flatForward.y   = 0.0
 
     ls = input.GetStick(0, input.gamePadStick.LS)
-    rs = input.GetStick(0, input.gamePadStick.RS)
+    s = input.GetStick(0, input.gamePadStick.LS)
 
     if input.GetKey(input.key.W) then
         t.position = math.addVec3(t.position, math.mulVec3(flatForward, neg))

@@ -186,19 +186,19 @@ harmony::Key harmony::Input::GetKeyFromSDLKeycode(SDL_Keycode keyCode)
 	if (keyCode >= SDLK_0 && keyCode <= SDLK_9)
 	{
 		int diff = keyCode - SDLK_0;
-		return static_cast<Key>(Key::Zero + diff);
+		return static_cast<Key>((int)Key::Zero + diff);
 	}
 
 	if (keyCode >= SDLK_a && keyCode <= SDLK_z)
 	{
 		int diff = keyCode - SDLK_a;
-		return static_cast<Key>(Key::A + diff);
+		return static_cast<Key>((int)Key::A + diff);
 	}
 
 	if (keyCode >= SDLK_F1 && keyCode <= SDLK_F12)
 	{
 		int diff = keyCode - SDLK_F1;
-		return static_cast<Key>(Key::F1 + diff);
+		return static_cast<Key>((int)Key::F1 + diff);
 	}
 
 	switch (keyCode)
@@ -264,7 +264,7 @@ harmony::Key harmony::Input::GetKeyFromSDLKeycode(SDL_Keycode keyCode)
 
 void harmony::Input::PostFrame()
 {
-	for (int button = Gamepad::Button::FaceNorth; button != Gamepad::Button::Start; button++)
+	for (int button = (int)Gamepad::Button::FaceNorth; button != (int)Gamepad::Button::Start; button++)
 	{
 		Gamepad::Button padButton = static_cast<Gamepad::Button>(button);
 		for (int pad = 0; pad < g_NumGamepads; pad++)
@@ -279,7 +279,7 @@ void harmony::Input::PostFrame()
 		}
 	}
 
-	for (int button = Gamepad::Trigger::LT; button != Gamepad::Trigger::RT; button++)
+	for (int button = (int)Gamepad::Trigger::LT; button != (int)Gamepad::Trigger::RT; button++)
 	{
 		Gamepad::Trigger padButton = static_cast<Gamepad::Trigger>(button);
 		for (int pad = 0; pad < g_NumGamepads; pad++)
@@ -295,7 +295,7 @@ void harmony::Input::PostFrame()
 		}
 	}
 
-	for (int button = Gamepad::Stick::LS; button != Gamepad::Stick::RS; button++)
+	for (int button = (int)Gamepad::Stick::LS; button != (int)Gamepad::Stick::RS; button++)
 	{
 		Gamepad::Stick padButton = static_cast<Gamepad::Stick>(button);
 		for (int pad = 0; pad < g_NumGamepads; pad++)
@@ -311,7 +311,7 @@ void harmony::Input::PostFrame()
 		}
 	}
 
-	for (int button = Key::A ; button != Key::Right; button++)
+	for (int button = (int)Key::A ; button != (int)Key::Right; button++)
 	{
 		Key padButton = static_cast<Key>(button);
 		for (int pad = 0; pad < g_NumGamepads; pad++)
@@ -326,7 +326,7 @@ void harmony::Input::PostFrame()
 		}
 	}
 
-	for (int button = Mouse::Button::Left; button != Mouse::Button::Extra3; button++)
+	for (int button = (int)Mouse::Button::Left; button != (int)Mouse::Button::Extra3; button++)
 	{
 		Mouse::Button mouseButton = static_cast<Mouse::Button>(button);
 		bool activeCurrentFrame = p_MouseState.CurrentFrameButtonState[mouseButton];
@@ -347,7 +347,7 @@ void harmony::Input::Init()
 		p_GamepadStates.emplace_back(GamepadState());
 	}
 
-	for (int button = Gamepad::Button::FaceNorth; button != Gamepad::Button::Start; button++)
+	for (int button = (int)Gamepad::Button::FaceNorth; button != (int)Gamepad::Button::Start; button++)
 	{
 		Gamepad::Button padButton = static_cast<Gamepad::Button>(button);
 		for (int pad = 0; pad < g_NumGamepads; pad++)
@@ -357,7 +357,7 @@ void harmony::Input::Init()
 		}
 	}
 
-	for (int trigger = Gamepad::Trigger::LT; trigger != Gamepad::Trigger::RT; trigger++)
+	for (int trigger = (int)Gamepad::Trigger::LT; trigger != (int)Gamepad::Trigger::RT; trigger++)
 	{
 		Gamepad::Trigger padTrigger = static_cast<Gamepad::Trigger>(trigger);
 		for (int pad = 0; pad < g_NumGamepads; pad++)
@@ -367,7 +367,7 @@ void harmony::Input::Init()
 		}
 	}
 
-	for (int stick = Gamepad::Stick::LS; stick != Gamepad::Stick::RS; stick++)
+	for (int stick = (int)Gamepad::Stick::LS; stick != (int)Gamepad::Stick::RS; stick++)
 	{
 		Gamepad::Stick padStick = static_cast<Gamepad::Stick>(stick);
 		for (int pad = 0; pad < g_NumGamepads; pad++)
@@ -377,7 +377,7 @@ void harmony::Input::Init()
 		}
 	}
 
-	for (int button = Key::A; button != Key::Escape; button++)
+	for (int button = (int)Key::A; button != (int)Key::Escape; button++)
 	{
 		Key key= static_cast<Key>(button);
 		p_KeyboardState.CurrentFrameKeyState.emplace(key, false);
@@ -387,7 +387,7 @@ void harmony::Input::Init()
 	p_MouseState.CurrentFrameMouseLocation = glm::vec2(0.0);
 	p_MouseState.PreviousFrameMouseLocation = glm::vec2(0.0);
 
-	for (int button = Mouse::Button::Left; button != Mouse::Button::Extra3; button++)
+	for (int button = (int)Mouse::Button::Left; button != (int)Mouse::Button::Extra3; button++)
 	{
 		Mouse::Button mouseButton = static_cast<Mouse::Button>(button);
 		p_MouseState.CurrentFrameButtonState.emplace(mouseButton, false);
