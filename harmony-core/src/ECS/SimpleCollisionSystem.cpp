@@ -107,6 +107,20 @@ std::vector<harmony::Hit> harmony::SimpleCollisionSystem::Raycast(Ray ray, entt:
 		}
 	}
 
+	auto sphereView = registry.view<TransformComponent, SphereColliderComponent>();
+	for (auto& [e, t, s] : sphereView.each())
+	{
+		auto hitPos = Collision::Intersects(ray, harmony::Sphere{ glm::vec4(t.Position, s.m_Radius) });
+		if (hitPos.Position.w > 0.0f)
+		{
+			Hit h;
+			h.Position = glm::vec3(hitPos.Position.x, hitPos.Position.y, hitPos.Position.z);
+			h.DidHit = true;
+			h.Entity = e;
+			hits.push_back(h);
+		}
+	}
+
 	return hits;
 }
 
