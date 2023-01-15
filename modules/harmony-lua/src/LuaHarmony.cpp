@@ -457,7 +457,8 @@ void harmony::InitHarmonyECS(sol::state& state, sol::table& h)
 		);
 
 	h.new_usertype<harmony::SphereColliderComponent>("sphere",
-		"colliders",&SphereColliderComponent::m_Colliders
+		"colliders", &SphereColliderComponent::m_Colliders,
+		"radius", &SphereColliderComponent::m_Radius
 		);
 
 	h.set_function("LoadScene", lua_LoadScene);

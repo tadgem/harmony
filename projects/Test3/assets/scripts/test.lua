@@ -16,12 +16,25 @@ jumpMomentum        = 40.0
 jumpMultiplier      = 6.0
 currentJumpHeight   = 0.0
 timeInAir = 0.0
-
+collisionTestMultiplier = 20
 lineEnd = nil
 
 function start()
     print("test.lua : start")
     viewEntity = harmony.GetViewEntity(view)
+    for x=1,collisionTestMultiplier do
+        for y=1,collisionTestMultiplier do
+            newEntity = harmony.GetScene():AddEntity()
+            newEntity:AddTransform()
+            newEntity:AddSphere()
+            t = newEntity:GetTransform()
+            t.position.x = t.position.x + x
+            t.position.z = t.position.z + y
+            newEntity:SetTransform(t)
+            s = newEntity:GetSphere()
+            s.radius = 2.0
+        end
+    end
 end
 
 function getMovementVector(a)

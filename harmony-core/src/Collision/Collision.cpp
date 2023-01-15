@@ -226,6 +226,7 @@ harmony::HitPosition harmony::Collision::Intersects(Ray& r, AABB& aabb)
 
 harmony::HitPosition harmony::Collision::Intersects(Ray& r, Sphere& s)
 {
+     // TODO rewrite as vectors.  
     float cx = s.PosR[0];
     float cy = s.PosR[1];
     float cz = s.PosR[2];

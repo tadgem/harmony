@@ -19,6 +19,18 @@ void harmony::LuaSystem::Init(entt::registry& registry)
         p_CurrentEntity = entity;
         state["this_entity"] = entity;
         InitEntityScript(entity, registry, state, lua);
+
+        if (lua.m_HasStart && lua.m_Start)
+        {
+            sol::protected_function_result result = lua.m_Start();
+            if (!result.valid())
+            {
+                sol::error err = result;
+                std::string what = err.what();
+                std::string entityStr = std::to_string((uint32_t)entity);
+                harmony::log::error("LuaSystem : InitEntityScript : Error : {} : in executing start() for Entity : {} : Script : {}", what, entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
+            }
+        }
     }
 }
 
@@ -190,17 +202,5 @@ void harmony::LuaSystem::InitEntityScript(entt::entity e, entt::registry& r, sol
     {
         lua.m_HasCleanup = true;
         lua.m_Cleanup = cleanupFx;
-    }
-
-    if (lua.m_HasStart && lua.m_Start)
-    {
-        sol::protected_function_result result = lua.m_Start();
-        if (!result.valid())
-        {
-            sol::error err = result;
-            std::string what = err.what();
-            std::string entityStr = std::to_string((uint32_t)e);
-            harmony::log::error("LuaSystem : InitEntityScript : Error : {} : in executing start() for Entity : {} : Script : {}", what, entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
-        }
     }
 }
