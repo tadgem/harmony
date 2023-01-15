@@ -193,7 +193,7 @@ std::vector<harmony::Hit> lua_Raycast(glm::vec3 origin, glm::vec3 dir)
 #if HARMONY_DEBUG
 void lua_DrawLine(glm::vec3 b, glm::vec3 e)
 {
-	harmony::GfxDebug::Get()->drawCapsule(harmony::GfxDebug::Channel::Editor, bx::Vec3(b.x, b.y, b.z), bx::Vec3(e.x, e.y, e.z), 0.1f);
+	harmony::GfxDebug::Get()->drawCylinder(harmony::GfxDebug::Channel::Editor, bx::Vec3(b.x, b.y, b.z), bx::Vec3(e.x, e.y, e.z), 0.05f);
 }
 #endif
 

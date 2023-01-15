@@ -294,7 +294,7 @@ vec3 posterize(vec3 _rgb, float _numColors)
 {
 	return floor(_rgb*_numColors) / _numColors;
 }
-
+``
 vec4 posterize(vec4 _rgba, float _numColors)
 {
 	return vec4(posterize(_rgba.xyz, _numColors), _rgba.w);

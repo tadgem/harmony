@@ -202,31 +202,29 @@ bool harmony::Collision::Intersects(AABB& a, glm::vec3& b)
 
 harmony::HitPosition harmony::Collision::Intersects(Ray& r, AABB& aabb)
 {
-    float r0x = aabb.Min.x - (r.Origin.x / r.Direction.x);
-    float r0y = aabb.Min.y - (r.Origin.y / r.Direction.y);
-    float r0z = aabb.Min.z - (r.Origin.z / r.Direction.z);
-    float rMin  = (r0x < r0y) ? r0x : r0y;
-    rMin = (rMin < r0z) ? r0z : rMin;
+    /*vec3 tMin = (boxMin - rayOrigin) / rayDir;
+    vec3 tMax = (boxMax - rayOrigin) / rayDir;
+    vec3 t1 = min(tMin, tMax);
+    vec3 t2 = max(tMin, tMax);
+    float tNear = max(max(t1.x, t1.y), t1.z);
+    float tFar = min(min(t2.x, t2.y), t2.z);
+    return vec2(tNear, tFar);*/
 
-    float r1x = aabb.Max.x - (r.Origin.x / r.Direction.x);
-    float r1y = aabb.Max.y - (r.Origin.y / r.Direction.y);
-    float r1z = aabb.Max.z - (r.Origin.z / r.Direction.z);
+    glm::vec3 tMin = (aabb.Min - r.Origin) / r.Direction;
+    glm::vec3 tMax = (aabb.Max - r.Origin) / r.Direction;
+    glm::vec3 t1 = glm::min(tMin, tMax);
+    glm::vec3 t2 = glm::max(tMin, tMax);
+    float tNear = glm::max(glm::max(t1.x, t1.y), t1.z);
+    float tFar = glm::min(glm::min(t2.x, t2.y), t2.z);
 
-    glm::vec3 a{ r0x, r0y, r0z };
-    glm::vec3 b{ r1x, r1y, r1z };
-
-    float rMax = (r1x > r1y) ? r1x : r1y;
-    rMax = (rMax > r1z) ? r1z : rMin;
-
-    if (!Intersects(aabb, b) && !Intersects(aabb, a))
-        return HitPosition(glm::vec4(glm::vec3(- 1.0), -1.0f));
-
-    if (rMin > rMax)
+    // tmax > Math.max(tmin, 0.0) ? tmin : -1;
+    if ((tFar - tNear) > 0.0f)
     {
-        return HitPosition(glm::vec4(a, 1.0f));
+        glm::vec3 pos = r.Origin + (r.Direction * tFar);
+        return HitPosition(glm::vec4(pos, 1.0f));
     }
 
-    return HitPosition(glm::vec4(b, 1.0f));
+    return HitPosition(glm::vec4(glm::vec3(- 1.0), -1.0f));
 }
 
 harmony::HitPosition harmony::Collision::Intersects(Ray& r, Sphere& aabb)

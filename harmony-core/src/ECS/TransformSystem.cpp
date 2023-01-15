@@ -120,4 +120,8 @@ void harmony::TransformSystem::CalculateDirectionVectors(glm::vec3 eulerDegrees,
     transform.Right     = Utils::CalculateVec3Degrees(right);
     transform.Up        = Utils::CalculateVec3Degrees(up);
 
+    transform.Forward = glm::normalize(transform.Forward);
+    transform.Right = glm::normalize(transform.Right);
+    transform.Up = glm::normalize(transform.Up);
+
 }

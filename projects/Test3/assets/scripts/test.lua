@@ -1,10 +1,10 @@
 
 e                   = nil 
-speed               = 0.33
+speed               = 4.0
 rotationBase        = 180.0
 rotationMulti       = 1.0;
 rotationThreshold   = 0.0
-deadZone            = 0.05
+deadZone            = 0.1
 limitX              = 60
 lowerLimitX         = 0.0 - limitX
 
@@ -33,6 +33,46 @@ function getMovementVector(a)
     return dtVec
 end
 
+function GetKeyboardMovement()
+    movement = math.vec2:new()
+    if input.GetKey(input.key.W) then
+        movement.y = -1.0
+    end
+    if input.GetKey(input.key.S) then
+        movement.y = 1.0
+    end
+
+    if input.GetKey(input.key.D) then
+        movement.x = 1.0
+    end
+
+    if input.GetKey(input.key.A) then
+        movement.x = -1.0
+    end
+    return movement
+end
+
+function GetMouseLook()
+    vel = input.GetMouseVelocity()
+    vel.x = vel.x * 25.0
+    vel.y = vel.y * 25.0
+    return vel
+end
+
+function GetControllerMovement()
+    return input.GetGamepadStick(0, input.gamePadStick.LS)
+end
+
+function GetControllerLook()
+    input.GetGamepadStick(0, input.gamePadStick.RS)
+end
+
+function jump()
+    currentJumpHeight = jumpMomentum
+    currentHeight = currentHeight + (currentJumpHeight * deltaTime)
+    timeInAir = 0.0
+end
+
 function update()
     deltaTime = time.GetFrameTime();
     view = harmony.GetView("RuntimeView")
@@ -41,26 +81,25 @@ function update()
     
     flatRight   = t.right
     flatForward = t.forward
-    lineEnd = math.subVec3(t.position, t.forward)    
-    hits = collision.raycast(t.position, t.forward)
+    dir = math.mulVec3f(t.forward, 10.0)
+    lineEnd = math.subVec3(t.position, dir)    
+    hits = collision.raycast(t.position, dir)
     if hits:size() > 0 then
         lineEnd = hits[1].position
     end
     debug.DrawLine(t.position,lineEnd)
     debug.SetColour(0.0, 255.0, 0.0, 255.0)
-    debug.DrawSphere(lineEnd, 2.0)
+    debug.DrawSphere(lineEnd, 0.25)
     
     flatRight.y     = 0.0
     flatForward.y   = 0.0
 
-    ls = input.GetGamepadStick(0, input.gamePadStick.LS)
-    rs = input.GetGamepadStick(0, input.gamePadStick.RS)
+    ls = GetKeyboardMovement()
+    rs = GetMouseLook()
 
     if input.GetGamepadButton(0, input.gamePadButton.FaceSouth) and currentHeight <= initHeight then
         print("Jump")
-        currentJumpHeight = jumpMomentum
-        currentHeight = currentHeight + (currentJumpHeight * deltaTime)
-        timeInAir = 0.0
+        jump()
     end
 
     forwardVec = getMovementVector(ls.y)
@@ -94,7 +133,7 @@ function update()
 
     r = deltaTime * rotationBase * rotationMulti;
 
-    if math.abs(rs.x) > deadZone or math.abs(rs.y) > deadZone then
+    if math.abs(rs.x * r) > deadZone or math.abs(rs.y * r) > deadZone then
         t.euler.x = t.euler.x - rs.y * r
         t.euler.y = t.euler.y - rs.x * r
     end
