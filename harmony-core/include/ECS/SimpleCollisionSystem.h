@@ -25,7 +25,7 @@ namespace harmony
 		AssetManager& p_AssetManager;
 
 		void UpdateColliders(entt::registry& registry);
-
+		void PreUpdate(entt::registry& registry);
 #if HARMONY_DEBUG
 		void DrawAABB(AABB& aabb, uint32_t color);
 		void DrawSphere(glm::vec3 position,float radius, uint32_t color);

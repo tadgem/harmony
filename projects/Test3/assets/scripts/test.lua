@@ -4,7 +4,7 @@ speed               = 4.0
 rotationBase        = 180.0
 rotationMulti       = 1.0;
 rotationThreshold   = 0.0
-deadZone            = 0.03
+deadZone            = 0.1
 limitX              = 60
 lowerLimitX         = 0.0 - limitX
 
@@ -54,8 +54,8 @@ end
 
 function GetMouseLook()
     vel = input.GetMouseVelocity()
-    vel.x = vel.x * 25.0
-    vel.y = vel.y * 25.0
+    vel.x = vel.x * 75.0
+    vel.y = vel.y * 75.0
     return vel
 end
 
@@ -64,13 +64,25 @@ function GetControllerMovement()
 end
 
 function GetControllerLook()
-    input.GetGamepadStick(0, input.gamePadStick.RS)
+    return input.GetGamepadStick(0, input.gamePadStick.RS)
 end
 
 function jump()
     currentJumpHeight = jumpMomentum
     currentHeight = currentHeight + (currentJumpHeight * deltaTime)
     timeInAir = 0.0
+end
+
+function ray(position, dir)
+    lineEnd = math.subVec3(position, dir)    
+    hits = collision.raycast(position, dir)
+    if hits:size() > 0 then
+        lineEnd = hits[1].position
+    end
+    debug.DrawLine(position,lineEnd)
+    debug.SetColour(0.0, 255.0, 0.0, 255.0)
+    debug.DrawSphere(lineEnd, 0.125)
+    debug.SetColour(255.0, 255.0, 255.0, 255.0)
 end
 
 function update()
@@ -81,21 +93,23 @@ function update()
     
     flatRight   = t.right
     flatForward = t.forward
-    dir = math.mulVec3f(t.forward, 10.0)
-    lineEnd = math.subVec3(t.position, dir)    
-    hits = collision.raycast(t.position, dir)
-    if hits:size() > 0 then
-        lineEnd = hits[1].position
-    end
-    debug.DrawLine(t.position,lineEnd)
-    debug.SetColour(0.0, 255.0, 0.0, 255.0)
-    debug.DrawSphere(lineEnd, 0.25)
+
+    forwardDir = math.mulVec3f(t.forward, 10.0)
+    worldUp = math.vec3:new()
+    worldUp.y = 1.0
+    upDir = math.mulVec3f(worldUp, 10.0)
+    backwardDir = math.mulVec3f(t.forward, -10.0)
+    downDir = math.mulVec3f(worldUp, -10.0)
+    ray(t.position, forwardDir)
+    ray(t.position, upDir)
+    ray(t.position, backwardDir)
+    ray(t.position, downDir)
     
     flatRight.y     = 0.0
     flatForward.y   = 0.0
 
-    ls = GetKeyboardMovement()
-    rs = GetMouseLook()
+    ls = GetControllerMovement()
+    rs = GetControllerLook()
 
     if input.GetGamepadButton(0, input.gamePadButton.FaceSouth) and currentHeight <= initHeight then
         print("Jump")

@@ -45,6 +45,7 @@ namespace harmony
         virtual void AddComponent(entt::registry& registry, entt::entity entity) = 0;
         virtual void RemoveComponent(entt::registry& registry, entt::entity entity) = 0;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) = 0;
+        virtual void Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy) = 0;
 
         template<typename T>
         bool RegistryHasComponent(entt::registry& reg, entt::entity e)
@@ -65,7 +66,7 @@ namespace harmony
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
         virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
-
+        virtual void Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy) override;
     };
 
     class DirectionalLightComponentUI : public ComponentUI
@@ -77,6 +78,7 @@ namespace harmony
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
         virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy) override;
     };
 
     class PointLightComponentUI : public ComponentUI
@@ -88,6 +90,7 @@ namespace harmony
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
         virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy) override;
     };
 
     class SpotLightComponentUI : public ComponentUI
@@ -99,6 +102,7 @@ namespace harmony
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
         virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy) override;
     };
 
     class MeshComponentUI : public ComponentUI
@@ -109,6 +113,7 @@ namespace harmony
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
         virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy) override;
 
     protected:
         AssetManager& p_AssetManager;
@@ -122,6 +127,7 @@ namespace harmony
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
         virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy) override;
 
     protected:
         Renderer& p_Renderer;
@@ -136,6 +142,7 @@ namespace harmony
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
         virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy) override;
 
     protected:
         Renderer& p_Renderer;
@@ -149,6 +156,7 @@ namespace harmony
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
         virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy) override;
 
     protected:
         AssetManager& p_AssetManager;
@@ -162,6 +170,7 @@ namespace harmony
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
         virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy) override;
 
     protected:
         AssetManager& p_AssetManager;
@@ -175,6 +184,7 @@ namespace harmony
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
         virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
         virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy) override;
 
     };
 

@@ -63,7 +63,7 @@ from "Graphics Gems", Academic Press, 1990
 
 //     } 
 
-void harmony::Collision::UpdateAABB(AABB& aabb, glm::mat3 matrix, glm::vec3 position)
+harmony::AABB harmony::Collision::UpdateAABB(AABB& aabb, glm::mat3 matrix, glm::vec3 position)
 {
 	AABB original = aabb;
 
@@ -103,12 +103,16 @@ void harmony::Collision::UpdateAABB(AABB& aabb, glm::mat3 matrix, glm::vec3 posi
         }
     }
 
-    aabb.Min.x = Bmin[0];  
-    aabb.Max.x = Bmax[0];
-    aabb.Min.y = Bmin[1];  
-    aabb.Max.y = Bmax[1];
-    aabb.Min.z = Bmin[2];  
-    aabb.Max.z = Bmax[2];
+    AABB ret;
+
+    ret.Min.x = Bmin[0];
+    ret.Max.x = Bmax[0];
+    ret.Min.y = Bmin[1];
+    ret.Max.y = Bmax[1];
+    ret.Min.z = Bmin[2];
+    ret.Max.z = Bmax[2];
+
+    return ret;
 }
 
 bool harmony::Collision::Intersects(AABB& a, AABB& b)

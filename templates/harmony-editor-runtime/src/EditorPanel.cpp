@@ -122,6 +122,20 @@ void harmony::EntityInspectorPanel::OnImGui()
 			}
 			ImGui::EndCombo();
 		}
+		ImGui::Separator();
+		ImGui::PushID((uint32_t)p_ScenePanel->m_SelectedEntity);
+		if (ImGui::Button("Duplicate"))
+		{
+			entt::entity dupe = activeScene->AddEntity().m_Handle;
+			for (int i = 0; i < p_ComponentUIProviders.size(); i++)
+			{
+				if (p_ComponentUIProviders[i]->HasComponent(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity))
+				{
+					p_ComponentUIProviders[i]->Duplicate(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity, dupe);
+				}
+			}
+		}
+		ImGui::PopID();
 		
 	}
 	ImGui::End();
@@ -163,6 +177,15 @@ void harmony::TransformComponentUI::RemoveComponent(entt::registry& registry, en
 	if (HasComponent(registry, entity))
 	{
 		registry.remove<TransformComponent>(entity);
+	}
+}
+
+void harmony::TransformComponentUI::Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy)
+{
+	if (HasComponent(registry, original))
+	{
+		TransformComponent t = registry.get<TransformComponent>(original);
+		registry.emplace<TransformComponent>(newCopy, t);
 	}
 }
 
@@ -221,6 +244,15 @@ void harmony::MeshComponentUI::RemoveComponent(entt::registry& registry, entt::e
 bool harmony::MeshComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
 	return RegistryHasComponent<MeshComponent>(registry, entity);
+}
+
+void harmony::MeshComponentUI::Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy)
+{
+	if (HasComponent(registry, original))
+	{
+		MeshComponent t = registry.get<MeshComponent>(original);
+		registry.emplace<MeshComponent>(newCopy, t);
+	}
 }
 
 harmony::MaterialComponentUI::MaterialComponentUI(Renderer& r, AssetManager& am) : ComponentUI("Material"), p_Renderer(r), p_AssetManager(am)
@@ -345,6 +377,15 @@ void harmony::MaterialComponentUI::RemoveComponent(entt::registry& registry, ent
 bool harmony::MaterialComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
 	return RegistryHasComponent<MaterialComponent>(registry, entity);
+}
+
+void harmony::MaterialComponentUI::Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy)
+{
+	if (HasComponent(registry, original))
+	{
+		MaterialComponent t = registry.get<MaterialComponent>(original);
+		registry.emplace<MaterialComponent>(newCopy, t);
+	}
 }
 
 harmony::AssetManagerPanel::AssetManagerPanel(Program& program) : p_Prog(program), p_AssetManager(program.m_AssetManager)
@@ -517,6 +558,15 @@ bool harmony::CameraComponentUI::HasComponent(entt::registry& registry, entt::en
 	return RegistryHasComponent<CameraComponent>(registry, entity);
 }
 
+void harmony::CameraComponentUI::Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy)
+{
+	if (HasComponent(registry, original))
+	{
+		CameraComponent t = registry.get<CameraComponent>(original);
+		registry.emplace<CameraComponent>(newCopy, t);
+	}
+}
+
 harmony::DirectionalLightComponentUI::DirectionalLightComponentUI() : ComponentUI("Directional Light")
 {
 }
@@ -554,6 +604,11 @@ void harmony::DirectionalLightComponentUI::RemoveComponent(entt::registry& regis
 bool harmony::DirectionalLightComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
 	return registry.any_of<DirectionalLight>(entity);
+}
+
+void harmony::DirectionalLightComponentUI::Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy)
+{
+	
 }
 
 harmony::PointLightComponentUI::PointLightComponentUI() : ComponentUI("Point Light")
@@ -597,6 +652,15 @@ bool harmony::PointLightComponentUI::HasComponent(entt::registry& registry, entt
 	return registry.any_of<PointLight>(entity);
 }
 
+void harmony::PointLightComponentUI::Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy)
+{
+	if (HasComponent(registry, original))
+	{
+		PointLight t = registry.get<PointLight>(original);
+		registry.emplace<PointLight>(newCopy, t);
+	}
+}
+
 harmony::SpotLightComponentUI::SpotLightComponentUI() : ComponentUI("Spot Light")
 {
 }
@@ -637,6 +701,15 @@ void harmony::SpotLightComponentUI::RemoveComponent(entt::registry& registry, en
 bool harmony::SpotLightComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
 	return registry.any_of<SpotLight>(entity);
+}
+
+void harmony::SpotLightComponentUI::Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy)
+{
+	if (HasComponent(registry, original))
+	{
+		SpotLight t = registry.get<SpotLight>(original);
+		registry.emplace<SpotLight>(newCopy, t);
+	}
 }
 
 harmony::LuaScriptComponentUI::LuaScriptComponentUI(AssetManager& am) : ComponentUI("Lua Scripts"), p_AssetManager(am)
@@ -684,6 +757,15 @@ bool harmony::LuaScriptComponentUI::HasComponent(entt::registry& registry, entt:
 	return registry.any_of<LuaComponent>(entity);
 }
 
+void harmony::LuaScriptComponentUI::Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy)
+{
+	if (HasComponent(registry, original))
+	{
+		LuaComponent t = registry.get<LuaComponent>(original);
+		registry.emplace<LuaComponent>(newCopy, t);
+	}
+}
+
 
 harmony::AABBComponentUI::AABBComponentUI(AssetManager& am) : ComponentUI("AABB Collider"), p_AssetManager(am)
 {
@@ -727,6 +809,15 @@ bool harmony::AABBComponentUI::HasComponent(entt::registry& registry, entt::enti
 	return registry.any_of<AABBColliderComponent>(entity);
 }
 
+void harmony::AABBComponentUI::Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy)
+{
+	if (HasComponent(registry, original))
+	{
+		AABBColliderComponent t = registry.get<AABBColliderComponent>(original);
+		registry.emplace<AABBColliderComponent>(newCopy, t);
+	}
+}
+
 harmony::SphereComponentUI::SphereComponentUI() : ComponentUI("Sphere Collider")
 {
 }
@@ -762,4 +853,13 @@ void harmony::SphereComponentUI::RemoveComponent(entt::registry& registry, entt:
 bool harmony::SphereComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
 	return registry.any_of<SphereColliderComponent>(entity);
+}
+
+void harmony::SphereComponentUI::Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy)
+{
+	if (HasComponent(registry, original))
+	{
+		SphereColliderComponent t = registry.get<SphereColliderComponent>(original);
+		registry.emplace<SphereColliderComponent>(newCopy, t);
+	}
 }

@@ -1,3 +1,6 @@
+#include <algorithm>
+#include <mutex>
+#include <execution>
 #include "ECS/SimpleCollisionSystem.h"
 #include "Core/Memory.h"
 #include "Core/Log.hpp"
@@ -30,6 +33,7 @@ void harmony::SimpleCollisionSystem::Init(entt::registry& registry)
 
 void harmony::SimpleCollisionSystem::Update(entt::registry& registry)
 {
+	PreUpdate(registry);
 	UpdateColliders(registry);
 }
 
@@ -90,53 +94,93 @@ void harmony::SimpleCollisionSystem::Refresh()
 {
 }
 
+static std::mutex s_AABBHitsMutex;
+static std::mutex s_SphereHitsMutex;
+
 std::vector<harmony::Hit> harmony::SimpleCollisionSystem::Raycast(Ray ray, entt::registry& registry)
 {
 	auto hits = std::vector<Hit>();
 	auto aabbView = registry.view<TransformComponent, AABBColliderComponent>();
-	for (auto& [e, t, aabb] : aabbView.each())
-	{
-		auto hitPos = Collision::Intersects(ray, aabb.m_Frame);
-		if (hitPos.Position.w > 0.0f)
+	std::for_each(
+		std::execution::par,
+		aabbView.begin(),
+		aabbView.end(),
+		[&ray, &hits, &aabbView](const auto &e)
 		{
-			Hit h;
-			h.Position = glm::vec3(hitPos.Position.x, hitPos.Position.y, hitPos.Position.z);
-			h.DidHit = true;
-			h.Entity = e;
-			hits.push_back(h);
+			AABBColliderComponent& aabb = aabbView.get<AABBColliderComponent>(e);
+			auto hitPos = Collision::Intersects(ray, aabb.m_Frame);
+			if (hitPos.Position.w > 0.0f)
+			{
+				Hit h;
+				h.Position = glm::vec3(hitPos.Position.x, hitPos.Position.y, hitPos.Position.z);
+				h.DidHit = true;
+				h.Entity = e;
+				std::lock_guard<std::mutex> hitLock(s_AABBHitsMutex);
+				hits.push_back(h);
+			}
 		}
-	}
+	);
+
 
 	auto sphereView = registry.view<TransformComponent, SphereColliderComponent>();
-	for (auto& [e, t, s] : sphereView.each())
-	{
-		auto hitPos = Collision::Intersects(ray, harmony::Sphere{ glm::vec4(t.Position, s.m_Radius) });
-		if (hitPos.Position.w > 0.0f)
+	std::for_each(
+		std::execution::par,
+		sphereView.begin(),
+		sphereView.end(),
+		[&ray, &hits, &sphereView](const auto& e)
 		{
-			Hit h;
-			h.Position = glm::vec3(hitPos.Position.x, hitPos.Position.y, hitPos.Position.z);
-			h.DidHit = true;
-			h.Entity = e;
-			hits.push_back(h);
+			SphereColliderComponent& s = sphereView.get<SphereColliderComponent>(e);
+			TransformComponent& t = sphereView.get<TransformComponent>(e);
+			auto hitPos = Collision::Intersects(ray, harmony::Sphere{ glm::vec4(t.Position, s.m_Radius) });
+			if (hitPos.Position.w > 0.0f)
+			{
+				Hit h;
+				h.Position = glm::vec3(hitPos.Position.x, hitPos.Position.y, hitPos.Position.z);
+				h.DidHit = true;
+				h.Entity = e;
+				std::lock_guard<std::mutex> hitLock(s_SphereHitsMutex);
+				hits.push_back(h);
+			}
 		}
-	}
+	);
 
 	return hits;
 }
+
+static std::mutex s_AABBTransformMutex;
 
 void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 {
 	auto aabbView = registry.view<TransformComponent, AABBColliderComponent>();
 	auto aabbs = std::vector<AABBColliderComponent*>();
 	auto aabbEntities = std::vector<entt::entity>();
+#if 0 // Experimental MT 
+	std::for_each(
+		std::execution::seq,
+		aabbView.begin(),
+		aabbView.end(),
+		[&aabbs, &aabbEntities, &aabbView](const auto& e)
+		{
+			auto t = aabbView.get<TransformComponent>(e);
+			auto aabb = aabbView.get<AABBColliderComponent>(e);
+
+			AABB newAABB = Collision::UpdateAABB(aabb.m_Original, glm::mat3(glm::transpose(t.Model)), t.Position);
+			std::lock_guard<std::mutex> hitLock(s_AABBTransformMutex);
+			aabb.m_Colliders.clear();
+			aabb.m_Frame = newAABB;
+			aabbs.emplace_back(&aabb);
+			aabbEntities.emplace_back(e);
+		});
+#else
+
 	for (auto& [e, t, aabb] : aabbView.each())
 	{
-		aabb.m_Frame = aabb.m_Original;
-		Collision::UpdateAABB(aabb.m_Frame, glm::mat3(glm::transpose(t.Model)), t.Position);
+		aabb.m_Frame = Collision::UpdateAABB(aabb.m_Original, glm::mat3(glm::transpose(t.Model)), t.Position);
 		aabb.m_Colliders.clear();
 		aabbs.emplace_back(&aabb);
 		aabbEntities.emplace_back(e);
 	}
+#endif
 	// AABB - AABB Intersection
 	size_t numAABBs = aabbs.size();
 	if (numAABBs > 0)
@@ -147,7 +191,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 			AABBColliderComponent* thisAABB = aabbs[i];
 			if (i < 0) continue;
 
-			for (int c = startIndex; c >= 0; c--)
+			for (int c = numAABBs - 1; c >= 0; c--)
 			{
 				AABBColliderComponent* currentAABB = aabbs[c];
 				if (Collision::Intersects(thisAABB->m_Frame, currentAABB->m_Frame))
@@ -232,6 +276,10 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 		}
 #endif
 	}
+}
+void harmony::SimpleCollisionSystem::PreUpdate(entt::registry& registry)
+{
+	
 }
 #if HARMONY_DEBUG
 void harmony::SimpleCollisionSystem::DrawAABB(AABB& aabb, uint32_t color)
