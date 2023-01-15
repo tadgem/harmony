@@ -202,32 +202,66 @@ bool harmony::Collision::Intersects(AABB& a, glm::vec3& b)
 
 harmony::HitPosition harmony::Collision::Intersects(Ray& r, AABB& aabb)
 {
-    /*vec3 tMin = (boxMin - rayOrigin) / rayDir;
-    vec3 tMax = (boxMax - rayOrigin) / rayDir;
-    vec3 t1 = min(tMin, tMax);
-    vec3 t2 = max(tMin, tMax);
-    float tNear = max(max(t1.x, t1.y), t1.z);
-    float tFar = min(min(t2.x, t2.y), t2.z);
-    return vec2(tNear, tFar);*/
 
-    glm::vec3 tMin = (aabb.Min - r.Origin) / r.Direction;
-    glm::vec3 tMax = (aabb.Max - r.Origin) / r.Direction;
-    glm::vec3 t1 = glm::min(tMin, tMax);
-    glm::vec3 t2 = glm::max(tMin, tMax);
-    float tNear = glm::max(glm::max(t1.x, t1.y), t1.z);
-    float tFar = glm::min(glm::min(t2.x, t2.y), t2.z);
+    glm::vec3 tMin  = (aabb.Min - r.Origin) / r.Direction;
+    glm::vec3 tMax  = (aabb.Max - r.Origin) / r.Direction;
+    glm::vec3 t1    = glm::min(tMin, tMax);
+    glm::vec3 t2    = glm::max(tMin, tMax);
+    float tNear     = glm::max(glm::max(t1.x, t1.y), t1.z);
+    float tFar      = glm::min(glm::min(t2.x, t2.y), t2.z);
 
-    // tmax > Math.max(tmin, 0.0) ? tmin : -1;
-    if ((tFar - tNear) > 0.0f)
+    if ((tFar - tNear) > 0.0f && tNear < 0.0f && tFar < 0.0f)
     {
         glm::vec3 pos = r.Origin + (r.Direction * tFar);
+        float dist = glm::distance(r.Origin, pos);
         return HitPosition(glm::vec4(pos, 1.0f));
     }
 
     return HitPosition(glm::vec4(glm::vec3(- 1.0), -1.0f));
 }
 
-harmony::HitPosition harmony::Collision::Intersects(Ray& r, Sphere& aabb)
+harmony::HitPosition harmony::Collision::Intersects(Ray& r, Sphere& s)
 {
-    return HitPosition(glm::vec4(glm::vec3(-1.0), -1.0f));
+    float cx = s.PosR[0];
+    float cy = s.PosR[1];
+    float cz = s.PosR[2];
+    float px = r.Origin.x;
+    float py = r.Origin.y;
+    float pz = r.Origin.z;
+    float vx = r.Direction.x;
+    float vy = r.Direction.y;
+    float vz = r.Direction.z;
+
+    float A = vx * vx + vy * vy + vz * vz;
+    float B = 2.0 * (px * vx + py * vy + pz * vz - vx * cx - vy * cy - vz * cz);
+    float C = px * px - 2 * px * cx + cx * cx + py * py - 2 * py * cy + cy * cy +
+        pz * pz - 2 * pz * cz + cz * cz - s.PosR[3] * s.PosR[3];
+
+    float D = B * B - 4 * A * C;
+
+    if (D < 0.0f || B < 0.0f)
+    {
+        return HitPosition(glm::vec4(glm::vec3(-1.0), -1.0f));
+    }
+
+    float t1 = (-B - glm::sqrt(D)) / (2.0 * A);
+
+    glm::vec3 rayEnd = r.Origin + r.Direction;
+
+    glm::vec3 solution1 = glm::vec3(r.Origin.x * (1 - t1) + t1 * rayEnd.x,
+        r.Origin.y * (1 - t1) + t1 * rayEnd.y,
+        r.Origin.z * (1 - t1) + t1 * rayEnd.z);
+
+    if (D == 0.0f)
+    {
+        return HitPosition(glm::vec4(solution1, 1.0f));
+    }
+
+    float t2 = (-B + glm::sqrt(D)) / (2.0 * A);
+    glm::vec3 solution2 = glm::vec3(r.Origin.x * (1 - t2) + t2 * rayEnd.x,
+        r.Origin.y * (1 - t2) + t2 * rayEnd.y,
+        r.Origin.z * (1 - t2) + t2 * rayEnd.z);
+
+    return HitPosition(glm::vec4(solution2, 1.0f));
+
 }

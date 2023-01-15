@@ -4,7 +4,7 @@ speed               = 4.0
 rotationBase        = 180.0
 rotationMulti       = 1.0;
 rotationThreshold   = 0.0
-deadZone            = 0.1
+deadZone            = 0.03
 limitX              = 60
 lowerLimitX         = 0.0 - limitX
 
