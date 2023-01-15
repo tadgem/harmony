@@ -1,6 +1,6 @@
 
 e                   = nil 
-speed               = 4.0
+speed               =10.0
 rotationBase        = 180.0
 rotationMulti       = 1.0;
 rotationThreshold   = 0.0
@@ -12,7 +12,7 @@ initHeight          = 0.0
 currentHeight       = 0.0
 fallSpeed           = 9.8
 fallSpeedMultiplier = 2.0
-jumpMomentum        = 55.0
+jumpMomentum        = 40.0
 jumpMultiplier      = 6.0
 currentJumpHeight   = 0.0
 timeInAir = 0.0

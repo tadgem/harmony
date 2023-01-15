@@ -152,101 +152,104 @@ static std::mutex s_AABBTransformMutex;
 void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 {
 	auto aabbView = registry.view<TransformComponent, AABBColliderComponent>();
-	auto aabbs = std::vector<AABBColliderComponent*>();
-	auto aabbEntities = std::vector<entt::entity>();
-#if 0 // Experimental MT 
+	auto aabbs = std::map<entt::entity, AABBColliderComponent*>();
+
 	std::for_each(
-		std::execution::seq,
+		std::execution::par,
 		aabbView.begin(),
 		aabbView.end(),
-		[&aabbs, &aabbEntities, &aabbView](const auto& e)
+		[&aabbView](const auto& e)
 		{
-			auto t = aabbView.get<TransformComponent>(e);
-			auto aabb = aabbView.get<AABBColliderComponent>(e);
-
-			AABB newAABB = Collision::UpdateAABB(aabb.m_Original, glm::mat3(glm::transpose(t.Model)), t.Position);
-			std::lock_guard<std::mutex> hitLock(s_AABBTransformMutex);
-			aabb.m_Colliders.clear();
-			aabb.m_Frame = newAABB;
-			aabbs.emplace_back(&aabb);
-			aabbEntities.emplace_back(e);
+			auto& aabb		= aabbView.get<AABBColliderComponent>(e);
+			auto& t			= aabbView.get<TransformComponent>(e);
+			AABB newAABB	= Collision::UpdateAABB(aabb.m_Original, glm::mat3(glm::transpose(t.Model)), t.Position);
+			aabb.m_Frame	= newAABB;
 		});
-#else
 
 	for (auto& [e, t, aabb] : aabbView.each())
 	{
-		aabb.m_Frame = Collision::UpdateAABB(aabb.m_Original, glm::mat3(glm::transpose(t.Model)), t.Position);
 		aabb.m_Colliders.clear();
-		aabbs.emplace_back(&aabb);
-		aabbEntities.emplace_back(e);
+		aabbs.emplace(e, &aabb);
 	}
-#endif
-	// AABB - AABB Intersection
-	size_t numAABBs = aabbs.size();
-	if (numAABBs > 0)
+	if (!aabbs.empty())
 	{
-		for (int i = numAABBs - 1; i >= 0; i--)
+		for (auto& [e, aabb] : aabbs)
 		{
-			size_t startIndex = i - 1;;
-			AABBColliderComponent* thisAABB = aabbs[i];
-			if (i < 0) continue;
-
-			for (int c = numAABBs - 1; c >= 0; c--)
-			{
-				AABBColliderComponent* currentAABB = aabbs[c];
-				if (Collision::Intersects(thisAABB->m_Frame, currentAABB->m_Frame))
+			harmony::AABBColliderComponent* currentAABB = aabb;
+			entt::entity currentEntity = e;
+			std::for_each(
+				std::execution::par,
+				aabbs.begin(),
+				aabbs.end(),
+				[currentAABB, currentEntity](const auto& testAABB)
 				{
-					currentAABB->m_Colliders.emplace_back(aabbEntities[i]);
-					thisAABB->m_Colliders.emplace_back(aabbEntities[c]);
-				}
-			}
+					if (currentAABB == testAABB.second) return;
+					if (Collision::Intersects(currentAABB->m_Frame, testAABB.second->m_Frame))
+					{
+						testAABB.second->m_Colliders.emplace_back(currentEntity);
+						currentAABB->m_Colliders.emplace_back(testAABB.first);
+					}
+
+				});
 		}
 	}
 
+	struct TempSphere
+	{
+		SphereColliderComponent* Sphere;
+		TransformComponent* Trans;
+	};
+
 
 	auto sphereView = registry.view<TransformComponent, SphereColliderComponent>();
-	auto spheres = std::vector<SphereColliderComponent*>();
-	auto sphereTransforms = std::vector<TransformComponent*>();
-	auto sphereEntities = std::vector<entt::entity>();
+	auto spheres = std::map<entt::entity, TempSphere>();
 	for (auto& [e, t, s] : sphereView.each())
 	{
 		s.m_Colliders.clear();
-		spheres.emplace_back(&s);
-		sphereEntities.emplace_back(e);
-		sphereTransforms.emplace_back(&t);
+		spheres.emplace(e, TempSphere{&s,&t});
 	}
 
-	size_t numSpheres = spheres.size();
-	if (numSpheres > 0)
+	if (!spheres.empty())
 	{
-		for (int i = numSpheres - 1; i >= 0; i--)
+		for (auto&[e, s] : spheres)
 		{
-			size_t startIndex = i - 1;;
-			SphereColliderComponent* thisSphereComponent = spheres[i];
-			TransformComponent* thisTransform = sphereTransforms[i];
+			SphereColliderComponent* thisSphereComponent = s.Sphere;
+			TransformComponent* thisTransform = s.Trans;
 			Sphere sphere{ glm::vec4(thisTransform->Position.x,thisTransform->Position.y,thisTransform->Position.z, thisSphereComponent->m_Radius) };
-			if (i < 0) continue;
-			// Sphere - Sphere Intersection Test
-			for (int c = startIndex; c >= 0; c--)
-			{
-				SphereColliderComponent* currentSphereComponent = spheres[c];
-				TransformComponent* currentTransform = sphereTransforms[c];
-				Sphere currentSphere{ glm::vec4(currentTransform->Position.x,currentTransform->Position.y,currentTransform->Position.z, currentSphereComponent->m_Radius) };
-				if (Collision::Intersects(sphere, currentSphere))
+			entt::entity thisEntity = e;
+			std::for_each(
+				std::execution::par,
+				spheres.begin(),
+				spheres.end(),
+				[thisSphereComponent, &sphere, thisEntity](const auto& testSphere)
 				{
-					currentSphereComponent->m_Colliders.emplace_back(sphereEntities[i]);
-					thisSphereComponent->m_Colliders.emplace_back(sphereEntities[c]);
-				}
-			}
-			// Sphere - AABB Intersection test
-			for (int a = 0; a < aabbs.size(); a++)
-			{
-				if (Collision::Intersects(sphere, aabbs[a]->m_Frame))
+					if (testSphere.second.Sphere == thisSphereComponent)
+					{
+						return;
+					}
+					SphereColliderComponent* currentSphereComponent = testSphere.second.Sphere;
+					TransformComponent* currentTransform = testSphere.second.Trans;
+					Sphere cs{ glm::vec4(currentTransform->Position.x,currentTransform->Position.y,currentTransform->Position.z, currentSphereComponent->m_Radius) };
+					if (Collision::Intersects(sphere, cs))
+					{
+						currentSphereComponent->m_Colliders.emplace_back(thisEntity);
+						thisSphereComponent->m_Colliders.emplace_back(testSphere.first);
+					}
+				});
+
+			std::for_each(
+				std::execution::par,
+				aabbs.begin(),
+				aabbs.end(),
+				[thisSphereComponent, &sphere, thisEntity](const auto& testAABB)
 				{
-					aabbs[a]->m_Colliders.emplace_back(sphereEntities[i]);
-					thisSphereComponent->m_Colliders.emplace_back(aabbEntities[a]);
-				}
-			}
+					if (Collision::Intersects(sphere, testAABB.second->m_Frame))
+					{
+						testAABB.second->m_Colliders.emplace_back(thisEntity);
+						thisSphereComponent->m_Colliders.emplace_back(testAABB.first);
+					}
+
+				});
 		}
 	}
 	for (auto& [e, t, aabb] : aabbView.each())
