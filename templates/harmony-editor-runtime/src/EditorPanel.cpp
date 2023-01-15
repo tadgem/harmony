@@ -616,7 +616,7 @@ void harmony::SpotLightComponentUI::OnComponentImGui(entt::registry& registry, e
 
 	ImGui::ColorEdit4("Diffuse", &sl.Diffuse[0]);
 	ImGui::ColorEdit4("Ambient", &sl.Ambient[0]);
-	ImGui::SliderFloat("Range", &sl.Radius, 0.0f, 500.0f);
+	ImGui::SliderFloat("Range", &sl.Radius, 0.0f, 100.0f);
 	ImGui::SliderFloat("Angle", &sl.Angle, 0.0f, 3.14f);
 	ImGui::SliderFloat("Intensity", &sl.Intensity, 0.0f, 1000.0f);
 }
@@ -685,7 +685,7 @@ bool harmony::LuaScriptComponentUI::HasComponent(entt::registry& registry, entt:
 }
 
 
-harmony::AABBComponentUI::AABBComponentUI(AssetManager& am) : ComponentUI("AABB"), p_AssetManager(am)
+harmony::AABBComponentUI::AABBComponentUI(AssetManager& am) : ComponentUI("AABB Collider"), p_AssetManager(am)
 {
 }
 
@@ -725,4 +725,41 @@ void harmony::AABBComponentUI::RemoveComponent(entt::registry& registry, entt::e
 bool harmony::AABBComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
 	return registry.any_of<AABBColliderComponent>(entity);
+}
+
+harmony::SphereComponentUI::SphereComponentUI() : ComponentUI("Sphere Collider")
+{
+}
+
+void harmony::SphereComponentUI::OnComponentImGui(entt::registry& registry, entt::entity entity)
+{
+	if (registry.valid(entity) == false)
+	{
+		return;
+	}
+	if (HasComponent(registry, entity) == false)
+	{
+		return;
+	}
+	SphereColliderComponent& s = registry.get<SphereColliderComponent>(entity);
+
+	ImGui::DragFloat("Radius", &s.m_Radius, 1.0f, 0.0, 5000.0f);
+}
+
+void harmony::SphereComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
+{
+	registry.emplace<SphereColliderComponent>(entity);
+}
+
+void harmony::SphereComponentUI::RemoveComponent(entt::registry& registry, entt::entity entity)
+{
+	if (HasComponent(registry, entity))
+	{
+		registry.remove<SphereColliderComponent>(entity);
+	}
+}
+
+bool harmony::SphereComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
+{
+	return registry.any_of<SphereColliderComponent>(entity);
 }

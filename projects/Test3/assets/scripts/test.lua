@@ -17,8 +17,10 @@ jumpMultiplier      = 6.0
 currentJumpHeight   = 0.0
 timeInAir = 0.0
 
+lineEnd = nil
+
 function start()
-    print("TestLua : Start")
+    print("test.lua : start")
     viewEntity = harmony.GetViewEntity(view)
 end
 
@@ -39,7 +41,15 @@ function update()
     
     flatRight   = t.right
     flatForward = t.forward
-
+    lineEnd = math.subVec3(t.position, t.forward)    
+    hits = collision.raycast(t.position, t.forward)
+    if hits:size() > 0 then
+        lineEnd = hits[1].position
+    end
+    debug.DrawLine(t.position,lineEnd)
+    debug.SetColour(0.0, 255.0, 0.0, 255.0)
+    debug.DrawSphere(lineEnd, 2.0)
+    
     flatRight.y     = 0.0
     flatForward.y   = 0.0
 

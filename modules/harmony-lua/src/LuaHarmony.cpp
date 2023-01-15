@@ -9,6 +9,11 @@
 #include "Rendering/Views/RuntimeView.h"
 #include "glm.hpp"
 #include "glm/detail/type_mat3x3.hpp"
+#include "ECS/SimpleCollisionSystem.h"
+#include "ECS/SimpleCollisionComponent.h"
+#include "Collision/CollisionShapes.h"
+#include "Rendering/Debug/GfxDebug.h"
+
 
 glm::vec2 lua_Vec2Multiply(glm::vec2& a, glm::vec2& b)
 {
@@ -25,6 +30,11 @@ glm::vec2 lua_Vec2Subtract(glm::vec2& a, glm::vec2& b)
 	return a - b;
 }
 
+glm::vec2 lua_Vec2MulF(glm::vec2& a, float b)
+{
+	return a * b;
+}
+
 glm::vec3 lua_Vec3Multiply(glm::vec3& a, glm::vec3& b)
 {
 	return a * b;
@@ -37,6 +47,11 @@ glm::vec3 lua_Vec3Add(glm::vec3& a, glm::vec3& b)
 glm::vec3 lua_Vec3Subtract(glm::vec3& a, glm::vec3& b)
 {
 	return a - b;
+}
+
+glm::vec3 lua_Vec3MulF(glm::vec3& a, float b)
+{
+	return a * b;
 }
 
 glm::vec3 lua_Vec4Multiply(glm::vec3& a, glm::vec3& b)
@@ -52,6 +67,11 @@ glm::vec3 lua_Vec4Add(glm::vec3& a, glm::vec3& b)
 glm::vec4 lua_Vec4Subtract(glm::vec4& a, glm::vec4& b)
 {
 	return a - b;
+}
+
+glm::vec4 lua_Vec4MulF(glm::vec4& a, float b)
+{
+	return a * b;
 }
 
 float lua_Abs(float v)
@@ -76,6 +96,22 @@ harmony::Renderer* lua_GetRenderer()
 	{
 		return &prog->m_Renderer;
 	}
+	return nullptr;
+}
+
+harmony::SimpleCollisionSystem* lua_GetCollisionSystem()
+{
+	auto prog = harmony::Program::Get();
+
+	if (prog)
+	{
+		auto sysWr = prog->GetSystem<harmony::SimpleCollisionSystem>();
+		if (!sysWr.expired())
+		{
+			return sysWr.lock().get();
+		}
+	}
+
 	return nullptr;
 }
 
@@ -138,18 +174,82 @@ harmony::LuaScriptEntity lua_GetViewEntity(harmony::View* view)
 	return harmony::LuaScriptEntity();
 }
 
+std::vector<harmony::Hit> lua_Raycast(glm::vec3 origin, glm::vec3 dir)
+{
+	auto collisionSystem = lua_GetCollisionSystem();
+	auto scene = lua_GetActiveScene();
+
+	auto hits = std::vector<harmony::Hit>();
+
+	if (scene && collisionSystem)
+	{
+		harmony::Ray ray{ origin, dir };
+		return collisionSystem->Raycast(ray, scene->m_Registry);
+	}
+
+	return hits;
+}
+
+#if HARMONY_DEBUG
+void lua_DrawLine(glm::vec3 b, glm::vec3 e)
+{
+	harmony::GfxDebug::Get()->drawCapsule(harmony::GfxDebug::Channel::Editor, bx::Vec3(b.x, b.y, b.z), bx::Vec3(e.x, e.y, e.z), 0.1f);
+}
+#endif
+
+union char_int
+{
+	uint8_t chars[4];
+	int32_t val;
+};
+
+#if HARMONY_DEBUG
+void lua_DrawSphere(glm::vec3 p, float r)
+{
+	harmony::GfxDebug::Get()->draw(harmony::GfxDebug::Channel::Editor, bx::Sphere{ bx::Vec3(p.x, p.y, p.z), r });
+}
+#endif
+
+#if HARMONY_DEBUG
+void lua_SetColour(float r, float g, float b, float a)
+{
+
+	char_int col;
+	col.chars[0] = r;
+	col.chars[1] = g;
+	col.chars[2] = b;
+	col.chars[3] = a;
+
+	harmony::GfxDebug::Get()->setColor(harmony::GfxDebug::Channel::Editor,col.val);
+}
+#endif
+
 void harmony::InitHarmony(sol::state& state)
 {
 	sol::table h = state.create_named_table("harmony");
 	sol::table i = state.create_named_table("input");
 	sol::table t = state.create_named_table("time");
 	sol::table m = state.create_named_table("math");
+	sol::table c = state.create_named_table("collision");
+	sol::table d = state.create_named_table("debug");
 	InitGLM(state, m);
 	InitHarmonyTime(state, t);
 	InitHarmonyRendering(state, h);
 	InitHarmonyInput(state, i);
 	InitHarmonyECS(state, h);
+	InitHarmonyCollision(state, c);
+#if HARMONY_DEBUG
+	InitHarmonyDebug(state, d);
+#endif
 }
+#if HARMONY_DEBUG
+void harmony::InitHarmonyDebug(sol::state& state, sol::table& h)
+{
+	h["DrawLine"] = &lua_DrawLine;
+	h["DrawSphere"] = &lua_DrawSphere;
+	h["SetColour"] = &lua_SetColour;
+}
+#endif
 
 
 // script 'Modules'
@@ -352,6 +452,14 @@ void harmony::InitHarmonyECS(sol::state& state, sol::table& h)
 		"intensity", &harmony::SpotLight::Intensity
 		);
 
+	h.new_usertype<harmony::AABBColliderComponent>("aabb",
+		"colliders", &AABBColliderComponent::m_Colliders
+		);
+
+	h.new_usertype<harmony::SphereColliderComponent>("sphere",
+		"colliders",&SphereColliderComponent::m_Colliders
+		);
+
 	h.set_function("LoadScene", lua_LoadScene);
 	h.set_function("OpenScene", lua_OpenScene);
 	h.set_function("GetScene", lua_GetActiveScene);
@@ -359,17 +467,39 @@ void harmony::InitHarmonyECS(sol::state& state, sol::table& h)
 
 	sceneDef["AddEntity"] = lua_AddEntity;
 
+	entityDef["Destroy"] = &harmony::LuaScriptEntity::Destroy;
+
+	entityDef["AddTransform"] = &harmony::LuaScriptEntity::AddTransform;
 	entityDef["GetTransform"] = &harmony::LuaScriptEntity::GetTransform;
 	entityDef["SetTransform"] = &harmony::LuaScriptEntity::SetTransform;
 
+	entityDef["AddCamera"] = &harmony::LuaScriptEntity::AddCamera;
 	entityDef["GetCamera"] = &harmony::LuaScriptEntity::GetCamera;
 	entityDef["SetCamera"] = &harmony::LuaScriptEntity::SetCamera;
 
+	entityDef["AddMesh"] = &harmony::LuaScriptEntity::AddMesh;
 	entityDef["GetMesh"] = &harmony::LuaScriptEntity::GetMesh;
 	entityDef["SetMesh"] = &harmony::LuaScriptEntity::SetMesh;
 
+	entityDef["AddMaterial"] = &harmony::LuaScriptEntity::AddMaterial;
 	entityDef["GetMaterial"] = &harmony::LuaScriptEntity::GetMaterial;
 	entityDef["SetMaterial"] = &harmony::LuaScriptEntity::SetMaterial;
+
+	entityDef["AddAABB"] = &harmony::LuaScriptEntity::AddAABB;
+	entityDef["GetAABB"] = &harmony::LuaScriptEntity::GetAABB;
+	entityDef["SetAABB"] = &harmony::LuaScriptEntity::SetAABB;
+
+	entityDef["AddSphere"] = &harmony::LuaScriptEntity::AddSphere;
+	entityDef["GetSphere"] = &harmony::LuaScriptEntity::GetSphere;
+	entityDef["SetSphere"] = &harmony::LuaScriptEntity::SetSphere;
+}
+
+void harmony::InitHarmonyCollision(sol::state& state, sol::table& h)
+{
+	h.new_usertype<harmony::SimpleCollisionSystem>("collision");
+	h.new_usertype<harmony::Ray>("ray", "origin", &harmony::Ray::Origin, "direction", &harmony::Ray::Direction);
+	h.new_usertype<harmony::Hit>("hit", "position", &harmony::Hit::Position, "hit", &harmony::Hit::DidHit);
+	h["raycast"] = &lua_Raycast;
 }
 
 void harmony::InitHarmonyTime(sol::state& state, sol::table& h)
@@ -386,15 +516,18 @@ void harmony::InitGLM(sol::state& state, sol::table& h)
 	auto vec3type = h.new_usertype<glm::vec3>("vec3", "x", &glm::vec3::x, "y", &glm::vec3::y, "z", &glm::vec3::z);
 	auto vec4type = h.new_usertype<glm::vec4>("vec4", "x", &glm::vec4::x, "y", &glm::vec4::y, "z", &glm::vec4::z, "z", &glm::vec4::w);
 
-	h["addVec2"] = lua_Vec2Add;
-	h["subVec2"] = lua_Vec2Subtract;
-	h["mulVec2"] = lua_Vec2Multiply;
-	h["addVec3"] = lua_Vec3Add;
-	h["subVec3"] = lua_Vec3Subtract;
-	h["mulVec3"] = lua_Vec3Multiply;
-	h["addVec4"] = lua_Vec4Add;
-	h["subVec4"] = lua_Vec4Subtract;
-	h["mulVec4"] = lua_Vec4Multiply;
+	h["addVec2"]	= lua_Vec2Add;
+	h["subVec2"]	= lua_Vec2Subtract;
+	h["mulVec2"]	= lua_Vec2Multiply;
+	h["mulVec2f"]	= lua_Vec2MulF;
+	h["addVec3"]	= lua_Vec3Add;
+	h["subVec3"]	= lua_Vec3Subtract;
+	h["mulVec3"]	= lua_Vec3Multiply;
+	h["mulVec3f"]	= lua_Vec3MulF;
+	h["addVec4"]	= lua_Vec4Add;
+	h["subVec4"]	= lua_Vec4Subtract;
+	h["mulVec4"]	= lua_Vec4Multiply;
+	h["mulVec4f"]	= lua_Vec4MulF;
 
 	h["abs"] = lua_Abs;
 }

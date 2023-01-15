@@ -76,6 +76,7 @@ void harmony::Editor::AddEditorPanels()
 	inspector->AddComponentUI<SpotLightComponentUI>();
 	inspector->AddComponentUI<LuaScriptComponentUI>(m_AssetManager);
 	inspector->AddComponentUI<AABBComponentUI>(m_AssetManager);
+	inspector->AddComponentUI<SphereComponentUI>();
 
 	p_Panels.emplace_back(inspector);
 }

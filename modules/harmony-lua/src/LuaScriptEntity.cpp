@@ -11,6 +11,25 @@ harmony::LuaScriptEntity::LuaScriptEntity(Scene* scene, entt::entity entity) : E
 	p_Scene = scene;
 }
 
+void harmony::LuaScriptEntity::Destroy()
+{
+	if (Valid())
+	{
+		p_Scene->m_Registry.destroy(m_Handle);
+	}
+}
+
+harmony::TransformComponent* harmony::LuaScriptEntity::AddTransform()
+{
+	if (Valid())
+	{
+		if (!p_Scene->m_Registry.any_of<TransformComponent>(m_Handle))
+		{
+			return &p_Scene->m_Registry.emplace<TransformComponent>(m_Handle);
+		}
+	}
+}
+
 harmony::TransformComponent* harmony::LuaScriptEntity::GetTransform()
 {
 	if (Valid())
@@ -33,6 +52,17 @@ void harmony::LuaScriptEntity::SetTransform(TransformComponent* t)
 		{
 			auto& trans =  p_Scene->m_Registry.get<TransformComponent>(m_Handle);
 			trans = *t;
+		}
+	}
+}
+
+harmony::MeshComponent* harmony::LuaScriptEntity::AddMesh()
+{
+	if (Valid())
+	{
+		if (!p_Scene->m_Registry.any_of<MeshComponent>(m_Handle))
+		{
+			return &p_Scene->m_Registry.emplace<MeshComponent>(m_Handle);
 		}
 	}
 }
@@ -62,6 +92,17 @@ void harmony::LuaScriptEntity::SetMesh(MeshComponent* m)
 	}
 }
 
+harmony::CameraComponent* harmony::LuaScriptEntity::AddCamera()
+{
+	if (Valid())
+	{
+		if (!p_Scene->m_Registry.any_of<CameraComponent>(m_Handle))
+		{
+			return &p_Scene->m_Registry.emplace<CameraComponent>(m_Handle);
+		}
+	}
+}
+
 harmony::CameraComponent* harmony::LuaScriptEntity::GetCamera()
 {
 	if (Valid())
@@ -87,6 +128,17 @@ void harmony::LuaScriptEntity::SetCamera(CameraComponent* c)
 	}
 }
 
+harmony::MaterialComponent* harmony::LuaScriptEntity::AddMaterial()
+{
+	if (Valid())
+	{
+		if (!p_Scene->m_Registry.any_of<MaterialComponent>(m_Handle))
+		{
+			return &p_Scene->m_Registry.emplace<MaterialComponent>(m_Handle);
+		}
+	}
+}
+
 harmony::MaterialComponent* harmony::LuaScriptEntity::GetMaterial()
 {
 	if (Valid())
@@ -107,6 +159,78 @@ void harmony::LuaScriptEntity::SetMaterial(MaterialComponent* c)
 		if (p_Scene->m_Registry.any_of<MaterialComponent>(m_Handle))
 		{
 			auto& mat = p_Scene->m_Registry.get<MaterialComponent>(m_Handle);
+			mat = *c;
+		}
+	}
+}
+
+harmony::AABBColliderComponent* harmony::LuaScriptEntity::AddAABB()
+{
+	if (Valid())
+	{
+		if (!p_Scene->m_Registry.any_of<AABBColliderComponent>(m_Handle))
+		{
+			return &p_Scene->m_Registry.emplace<AABBColliderComponent>(m_Handle);
+		}
+	}
+}
+
+harmony::AABBColliderComponent* harmony::LuaScriptEntity::GetAABB()
+{
+	if (Valid())
+	{
+		if (p_Scene->m_Registry.any_of<AABBColliderComponent>(m_Handle))
+		{
+			return &p_Scene->m_Registry.get<AABBColliderComponent>(m_Handle);
+		}
+	}
+
+	return nullptr;
+}
+
+void harmony::LuaScriptEntity::SetAABB(AABBColliderComponent* c)
+{
+	if (Valid())
+	{
+		if (p_Scene->m_Registry.any_of<AABBColliderComponent>(m_Handle))
+		{
+			auto& mat = p_Scene->m_Registry.get<AABBColliderComponent>(m_Handle);
+			mat = *c;
+		}
+	}
+}
+
+harmony::SphereColliderComponent* harmony::LuaScriptEntity::AddSphere()
+{
+	if (Valid())
+	{
+		if (!p_Scene->m_Registry.any_of<SphereColliderComponent>(m_Handle))
+		{
+			return &p_Scene->m_Registry.emplace<SphereColliderComponent>(m_Handle);
+		}
+	}
+}
+
+harmony::SphereColliderComponent* harmony::LuaScriptEntity::GetSphere()
+{
+	if (Valid())
+	{
+		if (p_Scene->m_Registry.any_of<SphereColliderComponent>(m_Handle))
+		{
+			return &p_Scene->m_Registry.get<SphereColliderComponent>(m_Handle);
+		}
+	}
+
+	return nullptr;
+}
+
+void harmony::LuaScriptEntity::SetSphere(SphereColliderComponent* c)
+{
+	if (Valid())
+	{
+		if (p_Scene->m_Registry.any_of<SphereColliderComponent>(m_Handle))
+		{
+			auto& mat = p_Scene->m_Registry.get<SphereColliderComponent>(m_Handle);
 			mat = *c;
 		}
 	}

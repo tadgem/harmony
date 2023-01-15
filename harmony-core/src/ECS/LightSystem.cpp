@@ -40,7 +40,7 @@ void harmony::LightSystem::Update(entt::registry& registry)
         bx::Vec3 from(t.Position.x, t.Position.y, t.Position.z);
         glm::vec3 _to = t.Position + (t.Forward * s.Radius);
         bx::Vec3 to(_to.x, _to.y, _to.z);
-        GfxDebug::Get()->drawCone(GfxDebug::Editor, to, from, s.Angle * s.Radius);
+        GfxDebug::Get()->drawCone(GfxDebug::Editor, to, from, s.Angle * s.Radius * 60.0f);
     }
 #endif
 }

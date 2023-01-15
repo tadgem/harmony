@@ -17,5 +17,16 @@ namespace harmony
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(Sphere, PosR)
 	};
 
+	struct Ray
+	{
+		glm::vec3 Origin;
+		glm::vec3 Direction;
+	};
+
+	struct HitPosition
+	{
+		HitPosition(glm::vec4 position);
+		glm::vec4 Position;
+	};
 
 }

@@ -113,20 +113,123 @@ void harmony::Collision::UpdateAABB(AABB& aabb, glm::mat3 matrix, glm::vec3 posi
 
 bool harmony::Collision::Intersects(AABB& a, AABB& b)
 {
-    return false;
+    if (a.Min.x <= b.Min.x && a.Max.x >= b.Max.x)
+    {
+        return false;
+    }
+
+    if (a.Max.x <= b.Min.x || a.Min.x >= b.Max.x)
+    {
+        return false;
+    }
+
+    if (a.Min.y <= b.Min.y && a.Max.y >= b.Max.y)
+    {
+        return false;
+    }
+
+    if (a.Max.y <= b.Min.y || a.Min.y >= b.Max.y)
+    {
+        return false;
+    }
+
+    if (a.Min.z <= b.Min.z && a.Max.z >= b.Max.z)
+    {
+        return false;
+    }
+
+    if (a.Max.z <= b.Min.z || a.Min.z >= b.Max.z)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool harmony::Collision::Intersects(Sphere& a, Sphere& b)
 {
+    glm::vec3 apos = glm::vec3(a.PosR.x, a.PosR.y, a.PosR.z);
+    glm::vec3 bpos = glm::vec3(b.PosR.x, b.PosR.y, b.PosR.z);
+
+    float dist = glm::abs(glm::distance(apos, bpos));
+    if (dist < (a.PosR[3] + b.PosR[3]))
+    {
+        return true;
+    }
+
     return false;
 }
 
 bool harmony::Collision::Intersects(AABB& a, Sphere& b)
 {
+    // https://stackoverflow.com/questions/28343716/sphere-intersection-test-of-aabb
+    // if (C[i] < Bmin[i]) dmin += SQR(C[i] - Bmin[i]); else
+    // if (C[i] > Bmax[i]) dmin += SQR(C[i] - Bmax[i]);
+    // Where Bmin stores the minima of the AABB for each axis, Bmax stores the maxima of the AABB for each axis, 
+    // C is the coordinate of the sphere centerand r2 is the squared radius.
+    float dmin = 0.0f;
+    float r2 = b.PosR.w * b.PosR.w;
+    for (int i = 0; i < 3; i++) {
+        if (b.PosR[i] < a.Min[i])
+        {
+            float d = b.PosR[i] - a.Min[i];
+            dmin += d * d;
+        }
+        else if (b.PosR[i] > a.Max[i])
+        {
+            float d = b.PosR[i] - a.Max[i];
+            dmin += d * d;
+        }
+    }
+    if (dmin <= r2)
+    {
+        return true;
+    }
     return false;
 }
 
 bool harmony::Collision::Intersects(Sphere& a, AABB& b)
 {
     return Intersects(b,a);
+}
+
+bool harmony::Collision::Intersects(AABB& a, glm::vec3& b)
+{
+    return b.x >= a.Min.x && b.x <= a.Max.x &&
+        b.y >= a.Min.y && b.y <= a.Max.y &&
+        b.z >= a.Min.z && b.x <= a.Max.z;
+}
+
+harmony::HitPosition harmony::Collision::Intersects(Ray& r, AABB& aabb)
+{
+    float r0x = aabb.Min.x - (r.Origin.x / r.Direction.x);
+    float r0y = aabb.Min.y - (r.Origin.y / r.Direction.y);
+    float r0z = aabb.Min.z - (r.Origin.z / r.Direction.z);
+    float rMin  = (r0x < r0y) ? r0x : r0y;
+    rMin = (rMin < r0z) ? r0z : rMin;
+
+    float r1x = aabb.Max.x - (r.Origin.x / r.Direction.x);
+    float r1y = aabb.Max.y - (r.Origin.y / r.Direction.y);
+    float r1z = aabb.Max.z - (r.Origin.z / r.Direction.z);
+
+    glm::vec3 a{ r0x, r0y, r0z };
+    glm::vec3 b{ r1x, r1y, r1z };
+
+    float rMax = (r1x > r1y) ? r1x : r1y;
+    rMax = (rMax > r1z) ? r1z : rMin;
+
+    if (!Intersects(aabb, b) && !Intersects(aabb, a))
+        return HitPosition(glm::vec4(glm::vec3(- 1.0), -1.0f));
+
+    if (rMin > rMax)
+    {
+        return HitPosition(glm::vec4(a, 1.0f));
+    }
+
+    return HitPosition(glm::vec4(b, 1.0f));
+}
+
+harmony::HitPosition harmony::Collision::Intersects(Ray& r, Sphere& aabb)
+{
+    return HitPosition(glm::vec4(glm::vec3(-1.0), -1.0f));
 }
