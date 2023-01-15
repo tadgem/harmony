@@ -28,6 +28,15 @@ void harmony::MeshRenderer::Draw(entt::registry& scene, Ref<ShaderProgram> shade
 		}
 
 		material.Data.SetOverrides();
+
+		auto _state = 0
+			| BGFX_STATE_WRITE_RGB
+			| BGFX_STATE_WRITE_A
+			| BGFX_STATE_WRITE_Z
+			| BGFX_STATE_DEPTH_TEST_LESS
+			| BGFX_STATE_MSAA
+			;
+		bgfx::setState(_state);
 		bgfx::setTransform(&transform.Model[0]);
 		bgfx::setVertexBuffer(0, mesh.MeshHandle.m_VBH);
 		bgfx::setIndexBuffer(mesh.MeshHandle.m_IBH);

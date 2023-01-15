@@ -59,7 +59,7 @@ harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& regist
 			, false
 			, 1
 			, format
-			, BGFX_TEXTURE_RT
+			, BGFX_TEXTURE_RT | BGFX_TEXTURE_MSAA_SAMPLE
 		);
 
 		Attachment a{
@@ -79,7 +79,7 @@ harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& regist
 			, false
 			, 1
 			, bgfx::TextureFormat::BGRA8
-			, BGFX_TEXTURE_RT
+			, BGFX_TEXTURE_RT | BGFX_TEXTURE_MSAA_SAMPLE
 		);
 
 		Attachment a{
@@ -121,7 +121,7 @@ harmony::PipelineStage::Data harmony::PipelineStage::Init(entt::registry& regist
 			, false
 			, 1
 			, format
-			, BGFX_TEXTURE_RT | BGFX_STATE_DEPTH_TEST_LESS | BGFX_TEXTURE_BLIT_DST
+			, BGFX_TEXTURE_RT | BGFX_STATE_DEPTH_TEST_LESS | BGFX_TEXTURE_BLIT_DST 
 		);
 
 		Attachment a{

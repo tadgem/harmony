@@ -181,7 +181,7 @@ void harmony::Program::InitBGFX()
 	bgfx_init.type = bgfx::RendererType::Count; // auto choose renderer
 	bgfx_init.resolution.width = p_WindowWidth;
 	bgfx_init.resolution.height = p_WindowHeight;
-	bgfx_init.resolution.reset = BGFX_RESET_VSYNC;
+	bgfx_init.resolution.reset = BGFX_RESET_VSYNC | BGFX_RESET_MSAA_X16;
 	bgfx_init.platformData = pd;
 	bgfx_init.debug = true;
 	bgfx_init.callback = &p_DebugCallback;

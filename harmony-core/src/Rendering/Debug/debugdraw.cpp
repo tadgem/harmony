@@ -2217,7 +2217,7 @@ struct DebugDrawEncoderImpl
 				m_encoder->setVertexBuffer(0, &tvb);
 				m_encoder->setIndexBuffer(&tib);
 				m_encoder->setState(0
-					| (attrib.m_state & ~BGFX_STATE_CULL_MASK)
+					| (attrib.m_state & ~BGFX_STATE_CULL_MASK) | BGFX_STATE_MSAA
 					);
 				m_encoder->setTransform(m_mtxStack[m_mtxStackCurrent].mtx);
 				m_encoder->setTexture(0, s_dds.s_texColor, s_dds.m_texture);
