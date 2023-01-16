@@ -219,12 +219,12 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 			Sphere sphere{ glm::vec4(thisTransform->Position.x,thisTransform->Position.y,thisTransform->Position.z, thisSphereComponent->m_Radius) };
 			entt::entity thisEntity = e;
 			std::for_each(
-				std::execution::seq,
+				std::execution::par,
 				spheres.begin(),
 				spheres.end(),
-				[&thisSphereComponent, &sphere, thisEntity](const auto& testSphere)
+				[&sphere, thisEntity](const auto& testSphere)
 				{
-					if (testSphere.second.Sphere == thisSphereComponent)
+					if (testSphere.first == thisEntity)
 					{
 						return;
 					}
@@ -234,22 +234,18 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 					if (Collision::Intersects(sphere, cs))
 					{
 						currentSphereComponent->m_Colliders.emplace_back(thisEntity);
-						// auto lock = std::lock_guard<std::mutex>(s_SphereIntersectionMutex);
-						thisSphereComponent->m_Colliders.emplace_back(testSphere.first);
 					}
 				});
 
 			std::for_each(
-				std::execution::seq,
+				std::execution::par,
 				aabbs.begin(),
 				aabbs.end(),
-				[&thisSphereComponent, &sphere, thisEntity](const auto& testAABB)
+				[&sphere, thisEntity](const auto& testAABB)
 				{
 					if (Collision::Intersects(sphere, testAABB.second->m_Frame))
 					{
 						testAABB.second->m_Colliders.emplace_back(thisEntity);
-						//auto lock = std::lock_guard<std::mutex>(s_SphereIntersectionMutex);
-						thisSphereComponent->m_Colliders.emplace_back(testAABB.first);
 					}
 
 				});
