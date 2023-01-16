@@ -36,6 +36,7 @@ void ValidateAngles(glm::vec3& input)
 
 void harmony::TransformSystem::Update(entt::registry& registry)
 {
+    HARMONY_PROFILE_FUNCTION()
 	auto transformView = registry.view<TransformComponent>();
 	glm::mat4 modelMatrix = glm::mat4(1.0);
 
@@ -58,14 +59,17 @@ void harmony::TransformSystem::Update(entt::registry& registry)
 
 void harmony::TransformSystem::Render(entt::registry& registry)
 {
+    HARMONY_PROFILE_FUNCTION()
 }
 
 void harmony::TransformSystem::Cleanup(entt::registry& registry)
 {
+    HARMONY_PROFILE_FUNCTION()
 }
 
 nlohmann::json harmony::TransformSystem::SerializeSystem(entt::registry& registry)
 {
+    HARMONY_PROFILE_FUNCTION()
     nlohmann::json j;
 
     auto view = registry.view<TransformComponent>();
@@ -80,6 +84,7 @@ nlohmann::json harmony::TransformSystem::SerializeSystem(entt::registry& registr
 
 void harmony::TransformSystem::DeserializeSystem(entt::registry& registry, nlohmann::json systemJson)
 {
+    HARMONY_PROFILE_FUNCTION()
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++)
     {
         entt::entity e = GetEntityFromKey(entry.key());
@@ -97,6 +102,7 @@ void harmony::TransformSystem::Refresh()
 
 void harmony::TransformSystem::CalculateDirectionVectors(glm::vec3 eulerDegrees, TransformComponent& transform)
 {
+    HARMONY_PROFILE_FUNCTION()
     // x = pitch, y = yaw, z = roll
     glm::vec3 eulerRadians = Utils::CalculateVec3Radians(eulerDegrees);
 

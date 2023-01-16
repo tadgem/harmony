@@ -18,6 +18,7 @@ void harmony::CameraSystem::Init(entt::registry& registry)
 
 void harmony::CameraSystem::Update(entt::registry& registry)
 {
+    HARMONY_PROFILE_FUNCTION()
     auto view = registry.view<TransformComponent, CameraComponent>();
 
     for (auto [entity, t,  c] : view.each())

@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <fstream>
+#include <vector>
 #include <thread>
 #include "ThirdParty/json.hpp"
 #include "glm/glm.hpp"
@@ -24,25 +24,25 @@ class Instrumentor
 {
 private:
 	InstrumentationSession* m_CurrentSession;
-	std::ofstream m_OutputStream;
 	int m_ProfileCount;
+	std::map<std::string, ProfileResult> m_ProfileResults;
 public:
 	Instrumentor()
 		: m_CurrentSession(nullptr), m_ProfileCount(0)
 	{
 	}
 
-	void BeginSession(const std::string& name, const std::string& filepath = "results.json")
+	void BeginSession(const std::string& name)
 	{
-		m_OutputStream.open(filepath);
+		// m_OutputStream.open(filepath);
 		WriteHeader();
 		m_CurrentSession = new InstrumentationSession{ name };
 	}
 
 	void EndSession()
 	{
-		WriteFooter();
-		m_OutputStream.close();
+		// WriteFooter();
+		// m_OutputStream.close();
 		delete m_CurrentSession;
 		m_CurrentSession = nullptr;
 		m_ProfileCount = 0;
@@ -50,7 +50,7 @@ public:
 
 	void WriteProfile(const ProfileResult& result)
 	{
-		if (m_ProfileCount++ > 0)
+		/*if (m_ProfileCount++ > 0)
 			m_OutputStream << ",";
 
 		std::string name = result.Name;
@@ -66,25 +66,42 @@ public:
 		m_OutputStream << "\"ts\":" << result.Start;
 		m_OutputStream << "}";
 
-		m_OutputStream.flush();
+		m_OutputStream.flush();*/
+
+		if (m_ProfileResults.find(result.Name) != m_ProfileResults.end())
+		{
+			long dist = result.End - result.Start;
+			m_ProfileResults[result.Name].End += dist;
+		}
+		m_ProfileResults.emplace(result.Name, result);
 	}
 
 	void WriteHeader()
 	{
-		m_OutputStream << "{\"otherData\": {},\"traceEvents\":[";
-		m_OutputStream.flush();
+		/*m_OutputStream << "{\"otherData\": {},\"traceEvents\":[";
+		m_OutputStream.flush();*/
 	}
 
 	void WriteFooter()
 	{
-		m_OutputStream << "]}";
-		m_OutputStream.flush();
+		/*m_OutputStream << "]}";
+		m_OutputStream.flush();*/
 	}
 
 	static Instrumentor& Get()
 	{
 		static Instrumentor instance;
 		return instance;
+	}
+
+	static std::map<std::string,ProfileResult>& GetResults()
+	{
+		return Get().m_ProfileResults;
+	}
+
+	static void ClearResults()
+	{
+		Get().m_ProfileResults.clear();
 	}
 };
 
@@ -125,9 +142,9 @@ private:
 };
 
 #if 1
-#define HARMONY_PROFILE_BEGIN_SESSION(name, filepath) Instrumentor::Get().BeginSession(name, filepath);
+#define HARMONY_PROFILE_BEGIN_SESSION(name, filepath) Instrumentor::Get().BeginSession(name);
 #define HARMONY_PROFILE_SCOPE(name) InstrumentationTimer timer##__LINE__(name);
-#define HARMONY_PROFILE_FUNCTION() HARMONY_PROFILE_SCOPE(__FUNCSIG__)
+#define HARMONY_PROFILE_FUNCTION() HARMONY_PROFILE_SCOPE(__FUNCTION__)
 #define HARMONY_PROFILE_END_SESSION() Instrumentor::Get().EndSession();
 #else
 #define HARMONY_PROFILE_BEGIN_SESSION(name, filepath)

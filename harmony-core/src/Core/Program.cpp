@@ -18,7 +18,7 @@
 #endif
 harmony::Program::Program(const std::string& name) : p_AppName(name), m_Renderer(m_AssetManager)
 {
-	HARMONY_PROFILE_FUNCTION()
+	HARMONY_PROFILE_BEGIN_SESSION("Harmony Engine")
 	if(s_Instance != nullptr)
 	{
 		harmony::log::error("Trying to create new application instance but an application already exists!");
@@ -33,6 +33,7 @@ harmony::Program::Program(const std::string& name) : p_AppName(name), m_Renderer
 
 harmony::Program::~Program()
 {
+	HARMONY_PROFILE_END_SESSION()
 	HARMONY_PROFILE_FUNCTION()
 }
 
@@ -347,6 +348,7 @@ void harmony::Program::PreRunInit()
 
 void harmony::Program::UpdateTimeVariables()
 {
+	Instrumentor::Get().ClearResults();
 	int64_t now = bx::getHPCounter();
 	static int64_t last = now;
 	const int64_t frameTime = now - last;
@@ -607,7 +609,7 @@ void harmony::Program::RunProgramLoop()
 
 		Input::PostFrame();
 
-		bgfx::frame();
+		Frame();
 	}
 }
 
@@ -941,4 +943,10 @@ void harmony::Program::UpdateProjectDirectory(const std::string& path)
 	harmony::log::info("Current working directory : {}", directory);
 
 	m_Project->m_ProjectDirectory = directory;
+}
+
+void harmony::Program::Frame()
+{
+	bgfx::frame();
+	// Instrumentor::Get().ClearResults();
 }

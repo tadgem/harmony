@@ -299,7 +299,7 @@ void harmony::Renderer::OnImGui()
     ImGui::SetNextWindowSizeConstraints(ImVec2(300, 300), ImVec2(300, 300));
     if (ImGui::Begin(rendererTitle.c_str()))
     {
-        ImGui::Text("Frametime : %f, ", Time::GetFrameTime());
+        ImGui::Text("Frametime : %f, ", Time::GetFrameTime() * 1000.0f);
         ImGui::SameLine();
         ImGui::Text("FPS : %f", 1.0 / Time::GetFrameTime());
         ImGui::Separator();

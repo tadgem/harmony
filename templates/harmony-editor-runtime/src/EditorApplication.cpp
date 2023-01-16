@@ -12,6 +12,7 @@
 #include "AssimpModelAssetFactory.h"
 #include "EditorView.h"
 #include "ECS/SimpleCollisionSystem.h"
+#include "Profiler.h"
 
 harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this)
 {
@@ -65,8 +66,10 @@ void harmony::Editor::AddEditorPanels()
 	Ref<AssetManagerPanel> assetManagerPanel = CreateRef<AssetManagerPanel>(*this);
 	p_Panels.emplace_back(assetManagerPanel);
 
+	Ref<ProfilerPanel> profilerPanel = CreateRef<ProfilerPanel>();
+	p_Panels.emplace_back(profilerPanel);
+
 	Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, p_ScenePanel);
-	
 	inspector->AddComponentUI<TransformComponentUI>();
 	inspector->AddComponentUI<MeshComponentUI>(m_AssetManager);
 	inspector->AddComponentUI<MaterialComponentUI>(m_Renderer, m_AssetManager);
@@ -154,7 +157,7 @@ int harmony::Editor::OnEditUpdate()
 
 	ImGuiPostUpdate();
 
-	bgfx::frame();
+	Frame();
 
 	return FSM::NO_TRIGGER;
 }
@@ -195,7 +198,7 @@ int harmony::Editor::OnRuntimeUpdate()
 
 	ImGuiPostUpdate();
 	  
-	bgfx::frame();
+	Frame();
 
 	return FSM::NO_TRIGGER;
 }

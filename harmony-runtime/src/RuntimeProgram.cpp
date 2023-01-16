@@ -216,7 +216,7 @@ int harmony::RuntimeProgram::OnRuntimeUpdate()
 
 	PresentRuntimeImage();
 
-	bgfx::frame();
+	Frame();
 
 	return FSM::NO_TRIGGER;
 }

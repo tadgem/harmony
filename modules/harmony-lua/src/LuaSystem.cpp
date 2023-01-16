@@ -11,6 +11,7 @@ harmony::LuaSystem::LuaSystem(AssetManager& am, Ref<LuaProgramComponent> luaPc) 
 
 void harmony::LuaSystem::Init(entt::registry& registry)
 {
+    HARMONY_PROFILE_FUNCTION()
     auto view = registry.view<LuaComponent>();
 
     sol::state& state = p_LuaProgramComponent->p_State;
@@ -36,6 +37,7 @@ void harmony::LuaSystem::Init(entt::registry& registry)
 
 void harmony::LuaSystem::Update(entt::registry& registry)
 {
+    HARMONY_PROFILE_FUNCTION()
     auto view = registry.view<LuaComponent>();
     sol::state& state = p_LuaProgramComponent->p_State;
     for (auto [entity, lua] : view.each())
@@ -64,10 +66,12 @@ void harmony::LuaSystem::Update(entt::registry& registry)
 
 void harmony::LuaSystem::Render(entt::registry& registry)
 {
+    HARMONY_PROFILE_FUNCTION()
 }
 
 void harmony::LuaSystem::Cleanup(entt::registry& registry)
 {
+    HARMONY_PROFILE_FUNCTION()
     auto view = registry.view<LuaComponent>();
     sol::state& state = p_LuaProgramComponent->p_State;
     for (auto [entity, lua] : view.each())
@@ -90,6 +94,7 @@ void harmony::LuaSystem::Cleanup(entt::registry& registry)
 
 nlohmann::json harmony::LuaSystem::SerializeSystem(entt::registry& registry)
 {
+    HARMONY_PROFILE_FUNCTION()
     nlohmann::json j;
 
     auto view = registry.view<LuaComponent>();
@@ -104,6 +109,7 @@ nlohmann::json harmony::LuaSystem::SerializeSystem(entt::registry& registry)
 
 void harmony::LuaSystem::DeserializeSystem(entt::registry& registry, nlohmann::json systemJson)
 {
+    HARMONY_PROFILE_FUNCTION()
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++)
     {
         entt::entity e = GetEntityFromKey(entry.key());

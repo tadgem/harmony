@@ -12,6 +12,7 @@ void harmony::MeshSystem::Init(entt::registry& registry)
 
 void harmony::MeshSystem::Update(entt::registry& registry)
 {
+	HARMONY_PROFILE_FUNCTION()
 	auto view = registry.view<MeshComponent>();
 
 	for (auto [entity, mesh] : view.each())
@@ -61,6 +62,7 @@ void harmony::MeshSystem::Refresh()
 
 void harmony::MeshSystem::UpdateMeshComponent(MeshComponent& mc)
 {
+	HARMONY_PROFILE_FUNCTION()
 	bool meshValid = mc.MeshHandle.m_Layout.m_stride > 0;
 	if (!meshValid)
 	{

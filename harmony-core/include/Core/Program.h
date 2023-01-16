@@ -8,7 +8,8 @@
 #endif
 #include "SDL.h"
 #undef main
-#include "Memory.h"
+#include "Core/Thread.h"
+#include "Core/Memory.h"
 #include "Core/ProgramComponent.h"
 #include "Core/Profile.hpp"
 #include "Assets/AssetManager.h"
@@ -18,7 +19,6 @@
 #include "Project.h"
 #include "Core/BGFXDebugCallback.h"
 #include "ImGui/imgui.h"
-
 namespace harmony
 {
 	typedef std::function<void()> Callback;
@@ -93,6 +93,7 @@ namespace harmony
 		void LoadImGuiSettings();
 
 		void UpdateProjectDirectory(const std::string& path);
+		void Frame();
 
 		std::string							p_AppName;
 		std::string							p_LoadedProjectPath;
