@@ -19,6 +19,6 @@ namespace harmony
 
     protected:
 
-        void CalculateDirectionVectors(glm::vec3 eulerDegrees, TransformComponent& transform);
+        static void CalculateDirectionVectors(glm::vec3 eulerDegrees, TransformComponent& transform);
     };
 };

@@ -1,9 +1,11 @@
 #include <algorithm>
 #include <mutex>
+#include "Core/Thread.h"
 #include <execution>
 #include "ECS/SimpleCollisionSystem.h"
 #include "Core/Memory.h"
 #include "Core/Log.hpp"
+#include "Core/Profile.hpp"
 #include "Collision/Collision.h"
 #include "ECS/TransformComponent.h"
 #include "ECS/SimpleCollisionComponent.h"
@@ -13,10 +15,12 @@
 #endif
 harmony::SimpleCollisionSystem::SimpleCollisionSystem(AssetManager& am) : System(GetTypeHash<SimpleCollisionSystem>()), p_AssetManager(am)
 {
+	HARMONY_PROFILE_FUNCTION()
 }
 
 void harmony::SimpleCollisionSystem::Init(entt::registry& registry)
 {
+	HARMONY_PROFILE_FUNCTION()
 	auto view = registry.view<TransformComponent, AABBColliderComponent>();
 	for (auto& [e, t, aabb] : view.each())
 	{
@@ -33,20 +37,24 @@ void harmony::SimpleCollisionSystem::Init(entt::registry& registry)
 
 void harmony::SimpleCollisionSystem::Update(entt::registry& registry)
 {
+	HARMONY_PROFILE_FUNCTION()
 	PreUpdate(registry);
 	UpdateColliders(registry);
 }
 
 void harmony::SimpleCollisionSystem::Render(entt::registry& registry)
 {
+	HARMONY_PROFILE_FUNCTION()
 }
 
 void harmony::SimpleCollisionSystem::Cleanup(entt::registry& registry)
 {
+	HARMONY_PROFILE_FUNCTION()
 }
 
 nlohmann::json harmony::SimpleCollisionSystem::SerializeSystem(entt::registry& registry)
 {
+	HARMONY_PROFILE_FUNCTION()
 	nlohmann::json j;
 
 	auto view = registry.view<AABBColliderComponent>();
@@ -67,6 +75,7 @@ nlohmann::json harmony::SimpleCollisionSystem::SerializeSystem(entt::registry& r
 
 void harmony::SimpleCollisionSystem::DeserializeSystem(entt::registry& registry, nlohmann::json systemJson)
 {
+	HARMONY_PROFILE_FUNCTION()
 	auto aabbJson = systemJson["aabb"];
 	for (auto entry = aabbJson.begin(); entry != aabbJson.end(); entry++)
 	{
@@ -99,6 +108,7 @@ static std::mutex s_SphereHitsMutex;
 
 std::vector<harmony::Hit> harmony::SimpleCollisionSystem::Raycast(Ray ray, entt::registry& registry)
 {
+	HARMONY_PROFILE_FUNCTION()
 	auto hits = std::vector<Hit>();
 	auto aabbView = registry.view<TransformComponent, AABBColliderComponent>();
 	std::for_each(
@@ -152,48 +162,64 @@ static std::mutex s_SphereIntersectionMutex;
 
 void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 {
+	HARMONY_PROFILE_FUNCTION()
+	//
+	// AABB Intersection Tests
+	// 
 	auto aabbView = registry.view<TransformComponent, AABBColliderComponent>();
 	auto aabbs = std::map<entt::entity, AABBColliderComponent*>();
 
-	std::for_each(
-		std::execution::par,
-		aabbView.begin(),
-		aabbView.end(),
-		[&aabbView](const auto& e)
-		{
-			auto& aabb		= aabbView.get<AABBColliderComponent>(e);
-			auto& t			= aabbView.get<TransformComponent>(e);
-			AABB newAABB	= Collision::UpdateAABB(aabb.m_Original, glm::mat3(glm::transpose(t.Model)), t.Position);
-			aabb.m_Frame	= newAABB;
-		});
-
-	for (auto& [e, t, aabb] : aabbView.each())
 	{
-		aabb.m_Colliders.clear();
-		aabbs.emplace(e, &aabb);
+		HARMONY_PROFILE_SCOPE("Update AABB Transforms")
+		std::for_each(
+			std::execution::par,
+			aabbView.begin(),
+			aabbView.end(),
+			[&aabbView](const auto& e)
+			{
+				auto& aabb = aabbView.get<AABBColliderComponent>(e);
+				auto& t = aabbView.get<TransformComponent>(e);
+				AABB newAABB = Collision::UpdateAABB(aabb.m_Original, glm::mat3(glm::transpose(t.Model)), t.Position);
+				aabb.m_Frame = newAABB;
+			});
+	}
+	{
+		HARMONY_PROFILE_SCOPE("Copy AABBs")
+		for (auto& [e, t, aabb] : aabbView.each())
+		{
+			aabb.m_Colliders.clear();
+			aabbs.emplace(e, &aabb);
+		}
 	}
 	if (!aabbs.empty())
 	{
-		for (auto& [e, aabb] : aabbs)
 		{
-			harmony::AABBColliderComponent* currentAABB = aabb;
-			entt::entity currentEntity = e;
-			std::for_each(
-				std::execution::seq,
-				aabbs.begin(),
-				aabbs.end(),
-				[currentAABB, currentEntity](const auto& testAABB)
+			HARMONY_PROFILE_SCOPE("AABB Intersection Test")
+				for (auto& [e, aabb] : aabbs)
 				{
-					if (currentAABB == testAABB.second) return;
-					if (Collision::Intersects(currentAABB->m_Frame, testAABB.second->m_Frame))
-					{
-						testAABB.second->m_Colliders.emplace_back(currentEntity);
-						currentAABB->m_Colliders.emplace_back(testAABB.first);
-					}
+					harmony::AABBColliderComponent* currentAABB = aabb;
+					entt::entity currentEntity = e;
+					std::for_each(
+						std::execution::seq,
+						aabbs.begin(),
+						aabbs.end(),
+						[currentAABB, currentEntity](const auto& testAABB)
+						{
+							if (currentAABB == testAABB.second) return;
+							if (Collision::Intersects(currentAABB->m_Frame, testAABB.second->m_Frame))
+							{
+								testAABB.second->m_Colliders.emplace_back(currentEntity);
+								currentAABB->m_Colliders.emplace_back(testAABB.first);
+							}
 
-				});
+						});
+				}
 		}
 	}
+
+	//
+	// Sphere Intersection Tests
+	//
 
 	struct TempSphere
 	{
@@ -201,18 +227,87 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 		TransformComponent* Trans;
 	};
 
-
 	auto sphereView = registry.view<TransformComponent, SphereColliderComponent>();
 	auto spheres = std::map<entt::entity, TempSphere>();
-	for (auto& [e, t, s] : sphereView.each())
 	{
-		s.m_Colliders.clear();
-		spheres.emplace(e, TempSphere{&s,&t});
+		HARMONY_PROFILE_SCOPE("Copy Spheres")
+			for (auto& [e, t, s] : sphereView.each())
+			{
+				s.m_Colliders.clear();
+				spheres.emplace(e, TempSphere{ &s,&t });
+			}
 	}
-
+#if FUTURES_IMPL
+	std::vector<SphereColliderComponent*> testedSpheres;
+	std::vector<std::future<void>> futures;
 	if (!spheres.empty())
 	{
-		for (auto&[e, s] : spheres)
+		for (auto& [e, s] : spheres)
+		{
+			SphereColliderComponent* thisSphereComponent = s.Sphere;
+			TransformComponent* thisTransform = s.Trans;
+			Sphere sphere{ glm::vec4(thisTransform->Position.x,thisTransform->Position.y,thisTransform->Position.z, thisSphereComponent->m_Radius) };
+			entt::entity thisEntity = e;
+
+			{
+				// Sphere - Sphere Intersection
+				HARMONY_PROFILE_SCOPE("Sphere - Sphere Intersection Test")
+				for (auto& [currentEntity, testSphere] : spheres)
+				{
+					SphereColliderComponent* currentSphereComponent = testSphere.Sphere;
+					if (currentSphereComponent == thisSphereComponent) continue;
+					if (std::find(testedSpheres.begin(), testedSpheres.end(), currentSphereComponent) != testedSpheres.end())
+					{
+						continue;
+					}
+					TransformComponent* currentTransform = testSphere.Trans;
+					Sphere cs{ glm::vec4(currentTransform->Position.x,currentTransform->Position.y,currentTransform->Position.z, currentSphereComponent->m_Radius) };
+					entt::entity ce = currentEntity;
+					futures.emplace_back(ThreadPool.submit(
+					[sphere, cs, ce, thisEntity, &currentSphereComponent, &thisSphereComponent]()
+					{
+						if (Collision::Intersects(sphere, cs))
+						{
+							std::lock_guard<std::mutex> intersectionLock(s_SphereIntersectionMutex);
+							thisSphereComponent->m_Colliders.emplace_back(ce);
+							currentSphereComponent->m_Colliders.emplace_back(thisEntity);
+						}
+
+					}));
+				}
+				testedSpheres.push_back(thisSphereComponent);
+				
+			}
+			{
+				// Sphere - ABB Intersection
+				HARMONY_PROFILE_SCOPE("Sphere - AABB Intersection Test")
+				for (auto& [currentEntity, testAABB] : aabbs)
+				{
+					if (Collision::Intersects(sphere, testAABB->m_Frame))
+					{
+						testAABB->m_Colliders.emplace_back(thisEntity);
+					}
+				}
+			}
+		}
+	}
+	while (!futures.empty())
+	{
+		for (int i = futures.size() - 1; i >= 0; i--)
+		{
+			if (is_ready<void>(futures[i]))
+			{
+				futures.erase(futures.begin() + i);
+			}
+		}
+	}
+	testedSpheres.clear();
+#endif
+#define FOREACH_IMPL
+#ifdef FOREACH_IMPL
+	if (!spheres.empty())
+	{
+		for (auto& [e, s] : spheres)
 		{
 			SphereColliderComponent* thisSphereComponent = s.Sphere;
 			TransformComponent* thisTransform = s.Trans;
@@ -251,41 +346,46 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 				});
 		}
 	}
-	for (auto& [e, t, aabb] : aabbView.each())
+#endif
 	{
+		HARMONY_PROFILE_SCOPE("Draw Collision Primitives")
+		for (auto& [e, t, aabb] : aabbView.each())
+		{
 #if HARMONY_DEBUG
-		if (aabb.m_Colliders.size() > 0)
-		{
-			DrawAABB(aabb.m_Frame, 0xff00ff00);
-		}
-		else
-		{
-			DrawAABB(aabb.m_Frame, 0xffffffff);
-		}
+			if (aabb.m_Colliders.size() > 0)
+			{
+				DrawAABB(aabb.m_Frame, 0xff00ff00);
+			}
+			else
+			{
+				DrawAABB(aabb.m_Frame, 0xffffffff);
+			}
 #endif
 	}
 
-	for (auto& [e, t, s] : sphereView.each())
-	{
+		for (auto& [e, t, s] : sphereView.each())
+		{
 #if HARMONY_DEBUG
-		if (s.m_Colliders.size() > 0)
-		{
-			DrawSphere(t.Position,s.m_Radius, 0xff00ff00);
-		}
-		else
-		{
-			DrawSphere(t.Position, s.m_Radius, 0xffffffff);
-		}
+			if (s.m_Colliders.size() > 0)
+			{
+				DrawSphere(t.Position, s.m_Radius, 0xff00ff00);
+			}
+			else
+			{
+				DrawSphere(t.Position, s.m_Radius, 0xffffffff);
+			}
 #endif
+		}
 	}
 }
 void harmony::SimpleCollisionSystem::PreUpdate(entt::registry& registry)
 {
-	
+	HARMONY_PROFILE_FUNCTION()
 }
 #if HARMONY_DEBUG
 void harmony::SimpleCollisionSystem::DrawAABB(AABB& aabb, uint32_t color)
 {
+	HARMONY_PROFILE_FUNCTION()
 	bx::Aabb bgfxAABB;
 	bgfxAABB.max = bx::Vec3(aabb.Max.x, aabb.Max.y, aabb.Max.z);
 	bgfxAABB.min = bx::Vec3(aabb.Min.x, aabb.Min.y, aabb.Min.z);
@@ -294,6 +394,7 @@ void harmony::SimpleCollisionSystem::DrawAABB(AABB& aabb, uint32_t color)
 }
 void harmony::SimpleCollisionSystem::DrawSphere(glm::vec3 position, float radius, uint32_t color)
 {
+	HARMONY_PROFILE_FUNCTION()
 	bx::Sphere bgfxSphere;
 	bgfxSphere.center = bx::Vec3(position.x, position.y, position.z);
 	bgfxSphere.radius = radius;

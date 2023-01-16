@@ -4,6 +4,11 @@
 #include "Core/Profile.hpp"
 #include "Core/Time.h"
 #include "Core/Utils.h"
+#include "Core/Log.hpp"
+#include <mutex>
+#include <execution>
+#include "Core/Thread.h"
+
 harmony::TransformSystem::TransformSystem() : System(GetTypeHash<TransformSystem>())
 {
 }
@@ -34,12 +39,91 @@ void ValidateAngles(glm::vec3& input)
     }
 }
 
+static std::mutex s_TransformMutex;
+
 void harmony::TransformSystem::Update(entt::registry& registry)
 {
     HARMONY_PROFILE_FUNCTION()
 	auto transformView = registry.view<TransformComponent>();
-	glm::mat4 modelMatrix = glm::mat4(1.0);
+#define MT_IMPL
+#ifdef MT_IMPL
 
+    uint8_t NUM_GROUPS = 5;
+    std::vector<TransformComponent*> transformGroups[NUM_GROUPS];
+    size_t numTransforms = transformView.size();
+    uint32_t groupSize = numTransforms / NUM_GROUPS;
+    if (transformView.size() % NUM_GROUPS != 0)
+    {
+        groupSize++;
+    }
+    uint32_t groupIndex = 0;
+    uint32_t groupCount = 0;
+
+    glm::mat4 modelMatrix = glm::mat4(1.0);
+    for (auto [entity, transform] : transformView.each())
+    {
+        transformGroups[groupIndex].push_back(&transform);
+
+        groupCount++;
+
+        if (groupCount >= groupSize)
+        {
+            groupIndex++;
+            groupCount = 0;
+        }
+    }
+    std::vector<std::future<void>> futures;
+    for (int i = 0; i < NUM_GROUPS; i++)
+    {
+        std::vector<TransformComponent*> tVec = transformGroups[i];
+        futures.emplace_back(ThreadPool.submit(
+            [tVec]()
+            {
+                for (int t = 0; t < tVec.size(); t++)
+                {
+                    TransformComponent* transform = tVec[t];
+                    glm::mat4 modelMatrix = glm::mat4(1.0);
+                    glm::vec3 pos = glm::vec3(0.0);
+                    glm::vec3 eul = glm::vec3(0.0);
+                    glm::vec3 scl = glm::vec3(0.0);
+
+                    {
+                        pos = transform->Position;
+                        eul = transform->Euler;
+                        scl = transform->Scale;
+                    }
+
+                    modelMatrix = glm::translate(modelMatrix, pos);
+                    ValidateAngles(eul);
+                    glm::quat rot = Utils::CalculateRotationQuat(eul);
+                    glm::mat4 localRotation = glm::mat4_cast(rot);
+                    glm::mat4 localScale = glm::mat4(1.0);
+                    localScale = glm::scale(localScale, scl);
+                    glm::mat4 finalMat = modelMatrix * localRotation * localScale;
+
+                    {
+                        transform->Model = finalMat;
+                        transform->Rotation = rot;
+                    }
+
+                    CalculateDirectionVectors(transform->Euler, *transform);
+                }
+            }
+        ));
+    }
+
+    while (futures.size() > 0)
+    {
+        for (int i = futures.size() - 1; i >= 0; i--)
+        {
+            if (is_ready<void>(futures[i]))
+            {
+                futures.erase(futures.begin() + i);
+            }
+        }
+    }
+#else
+    glm::mat4 modelMatrix = glm::mat4(1.0);
 	for (auto [entity, transform] : transformView.each())
 	{
 		modelMatrix = glm::mat4(1.0);
@@ -55,6 +139,7 @@ void harmony::TransformSystem::Update(entt::registry& registry)
 
         CalculateDirectionVectors(transform.Euler, transform);
 	}
+#endif
 }
 
 void harmony::TransformSystem::Render(entt::registry& registry)
