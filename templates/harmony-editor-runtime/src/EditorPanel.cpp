@@ -39,13 +39,20 @@ void harmony::ScenePanel::OnImGui()
 		}
 		const std::string entityNamePrefix = "Entity ";
 		ImGui::Separator();
+		const static int maxEntities = 50;
+		int counter = 0;
 		activeScene->m_Registry.each([&](entt::entity e)
 		{
-			std::string entityName = entityNamePrefix + std::to_string(static_cast<uint32_t>(e));
+			if (counter > maxEntities)
+			{
+				return;
+			}
+				std::string entityName = entityNamePrefix + std::to_string(static_cast<uint32_t>(e));
 			if (ImGui::Selectable(entityName.c_str()))
 			{
 				m_SelectedEntity = e;
 			}
+			counter++;
 		});
 
 	}

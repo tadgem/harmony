@@ -117,6 +117,7 @@ harmony::AABB harmony::Collision::UpdateAABB(AABB aabb, glm::mat3 matrix, glm::v
 
 bool harmony::Collision::Intersects(AABB a, AABB b)
 {
+    // Not right at all.
     if (a.Min.x <= b.Min.x && a.Max.x >= b.Max.x)
     {
         return false;

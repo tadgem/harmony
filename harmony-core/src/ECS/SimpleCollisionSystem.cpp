@@ -179,8 +179,12 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 			{
 				auto& aabb = aabbView.get<AABBColliderComponent>(e);
 				auto& t = aabbView.get<TransformComponent>(e);
-				AABB newAABB = Collision::UpdateAABB(aabb.m_Original, glm::mat3(glm::transpose(t.Model)), t.Position);
-				aabb.m_Frame = newAABB;
+				if (true)
+				{
+					AABB newAABB = Collision::UpdateAABB(aabb.m_Original, glm::mat3(glm::transpose(t.Model)), t.Position);
+					aabb.m_Frame = newAABB;
+					t.UpdateCollision = false;
+				}
 			});
 	}
 	{
@@ -237,80 +241,14 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 				spheres.emplace(e, TempSphere{ &s,&t });
 			}
 	}
-#if FUTURES_IMPL
-	std::vector<SphereColliderComponent*> testedSpheres;
-	std::vector<std::future<void>> futures;
 	if (!spheres.empty())
 	{
 		for (auto& [e, s] : spheres)
 		{
 			SphereColliderComponent* thisSphereComponent = s.Sphere;
 			TransformComponent* thisTransform = s.Trans;
-			Sphere sphere{ glm::vec4(thisTransform->Position.x,thisTransform->Position.y,thisTransform->Position.z, thisSphereComponent->m_Radius) };
-			entt::entity thisEntity = e;
-
-			{
-				// Sphere - Sphere Intersection
-				HARMONY_PROFILE_SCOPE("Sphere - Sphere Intersection Test")
-				for (auto& [currentEntity, testSphere] : spheres)
-				{
-					SphereColliderComponent* currentSphereComponent = testSphere.Sphere;
-					if (currentSphereComponent == thisSphereComponent) continue;
-					if (std::find(testedSpheres.begin(), testedSpheres.end(), currentSphereComponent) != testedSpheres.end())
-					{
-						continue;
-					}
-					TransformComponent* currentTransform = testSphere.Trans;
-					Sphere cs{ glm::vec4(currentTransform->Position.x,currentTransform->Position.y,currentTransform->Position.z, currentSphereComponent->m_Radius) };
-					entt::entity ce = currentEntity;
-					futures.emplace_back(ThreadPool.submit(
-					[sphere, cs, ce, thisEntity, &currentSphereComponent, &thisSphereComponent]()
-					{
-						if (Collision::Intersects(sphere, cs))
-						{
-							std::lock_guard<std::mutex> intersectionLock(s_SphereIntersectionMutex);
-							thisSphereComponent->m_Colliders.emplace_back(ce);
-							currentSphereComponent->m_Colliders.emplace_back(thisEntity);
-						}
-
-					}));
-				}
-				testedSpheres.push_back(thisSphereComponent);
-				
-			}
-			{
-				// Sphere - ABB Intersection
-				HARMONY_PROFILE_SCOPE("Sphere - AABB Intersection Test")
-				for (auto& [currentEntity, testAABB] : aabbs)
-				{
-					if (Collision::Intersects(sphere, testAABB->m_Frame))
-					{
-						testAABB->m_Colliders.emplace_back(thisEntity);
-					}
-				}
-			}
-		}
-	}
-	while (!futures.empty())
-	{
-		for (int i = futures.size() - 1; i >= 0; i--)
-		{
-			if (is_ready<void>(futures[i]))
-			{
-				futures.erase(futures.begin() + i);
-			}
-		}
-	}
-	testedSpheres.clear();
-#endif
-#define FOREACH_IMPL
-#ifdef FOREACH_IMPL
-	if (!spheres.empty())
-	{
-		for (auto& [e, s] : spheres)
-		{
-			SphereColliderComponent* thisSphereComponent = s.Sphere;
-			TransformComponent* thisTransform = s.Trans;
+			if (!thisTransform->UpdateCollision) continue;
+			thisTransform->UpdateCollision = false;
 			Sphere sphere{ glm::vec4(thisTransform->Position.x,thisTransform->Position.y,thisTransform->Position.z, thisSphereComponent->m_Radius) };
 			entt::entity thisEntity = e;
 			std::for_each(
@@ -346,7 +284,6 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 				});
 		}
 	}
-#endif
 	{
 		HARMONY_PROFILE_SCOPE("Draw Collision Primitives")
 		for (auto& [e, t, aabb] : aabbView.each())

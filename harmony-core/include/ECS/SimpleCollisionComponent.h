@@ -10,6 +10,7 @@ namespace harmony {
 	{
 		AABB m_Original;
 		AABB m_Frame;
+		bool m_Update;
 
 		AssetHandle m_MeshHandle;
 		std::vector<entt::entity> m_Colliders;
@@ -20,6 +21,7 @@ namespace harmony {
 	struct SphereColliderComponent
 	{
 		float m_Radius;
+		bool m_Update;
 		std::vector<entt::entity> m_Colliders;
 
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(SphereColliderComponent, m_Radius)
