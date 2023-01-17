@@ -9,24 +9,17 @@
 #include <execution>
 #include "Core/Thread.h"
 
-harmony::TransformSystem::TransformSystem() : System(GetTypeHash<TransformSystem>())
-{
-}
-
-void harmony::TransformSystem::Init(entt::registry& registry)
-{
-}
 
 void ValidateAngles(glm::vec3& input)
 {
     HARMONY_PROFILE_FUNCTION()
-    // need to perform these checks to avoid NaN values creating invalid model matrices.
-    // tradeoff is that transform values are only accurate to 4 decimal places...
-    // could cause jitteriness at high framerates in some cases
-    if (input.x <= 0.0001f && input.x >= 0.0001f)
-    {
-        input.x += 0.0001f;
-    }
+        // need to perform these checks to avoid NaN values creating invalid model matrices.
+        // tradeoff is that transform values are only accurate to 4 decimal places...
+        // could cause jitteriness at high framerates in some cases
+        if (input.x <= 0.0001f && input.x >= 0.0001f)
+        {
+            input.x += 0.0001f;
+        }
 
     if (input.y <= 0.0001f && input.y >= 0.0001f)
     {
@@ -39,16 +32,48 @@ void ValidateAngles(glm::vec3& input)
     }
 }
 
+harmony::TransformSystem::TransformSystem() : System(GetTypeHash<TransformSystem>())
+{
+}
+
+void harmony::TransformSystem::Init(entt::registry& registry)
+{
+    auto transformView = registry.view<TransformComponent>();
+    glm::mat4 modelMatrix = glm::mat4(1.0);
+    for (auto [entity, transform] : transformView.each())
+    {
+        modelMatrix = glm::mat4(1.0);
+        modelMatrix = glm::translate(modelMatrix, transform.Position);
+        ValidateAngles(transform.Euler);
+
+        transform.Rotation = Utils::CalculateRotationQuat(transform.Euler);
+        glm::mat4 localRotation = glm::mat4_cast(transform.Rotation);
+
+        glm::mat4 localScale = glm::mat4(1.0);
+        localScale = glm::scale(localScale, transform.Scale);
+        transform.Model = modelMatrix * localRotation * localScale;
+
+        CalculateDirectionVectors(transform.Euler, transform);
+    }
+}
+
+
 static std::mutex s_TransformMutex;
 
 void harmony::TransformSystem::Update(entt::registry& registry)
 {
     HARMONY_PROFILE_FUNCTION()
-	auto transformView = registry.view<TransformComponent>();
+	
+}
+
+void harmony::TransformSystem::Render(entt::registry& registry)
+{
+    HARMONY_PROFILE_FUNCTION()
+    auto transformView = registry.view<TransformComponent>();
 #define MT_IMPL
 #ifdef MT_IMPL
 
-    uint8_t NUM_GROUPS = 5;
+    static const uint8_t NUM_GROUPS = 4;
     std::vector<TransformComponent*> transformGroups[NUM_GROUPS];
     size_t numTransforms = transformView.size();
     uint32_t groupSize = numTransforms / NUM_GROUPS;
@@ -62,6 +87,12 @@ void harmony::TransformSystem::Update(entt::registry& registry)
     glm::mat4 modelMatrix = glm::mat4(1.0);
     for (auto [entity, transform] : transformView.each())
     {
+        if (transform.Position == transform.LastPosition &&
+            transform.Euler == transform.LastEuler &&
+            transform.Scale == transform.LastScale)
+        {
+            continue;
+        }
         transformGroups[groupIndex].push_back(&transform);
 
         groupCount++;
@@ -124,27 +155,28 @@ void harmony::TransformSystem::Update(entt::registry& registry)
     }
 #else
     glm::mat4 modelMatrix = glm::mat4(1.0);
-	for (auto [entity, transform] : transformView.each())
-	{
-		modelMatrix = glm::mat4(1.0);
-		modelMatrix = glm::translate(modelMatrix, transform.Position);
+    for (auto [entity, transform] : transformView.each())
+    {
+        modelMatrix = glm::mat4(1.0);
+        modelMatrix = glm::translate(modelMatrix, transform.Position);
         ValidateAngles(transform.Euler);
-    
-        transform.Rotation      = Utils::CalculateRotationQuat(transform.Euler);
+
+        transform.Rotation = Utils::CalculateRotationQuat(transform.Euler);
         glm::mat4 localRotation = glm::mat4_cast(transform.Rotation);
 
-        glm::mat4 localScale    = glm::mat4(1.0);
-        localScale              = glm::scale(localScale, transform.Scale);
-		transform.Model         = modelMatrix * localRotation * localScale;
+        glm::mat4 localScale = glm::mat4(1.0);
+        localScale = glm::scale(localScale, transform.Scale);
+        transform.Model = modelMatrix * localRotation * localScale;
 
         CalculateDirectionVectors(transform.Euler, transform);
-	}
+        }
 #endif
-}
-
-void harmony::TransformSystem::Render(entt::registry& registry)
-{
-    HARMONY_PROFILE_FUNCTION()
+    for (auto [entity, transform] : transformView.each())
+    {
+        transform.LastPosition = transform.Position;
+        transform.LastScale = transform.Scale;
+        transform.LastEuler = transform.Euler;
+    }
 }
 
 void harmony::TransformSystem::Cleanup(entt::registry& registry)

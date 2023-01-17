@@ -3,12 +3,14 @@
 #include "Rendering/PipelineDrawStage.h"
 #include "Rendering/View.h"
 #include "Core/Log.hpp"
+#include "Core/Profile.hpp"
 harmony::Pipeline::Pipeline(const PipelineHandle& handle, Pipeline::Type pipelineType) : m_Handle(handle), m_Name(handle.Name), m_Type(pipelineType), m_PostProcess(true)
 {
 }
 
 std::vector<harmony::PipelineDrawStage::Data> harmony::Pipeline::Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)
 {
+	HARMONY_PROFILE_FUNCTION()
 	std::vector<PipelineDrawStage::Data> datas = std::vector<PipelineDrawStage::Data>();
 	if (p_Stages.size() == 0)
 	{
@@ -23,6 +25,7 @@ std::vector<harmony::PipelineDrawStage::Data> harmony::Pipeline::Init(entt::regi
 
 void harmony::Pipeline::AddPipelineStage(Ref<PipelineDrawStage> stage)
 {
+	HARMONY_PROFILE_FUNCTION()
 	if (std::find(p_Stages.begin(), p_Stages.end(), stage) != p_Stages.end())
 	{
 		harmony::log::warn("Pipeline : {} : already contains stage : {}", m_Name, stage->m_Name);
@@ -34,6 +37,7 @@ void harmony::Pipeline::AddPipelineStage(Ref<PipelineDrawStage> stage)
 
 void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineDrawStage::Data> data)
 {
+	HARMONY_PROFILE_FUNCTION()
 	Ref<View> _v = view.lock();
 	if (p_Stages.size() == 0)
 	{
@@ -88,6 +92,7 @@ void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view, 
 
 void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineDrawStage::Data> data)
 {
+	HARMONY_PROFILE_FUNCTION()
 	if (p_Stages.size() == 0)
 	{
 		return;
@@ -100,6 +105,7 @@ void harmony::Pipeline::PostUpdate(entt::registry& registry, WeakRef<View> view,
 
 void harmony::Pipeline::Cleanup(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds)
 {
+	HARMONY_PROFILE_FUNCTION()
 	if (p_Stages.size() == 0)
 	{
 		return;
@@ -118,6 +124,7 @@ uint32_t harmony::Pipeline::NumPipelineStages()
 
 bool harmony::Pipeline::HasDepth()
 {
+	HARMONY_PROFILE_FUNCTION()
 	for (Ref<PipelineDrawStage> pipeline : p_Stages)
 	{
 		if (pipeline->m_HasDepthAttachment)

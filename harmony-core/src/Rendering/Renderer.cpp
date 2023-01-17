@@ -185,6 +185,7 @@ void harmony::Renderer::Init()
 
 void harmony::Renderer::OnPreUpdate(entt::registry& registry)
 {
+    HARMONY_PROFILE_FUNCTION()
     for (int i = 0; i < m_ActiveViews.size(); i++)
     {
         if (m_ActiveViews[i].expired())
@@ -209,6 +210,7 @@ void harmony::Renderer::OnPreUpdate(entt::registry& registry)
 
 void harmony::Renderer::OnPostUpdate(entt::registry& registry)
 {
+    HARMONY_PROFILE_FUNCTION()
     for (int i = 0; i < m_ActiveViews.size(); i++)
     {
         if (m_ActiveViews[i].expired())
@@ -243,6 +245,7 @@ harmony::PipelineStack& harmony::Renderer::GetViewPipelineStack(const std::strin
 
 void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline)
 {
+    HARMONY_PROFILE_FUNCTION()
     if (viewWeakRef.expired())
     {
         harmony::log::error("Trying to add pipeline association to a view which is expired.");
@@ -264,6 +267,7 @@ void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipel
 
 void harmony::Renderer::AddViewPostProcessStage(WeakRef<View> viewWeakRef, WeakRef<PostProcessStage> stage)
 {
+    HARMONY_PROFILE_FUNCTION()
     if (viewWeakRef.expired())
     {
         harmony::log::error("Trying to add pipeline association to a view which is expired.");
@@ -285,6 +289,7 @@ void harmony::Renderer::AddViewPostProcessStage(WeakRef<View> viewWeakRef, WeakR
 
 void harmony::Renderer::RefreshViews()
 {
+    HARMONY_PROFILE_FUNCTION()
     for (auto& [view, stack] :p_Views)
     {
         stack.OnViewResized(view);
@@ -1443,6 +1448,7 @@ void harmony::Renderer::DeserializeActiveViews(nlohmann::json& json, AssetManage
 
 void harmony::Renderer::HandleStackPipelineAccumulation(Ref<View> view, PipelineStack& stack, Ref<ShaderProgram> textureProg, entt::registry& registry)
 {
+    HARMONY_PROFILE_FUNCTION()
     view->OnPostUpdate(registry);
     auto texturesToBlit = stack.PostUpdate(registry, view);
 
@@ -1488,6 +1494,7 @@ void harmony::Renderer::HandleStackPipelineAccumulation(Ref<View> view, Pipeline
 
 void harmony::Renderer::HandleStackPostProcess(Ref<View> view, PipelineStack& stack, Ref<ShaderProgram> textureProg, entt::registry& registry)
 {
+    HARMONY_PROFILE_FUNCTION()
     PipelineStage::Data data;
 
     // Initialize with final result from draw pipelines.

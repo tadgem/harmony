@@ -9,6 +9,7 @@ harmony::MeshRenderer::MeshRenderer() : PipelineStageRenderer("MeshRenderer")
 
 void harmony::MeshRenderer::Draw(entt::registry& scene, Ref<ShaderProgram> shader, bgfx::ViewId viewId)
 {
+	HARMONY_PROFILE_FUNCTION()
 	auto drawables = scene.view<MeshComponent, MaterialComponent, TransformComponent>();
 	bool hasDrawn = false;
 	for (auto [e, mesh, material, transform] : drawables.each())

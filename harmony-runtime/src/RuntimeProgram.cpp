@@ -208,6 +208,8 @@ int harmony::RuntimeProgram::OnRuntimeUpdate()
 
 	RunSystemUpdate();
 
+	RunSystemRender();
+
 	RunRendererPostUpdate(); 
 
 	RunProgramComponentRender();

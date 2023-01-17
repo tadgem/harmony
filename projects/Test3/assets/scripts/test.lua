@@ -16,7 +16,7 @@ jumpMomentum        = 40.0
 jumpMultiplier      = 6.0
 currentJumpHeight   = 0.0
 timeInAir = 0.0
-collisionTestMultiplier = 20
+collisionTestMultiplier = 300
 lineEnd = nil
 
 function start()

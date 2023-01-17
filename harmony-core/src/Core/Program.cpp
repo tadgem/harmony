@@ -348,7 +348,8 @@ void harmony::Program::PreRunInit()
 
 void harmony::Program::UpdateTimeVariables()
 {
-	Instrumentor::Get().ClearResults();
+	HARMONY_PROFILE_FUNCTION()
+	// Instrumentor::Get().ClearResults();
 	int64_t now = bx::getHPCounter();
 	static int64_t last = now;
 	const int64_t frameTime = now - last;
@@ -371,6 +372,7 @@ void harmony::Program::ResizeApplicationWindow(int w, int h)
 
 void harmony::Program::HandleSDLEvent()
 {
+	HARMONY_PROFILE_FUNCTION()
 	SDL_Event sdlEvent;
 	p_ResizedThisFrame = false;
 
@@ -569,6 +571,7 @@ void harmony::Program::HandleInputEvent(SDL_Event& event)
 
 void harmony::Program::ImGuiPreUpdate()
 {
+	HARMONY_PROFILE_FUNCTION()
 #if HARMONY_DEBUG && !__WINRT__
 	bgfx::setViewClear((bgfx::ViewId)BGFX_MAIN_WINDOW_IMGUI_VIEW_ID, BGFX_CLEAR_COLOR, 0x00000000);
 	ImGui::NewFrame();
@@ -579,6 +582,8 @@ void harmony::Program::ImGuiPreUpdate()
 
 void harmony::Program::ImGuiPostUpdate()
 {
+	HARMONY_PROFILE_FUNCTION()
+
 #if HARMONY_DEBUG && !__WINRT__
 	imguiEndFrame();
 
@@ -600,6 +605,8 @@ void harmony::Program::RunProgramLoop()
 		RunProgramComponentUpdate();
 
 		RunSystemUpdate();
+
+		RunSystemRender();
 
 		RunRendererPostUpdate();
 
@@ -899,6 +906,7 @@ void harmony::Program::RunSystemCleanup()
 
 void harmony::Program::RunRendererPreUpdate()
 {
+	HARMONY_PROFILE_FUNCTION()
 	if (p_ActiveScene == nullptr)
 	{
 		return;
@@ -908,6 +916,7 @@ void harmony::Program::RunRendererPreUpdate()
 
 void harmony::Program::RunRendererPostUpdate()
 {
+	HARMONY_PROFILE_FUNCTION()
 	if (p_ActiveScene == nullptr)
 	{
 		return;
@@ -947,6 +956,7 @@ void harmony::Program::UpdateProjectDirectory(const std::string& path)
 
 void harmony::Program::Frame()
 {
+	HARMONY_PROFILE_FUNCTION()
 	bgfx::frame();
 	// Instrumentor::Get().ClearResults();
 }

@@ -71,7 +71,10 @@ public:
 		if (m_ProfileResults.find(result.Name) != m_ProfileResults.end())
 		{
 			long dist = result.End - result.Start;
-			m_ProfileResults[result.Name].End += dist;
+			long oldStart= m_ProfileResults[result.Name].Start;
+			long oldEnd = m_ProfileResults[result.Name].End;
+			m_ProfileResults[result.Name].Start = (oldStart + result.Start) / 2;
+			m_ProfileResults[result.Name].End = (oldEnd + result.End) / 2;
 		}
 		m_ProfileResults.emplace(result.Name, result);
 	}

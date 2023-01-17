@@ -24,6 +24,10 @@ namespace harmony
         glm::vec3 Scale;
         glm::vec3 Euler;
 
+        glm::vec3 LastPosition;
+        glm::vec3 LastScale;
+        glm::vec3 LastEuler;
+
         glm::vec3 Forward;
         glm::vec3 Right;
         glm::vec3 Up;

@@ -145,7 +145,9 @@ int harmony::Editor::OnEditUpdate()
 		VectorGraphics::Get()->FontBlur(VectorGraphics::One, 0);
 		VectorGraphics::Get()->FillColor(VectorGraphics::One, nvgRGBA(220, 220, 220, 160));
 		VectorGraphics::Get()->Text(VectorGraphics::One, 0.0f, 30.0f, "carbontype");
+		p_TransformSystem->Render(p_ActiveScene->m_Registry);
 	}
+
 
 	RunRendererPostUpdate();
 
@@ -185,6 +187,8 @@ int harmony::Editor::OnRuntimeUpdate()
 	RunProgramComponentUpdate();
 
 	RunSystemUpdate();
+
+	RunSystemRender();
 
 	RunRendererPostUpdate();
 
@@ -299,6 +303,7 @@ void harmony::Editor::OpenScene(uint32_t index)
 
 void harmony::Editor::UpdateEditor()
 {
+	HARMONY_PROFILE_FUNCTION()
 	p_MainMenuBar.OnImGui();
 	GlobalDockspace();
 
