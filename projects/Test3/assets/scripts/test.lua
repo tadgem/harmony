@@ -16,7 +16,7 @@ jumpMomentum        = 40.0
 jumpMultiplier      = 6.0
 currentJumpHeight   = 0.0
 timeInAir = 0.0
-collisionTestMultiplier = 300
+collisionTestMultiplier = 50
 lineEnd = nil
 
 function start()
@@ -26,12 +26,12 @@ function start()
         for y=1,collisionTestMultiplier do
             newEntity = harmony.GetScene():AddEntity()
             newEntity:AddTransform()
-            -- newEntity:AddSphere()
+            newEntity:AddSphere()
             t = newEntity:GetTransform()
             t.position.x = t.position.x + x
             t.position.z = t.position.z + y
-            -- s = newEntity:GetSphere()
-            -- s.radius = 2.0
+            s = newEntity:GetSphere()
+            s.radius = 2.0
         end
     end
 end
