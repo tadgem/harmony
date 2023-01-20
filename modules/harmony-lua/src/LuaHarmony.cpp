@@ -99,8 +99,15 @@ harmony::Renderer* lua_GetRenderer()
 	return nullptr;
 }
 
+harmony::SimpleCollisionSystem* s_Instance = nullptr;
+
 harmony::SimpleCollisionSystem* lua_GetCollisionSystem()
 {
+	if (s_Instance)
+	{
+		return s_Instance;
+
+	}
 	auto prog = harmony::Program::Get();
 
 	if (prog)
@@ -108,7 +115,8 @@ harmony::SimpleCollisionSystem* lua_GetCollisionSystem()
 		auto sysWr = prog->GetSystem<harmony::SimpleCollisionSystem>();
 		if (!sysWr.expired())
 		{
-			return sysWr.lock().get();
+			s_Instance = sysWr.lock().get();
+			return s_Instance;
 		}
 	}
 

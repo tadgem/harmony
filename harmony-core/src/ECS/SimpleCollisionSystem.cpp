@@ -305,11 +305,11 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 #if HARMONY_DEBUG
 			if (s.m_Colliders.size() > 0)
 			{
-				DrawSphere(t.Position, s.m_Radius, 0xff00ff00);
+				//DrawSphere(t.Position, s.m_Radius, 0xff00ff00);
 			}
 			else
 			{
-				DrawSphere(t.Position, s.m_Radius, 0xffffffff);
+				//DrawSphere(t.Position, s.m_Radius, 0xffffffff);
 			}
 #endif
 		}

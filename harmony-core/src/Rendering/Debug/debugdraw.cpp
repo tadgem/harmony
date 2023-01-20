@@ -1492,6 +1492,7 @@ struct DebugDrawEncoderImpl
 			? uint8_t(DebugMesh::SphereMaxLod)
 			: attrib.m_lod
 			;
+		lod += 2;
 		draw(DebugMesh::Enum(DebugMesh::Sphere0 + lod), mtx, 1, attrib.m_wireframe);
 	}
 
