@@ -235,7 +235,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 				aabb.m_Frame = Collision::UpdateAABB(aabb.m_Original, glm::mat3(glm::transpose(t.Model)), t.Position);
 				for (entt::entity ce : aabb.m_Colliders)
 				{
-					if (std::find(EntitiesToUpdate.begin(), EntitiesToUpdate.end(), ce) != EntitiesToUpdate.end())
+					if (std::find(EntitiesToUpdate.begin(), EntitiesToUpdate.end(), ce) == EntitiesToUpdate.end())
 					{
 						EntitiesToUpdate.push_back(ce);
 					}
@@ -243,6 +243,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 				t.UpdateCollision = false;
 			}
 		}
+
 
 		for (auto& [e, t, sphere] : sphereView.each())
 		{
@@ -253,7 +254,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 
 				for (entt::entity ce : sphere.m_Colliders)
 				{
-					if (std::find(EntitiesToUpdate.begin(), EntitiesToUpdate.end(), ce) != EntitiesToUpdate.end())
+					if (std::find(EntitiesToUpdate.begin(), EntitiesToUpdate.end(), ce) == EntitiesToUpdate.end())
 					{
 						EntitiesToUpdate.push_back(ce);
 					}
@@ -275,6 +276,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 			AABBCol col = AABBCol{ e, aabb.m_Frame };
 			if (findIt != EntitiesToUpdate.end())
 			{
+				aabb.m_Colliders.clear();
 				UpdateAABBs.push_back(col);
 				EntitiesToUpdate.erase(findIt);
 			}
@@ -287,6 +289,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 			SphereCol col = SphereCol{ e, Sphere { glm::vec4(t.Position, sphere.m_Radius)} };
 			if (findIt != EntitiesToUpdate.end())
 			{
+				sphere.m_Colliders.clear();
 				UpdateSpheres.push_back(col);
 				EntitiesToUpdate.erase(findIt);
 			}
@@ -312,6 +315,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 					std::vector<EntityCollision> collisions;
 					for (int i = 0; i < AABBs.size(); i++)
 					{
+						if (col.Entity == AABBs[i].Entity) continue;
 						if (Collision::Intersects(col.Col, AABBs[i].Col))
 						{
 							collisions.push_back({ col.Entity, AABBs[i].Entity });
@@ -352,6 +356,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 					std::vector<EntityCollision> collisions;
 					for (int i = 0; i < Spheres.size(); i++)
 					{
+						if (col.Entity == Spheres[i].Entity) continue;
 						if (Collision::Intersects(col.Col, Spheres[i].Col))
 						{
 							collisions.push_back({ col.Entity, Spheres[i].Entity });
