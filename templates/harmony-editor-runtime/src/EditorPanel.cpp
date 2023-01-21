@@ -870,3 +870,22 @@ void harmony::SphereComponentUI::Duplicate(entt::registry& registry, entt::entit
 		registry.emplace<SphereColliderComponent>(newCopy, t);
 	}
 }
+
+harmony::SimpleCollisionSystemPanel::SimpleCollisionSystemPanel(Program& program) : p_Prog(program)
+{
+	p_CollisionSystem = p_Prog.GetSystem<SimpleCollisionSystem>().lock();
+}
+
+void harmony::SimpleCollisionSystemPanel::OnImGui()
+{
+	const std::string  collisionTitle = std::string(ICON_FA_MAP) + " Collision System";
+
+	if (ImGui::Begin(collisionTitle.c_str()))
+	{
+		if (ImGui::RadioButton("Draw Debug", p_CollisionSystem->m_DebugDraw))
+		{
+			p_CollisionSystem->m_DebugDraw = !p_CollisionSystem->m_DebugDraw;
+		}
+	}
+	ImGui::End();
+}

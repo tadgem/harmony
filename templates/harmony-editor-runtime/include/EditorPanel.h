@@ -35,6 +35,19 @@ namespace harmony
         AssetManager& p_AssetManager;
         Program& p_Prog;
     };
+    class SimpleCollisionSystem;
+    class SimpleCollisionSystemPanel : public Panel
+    {
+    public:
+
+        SimpleCollisionSystemPanel(Program& program);
+        virtual void OnImGui() override;
+
+    protected:
+        std::string p_SelectedTypeHash;
+        Ref<SimpleCollisionSystem> p_CollisionSystem;
+        Program& p_Prog;
+    };
 
     class ComponentUI
     {

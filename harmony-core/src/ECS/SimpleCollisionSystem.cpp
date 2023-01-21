@@ -16,6 +16,7 @@
 harmony::SimpleCollisionSystem::SimpleCollisionSystem(AssetManager& am) : System(GetTypeHash<SimpleCollisionSystem>()), p_AssetManager(am)
 {
 	HARMONY_PROFILE_FUNCTION()
+	m_DebugDraw = true;
 }
 
 void harmony::SimpleCollisionSystem::Init(entt::registry& registry)
@@ -160,158 +161,334 @@ std::vector<harmony::Hit> harmony::SimpleCollisionSystem::Raycast(Ray ray, entt:
 static std::mutex s_AABBTransformMutex;
 static std::mutex s_SphereIntersectionMutex;
 
+struct AABBCol
+{
+	entt::entity	Entity;
+	harmony::AABB	Col;
+
+	bool operator== (const AABBCol& c2)
+	{
+		return Entity == c2.Entity;
+	}
+
+	bool operator!= (const AABBCol& c2)
+	{
+		return Entity != c2.Entity;
+	}
+};
+
+struct SphereCol
+{
+	entt::entity	Entity;
+	harmony::Sphere Col;
+
+	bool operator== (const SphereCol& c2)
+	{
+		return Entity == c2.Entity;
+	}
+
+	bool operator!= (const SphereCol& c2)
+	{
+		return Entity != c2.Entity;
+	}
+};
+
+struct EntityCollision
+{
+	entt::entity A;
+	entt::entity B;
+
+	bool operator== (const EntityCollision& c2)
+	{
+		return 
+			(A == c2.A && B == c2.B) ||
+			(A == c2.B && B == c2.A) ;
+	}
+
+	bool operator!= (const EntityCollision& c2)
+	{
+		return
+			(A != c2.A || B != c2.B) ||
+			(A != c2.B || B != c2.A);
+	}
+};
+
 void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 {
 	HARMONY_PROFILE_FUNCTION()
-	//
-	// AABB Intersection Tests
-	// 
-	auto aabbView = registry.view<TransformComponent, AABBColliderComponent>();
-	auto aabbs = std::map<entt::entity, AABBColliderComponent*>();
+	auto aabbView			= registry.view<TransformComponent, AABBColliderComponent>();
+	auto sphereView		= registry.view<TransformComponent, SphereColliderComponent>();
 
+	std::vector<entt::entity>	EntitiesToUpdate;
+
+	// Collect all entities that need to be updated.
+	// Collect all of their previous colliders and update them too
+	// ensure no dupes. 
 	{
-		HARMONY_PROFILE_SCOPE("Update AABB Transforms")
-		std::for_each(
-			std::execution::par,
-			aabbView.begin(),
-			aabbView.end(),
-			[&aabbView](const auto& e)
-			{
-				auto& aabb = aabbView.get<AABBColliderComponent>(e);
-				auto& t = aabbView.get<TransformComponent>(e);
-				if (true)
-				{
-					AABB newAABB = Collision::UpdateAABB(aabb.m_Original, glm::mat3(glm::transpose(t.Model)), t.Position);
-					aabb.m_Frame = newAABB;
-					t.UpdateCollision = false;
-				}
-			});
-	}
-	{
-		HARMONY_PROFILE_SCOPE("Copy AABBs")
+		HARMONY_PROFILE_SCOPE("SimpleCollisionSystem::UpdateColliders Find Entities To Update")
 		for (auto& [e, t, aabb] : aabbView.each())
 		{
-			aabb.m_Colliders.clear();
-			aabbs.emplace(e, &aabb);
-		}
-	}
-	if (!aabbs.empty())
-	{
-		{
-			HARMONY_PROFILE_SCOPE("AABB Intersection Test")
-				for (auto& [e, aabb] : aabbs)
+			// TODO: support updating only if needed.
+			if (t.UpdateCollision)
+			{
+				EntitiesToUpdate.push_back(e);
+				aabb.m_Frame = Collision::UpdateAABB(aabb.m_Original, glm::mat3(glm::transpose(t.Model)), t.Position);
+				for (entt::entity ce : aabb.m_Colliders)
 				{
-					harmony::AABBColliderComponent* currentAABB = aabb;
-					entt::entity currentEntity = e;
-					std::for_each(
-						std::execution::seq,
-						aabbs.begin(),
-						aabbs.end(),
-						[currentAABB, currentEntity](const auto& testAABB)
-						{
-							if (currentAABB == testAABB.second) return;
-							if (Collision::Intersects(currentAABB->m_Frame, testAABB.second->m_Frame))
-							{
-								testAABB.second->m_Colliders.emplace_back(currentEntity);
-								currentAABB->m_Colliders.emplace_back(testAABB.first);
-							}
-
-						});
+					if (std::find(EntitiesToUpdate.begin(), EntitiesToUpdate.end(), ce) != EntitiesToUpdate.end())
+					{
+						EntitiesToUpdate.push_back(ce);
+					}
 				}
+				t.UpdateCollision = false;
+			}
+		}
+
+		for (auto& [e, t, sphere] : sphereView.each())
+		{
+			// TODO: support updating only if needed.
+			if (t.UpdateCollision)
+			{
+				EntitiesToUpdate.push_back(e);
+
+				for (entt::entity ce : sphere.m_Colliders)
+				{
+					if (std::find(EntitiesToUpdate.begin(), EntitiesToUpdate.end(), ce) != EntitiesToUpdate.end())
+					{
+						EntitiesToUpdate.push_back(ce);
+					}
+				}
+				t.UpdateCollision = false;
+			}
+		}
+	}
+	// Create list of colliders to intersect test.
+	std::vector<AABBCol>		UpdateAABBs;
+	std::vector<SphereCol>		UpdateSpheres;
+	std::vector<AABBCol>		AABBs;
+	std::vector<SphereCol>		Spheres;
+	{
+		HARMONY_PROFILE_SCOPE("SimpleCollisionSystem::UpdateColliders Create Copies of Colliders")
+		for (auto& [e, t, aabb] : aabbView.each())
+		{
+			auto findIt = std::find(EntitiesToUpdate.begin(), EntitiesToUpdate.end(), e);
+			AABBCol col = AABBCol{ e, aabb.m_Frame };
+			if (findIt != EntitiesToUpdate.end())
+			{
+				UpdateAABBs.push_back(col);
+				EntitiesToUpdate.erase(findIt);
+			}
+			AABBs.push_back(col);
+		}
+
+		for (auto& [e, t, sphere] : sphereView.each())
+		{
+			auto findIt = std::find(EntitiesToUpdate.begin(), EntitiesToUpdate.end(), e);
+			SphereCol col = SphereCol{ e, Sphere { glm::vec4(t.Position, sphere.m_Radius)} };
+			if (findIt != EntitiesToUpdate.end())
+			{
+				UpdateSpheres.push_back(col);
+				EntitiesToUpdate.erase(findIt);
+			}
+			Spheres.push_back(col);
+		}
+	}
+	// Warn if some entities have been missed.
+	if (!EntitiesToUpdate.empty())
+	{
+		harmony::log::warn("SimpleCollisionSystem : Not all entities requiring collision could be updated!");
+	}
+
+	std::vector<std::future<std::vector<EntityCollision>>> futures;
+
+	// Intersection Tests (needs to be performed against ALL colliders.)
+	// AABB-AABB
+	for (AABBCol& col : UpdateAABBs)
+	{
+		futures.emplace_back(
+			ThreadPool.submit(
+				[col, AABBs]()
+				{
+					std::vector<EntityCollision> collisions;
+					for (int i = 0; i < AABBs.size(); i++)
+					{
+						if (Collision::Intersects(col.Col, AABBs[i].Col))
+						{
+							collisions.push_back({ col.Entity, AABBs[i].Entity });
+						}
+					}
+					return collisions;
+				}
+			)
+		);
+	}
+	// AABB-Sphere
+	for (AABBCol& col : UpdateAABBs)
+	{
+		futures.emplace_back(
+			ThreadPool.submit(
+				[col, Spheres]()
+				{
+					std::vector<EntityCollision> collisions;
+					for (int i = 0; i < Spheres.size(); i++)
+					{
+						if (Collision::Intersects(col.Col, Spheres[i].Col))
+						{
+							collisions.push_back({ col.Entity, Spheres[i].Entity });
+						}
+					}
+					return collisions;
+				}
+			)
+		);
+	}
+	// Sphere-Sphere
+	for (SphereCol& col : UpdateSpheres)
+	{
+		futures.emplace_back(
+			ThreadPool.submit(
+				[col, Spheres]()
+				{
+					std::vector<EntityCollision> collisions;
+					for (int i = 0; i < Spheres.size(); i++)
+					{
+						if (Collision::Intersects(col.Col, Spheres[i].Col))
+						{
+							collisions.push_back({ col.Entity, Spheres[i].Entity });
+						}
+					}
+					return collisions;
+				}
+			)
+		);
+	}
+	// Sphere-AABB
+	for (SphereCol& col : UpdateSpheres)
+	{
+		futures.emplace_back(
+			ThreadPool.submit(
+				[col, AABBs]()
+				{
+					std::vector<EntityCollision> collisions;
+					for (int i = 0; i < AABBs.size(); i++)
+					{
+						if (Collision::Intersects(col.Col, AABBs[i].Col))
+						{
+							collisions.push_back({ col.Entity, AABBs[i].Entity });
+						}
+					}
+					return collisions;
+				}
+			)
+		);
+	}
+	std::vector<EntityCollision> collisions;
+	while (futures.size() > 0)
+	{
+		for (int i = futures.size() - 1; i >= 0; i--)
+		{
+			if (is_ready<std::vector<EntityCollision>>(futures[i]))
+			{
+				auto& cols = futures[i].get();
+				collisions.insert(collisions.end(), cols.begin(), cols.end());
+				futures.erase(futures.begin() + i);
+			}
 		}
 	}
 
-	//
-	// Sphere Intersection Tests
-	//
-
-	struct TempSphere
+	for (int i = collisions.size() - 1; i >= 0; i--)
 	{
-		SphereColliderComponent* Sphere;
-		TransformComponent* Trans;
-	};
-
-	auto sphereView = registry.view<TransformComponent, SphereColliderComponent>();
-	auto spheres = std::map<entt::entity, TempSphere>();
+		EntityCollision ec = collisions[i];
+		if (registry.any_of<AABBColliderComponent>(ec.A))
+		{
+			AABBColliderComponent& a = registry.get<AABBColliderComponent>(ec.A);
+			if (registry.any_of<AABBColliderComponent>(ec.B))
+			{
+				AABBColliderComponent& b = registry.get<AABBColliderComponent>(ec.B);
+				if (std::find(b.m_Colliders.begin(), b.m_Colliders.end(), ec.A) == b.m_Colliders.end())
+				{
+					b.m_Colliders.emplace_back(ec.A);
+				}
+				if (std::find(a.m_Colliders.begin(), a.m_Colliders.end(), ec.B) == a.m_Colliders.end())
+				{
+					a.m_Colliders.emplace_back(ec.B);
+				}
+			}
+			if (registry.any_of<SphereColliderComponent>(ec.B))
+			{
+				SphereColliderComponent& b = registry.get<SphereColliderComponent>(ec.B);
+				if (std::find(b.m_Colliders.begin(), b.m_Colliders.end(), ec.A) == b.m_Colliders.end())
+				{
+					b.m_Colliders.emplace_back(ec.A);
+				}
+				if (std::find(a.m_Colliders.begin(), a.m_Colliders.end(), ec.B) == a.m_Colliders.end())
+				{
+					a.m_Colliders.emplace_back(ec.B);
+				}
+			}
+		}
+		if (registry.any_of<SphereColliderComponent>(ec.A))
+		{
+			SphereColliderComponent& a = registry.get<SphereColliderComponent>(ec.A);
+			if (registry.any_of<AABBColliderComponent>(ec.B))
+			{
+				AABBColliderComponent& b = registry.get<AABBColliderComponent>(ec.B);
+				if (std::find(b.m_Colliders.begin(), b.m_Colliders.end(), ec.A) == b.m_Colliders.end())
+				{
+					b.m_Colliders.emplace_back(ec.A);
+				}
+				if (std::find(a.m_Colliders.begin(), a.m_Colliders.end(), ec.B) == a.m_Colliders.end())
+				{
+					a.m_Colliders.emplace_back(ec.B);
+				}
+			}
+			if (registry.any_of<SphereColliderComponent>(ec.B))
+			{
+				SphereColliderComponent& b = registry.get<SphereColliderComponent>(ec.B);
+				if (std::find(b.m_Colliders.begin(), b.m_Colliders.end(), ec.A) == b.m_Colliders.end())
+				{
+					b.m_Colliders.emplace_back(ec.A);
+				}
+				if (std::find(a.m_Colliders.begin(), a.m_Colliders.end(), ec.B) == a.m_Colliders.end())
+				{
+					a.m_Colliders.emplace_back(ec.B);
+				}
+			}
+		}
+	}
+	
+	// Draw Collision Primitives
 	{
-		HARMONY_PROFILE_SCOPE("Copy Spheres")
+		HARMONY_PROFILE_SCOPE("SimpleCollisionSystem::UpdateColliders Draw Collision Primitives")
+		if (m_DebugDraw)
+		{
+			for (auto& [e, t, aabb] : aabbView.each())
+			{
+#if HARMONY_DEBUG
+				if (aabb.m_Colliders.size() > 0)
+				{
+					DrawAABB(aabb.m_Frame, 0xff00ff00);
+				}
+				else
+				{
+					DrawAABB(aabb.m_Frame, 0xffffffff);
+				}
+#endif
+			}
+
 			for (auto& [e, t, s] : sphereView.each())
 			{
-				s.m_Colliders.clear();
-				spheres.emplace(e, TempSphere{ &s,&t });
-			}
-	}
-	if (!spheres.empty())
-	{
-		for (auto& [e, s] : spheres)
-		{
-			SphereColliderComponent* thisSphereComponent = s.Sphere;
-			TransformComponent* thisTransform = s.Trans;
-			if (!thisTransform->UpdateCollision) continue;
-			thisTransform->UpdateCollision = false;
-			Sphere sphere{ glm::vec4(thisTransform->Position.x,thisTransform->Position.y,thisTransform->Position.z, thisSphereComponent->m_Radius) };
-			entt::entity thisEntity = e;
-			std::for_each(
-				std::execution::par,
-				spheres.begin(),
-				spheres.end(),
-				[&sphere, thisEntity](const auto& testSphere)
-				{
-					if (testSphere.first == thisEntity)
-					{
-						return;
-					}
-					SphereColliderComponent* currentSphereComponent = testSphere.second.Sphere;
-					TransformComponent* currentTransform = testSphere.second.Trans;
-					Sphere cs{ glm::vec4(currentTransform->Position.x,currentTransform->Position.y,currentTransform->Position.z, currentSphereComponent->m_Radius) };
-					if (Collision::Intersects(sphere, cs))
-					{
-						currentSphereComponent->m_Colliders.emplace_back(thisEntity);
-					}
-				});
-
-			std::for_each(
-				std::execution::par,
-				aabbs.begin(),
-				aabbs.end(),
-				[&sphere, thisEntity](const auto& testAABB)
-				{
-					if (Collision::Intersects(sphere, testAABB.second->m_Frame))
-					{
-						testAABB.second->m_Colliders.emplace_back(thisEntity);
-					}
-
-				});
-		}
-	}
-	{
-		HARMONY_PROFILE_SCOPE("Draw Collision Primitives")
-		for (auto& [e, t, aabb] : aabbView.each())
-		{
 #if HARMONY_DEBUG
-			if (aabb.m_Colliders.size() > 0)
-			{
-				DrawAABB(aabb.m_Frame, 0xff00ff00);
-			}
-			else
-			{
-				DrawAABB(aabb.m_Frame, 0xffffffff);
-			}
+				if (s.m_Colliders.size() > 0)
+				{
+					DrawSphere(t.Position, s.m_Radius, 0xff00ff00);
+				}
+				else
+				{
+					DrawSphere(t.Position, s.m_Radius, 0xffffffff);
+				}
 #endif
-	}
-
-		for (auto& [e, t, s] : sphereView.each())
-		{
-#if HARMONY_DEBUG
-			if (s.m_Colliders.size() > 0)
-			{
-				//DrawSphere(t.Position, s.m_Radius, 0xff00ff00);
 			}
-			else
-			{
-				//DrawSphere(t.Position, s.m_Radius, 0xffffffff);
-			}
-#endif
 		}
 	}
 }

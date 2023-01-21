@@ -19,10 +19,10 @@ namespace harmony
 		virtual void DeserializeSystem(entt::registry& registry, nlohmann::json systemJson) override;
 		virtual void Refresh() override;
 
-		std::vector<Hit> Raycast(Ray ray, entt::registry& registry);
-
+		std::vector<Hit>	Raycast(Ray ray, entt::registry& registry);
+		bool				m_DebugDraw;
 	protected:
-		AssetManager& p_AssetManager;
+		AssetManager&			p_AssetManager;
 
 		void UpdateColliders(entt::registry& registry);
 		void PreUpdate(entt::registry& registry);
