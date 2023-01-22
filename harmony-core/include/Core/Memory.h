@@ -9,6 +9,32 @@
 #include "ThirdParty/json.hpp"
 
 namespace harmony {
+	
+	class Memory
+	{
+	private:
+		inline static uint64_t s_HarmonyAllocated = 0;
+		inline static uint64_t s_HarmonyFreed = 0;
+	public:
+		inline static void		AddAllocatedMemory(size_t allocated)
+		{
+			s_HarmonyAllocated += allocated;
+		}
+		inline static void		AddFreedMemory(size_t freed)
+		{
+			s_HarmonyFreed += freed;
+		}
+		inline static uint64_t GetAllocatedMemory()
+		{
+			return s_HarmonyAllocated;
+		}
+
+		inline static uint64_t GetFreedMemory()
+		{
+			return s_HarmonyFreed;
+		}
+	};
+
 #if defined(__APPLE__)||defined(__unix__)||defined(__unix)
 
 	static std::string ParseUnixTypeName(const std::string& typeName)
@@ -82,6 +108,7 @@ namespace harmony {
         return finalTypeName;
 	}
 #endif
+
 
 	template <typename T>
 	static std::string GetTypeHash()
