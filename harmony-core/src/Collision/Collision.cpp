@@ -117,38 +117,9 @@ harmony::AABB harmony::Collision::UpdateAABB(AABB aabb, glm::mat3 matrix, glm::v
 
 bool harmony::Collision::Intersects(AABB a, AABB b)
 {
-    // Not right at all.
-    if (a.Min.x <= b.Min.x && a.Max.x >= b.Max.x)
-    {
-        return false;
-    }
-
-    if (a.Max.x <= b.Min.x || a.Min.x >= b.Max.x)
-    {
-        return false;
-    }
-
-    if (a.Min.y <= b.Min.y && a.Max.y >= b.Max.y)
-    {
-        return false;
-    }
-
-    if (a.Max.y <= b.Min.y || a.Min.y >= b.Max.y)
-    {
-        return false;
-    }
-
-    if (a.Min.z <= b.Min.z && a.Max.z >= b.Max.z)
-    {
-        return false;
-    }
-
-    if (a.Max.z <= b.Min.z || a.Min.z >= b.Max.z)
-    {
-        return false;
-    }
-
-    return true;
+    return (a.Min.x <= b.Max.x && a.Max.x >= b.Min.x) &&
+        (a.Min.y <= b.Max.y && a.Max.y >= b.Min.y) &&
+        (a.Min.z <= b.Max.z && a.Max.z >= b.Min.z);
 }
 
 bool harmony::Collision::Intersects(Sphere a, Sphere b)
