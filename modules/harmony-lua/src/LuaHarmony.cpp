@@ -187,14 +187,13 @@ std::vector<harmony::Hit> lua_Raycast(glm::vec3 origin, glm::vec3 dir)
 	auto collisionSystem = lua_GetCollisionSystem();
 	auto scene = lua_GetActiveScene();
 
-	auto hits = std::vector<harmony::Hit>();
-
 	if (scene && collisionSystem)
 	{
 		harmony::Ray ray{ origin, dir };
 		return collisionSystem->Raycast(ray, scene->m_Registry);
 	}
 
+	auto hits = std::vector<harmony::Hit>();
 	return hits;
 }
 

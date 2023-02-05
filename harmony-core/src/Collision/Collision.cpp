@@ -205,7 +205,7 @@ bool harmony::Collision::Intersects(AABB a, glm::vec3 b)
         b.z >= a.Min.z && b.x <= a.Max.z;
 }
 
-harmony::HitPosition harmony::Collision::Intersects(Ray r, AABB aabb)
+harmony::RayHit harmony::Collision::Intersects(Ray r, AABB aabb)
 {
 
     glm::vec3 tMin  = (aabb.Min - r.Origin) / r.Direction;
@@ -219,13 +219,13 @@ harmony::HitPosition harmony::Collision::Intersects(Ray r, AABB aabb)
     {
         glm::vec3 pos = r.Origin + (r.Direction * tFar);
         float dist = glm::distance(r.Origin, pos);
-        return HitPosition(glm::vec4(pos, 1.0f));
+        return RayHit(glm::vec4(pos, 1.0f), dist);
     }
 
-    return HitPosition(glm::vec4(glm::vec3(- 1.0), -1.0f));
+    return RayHit(glm::vec4(glm::vec3(- 1.0), -1.0f), -1.0f);
 }
 
-harmony::HitPosition harmony::Collision::Intersects(Ray r, Sphere s)
+harmony::RayHit harmony::Collision::Intersects(Ray r, Sphere s)
 {
      // TODO rewrite as vectors.  
     float cx = s.PosR[0];
@@ -247,7 +247,7 @@ harmony::HitPosition harmony::Collision::Intersects(Ray r, Sphere s)
 
     if (D < 0.0f || B < 0.0f)
     {
-        return HitPosition(glm::vec4(glm::vec3(-1.0), -1.0f));
+        return RayHit(glm::vec4(glm::vec3(-1.0), -1.0f), -1.0f);
     }
 
     float t1 = (-B - glm::sqrt(D)) / (2.0 * A);
@@ -260,7 +260,7 @@ harmony::HitPosition harmony::Collision::Intersects(Ray r, Sphere s)
 
     if (D == 0.0f)
     {
-        return HitPosition(glm::vec4(solution1, 1.0f));
+        return RayHit(glm::vec4(solution1, 1.0f), -1.0f);
     }
 
     float t2 = (-B + glm::sqrt(D)) / (2.0 * A);
@@ -268,6 +268,8 @@ harmony::HitPosition harmony::Collision::Intersects(Ray r, Sphere s)
         r.Origin.y * (1 - t2) + t2 * rayEnd.y,
         r.Origin.z * (1 - t2) + t2 * rayEnd.z);
 
-    return HitPosition(glm::vec4(solution2, 1.0f));
+    float distance = glm::length(solution2 - r.Origin);
+
+    return RayHit(glm::vec4(solution2, 1.0f), distance);
 
 }

@@ -30,6 +30,7 @@ namespace harmony {
 	struct Hit
 	{
 		glm::vec3 Position;
+		float Distance;
 		bool DidHit;
 		entt::entity Entity;
 	};

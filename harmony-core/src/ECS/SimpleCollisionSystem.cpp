@@ -107,9 +107,14 @@ void harmony::SimpleCollisionSystem::Refresh()
 static std::mutex s_AABBHitsMutex;
 static std::mutex s_SphereHitsMutex;
 
+bool hit_sorter(harmony::Hit const& lhs, harmony::Hit const& rhs) {
+	return lhs.Distance < rhs.Distance;
+}
+
 std::vector<harmony::Hit> harmony::SimpleCollisionSystem::Raycast(Ray ray, entt::registry& registry)
 {
 	HARMONY_PROFILE_FUNCTION()
+	// Ray - AABB Intersection Test
 	auto hits = std::vector<Hit>();
 	auto aabbView = registry.view<TransformComponent, AABBColliderComponent>();
 	std::for_each(
@@ -132,7 +137,7 @@ std::vector<harmony::Hit> harmony::SimpleCollisionSystem::Raycast(Ray ray, entt:
 		}
 	);
 
-
+	// Ray - Sphere Intersection Test
 	auto sphereView = registry.view<TransformComponent, SphereColliderComponent>();
 	std::for_each(
 		std::execution::par,
@@ -146,15 +151,18 @@ std::vector<harmony::Hit> harmony::SimpleCollisionSystem::Raycast(Ray ray, entt:
 			if (hitPos.Position.w > 0.0f)
 			{
 				Hit h;
-				h.Position = glm::vec3(hitPos.Position.x, hitPos.Position.y, hitPos.Position.z);
+				h.Position = glm::vec3(hitPos.Position);
 				h.DidHit = true;
 				h.Entity = e;
+				h.Distance = hitPos.Distance;
 				std::lock_guard<std::mutex> hitLock(s_SphereHitsMutex);
 				hits.push_back(h);
 			}
 		}
 	);
 
+	// Sort hits by distance.
+	std::sort(hits.begin(), hits.end(), hit_sorter);
 	return hits;
 }
 

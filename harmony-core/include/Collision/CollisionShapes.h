@@ -23,10 +23,11 @@ namespace harmony
 		glm::vec3 Direction;
 	};
 
-	struct HitPosition
+	struct RayHit
 	{
-		HitPosition(glm::vec4 position);
-		glm::vec4 Position;
+		RayHit(glm::vec4 position, float distance);
+		glm::vec4	Position;
+		float		Distance;
 	};
 
 }
