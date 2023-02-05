@@ -1,5 +1,5 @@
 #include "Collision/CollisionShapes.h"
 
-harmony::HitPosition::HitPosition(glm::vec4 position) : Position(position)
+harmony::RayHit::RayHit(glm::vec4 position, float distance) : Position(position), Distance(distance)
 {
 }

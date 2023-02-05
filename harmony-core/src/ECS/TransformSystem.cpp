@@ -54,6 +54,8 @@ void harmony::TransformSystem::Init(entt::registry& registry)
         transform.Model = modelMatrix * localRotation * localScale;
 
         CalculateDirectionVectors(transform.Euler, transform);
+
+        transform.UpdateCollision = true;
     }
 }
 
@@ -93,6 +95,7 @@ void harmony::TransformSystem::Render(entt::registry& registry)
         {
             continue;
         }
+        transform.UpdateCollision = true;
         transformGroups[groupIndex].push_back(&transform);
 
         groupCount++;

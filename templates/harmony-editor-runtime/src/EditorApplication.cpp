@@ -69,6 +69,9 @@ void harmony::Editor::AddEditorPanels()
 	Ref<ProfilerPanel> profilerPanel = CreateRef<ProfilerPanel>();
 	p_Panels.emplace_back(profilerPanel);
 
+	Ref<SimpleCollisionSystemPanel> collisionSystemPanel = CreateRef<SimpleCollisionSystemPanel>(*this);
+	p_Panels.emplace_back(collisionSystemPanel);
+
 	Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, p_ScenePanel);
 	inspector->AddComponentUI<TransformComponentUI>();
 	inspector->AddComponentUI<MeshComponentUI>(m_AssetManager);

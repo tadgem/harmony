@@ -99,8 +99,15 @@ harmony::Renderer* lua_GetRenderer()
 	return nullptr;
 }
 
+harmony::SimpleCollisionSystem* s_Instance = nullptr;
+
 harmony::SimpleCollisionSystem* lua_GetCollisionSystem()
 {
+	if (s_Instance)
+	{
+		return s_Instance;
+
+	}
 	auto prog = harmony::Program::Get();
 
 	if (prog)
@@ -108,7 +115,8 @@ harmony::SimpleCollisionSystem* lua_GetCollisionSystem()
 		auto sysWr = prog->GetSystem<harmony::SimpleCollisionSystem>();
 		if (!sysWr.expired())
 		{
-			return sysWr.lock().get();
+			s_Instance = sysWr.lock().get();
+			return s_Instance;
 		}
 	}
 
@@ -179,14 +187,13 @@ std::vector<harmony::Hit> lua_Raycast(glm::vec3 origin, glm::vec3 dir)
 	auto collisionSystem = lua_GetCollisionSystem();
 	auto scene = lua_GetActiveScene();
 
-	auto hits = std::vector<harmony::Hit>();
-
 	if (scene && collisionSystem)
 	{
 		harmony::Ray ray{ origin, dir };
 		return collisionSystem->Raycast(ray, scene->m_Registry);
 	}
 
+	auto hits = std::vector<harmony::Hit>();
 	return hits;
 }
 

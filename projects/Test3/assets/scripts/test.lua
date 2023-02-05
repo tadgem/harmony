@@ -16,9 +16,9 @@ jumpMomentum        = 40.0
 jumpMultiplier      = 6.0
 currentJumpHeight   = 0.0
 timeInAir = 0.0
-collisionTestMultiplier = 50
+collisionTestMultiplier = 10
 lineEnd = nil
-
+offset = 2.0
 function start()
     print("test.lua : start")
     viewEntity = harmony.GetViewEntity(view)
@@ -28,8 +28,8 @@ function start()
             newEntity:AddTransform()
             newEntity:AddSphere()
             t = newEntity:GetTransform()
-            t.position.x = t.position.x + x
-            t.position.z = t.position.z + y
+            t.position.x = t.position.x + (x * offset)
+            t.position.z = t.position.z + (y * offset)
             s = newEntity:GetSphere()
             s.radius = 2.0
         end
@@ -114,7 +114,6 @@ function update()
     downDir = math.mulVec3f(worldUp, -10.0)
     ray(t.position, forwardDir)
     ray(t.position, upDir)
-    ray(t.position, backwardDir)
     ray(t.position, downDir)
     
     flatRight.y     = 0.0

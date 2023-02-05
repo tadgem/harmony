@@ -39,13 +39,20 @@ void harmony::ScenePanel::OnImGui()
 		}
 		const std::string entityNamePrefix = "Entity ";
 		ImGui::Separator();
+		const static int maxEntities = 50;
+		int counter = 0;
 		activeScene->m_Registry.each([&](entt::entity e)
 		{
-			std::string entityName = entityNamePrefix + std::to_string(static_cast<uint32_t>(e));
+			if (counter > maxEntities)
+			{
+				return;
+			}
+				std::string entityName = entityNamePrefix + std::to_string(static_cast<uint32_t>(e));
 			if (ImGui::Selectable(entityName.c_str()))
 			{
 				m_SelectedEntity = e;
 			}
+			counter++;
 		});
 
 	}
@@ -862,4 +869,23 @@ void harmony::SphereComponentUI::Duplicate(entt::registry& registry, entt::entit
 		SphereColliderComponent t = registry.get<SphereColliderComponent>(original);
 		registry.emplace<SphereColliderComponent>(newCopy, t);
 	}
+}
+
+harmony::SimpleCollisionSystemPanel::SimpleCollisionSystemPanel(Program& program) : p_Prog(program)
+{
+	p_CollisionSystem = p_Prog.GetSystem<SimpleCollisionSystem>().lock();
+}
+
+void harmony::SimpleCollisionSystemPanel::OnImGui()
+{
+	const std::string  collisionTitle = std::string(ICON_FA_MAP) + " Collision System";
+
+	if (ImGui::Begin(collisionTitle.c_str()))
+	{
+		if (ImGui::RadioButton("Draw Debug", p_CollisionSystem->m_DebugDraw))
+		{
+			p_CollisionSystem->m_DebugDraw = !p_CollisionSystem->m_DebugDraw;
+		}
+	}
+	ImGui::End();
 }

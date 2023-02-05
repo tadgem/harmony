@@ -35,6 +35,8 @@ namespace harmony
         glm::quat Rotation;
         glm::mat4 Model;
 
+        bool UpdateCollision;
+
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(TransformComponent, Position, Scale, Euler, Rotation);
     };
 };
