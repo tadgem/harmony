@@ -51,7 +51,7 @@ imgui.ini
 */Debug
 *\obj
 */obj
-
+*.deps.json
 *CMakeSettings.json
 .vs/VSWorkspaceState.json
 .vs/slnx.sqlite
