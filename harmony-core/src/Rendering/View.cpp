@@ -43,6 +43,11 @@ void harmony::View::OnImGui()
 	uint32_t currentWidth = static_cast<uint32_t>(dim.x);
 	uint32_t currentHeight = static_cast<uint32_t>(dim.y);
 
+	if (currentHeight <= 0 || currentWidth <= 0)
+	{
+		return;
+	}
+
 	if (currentWidth != m_ImGuiWindowWidth || currentHeight != m_ImGuiWindowHeight)
 	{
 		if (Input::GetMouseButton(Mouse::Button::Left))

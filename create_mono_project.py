@@ -11,7 +11,7 @@ from imgui.integrations.sdl2 import SDL2Renderer
 sample_project_path = "sandbox/projects/sample"
 
 def create_project_window(path_text_val, name_text_val):
-    imgui.text("Create Project Tool")
+    imgui.text("Create Mono Project Tool")
     changed, path_text = imgui.input_text(
     'Path',
     path_text_val,

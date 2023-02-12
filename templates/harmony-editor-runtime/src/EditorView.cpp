@@ -19,6 +19,8 @@ harmony::DebugCamera::DebugCamera()
 	FOV = 80.0f;
 	NearClipPlane = 0.1f;
 	FarClipPlane = 300.0f;
+	Width = 1280;
+	Height = 720;
 	Speed = 10.0f;
 	Type = ProjectionType::Perspective;
 	Focussed = false;
