@@ -6,6 +6,11 @@ namespace harmony
 {
     class MonoAssemblyAssetFactory : public AssetFactory
     {
-        public:
+    public:
+        MonoAssemblyAssetFactory();
+
+        virtual void LoadAssetData(const std::string& path, entt::registry& registry) override;
+        virtual void UnloadAssetData(const std::string& path, entt::registry& registry) override;
+
     };
 }

@@ -4,13 +4,12 @@
 
 namespace harmony
 {
-    class MonoAssembly
+    class MonoAssembly : public Asset
     {
-
-    };
-    
-    class MonoAssemblyAsset : public Asset
-    {
-        public:
+    public:
+        MonoAssembly(std::vector<uint8_t> assemblyBinary, const std::string& assemblyPath);
+        const std::string m_AssemblyPath;
+    protected:
+        const std::vector<uint8_t> p_AssemblyBinary;
     };
 }
