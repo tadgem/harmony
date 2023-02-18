@@ -22,4 +22,4 @@ CACHE INTERNAL "")
 
 target_include_directories(harmony-mono PUBLIC ${HARMONY_MONO_INCLUDES})
 target_link_directories(harmony-mono PUBLIC ${MONO_LIBRARY_DIRS})
-target_link_libraries(harmony-mono ${MONO_LIBRARIES})
+target_link_libraries(harmony-mono ${MONO_LIBRARIES} harmony-core)
