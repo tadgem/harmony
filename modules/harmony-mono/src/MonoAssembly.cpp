@@ -1,11 +1,15 @@
 #include "MonoAssembly.h"
 #include "MonoUtils.hpp"
-harmony::MonoAssembly::MonoAssembly(std::vector<uint8_t> assemblyBinary, const std::string& assemblyPath) : p_AssemblyBinary(assemblyBinary), m_AssemblyPath(assemblyPath)
+
+harmony::MonoAssemblyAsset::MonoAssemblyAsset(std::vector<uint8_t> assemblyBinary, const std::string& assemblyPath) :
+	Asset(),
+	p_AssemblyBinary(assemblyBinary), 
+	m_AssemblyPath(assemblyPath),
+	p_MonoAssembly(MonoUtils::LoadCSharpAssembly(m_AssemblyPath, (char*)p_AssemblyBinary.data(), p_AssemblyBinary.size()))
 {
-	CreateMonoAssembly();
 }
 
-void harmony::MonoAssembly::CreateMonoAssembly()
+harmony::MonoAssemblyAsset::~MonoAssemblyAsset()
 {
-	p_MonoAssembly = MonoUtils::LoadCSharpAssembly(m_AssemblyPath, (char*) p_AssemblyBinary.data(), p_AssemblyBinary.size());
+	MonoUtils::FreeCSharpAssembly(p_MonoAssembly);
 }

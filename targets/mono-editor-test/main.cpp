@@ -20,9 +20,8 @@ int main()
 {
 	harmony::Editor app;
 
-	app.m_AssetManager.AddAssetFactory(harmony::CreateRef<harmony::MonoAssemblyAssetFactory>());
-	harmony::Ref<harmony::MonoProgramComponent> mono = app.AddProgramComponent<harmony::MonoProgramComponent>().lock();
-	app.AddSystem<harmony::MonoSystem>();
+	harmony::AddMono(app);
+
 	app.Run("../../../projects/mono-test/MonoTest.harmonyproj");
 
 	return 0;

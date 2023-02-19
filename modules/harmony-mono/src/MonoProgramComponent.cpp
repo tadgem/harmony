@@ -1,6 +1,7 @@
 #include "MonoProgramComponent.h"
+#include "MonoAssemblyAssetFactory.h"
 #include "Core/Memory.h"
-
+#include "Core/Program.h"
 harmony::MonoProgramComponent::MonoProgramComponent()
 {
 
@@ -66,4 +67,14 @@ void harmony::MonoSystem::DeserializeSystem(entt::registry& registry, nlohmann::
 
 void harmony::MonoSystem::Refresh()
 {
+}
+
+void harmony::AddMono(harmony::Program& program)
+{
+    // root component required for all mono functionality
+    harmony::WeakRef<harmony::MonoProgramComponent> mono = program.AddProgramComponent<harmony::MonoProgramComponent>();
+    // factory responsible for loading assembly binary + creating a mono object for the assembly.
+    program.m_AssetManager.AddAssetFactory(harmony::CreateRef<harmony::MonoAssemblyAssetFactory>(mono));
+    // Per scene Mono components
+    program.AddSystem<harmony::MonoSystem>();
 }

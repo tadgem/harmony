@@ -15,5 +15,6 @@ namespace harmony
 
     protected:
         WeakRef<MonoProgramComponent> p_Mono;
+        const std::string p_AssemblyTypeHash;
     };
 }

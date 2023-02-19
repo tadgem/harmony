@@ -3,6 +3,7 @@
 #include "ECS/System.h"
 namespace harmony
 {
+    class Program;
     class MonoProgramComponent : public ProgramComponent
     {
     public:
@@ -31,4 +32,6 @@ namespace harmony
         virtual void DeserializeSystem(entt::registry& registry, nlohmann::json systemJson) override;
         virtual void Refresh() override;
     };
+
+    void AddMono(harmony::Program& program);
 }

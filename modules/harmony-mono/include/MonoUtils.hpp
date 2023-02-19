@@ -164,6 +164,11 @@ namespace harmony
             return assembly;
         }
 
+        void FreeCSharpAssembly(const MonoAssembly* assembly)
+        {
+            mono_assembly_close((MonoAssembly*) assembly);
+        }
+
         MonoClass* GetClassInAssembly(MonoAssembly* assembly, const char* namespaceName, const char* className)
         {
             MonoImage* image = mono_assembly_get_image(assembly);

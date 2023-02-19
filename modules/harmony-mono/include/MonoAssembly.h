@@ -1,19 +1,18 @@
 #pragma once
 
 #include "Assets/Asset.h"
+#include "mono/metadata/assembly.h"
 
 namespace harmony
 {
-    class MonoAssembly : public Asset
+    class MonoAssemblyAsset : public Asset
     {
     public:
-        MonoAssembly(std::vector<uint8_t> assemblyBinary, const std::string& assemblyPath);
-
+        MonoAssemblyAsset(std::vector<uint8_t> assemblyBinary, const std::string& assemblyPath);
+        ~MonoAssemblyAsset();
         const std::string m_AssemblyPath;
     protected:
-        void CreateMonoAssembly();
-
         const std::vector<uint8_t>  p_AssemblyBinary;
-        MonoAssembly*               p_MonoAssembly;
+        const MonoAssembly*         p_MonoAssembly;
     };
 }

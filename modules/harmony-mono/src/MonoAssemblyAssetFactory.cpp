@@ -5,11 +5,9 @@
 #include "Core/Log.hpp"
 #include "Core/Memory.h"
 
-harmony::MonoAssemblyAssetFactory::MonoAssemblyAssetFactory(WeakRef<MonoProgramComponent> mono) : p_Mono(mono)
+harmony::MonoAssemblyAssetFactory::MonoAssemblyAssetFactory(WeakRef<MonoProgramComponent> mono) : p_Mono(mono), p_AssemblyTypeHash(GetTypeHash<MonoAssemblyAsset>())
 {
-	auto monoAssemblyHash = GetTypeHash<MonoAssembly>();
-
-	m_Capabilities.AssetTypeHashes.push_back(monoAssemblyHash);
+	m_Capabilities.AssetTypeHashes.push_back(p_AssemblyTypeHash);
 }
 
 void harmony::MonoAssemblyAssetFactory::LoadAssetData(const std::string& path, entt::registry& registry)
@@ -21,13 +19,13 @@ void harmony::MonoAssemblyAssetFactory::LoadAssetData(const std::string& path, e
 		return;
 	}
 	
-	Ref<MonoAssembly> assembly = CreateRef<MonoAssembly>(assemblyBytes, path);
+	Ref<MonoAssemblyAsset> assembly = CreateRef<MonoAssemblyAsset>(assemblyBytes, path);
 
-	AssetHandle assemblyHandle{ path, 0, GetTypeHash<MonoAssembly>() };
-	AssetComponent<MonoAssembly> assemblyComponent{ assembly, assemblyHandle };
+	AssetHandle assemblyHandle{ path, 0, p_AssemblyTypeHash };
+	AssetComponent<MonoAssemblyAsset> assemblyComponent{ assembly, assemblyHandle };
 
 	entt::entity e = registry.create();
-	registry.emplace<AssetComponent<MonoAssembly>>(e, assemblyComponent);
+	registry.emplace<AssetComponent<MonoAssemblyAsset>>(e, assemblyComponent);
 	registry.emplace<AssetHandle>(e, assemblyHandle);
 
 }
@@ -36,7 +34,7 @@ void harmony::MonoAssemblyAssetFactory::UnloadAssetData(const std::string& path,
 {
 	std::vector<entt::entity> entitiesToDestroy;
 
-	auto assemblyView = registry.view<AssetComponent<MonoAssembly>, AssetHandle>();
+	auto assemblyView = registry.view<AssetComponent<MonoAssemblyAsset>, AssetHandle>();
 
 	for (auto [e, assembly, handle] : assemblyView.each())
 	{
