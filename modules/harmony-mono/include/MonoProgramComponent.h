@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/ProgramComponent.h"
+#include "Core/Memory.h"
 #include "ECS/System.h"
 namespace harmony
 {
@@ -22,7 +23,7 @@ namespace harmony
     class MonoSystem : public System
     {
     public:
-        MonoSystem();
+        MonoSystem(WeakRef<MonoProgramComponent> mono);
         // Inherited via System
         virtual void Init(entt::registry& registry) override;
         virtual void Update(entt::registry& registry) override;
@@ -31,6 +32,9 @@ namespace harmony
         virtual nlohmann::json SerializeSystem(entt::registry& registry) override;
         virtual void DeserializeSystem(entt::registry& registry, nlohmann::json systemJson) override;
         virtual void Refresh() override;
+
+    protected:
+        WeakRef<MonoProgramComponent> p_Mono;
     };
 
     void AddMono(harmony::Program& program);

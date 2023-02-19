@@ -36,7 +36,7 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
 {
 }
 
-harmony::MonoSystem::MonoSystem() : System(GetTypeHash<MonoSystem>())
+harmony::MonoSystem::MonoSystem(WeakRef<MonoProgramComponent> mono) : System(GetTypeHash<MonoSystem>()), p_Mono(mono)
 {
 }
 
@@ -76,5 +76,5 @@ void harmony::AddMono(harmony::Program& program)
     // factory responsible for loading assembly binary + creating a mono object for the assembly.
     program.m_AssetManager.AddAssetFactory(harmony::CreateRef<harmony::MonoAssemblyAssetFactory>(mono));
     // Per scene Mono components
-    program.AddSystem<harmony::MonoSystem>();
+    program.AddSystem<harmony::MonoSystem>(mono);
 }
