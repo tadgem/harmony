@@ -7,6 +7,7 @@ harmony::MonoProgramComponent::MonoProgramComponent()
 }
 void harmony::MonoProgramComponent::Init()
 {
+    BindScriptingAPI();
 }
 
 void harmony::MonoProgramComponent::Update()
@@ -27,6 +28,10 @@ nlohmann::json harmony::MonoProgramComponent::ToJson()
 }
 
 void harmony::MonoProgramComponent::FromJson(const nlohmann::json& json)
+{
+}
+
+void harmony::MonoProgramComponent::BindScriptingAPI()
 {
 }
 
