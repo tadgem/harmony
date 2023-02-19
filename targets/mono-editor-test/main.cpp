@@ -21,7 +21,7 @@ int main()
 	harmony::Editor app;
 
 	app.m_AssetManager.AddAssetFactory(harmony::CreateRef<harmony::MonoAssemblyAssetFactory>());
-	app.AddProgramComponent<harmony::MonoProgramComponent>();
+	harmony::Ref<harmony::MonoProgramComponent> mono = app.AddProgramComponent<harmony::MonoProgramComponent>().lock();
 	app.AddSystem<harmony::MonoSystem>();
 	app.Run("../../../projects/mono-test/MonoTest.harmonyproj");
 

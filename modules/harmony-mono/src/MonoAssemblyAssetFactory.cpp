@@ -1,9 +1,11 @@
 #include "MonoAssemblyAssetFactory.h"
 #include "MonoAssembly.h"
+#include "MonoProgramComponent.h"
 #include "Core/Utils.h"
 #include "Core/Log.hpp"
+#include "Core/Memory.h"
 
-harmony::MonoAssemblyAssetFactory::MonoAssemblyAssetFactory()
+harmony::MonoAssemblyAssetFactory::MonoAssemblyAssetFactory(WeakRef<MonoProgramComponent> mono) : p_Mono(mono)
 {
 	auto monoAssemblyHash = GetTypeHash<MonoAssembly>();
 

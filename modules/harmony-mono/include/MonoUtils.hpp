@@ -11,7 +11,7 @@
 
 namespace harmony
 {
-    namespace MonoHelpers
+    namespace MonoUtils
     {
         enum Accessibility : uint8_t
         {

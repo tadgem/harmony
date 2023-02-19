@@ -8,8 +8,12 @@ namespace harmony
     {
     public:
         MonoAssembly(std::vector<uint8_t> assemblyBinary, const std::string& assemblyPath);
+
         const std::string m_AssemblyPath;
     protected:
-        const std::vector<uint8_t> p_AssemblyBinary;
+        void CreateMonoAssembly();
+
+        const std::vector<uint8_t>  p_AssemblyBinary;
+        MonoAssembly*               p_MonoAssembly;
     };
 }
