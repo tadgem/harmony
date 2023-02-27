@@ -25,7 +25,7 @@ void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry& registry, Ref<Sh
 	unsigned int numSpotLights		= 0;
 
 	// Update uniform vals;
-	for (auto& [entity, dl, t] : dirLightView.each())
+	for (auto [entity, dl, t] : dirLightView.each())
 	{
 		m_DirectionalLightAmbient	= dl.Ambient;
 		m_DirectionalLightDiffuse	= dl.Diffuse;
@@ -33,7 +33,7 @@ void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry& registry, Ref<Sh
 		dirLightActive = 1;
 	}
 
-	for (auto& [entity, pl, t] : pointLightView.each())
+	for (auto [entity, pl, t] : pointLightView.each())
 	{
 		m_PointLightAmbient[numPointLights]		= pl.Ambient;
 		m_PointLightDiffuse[numPointLights]		= pl.Diffuse;
@@ -42,7 +42,7 @@ void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry& registry, Ref<Sh
 		numPointLights++;
 	}
 
-	for (auto& [entity, sl, t] : spotLightView.each())
+	for (auto [entity, sl, t] : spotLightView.each())
 	{
 		m_SpotLightAmbient[numSpotLights]	= sl.Ambient;
 		m_SpotLightDiffuse[numSpotLights]	= sl.Diffuse;

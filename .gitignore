@@ -58,3 +58,4 @@ imgui.ini
 .vs/ProjectSettings.json
 .vs/CMakeWorkspaceSettings.json
 *.DS_Store
+*cmake-build-debug

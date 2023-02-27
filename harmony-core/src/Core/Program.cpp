@@ -18,7 +18,7 @@
 #endif
 harmony::Program::Program(const std::string& name) : p_AppName(name), m_Renderer(m_AssetManager)
 {
-	HARMONY_PROFILE_BEGIN_SESSION("Harmony Engine")
+	HARMONY_PROFILE_BEGIN_SESSION("Harmony Engine", "")
 	if(s_Instance != nullptr)
 	{
 		harmony::log::error("Trying to create new application instance but an application already exists!");

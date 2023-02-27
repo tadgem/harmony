@@ -23,7 +23,7 @@ void harmony::SimpleCollisionSystem::Init(entt::registry& registry)
 {
 	HARMONY_PROFILE_FUNCTION()
 	auto view = registry.view<TransformComponent, AABBColliderComponent>();
-	for (auto& [e, t, aabb] : view.each())
+	for (auto [e, t, aabb] : view.each())
 	{
 		auto mesh = p_AssetManager.GetAsset<Mesh>(aabb.m_MeshHandle);
 		if (mesh.expired())
@@ -234,7 +234,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 	// ensure no dupes. 
 	{
 		HARMONY_PROFILE_SCOPE("SimpleCollisionSystem::UpdateColliders Find Entities To Update")
-		for (auto& [e, t, aabb] : aabbView.each())
+		for (auto [e, t, aabb] : aabbView.each())
 		{
 			// TODO: support updating only if needed.
 			if (t.UpdateCollision)
@@ -253,7 +253,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 		}
 
 
-		for (auto& [e, t, sphere] : sphereView.each())
+		for (auto [e, t, sphere] : sphereView.each())
 		{
 			// TODO: support updating only if needed.
 			if (t.UpdateCollision)
@@ -278,7 +278,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 	std::vector<SphereCol>		Spheres;
 	{
 		HARMONY_PROFILE_SCOPE("SimpleCollisionSystem::UpdateColliders Create Copies of Colliders")
-		for (auto& [e, t, aabb] : aabbView.each())
+		for (auto [e, t, aabb] : aabbView.each())
 		{
 			auto findIt = std::find(EntitiesToUpdate.begin(), EntitiesToUpdate.end(), e);
 			AABBCol col = AABBCol{ e, aabb.m_Frame };
@@ -291,7 +291,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 			AABBs.push_back(col);
 		}
 
-		for (auto& [e, t, sphere] : sphereView.each())
+		for (auto [e, t, sphere] : sphereView.each())
 		{
 			auto findIt = std::find(EntitiesToUpdate.begin(), EntitiesToUpdate.end(), e);
 			SphereCol col = SphereCol{ e, Sphere { glm::vec4(t.Position, sphere.m_Radius)} };
@@ -402,7 +402,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 		{
 			if (is_ready<std::vector<EntityCollision>>(futures[i]))
 			{
-				auto& cols = futures[i].get();
+				auto cols = futures[i].get();
 				collisions.insert(collisions.end(), cols.begin(), cols.end());
 				futures.erase(futures.begin() + i);
 			}
@@ -475,7 +475,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 		HARMONY_PROFILE_SCOPE("SimpleCollisionSystem::UpdateColliders Draw Collision Primitives")
 		if (m_DebugDraw)
 		{
-			for (auto& [e, t, aabb] : aabbView.each())
+			for (auto [e, t, aabb] : aabbView.each())
 			{
 #if HARMONY_DEBUG
 				if (aabb.m_Colliders.size() > 0)
@@ -489,7 +489,7 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry& registry)
 #endif
 			}
 
-			for (auto& [e, t, s] : sphereView.each())
+			for (auto [e, t, s] : sphereView.each())
 			{
 #if HARMONY_DEBUG
 				if (s.m_Colliders.size() > 0)

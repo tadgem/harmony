@@ -5,6 +5,12 @@
 
 namespace harmony
 {
+    enum class MonoAssemblyConfiguration
+    {
+        Debug = 0,
+        Release = 1
+    };
+
     class MonoAssemblyAsset : public Asset
     {
     public:
