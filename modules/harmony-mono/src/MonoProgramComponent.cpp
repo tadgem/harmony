@@ -1,13 +1,41 @@
 #include "MonoProgramComponent.h"
 #include "MonoAssemblyAssetFactory.h"
+#include "MonoUtils.h"
 #include "Core/Memory.h"
 #include "Core/Program.h"
+#include "Core/Log.hpp"
+
 harmony::MonoProgramComponent::MonoProgramComponent()
 {
 
 }
 void harmony::MonoProgramComponent::Init()
 {
+    // TODO: Change to the project directory
+    std::string root(std::getenv("MONO_DIR"));
+    std::string assemblyDir = root + "/lib/mono/4.5";
+    mono_set_assemblies_path(assemblyDir.c_str());
+
+    p_RootDomain = mono_jit_init(p_RootDomainName.c_str());
+
+    if(p_RootDomain == nullptr)
+    {
+        harmony::log::error("MonoProgramComponent : Failed to create root domain.");
+        return;
+    }
+
+    static char* APP_DOMAIN_CONFIG = nullptr;
+    p_AppDomain = mono_domain_create_appdomain((char*) p_AppDomainName.c_str(), APP_DOMAIN_CONFIG);
+
+    if(p_AppDomain == nullptr)
+    {
+        harmony::log::error("MonoProgramComponent : Failed to create application domain.");
+        return;
+    }
+
+    static bool FORCE_SET = true;
+    mono_domain_set(p_AppDomain, FORCE_SET);
+
     BindScriptingAPI();
 }
 

@@ -2,6 +2,8 @@
 #include "Core/ProgramComponent.h"
 #include "Core/Memory.h"
 #include "ECS/System.h"
+#include <mono/metadata/appdomain.h>
+
 namespace harmony
 {
     class Program;
@@ -18,6 +20,13 @@ namespace harmony
         virtual void FromJson(const nlohmann::json& json) override;
 
         virtual void BindScriptingAPI();
+
+    protected:
+        MonoDomain* p_RootDomain;
+        MonoDomain* p_AppDomain;
+        // TODO: Make this customizable per-application
+        const std::string p_RootDomainName = "Harmony";
+        const std::string p_AppDomainName = "HarmonyApp";
     };
 
     class MonoSystem : public System

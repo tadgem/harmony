@@ -1,5 +1,5 @@
 #include "MonoAssembly.h"
-#include "MonoUtils.hpp"
+#include "MonoUtils.h"
 
 harmony::MonoAssemblyAsset::MonoAssemblyAsset(std::vector<uint8_t> assemblyBinary, const std::string& assemblyPath) :
 	Asset(),
