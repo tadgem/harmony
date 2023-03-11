@@ -337,7 +337,7 @@ void harmony::Renderer::OnImGui()
                 p_CreateDrawStageWindow = true;
             }
         }
-
+        ImGui::Separator();
         if (ImGui::CollapsingHeader("[PostProcessStages]", ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Framed))
         {
             ImGui::Indent();
@@ -352,6 +352,7 @@ void harmony::Renderer::OnImGui()
                 p_CreatePostProcessStageWindow = true;
             }
         }
+        ImGui::Separator();
         if (ImGui::CollapsingHeader("[Pipelines]"))
         {
             for (auto& pipeline : p_Pipelines)

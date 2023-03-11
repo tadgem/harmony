@@ -212,7 +212,7 @@ int harmony::Editor::OnRuntimeUpdate()
 
 void harmony::Editor::OnRuntimeEntry()
 {
-	SetRunningStyle();
+    SetStyle();
 	RunSystemInit();
 	p_EditorView->Camera.Focussed = false;
 	SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -220,7 +220,7 @@ void harmony::Editor::OnRuntimeEntry()
 
 void harmony::Editor::OnRuntimeExit()
 {
-	SetStyle();
+    SetRunningStyle();
 	LoadScene(p_LoadedScenePath);
 	p_EditorView->Camera.Focussed = true;
 	SDL_SetRelativeMouseMode(SDL_FALSE);
@@ -240,7 +240,7 @@ void harmony::Editor::Run()
 	InitializeViews();
 	PreRunInit();
 
-	SetStyle();
+	SetRunningStyle();
 
 	while (p_Run)
 	{
@@ -282,7 +282,7 @@ void harmony::Editor::Run(const std::string& projectPath)
 
 	PreRunInit();
 
-	SetStyle();
+	SetRunningStyle();
 
 	while (p_Run)
 	{
@@ -335,7 +335,11 @@ void harmony::Editor::SetRunningStyle()
 
 	style.Alpha = 1.0f;
 	style.DisabledAlpha = 0.6000000238418579f;
-	style.WindowMenuButtonPosition = ImGuiDir_Left;
+    style.DisplaySafeAreaPadding = ImVec2(0.0f, 0.0f);
+    style.WindowPadding = ImVec2(0.0f, 0.0f);
+    style.FramePadding  = ImVec2(0.0f, 0.0f);
+    style.DisplayWindowPadding = ImVec2(0.0f, 0.0f);
+
 	
 	style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 	style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.4980392158031464f, 0.4980392158031464f, 0.4980392158031464f, 1.0f);
@@ -394,21 +398,21 @@ void harmony::Editor::SetRunningStyle()
 
 void harmony::Editor::GlobalDockspace()
 {
-	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode |ImGuiDockNodeFlags_NoResize;
 
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
 
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImVec2 winPos = viewport->Pos;
 	ImVec2 winSize = viewport->Size;
-	//winPos.y += p_MainMenuBar.m_MenuBarSize.y;
+	winPos.y += p_MainMenuBar.m_MenuBarSize.y;
 	winSize.x = p_WindowWidth;
 	winSize.y = p_WindowHeight + p_MainMenuBar.m_MenuBarSize.y;
 	ImGui::SetNextWindowPos(winPos);
 	ImGui::SetNextWindowSize(winSize);
 	ImGui::SetNextWindowViewport(viewport->ID);
 
-	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
 
