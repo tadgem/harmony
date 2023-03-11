@@ -121,3 +121,7 @@ glm::quat harmony::Utils::CalculateRotationQuat(glm::vec3 eulerDegrees)
 
 	return zRotation * yRotation * xRotation;
 }
+
+bool harmony::Utils::FileExists(const std::string &filepath) {
+    return std::filesystem::exists(filepath);
+}

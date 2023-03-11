@@ -1,4 +1,6 @@
 #include "Core/Memory.h"
+#include "MonoProgramComponent.h"
+#include "MonoAssemblyAssetFactory.h"
 
 void* operator new(size_t size)
 {
@@ -17,7 +19,10 @@ void operator delete(void* memory, size_t size)
 int main()
 {
 	harmony::Editor app;
-	// app.Run("../../../projects/Test3/Test3.harmonyproj");
-	app.Run();
+
+	harmony::AddMono(app);
+
+	app.Run("../../../projects/mono-test/MonoTest.harmonyproj");
+
 	return 0;
 }

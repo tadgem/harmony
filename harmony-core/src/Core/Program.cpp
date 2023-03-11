@@ -18,7 +18,7 @@
 #endif
 harmony::Program::Program(const std::string& name) : p_AppName(name), m_Renderer(m_AssetManager)
 {
-	HARMONY_PROFILE_BEGIN_SESSION("Harmony Engine")
+	HARMONY_PROFILE_BEGIN_SESSION("Harmony Engine", "")
 	if(s_Instance != nullptr)
 	{
 		harmony::log::error("Trying to create new application instance but an application already exists!");
@@ -227,36 +227,10 @@ void harmony::Program::SetStyle()
 	// Harmony style from ImThemes
 	ImGuiStyle& style = ImGui::GetStyle();
 
-	style.Alpha = 1.0f;
-	style.DisabledAlpha = 0.300000011920929f;
-	style.WindowPadding = ImVec2(4.0f, 4.0f);
-	style.WindowRounding = 0.0f;
-	style.WindowBorderSize = 1.0f;
-	style.WindowMinSize = ImVec2(32.0f, 32.0f);
-	style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
-	style.WindowMenuButtonPosition = ImGuiDir_Left;
-	style.ChildRounding = 4.0f;
-	style.ChildBorderSize = 1.0f;
-	style.PopupRounding = 4.0f;
-	style.PopupBorderSize = 1.0f;
-	style.FramePadding = ImVec2(5.0f, 2.0f);
-	style.FrameRounding = 4.0f;
-	style.FrameBorderSize = 1.0f;
-	style.ItemSpacing = ImVec2(4.0f, 4.0f);
-	style.ItemInnerSpacing = ImVec2(8.0f, 8.0f);
-	style.CellPadding = ImVec2(4.0f, 4.0f);
-	style.IndentSpacing = 8.0f;
-	style.ColumnsMinSpacing = 4.0f;
-	style.ScrollbarSize = 16.0f;
-	style.ScrollbarRounding = 4.0f;
-	style.GrabMinSize = 4.0f;
-	style.GrabRounding = 16.0f;
-	style.TabRounding = 4.0f;
-	style.TabBorderSize = 1.0f;
-	style.TabMinWidthForCloseButton = 4.0f;
-	style.ColorButtonPosition = ImGuiDir_Right;
-	style.ButtonTextAlign = ImVec2(0.5f, 0.5f);
-	style.SelectableTextAlign = ImVec2(0.0f, 0.0f);
+    style.DisplaySafeAreaPadding = ImVec2(0.0f, 0.0f);
+    style.WindowPadding = ImVec2(0.0f, 0.0f);
+    style.FramePadding  = ImVec2(0.0f, 0.0f);
+    style.DisplayWindowPadding = ImVec2(0.0f, 0.0f);
 
 	style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 0.9999899864196777f, 0.9999899864196777f, 1.0f);
 	style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.6866884231567383f, 0.6866952776908875f, 0.6866907477378845f, 1.0f);
@@ -667,6 +641,12 @@ void harmony::Program::LoadProject(const std::string& path)
 	HARMONY_PROFILE_FUNCTION()
 	CloseActiveProject();
 
+    if(!Utils::FileExists(path))
+    {
+        harmony::log::warn("Program : Cannot open project at path {}", path);
+        return;
+    }
+
 	nlohmann::json projectJson = Utils::LoadJsonFromPath(path);
 	m_Project = CreateRef<Project>(projectJson);
 		
@@ -937,7 +917,11 @@ void harmony::Program::SaveImGuiSettings()
 
 void harmony::Program::LoadImGuiSettings()
 {
-	m_Project->m_ImGuiIniPath = m_Project->m_ProjectName + "_ImGui.ini";
+    if(!m_Project)
+    {
+        return;
+    }
+   	m_Project->m_ImGuiIniPath = m_Project->m_ProjectName + "_ImGui.ini";
 	if (std::filesystem::exists(m_Project->m_ImGuiIniPath))
 	{
 		ImGui::LoadIniSettingsFromDisk(m_Project->m_ImGuiIniPath.c_str());

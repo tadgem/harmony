@@ -25,18 +25,18 @@ void harmony::LightSystem::Update(entt::registry& registry)
     auto slView = registry.view<SpotLight, TransformComponent>();
     GfxDebug::Get()->setWireframe(GfxDebug::Editor, true);
     
-    for (auto& [e, dl, t] : dlView.each())
+    for (auto [e, dl, t] : dlView.each())
     {
         auto b = bx::Vec3(0.0f, 0.0f, 0.0f);
         auto end = bx::Vec3(b.x + t.Forward.x, b.y + t.Forward.y, b.z + t.Forward.z);
         GfxDebug::Get()->drawCylinder(GfxDebug::Editor, b, end, 1.0f);
     }
-    for (auto& [e, p, t] : plView.each())
+    for (auto [e, p, t] : plView.each())
     {
         GfxDebug::Get()->drawOrb(GfxDebug::Editor, t.Position.x, t.Position.y, t.Position.z, p.Radius);
     }
 
-    for (auto& [e, s, t] : slView.each())
+    for (auto [e, s, t] : slView.each())
     {
         bx::Vec3 from(t.Position.x, t.Position.y, t.Position.z);
         glm::vec3 _to = t.Position + (t.Forward * s.Radius);

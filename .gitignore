@@ -42,13 +42,22 @@ imgui.ini
 
 *idea
 */cmake-build-debug
+*\cmake-build-debug-visual-studio
+*\cmake-build-release-visual-studio
 */build
 */uwp
-*/.vs
+*.vs
 */out
+*/bin
+*\bin
+*/Debug
+*\obj
+*/obj
+*.deps.json
 *CMakeSettings.json
 .vs/VSWorkspaceState.json
 .vs/slnx.sqlite
 .vs/ProjectSettings.json
 .vs/CMakeWorkspaceSettings.json
 *.DS_Store
+*cmake-build-debug
