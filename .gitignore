@@ -38,7 +38,6 @@ __pycache__/create_project.cpython-310.pyc
 imgui.ini
 *.pdb
 *.pyc
-*.bin
 
 *idea
 */cmake-build-debug
@@ -48,8 +47,6 @@ imgui.ini
 */uwp
 *.vs
 */out
-*/bin
-*\bin
 */Debug
 *\obj
 */obj
