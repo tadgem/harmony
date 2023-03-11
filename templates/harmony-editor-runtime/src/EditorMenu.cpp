@@ -87,6 +87,7 @@ void harmony::EditorMainMenuBar::MenuBar()
 
 void harmony::EditorMainMenuBar::Dialogs()
 {
+    ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 	if (ImGuiFileDialog::Instance()->Display("HarmonyOpenProject"))
 	{
 		// action if OK
@@ -98,6 +99,7 @@ void harmony::EditorMainMenuBar::Dialogs()
 		ImGuiFileDialog::Instance()->Close();
 	}
 
+    ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 	if (ImGuiFileDialog::Instance()->Display("HarmonySaveScene"))
 	{
 		// action if OK

@@ -398,7 +398,7 @@ void harmony::Editor::SetRunningStyle()
 
 void harmony::Editor::GlobalDockspace()
 {
-	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode |ImGuiDockNodeFlags_NoResize;
+	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
 
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
 
