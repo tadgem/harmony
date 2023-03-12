@@ -1,8 +1,11 @@
 local view = nil
 local viewTransform = nil
+local enemyMoveDir = math.vec3:new()
+local enemySpeed = 0.0
 
 function start()
     print("enemy.lua : start")
+    enemySpeed = math.random()
 end
 
 function GetView()
@@ -19,6 +22,13 @@ end
 function update()
     GetView()
     deltaTime = time.GetFrameTime();
+
+    local finalSpeed = deltaTime * enemySpeed
+
+    thisTransform = this_entity:GetTransform()
+    enemyMoveDir = math.subVec3(viewTransform.position, thisTransform.position)
+
+    thisTransform.position = math.addVec3(thisTransform.position, math.mulVec3f(enemyMoveDir, finalSpeed))
 end
 
 function cleanup()

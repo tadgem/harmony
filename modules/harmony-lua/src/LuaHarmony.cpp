@@ -79,6 +79,11 @@ float lua_Abs(float v)
 	return glm::abs(v);
 }
 
+float lua_Random()
+{
+    return ((float) rand() / (RAND_MAX)) + 1;
+}
+
 harmony::Scene* lua_GetActiveScene()
 {
 	auto sceneWr = harmony::Program::Get()->GetActiveScene();
@@ -537,5 +542,6 @@ void harmony::InitGLM(sol::state& state, sol::table& h)
 	h["mulVec4"]	= lua_Vec4Multiply;
 	h["mulVec4f"]	= lua_Vec4MulF;
 
-	h["abs"] = lua_Abs;
+	h["abs"]        = lua_Abs;
+    h["random"]     = lua_Random;
 }

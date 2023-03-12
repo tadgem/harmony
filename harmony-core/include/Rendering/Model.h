@@ -1,7 +1,7 @@
 #pragma once
 #include "Rendering/Mesh.h"
 #include "Assets/Asset.h"
-#include "Core/Memory.h"
+#include "Core/Alias.h"
 namespace harmony
 {
     struct ModelHandle
@@ -13,12 +13,21 @@ namespace harmony
         static uint32_t p_Counter;
     };
 
+    struct ModelEntry
+    {
+        AssetHandle         Mesh;
+        glm::vec3           Position;
+        glm::vec3           Euler;
+        glm::vec3           Scale;
+        Vector<AssetHandle> Textures;
+    };
+
     class Model : public Asset
     {
     public:
-        Model(const std::string& name);
-        std::string m_Name;
-        ModelHandle m_ModelHandle;
-        std::vector<AssetHandle> m_Meshes;
+        Model(const String& name);
+        String              m_Name;
+        AssetHandle         m_ModelHandle;
+        Vector<ModelEntry>  m_Entries;
     };
 };

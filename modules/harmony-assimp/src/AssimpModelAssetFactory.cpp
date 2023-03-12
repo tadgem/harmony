@@ -33,7 +33,8 @@ harmony::AssimpModelAssetFactory::AssimpModelAssetFactory(Renderer& renderer) : 
 void harmony::AssimpModelAssetFactory::ProcessNode(const std::string& path, aiNode* node, const aiScene* scene)
 {
 	HARMONY_PROFILE_FUNCTION()
-	if (node->mNumMeshes > 0)
+
+    if (node->mNumMeshes > 0)
 	{
 		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
@@ -57,6 +58,7 @@ void harmony::AssimpModelAssetFactory::ProcessNode(const std::string& path, aiNo
 void harmony::AssimpModelAssetFactory::ProcessMesh(const std::string& path, aiMesh* mesh, aiNode* node, const aiScene* scene)
 {
 	HARMONY_PROFILE_FUNCTION()
+
 	Ref<Mesh> meshAsset = CreateRef<Mesh>(path, p_MeshCounter);
 	p_MeshCounter++;
 	bool hasPositions = mesh->HasPositions();
@@ -176,7 +178,6 @@ void harmony::AssimpModelAssetFactory::UnloadAssetData(const std::string& path, 
 		registry.destroy(entitiesToDestroy[i]);
 	}
 }
-
 
 void harmony::AssimpModelAssetFactory::LoadAssetData(const std::string& path, entt::registry& registry)
 {
