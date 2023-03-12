@@ -35,6 +35,12 @@ glm::vec2 lua_Vec2MulF(glm::vec2& a, float b)
 	return a * b;
 }
 
+glm::vec2 lua_Vec2Norm(glm::vec2& a)
+{
+    return glm::normalize(a);
+}
+
+
 glm::vec3 lua_Vec3Multiply(glm::vec3& a, glm::vec3& b)
 {
 	return a * b;
@@ -52,6 +58,11 @@ glm::vec3 lua_Vec3Subtract(glm::vec3& a, glm::vec3& b)
 glm::vec3 lua_Vec3MulF(glm::vec3& a, float b)
 {
 	return a * b;
+}
+
+glm::vec3 lua_Vec3Norm(glm::vec3& a)
+{
+    return glm::normalize(a);
 }
 
 glm::vec3 lua_Vec4Multiply(glm::vec3& a, glm::vec3& b)
@@ -73,6 +84,12 @@ glm::vec4 lua_Vec4MulF(glm::vec4& a, float b)
 {
 	return a * b;
 }
+
+glm::vec4 lua_Vec4Norm(glm::vec4& a)
+{
+    return glm::normalize(a);
+}
+
 
 float lua_Abs(float v)
 {
@@ -533,14 +550,17 @@ void harmony::InitGLM(sol::state& state, sol::table& h)
 	h["subVec2"]	= lua_Vec2Subtract;
 	h["mulVec2"]	= lua_Vec2Multiply;
 	h["mulVec2f"]	= lua_Vec2MulF;
+    h["normVec2"]   = lua_Vec2Norm;
 	h["addVec3"]	= lua_Vec3Add;
 	h["subVec3"]	= lua_Vec3Subtract;
 	h["mulVec3"]	= lua_Vec3Multiply;
 	h["mulVec3f"]	= lua_Vec3MulF;
+    h["normVec3"]   = lua_Vec3Norm;
 	h["addVec4"]	= lua_Vec4Add;
 	h["subVec4"]	= lua_Vec4Subtract;
 	h["mulVec4"]	= lua_Vec4Multiply;
 	h["mulVec4f"]	= lua_Vec4MulF;
+    h["normVec4"]   = lua_Vec4Norm;
 
 	h["abs"]        = lua_Abs;
     h["random"]     = lua_Random;

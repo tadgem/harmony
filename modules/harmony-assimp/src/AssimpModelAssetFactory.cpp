@@ -16,21 +16,21 @@ static glm::vec2 AssimpToGLM(aiVector2D aiVec)
 	return glm::vec2(aiVec.x, aiVec.y);
 }
 
-static std::string AssimpToSTD(aiString str)
+static harmony::String AssimpToSTD(aiString str)
 {
-	return std::string(str.C_Str());
+	return harmony::String(str.C_Str());
 }
 
 harmony::AssimpModelAssetFactory::AssimpModelAssetFactory(Renderer& renderer) : harmony::AssetFactory(), p_Renderer(renderer)
 {
-	std::string modelTypeHash = GetTypeHash<Model>();
-	std::string meshTypeHash = GetTypeHash<Mesh>();
+	String modelTypeHash = GetTypeHash<Model>();
+	String meshTypeHash = GetTypeHash<Mesh>();
 
 	m_Capabilities.AssetTypeHashes.push_back(modelTypeHash);
 	m_Capabilities.AssetTypeHashes.push_back(meshTypeHash);
 }
 
-void harmony::AssimpModelAssetFactory::ProcessNode(const std::string& path, aiNode* node, const aiScene* scene)
+void harmony::AssimpModelAssetFactory::ProcessNode(const String& path, aiNode* node, const aiScene* scene)
 {
 	HARMONY_PROFILE_FUNCTION()
 
@@ -55,19 +55,20 @@ void harmony::AssimpModelAssetFactory::ProcessNode(const std::string& path, aiNo
 	}
 }
 
-void harmony::AssimpModelAssetFactory::ProcessMesh(const std::string& path, aiMesh* mesh, aiNode* node, const aiScene* scene)
+void harmony::AssimpModelAssetFactory::ProcessMesh(const String& path, aiMesh* mesh, aiNode* node, const aiScene* scene)
 {
 	HARMONY_PROFILE_FUNCTION()
 
-	Ref<Mesh> meshAsset = CreateRef<Mesh>(path, p_MeshCounter);
-	p_MeshCounter++;
-	bool hasPositions = mesh->HasPositions();
-	bool hasIndices = mesh->HasFaces();
-	bool hasNormals = mesh->HasNormals();
-	bool hasUVs = mesh->HasTextureCoords(0);
-	bool hasTangentsAndBitangents = false;
 
-	std::vector<glm::vec3> positions;
+	Ref<Mesh> meshAsset             = CreateRef<Mesh>(path, p_MeshCounter);
+	bool hasPositions               = mesh->HasPositions();
+	bool hasIndices                 = mesh->HasFaces();
+	bool hasNormals                 = mesh->HasNormals();
+	bool hasUVs                     = mesh->HasTextureCoords(0);
+	bool hasTangentsAndBitangents   = false;
+    p_MeshCounter++;
+
+    std::vector<glm::vec3> positions;
 	if (hasPositions)
 	{
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -150,7 +151,7 @@ void harmony::AssimpModelAssetFactory::ProcessMesh(const std::string& path, aiMe
 	p_MeshNames.emplace_back(AssimpToSTD(mesh->mName));
 }
 
-void harmony::AssimpModelAssetFactory::UnloadAssetData(const std::string& path, entt::registry& registry)
+void harmony::AssimpModelAssetFactory::UnloadAssetData(const String& path, entt::registry& registry)
 {
 	std::vector<entt::entity> entitiesToDestroy;
 
@@ -179,7 +180,7 @@ void harmony::AssimpModelAssetFactory::UnloadAssetData(const std::string& path, 
 	}
 }
 
-void harmony::AssimpModelAssetFactory::LoadAssetData(const std::string& path, entt::registry& registry)
+void harmony::AssimpModelAssetFactory::LoadAssetData(const String& path, entt::registry& registry)
 {
 	HARMONY_PROFILE_FUNCTION()
 
@@ -201,8 +202,8 @@ void harmony::AssimpModelAssetFactory::LoadAssetData(const std::string& path, en
 	}
 	//
 	ProcessNode(path, scene->mRootNode, scene);
-	std::string modelName = std::string(scene->mName.C_Str());
-	Ref<Model> model = CreateRef<Model>(modelName); 
+	String modelName = String(scene->mName.C_Str());
+	Ref<Model> model = CreateRef<Model>(modelName);
 	AssetHandle handle(path, 0, GetTypeHash<Model>() );
 
 	for (int i = 0; i < p_Meshes.size(); i++)

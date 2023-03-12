@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Alias.h"
 #include "Assets/AssetFactory.h"
 #include "glm/glm.hpp"
 
@@ -15,14 +16,15 @@ namespace harmony
     public:
         AssimpModelAssetFactory(Renderer& renderer);
     protected:
-        virtual void LoadAssetData(const std::string& path, entt::registry& registry) override;
-        virtual void UnloadAssetData(const std::string& path, entt::registry& registry) override;
+        virtual void LoadAssetData(const String& path, entt::registry& registry) override;
+        virtual void UnloadAssetData(const String& path, entt::registry& registry) override;
 
-        void ProcessNode(const std::string& path, aiNode* node, const aiScene* scene);
-        void ProcessMesh(const std::string& path, aiMesh* mesh, aiNode* node, const aiScene* scene);
+        void ProcessNode(const String& path, aiNode* node, const aiScene* scene);
+        void ProcessMesh(const String& path, aiMesh* mesh, aiNode* node, const aiScene* scene);
 
-        std::vector<Ref<Asset>> p_Meshes;
-        std::vector<std::string> p_MeshNames;
+        Vector<Ref<Asset>> p_Meshes;
+
+        Vector<String> p_MeshNames;
 
         uint32_t p_MeshCounter = 0;
 

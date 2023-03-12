@@ -26,7 +26,7 @@ function update()
     local finalSpeed = deltaTime * enemySpeed
 
     thisTransform = this_entity:GetTransform()
-    enemyMoveDir = math.subVec3(viewTransform.position, thisTransform.position)
+    enemyMoveDir = math.normVec3(math.subVec3(viewTransform.position, thisTransform.position))
 
     thisTransform.position = math.addVec3(thisTransform.position, math.mulVec3f(enemyMoveDir, finalSpeed))
 end

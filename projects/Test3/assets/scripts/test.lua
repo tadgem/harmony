@@ -7,6 +7,8 @@ local deadZone            = 0.1
 local limitX              = 60
 local lowerLimitX         = 0.0 - limitX
 
+
+local playerHeight        = 1.8
 local groundHeight        = 0.0
 local initHeight          = 0.0
 local currentHeight       = 0.0
@@ -33,18 +35,18 @@ function start()
     print("test.lua : start")
     worldUp.y = 1.0
     viewEntity = harmony.GetViewEntity(view)
-    for x=1,collisionTestMultiplier do
-        for y=1,collisionTestMultiplier do
-            newEntity = harmony.GetScene():AddEntity()
-            newEntity:AddTransform()
-            newEntity:AddSphere()
-            t = newEntity:GetTransform()
-            t.position.x = t.position.x + (x * offset)
-            t.position.z = t.position.z + (y * offset)
-            s = newEntity:GetSphere()
-            s.radius = 2.0
-        end
-    end
+    -- for x=1,collisionTestMultiplier do
+    --     for y=1,collisionTestMultiplier do
+    --         newEntity = harmony.GetScene():AddEntity()
+    --         newEntity:AddTransform()
+    --         newEntity:AddSphere()
+    --         t = newEntity:GetTransform()
+    --         t.position.x = t.position.x + (x * offset)
+    --         t.position.z = t.position.z + (y * offset)
+    --         s = newEntity:GetSphere()
+    --         s.radius = 2.0
+    --     end
+    -- end
 end
 
 function getMovementVector(a)
@@ -139,44 +141,32 @@ function update()
     UpdateDirectionVectors(t)
 
     ray(t.position, forwardDir)
-    ray(t.position, upDir)
-    downHit = ray(t.position, downDir)
+    downHit = ray(t.position, upDir)
+    ray(t.position, downDir)
 
     ls = GetControllerMovement()
     rs = GetControllerLook()
 
-    groundHeight = initHeight
+    groundHeight = downHit.y
+    currentHeight = t.position.y
+    
+    print("Height Diff : %f", heightDiff)    
+    heightDiff = math.abs(currentHeight - groundHeight)
 
-    if(downHit.y > groundHeight) then
-        groundHeight = downHit.y    
+    if heightDiff <= playerHeight then
+        heightDiff = 0.0
+        if input.GetGamepadButton(0, input.gamePadButton.FaceSouth)then
+            Jump()
+        end
+    else
+        currentHeight = currentHeight + (currentJumpHeight * deltaTime)
     end
 
-    heightDiff = groundHeight - currentHeight
-    if input.GetGamepadButton(0, input.gamePadButton.FaceSouth) and heightDiff >= 0.3 then
-        Jump()
-    end
+    currentJumpHeight = currentJumpHeight - (deltaTime * fallSpeed * fallSpeedMultiplier)
 
     forwardVec = getMovementVector(ls.y)
     rightVec = getMovementVector(ls.x)
         
-    if currentHeight > groundHeight then
-        timeInAir = timeInAir + deltaTime * fallSpeedMultiplier
-        currentJumpHeight = currentJumpHeight - deltaTime * fallSpeed * jumpMultiplier
-        currentHeight = currentHeight + (currentJumpHeight * deltaTime)
-        if(timeInAir < 1.0) then
-            currentHeight = currentHeight - deltaTime * fallSpeed
-        else
-            currentHeight = currentHeight - deltaTime * fallSpeed * timeInAir
-        end
-    else
-        currentHeight = initHeight
-        timeInAir = 0.0
-    end
-
-    if currentJumpHeight < 0.0 then
-        currentJumpHeight = 0.0
-    end
-
     if math.abs(ls.x) > deadZone or math.abs(ls.y) > deadZone then
         t.position = math.addVec3(t.position, math.mulVec3(flatForward, forwardVec))
         t.position = math.addVec3(t.position, math.mulVec3(flatRight, rightVec))
