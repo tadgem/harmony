@@ -4,6 +4,7 @@
 #include "LuaComponent.h"
 #include "Assets/AssetManager.h"
 #include "Core/Scene.h"
+#include "Core/Alias.h"
 #include <string>
 harmony::LuaSystem::LuaSystem(AssetManager& am, Ref<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaSystem>()), p_LuaProgramComponent(luaPc), p_AssetManager(am)
 {
@@ -178,7 +179,8 @@ void harmony::LuaSystem::UpdateScripts(WeakRef<Scene> scene)
 
 void harmony::LuaSystem::InitEntityScript(entt::entity e, entt::registry& r, sol::state& state, LuaComponent& lua)
 {
-    auto compilationResult = state.do_string(lua.m_LuaScriptAsset.m_Script, lua.m_LuaScriptAsset.m_Name);
+    String chunkName = std::to_string(static_cast<uint32_t>(e));
+    auto compilationResult = state.do_string(lua.m_LuaScriptAsset.m_Script, chunkName);
 
     if (!compilationResult.valid())
     {

@@ -149,6 +149,7 @@ function update()
     end
 
     heightDiff = groundHeight - currentHeight
+    print("Height diff : ", heightDiff)
     if input.GetGamepadButton(0, input.gamePadButton.FaceSouth) and heightDiff >= 0.3 then
         Jump()
     end
