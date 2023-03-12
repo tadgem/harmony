@@ -99,6 +99,9 @@ end
 function GetView()
     if view == nil then
         view = harmony.GetView("RuntimeView")
+        if(view == nil) then
+            return
+        end
         t = viewEntity:GetTransform()
         currentHeight = t.position.y
     end

@@ -19,7 +19,6 @@ void harmony::LuaSystem::Init(entt::registry& registry)
     for (auto [entity, lua] : view.each())
     {
         p_CurrentEntity = entity;
-        state["this_entity"] = entity;
         InitEntityScript(entity, registry, state, lua);
 
         if (lua.m_HasStart && lua.m_Start)
@@ -44,7 +43,6 @@ void harmony::LuaSystem::Update(entt::registry& registry)
     for (auto [entity, lua] : view.each())
     {
         p_CurrentEntity = entity;
-        state["this_entity"] = entity;
         if (lua.m_HasUpdate && lua.m_Update)
         {
             try {
@@ -78,7 +76,7 @@ void harmony::LuaSystem::Cleanup(entt::registry& registry)
     for (auto [entity, lua] : view.each())
     {
         p_CurrentEntity = entity;
-        state["this_entity"] = entity;
+
         if (lua.m_HasCleanup && lua.m_Cleanup)
         {
             auto result = lua.m_Cleanup();
@@ -180,7 +178,11 @@ void harmony::LuaSystem::UpdateScripts(WeakRef<Scene> scene)
 void harmony::LuaSystem::InitEntityScript(entt::entity e, entt::registry& r, sol::state& state, LuaComponent& lua)
 {
     String chunkName = std::to_string(static_cast<uint32_t>(e));
-    auto compilationResult = state.do_string(lua.m_LuaScriptAsset.m_Script, chunkName);
+
+    sol::environment env(state, sol::create, state.globals());
+    env["this_entity"] = e;
+
+    auto compilationResult = state.do_string(lua.m_LuaScriptAsset.m_Script, env);
 
     if (!compilationResult.valid())
     {
@@ -190,9 +192,9 @@ void harmony::LuaSystem::InitEntityScript(entt::entity e, entt::registry& r, sol
         harmony::log::error("LuaSystem : InitEntityScript : Error : {} : in compiling file for Entity : {} : Script : {}", what, entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
     }
 
-    sol::function startFx = state["start"];
-    sol::function updateFx = state["update"];
-    sol::function cleanupFx = state["cleanup"];
+    sol::function startFx = env["start"];
+    sol::function updateFx = env["update"];
+    sol::function cleanupFx = env["cleanup"];
 
     if (startFx.valid())
     {

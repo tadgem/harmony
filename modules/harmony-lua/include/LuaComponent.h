@@ -17,6 +17,8 @@ namespace harmony
         bool m_HasUpdate;
         bool m_HasCleanup;
 
+        sol::environment  m_Env;
+
         sol::function m_Start;
         sol::function m_Update;
         sol::function m_Cleanup;
