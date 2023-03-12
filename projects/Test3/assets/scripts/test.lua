@@ -13,8 +13,8 @@ local groundHeight        = 0.0
 local initHeight          = 0.0
 local currentHeight       = 0.0
 local fallSpeed           = 9.8
-local fallSpeedMultiplier = 2.0
-local jumpMomentum        = 40.0
+local fallSpeedMultiplier = 8.0
+local jumpMomentum        = 20.0
 local jumpMultiplier      = 6.0
 local currentJumpHeight   = 0.0
 local timeInAir           = 0.0
@@ -132,6 +132,16 @@ function UpdateDirectionVectors(t)
     downDir = math.mulVec3f(worldUp, -10.0)
 end
 
+function LimitAngles(transform)
+    if transform.euler.x > limitX then
+        transform.euler.x = limitX;
+    end
+
+    if transform.euler.x < lowerLimitX then
+        transform.euler.x = lowerLimitX
+    end
+end
+
 function update()
     deltaTime = time.GetFrameTime();
     GetView()
@@ -154,18 +164,22 @@ function update()
     heightDiff = math.abs(currentHeight - groundHeight)
 
     if heightDiff <= playerHeight then
+        if currentHeight < groundHeight + playerHeight then
+            currentHeight = groundHeight + playerHeight
+        end
         heightDiff = 0.0
         if input.GetGamepadButton(0, input.gamePadButton.FaceSouth)then
             Jump()
         end
     else
+        timeInAir = timeInAir + deltaTime
         currentHeight = currentHeight + (currentJumpHeight * deltaTime)
     end
 
-    currentJumpHeight = currentJumpHeight - (deltaTime * fallSpeed * fallSpeedMultiplier)
+    currentJumpHeight = currentJumpHeight - (deltaTime * timeInAir * fallSpeed * fallSpeedMultiplier)
 
     forwardVec = getMovementVector(ls.y)
-    rightVec = getMovementVector(ls.x)
+    rightVec    = getMovementVector(ls.x)
         
     if math.abs(ls.x) > deadZone or math.abs(ls.y) > deadZone then
         t.position = math.addVec3(t.position, math.mulVec3(flatForward, forwardVec))
@@ -181,13 +195,8 @@ function update()
         t.euler.y = t.euler.y - rs.x * r
     end
     
-    if t.euler.x > limitX then
-        t.euler.x = limitX;
-    end
-
-    if t.euler.x < lowerLimitX then
-        t.euler.x = lowerLimitX
-    end
+    LimitAngles(t)
+    
 end
 
 function cleanup()
