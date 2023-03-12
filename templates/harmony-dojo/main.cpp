@@ -17,7 +17,7 @@ void operator delete(void* memory, size_t size)
 int main()
 {
 	harmony::Editor app;
-	// app.Run("../../../projects/Test3/Test3.harmonyproj");
-	app.Run();
+	app.Run("../../../../projects/Test3/Test3.harmonyproj");
+	//app.Run();
 	return 0;
 }

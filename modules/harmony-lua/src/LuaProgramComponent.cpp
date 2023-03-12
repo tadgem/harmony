@@ -9,7 +9,7 @@ harmony::LuaProgramComponent::LuaProgramComponent()
 
 void harmony::LuaProgramComponent::Init()
 {
-    p_State.open_libraries(sol::lib::base, sol::lib::package);
+    p_State.open_libraries(sol::lib::base, sol::lib::package, sol::lib::jit, sol::lib::ffi);
     harmony::InitNanoVG(p_State);
     harmony::InitHarmony(p_State);
 }

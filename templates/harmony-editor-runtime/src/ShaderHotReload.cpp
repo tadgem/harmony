@@ -9,7 +9,7 @@
 harmony::ShaderHotReload::ShaderHotReload(Program& prog) : AssetHotReloadProvider("Shader"), p_Program(prog), p_Renderer(prog.m_Renderer)
 {
     std::string currentPath = std::filesystem::current_path().string();
-    p_ShaderCompilerLocation = currentPath + "/../../../tools/bgfx-shaderc/bin/shaderc" + PLATFORM_SHADER_COMPILER_EXECUTABLE;
+    p_ShaderCompilerLocation = currentPath + "/../../../../tools/bgfx-shaderc/bin/shaderc" + PLATFORM_SHADER_COMPILER_EXECUTABLE;
     p_Initialized = false;
     if (!std::filesystem::exists(p_ShaderCompilerLocation))
     {
