@@ -111,7 +111,8 @@ harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::BuildShader(const st
     return GetWeakRef<ShaderProgram>(prog);
 }
 
-uint32_t harmony::Renderer::p_ViewHandleCounter = 1;
+uint32_t harmony::Renderer::p_ViewHandleCounter = 0;
+uint32_t harmony::Renderer::p_PresentViewHandleCounter = 1;
 
 harmony::WeakRef<harmony::View> harmony::Renderer::GetView(const std::string& name)
 {
@@ -740,6 +741,14 @@ bgfx::ViewId harmony::Renderer::GetViewID()
     p_ViewHandleCounter++;
     return v;
 }
+
+bgfx::ViewId harmony::Renderer::GetPresentViewID()
+{
+    bgfx::ViewId v = p_MaxViews - p_PresentViewHandleCounter;
+    p_PresentViewHandleCounter++;
+    return v;
+}
+
 
 nlohmann::json harmony::Renderer::Serialize()
 {
@@ -1456,23 +1465,29 @@ void harmony::Renderer::HandleStackPipelineAccumulation(Ref<View> view, Pipeline
     bgfx::setViewClear(stack.m_PipelineStackAccumulationView, BGFX_CLEAR_COLOR, 0x00000000);
 
     bool touchNoPostProcess = true;
-    auto noPostProcess = std::vector<bgfx::TextureHandle>();
+    auto noPostProcess  = std::vector<bgfx::TextureHandle>();
+    auto toPostProcess    = std::vector<bgfx::TextureHandle>();
     for(auto& [th, postProcess] : texturesToBlit)
     {
         bgfx::TextureHandle h{ th };
         // do this better
         if (postProcess)
         {
-            bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, h);
-            ScreenSpaceQuad(view->m_Width, view->m_Height);
-            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
-            bgfx::submit(stack.m_PipelineStackAccumulationView, textureProg->m_Handle);
+            toPostProcess.emplace_back(h);
         }
         else
         {
             noPostProcess.emplace_back(h);
             touchNoPostProcess = false;
         }
+    }
+
+    for(int i = toPostProcess.size() -1; i >= 0; i--)
+    {
+        bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, toPostProcess[i]);
+        ScreenSpaceQuad(view->m_Width, view->m_Height);
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
+        bgfx::submit(stack.m_PipelineStackAccumulationView, textureProg->m_Handle);
     }
 
     bgfx::setViewClear(stack.m_PipelineStackNoPostProcessView, BGFX_CLEAR_COLOR, 0x00000000);
@@ -1525,7 +1540,7 @@ void harmony::Renderer::HandleStackPostProcess(Ref<View> view, PipelineStack& st
     }
 
     // post processing image drawn first
-    bgfx::setViewClear(stack.m_FinalImageViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000);
+    bgfx::setViewClear(stack.m_FinalImageViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0F);
     bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, data.m_Attachments[data.GetColorType()].m_Handle);
     ScreenSpaceQuad(view->m_Width, view->m_Height);
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ADD);

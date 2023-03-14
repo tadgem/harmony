@@ -154,8 +154,8 @@ function update()
     downHit = ray(t.position, upDir)
     ray(t.position, downDir)
 
-    ls = GetControllerMovement()
-    rs = GetControllerLook()
+    ls = GetKeyboardMovement()
+    rs = GetMouseLook()
 
     groundHeight = downHit.y
     currentHeight = t.position.y

@@ -69,7 +69,7 @@ void harmony::PostProcessStage::PostUpdate(entt::registry& registry, WeakRef<Vie
 
 	Ref<View> v = view.lock();
 
-	bgfx::setViewClear(viewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
+	bgfx::setViewClear(viewId, BGFX_CLEAR_COLOR, 0x00000000, 1.0f);
 	bgfx::setViewRect(viewId, 0, 0, v->m_Width, v->m_Height);
 
 	bgfx::TextureHandle colourAttachment	= data.m_Attachments[colourType].m_Handle;

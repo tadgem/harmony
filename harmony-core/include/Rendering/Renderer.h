@@ -77,9 +77,12 @@ namespace harmony
                 
         PipelineStack&                  GetViewPipelineStack(const std::string& viewName);
         static bgfx::ViewId             GetViewID();
+        static bgfx::ViewId             GetPresentViewID();
             
         nlohmann::json                  Serialize();
         void                            Deserialize(AssetManager& am, nlohmann::json& json);
+
+        std::vector<WeakRef<View>>      m_ActiveViews;
 
 #if HARMONY_DEBUG
         void                OnImGui();
@@ -108,7 +111,6 @@ namespace harmony
         int p_SelectedPipelineType;
         int p_SelectedPipelineDrawStageType;
 #endif
-        std::vector<WeakRef<View>> m_ActiveViews;
     protected:
         bgfx::VertexLayout  BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
             
@@ -133,7 +135,9 @@ namespace harmony
         void                HandleStackPipelineAccumulation (Ref<View> view, PipelineStack& stack, Ref<ShaderProgram> textureProg, entt::registry& registry);
         void                HandleStackPostProcess          (Ref<View> view, PipelineStack& stack, Ref<ShaderProgram> textureProg, entt::registry& registry);
 
+        static uint32_t p_PresentViewHandleCounter;
         static uint32_t p_ViewHandleCounter;
+        static const uint32_t p_MaxViews = 255;
         AssetManager&   p_AssetManager;
         int             s_PresentShaderIndex;
 

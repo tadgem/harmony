@@ -9,9 +9,9 @@
 harmony::PipelineStack::PipelineStack()
 {
     p_Initialized                       = false;
-    m_FinalImageViewId                  = Renderer::GetViewID();
-    m_PipelineStackAccumulationView     = Renderer::GetViewID();
-    m_PipelineStackNoPostProcessView    = Renderer::GetViewID();
+    m_FinalImageViewId                  = Renderer::GetPresentViewID();
+    m_PipelineStackAccumulationView     = Renderer::GetPresentViewID();
+    m_PipelineStackNoPostProcessView    = Renderer::GetPresentViewID();
 }
 
 bgfx::TextureHandle harmony::PipelineStack::GetFinalImage()

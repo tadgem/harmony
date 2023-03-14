@@ -21,7 +21,6 @@ harmony::PipelineDrawStage::Data harmony::DebugDrawStage::Init(entt::registry& r
 void harmony::DebugDrawStage::PreUpdate(entt::registry& registry, WeakRef<View> view, bgfx::ViewId viewId)
 {
 	Ref<View> _view = view.lock();
-	bgfx::setViewClear(viewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
 	bgfx::setViewTransform(viewId, &_view->m_View[0], &_view->m_Projection[0]);
 	bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
 	p_DebugRenderers[_view->m_Name]->begin(viewId, true);

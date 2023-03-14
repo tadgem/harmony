@@ -18,6 +18,7 @@ std::vector<harmony::PipelineDrawStage::Data> harmony::Pipeline::Init(entt::regi
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
+        bgfx::setViewMode(viewIds[i], bgfx::ViewMode::Sequential);
 		datas.emplace_back(p_Stages[i]->Init(registry, view, viewIds[i]));
 	}
 	return datas;
@@ -45,7 +46,7 @@ void harmony::Pipeline::PreUpdate(entt::registry& registry, WeakRef<View> view, 
 	}
 	for (int i = 0; i < p_Stages.size(); i++)
 	{
-		bgfx::setViewClear(viewIds[i], BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
+            bgfx::setViewClear(viewIds[i], BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
 	}
 
 	for (int i = 0; i < p_Stages.size(); i++)
