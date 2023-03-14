@@ -40,7 +40,6 @@ glm::vec2 lua_Vec2Norm(glm::vec2& a)
     return glm::normalize(a);
 }
 
-
 glm::vec3 lua_Vec3Multiply(glm::vec3& a, glm::vec3& b)
 {
 	return a * b;
@@ -242,7 +241,6 @@ void lua_DrawSphere(glm::vec3 p, float r)
 #if HARMONY_DEBUG
 void lua_SetColour(float r, float g, float b, float a)
 {
-
 	char_int col;
 	col.chars[0] = r;
 	col.chars[1] = g;
@@ -260,7 +258,6 @@ void harmony::InitHarmony(sol::state& state)
 	sol::table t = state.create_named_table("time");
 	sol::table m = state.create_named_table("math");
 	sol::table c = state.create_named_table("collision");
-	sol::table d = state.create_named_table("debug");
 	InitGLM(state, m);
 	InitHarmonyTime(state, t);
 	InitHarmonyRendering(state, h);
@@ -268,6 +265,7 @@ void harmony::InitHarmony(sol::state& state)
 	InitHarmonyECS(state, h);
 	InitHarmonyCollision(state, c);
 #if HARMONY_DEBUG
+    sol::table d = state.create_named_table("debug");
 	InitHarmonyDebug(state, d);
 #endif
 }
@@ -279,9 +277,6 @@ void harmony::InitHarmonyDebug(sol::state& state, sol::table& h)
 	h["SetColour"] = &lua_SetColour;
 }
 #endif
-
-
-// script 'Modules'
 
 void harmony::InitHarmonyAssets(sol::state& state, sol::table& h)
 {
@@ -447,7 +442,7 @@ void harmony::InitHarmonyECS(sol::state& state, sol::table& h)
 		);
 
 	h.new_usertype<harmony::MeshComponent>("mesh",
-		"asset", &MeshComponent::MeshAsset,
+		"mesh", &MeshComponent::MeshAsset,
 		"castShadow", &MeshComponent::CastShadow
 		);
 
@@ -537,7 +532,7 @@ void harmony::InitHarmonyTime(sol::state& state, sol::table& h)
 	h["GetFrameTime"]			= &Time::GetFrameTime;
 	h["GetFrameTimeUnscaled"]	= &Time::GetFrameTimeUnscaled;
 	h["GetTimeScale"]			= &Time::GetTimeScale;
-	h["GetTimescale"]			= &Time::SetTimeScale;
+	h["SetTimescale"]			= &Time::SetTimeScale;
 }
 
 void harmony::InitGLM(sol::state& state, sol::table& h)
