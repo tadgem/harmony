@@ -1466,28 +1466,22 @@ void harmony::Renderer::HandleStackPipelineAccumulation(Ref<View> view, Pipeline
 
     bool touchNoPostProcess = true;
     auto noPostProcess  = std::vector<bgfx::TextureHandle>();
-    auto toPostProcess    = std::vector<bgfx::TextureHandle>();
     for(auto& [th, postProcess] : texturesToBlit)
     {
         bgfx::TextureHandle h{ th };
         // do this better
         if (postProcess)
         {
-            toPostProcess.emplace_back(h);
+            bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, h);
+            ScreenSpaceQuad(view->m_Width, view->m_Height);
+            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
+            bgfx::submit(stack.m_PipelineStackAccumulationView, textureProg->m_Handle);
         }
         else
         {
             noPostProcess.emplace_back(h);
             touchNoPostProcess = false;
         }
-    }
-
-    for(int i = toPostProcess.size() -1; i >= 0; i--)
-    {
-        bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, toPostProcess[i]);
-        ScreenSpaceQuad(view->m_Width, view->m_Height);
-        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
-        bgfx::submit(stack.m_PipelineStackAccumulationView, textureProg->m_Handle);
     }
 
     bgfx::setViewClear(stack.m_PipelineStackNoPostProcessView, BGFX_CLEAR_COLOR, 0x00000000);

@@ -1,5 +1,12 @@
 #include "JoltPhysicsSystem.h"
 #include "Core/Memory.h"
+#include <Jolt/Physics/Collision/CollideShape.h>
+#include <Jolt/Physics/Collision/ObjectLayer.h>
+#include "Jolt/Core/JobSystem.h"
+#include "Jolt/Core/TempAllocator.h"
+#include "Jolt/Physics/PhysicsSystem.h"
+#include "Jolt/Physics/PhysicsSettings.h"
+#include <Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h>
 
 harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GetTypeHash<JoltPhysicsSystem>())
 {

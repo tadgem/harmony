@@ -46,6 +46,7 @@ imgui.ini
 *\cmake-build-release
 *\cmake-build-debug-visual-studio
 *\cmake-build-release-visual-studio
+*\win
 */build
 */uwp
 *.vs
