@@ -1,14 +1,38 @@
 #pragma once
 #include "Jolt/Jolt.h"
 #include "Jolt/Renderer/DebugRenderer.h"
-
+#include "bgfx/bgfx.h"
+#include "Rendering/Debug/GfxDebug.h"
 namespace harmony
 {
+    class Mesh;
     class HarmonyDebugRenderer : public JPH::DebugRenderer
     {
     public:
         HarmonyDebugRenderer();
         ~HarmonyDebugRenderer() override;
+
+        class HarmonyGeometryBatch : public JPH::RefTarget<HarmonyGeometryBatch>, public JPH::RefTargetVirtual
+        {
+        public:
+            JPH_OVERRIDE_NEW_DELETE
+
+            HarmonyGeometryBatch(const Vertex* inVertices, int inVertexCount, const JPH::uint32* inIndices,
+                    int inIndexCount);
+
+            DdVertex* m_Vertices;
+            uint32_t m_NumVertices;
+            uint16_t* m_Indices;
+            uint32_t m_NumIndices;
+            uint32_t m_Color;
+            
+
+            // Inherited via RefTargetVirtual
+            virtual void AddRef() override;
+
+            virtual void Release() override;
+
+        };
 
         void DrawLine(JPH::RVec3Arg inFrom, JPH::RVec3Arg inTo, JPH::ColorArg inColor) override;
 

@@ -1,6 +1,8 @@
 #include "HarmonyDebugRenderer.h"
 #include "Rendering/Debug/GfxDebug.h"
 #include "Core/Log.hpp"
+#include "Rendering/Mesh.h"
+
 harmony::HarmonyDebugRenderer::HarmonyDebugRenderer() : JPH::DebugRenderer()
 {
     Initialize();
@@ -33,7 +35,9 @@ harmony::HarmonyDebugRenderer::CreateTriangleBatch(const JPH::DebugRenderer::Ver
                                                 const JPH::uint32 *inIndices, int inIndexCount)
 {
     harmony::log::info("Create Tri Batch Indexed");
-    return JPH::DebugRenderer::Batch();
+    auto batch = new HarmonyGeometryBatch(inVertices, inVertexCount, inIndices, inIndexCount);
+
+    return batch;
 }
 
 void harmony::HarmonyDebugRenderer::DrawGeometry(const JPH::Mat44 &inModelMatrix, const JPH::AABox &inWorldSpaceBounds,
@@ -43,6 +47,10 @@ void harmony::HarmonyDebugRenderer::DrawGeometry(const JPH::Mat44 &inModelMatrix
                                               JPH::DebugRenderer::ECastShadow inCastShadow,
                                               JPH::DebugRenderer::EDrawMode inDrawMode) 
 {
+    HarmonyGeometryBatch* batch = static_cast<HarmonyGeometryBatch*>(inGeometry->mLODs[0].mTriangleBatch.GetPtr());
+    
+    GfxDebug::Get()->setTransform(GfxDebug::Editor, (const void *) &inModelMatrix);
+    GfxDebug::Get()->drawTriList(GfxDebug::Editor, batch->m_NumVertices, batch->m_Vertices, batch->m_NumIndices, batch->m_Indices);
     harmony::log::info("Draw Geometry");
 }
 
@@ -50,4 +58,34 @@ void harmony::HarmonyDebugRenderer::DrawText3D(JPH::RVec3Arg inPosition, const s
                                             JPH::ColorArg inColor, float inHeight) 
 {
     harmony::log::info("Draw Text");
+}
+
+harmony::HarmonyDebugRenderer::HarmonyGeometryBatch::HarmonyGeometryBatch(const Vertex* inVertices, int inVertexCount, const JPH::uint32* inIndices, int inIndexCount)
+{
+    m_Vertices = new DdVertex[inVertexCount];
+    m_Indices = new uint16_t[inIndexCount];
+    m_NumVertices = inVertexCount;
+    m_NumIndices = inIndexCount;
+
+    for (int i = 0; i < inVertexCount; i++)
+    {
+        m_Vertices[i].x = inVertices[i].mPosition.x;
+        m_Vertices[i].y = inVertices[i].mPosition.y;
+        m_Vertices[i].z = inVertices[i].mPosition.z;
+        m_Color = inVertices[i].mColor.mU32;
+    }
+
+    for (int i = 0; i < inIndexCount; i++)
+    {
+        m_Indices[i] = inIndices[i];
+    }
+
+}
+
+void harmony::HarmonyDebugRenderer::HarmonyGeometryBatch::AddRef()
+{
+}
+
+void harmony::HarmonyDebugRenderer::HarmonyGeometryBatch::Release()
+{
 }
