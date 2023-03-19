@@ -47,8 +47,9 @@ void harmony::HarmonyDebugRenderer::DrawGeometry(const JPH::Mat44 &inModelMatrix
                                               JPH::DebugRenderer::ECastShadow inCastShadow,
                                               JPH::DebugRenderer::EDrawMode inDrawMode) 
 {
-    HarmonyGeometryBatch* batch = static_cast<HarmonyGeometryBatch*>(inGeometry->mLODs[0].mTriangleBatch.GetPtr());
-    
+    int maxLod = inGeometry->mLODs.size() - 1;
+    HarmonyGeometryBatch* batch = static_cast<HarmonyGeometryBatch*>(inGeometry->mLODs[maxLod].mTriangleBatch.GetPtr());
+    GfxDebug::Get()->setColor(GfxDebug::Editor, inModelColor.GetUInt32());
     GfxDebug::Get()->setTransform(GfxDebug::Editor, (const void *) &inModelMatrix);
     GfxDebug::Get()->drawTriList(GfxDebug::Editor, batch->m_NumVertices, batch->m_Vertices, batch->m_NumIndices, batch->m_Indices);
     harmony::log::info("Draw Geometry");
