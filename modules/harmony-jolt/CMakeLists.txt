@@ -22,4 +22,4 @@ ${ROOT_DIR}/submodules/jolt
 CACHE INTERNAL "")
 
 target_include_directories(harmony-jolt PUBLIC ${HARMONY_JOLT_INCLUDES})
-target_link_libraries(harmony-jolt Jolt)
+target_link_libraries(harmony-jolt Jolt harmony-core)

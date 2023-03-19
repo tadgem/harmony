@@ -4,10 +4,11 @@
 
 namespace harmony
 {
-    class JoltDebugRenderer : public JPH::DebugRenderer
+    class HarmonyDebugRenderer : public JPH::DebugRenderer
     {
     public:
-        ~JoltDebugRenderer() override;
+        HarmonyDebugRenderer();
+        ~HarmonyDebugRenderer() override;
 
         void DrawLine(JPH::RVec3Arg inFrom, JPH::RVec3Arg inTo, JPH::ColorArg inColor) override;
 

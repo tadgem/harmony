@@ -16,7 +16,7 @@ namespace harmony
 {
     class HarmonyContactListener;
     class HarmonyBodyActivationListener;
-
+    class HarmonyDebugRenderer;
     class JoltPhysicsSystem : public System
     {
     public:
@@ -61,7 +61,7 @@ namespace harmony
         Unique<JPH::BroadPhaseLayerInterface>       m_BroadPhaseLayerInterface;
         Unique<HarmonyBodyActivationListener>       m_BodyActivationListener;
         Unique<HarmonyContactListener>              m_ContactListener;          // Contact listener implementation
-
+        Unique<HarmonyDebugRenderer>                m_DebugRenderer;
         JPH::BodyInterface*                   m_BodyInterface;
     };
 }

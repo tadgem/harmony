@@ -37,16 +37,30 @@
 #include <Jolt/Physics/Constraints/DistanceConstraint.h>
 #include <Jolt/Physics/Constraints/PulleyConstraint.h>
 #include <Jolt/RegisterTypes.h>
+#include "Core/Log.hpp"
 #include <Jolt/Core/Factory.h>
 #include "HarmonyContactListener.h"
 #include "HarmonyBroadPhaseLayerInterface.h"
 #include "HarmonyBodyActivationListener.h"
+#include "HarmonyDebugRenderer.h"
 
-// Create a factory
+// Trace to TTY
+void TraceImpl(const char* inFMT, ...)
+{
+    harmony::log::info(inFMT);
+}
+
+void FatalError [[noreturn]] (const char* inFMT, ...)
+{
+    harmony::log::error(inFMT);
+}
+
 
 harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GetTypeHash<JoltPhysicsSystem>()),
 m_NumJobs(JPH::thread::hardware_concurrency() - 1)
 {
+    JPH::Trace = TraceImpl;
+
     JPH::RegisterDefaultAllocator();
 
     JPH::Factory::sInstance = new JPH::Factory();
@@ -75,6 +89,8 @@ m_NumJobs(JPH::thread::hardware_concurrency() - 1)
     m_PhysicsSystem->SetBodyActivationListener(m_BodyActivationListener.get());
 
     m_BodyInterface = &m_PhysicsSystem->GetBodyInterface();
+
+    m_DebugRenderer = CreateUnique<HarmonyDebugRenderer>();
 }
 
 harmony::JoltPhysicsSystem::~JoltPhysicsSystem()
@@ -87,8 +103,8 @@ void harmony::JoltPhysicsSystem::Init(entt::registry &registry)
     const float inSize = 200.0f;
     const float scale = 1.0f;
     using namespace JPH;
-    Body* floor = m_BodyInterface->CreateBody(BodyCreationSettings(new BoxShape(scale * Vec3(0.5f * inSize, 1.0f, 0.5f * inSize), 0.0f), RVec3(scale * Vec3(0.0f, -1.0f, 0.0f)), Quat::sIdentity(), EMotionType::Static, Layers::NON_MOVING));
-    m_BodyInterface->AddBody(floor->GetID(), EActivation::DontActivate);
+    Body& floor = *m_BodyInterface->CreateBody(BodyCreationSettings(new BoxShape(scale * Vec3(0.5f * inSize, 1.0f, 0.5f * inSize), 0.0f), RVec3(scale * Vec3(0.0f, -1.0f, 0.0f)), Quat::sIdentity(), EMotionType::Static, Layers::NON_MOVING));
+    m_BodyInterface->AddBody(floor.GetID(), EActivation::DontActivate);
 
     RefConst<Shape> box_shape = new BoxShape(Vec3(0.5f, 1.0f, 2.0f));
 
@@ -111,6 +127,13 @@ void harmony::JoltPhysicsSystem::Update(entt::registry &registry)
 {
     float deltaTime = static_cast<float>(Time::GetFrameTime());
     m_PhysicsSystem->Update(deltaTime, s_CollisionSteps, s_IntegrationSubSteps, m_TempAllocator.get(), m_JobSystem.get());
+    JPH::BodyManager::DrawSettings settings;
+    
+    JPH::DebugRenderer* dr = m_DebugRenderer.get();
+    m_PhysicsSystem->DrawBodies(settings, dr);
+#ifdef HARMONY_DEBUG
+#endif
+    deltaTime = 0.0f;
 }
 
 void harmony::JoltPhysicsSystem::Render(entt::registry &registry)
