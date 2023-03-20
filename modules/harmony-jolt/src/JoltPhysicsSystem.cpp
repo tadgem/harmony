@@ -38,11 +38,13 @@
 #include <Jolt/Physics/Constraints/PulleyConstraint.h>
 #include <Jolt/RegisterTypes.h>
 #include "Core/Log.hpp"
+#include "ECS/TransformComponent.h"
 #include <Jolt/Core/Factory.h>
 #include "HarmonyContactListener.h"
 #include "HarmonyBroadPhaseLayerInterface.h"
 #include "HarmonyBodyActivationListener.h"
 #include "HarmonyDebugRenderer.h"
+#include "JoltComponents.h"
 
 // Trace to TTY
 void TraceImpl(const char* inFMT, ...)
@@ -74,23 +76,8 @@ m_NumJobs(JPH::thread::hardware_concurrency() - 1)
 
     m_BroadPhaseLayerInterface  = CreateUnique<HarmonyBroadPhaseLayerInterface>();
     m_BodyActivationListener    = CreateUnique<HarmonyBodyActivationListener>();
-    m_PhysicsSystem             = CreateUnique<JPH::PhysicsSystem>();
-
-    m_PhysicsSystem->Init(s_NumBodies, s_NumBodyMutexes, s_MaxBodyPairs, s_MaxContactConstraints, *m_BroadPhaseLayerInterface, BroadPhaseCanCollide, ObjectCanCollide );
-    m_PhysicsSystem->SetPhysicsSettings(m_PhysicsSettings);
-    m_PhysicsSystem->SetGravity(s_DefaultGravity);
-
-    if(s_UseContactListener)
-    {
-        m_ContactListener = CreateUnique<HarmonyContactListener>();
-        m_PhysicsSystem->SetContactListener(m_ContactListener.get());
-    }
-
-    m_PhysicsSystem->SetBodyActivationListener(m_BodyActivationListener.get());
-
-    m_BodyInterface = &m_PhysicsSystem->GetBodyInterface();
-
     m_DebugRenderer = CreateUnique<HarmonyDebugRenderer>();
+    
 }
 
 harmony::JoltPhysicsSystem::~JoltPhysicsSystem()
@@ -100,25 +87,48 @@ harmony::JoltPhysicsSystem::~JoltPhysicsSystem()
 
 void harmony::JoltPhysicsSystem::Init(entt::registry &registry)
 {
-    const float inSize = 200.0f;
-    const float scale = 1.0f;
-    using namespace JPH;
-    Body& floor = *m_BodyInterface->CreateBody(BodyCreationSettings(new BoxShape(scale * Vec3(0.5f * inSize, 1.0f, 0.5f * inSize), 0.0f), RVec3(scale * Vec3(0.0f, -1.0f, 0.0f)), Quat::sIdentity(), EMotionType::Static, Layers::NON_MOVING));
-    m_BodyInterface->AddBody(floor.GetID(), EActivation::DontActivate);
+    m_PhysicsSystem = CreateUnique<JPH::PhysicsSystem>();
 
-    RefConst<Shape> box_shape = new BoxShape(Vec3(0.5f, 1.0f, 2.0f));
+    m_PhysicsSystem->Init(s_NumBodies, s_NumBodyMutexes, s_MaxBodyPairs, s_MaxContactConstraints, *m_BroadPhaseLayerInterface, BroadPhaseCanCollide, ObjectCanCollide);
+    m_PhysicsSystem->SetPhysicsSettings(m_PhysicsSettings);
+    m_PhysicsSystem->SetGravity(s_DefaultGravity);
 
-    // Dynamic body 1
-    Body &body1 = *m_BodyInterface->CreateBody(BodyCreationSettings(box_shape, RVec3(0, 10, 0), Quat::sIdentity(), EMotionType::Dynamic, Layers::MOVING));
-    m_BodyInterface->AddBody(body1.GetID(), EActivation::Activate);
+    if (s_UseContactListener)
+    {
+        m_ContactListener = CreateUnique<HarmonyContactListener>();
+        m_PhysicsSystem->SetContactListener(m_ContactListener.get());
+    }
 
-    // Dynamic body 2
-    Body &body2 = *m_BodyInterface->CreateBody(BodyCreationSettings(box_shape, RVec3(5, 10, 0), Quat::sRotation(Vec3::sAxisX(), 0.25f * JPH_PI), EMotionType::Dynamic, Layers::MOVING));
-    m_BodyInterface->AddBody(body2.GetID(), EActivation::Activate);
+    m_PhysicsSystem->SetBodyActivationListener(m_BodyActivationListener.get());
 
-    // Dynamic body 3
-    Body &body3 = *m_BodyInterface->CreateBody(BodyCreationSettings(new SphereShape(2.0f), RVec3(10, 10, 0), Quat::sRotation(Vec3::sAxisX(), 0.25f * JPH_PI), EMotionType::Dynamic, Layers::MOVING));
-    m_BodyInterface->AddBody(body3.GetID(), EActivation::Activate);
+    m_BodyInterface = &m_PhysicsSystem->GetBodyInterface();
+
+    //const float inSize = 200.0f;
+    //const float scale = 1.0f;
+    //using namespace JPH;
+    //Body& floor = *m_BodyInterface->CreateBody(BodyCreationSettings(new BoxShape(scale * Vec3(0.5f * inSize, 1.0f, 0.5f * inSize), 0.0f), RVec3(scale * Vec3(0.0f, -1.0f, 0.0f)), Quat::sIdentity(), EMotionType::Static, Layers::NON_MOVING));
+    //m_BodyInterface->AddBody(floor.GetID(), EActivation::DontActivate);
+
+    //RefConst<Shape> box_shape = new BoxShape(Vec3(0.5f, 1.0f, 2.0f));
+
+    //// Dynamic body 1
+    //Body &body1 = *m_BodyInterface->CreateBody(BodyCreationSettings(box_shape, RVec3(0, 10, 0), Quat::sIdentity(), EMotionType::Dynamic, Layers::MOVING));
+    //m_BodyInterface->AddBody(body1.GetID(), EActivation::Activate);
+
+    //// Dynamic body 2
+    //Body &body2 = *m_BodyInterface->CreateBody(BodyCreationSettings(box_shape, RVec3(5, 10, 0), Quat::sRotation(Vec3::sAxisX(), 0.25f * JPH_PI), EMotionType::Dynamic, Layers::MOVING));
+    //m_BodyInterface->AddBody(body2.GetID(), EActivation::Activate);
+
+    //// Dynamic body 3
+    //Body &body3 = *m_BodyInterface->CreateBody(BodyCreationSettings(new SphereShape(2.0f), RVec3(10, 10, 0), Quat::sRotation(Vec3::sAxisX(), 0.25f * JPH_PI), EMotionType::Dynamic, Layers::MOVING));
+    //m_BodyInterface->AddBody(body3.GetID(), EActivation::Activate);
+
+    auto bodyView = registry.view<TransformComponent, JoltBodyComponent>();
+
+    for (auto [e, t, b] : bodyView.each())
+    {
+        InitBody(e, t, b);
+    }
 
     m_PhysicsSystem->OptimizeBroadPhase();
 }
@@ -128,12 +138,24 @@ void harmony::JoltPhysicsSystem::Update(entt::registry &registry)
     float deltaTime = static_cast<float>(Time::GetFrameTime());
     m_PhysicsSystem->Update(deltaTime, s_CollisionSteps, s_IntegrationSubSteps, m_TempAllocator.get(), m_JobSystem.get());
     JPH::BodyManager::DrawSettings settings;
-    
-    JPH::DebugRenderer* dr = m_DebugRenderer.get();
-    m_PhysicsSystem->DrawBodies(settings, dr);
+
 #ifdef HARMONY_DEBUG
+    if (m_DrawDebug)
+    {
+        JPH::DebugRenderer* dr = m_DebugRenderer.get();
+        m_PhysicsSystem->DrawBodies(settings, dr);
+        m_PhysicsSystem->DrawConstraints(dr);
+    }
 #endif
-    deltaTime = 0.0f;
+    auto bodyView = registry.view<TransformComponent, JoltBodyComponent>();
+
+    for (auto [e, t, b] : bodyView.each())
+    {
+        if (b.RequiresUpdate)
+        {
+            InitBody(e, t, b);
+        }
+    }
 }
 
 void harmony::JoltPhysicsSystem::Render(entt::registry &registry)
@@ -143,7 +165,7 @@ void harmony::JoltPhysicsSystem::Render(entt::registry &registry)
 
 void harmony::JoltPhysicsSystem::Cleanup(entt::registry &registry)
 {
-
+    m_PhysicsSystem.reset();
 }
 
 nlohmann::json harmony::JoltPhysicsSystem::SerializeSystem(entt::registry &registry)
@@ -157,5 +179,50 @@ void harmony::JoltPhysicsSystem::DeserializeSystem(entt::registry &registry, nlo
 }
 
 void harmony::JoltPhysicsSystem::Refresh() {
+
+}
+
+void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent& t, JoltBodyComponent& b)
+{
+    if (b.Body != nullptr)
+    {
+        delete b.Body->GetShape();
+        m_BodyInterface->DestroyBody(b.Body->GetID());
+        b.Body = nullptr;
+    }
+
+    JPH::BodyCreationSettings bodyCreationSettings; 
+    switch (b.Shape)
+    {
+        case JoltBodyShape::Box:
+        {
+            auto boxShape = new JPH::BoxShape(JPH::Vec3(t.Scale.x, t.Scale.y, t.Scale.x));
+            bodyCreationSettings.SetShape(boxShape);
+        }
+        break;
+        case JoltBodyShape::Sphere:
+        {
+            float scaleNorm = (t.Scale.x + t.Scale.y + t.Scale.x) / 3.0f;
+            auto sphereShape = new JPH::SphereShape(scaleNorm);
+            bodyCreationSettings.SetShape(sphereShape);
+        }
+        break;
+        case JoltBodyShape::Capsule:
+        {
+            auto capsuleShape = new JPH::CapsuleShape(t.Scale.x, t.Scale.y / 2.0f);
+            bodyCreationSettings.SetShape(capsuleShape);
+        }
+        break;
+        case JoltBodyShape::Mesh:
+        {    // TODO
+        }
+        break;
+    }
+
+    bodyCreationSettings.mMotionType = b.MotionType;
+    bodyCreationSettings.mObjectLayer = b.MotionType == JPH::EMotionType::Static ? Layers::NON_MOVING : Layers::MOVING;
+
+    b.Body = m_BodyInterface->CreateBody(bodyCreationSettings);
+
 
 }

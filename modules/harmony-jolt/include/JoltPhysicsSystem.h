@@ -17,6 +17,8 @@ namespace harmony
     class HarmonyContactListener;
     class HarmonyBodyActivationListener;
     class HarmonyDebugRenderer;
+    class TransformComponent;
+    class JoltBodyComponent;
     class JoltPhysicsSystem : public System
     {
     public:
@@ -29,9 +31,13 @@ namespace harmony
         void Cleanup(entt::registry &registry) override;
         nlohmann::json SerializeSystem(entt::registry &registry) override;
         void DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) override;
+        void Refresh() override;
 
     protected:
-        void Refresh() override;
+
+        const bool m_DrawDebug = true;
+
+        void InitBody(entt::entity e, TransformComponent& t, JoltBodyComponent& b);
 
         static constexpr bool       s_UseContactListener = true;
         static constexpr uint32_t   s_NumBodyMutexes = 0; // Autodetect
@@ -62,6 +68,8 @@ namespace harmony
         Unique<HarmonyBodyActivationListener>       m_BodyActivationListener;
         Unique<HarmonyContactListener>              m_ContactListener;          // Contact listener implementation
         Unique<HarmonyDebugRenderer>                m_DebugRenderer;
-        JPH::BodyInterface*                   m_BodyInterface;
+        JPH::BodyInterface*                         m_BodyInterface;
+
+        friend class JoltDebugRendererComponent;
     };
 }
