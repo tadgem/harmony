@@ -19,6 +19,7 @@ namespace harmony
     class HarmonyDebugRenderer;
     class TransformComponent;
     class JoltBodyComponent;
+    enum  JoltBodyShape;
     class JoltPhysicsSystem : public System
     {
     public:
@@ -32,6 +33,9 @@ namespace harmony
         nlohmann::json SerializeSystem(entt::registry &registry) override;
         void DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) override;
         void Refresh() override;
+
+        JoltBodyComponent& CreateBodyComponent(entt::registry registry, entt::entity e, JoltBodyShape shape);
+        void DestroyBody(JoltBodyComponent& body);
 
     protected:
 

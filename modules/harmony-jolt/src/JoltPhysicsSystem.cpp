@@ -151,6 +151,10 @@ void harmony::JoltPhysicsSystem::Update(entt::registry &registry)
 
     for (auto [e, t, b] : bodyView.each())
     {
+        if (t.UpdateCollision)
+        {
+            b.RequiresUpdate = true;
+        }
         if (b.RequiresUpdate)
         {
             InitBody(e, t, b);
@@ -182,6 +186,31 @@ void harmony::JoltPhysicsSystem::Refresh() {
 
 }
 
+harmony::JoltBodyComponent& harmony::JoltPhysicsSystem::CreateBodyComponent(entt::registry registry, entt::entity e, JoltBodyShape shape)
+{
+    if (registry.any_of<JoltBodyComponent>(e))
+    {
+        harmony::log::warn("JoltPhysicsSystem : Entity {} already has a Body Component.", (uint32_t)e);
+        return registry.get<JoltBodyComponent>(e);
+    }
+
+    JoltBodyComponent& c = registry.emplace<JoltBodyComponent>(e);
+    c.RequiresUpdate = true;
+    c.Shape = shape;
+
+    return c;
+}
+
+void harmony::JoltPhysicsSystem::DestroyBody(JoltBodyComponent& body)
+{
+    if (body.Body == nullptr)
+    {
+        harmony::log::warn("JoltPhysicsSystem : No jolt body with supplied component");
+        return;
+    }
+    m_BodyInterface->DestroyBody(body.Body->GetID());
+}
+
 void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent& t, JoltBodyComponent& b)
 {
     if (b.Body != nullptr)
@@ -202,6 +231,7 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent& t,
         break;
         case JoltBodyShape::Sphere:
         {
+            // TOOD: Improve to be anything better.
             float scaleNorm = (t.Scale.x + t.Scale.y + t.Scale.x) / 3.0f;
             auto sphereShape = new JPH::SphereShape(scaleNorm);
             bodyCreationSettings.SetShape(sphereShape);
@@ -223,6 +253,5 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent& t,
     bodyCreationSettings.mObjectLayer = b.MotionType == JPH::EMotionType::Static ? Layers::NON_MOVING : Layers::MOVING;
 
     b.Body = m_BodyInterface->CreateBody(bodyCreationSettings);
-
-
+    m_BodyInterface->AddBody(b.Body->GetID(), JPH::EActivation::Activate);
 }
