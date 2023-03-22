@@ -1,9 +1,9 @@
 #include "LuaScriptHotReload.h"
-#include "LuaProgramComponent.h"
+#include "Script/Lua/LuaProgramComponent.h"
 #include "Core/Memory.h"
 #include "Core/Program.h"
-#include "LuaScriptAsset.h"
-#include "LuaSystem.h"
+#include "Script/Lua/LuaScriptAsset.h"
+#include "Script/Lua/LuaSystem.h"
 
 
 harmony::LuaScriptHotReload::LuaScriptHotReload(Program& prog, Ref<LuaSystem> luaSystem) : AssetHotReloadProvider("LuaScript"),  p_Program(prog), p_LuaSystem(luaSystem)

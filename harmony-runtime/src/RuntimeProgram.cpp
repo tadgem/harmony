@@ -6,9 +6,9 @@
 #include "Rendering/Shapes.h"
 #include "Core/FSM.h"
 #include "ECS/LightSystem.h"
-#include "LuaProgramComponent.h"
-#include "LuaSystem.h"
-#include "LuaScriptAssetFactory.h"
+#include "Script/Lua/LuaProgramComponent.h"
+#include "Script/Lua/LuaSystem.h"
+#include "Script/Lua/LuaScriptAssetFactory.h"
 #include "JoltPhysicsSystem.h"
 #include "ECS/SimpleCollisionSystem.h"
 

@@ -10,7 +10,7 @@
 #include "Assets/ShaderSourceAsset.h"
 #include "Assets/FontAsset.h"
 #include "ECS/CameraComponent.h"
-#include "LuaComponent.h"
+#include "Script/Lua/LuaComponent.h"
 #include "ECS/SimpleCollisionSystem.h"
 #include "ECS/SimpleCollisionComponent.h"
 

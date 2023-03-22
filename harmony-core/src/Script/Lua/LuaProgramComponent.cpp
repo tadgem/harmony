@@ -1,6 +1,6 @@
-#include "LuaProgramComponent.h"
-#include "LuaNanoVG.hpp"
-#include "LuaHarmony.hpp"
+#include "Script/Lua/LuaProgramComponent.h"
+#include "Script/Lua/LuaNanoVG.hpp"
+#include "Script/Lua/LuaHarmony.hpp"
 #include "Core/Log.hpp"
 
 harmony::LuaProgramComponent::LuaProgramComponent()

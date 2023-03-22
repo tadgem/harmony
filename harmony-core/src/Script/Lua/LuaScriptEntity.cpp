@@ -1,4 +1,4 @@
-#include "LuaScriptEntity.h"
+#include "Script/Lua/LuaScriptEntity.h"
 
 harmony::LuaScriptEntity::LuaScriptEntity()
 {

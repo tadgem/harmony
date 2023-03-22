@@ -1,4 +1,4 @@
-#include "LuaComponent.h"
+#include "Script/Lua/LuaComponent.h"
 #include "Assets/Asset.h"
 
 harmony::LuaComponent::LuaComponent() : m_LuaScriptAsset("", "")
