@@ -2,7 +2,7 @@
 #include "ThirdParty/json.hpp"
 #include "sol.hpp"
 #include "Assets/Asset.h"
-#include "LuaScriptAsset.h"
+#include "Script/Lua/LuaScriptAsset.h"
 
 namespace harmony 
 {

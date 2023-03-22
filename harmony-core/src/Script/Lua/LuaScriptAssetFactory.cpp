@@ -1,5 +1,5 @@
-#include "LuaScriptAssetFactory.h"
-#include "LuaScriptAsset.h"
+#include "Script/Lua/LuaScriptAssetFactory.h"
+#include "Script/Lua/LuaScriptAsset.h"
 #include "Core/Utils.h"
 #include "Core/Log.hpp"
 

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 project(harmony-core VERSION 0.1.0)
 
 option(HARMONY_DEBUG "Build harmony with debug functionality enabled." ON)
+option(HARMONY_USE_LUAJIT "Use LuaJIT instead of regular Lua" ON)
 
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS /W2)
@@ -12,7 +13,7 @@ file(GLOB_RECURSE CORE_HEADER_FILES include/*.h)
 file(GLOB_RECURSE CORE_HEADERPP_FILES include/*.hpp)
 get_filename_component(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
-set(BGFX_BUILD_EXAMPLES OFF CACHE BOOL "Disable BGFX Examples")
+set(BGFX_BUILD_EXAMPLES      ON  CACHE BOOL "Disable BGFX Examples")
 set(SDL2_DISABLE_SDL2MAIN    ON  CACHE BOOL "Disable SDL Entrypoint")
 set(SDL2_DISABLE_INSTALL     ON  CACHE BOOL "Disable SDL Install")
 set(SDL2_DISABLE_UNINSTALL   ON  CACHE BOOL "Disable SDL Uninstall")
@@ -36,18 +37,30 @@ ${ROOT_DIR}/submodules/bgfx/bgfx/include
 ${ROOT_DIR}/submodules/bgfx/bx/include
 ${ROOT_DIR}/submodules/bgfx/bimg/include
 ${ROOT_DIR}/submodules/glm/glm
-CACHE INTERNAL "")
-
-target_include_directories(harmony-core PRIVATE 
-    ${HARMONY_CORE_INCLUDES}
 )
+
 
 if(HARMONY_DEBUG)
     target_compile_definitions(harmony-core PUBLIC SDL_SENSOR_DUMMY HARMONY_DEBUG)
 endif()
 
-if (MSVC)
-  target_compile_options(harmony-core PRIVATE /bigobj)
+if(HARMONY_USE_LUAJIT)
+    add_subdirectory(${ROOT_DIR}/submodules/luajit-cmake ${CMAKE_CURRENT_BINARY_DIR}/luajit)
+    set(HARMONY_CORE_INCLUDES ${HARMONY_CORE_INCLUDES} ${ROOT_DIR}/submodules/luajit-cmake/src CACHE INTERNAL "Harmony Core Includes")
+    target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bgfx glm libluajit)
+else()
+    add_subdirectory(${ROOT_DIR}/submodules/lua-cmake ${CMAKE_CURRENT_BINARY_DIR}/lua)
+    set(HARMONY_CORE_INCLUDES ${HARMONY_CORE_INCLUDES} ${ROOT_DIR}/submodules/lua-cmake/upstream CACHE INTERNAL "Harmony Core Includes")
+    target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bgfx glm lua)
 endif()
 
-target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bgfx glm)
+if (MSVC)
+    target_compile_options(harmony-core PRIVATE /bigobj)
+else()
+    target_compile_options(harmony-core PRIVATE -Wa,-mbig-obj)
+endif()
+
+# Includes + Link Dirs
+target_include_directories(harmony-core PRIVATE 
+    ${HARMONY_CORE_INCLUDES}
+)

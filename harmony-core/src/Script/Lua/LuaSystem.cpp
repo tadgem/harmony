@@ -1,13 +1,14 @@
-#include "LuaSystem.h"
-#include "LuaProgramComponent.h"
-#include "LuaScriptAsset.h"
-#include "LuaScriptEntity.h"
-#include "LuaComponent.h"
+#include "Script/Lua/LuaSystem.h"
+#include "Script/Lua/LuaProgramComponent.h"
+#include "Script/Lua/LuaScriptAsset.h"
+#include "Script/Lua/LuaScriptEntity.h"
+#include "Script/Lua/LuaComponent.h"
 #include "Assets/AssetManager.h"
 #include "Core/Scene.h"
 #include "Core/Alias.h"
 #include "Core/Program.h"
 #include <string>
+
 harmony::LuaSystem::LuaSystem(AssetManager& am, Ref<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaSystem>()), p_LuaProgramComponent(luaPc), p_AssetManager(am)
 {
 }

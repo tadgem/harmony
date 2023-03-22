@@ -13,6 +13,12 @@ endif()
 add_library(harmony-jolt STATIC ${HEADER_FILES} ${HEADERPP_FILES} ${SRC_FILES}  ${C_SRC_FILES})
 set_property(TARGET harmony-jolt PROPERTY CXX_STANDARD 17)
 
+set(TARGET_UNIT_TESTS       OFF)
+set(TARGET_HELLO_WORLD      OFF)
+set(TARGET_PERFORMANCE_TEST OFF)
+set(TARGET_SAMPLES          OFF)
+set(TARGET_VIEWER           OFF)
+
 add_subdirectory(${ROOT_DIR}/submodules/jolt/Build ${CMAKE_CURRENT_BINARY_DIR}/jolt)
 
 set(HARMONY_JOLT_INCLUDES 

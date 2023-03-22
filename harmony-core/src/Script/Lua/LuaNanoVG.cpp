@@ -1,4 +1,4 @@
-#include "LuaNanoVG.hpp"
+#include "Script/Lua/LuaNanoVG.hpp"
 #include "Rendering/VectorGraphics.h"
 
 

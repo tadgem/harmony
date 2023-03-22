@@ -34,7 +34,7 @@
 
 // beginning of sol/version.hpp
 
-#include <config.hpp>
+#include <Script/Lua/config.hpp>
 
 #define SOL_VERSION_MAJOR 3
 #define SOL_VERSION_MINOR 2
