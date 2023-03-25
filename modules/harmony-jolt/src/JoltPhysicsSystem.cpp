@@ -103,26 +103,6 @@ void harmony::JoltPhysicsSystem::Init(entt::registry &registry)
 
     m_BodyInterface = &m_PhysicsSystem->GetBodyInterface();
 
-    //const float inSize = 200.0f;
-    //const float scale = 1.0f;
-    //using namespace JPH;
-    //Body& floor = *m_BodyInterface->CreateBody(BodyCreationSettings(new BoxShape(scale * Vec3(0.5f * inSize, 1.0f, 0.5f * inSize), 0.0f), RVec3(scale * Vec3(0.0f, -1.0f, 0.0f)), Quat::sIdentity(), EMotionType::Static, Layers::NON_MOVING));
-    //m_BodyInterface->AddBody(floor.GetID(), EActivation::DontActivate);
-
-    //RefConst<Shape> box_shape = new BoxShape(Vec3(0.5f, 1.0f, 2.0f));
-
-    //// Dynamic body 1
-    //Body &body1 = *m_BodyInterface->CreateBody(BodyCreationSettings(box_shape, RVec3(0, 10, 0), Quat::sIdentity(), EMotionType::Dynamic, Layers::MOVING));
-    //m_BodyInterface->AddBody(body1.GetID(), EActivation::Activate);
-
-    //// Dynamic body 2
-    //Body &body2 = *m_BodyInterface->CreateBody(BodyCreationSettings(box_shape, RVec3(5, 10, 0), Quat::sRotation(Vec3::sAxisX(), 0.25f * JPH_PI), EMotionType::Dynamic, Layers::MOVING));
-    //m_BodyInterface->AddBody(body2.GetID(), EActivation::Activate);
-
-    //// Dynamic body 3
-    //Body &body3 = *m_BodyInterface->CreateBody(BodyCreationSettings(new SphereShape(2.0f), RVec3(10, 10, 0), Quat::sRotation(Vec3::sAxisX(), 0.25f * JPH_PI), EMotionType::Dynamic, Layers::MOVING));
-    //m_BodyInterface->AddBody(body3.GetID(), EActivation::Activate);
-
     auto bodyView = registry.view<TransformComponent, JoltBodyComponent>();
 
     for (auto [e, t, b] : bodyView.each())

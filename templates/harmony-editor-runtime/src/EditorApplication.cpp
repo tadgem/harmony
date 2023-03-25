@@ -39,7 +39,7 @@ void harmony::Editor::AddProgramComponents()
 {
 	auto assetHotReload		= AddProgramComponent<AssetHotReload>(*this).lock();
 	auto shaderProvider		= CreateRef<ShaderHotReload>(*this);
-	auto luaProvider								= CreateRef<LuaScriptHotReload>(*this, p_LuaSystem);
+	auto luaProvider		= CreateRef<LuaScriptHotReload>(*this, p_LuaSystem);
 
 	assetHotReload->AddHotReloadProvider(shaderProvider);
 	assetHotReload->AddHotReloadProvider(luaProvider);
@@ -69,9 +69,6 @@ void harmony::Editor::AddEditorPanels()
 	Ref<ProfilerPanel> profilerPanel = CreateRef<ProfilerPanel>();
 	p_Panels.emplace_back(profilerPanel);
 
-	Ref<SimpleCollisionSystemPanel> collisionSystemPanel = CreateRef<SimpleCollisionSystemPanel>(*this);
-	p_Panels.emplace_back(collisionSystemPanel);
-
 	Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, p_ScenePanel);
 	inspector->AddComponentUI<TransformComponentUI>();
 	inspector->AddComponentUI<MeshComponentUI>(m_AssetManager);
@@ -81,8 +78,6 @@ void harmony::Editor::AddEditorPanels()
 	inspector->AddComponentUI<PointLightComponentUI>();
 	inspector->AddComponentUI<SpotLightComponentUI>();
 	inspector->AddComponentUI<LuaScriptComponentUI>(m_AssetManager);
-	inspector->AddComponentUI<AABBComponentUI>(m_AssetManager);
-	inspector->AddComponentUI<SphereComponentUI>();
 
 	p_Panels.emplace_back(inspector);
 }
