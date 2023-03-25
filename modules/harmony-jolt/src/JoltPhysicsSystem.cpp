@@ -243,6 +243,12 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent& t,
             bodyCreationSettings.SetShape(capsuleShape);
         }
         break;
+        case JoltBodyShape::Cylinder:
+        {
+            auto cylinderShape = new JPH::CylinderShape(t.Scale.x, t.Scale.y / 2.0f);
+            bodyCreationSettings.SetShape(cylinderShape);
+        }
+        break;
         case JoltBodyShape::Mesh:
         {    // TODO
         }

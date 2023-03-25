@@ -9,6 +9,7 @@ namespace harmony
         Box = 0,
         Sphere,
         Capsule,
+        Cylinder,
         Mesh
     };
 
