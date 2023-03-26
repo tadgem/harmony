@@ -898,21 +898,53 @@ harmony::JoltBodyComponentUI::JoltBodyComponentUI() : ComponentUI("Jolt Body")
 
 void harmony::JoltBodyComponentUI::OnComponentImGui(entt::registry& registry, entt::entity entity)
 {
+	if (registry.valid(entity) == false)
+	{
+		return;
+	}
+	if (HasComponent(registry, entity) == false)
+	{
+		return;
+	}
+	JoltBodyComponent& b = registry.get<JoltBodyComponent>(entity);
+
+	const char* motionTypeNames[3] = { "Static", "Kinematic", "Dynamic" };
+	const char* shapeNames[6] = { "Box", "Sphere", "Capsule", "Cylinder", "MeshShape", "Compound"};
+
+
+	if (ImGui::ListBox("Motion Type", (int*)&b.MotionType, motionTypeNames, 3))
+	{
+		b.RequiresUpdate = true;
+	}
+	if (ImGui::ListBox("Shape", (int*)&b.Shape, shapeNames, 6))
+	{
+		b.RequiresUpdate = true;
+	}
 }
 
 void harmony::JoltBodyComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
 {
+	registry.emplace<JoltBodyComponent>(entity);
 }
 
 void harmony::JoltBodyComponentUI::RemoveComponent(entt::registry& registry, entt::entity entity)
 {
+	if (HasComponent(registry, entity))
+	{
+		registry.remove<JoltBodyComponent>(entity);
+	}
 }
 
 bool harmony::JoltBodyComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
 {
-	return false;
+	return registry.any_of<JoltBodyComponent>(entity);
 }
 
 void harmony::JoltBodyComponentUI::Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy)
 {
+	if (HasComponent(registry, original))
+	{
+		JoltBodyComponent t = registry.get<JoltBodyComponent>(original);
+		registry.emplace<JoltBodyComponent>(newCopy, t);
+	}
 }

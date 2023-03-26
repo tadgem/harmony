@@ -213,8 +213,10 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent& t,
 {
     if (b.Body != nullptr)
     {
-        delete b.Body->GetShape();
-        m_BodyInterface->DestroyBody(b.Body->GetID());
+        if (!b.Body->IsActive())
+        {
+            m_BodyInterface->DestroyBody(b.Body->GetID());
+        }
         b.Body = nullptr;
     }
 
@@ -256,4 +258,6 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent& t,
     b.Body = m_BodyInterface->CreateBody(bodyCreationSettings);
 
     m_BodyInterface->AddBody(b.Body->GetID(), JPH::EActivation::Activate);
+
+    b.RequiresUpdate = false;
 }

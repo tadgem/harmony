@@ -14,19 +14,19 @@ harmony::HarmonyDebugRenderer::~HarmonyDebugRenderer()
 
 void harmony::HarmonyDebugRenderer::DrawLine(JPH::RVec3Arg inFrom, JPH::RVec3Arg inTo, JPH::ColorArg inColor) 
 {
-    harmony::log::info("Draw Line");
+    harmony::log::info("JoltDebugRenderer : Implement : Draw Line");
 }
 
 void harmony::HarmonyDebugRenderer::DrawTriangle(JPH::RVec3Arg inV1, JPH::RVec3Arg inV2, JPH::RVec3Arg inV3,
                                               JPH::ColorArg inColor) 
 {
-    harmony::log::info("Draw Triangle");
+    harmony::log::info("JoltDebugRenderer : Implement : Draw Triangle");
 }
 
 JPH::DebugRenderer::Batch
 harmony::HarmonyDebugRenderer::CreateTriangleBatch(const JPH::DebugRenderer::Triangle *inTriangles, int inTriangleCount) 
 {
-    harmony::log::info("Create Tri Batch");
+    harmony::log::info("JoltDebugRenderer : Implement : Create Tri Batch");
     return JPH::DebugRenderer::Batch();
 }
 
@@ -34,31 +34,30 @@ JPH::DebugRenderer::Batch
 harmony::HarmonyDebugRenderer::CreateTriangleBatch(const JPH::DebugRenderer::Vertex *inVertices, int inVertexCount,
                                                 const JPH::uint32 *inIndices, int inIndexCount)
 {
-    harmony::log::info("Create Tri Batch Indexed");
+    harmony::log::info("JoltDebugRenderer : Create Tri Batch Indexed");
     auto batch = new HarmonyGeometryBatch(inVertices, inVertexCount, inIndices, inIndexCount);
 
     return batch;
 }
 
-void harmony::HarmonyDebugRenderer::DrawGeometry(const JPH::Mat44 &inModelMatrix, const JPH::AABox &inWorldSpaceBounds,
-                                              float inLODScaleSq, JPH::ColorArg inModelColor,
-                                              const JPH::DebugRenderer::GeometryRef &inGeometry,
-                                              JPH::DebugRenderer::ECullMode inCullMode,
-                                              JPH::DebugRenderer::ECastShadow inCastShadow,
-                                              JPH::DebugRenderer::EDrawMode inDrawMode) 
+void harmony::HarmonyDebugRenderer::DrawGeometry(const JPH::Mat44& inModelMatrix, const JPH::AABox& inWorldSpaceBounds,
+    float inLODScaleSq, JPH::ColorArg inModelColor,
+    const JPH::DebugRenderer::GeometryRef& inGeometry,
+    JPH::DebugRenderer::ECullMode inCullMode,
+    JPH::DebugRenderer::ECastShadow inCastShadow,
+    JPH::DebugRenderer::EDrawMode inDrawMode)
 {
     int maxLod = inGeometry->mLODs.size() - 1;
     HarmonyGeometryBatch* batch = static_cast<HarmonyGeometryBatch*>(inGeometry->mLODs[maxLod].mTriangleBatch.GetPtr());
     GfxDebug::Get()->setColor(GfxDebug::Editor, inModelColor.GetUInt32());
-    GfxDebug::Get()->setTransform(GfxDebug::Editor, (const void *) &inModelMatrix);
+    GfxDebug::Get()->setTransform(GfxDebug::Editor, (const void*)&inModelMatrix);
     GfxDebug::Get()->drawTriList(GfxDebug::Editor, batch->m_NumVertices, batch->m_Vertices, batch->m_NumIndices, batch->m_Indices);
-    harmony::log::info("Draw Geometry");
 }
 
 void harmony::HarmonyDebugRenderer::DrawText3D(JPH::RVec3Arg inPosition, const std::string_view &inString,
                                             JPH::ColorArg inColor, float inHeight) 
 {
-    harmony::log::info("Draw Text");
+    harmony::log::info("JoltDebugRenderer : Implement : Draw Text");
 }
 
 harmony::HarmonyDebugRenderer::HarmonyGeometryBatch::HarmonyGeometryBatch(const Vertex* inVertices, int inVertexCount, const JPH::uint32* inIndices, int inIndexCount)
