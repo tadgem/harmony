@@ -95,7 +95,10 @@ void harmony::TransformSystem::Render(entt::registry& registry)
         {
             continue;
         }
-        transform.UpdateCollision = true;
+        if (transform.Scale != transform.LastScale)
+        {
+            transform.UpdateCollision = true;
+        }
         transformGroups[groupIndex].push_back(&transform);
 
         groupCount++;

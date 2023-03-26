@@ -217,6 +217,7 @@ void harmony::Editor::OnRuntimeEntry()
 void harmony::Editor::OnRuntimeExit()
 {
     SetRunningStyle();
+	RunSystemCleanup();
 	LoadScene(p_LoadedScenePath);
 	p_EditorView->Camera.Focussed = true;
 	SDL_SetRelativeMouseMode(SDL_FALSE);

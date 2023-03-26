@@ -107,6 +107,7 @@ void harmony::JoltPhysicsSystem::Init(entt::registry &registry)
 
     for (auto [e, t, b] : bodyView.each())
     {
+        b.Body = nullptr;
         InitBody(e, t, b);
     }
 
@@ -134,11 +135,20 @@ void harmony::JoltPhysicsSystem::Update(entt::registry &registry)
         if (t.UpdateCollision)
         {
             b.RequiresUpdate = true;
+            t.UpdateCollision = false;
         }
         if (b.RequiresUpdate)
         {
             InitBody(e, t, b);
         }
+
+        auto pos = b.Body->GetPosition();
+        auto rot = b.Body->GetRotation();
+        glm::quat glmRot = glm::quat(rot.GetW(), rot.GetX(), rot.GetY(), rot.GetZ());
+
+        t.Euler = glm::degrees(glm::eulerAngles(glmRot));
+        t.Position = glm::vec3(pos.GetX(), pos.GetY(), pos.GetZ());
+
     }
 }
 
@@ -149,7 +159,6 @@ void harmony::JoltPhysicsSystem::Render(entt::registry &registry)
 
 void harmony::JoltPhysicsSystem::Cleanup(entt::registry &registry)
 {
-    m_PhysicsSystem.reset();
 }
 
 nlohmann::json harmony::JoltPhysicsSystem::SerializeSystem(entt::registry &registry)
@@ -213,9 +222,9 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent& t,
 {
     if (b.Body != nullptr)
     {
-        if (!b.Body->IsActive())
+        if (b.Body->IsActive() || b.Body->IsInBroadPhase())
         {
-            m_BodyInterface->DestroyBody(b.Body->GetID());
+            m_BodyInterface->RemoveBody(b.Body->GetID());
         }
         b.Body = nullptr;
     }
@@ -225,7 +234,7 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent& t,
     {
         case JoltBodyShape::Box:
         {
-            b.ShapePtr = new JPH::BoxShape(JPH::Vec3(t.Scale.x, t.Scale.y, t.Scale.x));
+            b.ShapePtr = new JPH::BoxShape(JPH::Vec3(t.Scale.x / 2.0f, t.Scale.y / 2.0f, t.Scale.x / 2.0f));
         }
         break;
         case JoltBodyShape::Sphere:
@@ -237,7 +246,7 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent& t,
         break;
         case JoltBodyShape::Capsule:
         {
-            b.ShapePtr = new JPH::CapsuleShape(t.Scale.x, t.Scale.y / 2.0f);
+            b.ShapePtr = new JPH::CapsuleShape(t.Scale.x / 3.0f, t.Scale.y / 6.0f);
         }
         break;
         case JoltBodyShape::Cylinder:
@@ -251,6 +260,8 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent& t,
         break;
     }
     bodyCreationSettings.SetShape(b.ShapePtr);
+    bodyCreationSettings.mPosition = JPH::Vec3(t.Position.x, t.Position.y, t.Position.z);
+    bodyCreationSettings.mRotation = JPH::Quat(t.Rotation.x, t.Rotation.y, t.Rotation.z, t.Rotation.w);
 
     bodyCreationSettings.mMotionType    = b.MotionType;
     bodyCreationSettings.mObjectLayer   = b.MotionType == JPH::EMotionType::Static ? Layers::NON_MOVING : Layers::MOVING;
