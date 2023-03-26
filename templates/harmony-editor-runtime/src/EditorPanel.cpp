@@ -13,6 +13,8 @@
 #include "Script/Lua/LuaComponent.h"
 #include "ECS/SimpleCollisionSystem.h"
 #include "ECS/SimpleCollisionComponent.h"
+#include "JoltComponents.h"
+#include "Assets/AssetManager.h"
 
 harmony::ScenePanel::ScenePanel(Program& program) : p_Prog(program)
 {
@@ -888,4 +890,29 @@ void harmony::SimpleCollisionSystemPanel::OnImGui()
 		}
 	}
 	ImGui::End();
+}
+
+harmony::JoltBodyComponentUI::JoltBodyComponentUI() : ComponentUI("Jolt Body")
+{
+}
+
+void harmony::JoltBodyComponentUI::OnComponentImGui(entt::registry& registry, entt::entity entity)
+{
+}
+
+void harmony::JoltBodyComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
+{
+}
+
+void harmony::JoltBodyComponentUI::RemoveComponent(entt::registry& registry, entt::entity entity)
+{
+}
+
+bool harmony::JoltBodyComponentUI::HasComponent(entt::registry& registry, entt::entity entity)
+{
+	return false;
+}
+
+void harmony::JoltBodyComponentUI::Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy)
+{
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "Jolt/Jolt.h"
 #include "Jolt/Physics/Body/Body.h"
+#include "ThirdParty/json.hpp"
 
 namespace harmony
 {
@@ -10,15 +11,39 @@ namespace harmony
         Sphere,
         Capsule,
         Cylinder,
-        Mesh
+        MeshShape,
+        Compound
     };
+
+    NLOHMANN_JSON_SERIALIZE_ENUM(JoltBodyShape, {
+        {Box, "Box"},
+        {Sphere, "Sphere"},
+        {Capsule, "Capsule"},
+        {Cylinder, "Cylinder"},
+        {MeshShape, "MeshShape"},
+        {Compound, "Compound"},
+    })
+
+    NLOHMANN_JSON_SERIALIZE_ENUM(JPH::EMotionType, {
+        {Static, "Static"},
+        {Kinematic, "Kinematic"},
+        {Dynamic, "Dynamic"}
+        })
 
     struct JoltBodyComponent
     {
         JPH::Body*          Body = nullptr;
+        JPH::Shape*         ShapePtr = nullptr;
         JPH::EMotionType    MotionType;
         JoltBodyShape       Shape;
 
         bool                RequiresUpdate = true;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(JoltBodyComponent, MotionType, Shape)
+    };
+
+    struct JoltCompoundShapeComponent
+    {
+        // todo: implement me
     };
 }

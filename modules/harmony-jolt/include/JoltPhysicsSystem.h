@@ -14,11 +14,11 @@ namespace JPH
 }
 namespace harmony
 {
+    struct JoltBodyComponent;
     class HarmonyContactListener;
     class HarmonyBodyActivationListener;
     class HarmonyDebugRenderer;
     class TransformComponent;
-    class JoltBodyComponent;
     enum  JoltBodyShape;
     class JoltPhysicsSystem : public System
     {

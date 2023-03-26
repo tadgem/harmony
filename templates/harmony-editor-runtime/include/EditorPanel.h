@@ -3,7 +3,6 @@
 #include "Core/Scene.h"
 #include "Core/Program.h"
 #include "ThirdParty/entt.hpp"
-
 namespace harmony
 {
     class Panel
@@ -193,6 +192,18 @@ namespace harmony
     {
     public:
         SphereComponentUI();
+        virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
+        virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
+        virtual bool HasComponent(entt::registry& registry, entt::entity entity) override;
+        virtual void Duplicate(entt::registry& registry, entt::entity original, entt::entity newCopy) override;
+
+    };
+
+    class JoltBodyComponentUI : public ComponentUI
+    {
+    public:
+        JoltBodyComponentUI();
         virtual void OnComponentImGui(entt::registry& registry, entt::entity entity) override;
         virtual void AddComponent(entt::registry& registry, entt::entity entity) override;
         virtual void RemoveComponent(entt::registry& registry, entt::entity entity) override;
