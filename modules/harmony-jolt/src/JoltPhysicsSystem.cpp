@@ -142,12 +142,23 @@ void harmony::JoltPhysicsSystem::Update(entt::registry &registry)
             InitBody(e, t, b);
         }
 
-        auto pos = b.Body->GetPosition();
-        auto rot = b.Body->GetRotation();
-        glm::quat glmRot = glm::quat(rot.GetW(), rot.GetX(), rot.GetY(), rot.GetZ());
+        if (b.MotionType == JPH::EMotionType::Dynamic)
+        {
+            auto pos = b.Body->GetPosition();
+            auto rot = b.Body->GetRotation();
+            glm::quat glmRot = glm::quat(rot.GetW(), rot.GetX(), rot.GetY(), rot.GetZ());
 
-        t.Euler = glm::degrees(glm::eulerAngles(glmRot));
-        t.Position = glm::vec3(pos.GetX(), pos.GetY(), pos.GetZ());
+            t.Euler = glm::degrees(glm::eulerAngles(glmRot));
+            t.Position = glm::vec3(pos.GetX(), pos.GetY(), pos.GetZ());
+        }
+
+        if (b.MotionType == JPH::EMotionType::Kinematic)
+        {
+            JPH::Vec3 pos = JPH::Vec3(t.Position.x, t.Position.y, t.Position.z);
+            JPH::Quat rot = JPH::Quat(t.Rotation.w, t.Rotation.x, t.Rotation.y, t.Rotation.z);
+
+            m_BodyInterface->SetPositionAndRotation(b.Body->GetID(), pos, rot, JPH::EActivation::Activate);
+        }
 
     }
 }
@@ -262,9 +273,16 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent& t,
     bodyCreationSettings.SetShape(b.ShapePtr);
     bodyCreationSettings.mPosition = JPH::Vec3(t.Position.x, t.Position.y, t.Position.z);
     bodyCreationSettings.mRotation = JPH::Quat(t.Rotation.x, t.Rotation.y, t.Rotation.z, t.Rotation.w);
+    
+    if (b.MotionType == JPH::EMotionType::Dynamic)
+    {
+        bodyCreationSettings.mAllowSleeping = false;
+    }
 
     bodyCreationSettings.mMotionType    = b.MotionType;
     bodyCreationSettings.mObjectLayer   = b.MotionType == JPH::EMotionType::Static ? Layers::NON_MOVING : Layers::MOVING;
+    bodyCreationSettings.mRestitution   = b.Restitution;
+    bodyCreationSettings.mFriction      = b.Friction;
 
     b.Body = m_BodyInterface->CreateBody(bodyCreationSettings);
 

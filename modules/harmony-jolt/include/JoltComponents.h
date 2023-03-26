@@ -36,10 +36,12 @@ namespace harmony
         JPH::Shape*         ShapePtr = nullptr;
         JPH::EMotionType    MotionType;
         JoltBodyShape       Shape;
+        float               Restitution = 0.0f;
+        float               Friction    = 1.0f;
 
         bool                RequiresUpdate = true;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(JoltBodyComponent, MotionType, Shape)
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(JoltBodyComponent, MotionType, Shape, Restitution, Friction)
     };
 
     struct JoltCompoundShapeComponent

@@ -920,6 +920,9 @@ void harmony::JoltBodyComponentUI::OnComponentImGui(entt::registry& registry, en
 	{
 		b.RequiresUpdate = true;
 	}
+
+	ImGui::SliderFloat("Friction", &b.Friction, 0.0f, 1.0f);
+	ImGui::SliderFloat("Restitution", &b.Restitution, 0.0f, 1.0f);
 }
 
 void harmony::JoltBodyComponentUI::AddComponent(entt::registry& registry, entt::entity entity)
