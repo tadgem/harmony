@@ -109,7 +109,7 @@ void harmony::PipelineStack::PreUpdate(entt::registry& registry, WeakRef<View> v
      }
 }
 
-std::map<uint16_t, bool>  harmony::PipelineStack::PostUpdate(entt::registry& registry, WeakRef<View> view)
+std::vector<harmony::PipelineStack::Data>  harmony::PipelineStack::PostUpdate(entt::registry& registry, WeakRef<View> view)
 {
     HARMONY_PROFILE_FUNCTION()
     for (int p = 0; p < m_PipelineStack.size(); p++)
@@ -125,7 +125,7 @@ std::map<uint16_t, bool>  harmony::PipelineStack::PostUpdate(entt::registry& reg
     
     Ref<View> _view = view.lock();
 
-    std::map<uint16_t, bool> texturesToBlit = std::map<uint16_t, bool>();
+    std::vector<Data> texturesToBlit = std::vector<Data>();
 
     for (int p = 0; p < m_PipelineStack.size(); p++)
     {
@@ -160,8 +160,8 @@ std::map<uint16_t, bool>  harmony::PipelineStack::PostUpdate(entt::registry& reg
                 continue;
             }
             // bind & draw w/ present shader
-
-            texturesToBlit.emplace(th.idx, pipeline->m_PostProcess);
+            Data stackDataEntry {th.idx, pipeline->m_PostProcess};
+            texturesToBlit.emplace_back(stackDataEntry);
         }       
     }
 

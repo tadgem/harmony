@@ -9,6 +9,13 @@ namespace harmony
     class PipelineStack
     {
     public:
+
+        struct Data
+        {
+            uint16_t m_Handle;
+            bool     m_PostProcess;
+        };
+
         PipelineStack(); 
 
         bgfx::TextureHandle GetFinalImage();
@@ -31,7 +38,7 @@ namespace harmony
         void    OnViewResized(WeakRef<View> view);
 
         void                                PreUpdate(entt::registry& registry, WeakRef<View> view);
-        std::map<uint16_t,bool>  PostUpdate(entt::registry& registry, WeakRef<View> view);
+        std::vector<Data>                   PostUpdate(entt::registry& registry, WeakRef<View> view);
 
         nlohmann::json  Serialize();
 
