@@ -18,6 +18,6 @@ int main()
 {
 	harmony::Editor app;
 	// app.Run("../../../projects/Test3/Test3.harmonyproj");
-	app.Run("../../../projects/JoltTest/JoltTest.harmonyproj");
+	app.Run("../../../../projects/JoltTest/JoltTest.harmonyproj");
 	return 0;
 }
