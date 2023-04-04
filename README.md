@@ -1,3 +1,4 @@
+![harmony logo](logo.jpg)
 # harmony
 ## A cross platform engine focussed on being fun to use and easy to extend. 
 ### Development Status : pre-alpha (all features unless stated otherwise are WIP)
