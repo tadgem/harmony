@@ -25,9 +25,9 @@ namespace harmony
     })
 
     NLOHMANN_JSON_SERIALIZE_ENUM(JPH::EMotionType, {
-        {Static, "Static"},
-        {Kinematic, "Kinematic"},
-        {Dynamic, "Dynamic"}
+        {JPH::EMotionType::Static, "Static"},
+        {JPH::EMotionType::Kinematic, "Kinematic"},
+        {JPH::EMotionType::Dynamic, "Dynamic"}
         })
 
     struct JoltBodyComponent
