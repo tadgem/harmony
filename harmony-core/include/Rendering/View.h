@@ -4,7 +4,7 @@
 #include "glm/glm.hpp"
 #include "ThirdParty/json.hpp"
 #include "bgfx/bgfx.h"
-#include "Rendering/PipelineStack.h"
+#include "Rendering/Pipelines/PipelineStack.h"
 
 namespace harmony
 {

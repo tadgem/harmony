@@ -1,7 +1,7 @@
 #pragma once
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
-#include "Rendering/PipelineDrawStage.h"
+#include "PipelineDrawStage.h"
 #include "Core/Profile.hpp"
 #include "ThirdParty/json.hpp"
 namespace harmony

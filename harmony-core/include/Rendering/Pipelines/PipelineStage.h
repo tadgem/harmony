@@ -3,7 +3,7 @@
 #include "ThirdParty/entt.hpp"
 #include "ThirdParty/json.hpp"
 #include "Rendering/Attachment.h"
-#include "Rendering/PipelineHandle.h"
+#include "PipelineHandle.h"
 #include "Rendering/Shader.h"
 #include "Rendering/ShaderDataSource.h"
 namespace harmony

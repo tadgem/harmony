@@ -1,4 +1,4 @@
-#include "Rendering/PipelineStageRenderers/MeshRenderer.h"
+#include "Rendering/Pipelines/PipelineStageRenderers/MeshRenderer.h"
 #include "ECS/MeshComponent.h"
 #include "ECS/MaterialComponent.h"
 #include "ECS/TransformComponent.h"

@@ -1,4 +1,4 @@
-#include "Rendering/PostProcessStage.h"
+#include "Rendering/Pipelines/PostProcessStage.h"
 #include "Rendering/View.h"
 #include "Rendering/Shapes.h"
 harmony::PostProcessStage::PostProcessStage(const std::string& name, Type stageType, WeakRef<ShaderProgram> shader, WeakRef<PipelineStageRenderer> stageRenderer, Attachment::Type attachments) : PipelineStage(name, stageType, attachments, shader, stageRenderer)

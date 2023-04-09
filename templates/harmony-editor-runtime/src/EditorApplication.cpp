@@ -7,7 +7,7 @@
 #include "ShaderHotReload.h"
 #include "LuaScriptHotReload.h"
 #include "Rendering/Views/RuntimeView.h"
-#include "Rendering/PipelineStageRenderers/MeshRenderer.h"
+#include "Rendering/Pipelines/PipelineStageRenderers/MeshRenderer.h"
 #include "Assets/ShaderSourceAssetFactory.h"
 #include "AssimpModelAssetFactory.h"
 #include "EditorView.h"

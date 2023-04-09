@@ -1,5 +1,5 @@
-#include "Rendering/PipelineStage.h"
-#include "Rendering/PipelineStageRenderer.h"
+#include "Rendering/Pipelines/PipelineStage.h"
+#include "Rendering/Pipelines/PipelineStageRenderer.h"
 #include "Rendering/View.h"
 #include "Core/SerializationKeys.h"
 

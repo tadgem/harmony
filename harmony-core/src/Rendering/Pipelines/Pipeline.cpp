@@ -1,6 +1,6 @@
 #include <algorithm>
-#include "Rendering/Pipeline.h"
-#include "Rendering/PipelineDrawStage.h"
+#include "Rendering/Pipelines/Pipeline.h"
+#include "Rendering/Pipelines/PipelineDrawStage.h"
 #include "Rendering/View.h"
 #include "Core/Log.hpp"
 #include "Core/Profile.hpp"

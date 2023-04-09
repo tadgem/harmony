@@ -11,10 +11,10 @@
 #include "Rendering/BuiltinShaders.h"
 #include "Rendering/Shapes.h"
 #include "Rendering/View.h"
-#include "Rendering/PipelineStageRenderer.h"
+#include "Rendering/Pipelines/PipelineStageRenderer.h"
 #include "Rendering/ShaderDataSource.h"
-#include "Rendering/PostProcessStage.h"
-#include "Rendering/PipelineDrawStage.h"
+#include "Rendering/Pipelines/PostProcessStage.h"
+#include "Rendering/Pipelines/PipelineDrawStage.h"
 
 #if HARMONY_DEBUG
 #include "ImGui/imgui_bgfx.h"

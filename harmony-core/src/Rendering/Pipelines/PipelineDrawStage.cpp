@@ -1,5 +1,5 @@
-#include "Rendering/PipelineDrawStage.h"
-#include "Rendering/PipelineStageRenderer.h"
+#include "Rendering/Pipelines/PipelineDrawStage.h"
+#include "Rendering/Pipelines/PipelineStageRenderer.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/View.h"
 #include "ECS/MaterialComponent.h"

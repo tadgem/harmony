@@ -1,10 +1,10 @@
 #include "Core/Log.hpp"
 #include "Core/SerializationKeys.h"
-#include "Rendering/PipelineStack.h"
+#include "Rendering/Pipelines/PipelineStack.h"
 #include "Rendering/Shapes.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/View.h"
-#include "Rendering/PostProcessStage.h"
+#include "Rendering/Pipelines/PostProcessStage.h"
 
 harmony::PipelineStack::PipelineStack()
 {

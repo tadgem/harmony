@@ -1,5 +1,5 @@
 #pragma once
-#include "Rendering/PipelineStageRenderer.h"
+#include "Rendering/Pipelines/PipelineStageRenderer.h"
 namespace harmony 
 {
     class MeshRenderer : public PipelineStageRenderer

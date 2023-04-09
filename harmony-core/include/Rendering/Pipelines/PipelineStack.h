@@ -1,7 +1,7 @@
 #pragma once
 #include <map>
 #include <vector>
-#include "Rendering/Pipeline.h"
+#include "Pipeline.h"
 namespace harmony
 {
     class View;

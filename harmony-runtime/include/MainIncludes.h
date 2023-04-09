@@ -6,7 +6,7 @@
 #include "Rendering/Model.h"
 #include "Rendering/Pipelines/DebugDrawPipeline.h"
 #include "Rendering/Pipelines/VectorPipeline.h"
-#include "Rendering/PipelineStageRenderers/MeshRenderer.h"
+#include "Rendering/Pipelines/PipelineStageRenderers/MeshRenderer.h"
 #include "Assets/TextureAssetFactory.h"
 #include "Assets/ShaderStageBinaryAssetFactory.h"
 #include "ECS/TransformSystem.h"
