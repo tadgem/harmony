@@ -59,6 +59,9 @@ namespace harmony
         class IGraphNodeIOT : public IGraphNodeIO
         {
         public:
+            IGraphNodeIOT() = default;
+
+            T*  m_Value = nullptr;
 
         };
 
@@ -78,6 +81,14 @@ namespace harmony
         class PrintNode : public IGraphNode
         {
         public:
+            PrintNode();
+            Ops             Build() override;
+            nlohmann::json  Serialize() override;
+            void            Deserialize() override;
+
+            Unique<IGraphNodeIOT<String>> m_StringInput;
+
+        public:
         };
 
         struct IControlFlow
@@ -93,6 +104,7 @@ namespace harmony
             Vector<Unique<IVariable>>       m_Variables;
             Vector<Unique<IControlFlow>>    m_GraphFlow;
 
+            
         };
 
     };
