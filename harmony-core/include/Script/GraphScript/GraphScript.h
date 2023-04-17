@@ -52,7 +52,6 @@ namespace harmony
 
         class IGraphNodeIO
         {
-            virtual void Process() = 0;
         };
 
         template<typename T>
@@ -103,8 +102,6 @@ namespace harmony
             Vector<Unique<IGraphNode>>      m_GraphNodes;
             Vector<Unique<IVariable>>       m_Variables;
             Vector<Unique<IControlFlow>>    m_GraphFlow;
-
-            
         };
 
     };
