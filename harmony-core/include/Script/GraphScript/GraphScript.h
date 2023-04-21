@@ -96,12 +96,19 @@ namespace harmony
             IGraphNodeIO* m_RHS;
         };
 
+        class IEntryPoint
+        {
+        public:
+            String m_Name;
+        };
+
         class Graph
         {
         public:
             Vector<Unique<IGraphNode>>      m_GraphNodes;
             Vector<Unique<IVariable>>       m_Variables;
             Vector<Unique<IControlFlow>>    m_GraphFlow;
+            Vector<Unique<IEntryPoint>>     m_EntryPoints;
         };
 
     };

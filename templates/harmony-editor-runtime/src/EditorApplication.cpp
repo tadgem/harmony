@@ -131,6 +131,8 @@ int harmony::Editor::OnEditUpdate()
 
 	RunProgramComponentUpdate();
 
+    m_GraphScriptEditor.Render();
+
 	if (p_ActiveScene)
 	{
 		p_MeshSystem->Update(p_ActiveScene->m_Registry);

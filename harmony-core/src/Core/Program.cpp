@@ -15,6 +15,7 @@
 #include "ImGui/ImGuizmo.h"
 #include "ImGui/backends/imgui_impl_sdl.h"
 #include "ImGui/robotomono_regular.ttf.h"
+#include "ImGui/imnodes.h"
 #endif
 harmony::Program::Program(const std::string& name) : p_AppName(name), m_Renderer(m_AssetManager)
 {
@@ -33,8 +34,10 @@ harmony::Program::Program(const std::string& name) : p_AppName(name), m_Renderer
 
 harmony::Program::~Program()
 {
-	HARMONY_PROFILE_END_SESSION()
 	HARMONY_PROFILE_FUNCTION()
+    ImNodes::DestroyContext();
+    ImGui::DestroyContext();
+	HARMONY_PROFILE_END_SESSION()
 }
 
 void harmony::Program::Init()
@@ -292,6 +295,7 @@ void harmony::Program::InitImGui()
 {
 	HARMONY_PROFILE_FUNCTION()
 	ImGui::CreateContext();
+    ImNodes::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	p_ImGuiAllocator = new bx::DefaultAllocator();
 	
@@ -592,6 +596,9 @@ void harmony::Program::RunProgramLoop()
 
 		Frame();
 	}
+
+    ImGui::DestroyContext();
+    ImNodes::DestroyContext();
 }
 
 void harmony::Program::Run()

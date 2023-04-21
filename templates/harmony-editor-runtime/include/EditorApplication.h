@@ -4,6 +4,7 @@
 #include "EditorPanel.h"
 #include "EditorMenu.h"
 
+#include "ImGui/GraphScript/GraphScriptImGui.h"
 namespace harmony
 {
 	class CameraSystem;
@@ -60,8 +61,12 @@ namespace harmony
 
 		FSM m_EditorFSM;
 
-	protected:		
+        harmony::GraphScriptImGuiEditor m_GraphScriptEditor;
+
+	protected:
 		std::vector<Ref<Panel>> p_Panels;
+
+
 
 		Ref<ScenePanel> 		p_ScenePanel;
 		Ref<EditorView> 		p_EditorView;

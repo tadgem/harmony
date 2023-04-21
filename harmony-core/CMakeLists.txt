@@ -26,7 +26,7 @@ add_subdirectory(${ROOT_DIR}/submodules/spdlog ${CMAKE_CURRENT_BINARY_DIR}/spdlo
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 set(HARMONY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
 
-add_library(harmony-core STATIC ${CORE_HEADER_FILES} ${CORE_HEADERPP_FILES} ${CORE_SRC_FILES})
+add_library(harmony-core STATIC ${CORE_HEADER_FILES} ${CORE_HEADERPP_FILES} ${CORE_SRC_FILES} src/ImGui/GraphScript/GraphScriptImGui.cpp)
 set_property(TARGET harmony-core PROPERTY CXX_STANDARD 17)
 
 set(HARMONY_CORE_INCLUDES 
