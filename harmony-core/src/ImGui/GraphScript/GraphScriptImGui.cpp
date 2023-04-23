@@ -1,12 +1,15 @@
 //
 // Created by liam_ on 4/21/2023.
 //
+#include "Core/Log.hpp"
 #include "ImGui/GraphScript/GraphScriptImGui.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imnodes.h"
+#include "SDL.h"
 
-void harmony::GraphScriptImGuiEditor::AddGraphDebug(harmony::GraphScript::Graph *graph) {
+void harmony::GraphScriptImGuiEditor::AddGraph(harmony::GraphScript::Graph *graph) {
     m_Graphs.emplace_back(graph);
+    m_GraphStates.emplace_back(ImGuiGraphState());
 }
 
 void harmony::GraphScriptImGuiEditor::Render()
@@ -14,6 +17,15 @@ void harmony::GraphScriptImGuiEditor::Render()
     if(ImGui::Begin("GraphScripts"))
     {
         ImNodes::BeginNodeEditor();
+
+        if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) &&
+            ImNodes::IsEditorHovered() && ImGui::IsKeyReleased(ImGuiKey_MouseRight))
+        {
+            // ImNodes::SetNodeScreenSpacePos(1, ImGui::GetMousePos());
+            harmony::log::info("Right clicked in GraphScript Editor");
+        }
+
+        ImNodes::MiniMap();
         ImNodes::EndNodeEditor();
 
         int create_start_attr, create_end_attr;

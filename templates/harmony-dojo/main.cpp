@@ -22,7 +22,7 @@ int main()
 
     // create a graph.
 
-    app.m_GraphScriptEditor.AddGraphDebug(graph);
+    app.m_GraphScriptEditor.AddGraph(graph);
 
 	// app.Run("../../../projects/Test3/Test3.harmonyproj");
 	app.Run("../../../../projects/JoltTest/JoltTest.harmonyproj");
