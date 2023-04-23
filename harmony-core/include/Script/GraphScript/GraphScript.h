@@ -54,6 +54,10 @@ namespace harmony
         {
         };
 
+        class ExecutionGraphNodeIO : public IGraphNodeIO
+        {
+        };
+
         template<typename T>
         class IGraphNodeIOT : public IGraphNodeIO
         {
@@ -64,6 +68,13 @@ namespace harmony
 
         };
 
+        class IConnection
+        {
+        public:
+            IGraphNodeIO* m_LHS = nullptr;
+            IGraphNodeIO* m_RHS = nullptr;
+        };
+
         class IGraphNode
         {
         public:
@@ -71,7 +82,9 @@ namespace harmony
             virtual Ops             Build() = 0;
             virtual nlohmann::json  Serialize() = 0;
             virtual void            Deserialize() = 0;
+            virtual IGraphNode*     Clone() = 0;
 
+            String Name;
             Vector<Unique<IGraphNodeIO>>    m_Inputs;
             Vector<Unique<IGraphNodeIO>>    m_Outputs;
 
@@ -81,41 +94,61 @@ namespace harmony
         {
         public:
             PrintNode();
-            Ops             Build() override;
-            nlohmann::json  Serialize() override;
-            void            Deserialize() override;
+            Ops                 Build() override;
+            nlohmann::json      Serialize() override;
+            void                Deserialize() override;
+            IGraphNode*         Clone() override;
 
             Unique<IGraphNodeIOT<String>> m_StringInput;
 
         public:
         };
 
-        struct IControlFlow
-        {
-            IGraphNodeIO* m_LHS;
-            IGraphNodeIO* m_RHS;
-        };
-
-        class IEntryPoint
+        struct IEntryPointName
         {
         public:
             String m_Name;
         };
 
+        class EntryPointNode : public IGraphNode
+        {
+        public:
+            EntryPointNode();
+            EntryPointNode(const String& entryPointName);
+            Ops                 Build() override;
+            nlohmann::json      Serialize() override;
+            void                Deserialize() override;
+            IGraphNode*         Clone() override;
+
+            IEntryPointName     m_Entry;
+        };
+
+
         class Graph
         {
         public:
+
+            bool Build();
+
+            void CallEntryPoint(String name);
+
             Vector<Unique<IGraphNode>>      m_GraphNodes;
             Vector<Unique<IVariable>>       m_Variables;
-            Vector<Unique<IControlFlow>>    m_GraphFlow;
-            Vector<Unique<IEntryPoint>>     m_EntryPoints;
+            Vector<Unique<IConnection>>     m_Connections;
+            Vector<Unique<EntryPointNode>>  m_EntryPoints;
+        protected:
+            HashMap<String, Ops>       p_Entries;
         };
 
     };
 
     class GraphScriptVM
     {
+    public:
 
+        void AddNode(GraphScript::IGraphNode* node);
+
+        Vector<GraphScript::IGraphNode*>    m_AvailableNodes;
     };
 }
 

@@ -131,8 +131,6 @@ int harmony::Editor::OnEditUpdate()
 
 	RunProgramComponentUpdate();
 
-    m_GraphScriptEditor.Render();
-
 	if (p_ActiveScene)
 	{
 		p_MeshSystem->Update(p_ActiveScene->m_Registry);
@@ -264,7 +262,7 @@ void harmony::Editor::Init()
 	m_EditorFSM.SetStartingState(Mode::Edit);
 }
 
-void harmony::Editor::Run(const std::string& projectPath)
+void harmony::Editor::Run(const std::string& projectPath, harmony::Procedure proc)
 {
 	HARMONY_PROFILE_FUNCTION()
 
@@ -286,6 +284,7 @@ void harmony::Editor::Run(const std::string& projectPath)
 	while (p_Run)
 	{
 		m_EditorFSM.Process();
+        proc();
 	}
 }
 
@@ -309,6 +308,7 @@ void harmony::Editor::UpdateEditor()
 	p_MainMenuBar.OnImGui();
 	GlobalDockspace();
 
+    m_GraphScriptEditor.Render();
 	m_Renderer.OnImGui();
 	m_AssetManager.OnImGui();
 

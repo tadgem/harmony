@@ -13,7 +13,8 @@ namespace harmony
         glm::vec3 Position;
         glm::vec3 Euler;
         glm::quat Rotation;
-        float Speed;
+        float MoveSpeed;
+        float LookSpeed = 2.0f;
         bool Focussed = true;
         bool ShowCursor = true;
         bool Enabled = true;

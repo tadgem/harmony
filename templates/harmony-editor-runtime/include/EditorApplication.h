@@ -3,7 +3,7 @@
 #include "Core/FSM.h"
 #include "EditorPanel.h"
 #include "EditorMenu.h"
-
+#include "Core/Alias.h"
 #include "ImGui/GraphScript/GraphScriptImGui.h"
 namespace harmony
 {
@@ -50,7 +50,7 @@ namespace harmony
 
 		virtual void 	Run() override;
 		virtual void	Init() override;
-		void			Run(const std::string& projectPath);
+		void			Run(const std::string& projectPath, harmony::Procedure proc = NULL);
 
 		virtual void 	LoadScene(const std::string& path) override;
 		virtual void 	OpenScene(uint32_t index) override;

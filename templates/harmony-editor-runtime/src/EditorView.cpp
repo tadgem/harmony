@@ -12,6 +12,9 @@
 
 #include "Core/Input.h"
 #include "SDL.h"
+
+#define RAD 180.0f
+
 harmony::DebugCamera::DebugCamera()
 {
 	Position = glm::vec3(0.0f, 10.0f, 0.0f);
@@ -21,7 +24,7 @@ harmony::DebugCamera::DebugCamera()
 	FarClipPlane = 300.0f;
 	Width = 1280;
 	Height = 720;
-	Speed = 10.0f;
+	MoveSpeed = 10.0f;
 	Type = ProjectionType::Perspective;
 	Focussed = false;
 	ShowCursor = true;
@@ -46,27 +49,27 @@ void harmony::DebugCamera::Update()
 			}
 			if (Input::GetKey(Key::W))
 			{
-				Position += MathsUtils::CalculateForwardVector(Rotation) * (float)Time::GetFrameTime() * Speed;
+				Position += MathsUtils::CalculateForwardVector(Rotation) * (float)Time::GetFrameTime() * MoveSpeed;
 			}
 			if (Input::GetKey(Key::S))
 			{
-				Position -= MathsUtils::CalculateForwardVector(Rotation) * (float)Time::GetFrameTime() * Speed;
+				Position -= MathsUtils::CalculateForwardVector(Rotation) * (float)Time::GetFrameTime() * MoveSpeed;
 			}
 			if (Input::GetKey(Key::A))
 			{
-				Position -= MathsUtils::CalculateRightVector(Rotation) * (float)Time::GetFrameTime() * Speed;
+				Position -= MathsUtils::CalculateRightVector(Rotation) * (float)Time::GetFrameTime() * MoveSpeed;
 			}
 			if (Input::GetKey(Key::D))
 			{
-				Position += MathsUtils::CalculateRightVector(Rotation) * (float)Time::GetFrameTime() * Speed;
+				Position += MathsUtils::CalculateRightVector(Rotation) * (float)Time::GetFrameTime() * MoveSpeed;
 			}
 			if (Input::GetKey(Key::Q))
 			{
-				Position -= MathsUtils::CalculateUpVector(Rotation) * (float)Time::GetFrameTime() * Speed;
+				Position -= MathsUtils::CalculateUpVector(Rotation) * (float)Time::GetFrameTime() * MoveSpeed;
 			}
 			if (Input::GetKey(Key::E))
 			{
-				Position += MathsUtils::CalculateUpVector(Rotation) * (float)Time::GetFrameTime() * Speed;
+				Position += MathsUtils::CalculateUpVector(Rotation) * (float)Time::GetFrameTime() * MoveSpeed;
 			}
 
 			glm::vec2 mouseVelocity = Input::GetMouseVelocity();
@@ -75,8 +78,8 @@ void harmony::DebugCamera::Update()
 
 			if (magnitude > 0.0015f)
 			{
-				Euler.x -= mouseVelocity.y * Time::GetFrameTime() * 180.0f * 180.0f;
-				Euler.y += mouseVelocity.x * Time::GetFrameTime() * 180.0f * 180.0f;
+				Euler.x -= mouseVelocity.y * Time::GetFrameTime() * RAD * RAD * LookSpeed;
+				Euler.y += mouseVelocity.x * Time::GetFrameTime() * RAD * RAD * LookSpeed;
 			}
 		}
 		else
@@ -168,6 +171,11 @@ void harmony::EditorView::OnImGui()
 		{
 			Camera.Focussed = true;
 		}
+        else
+        {
+            Camera.Focussed = false;
+        }
+
 		ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
 		ImGuizmo::AllowAxisFlip(false);
 		float windowWidth = (float)ImGui::GetWindowWidth();

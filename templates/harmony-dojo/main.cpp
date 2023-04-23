@@ -24,7 +24,12 @@ int main()
 
     app.m_GraphScriptEditor.AddGraph(graph);
 
+    auto proc = []()
+    {
+
+    };
+
 	// app.Run("../../../projects/Test3/Test3.harmonyproj");
-	app.Run("../../../../projects/JoltTest/JoltTest.harmonyproj");
+	app.Run("../../../../projects/JoltTest/JoltTest.harmonyproj", proc);
 	return 0;
 }
