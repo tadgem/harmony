@@ -29,8 +29,10 @@ def gather_all_sources(subdirs):
     return files_to_format
 
 def execute_clang_tidy(sources):
-    for source in sources:
-        print("Source : " + source)
+    # Create base clang tidy command
+    # Append all sources
+    # Execute
+    print("Format Sources : TODO Implement ClangTidy execution")
 
 
 def main():
