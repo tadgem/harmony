@@ -3,10 +3,8 @@
 #include "Jolt/Jolt.h"
 #include "Jolt/Physics/Body/BodyActivationListener.h"
 
-namespace harmony
-{
-    class HarmonyBodyActivationListener : public JPH::BodyActivationListener
-    {
+namespace harmony {
+    class HarmonyBodyActivationListener : public JPH::BodyActivationListener {
     public:
         ~HarmonyBodyActivationListener() override = default;
 

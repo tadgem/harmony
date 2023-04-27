@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Core/Log.hpp"
 #include "ImGui/ImGuiFileDialog.h"
 #include "ImGui/imgui.h"

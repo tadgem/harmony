@@ -7,11 +7,11 @@ add_executable(harmony-dojo main.cpp)
 set_property(TARGET harmony-dojo PROPERTY CXX_STANDARD 17)
 
 if (WIN32)
-  # set stuff for windows
-else()
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error")
-endif()
+    # set stuff for windows
+else ()
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error")
+endif ()
 
 get_filename_component(TEMP_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 get_filename_component(ROOT_DIR ${TEMP_DIR} DIRECTORY)

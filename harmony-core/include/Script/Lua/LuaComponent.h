@@ -1,13 +1,12 @@
 #pragma once
+
 #include "ThirdParty/json.hpp"
 #include "sol.hpp"
 #include "Assets/Asset.h"
 #include "Script/Lua/LuaScriptAsset.h"
 
-namespace harmony 
-{
-    struct LuaComponent
-    {
+namespace harmony {
+    struct LuaComponent {
     public:
         LuaComponent();
 
@@ -17,7 +16,7 @@ namespace harmony
         bool m_HasUpdate;
         bool m_HasCleanup;
 
-        sol::environment  m_Env;
+        sol::environment m_Env;
 
         sol::function m_Start;
         sol::function m_Update;

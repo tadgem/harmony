@@ -6,26 +6,26 @@ file(GLOB_RECURSE C_SRC_FILES src/*.c)
 file(GLOB_RECURSE HEADER_FILES include/*.h)
 file(GLOB_RECURSE HEADERPP_FILES include/*.hpp)
 
-if(MSVC)
+if (MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS /W2)
-endif()
+endif ()
 
-add_library(harmony-jolt STATIC ${HEADER_FILES} ${HEADERPP_FILES} ${SRC_FILES}  ${C_SRC_FILES})
+add_library(harmony-jolt STATIC ${HEADER_FILES} ${HEADERPP_FILES} ${SRC_FILES} ${C_SRC_FILES})
 set_property(TARGET harmony-jolt PROPERTY CXX_STANDARD 17)
 
-set(TARGET_UNIT_TESTS       OFF)
-set(TARGET_HELLO_WORLD      OFF)
+set(TARGET_UNIT_TESTS OFF)
+set(TARGET_HELLO_WORLD OFF)
 set(TARGET_PERFORMANCE_TEST OFF)
-set(TARGET_SAMPLES          OFF)
-set(TARGET_VIEWER           OFF)
+set(TARGET_SAMPLES OFF)
+set(TARGET_VIEWER OFF)
 
 add_subdirectory(${ROOT_DIR}/submodules/jolt/Build ${CMAKE_CURRENT_BINARY_DIR}/jolt)
 
-set(HARMONY_JOLT_INCLUDES 
-${CMAKE_CURRENT_SOURCE_DIR}/include 
-${HARMONY_CORE_INCLUDES}
-${ROOT_DIR}/submodules/jolt 
-CACHE INTERNAL "")
+set(HARMONY_JOLT_INCLUDES
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${HARMONY_CORE_INCLUDES}
+        ${ROOT_DIR}/submodules/jolt
+        CACHE INTERNAL "")
 
 target_include_directories(harmony-jolt PUBLIC ${HARMONY_JOLT_INCLUDES})
 target_link_libraries(harmony-jolt Jolt harmony-core)

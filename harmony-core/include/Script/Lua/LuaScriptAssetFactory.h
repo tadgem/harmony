@@ -1,16 +1,17 @@
 #pragma once
+
 #include "Assets/AssetFactory.h"
 
-namespace harmony
-{
-	class LuaScriptAssetFactory : public AssetFactory
-	{
-	public:
+namespace harmony {
+    class LuaScriptAssetFactory : public AssetFactory {
+    public:
 
-		LuaScriptAssetFactory();
+        LuaScriptAssetFactory();
 
-		virtual void LoadAssetData(const std::string& path, entt::registry& registry) override;
-		virtual void UnloadAssetData(const std::string& path, entt::registry& registry) override;
-		virtual void ClearLoadedData() override;
-	};
+        virtual void LoadAssetData(const std::string &path, entt::registry &registry) override;
+
+        virtual void UnloadAssetData(const std::string &path, entt::registry &registry) override;
+
+        virtual void ClearLoadedData() override;
+    };
 }

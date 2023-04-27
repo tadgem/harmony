@@ -1,35 +1,31 @@
 #include "Core/Memory.h"
 
-void* operator new(size_t size)
-{
-	harmony::Memory::AddAllocatedMemory(size);
-	return malloc(size);
+void *operator new(size_t size) {
+    harmony::Memory::AddAllocatedMemory(size);
+    return malloc(size);
 }
 
-void operator delete(void* memory, size_t size)
-{
-	harmony::Memory::AddFreedMemory(size);
-	free(memory);
+void operator delete(void *memory, size_t size) {
+    harmony::Memory::AddFreedMemory(size);
+    free(memory);
 }
 
 #include "EditorApplication.h"
 
-int main()
-{
-	harmony::Editor app;
+int main() {
+    harmony::Editor app;
 
-    auto * graph = new harmony::GraphScript::Graph();
+    auto *graph = new harmony::GraphScript::Graph();
 
     // create a graph.
 
     app.m_GraphScriptEditor.AddGraph(graph);
 
-    auto proc = []()
-    {
+    auto proc = []() {
 
     };
 
-	// app.Run("../../../projects/Test3/Test3.harmonyproj");
-	app.Run("../../../../projects/JoltTest/JoltTest.harmonyproj", proc);
-	return 0;
+    // app.Run("../../../projects/Test3/Test3.harmonyproj");
+    app.Run("../../../../projects/JoltTest/JoltTest.harmonyproj", proc);
+    return 0;
 }

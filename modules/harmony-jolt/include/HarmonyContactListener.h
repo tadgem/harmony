@@ -1,12 +1,13 @@
 #pragma once
+
 #include "Jolt/Jolt.h"
 #include <Jolt/Physics/Collision/ContactListener.h>
-namespace harmony
-{
-    class HarmonyContactListener final : public JPH::ContactListener
-    {
+
+namespace harmony {
+    class HarmonyContactListener final : public JPH::ContactListener {
     public:
         HarmonyContactListener();
+
         ~HarmonyContactListener() override = default;
 
         JPH::ValidateResult

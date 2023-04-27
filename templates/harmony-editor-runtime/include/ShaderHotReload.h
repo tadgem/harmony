@@ -1,37 +1,41 @@
 #pragma once
+
 #include "AssetHotReload.h"
 #include "Assets/Asset.h"
 #include "bx/platform.h"
 #include "Rendering/Shader.h"
 
-namespace harmony
-{
+namespace harmony {
     class Program;
+
     class Renderer;
+
     class ShaderSourceAsset;
 
-    class ShaderHotReload : public AssetHotReloadProvider
-    {
+    class ShaderHotReload : public AssetHotReloadProvider {
     public:
-        ShaderHotReload(Program& prog);
+        ShaderHotReload(Program &prog);
+
         ~ShaderHotReload();
+
         virtual void Init() override;
 
     protected:
-        Program& p_Program;
-        Renderer& p_Renderer;
+        Program &p_Program;
+        Renderer &p_Renderer;
         std::string p_ShaderCompilerLocation;
 
-        int CompileShader(const std::string& shaderName);
+        int CompileShader(const std::string &shaderName);
+
         void ReloadTrackedShaders();
-        
-        void OnChange(const std::string& filename, const std::string& directory, efsw::Action action);
-        
-        std::map<std::string , Ref<ShaderSourceAsset>> p_LoadedShaderSources;
+
+        void OnChange(const std::string &filename, const std::string &directory, efsw::Action action);
+
+        std::map<std::string, Ref<ShaderSourceAsset>> p_LoadedShaderSources;
         std::map<std::string, Ref<ShaderStage>> p_LoadedShaderBinaries;
         std::map<std::string, std::string> p_RendererProfileMapping;
 
-        efsw::FileWatcher* p_FileWatcher;
+        efsw::FileWatcher *p_FileWatcher;
         efsw::WatchID p_DirectoryWatchID;
 
         bool p_Initialized;

@@ -12,15 +12,12 @@ void harmony::GraphScriptImGuiEditor::AddGraph(harmony::GraphScript::Graph *grap
     m_GraphStates.emplace_back(ImGuiGraphState());
 }
 
-void harmony::GraphScriptImGuiEditor::Render()
-{
-    if(ImGui::Begin("GraphScripts"))
-    {
+void harmony::GraphScriptImGuiEditor::Render() {
+    if (ImGui::Begin("GraphScripts")) {
         ImNodes::BeginNodeEditor();
 
         if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) &&
-            ImNodes::IsEditorHovered() && ImGui::IsKeyReleased(ImGuiKey_MouseRight))
-        {
+            ImNodes::IsEditorHovered() && ImGui::IsKeyReleased(ImGuiKey_MouseRight)) {
             // ImNodes::SetNodeScreenSpacePos(1, ImGui::GetMousePos());
             harmony::log::info("Right clicked in GraphScript Editor");
         }
@@ -29,18 +26,15 @@ void harmony::GraphScriptImGuiEditor::Render()
         ImNodes::EndNodeEditor();
 
         int create_start_attr, create_end_attr;
-        if(ImNodes::IsLinkCreated(&create_start_attr, &create_end_attr))
-        {
+        if (ImNodes::IsLinkCreated(&create_start_attr, &create_end_attr)) {
 
         }
         int destroyed_attr;
-        if(ImNodes::IsLinkDestroyed(&destroyed_attr))
-        {
+        if (ImNodes::IsLinkDestroyed(&destroyed_attr)) {
 
         }
         int drop_start_attr;
-        if(ImNodes::IsLinkDropped(&drop_start_attr,  true))
-        {
+        if (ImNodes::IsLinkDropped(&drop_start_attr, true)) {
 
         }
     }

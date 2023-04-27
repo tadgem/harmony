@@ -12,30 +12,29 @@ namespace bx { struct AllocatorI; }
 
 struct NVGcontext;
 
-struct NVGLUframebuffer
-{
-  NVGcontext* ctx;
-  bgfx::FrameBufferHandle handle;
-  int image;
-  bgfx::ViewId viewId;
+struct NVGLUframebuffer {
+    NVGcontext *ctx;
+    bgfx::FrameBufferHandle handle;
+    int image;
+    bgfx::ViewId viewId;
 };
 
 ///
-NVGcontext* nvgCreate(int32_t _edgeaa, bgfx::ViewId _viewId, bx::AllocatorI* _allocator);
+NVGcontext *nvgCreate(int32_t _edgeaa, bgfx::ViewId _viewId, bx::AllocatorI *_allocator);
 
 ///
-NVGcontext* nvgCreate(int32_t _edgeaa, bgfx::ViewId _viewId);
+NVGcontext *nvgCreate(int32_t _edgeaa, bgfx::ViewId _viewId);
 
 ///
-void nvgDelete(NVGcontext* _ctx);
+void nvgDelete(NVGcontext *_ctx);
 
 ///
-void nvgSetViewId(NVGcontext* _ctx, bgfx::ViewId _viewId);
+void nvgSetViewId(NVGcontext *_ctx, bgfx::ViewId _viewId);
 
 ///
-uint16_t nvgGetViewId(struct NVGcontext* _ctx);
+uint16_t nvgGetViewId(struct NVGcontext *_ctx);
 
-bgfx::TextureHandle nvgGetFramebufferTexture(NVGcontext* _ctx);
+bgfx::TextureHandle nvgGetFramebufferTexture(NVGcontext *_ctx);
 
 // Helper functions to create bgfx framebuffer to render to.
 // Example:
@@ -58,24 +57,25 @@ bgfx::TextureHandle nvgGetFramebufferTexture(NVGcontext* _ctx);
 //		nvgEndFrame(ctx);
 
 ///
-NVGLUframebuffer* nvgluCreateFramebuffer(NVGcontext* _ctx, int32_t _width, int32_t _height, int32_t _imageFlags, bgfx::ViewId _viewId);
+NVGLUframebuffer *
+nvgluCreateFramebuffer(NVGcontext *_ctx, int32_t _width, int32_t _height, int32_t _imageFlags, bgfx::ViewId _viewId);
 
 ///
-NVGLUframebuffer* nvgluCreateFramebuffer(NVGcontext* _ctx, int32_t _width, int32_t _height, int32_t _imageFlags);
+NVGLUframebuffer *nvgluCreateFramebuffer(NVGcontext *_ctx, int32_t _width, int32_t _height, int32_t _imageFlags);
 
 ///
-NVGLUframebuffer* nvgluCreateFramebuffer(NVGcontext* _ctx, int32_t _imageFlags, bgfx::ViewId _viewId);
+NVGLUframebuffer *nvgluCreateFramebuffer(NVGcontext *_ctx, int32_t _imageFlags, bgfx::ViewId _viewId);
 
 ///
-NVGLUframebuffer* nvgluCreateFramebuffer(NVGcontext* _ctx, int32_t _imageFlags);
+NVGLUframebuffer *nvgluCreateFramebuffer(NVGcontext *_ctx, int32_t _imageFlags);
 
 ///
-void nvgluBindFramebuffer(NVGLUframebuffer* _framebuffer);
+void nvgluBindFramebuffer(NVGLUframebuffer *_framebuffer);
 
 ///
-void nvgluDeleteFramebuffer(NVGLUframebuffer* _framebuffer);
+void nvgluDeleteFramebuffer(NVGLUframebuffer *_framebuffer);
 
 ///
-void nvgluSetViewFramebuffer(bgfx::ViewId _viewId, NVGLUframebuffer* _framebuffer);
+void nvgluSetViewFramebuffer(bgfx::ViewId _viewId, NVGLUframebuffer *_framebuffer);
 
 #endif // NANOVG_BGFX_H_HEADER_GUARD

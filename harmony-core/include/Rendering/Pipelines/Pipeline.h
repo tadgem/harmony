@@ -1,19 +1,19 @@
 #pragma once
+
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
 #include "PipelineDrawStage.h"
 #include "Core/Profile.hpp"
 #include "ThirdParty/json.hpp"
-namespace harmony
-{
+
+namespace harmony {
     class View;
-    class Pipeline
-    {
+
+    class Pipeline {
     public:
 
-        enum Type
-        {
-            Unknown, 
+        enum Type {
+            Unknown,
             Compute,
             ScreenSpace,
             Surface,
@@ -21,18 +21,17 @@ namespace harmony
         };
 
         NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
-            {Unknown, "unknown"},
-            {ScreenSpace, "screenSpace"},
-            {Surface, "surface"},
-            {PostProcess, "postProcess"},
-            {Compute, "compute"}
-            })
+            { Unknown, "unknown" },
+            { ScreenSpace, "screenSpace" },
+            { Surface, "surface" },
+            { PostProcess, "postProcess" },
+            { Compute, "compute" }
+        })
 
-        Pipeline(const PipelineHandle& handle, Type pipelineType);
+        Pipeline(const PipelineHandle &handle, Type pipelineType);
 
         template<typename T, typename ... Args>
-        WeakRef<T> AddPipelineStage(Args&& ... args)
-        {
+        WeakRef<T> AddPipelineStage(Args &&... args) {
             HARMONY_PROFILE_FUNCTION()
             static_assert(std::is_base_of<PipelineDrawStage, T>());
 
@@ -44,24 +43,34 @@ namespace harmony
         }
 
         virtual void AddPipelineStage(Ref<PipelineDrawStage> stage);
-        virtual std::vector<PipelineDrawStage::Data> Init(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
-        virtual void PreUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineDrawStage::Data> data);
-        virtual void PostUpdate(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds, std::vector<PipelineDrawStage::Data> data);
-        virtual void Cleanup(entt::registry& registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
-                
-        uint32_t            NumPipelineStages();
-        bool                HasDepth();
 
-        nlohmann::json      Serialize();
-        void                Deserialize(nlohmann::json& json);
+        virtual std::vector<PipelineDrawStage::Data>
+        Init(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
 
-        PipelineHandle      m_Handle;
-        std::string         m_Name;
-        Type                m_Type;
-        bool                m_PostProcess;
+        virtual void PreUpdate(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds,
+                               std::vector<PipelineDrawStage::Data> data);
+
+        virtual void PostUpdate(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds,
+                                std::vector<PipelineDrawStage::Data> data);
+
+        virtual void Cleanup(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
+
+        uint32_t NumPipelineStages();
+
+        bool HasDepth();
+
+        nlohmann::json Serialize();
+
+        void Deserialize(nlohmann::json &json);
+
+        PipelineHandle m_Handle;
+        std::string m_Name;
+        Type m_Type;
+        bool m_PostProcess;
 
     protected:
         friend class Renderer;
+
         std::vector<Ref<PipelineDrawStage>> p_Stages;
     };
 };

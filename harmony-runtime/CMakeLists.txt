@@ -19,12 +19,12 @@ add_subdirectory(${ROOT_DIR}/harmony-core ${CMAKE_CURRENT_BINARY_DIR}/harmony)
 add_subdirectory(${ROOT_DIR}/modules/harmony-assimp ${CMAKE_CURRENT_BINARY_DIR}/harmony-assimp)
 add_subdirectory(${ROOT_DIR}/modules/harmony-jolt ${CMAKE_CURRENT_BINARY_DIR}/harmony-jolt)
 
-set(HARMONY_CORE_RUNTIME_INCLUDES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${ROOT_DIR}/submodules/assimp/include  
-    ${HARMONY_CORE_INCLUDES}
-    ${HARMONY_JOLT_INCLUDES}
-    CACHE INTERNAL "")
+set(HARMONY_CORE_RUNTIME_INCLUDES
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${ROOT_DIR}/submodules/assimp/include
+        ${HARMONY_CORE_INCLUDES}
+        ${HARMONY_JOLT_INCLUDES}
+        CACHE INTERNAL "")
 
 target_include_directories(harmony-runtime PUBLIC ${HARMONY_CORE_RUNTIME_INCLUDES})
 target_link_libraries(harmony-runtime harmony-core harmony-assimp harmony-jolt)

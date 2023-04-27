@@ -9,156 +9,159 @@
 #include "Core/Alias.h"
 #include "Core/Memory.h"
 
-namespace harmony
-{
-    namespace GraphScript
-    {
+namespace harmony {
+    namespace GraphScript {
 
-        class IVariable
-        {
+        class IVariable {
             virtual void Dispose() = 0;
         };
 
         template<typename T>
-        class IVariableT : public IVariable
-        {
+        class IVariableT : public IVariable {
         public:
-            virtual T*      Get() = 0;
-            virtual void    Set(const T& value) = 0;
+            virtual T *Get() = 0;
+
+            virtual void Set(const T &value) = 0;
         };
 
         template<typename T>
-        class HeapVariable : public IVariableT<T>
-        {
+        class HeapVariable : public IVariableT<T> {
         public:
             template<typename ... Args>
-            explicit HeapVariable(Args&& ... args)
-            {
+            explicit HeapVariable(Args &&... args) {
                 p_Value = CreateUnique<T>(args ...);
             }
 
-            virtual T*      Get() override      { return p_Value.get();}
-            virtual void    Set(const T& value) { *p_Value = value;}
-            virtual void    Dispose()           { p_Value.reset(); }
+            virtual T *Get() override { return p_Value.get(); }
+
+            virtual void Set(const T &value) { *p_Value = value; }
+
+            virtual void Dispose() { p_Value.reset(); }
 
         protected:
             Unique<T> p_Value;
         };
 
-        struct Ops
-        {
+        struct Ops {
             Vector<Procedure> m_Procs;
         };
 
-        class IGraphNodeIO
-        {
+        class IGraphNodeIO {
         };
 
-        class ExecutionGraphNodeIO : public IGraphNodeIO
-        {
+        class ExecutionGraphNodeIO : public IGraphNodeIO {
         };
 
         template<typename T>
-        class IGraphNodeIOT : public IGraphNodeIO
-        {
+        class IGraphNodeIOT : public IGraphNodeIO {
         public:
             IGraphNodeIOT() = default;
 
-            T*  m_Value = nullptr;
+            T *m_Value = nullptr;
 
         };
 
-        class IConnection
-        {
+        class IConnection {
         public:
-            IGraphNodeIO* m_LHS = nullptr;
-            IGraphNodeIO* m_RHS = nullptr;
+            IGraphNodeIO *m_LHS = nullptr;
+            IGraphNodeIO *m_RHS = nullptr;
         };
 
-        class IGraphNode
-        {
+        class IGraphNode {
         public:
 
-            virtual Ops             Build() = 0;
-            virtual nlohmann::json  Serialize() = 0;
-            virtual void            Deserialize() = 0;
-            virtual IGraphNode*     Clone() = 0;
+            virtual Ops Build() = 0;
+
+            virtual nlohmann::json Serialize() = 0;
+
+            virtual void Deserialize() = 0;
+
+            virtual IGraphNode *Clone() = 0;
 
             String Name;
-            Vector<Unique<IGraphNodeIO>>    m_Inputs;
-            Vector<Unique<IGraphNodeIO>>    m_Outputs;
+            Vector<Unique<IGraphNodeIO>> m_Inputs;
+            Vector<Unique<IGraphNodeIO>> m_Outputs;
 
         };
 
-        class PrintNode : public IGraphNode
-        {
+        class PrintNode : public IGraphNode {
         public:
             PrintNode();
-            Ops                 Build() override;
-            nlohmann::json      Serialize() override;
-            void                Deserialize() override;
-            IGraphNode*         Clone() override;
+
+            Ops Build() override;
+
+            nlohmann::json Serialize() override;
+
+            void Deserialize() override;
+
+            IGraphNode *Clone() override;
 
             Unique<IGraphNodeIOT<String>> m_StringInput;
 
         public:
         };
 
-        struct EntryPointName
-        {
+        struct EntryPointName {
         public:
-            explicit EntryPointName(std::string&& name);
+            explicit EntryPointName(const std::string &name);
+
             uint64_t m_id;
 
-            inline bool operator== (const EntryPointName& rhs) { return m_id = rhs.m_id; }
-            inline bool operator!= (const EntryPointName& rhs) const  { return m_id != rhs.m_id;}
-            inline bool operator<   (const EntryPointName &rhs)  const { return m_id < rhs.m_id;}
+            inline bool operator==(const EntryPointName &rhs) { return m_id = rhs.m_id; }
+
+            inline bool operator!=(const EntryPointName &rhs) const { return m_id != rhs.m_id; }
+
+            inline bool operator<(const EntryPointName &rhs) const { return m_id < rhs.m_id; }
         };
 
-        class EntryPointNode : public IGraphNode
-        {
+        class EntryPointNode : public IGraphNode {
         public:
-            EntryPointNode();
-            explicit EntryPointNode(const String& entryPointName);
-            Ops                 Build() override;
-            nlohmann::json      Serialize() override;
-            void                Deserialize() override;
-            IGraphNode*         Clone() override;
+            explicit EntryPointNode(const String &entryPointName);
 
-            EntryPointName     m_Entry;
+            Ops Build() override;
+
+            nlohmann::json Serialize() override;
+
+            void Deserialize() override;
+
+            IGraphNode *Clone() override;
+
+            EntryPointName m_Entry;
         };
 
 
-        class Graph
-        {
+        class Graph {
         public:
 
-            bool            Build();
-            nlohmann::json  Serialize();
-            void            CallEntryPoint(EntryPointName& name);
+            bool Build();
 
-            Vector<Unique<IGraphNode>>      m_GraphNodes;
-            Vector<Unique<IVariable>>       m_Variables;
-            Vector<Unique<IConnection>>     m_Connections;
-            Vector<Unique<EntryPointNode>>  m_EntryPoints;
+            nlohmann::json Serialize();
+
+            void CallEntryPoint(EntryPointName &name);
+
+            Vector<Unique<IGraphNode>> m_GraphNodes;
+            Vector<Unique<IVariable>> m_Variables;
+            Vector<Unique<IConnection>> m_Connections;
+            Vector<Unique<EntryPointNode>> m_EntryPoints;
         protected:
-            Map<EntryPointName, Ops>       p_Entries;
+            Map<EntryPointName, Ops> p_Entries;
         };
 
     }
 
-    class GraphScriptVM
-    {
+    class GraphScriptVM {
     public:
         GraphScriptVM();
+
         ~GraphScriptVM();
 
-        void AddNode(GraphScript::IGraphNode* node);
-        void RemoveNode(GraphScript::IGraphNode* node);
+        void AddNode(GraphScript::IGraphNode *node);
+
+        void RemoveNode(GraphScript::IGraphNode *node);
 
         Unique<GraphScript::Graph> Deserialize(nlohmann::json json);
 
-        Vector<GraphScript::IGraphNode*>    m_AvailableNodes;
+        Vector<GraphScript::IGraphNode *> m_AvailableNodes;
     };
 }
 

@@ -63,40 +63,33 @@ from "Graphics Gems", Academic Press, 1990
 
 //     } 
 
-harmony::AABB harmony::Collision::UpdateAABB(AABB aabb, glm::mat3 matrix, glm::vec3 position)
-{
-	AABB original = aabb;
+harmony::AABB harmony::Collision::UpdateAABB(AABB aabb, glm::mat3 matrix, glm::vec3 position) {
+    AABB original = aabb;
 
-	float  a, b;
-	glm::vec3 Amin, Amax;
-	glm::vec3 Bmin, Bmax;
-	int    i, j;
+    float a, b;
+    glm::vec3 Amin, Amax;
+    glm::vec3 Bmin, Bmax;
+    int i, j;
 
-	Amin[0] = (float)aabb.Min.x;  
-	Amax[0] = (float)aabb.Max.x;
-    Amin[1] = (float)aabb.Min.y;  
-	Amax[1] = (float)aabb.Max.y;
-	Amin[2] = (float)aabb.Min.z;
-	Amax[2] = (float)aabb.Max.z;
+    Amin[0] = (float) aabb.Min.x;
+    Amax[0] = (float) aabb.Max.x;
+    Amin[1] = (float) aabb.Min.y;
+    Amax[1] = (float) aabb.Max.y;
+    Amin[2] = (float) aabb.Min.z;
+    Amax[2] = (float) aabb.Max.z;
 
-	Bmin[0] = Bmax[0] = (float)position.x;
-	Bmin[1] = Bmax[1] = (float)position.y;
-	Bmin[2] = Bmax[2] = (float)position.z;
+    Bmin[0] = Bmax[0] = (float) position.x;
+    Bmin[1] = Bmax[1] = (float) position.y;
+    Bmin[2] = Bmax[2] = (float) position.z;
 
-    for (i = 0; i < 3; i++)
-    {
-        for (j = 0; j < 3; j++)
-        {
-            a = (float)(matrix[i][j] * Amin[j]);
-            b = (float)(matrix[i][j] * Amax[j]);
-            if (a < b)
-
-            {
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+            a = (float) (matrix[i][j] * Amin[j]);
+            b = (float) (matrix[i][j] * Amax[j]);
+            if (a < b) {
                 Bmin[i] += a;
                 Bmax[i] += b;
-            }
-            else
-            {
+            } else {
                 Bmin[i] += b;
                 Bmax[i] += a;
             }
@@ -115,29 +108,25 @@ harmony::AABB harmony::Collision::UpdateAABB(AABB aabb, glm::mat3 matrix, glm::v
     return ret;
 }
 
-bool harmony::Collision::Intersects(AABB a, AABB b)
-{
+bool harmony::Collision::Intersects(AABB a, AABB b) {
     return (a.Min.x <= b.Max.x && a.Max.x >= b.Min.x) &&
-        (a.Min.y <= b.Max.y && a.Max.y >= b.Min.y) &&
-        (a.Min.z <= b.Max.z && a.Max.z >= b.Min.z);
+           (a.Min.y <= b.Max.y && a.Max.y >= b.Min.y) &&
+           (a.Min.z <= b.Max.z && a.Max.z >= b.Min.z);
 }
 
-bool harmony::Collision::Intersects(Sphere a, Sphere b)
-{
+bool harmony::Collision::Intersects(Sphere a, Sphere b) {
     glm::vec3 apos = glm::vec3(a.PosR.x, a.PosR.y, a.PosR.z);
     glm::vec3 bpos = glm::vec3(b.PosR.x, b.PosR.y, b.PosR.z);
 
     float dist = glm::distance(apos, bpos);
-    if (dist < (a.PosR[3] + b.PosR[3]))
-    {
+    if (dist < (a.PosR[3] + b.PosR[3])) {
         return true;
     }
 
     return false;
 }
 
-bool harmony::Collision::Intersects(AABB a, Sphere b)
-{
+bool harmony::Collision::Intersects(AABB a, Sphere b) {
     // https://stackoverflow.com/questions/28343716/sphere-intersection-test-of-aabb
     // if (C[i] < Bmin[i]) dmin += SQR(C[i] - Bmin[i]); else
     // if (C[i] > Bmax[i]) dmin += SQR(C[i] - Bmax[i]);
@@ -146,59 +135,50 @@ bool harmony::Collision::Intersects(AABB a, Sphere b)
     float dmin = 0.0f;
     float r2 = b.PosR.w * b.PosR.w;
     for (int i = 0; i < 3; i++) {
-        if (b.PosR[i] < a.Min[i])
-        {
+        if (b.PosR[i] < a.Min[i]) {
             float d = b.PosR[i] - a.Min[i];
             dmin += d * d;
-        }
-        else if (b.PosR[i] > a.Max[i])
-        {
+        } else if (b.PosR[i] > a.Max[i]) {
             float d = b.PosR[i] - a.Max[i];
             dmin += d * d;
         }
     }
-    if (dmin <= r2)
-    {
+    if (dmin <= r2) {
         return true;
     }
     return false;
 }
 
-bool harmony::Collision::Intersects(Sphere a, AABB b)
-{
-    return Intersects(b,a);
+bool harmony::Collision::Intersects(Sphere a, AABB b) {
+    return Intersects(b, a);
 }
 
-bool harmony::Collision::Intersects(AABB a, glm::vec3 b)
-{
+bool harmony::Collision::Intersects(AABB a, glm::vec3 b) {
     return b.x >= a.Min.x && b.x <= a.Max.x &&
-        b.y >= a.Min.y && b.y <= a.Max.y &&
-        b.z >= a.Min.z && b.x <= a.Max.z;
+           b.y >= a.Min.y && b.y <= a.Max.y &&
+           b.z >= a.Min.z && b.x <= a.Max.z;
 }
 
-harmony::RayHit harmony::Collision::Intersects(Ray r, AABB aabb)
-{
+harmony::RayHit harmony::Collision::Intersects(Ray r, AABB aabb) {
 
-    glm::vec3 tMin  = (aabb.Min - r.Origin) / r.Direction;
-    glm::vec3 tMax  = (aabb.Max - r.Origin) / r.Direction;
-    glm::vec3 t1    = glm::min(tMin, tMax);
-    glm::vec3 t2    = glm::max(tMin, tMax);
-    float tNear     = glm::max(glm::max(t1.x, t1.y), t1.z);
-    float tFar      = glm::min(glm::min(t2.x, t2.y), t2.z);
+    glm::vec3 tMin = (aabb.Min - r.Origin) / r.Direction;
+    glm::vec3 tMax = (aabb.Max - r.Origin) / r.Direction;
+    glm::vec3 t1 = glm::min(tMin, tMax);
+    glm::vec3 t2 = glm::max(tMin, tMax);
+    float tNear = glm::max(glm::max(t1.x, t1.y), t1.z);
+    float tFar = glm::min(glm::min(t2.x, t2.y), t2.z);
 
-    if ((tFar - tNear) > 0.0f && tNear < 0.0f && tFar < 0.0f)
-    {
+    if ((tFar - tNear) > 0.0f && tNear < 0.0f && tFar < 0.0f) {
         glm::vec3 pos = r.Origin + (r.Direction * tFar);
         float dist = glm::distance(r.Origin, pos);
         return RayHit(glm::vec4(pos, 1.0f), dist);
     }
 
-    return RayHit(glm::vec4(glm::vec3(- 1.0), -1.0f), -1.0f);
+    return RayHit(glm::vec4(glm::vec3(-1.0), -1.0f), -1.0f);
 }
 
-harmony::RayHit harmony::Collision::Intersects(Ray r, Sphere s)
-{
-     // TODO rewrite as vectors.  
+harmony::RayHit harmony::Collision::Intersects(Ray r, Sphere s) {
+    // TODO rewrite as vectors.
     float cx = s.PosR[0];
     float cy = s.PosR[1];
     float cz = s.PosR[2];
@@ -212,12 +192,11 @@ harmony::RayHit harmony::Collision::Intersects(Ray r, Sphere s)
     float A = vx * vx + vy * vy + vz * vz;
     float B = 2.0 * (px * vx + py * vy + pz * vz - vx * cx - vy * cy - vz * cz);
     float C = px * px - 2 * px * cx + cx * cx + py * py - 2 * py * cy + cy * cy +
-        pz * pz - 2 * pz * cz + cz * cz - s.PosR[3] * s.PosR[3];
+              pz * pz - 2 * pz * cz + cz * cz - s.PosR[3] * s.PosR[3];
 
     float D = B * B - 4 * A * C;
 
-    if (D < 0.0f || B < 0.0f)
-    {
+    if (D < 0.0f || B < 0.0f) {
         return RayHit(glm::vec4(glm::vec3(-1.0), -1.0f), -1.0f);
     }
 
@@ -226,18 +205,17 @@ harmony::RayHit harmony::Collision::Intersects(Ray r, Sphere s)
     glm::vec3 rayEnd = r.Origin + r.Direction;
 
     glm::vec3 solution1 = glm::vec3(r.Origin.x * (1 - t1) + t1 * rayEnd.x,
-        r.Origin.y * (1 - t1) + t1 * rayEnd.y,
-        r.Origin.z * (1 - t1) + t1 * rayEnd.z);
+                                    r.Origin.y * (1 - t1) + t1 * rayEnd.y,
+                                    r.Origin.z * (1 - t1) + t1 * rayEnd.z);
 
-    if (D == 0.0f)
-    {
+    if (D == 0.0f) {
         return RayHit(glm::vec4(solution1, 1.0f), -1.0f);
     }
 
     float t2 = (-B + glm::sqrt(D)) / (2.0 * A);
     glm::vec3 solution2 = glm::vec3(r.Origin.x * (1 - t2) + t2 * rayEnd.x,
-        r.Origin.y * (1 - t2) + t2 * rayEnd.y,
-        r.Origin.z * (1 - t2) + t2 * rayEnd.z);
+                                    r.Origin.y * (1 - t2) + t2 * rayEnd.y,
+                                    r.Origin.z * (1 - t2) + t2 * rayEnd.z);
 
     float distance = glm::length(solution2 - r.Origin);
 

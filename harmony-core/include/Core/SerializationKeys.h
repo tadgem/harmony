@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 
 inline static std::string sk_AssetHandle = "m_Handle";
@@ -34,4 +35,4 @@ inline static std::string sk_PipelineStackPostProcessStages = "post-process-stag
 
 inline static std::string sk_ViewData = "view";
 inline static std::string sk_ViewName = "name";
-inline static std::string sk_PipelineStack= "pipeline-stack";
+inline static std::string sk_PipelineStack = "pipeline-stack";

@@ -1,18 +1,16 @@
 #pragma once
+
 #include "Core/Memory.h"
 #include "bgfx/bgfx.h"
 
-namespace harmony
-{
-    struct BGFXFramebufferHandle
-    {
+namespace harmony {
+    struct BGFXFramebufferHandle {
         bgfx::FrameBufferHandle m_Handle;
-        
+
     };
 
-    class Framebuffer
-    {
-        public: 
+    class Framebuffer {
+    public:
         Framebuffer();
 
         uint32_t m_Width;

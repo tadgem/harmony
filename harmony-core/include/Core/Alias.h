@@ -1,12 +1,12 @@
 #pragma once
+
 #include <map>
 #include <unordered_map>
 #include <vector>
 #include <string>
 #include <functional>
 
-namespace harmony
-{
+namespace harmony {
     using String = std::string;
 
     template<typename T1, typename T2>

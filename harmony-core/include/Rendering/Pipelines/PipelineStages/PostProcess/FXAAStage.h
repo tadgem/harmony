@@ -2,10 +2,8 @@
 
 #include "Rendering/Pipelines/PipelineDrawStage.h"
 
-namespace harmony
-{
-    class FXAAStage
-    {
+namespace harmony {
+    class FXAAStage {
 
     };
 }

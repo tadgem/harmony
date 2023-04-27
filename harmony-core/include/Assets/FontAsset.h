@@ -1,14 +1,14 @@
 #pragma once
+
 #include "Assets/Asset.h"
 
-namespace harmony
-{
-	class FontAsset : public Asset
-	{
-	public:
-		FontAsset(AssetHandle& handle);
-		FontAsset();
+namespace harmony {
+    class FontAsset : public Asset {
+    public:
+        FontAsset(AssetHandle &handle);
 
-		std::string m_CleanName;
-	};
+        FontAsset();
+
+        std::string m_CleanName;
+    };
 }

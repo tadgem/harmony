@@ -1,11 +1,10 @@
 #pragma once
+
 #include "Jolt/Jolt.h"
 #include "Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h"
 
-namespace harmony
-{
-    namespace Layers
-    {
+namespace harmony {
+    namespace Layers {
         static constexpr uint8_t UNUSED1 = 0; // 4 unused values so that broadphase layers values don't match with object layer values (for testing purposes)
         static constexpr uint8_t UNUSED2 = 1;
         static constexpr uint8_t UNUSED3 = 2;
@@ -18,8 +17,7 @@ namespace harmony
     };
 
     /// Broadphase layers
-    namespace BroadPhaseLayers
-    {
+    namespace BroadPhaseLayers {
         static constexpr JPH::BroadPhaseLayer NON_MOVING(0);
         static constexpr JPH::BroadPhaseLayer MOVING(1);
         static constexpr JPH::BroadPhaseLayer DEBRIS(2);
@@ -28,14 +26,13 @@ namespace harmony
         static constexpr uint8_t NUM_LAYERS(5);
     };
 
-    static inline bool BroadPhaseCanCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2)
-    {
-        switch (inLayer1)
-        {
+    static inline bool BroadPhaseCanCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) {
+        switch (inLayer1) {
             case Layers::NON_MOVING:
                 return inLayer2 == BroadPhaseLayers::MOVING;
             case Layers::MOVING:
-                return inLayer2 == BroadPhaseLayers::NON_MOVING || inLayer2 == BroadPhaseLayers::MOVING || inLayer2 == BroadPhaseLayers::SENSOR;
+                return inLayer2 == BroadPhaseLayers::NON_MOVING || inLayer2 == BroadPhaseLayers::MOVING ||
+                       inLayer2 == BroadPhaseLayers::SENSOR;
             case Layers::DEBRIS:
                 return inLayer2 == BroadPhaseLayers::NON_MOVING;
             case Layers::SENSOR:
@@ -50,10 +47,8 @@ namespace harmony
     }
 
     /// Function that determines if two object layers can collide
-    static inline bool ObjectCanCollide(JPH::ObjectLayer inObject1, JPH::ObjectLayer inObject2)
-    {
-        switch (inObject1)
-        {
+    static inline bool ObjectCanCollide(JPH::ObjectLayer inObject1, JPH::ObjectLayer inObject2) {
+        switch (inObject1) {
             case Layers::UNUSED1:
             case Layers::UNUSED2:
             case Layers::UNUSED3:
@@ -72,17 +67,19 @@ namespace harmony
         }
     };
 
-    class HarmonyBroadPhaseLayerInterface : public JPH::BroadPhaseLayerInterface
-    {
+    class HarmonyBroadPhaseLayerInterface : public JPH::BroadPhaseLayerInterface {
     public:
         HarmonyBroadPhaseLayerInterface();
+
         ~HarmonyBroadPhaseLayerInterface() override = default;
 
         JPH::uint GetNumBroadPhaseLayers() const override;
+
         JPH::BroadPhaseLayer GetBroadPhaseLayer(JPH::ObjectLayer inLayer) const override;
+
         const char *GetBroadPhaseLayerName(JPH::BroadPhaseLayer inLayer) const override;
 
     protected:
-        JPH::BroadPhaseLayer					m_ObjectToBroadPhase[Layers::NUM_LAYERS];
+        JPH::BroadPhaseLayer m_ObjectToBroadPhase[Layers::NUM_LAYERS];
     };
 }

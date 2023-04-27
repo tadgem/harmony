@@ -2,7 +2,6 @@
 
 #include "spdlog/spdlog.h"
 
-namespace harmony
-{
-	namespace log = spdlog;
+namespace harmony {
+    namespace log = spdlog;
 }
