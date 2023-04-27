@@ -50,6 +50,11 @@ void harmony::EditorMainMenuBar::MenuBar() {
                                                             ".");
                 }
             }
+            if (ImGui::MenuItem("Close Scene")) {
+                if (!p_Prog.GetActiveScene().expired()) {
+                    p_Prog.CloseActiveScene();
+                }
+            }
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Run")) {
