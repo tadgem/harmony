@@ -104,23 +104,28 @@ namespace harmony
         public:
         };
 
-        struct IEntryPointName
+        struct EntryPointName
         {
         public:
-            String m_Name;
+            explicit EntryPointName(std::string&& name);
+            uint64_t m_id;
+
+            inline bool operator== (const EntryPointName& rhs) { return m_id = rhs.m_id; }
+            inline bool operator!= (const EntryPointName& rhs) const  { return m_id != rhs.m_id;}
+            inline bool operator<   (const EntryPointName &rhs)  const { return m_id < rhs.m_id;}
         };
 
         class EntryPointNode : public IGraphNode
         {
         public:
             EntryPointNode();
-            EntryPointNode(const String& entryPointName);
+            explicit EntryPointNode(const String& entryPointName);
             Ops                 Build() override;
             nlohmann::json      Serialize() override;
             void                Deserialize() override;
             IGraphNode*         Clone() override;
 
-            IEntryPointName     m_Entry;
+            EntryPointName     m_Entry;
         };
 
 
@@ -128,25 +133,30 @@ namespace harmony
         {
         public:
 
-            bool Build();
-
-            void CallEntryPoint(String name);
+            bool            Build();
+            nlohmann::json  Serialize();
+            void            CallEntryPoint(EntryPointName& name);
 
             Vector<Unique<IGraphNode>>      m_GraphNodes;
             Vector<Unique<IVariable>>       m_Variables;
             Vector<Unique<IConnection>>     m_Connections;
             Vector<Unique<EntryPointNode>>  m_EntryPoints;
         protected:
-            HashMap<String, Ops>       p_Entries;
+            Map<EntryPointName, Ops>       p_Entries;
         };
 
-    };
+    }
 
     class GraphScriptVM
     {
     public:
+        GraphScriptVM();
+        ~GraphScriptVM();
 
         void AddNode(GraphScript::IGraphNode* node);
+        void RemoveNode(GraphScript::IGraphNode* node);
+
+        Unique<GraphScript::Graph> Deserialize(nlohmann::json json);
 
         Vector<GraphScript::IGraphNode*>    m_AvailableNodes;
     };

@@ -68,11 +68,43 @@ void harmony::GraphScriptVM::AddNode(harmony::GraphScript::IGraphNode *node)
 
 }
 
-void harmony::GraphScript::Graph::CallEntryPoint(String name)
+harmony::GraphScriptVM::GraphScriptVM()
+{
+    m_AvailableNodes = Vector<GraphScript::IGraphNode*>();
+}
+
+
+
+harmony::GraphScriptVM::~GraphScriptVM()
+{
+    for(auto node : m_AvailableNodes)
+    {
+        delete node;
+    }
+    m_AvailableNodes.clear();
+}
+
+void harmony::GraphScriptVM::RemoveNode(harmony::GraphScript::IGraphNode *node)
+{
+    auto it = std::find(m_AvailableNodes.begin(), m_AvailableNodes.end(), node);
+    if(it == m_AvailableNodes.end())
+    {
+        harmony::log::warn("GraphScriptVM : Node not found in VM available nodes");
+        return;
+    }
+    m_AvailableNodes.erase(it);
+}
+
+harmony::Unique<harmony::GraphScript::Graph> harmony::GraphScriptVM::Deserialize(nlohmann::json json)
+{
+    return nullptr;
+}
+
+void harmony::GraphScript::Graph::CallEntryPoint(EntryPointName& name)
 {
     if(p_Entries.find(name) == p_Entries.end())
     {
-        harmony::log::warn("GraphScript : Graph : No entry point : {}", name);
+        harmony::log::warn("GraphScript : Graph : No entry point : {}", name.m_id);
         return;
     }
 
@@ -87,4 +119,17 @@ void harmony::GraphScript::Graph::CallEntryPoint(String name)
 
 bool harmony::GraphScript::Graph::Build() {
     return false;
+}
+
+nlohmann::json harmony::GraphScript::Graph::Serialize() {
+    return nlohmann::json();
+}
+
+harmony::GraphScript::EntryPointName::EntryPointName(std::string &&name)
+{
+    for(auto c : name)
+    {
+        m_id += c;
+    }
+
 }
