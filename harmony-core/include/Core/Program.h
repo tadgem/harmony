@@ -106,6 +106,8 @@ namespace harmony {
 
         void UpdateTimeVariables();
 
+        void ProfilerBeginFrame();
+
         void RunProgramLoop();
 
         virtual void ResizeApplicationWindow(int w, int h);

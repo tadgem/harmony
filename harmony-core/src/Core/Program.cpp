@@ -7,8 +7,8 @@
 #include "bgfx/platform.h"
 #include "bx/timer.h"
 #include "SDL_syswm.h"
-
 #if HARMONY_DEBUG
+#include "optick.h"
 
 #include "Rendering/VectorGraphics.h"
 #include "ImGui/imgui.h"
@@ -103,6 +103,8 @@ void harmony::Program::Cleanup() {
 
     SDL_DestroyWindow(p_Window);
     SDL_Quit();
+
+    OPTICK_SHUTDOWN();
 }
 
 void harmony::Program::InitSDL() {
@@ -877,4 +879,9 @@ void harmony::Program::Frame() {
 
     bgfx::frame();
     // Instrumentor::Get().ClearResults();
+}
+
+void harmony::Program::ProfilerBeginFrame()
+{
+    OPTICK_FRAME("MainThread");
 }
