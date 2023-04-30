@@ -22,3 +22,6 @@
 [submodule "submodules/luajit-cmake"]
 	path = submodules/luajit-cmake
 	url = https://github.com/WohlSoft/LuaJIT.git
+[submodule "submodules/optick"]
+	path = submodules/optick
+	url = https://github.com/bombomby/optick.git
