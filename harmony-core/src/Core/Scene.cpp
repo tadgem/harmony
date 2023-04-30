@@ -1,16 +1,16 @@
 #include "Core/Scene.h"
-#include "Core/Profile.hpp"
+
 
 harmony::Scene::Scene() {
-    HARMONY_PROFILE_FUNCTION()
+
 }
 
 harmony::Scene::Scene(const std::string &name) : m_Name(name) {
-    HARMONY_PROFILE_FUNCTION()
+
 }
 
 void harmony::Scene::Deserialize(std::vector<Ref<System>> &systems) {
-    HARMONY_PROFILE_FUNCTION()
+
     m_Registry.clear();
     for (int i = 0; i < p_Entities.size(); i++) {
         m_Registry.create(p_Entities[i].m_Handle);
@@ -27,7 +27,7 @@ void harmony::Scene::Deserialize(std::vector<Ref<System>> &systems) {
 }
 
 void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<Ref<System>> &systems) {
-    HARMONY_PROFILE_FUNCTION()
+
     p_SystemSerializationAttributes.clear();
 
     for (int i = 0; i < systems.size(); i++) {
@@ -39,7 +39,7 @@ void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<Ref<Sy
 }
 
 harmony::Entity harmony::Scene::AddEntity() {
-    HARMONY_PROFILE_FUNCTION()
+
     entt::entity e = m_Registry.create();
     Entity entity = Entity();
     entity.m_Handle = e;

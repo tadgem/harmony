@@ -1,13 +1,13 @@
 #include "Rendering/Mesh.h"
-#include "Core/Profile.hpp"
+
 
 harmony::Mesh::Mesh(const std::string &path, uint32_t index) : Asset(AssetHandle{path, index, GetTypeHash<Mesh>()}) {
     m_SubmittedToGpu = false;
-    HARMONY_PROFILE_FUNCTION()
+
 }
 
 void harmony::Mesh::Release() {
-    HARMONY_PROFILE_FUNCTION()
+
     m_Positions.clear();
     m_Indices.clear();
     m_Normals.clear();
@@ -17,7 +17,7 @@ void harmony::Mesh::Release() {
 }
 
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices) {
-    HARMONY_PROFILE_FUNCTION()
+
     m_Positions = positions;
     m_Indices = indices;
     m_HasNormals = false;
@@ -30,7 +30,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,
                                    std::vector<glm::vec3> normals) {
-    HARMONY_PROFILE_FUNCTION()
+
     m_Positions = positions;
     m_Indices = indices;
     m_Normals = normals;
@@ -44,7 +44,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,
                                    std::vector<glm::vec3> normals, std::vector<glm::vec2> uvs) {
-    HARMONY_PROFILE_FUNCTION()
+
     m_Positions = positions;
     m_Indices = indices;
     m_Normals = normals;
@@ -60,7 +60,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,
                                    std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents,
                                    std::vector<glm::vec2> uvs) {
-    HARMONY_PROFILE_FUNCTION()
+
     m_Positions = positions;
     m_Indices = indices;
     m_Normals = normals;
@@ -77,7 +77,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,
                                    std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents,
                                    std::vector<glm::vec3> bitangents, std::vector<glm::vec2> uvs) {
-    HARMONY_PROFILE_FUNCTION()
+
     m_Positions = positions;
     m_Indices = indices;
     m_Normals = normals;
@@ -93,7 +93,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 }
 
 void harmony::Mesh::BuildBGFXData() {
-    HARMONY_PROFILE_FUNCTION()
+
     m_BGFXData.clear();
 
     glm::vec3 min = glm::vec3(0.0);

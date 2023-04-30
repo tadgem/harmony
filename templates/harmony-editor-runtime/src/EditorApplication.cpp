@@ -12,7 +12,6 @@
 #include "AssimpModelAssetFactory.h"
 #include "EditorView.h"
 #include "ECS/SimpleCollisionSystem.h"
-#include "Profiler.h"
 
 harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this) {
     AddAssetTypeNames();
@@ -58,9 +57,6 @@ void harmony::Editor::AddEditorPanels() {
 
     Ref<AssetManagerPanel> assetManagerPanel = CreateRef<AssetManagerPanel>(*this);
     p_Panels.emplace_back(assetManagerPanel);
-
-    Ref<ProfilerPanel> profilerPanel = CreateRef<ProfilerPanel>();
-    p_Panels.emplace_back(profilerPanel);
 
     Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, p_ScenePanel);
     inspector->AddComponentUI<TransformComponentUI>();
@@ -205,7 +201,7 @@ void harmony::Editor::OnRuntimeExit() {
 }
 
 void harmony::Editor::Run() {
-    HARMONY_PROFILE_FUNCTION()
+    
 
     Init();
     m_Renderer.Init();
@@ -241,7 +237,7 @@ void harmony::Editor::Init() {
 }
 
 void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure proc) {
-    HARMONY_PROFILE_FUNCTION()
+    
 
     Init();
     m_Renderer.Init();
@@ -277,7 +273,7 @@ void harmony::Editor::OpenScene(uint32_t index) {
 }
 
 void harmony::Editor::UpdateEditor() {
-    HARMONY_PROFILE_FUNCTION()
+    
     p_MainMenuBar.OnImGui();
     GlobalDockspace();
 

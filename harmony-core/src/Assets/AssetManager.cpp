@@ -1,5 +1,5 @@
 #include "Assets/AssetManager.h"
-#include "Core/Profile.hpp"
+
 #include "Core/Log.hpp"
 
 #if HARMONY_DEBUG

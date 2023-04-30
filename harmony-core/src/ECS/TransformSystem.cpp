@@ -1,7 +1,7 @@
 #include "ECS/TransformSystem.h"
 #include "ECS/TransformComponent.h"
 #include "Core/Memory.h"
-#include "Core/Profile.hpp"
+
 #include "Core/Time.h"
 #include "Core/Utils.h"
 #include "Core/Log.hpp"
@@ -11,7 +11,7 @@
 
 
 void ValidateAngles(glm::vec3 &input) {
-    HARMONY_PROFILE_FUNCTION()
+
     // need to perform these checks to avoid NaN values creating invalid model matrices.
     // tradeoff is that transform values are only accurate to 4 decimal places...
     // could cause jitteriness at high framerates in some cases
@@ -56,12 +56,12 @@ void harmony::TransformSystem::Init(entt::registry &registry) {
 static std::mutex s_TransformMutex;
 
 void harmony::TransformSystem::Update(entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
 
 }
 
 void harmony::TransformSystem::Render(entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
     auto transformView = registry.view<TransformComponent>();
 #define MT_IMPL
 #ifdef MT_IMPL
@@ -165,11 +165,11 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
 }
 
 void harmony::TransformSystem::Cleanup(entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
 }
 
 nlohmann::json harmony::TransformSystem::SerializeSystem(entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
     nlohmann::json j;
 
     auto view = registry.view<TransformComponent>();
@@ -182,7 +182,7 @@ nlohmann::json harmony::TransformSystem::SerializeSystem(entt::registry &registr
 }
 
 void harmony::TransformSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
-    HARMONY_PROFILE_FUNCTION()
+
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
         nlohmann::json transformJson = entry.value();
@@ -197,7 +197,7 @@ void harmony::TransformSystem::Refresh() {
 }
 
 void harmony::TransformSystem::CalculateDirectionVectors(glm::vec3 eulerDegrees, TransformComponent &transform) {
-    HARMONY_PROFILE_FUNCTION()
+
     // x = pitch, y = yaw, z = roll
     glm::vec3 eulerRadians = Utils::CalculateVec3Radians(eulerDegrees);
 

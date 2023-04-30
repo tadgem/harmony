@@ -1,6 +1,6 @@
 #include <algorithm>
 #include "Rendering/Renderer.h"
-#include "Core/Profile.hpp"
+
 #include "bgfx/platform.h"
 #include "ECS/ModelComponent.h"
 #include "ECS/MeshComponent.h"
@@ -25,7 +25,7 @@
 #endif
 
 harmony::Renderer::Renderer(AssetManager &assetManager) : p_AssetManager(assetManager) {
-    HARMONY_PROFILE_FUNCTION()
+
 #if HARMONY_DEBUG
     p_CreatePipelineWindow = false;
     p_CreateShaderProgramWindow = false;
@@ -173,7 +173,7 @@ void harmony::Renderer::Init() {
 }
 
 void harmony::Renderer::OnPreUpdate(entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
     for (int i = 0; i < m_ActiveViews.size(); i++) {
         if (m_ActiveViews[i].expired()) {
             harmony::log::warn("View {} is expired.", i);
@@ -194,7 +194,7 @@ void harmony::Renderer::OnPreUpdate(entt::registry &registry) {
 }
 
 void harmony::Renderer::OnPostUpdate(entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
     for (int i = 0; i < m_ActiveViews.size(); i++) {
         if (m_ActiveViews[i].expired()) {
             harmony::log::warn("View {} is expired.", i);
@@ -223,7 +223,7 @@ harmony::PipelineStack &harmony::Renderer::GetViewPipelineStack(const std::strin
 }
 
 void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline) {
-    HARMONY_PROFILE_FUNCTION()
+
     if (viewWeakRef.expired()) {
         harmony::log::error("Trying to add pipeline association to a view which is expired.");
         return;
@@ -242,7 +242,7 @@ void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipel
 }
 
 void harmony::Renderer::AddViewPostProcessStage(WeakRef<View> viewWeakRef, WeakRef<PostProcessStage> stage) {
-    HARMONY_PROFILE_FUNCTION()
+
     if (viewWeakRef.expired()) {
         harmony::log::error("Trying to add pipeline association to a view which is expired.");
         return;
@@ -261,7 +261,7 @@ void harmony::Renderer::AddViewPostProcessStage(WeakRef<View> viewWeakRef, WeakR
 }
 
 void harmony::Renderer::RefreshViews() {
-    HARMONY_PROFILE_FUNCTION()
+
     for (auto &[view, stack]: p_Views) {
         stack.OnViewResized(view);
     }
@@ -852,7 +852,7 @@ harmony::WeakRef<harmony::ShaderDataSource> harmony::Renderer::GetShaderDataSour
 }
 
 harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(WeakRef<Mesh> mesh) {
-    HARMONY_PROFILE_FUNCTION()
+
     auto meshRef = mesh.lock();
     BGFXMeshHandle m = BGFXMeshHandle();
     m.m_Layout = BuildVertexLayout(mesh);
@@ -913,7 +913,7 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
 }
 
 bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRef) {
-    HARMONY_PROFILE_FUNCTION()
+
     auto mesh = meshWeakRef.lock();
     bgfx::VertexLayout vl = bgfx::VertexLayout();
     vl.begin();
@@ -1247,7 +1247,7 @@ void harmony::Renderer::DeserializeActiveViews(nlohmann::json &json, AssetManage
 void
 harmony::Renderer::HandleStackPipelineAccumulation(Ref<View> view, PipelineStack &stack, Ref<ShaderProgram> textureProg,
                                                    entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
     view->OnPostUpdate(registry);
     auto texturesToBlit = stack.PostUpdate(registry, view);
 
@@ -1285,7 +1285,7 @@ harmony::Renderer::HandleStackPipelineAccumulation(Ref<View> view, PipelineStack
 
 void harmony::Renderer::HandleStackPostProcess(Ref<View> view, PipelineStack &stack, Ref<ShaderProgram> textureProg,
                                                entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
     PipelineStage::Data data;
 
     // Initialize with final result from draw pipelines.

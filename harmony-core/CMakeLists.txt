@@ -22,6 +22,7 @@ add_subdirectory(${ROOT_DIR}/submodules/glm ${CMAKE_CURRENT_BINARY_DIR}/glm)
 add_subdirectory(${ROOT_DIR}/submodules/bgfx ${CMAKE_CURRENT_BINARY_DIR}/bgfx)
 add_subdirectory(${ROOT_DIR}/submodules/sdl ${CMAKE_CURRENT_BINARY_DIR}/sdl)
 add_subdirectory(${ROOT_DIR}/submodules/spdlog ${CMAKE_CURRENT_BINARY_DIR}/spdlog)
+add_subdirectory(${ROOT_DIR}/submodules/optick ${CMAKE_CURRENT_BINARY_DIR}/optick)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 set(HARMONY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
@@ -37,6 +38,7 @@ set(HARMONY_CORE_INCLUDES
         ${ROOT_DIR}/submodules/bgfx/bx/include
         ${ROOT_DIR}/submodules/bgfx/bimg/include
         ${ROOT_DIR}/submodules/glm/glm
+        ${ROOT_DIR}/submodules/optick/src
         )
 
 
@@ -47,11 +49,11 @@ endif ()
 if (HARMONY_USE_LUAJIT)
     add_subdirectory(${ROOT_DIR}/submodules/luajit-cmake ${CMAKE_CURRENT_BINARY_DIR}/luajit)
     set(HARMONY_CORE_INCLUDES ${HARMONY_CORE_INCLUDES} ${ROOT_DIR}/submodules/luajit-cmake/src CACHE INTERNAL "Harmony Core Includes")
-    target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bgfx glm libluajit)
+    target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bgfx glm OptickCore libluajit)
 else ()
     add_subdirectory(${ROOT_DIR}/submodules/lua-cmake ${CMAKE_CURRENT_BINARY_DIR}/lua)
     set(HARMONY_CORE_INCLUDES ${HARMONY_CORE_INCLUDES} ${ROOT_DIR}/submodules/lua-cmake/upstream CACHE INTERNAL "Harmony Core Includes")
-    target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bgfx glm lua)
+    target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bgfx glm OptickCore lua)
 endif ()
 
 if (MSVC)

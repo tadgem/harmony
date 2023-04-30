@@ -5,7 +5,7 @@
 #include "ECS/SimpleCollisionSystem.h"
 #include "Core/Memory.h"
 #include "Core/Log.hpp"
-#include "Core/Profile.hpp"
+
 #include "Collision/Collision.h"
 #include "ECS/TransformComponent.h"
 #include "ECS/SimpleCollisionComponent.h"
@@ -19,12 +19,12 @@
 
 harmony::SimpleCollisionSystem::SimpleCollisionSystem(AssetManager &am) : System(GetTypeHash<SimpleCollisionSystem>()),
                                                                           p_AssetManager(am) {
-    HARMONY_PROFILE_FUNCTION()
+
     m_DebugDraw = true;
 }
 
 void harmony::SimpleCollisionSystem::Init(entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
     auto view = registry.view<TransformComponent, AABBColliderComponent>();
     for (auto [e, t, aabb]: view.each()) {
         auto mesh = p_AssetManager.GetAsset<Mesh>(aabb.m_MeshHandle);
@@ -39,21 +39,21 @@ void harmony::SimpleCollisionSystem::Init(entt::registry &registry) {
 }
 
 void harmony::SimpleCollisionSystem::Update(entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
     PreUpdate(registry);
     UpdateColliders(registry);
 }
 
 void harmony::SimpleCollisionSystem::Render(entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
 }
 
 void harmony::SimpleCollisionSystem::Cleanup(entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
 }
 
 nlohmann::json harmony::SimpleCollisionSystem::SerializeSystem(entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
     nlohmann::json j;
 
     auto view = registry.view<AABBColliderComponent>();
@@ -71,7 +71,7 @@ nlohmann::json harmony::SimpleCollisionSystem::SerializeSystem(entt::registry &r
 }
 
 void harmony::SimpleCollisionSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
-    HARMONY_PROFILE_FUNCTION()
+
     auto aabbJson = systemJson["aabb"];
     for (auto entry = aabbJson.begin(); entry != aabbJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
@@ -104,7 +104,7 @@ bool hit_sorter(harmony::Hit const &lhs, harmony::Hit const &rhs) {
 }
 
 std::vector<harmony::Hit> harmony::SimpleCollisionSystem::Raycast(Ray ray, entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
     // Ray - AABB Intersection Test
     auto hits = std::vector<Hit>();
     auto aabbView = registry.view<TransformComponent, AABBColliderComponent>();
@@ -200,7 +200,7 @@ struct EntityCollision {
 };
 
 void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
     auto aabbView = registry.view<TransformComponent, AABBColliderComponent>();
     auto sphereView = registry.view<TransformComponent, SphereColliderComponent>();
 
@@ -210,7 +210,6 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry &registry) {
     // Collect all of their previous colliders and update them too
     // ensure no dupes.
     {
-        HARMONY_PROFILE_SCOPE("SimpleCollisionSystem::UpdateColliders Find Entities To Update")
         for (auto [e, t, aabb]: aabbView.each()) {
             // TODO: support updating only if needed.
             if (t.UpdateCollision) {
@@ -246,7 +245,6 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry &registry) {
     std::vector<AABBCol> AABBs;
     std::vector<SphereCol> Spheres;
     {
-        HARMONY_PROFILE_SCOPE("SimpleCollisionSystem::UpdateColliders Create Copies of Colliders")
         for (auto [e, t, aabb]: aabbView.each()) {
             auto findIt = std::find(EntitiesToUpdate.begin(), EntitiesToUpdate.end(), e);
             AABBCol col = AABBCol{e, aabb.m_Frame};
@@ -402,7 +400,6 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry &registry) {
 
     // Draw Collision Primitives
     {
-        HARMONY_PROFILE_SCOPE("SimpleCollisionSystem::UpdateColliders Draw Collision Primitives")
         if (m_DebugDraw) {
             for (auto [e, t, aabb]: aabbView.each()) {
 #if HARMONY_DEBUG
@@ -428,13 +425,13 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry &registry) {
 }
 
 void harmony::SimpleCollisionSystem::PreUpdate(entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
 }
 
 #if HARMONY_DEBUG
 
 void harmony::SimpleCollisionSystem::DrawAABB(AABB &aabb, uint32_t color) {
-    HARMONY_PROFILE_FUNCTION()
+
     bx::Aabb bgfxAABB;
     bgfxAABB.max = bx::Vec3(aabb.Max.x, aabb.Max.y, aabb.Max.z);
     bgfxAABB.min = bx::Vec3(aabb.Min.x, aabb.Min.y, aabb.Min.z);
@@ -443,7 +440,7 @@ void harmony::SimpleCollisionSystem::DrawAABB(AABB &aabb, uint32_t color) {
 }
 
 void harmony::SimpleCollisionSystem::DrawSphere(glm::vec3 position, float radius, uint32_t color) {
-    HARMONY_PROFILE_FUNCTION()
+
     bx::Sphere bgfxSphere;
     bgfxSphere.center = bx::Vec3(position.x, position.y, position.z);
     bgfxSphere.radius = radius;

@@ -3,7 +3,6 @@
 #include <map>
 #include "ThirdParty/entt.hpp"
 #include "Core/Memory.h"
-#include "Core/Profile.hpp"
 #include "Assets/Asset.h"
 
 namespace harmony {

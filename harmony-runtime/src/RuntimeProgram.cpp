@@ -26,7 +26,7 @@ harmony::RuntimeProgram::RuntimeProgram(const std::string &name) : Program(name)
 }
 
 void harmony::RuntimeProgram::Run() {
-    HARMONY_PROFILE_FUNCTION()
+    
 
     Init();
     m_Renderer.Init();
@@ -46,7 +46,7 @@ void harmony::RuntimeProgram::Run() {
 }
 
 void harmony::RuntimeProgram::Run(const std::string &projectPath) {
-    HARMONY_PROFILE_FUNCTION()
+    
     Init();
     m_Renderer.Init();
 
@@ -216,7 +216,7 @@ void harmony::RuntimeProgram::LoadBuiltInAssets() {
 }
 
 void harmony::RuntimeProgram::ResizeApplicationWindow(int w, int h) {
-    HARMONY_PROFILE_FUNCTION()
+    
 
     Program::ResizeApplicationWindow(w, h);
     bgfx::setViewRect(p_PresentViewId, 0, 0, p_WindowWidth, p_WindowHeight);

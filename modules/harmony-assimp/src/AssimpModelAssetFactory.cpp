@@ -28,7 +28,6 @@ harmony::AssimpModelAssetFactory::AssimpModelAssetFactory(Renderer &renderer)
 }
 
 void harmony::AssimpModelAssetFactory::ProcessNode(const String &path, aiNode *node, const aiScene *scene) {
-    HARMONY_PROFILE_FUNCTION()
 
     if (node->mNumMeshes > 0) {
         for (unsigned int i = 0; i < node->mNumMeshes; i++) {
@@ -49,8 +48,6 @@ void harmony::AssimpModelAssetFactory::ProcessNode(const String &path, aiNode *n
 
 void
 harmony::AssimpModelAssetFactory::ProcessMesh(const String &path, aiMesh *mesh, aiNode *node, const aiScene *scene) {
-    HARMONY_PROFILE_FUNCTION()
-
 
     Ref<Mesh> meshAsset = CreateRef<Mesh>(path, p_MeshCounter);
     bool hasPositions = mesh->HasPositions();
@@ -152,7 +149,6 @@ void harmony::AssimpModelAssetFactory::UnloadAssetData(const String &path, entt:
 }
 
 void harmony::AssimpModelAssetFactory::LoadAssetData(const String &path, entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
 
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(path,

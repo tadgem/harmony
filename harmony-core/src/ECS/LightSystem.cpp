@@ -17,7 +17,7 @@ void harmony::LightSystem::Init(entt::registry &registry) {
 }
 
 void harmony::LightSystem::Update(entt::registry &registry) {
-    HARMONY_PROFILE_FUNCTION()
+
 #if HARMONY_DEBUG
     auto dlView = registry.view<DirectionalLight, TransformComponent>();
     auto plView = registry.view<PointLight, TransformComponent>();

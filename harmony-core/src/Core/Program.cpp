@@ -21,7 +21,6 @@
 #endif
 
 harmony::Program::Program(const std::string &name) : p_AppName(name), m_Renderer(m_AssetManager) {
-    HARMONY_PROFILE_BEGIN_SESSION("Harmony Engine", "")
     if (s_Instance != nullptr) {
         harmony::log::error("Trying to create new application instance but an application already exists!");
         return;
@@ -34,14 +33,13 @@ harmony::Program::Program(const std::string &name) : p_AppName(name), m_Renderer
 }
 
 harmony::Program::~Program() {
-    HARMONY_PROFILE_FUNCTION()
+
     ImNodes::DestroyContext();
     ImGui::DestroyContext();
-    HARMONY_PROFILE_END_SESSION()
 }
 
 void harmony::Program::Init() {
-    HARMONY_PROFILE_FUNCTION()
+
 
     harmony::log::info("Harmony Engine");
 
@@ -92,7 +90,7 @@ void harmony::Program::ChangeWorkingDirectory(const std::string &directory) {
 }
 
 void harmony::Program::Cleanup() {
-    HARMONY_PROFILE_FUNCTION()
+
 #if HARMONY_DEBUG && !__WINRT__
     ImGui_ImplSDL2_Shutdown();
     imguiDestroy();
@@ -108,7 +106,7 @@ void harmony::Program::Cleanup() {
 }
 
 void harmony::Program::InitSDL() {
-    HARMONY_PROFILE_FUNCTION()
+
     // init SDL window
     Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK;
     SDL_Init(flags);
@@ -137,7 +135,7 @@ void harmony::Program::InitSDL() {
 }
 
 void harmony::Program::InitBGFX() {
-    HARMONY_PROFILE_FUNCTION()
+
 
 #if !BX_PLATFORM_EMSCRIPTEN
     SDL_SysWMinfo wmi;
@@ -315,7 +313,7 @@ void harmony::Program::SetStyle() {
 }
 
 void harmony::Program::InitImGui() {
-    HARMONY_PROFILE_FUNCTION()
+
     ImGui::CreateContext();
     ImNodes::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
@@ -337,7 +335,7 @@ void harmony::Program::InitImGui() {
 }
 
 void harmony::Program::PreRunInit() {
-    HARMONY_PROFILE_FUNCTION()
+
 
     // TODO: Find a better place for this;
     SDL_SetWindowMouseRect(p_Window, NULL);
@@ -346,7 +344,7 @@ void harmony::Program::PreRunInit() {
 }
 
 void harmony::Program::UpdateTimeVariables() {
-    HARMONY_PROFILE_FUNCTION()
+
     // Instrumentor::Get().ClearResults();
     int64_t now = bx::getHPCounter();
     static int64_t last = now;
@@ -358,7 +356,7 @@ void harmony::Program::UpdateTimeVariables() {
 }
 
 void harmony::Program::ResizeApplicationWindow(int w, int h) {
-    HARMONY_PROFILE_FUNCTION()
+
 
     p_WindowWidth = static_cast<uint16_t>(w);
     p_WindowHeight = static_cast<uint16_t>(h);
@@ -368,7 +366,7 @@ void harmony::Program::ResizeApplicationWindow(int w, int h) {
 }
 
 void harmony::Program::HandleSDLEvent() {
-    HARMONY_PROFILE_FUNCTION()
+
     SDL_Event sdlEvent;
     p_ResizedThisFrame = false;
 
@@ -541,7 +539,7 @@ void harmony::Program::HandleInputEvent(SDL_Event &event) {
 }
 
 void harmony::Program::ImGuiPreUpdate() {
-    HARMONY_PROFILE_FUNCTION()
+
 #if HARMONY_DEBUG && !__WINRT__
     bgfx::setViewClear((bgfx::ViewId) BGFX_MAIN_WINDOW_IMGUI_VIEW_ID, BGFX_CLEAR_COLOR, 0x00000000);
     ImGui::NewFrame();
@@ -551,7 +549,7 @@ void harmony::Program::ImGuiPreUpdate() {
 }
 
 void harmony::Program::ImGuiPostUpdate() {
-    HARMONY_PROFILE_FUNCTION()
+
 
 #if HARMONY_DEBUG && !__WINRT__
     imguiEndFrame();
@@ -591,7 +589,7 @@ void harmony::Program::RunProgramLoop() {
 }
 
 void harmony::Program::Run() {
-    HARMONY_PROFILE_FUNCTION()
+
 
     PreRunInit();
     RunProgramLoop();
@@ -599,21 +597,21 @@ void harmony::Program::Run() {
 }
 
 void harmony::Program::Run(const std::string &projectPath) {
-    HARMONY_PROFILE_FUNCTION()
+
 
     PreRunInit();
     RunProgramLoop();
 }
 
 void harmony::Program::CreateProject(const std::string &name, const std::string &path) {
-    HARMONY_PROFILE_FUNCTION()
+
     CloseActiveProject();
     m_Project = CreateRef<Project>(name);
     p_LoadedProjectPath = path + "/" + name + ".harmonyproj";
 }
 
 void harmony::Program::SaveProject() {
-    HARMONY_PROFILE_FUNCTION()
+
     if (m_Project == nullptr) {
         harmony::log::warn("Program::SaveProject : cannot save project, as there is no active project.");
         return;
@@ -628,7 +626,7 @@ void harmony::Program::SaveProject() {
 }
 
 void harmony::Program::LoadProject(const std::string &path) {
-    HARMONY_PROFILE_FUNCTION()
+
     CloseActiveProject();
 
     if (!Utils::FileExists(path)) {
@@ -650,7 +648,7 @@ void harmony::Program::LoadProject(const std::string &path) {
 }
 
 void harmony::Program::CloseActiveProject() {
-    HARMONY_PROFILE_FUNCTION()
+
     if (m_Project == nullptr) {
         return;
     }
@@ -668,7 +666,7 @@ void harmony::Program::CloseActiveProject() {
 }
 
 void harmony::Program::CreateScene(const std::string &name) {
-    HARMONY_PROFILE_FUNCTION()
+
     if (m_Project == nullptr) {
         harmony::log::warn("Program::CreateScene : No project loaded, cannot create scene");
     }
@@ -734,7 +732,7 @@ void harmony::Program::OpenScene(uint32_t index) {
 }
 
 void harmony::Program::CloseActiveScene() {
-    HARMONY_PROFILE_FUNCTION()
+
     if (p_ActiveScene == nullptr) {
         return;
     }
@@ -758,14 +756,14 @@ harmony::WeakRef<harmony::Scene> harmony::Program::GetActiveScene() {
 }
 
 void harmony::Program::RunProgramComponentInit() {
-    HARMONY_PROFILE_FUNCTION()
+
     for (int i = 0; i < p_ProgramComponents.size(); i++) {
         p_ProgramComponents[i]->Init();
     }
 }
 
 void harmony::Program::RunProgramComponentUpdate() {
-    HARMONY_PROFILE_FUNCTION()
+
     for (int i = 0; i < p_ProgramComponents.size(); i++) {
         p_ProgramComponents[i]->Update();
     }
@@ -774,21 +772,21 @@ void harmony::Program::RunProgramComponentUpdate() {
 }
 
 void harmony::Program::RunProgramComponentRender() {
-    HARMONY_PROFILE_FUNCTION()
+
     for (int i = 0; i < p_ProgramComponents.size(); i++) {
         p_ProgramComponents[i]->Render();
     }
 }
 
 void harmony::Program::RunProgramComponentCleanup() {
-    HARMONY_PROFILE_FUNCTION()
+
     for (int i = 0; i < p_ProgramComponents.size(); i++) {
         p_ProgramComponents[i]->Cleanup();
     }
 }
 
 void harmony::Program::RunSystemInit() {
-    HARMONY_PROFILE_FUNCTION()
+
     if (p_ActiveScene == nullptr) {
         return;
     }
@@ -798,7 +796,7 @@ void harmony::Program::RunSystemInit() {
 }
 
 void harmony::Program::RunSystemUpdate() {
-    HARMONY_PROFILE_FUNCTION()
+
     if (p_ActiveScene == nullptr) {
         return;
     }
@@ -809,7 +807,7 @@ void harmony::Program::RunSystemUpdate() {
 }
 
 void harmony::Program::RunSystemRender() {
-    HARMONY_PROFILE_FUNCTION()
+
 
     if (p_ActiveScene == nullptr) {
         return;
@@ -821,7 +819,7 @@ void harmony::Program::RunSystemRender() {
 }
 
 void harmony::Program::RunSystemCleanup() {
-    HARMONY_PROFILE_FUNCTION()
+
 
     if (p_ActiveScene == nullptr) {
         return;
@@ -832,7 +830,7 @@ void harmony::Program::RunSystemCleanup() {
 }
 
 void harmony::Program::RunRendererPreUpdate() {
-    HARMONY_PROFILE_FUNCTION()
+
     if (p_ActiveScene == nullptr) {
         return;
     }
@@ -840,7 +838,7 @@ void harmony::Program::RunRendererPreUpdate() {
 }
 
 void harmony::Program::RunRendererPostUpdate() {
-    HARMONY_PROFILE_FUNCTION()
+
     if (p_ActiveScene == nullptr) {
         return;
     }
@@ -876,7 +874,7 @@ void harmony::Program::UpdateProjectDirectory(const std::string &path) {
 }
 
 void harmony::Program::Frame() {
-    HARMONY_PROFILE_FUNCTION()
+
     bgfx::frame();
     // Instrumentor::Get().ClearResults();
 }

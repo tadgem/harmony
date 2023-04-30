@@ -268,7 +268,6 @@ namespace harmony {
 
         template<typename T, typename ... Args>
         WeakRef<T> AddComponentUI(Args &&... args) {
-            HARMONY_PROFILE_FUNCTION()
             static_assert(std::is_base_of<ComponentUI, T>());
             Ref<T> ui = CreateRef<T>(std::forward<Args>(args)...);
             p_ComponentUIProviders.emplace_back(ui);

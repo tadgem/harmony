@@ -51,7 +51,7 @@ bgfx::TextureHandle harmony::PipelineStack::GetFinalDepth() {
 }
 
 void harmony::PipelineStack::PreUpdate(entt::registry &registry, WeakRef<View> view) {
-    HARMONY_PROFILE_FUNCTION()
+
     for (int p = 0; p < m_PipelineStack.size(); p++) {
         Ref<Pipeline> pipeline = m_PipelineStack[p].lock();
         if (!pipeline) {
@@ -96,7 +96,7 @@ void harmony::PipelineStack::PreUpdate(entt::registry &registry, WeakRef<View> v
 
 std::vector<harmony::PipelineStack::Data>
 harmony::PipelineStack::PostUpdate(entt::registry &registry, WeakRef<View> view) {
-    HARMONY_PROFILE_FUNCTION()
+
     for (int p = 0; p < m_PipelineStack.size(); p++) {
         Ref<Pipeline> pipeline = m_PipelineStack[p].lock();
         if (!pipeline) {

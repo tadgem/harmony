@@ -3,7 +3,7 @@
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
 #include "PipelineDrawStage.h"
-#include "Core/Profile.hpp"
+
 #include "ThirdParty/json.hpp"
 
 namespace harmony {
@@ -32,7 +32,7 @@ namespace harmony {
 
         template<typename T, typename ... Args>
         WeakRef<T> AddPipelineStage(Args &&... args) {
-            HARMONY_PROFILE_FUNCTION()
+
             static_assert(std::is_base_of<PipelineDrawStage, T>());
 
             Ref<T> stage = CreateRef<T>(std::forward<Args>(args)...);

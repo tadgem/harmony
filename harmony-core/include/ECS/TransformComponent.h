@@ -3,7 +3,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 #include "ThirdParty/json.hpp"
-#include "Core/Profile.hpp"
+
 #include "Rendering/ShaderUniform.h"
 
 namespace harmony {

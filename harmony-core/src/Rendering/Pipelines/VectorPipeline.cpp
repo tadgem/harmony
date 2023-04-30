@@ -11,7 +11,7 @@ harmony::VectorGraphicsStage::VectorGraphicsStage(VectorGraphics::Layer layer)
 
 harmony::PipelineDrawStage::Data
 harmony::VectorGraphicsStage::Init(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) {
-    HARMONY_PROFILE_FUNCTION()
+
 
     p_Shader = Program::Get()->m_Renderer.GetShader("NanoVG");
 

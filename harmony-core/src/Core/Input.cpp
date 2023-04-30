@@ -240,7 +240,7 @@ harmony::Key harmony::Input::GetKeyFromSDLKeycode(SDL_Keycode keyCode) {
 }
 
 void harmony::Input::PostFrame() {
-    HARMONY_PROFILE_FUNCTION()
+
     for (int button = (int) Gamepad::Button::FaceNorth; button != (int) Gamepad::Button::Start; button++) {
         Gamepad::Button padButton = static_cast<Gamepad::Button>(button);
         for (int pad = 0; pad < g_NumGamepads; pad++) {
