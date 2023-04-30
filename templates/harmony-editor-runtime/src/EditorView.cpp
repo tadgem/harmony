@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "EditorView.h"
 #include "Core/MathsUtils.h"
 #include "Core/Log.hpp"
@@ -19,6 +20,7 @@
 #define RAD 180.0f
 
 harmony::DebugCamera::DebugCamera() {
+    OPTICK_EVENT();
     Position = glm::vec3(0.0f, 10.0f, 0.0f);
     Euler = glm::vec3(0.0f, 0.0f, 0.0f);
     FOV = 80.0f;
@@ -33,10 +35,12 @@ harmony::DebugCamera::DebugCamera() {
 }
 
 void harmony::DebugCamera::UpdateProjection(glm::mat4 projection) {
+    OPTICK_EVENT();
     Projection = projection;
 }
 
 void harmony::DebugCamera::Update() {
+    OPTICK_EVENT();
 
     if (Focussed && Enabled) {
         if (Input::GetMouseButton(Mouse::Button::Right)) {
@@ -106,16 +110,19 @@ void harmony::DebugCamera::Update() {
 harmony::EditorView::EditorView(Program &program, Ref<ScenePanel> scenePanel) : View("Editor"), p_Program(program),
                                                                                 p_Renderer(program.m_Renderer),
                                                                                 p_ScenePanel(scenePanel) {
+    OPTICK_EVENT();
     p_Op = ImGuizmo::OPERATION::TRANSLATE;
 }
 
 void harmony::EditorView::OnPreUpdate(entt::registry &registry) {
+    OPTICK_EVENT();
     Camera.Update();
     m_View = Camera.View;
     m_Projection = Camera.Projection;
 }
 
 void harmony::EditorView::OnResized(uint32_t w, uint32_t h) {
+    OPTICK_EVENT();
     View::OnResized(w, h);
     glm::mat4 proj = glm::perspectiveFov(glm::radians(Camera.FOV), static_cast<float>(m_Width),
                                          static_cast<float>(m_Height), Camera.NearClipPlane, Camera.FarClipPlane);
@@ -127,6 +134,7 @@ void harmony::EditorView::OnResized(uint32_t w, uint32_t h) {
 #if HARMONY_DEBUG
 
 void harmony::EditorView::OnImGui() {
+    OPTICK_EVENT();
     if (p_Program.GetActiveScene().expired()) {
         return;
     }
@@ -228,6 +236,7 @@ void harmony::EditorView::OnImGui() {
 }
 
 void harmony::EditorView::OnImGuiOptions() {
+    OPTICK_EVENT();
     ImGui::DragFloat3("Camera Position", &Camera.Position[0], -50.0f, 50.0f);
     ImGui::DragFloat3("Camera Rotation", &Camera.Euler[0], -180.0f, 180.0f);
 

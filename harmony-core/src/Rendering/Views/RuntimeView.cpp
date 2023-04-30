@@ -30,13 +30,15 @@ void harmony::RuntimeView::OnPreUpdate(entt::registry &registry) {
 
 void harmony::RuntimeView::OnResized(uint32_t w, uint32_t h) {
     OPTICK_EVENT();
-    View::OnResized(w, h);
     if (p_Program.GetActiveScene().expired()) {
+        harmony::log::warn("RuntimeView : Cannot resize view, no active scene!");
         return;
     }
 
+    View::OnResized(w, h);
     Ref<Scene> scene = p_Program.GetActiveScene().lock();
     if (!scene->m_Registry.valid(CameraEntity)) {
+        harmony::log::warn("RuntimeView : Cannot find camera on entity {}", static_cast<uint32_t>(CameraEntity));
         return;
     }
     if (scene->m_Registry.any_of<CameraComponent>(CameraEntity)) {

@@ -17,7 +17,6 @@
 #include "ImGui/backends/imgui_impl_sdl.h"
 #include "ImGui/robotomono_regular.ttf.h"
 #include "ImGui/imnodes.h"
-
 #endif
 
 harmony::Program::Program(const std::string &name) : p_AppName(name), m_Renderer(m_AssetManager) {
@@ -125,7 +124,7 @@ void harmony::Program::InitSDL() {
     p_WindowHeight = rect.h;
 
     SDL_WindowFlags windowFlags = static_cast<SDL_WindowFlags>(SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE |
-                                                               SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_MAXIMIZED);
+                                                               SDL_WINDOW_MAXIMIZED);
     // TODO: Add window resizing.
     p_Window = SDL_CreateWindow(
             p_AppName.c_str(),
@@ -367,12 +366,17 @@ void harmony::Program::UpdateTimeVariables() {
 
 void harmony::Program::ResizeApplicationWindow(int w, int h) {
     OPTICK_EVENT();
-
+    harmony::log::info("Program : Window resized : Old size {},{} : New Size {},{}", p_WindowWidth, p_WindowHeight, w, h);
     p_WindowWidth = static_cast<uint16_t>(w);
     p_WindowHeight = static_cast<uint16_t>(h);
-    SDL_SetWindowSize(p_Window, w, h);
-    ImGui::GetIO().DisplaySize = ImVec2(p_WindowWidth, p_WindowHeight);
     bgfx::reset(p_WindowWidth, p_WindowHeight, BGFX_RESET_VSYNC);
+    ImGui::GetIO().DisplaySize = ImVec2(p_WindowWidth, p_WindowHeight);
+    SDL_SetWindowSize(p_Window, w, h);
+    SDL_DisplayMode mode;
+    SDL_GetWindowDisplayMode(p_Window, &mode);
+    mode.w = w;
+    mode.h = h;
+    SDL_SetWindowDisplayMode(p_Window, &mode);
 }
 
 void harmony::Program::HandleSDLEvent() {

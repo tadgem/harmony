@@ -15,6 +15,7 @@
 #include "ECS/SimpleCollisionSystem.h"
 
 harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this) {
+    OPTICK_EVENT();
     AddAssetTypeNames();
     AddAssetFactories();
     AddProgramComponents();
@@ -25,14 +26,17 @@ harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*th
 }
 
 void harmony::Editor::AddAssetTypeNames() {
+    OPTICK_EVENT();
     m_AssetManager.AddAssetTypeName<ShaderSourceAsset>();
 }
 
 void harmony::Editor::AddAssetFactories() {
+    OPTICK_EVENT();
     m_AssetManager.AddAssetFactory(CreateRef<ShaderSourceAssetFactory>());
 }
 
 void harmony::Editor::AddProgramComponents() {
+    OPTICK_EVENT();
     auto assetHotReload = AddProgramComponent<AssetHotReload>(*this).lock();
     auto shaderProvider = CreateRef<ShaderHotReload>(*this);
     auto luaProvider = CreateRef<LuaScriptHotReload>(*this, p_LuaSystem);
@@ -42,6 +46,7 @@ void harmony::Editor::AddProgramComponents() {
 }
 
 void harmony::Editor::AddSystems() {
+    OPTICK_EVENT();
     p_TransformSystem = GetSystem<TransformSystem>().lock();
     p_CameraSystem = GetSystem<CameraSystem>().lock();
     p_MeshSystem = GetSystem<MeshSystem>().lock();
@@ -50,9 +55,11 @@ void harmony::Editor::AddSystems() {
 }
 
 void harmony::Editor::AddPipelineStageRenderers() {
+    OPTICK_EVENT();
 }
 
 void harmony::Editor::AddEditorPanels() {
+    OPTICK_EVENT();
     p_ScenePanel = CreateRef<ScenePanel>(*this);
     p_Panels.emplace_back(p_ScenePanel);
 
@@ -74,10 +81,12 @@ void harmony::Editor::AddEditorPanels() {
 }
 
 void harmony::Editor::InitializePipelines() {
+    OPTICK_EVENT();
     RuntimeProgram::InitializePipelines();
 }
 
 void harmony::Editor::InitializeViews() {
+    OPTICK_EVENT();
     RuntimeProgram::InitializeViews();
 
     auto editorViewWr = m_Renderer.CreateView<EditorView>(*this, p_ScenePanel);
@@ -90,16 +99,19 @@ void harmony::Editor::InitializeViews() {
 }
 
 void harmony::Editor::SaveProject() {
+    OPTICK_EVENT();
     Program::SaveProject();
     SaveImGuiSettings();
 }
 
 void harmony::Editor::LoadProject(const std::string &path) {
+    OPTICK_EVENT();
     Program::LoadProject(path);
     LoadImGuiSettings();
 }
 
 int harmony::Editor::OnEditUpdate() {
+    OPTICK_EVENT();
     UpdateTimeVariables();
 
     HandleSDLEvent();
@@ -147,10 +159,12 @@ int harmony::Editor::OnEditUpdate() {
 }
 
 void harmony::Editor::OnEditExit() {
+    OPTICK_EVENT();
     SaveScene(p_LoadedScenePath);
 }
 
 int harmony::Editor::OnRuntimeUpdate() {
+    OPTICK_EVENT();
     UpdateTimeVariables();
 
     HandleSDLEvent();
@@ -187,6 +201,7 @@ int harmony::Editor::OnRuntimeUpdate() {
 }
 
 void harmony::Editor::OnRuntimeEntry() {
+    OPTICK_EVENT();
     SetStyle();
     RunSystemInit();
     p_EditorView->Camera.Focussed = false;
@@ -194,6 +209,7 @@ void harmony::Editor::OnRuntimeEntry() {
 }
 
 void harmony::Editor::OnRuntimeExit() {
+    OPTICK_EVENT();
     SetRunningStyle();
     RunSystemCleanup();
     LoadScene(p_LoadedScenePath);
@@ -202,7 +218,7 @@ void harmony::Editor::OnRuntimeExit() {
 }
 
 void harmony::Editor::Run() {
-    
+    OPTICK_EVENT();
 
     Init();
     m_Renderer.Init();
@@ -222,6 +238,7 @@ void harmony::Editor::Run() {
 }
 
 void harmony::Editor::Init() {
+    OPTICK_EVENT();
     Program::Init();
 
     m_EditorFSM.AddState(Mode::Edit, [this]() { return OnEditUpdate(); });
@@ -238,7 +255,7 @@ void harmony::Editor::Init() {
 }
 
 void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure proc) {
-    
+    OPTICK_EVENT();
 
     Init();
     m_Renderer.Init();
@@ -263,19 +280,21 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
 }
 
 void harmony::Editor::LoadScene(const std::string &path) {
+    OPTICK_EVENT();
     Program::LoadScene(path);
     p_LoadedScenePath = path;
     p_SimpleCollisionSystem->Init(p_ActiveScene->m_Registry);
 }
 
 void harmony::Editor::OpenScene(uint32_t index) {
+    OPTICK_EVENT();
     Program::OpenScene(index);
     p_LoadedScenePath = m_Project->m_SerializedScenes[index];
     p_SimpleCollisionSystem->Init(p_ActiveScene->m_Registry);
 }
 
 void harmony::Editor::UpdateEditor() {
-    
+    OPTICK_EVENT();
     p_MainMenuBar.OnImGui();
     GlobalDockspace();
 
@@ -297,6 +316,7 @@ void harmony::Editor::UpdateEditor() {
 }
 
 void harmony::Editor::SetRunningStyle() {
+    OPTICK_EVENT();
     // Photoshop style by Derydoca from ImThemes
     ImGuiStyle &style = ImGui::GetStyle();
 
@@ -371,6 +391,7 @@ void harmony::Editor::SetRunningStyle() {
 }
 
 void harmony::Editor::GlobalDockspace() {
+    OPTICK_EVENT();
     static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
@@ -406,6 +427,7 @@ void harmony::Editor::GlobalDockspace() {
 }
 
 void harmony::Editor::LoadBuiltInAssets() {
+    OPTICK_EVENT();
     AssetHandle cubeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Cube", CreateRef<Cube>(1.0f));
     Ref<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
     m_Renderer.SubmitMeshToGPU(cube);
