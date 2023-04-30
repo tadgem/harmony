@@ -1,12 +1,15 @@
+#include <optick.h>
 #include "Rendering/Mesh.h"
 
 
 harmony::Mesh::Mesh(const std::string &path, uint32_t index) : Asset(AssetHandle{path, index, GetTypeHash<Mesh>()}) {
+    OPTICK_EVENT();
     m_SubmittedToGpu = false;
 
 }
 
 void harmony::Mesh::Release() {
+    OPTICK_EVENT();
 
     m_Positions.clear();
     m_Indices.clear();
@@ -17,6 +20,7 @@ void harmony::Mesh::Release() {
 }
 
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices) {
+    OPTICK_EVENT();
 
     m_Positions = positions;
     m_Indices = indices;
@@ -30,6 +34,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,
                                    std::vector<glm::vec3> normals) {
+    OPTICK_EVENT();
 
     m_Positions = positions;
     m_Indices = indices;
@@ -44,6 +49,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,
                                    std::vector<glm::vec3> normals, std::vector<glm::vec2> uvs) {
+    OPTICK_EVENT();
 
     m_Positions = positions;
     m_Indices = indices;
@@ -60,6 +66,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,
                                    std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents,
                                    std::vector<glm::vec2> uvs) {
+    OPTICK_EVENT();
 
     m_Positions = positions;
     m_Indices = indices;
@@ -77,6 +84,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,
                                    std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents,
                                    std::vector<glm::vec3> bitangents, std::vector<glm::vec2> uvs) {
+    OPTICK_EVENT();
 
     m_Positions = positions;
     m_Indices = indices;
@@ -93,6 +101,7 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
 }
 
 void harmony::Mesh::BuildBGFXData() {
+    OPTICK_EVENT();
 
     m_BGFXData.clear();
 

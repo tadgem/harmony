@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "Core/Log.hpp"
 #include "Core/SerializationKeys.h"
 #include "Rendering/Pipelines/PipelineStack.h"
@@ -7,6 +8,7 @@
 #include "Rendering/Pipelines/PostProcessStage.h"
 
 harmony::PipelineStack::PipelineStack() {
+    OPTICK_EVENT();
     p_Initialized = false;
     m_FinalImageViewId = Renderer::GetPresentViewID();
     m_PipelineStackAccumulationView = Renderer::GetPresentViewID();
@@ -14,6 +16,7 @@ harmony::PipelineStack::PipelineStack() {
 }
 
 bgfx::TextureHandle harmony::PipelineStack::GetFinalImage() {
+    OPTICK_EVENT();
     if (!p_Initialized || m_FinalFramebufferHandle.idx >= 65534) {
         return bgfx::TextureHandle();
     }
@@ -21,6 +24,7 @@ bgfx::TextureHandle harmony::PipelineStack::GetFinalImage() {
 }
 
 bgfx::TextureHandle harmony::PipelineStack::GetFinalDepth() {
+    OPTICK_EVENT();
     if (!p_Initialized) {
         return bgfx::TextureHandle();
     }
@@ -51,6 +55,7 @@ bgfx::TextureHandle harmony::PipelineStack::GetFinalDepth() {
 }
 
 void harmony::PipelineStack::PreUpdate(entt::registry &registry, WeakRef<View> view) {
+    OPTICK_EVENT();
 
     for (int p = 0; p < m_PipelineStack.size(); p++) {
         Ref<Pipeline> pipeline = m_PipelineStack[p].lock();
@@ -96,6 +101,7 @@ void harmony::PipelineStack::PreUpdate(entt::registry &registry, WeakRef<View> v
 
 std::vector<harmony::PipelineStack::Data>
 harmony::PipelineStack::PostUpdate(entt::registry &registry, WeakRef<View> view) {
+    OPTICK_EVENT();
 
     for (int p = 0; p < m_PipelineStack.size(); p++) {
         Ref<Pipeline> pipeline = m_PipelineStack[p].lock();
@@ -146,6 +152,7 @@ harmony::PipelineStack::PostUpdate(entt::registry &registry, WeakRef<View> view)
 }
 
 void harmony::PipelineStack::AddPipeline(WeakRef<Pipeline> pipeline, WeakRef<View> view) {
+    OPTICK_EVENT();
     InitializeStack(view);
 
     Ref<Pipeline> p = pipeline.lock();
@@ -166,6 +173,7 @@ void harmony::PipelineStack::AddPipeline(WeakRef<Pipeline> pipeline, WeakRef<Vie
 }
 
 void harmony::PipelineStack::AddPipelineAtIndex(WeakRef<Pipeline> pipeline, WeakRef<View> view, int index) {
+    OPTICK_EVENT();
     AddPipeline(pipeline, view);
     if (index < 0) {
         return;
@@ -188,6 +196,7 @@ void harmony::PipelineStack::AddPipelineAtIndex(WeakRef<Pipeline> pipeline, Weak
 }
 
 void harmony::PipelineStack::RemovePipeline(WeakRef<Pipeline> pipeline, WeakRef<View> view) {
+    OPTICK_EVENT();
     Ref<Pipeline> p = pipeline.lock();
 
     if (!p) {
@@ -226,6 +235,7 @@ void harmony::PipelineStack::RemovePipeline(WeakRef<Pipeline> pipeline, WeakRef<
 }
 
 int harmony::PipelineStack::GetPipelineIndex(WeakRef<Pipeline> pipeline) {
+    OPTICK_EVENT();
     int index = -1;
 
     if (pipeline.expired()) {
@@ -245,14 +255,17 @@ int harmony::PipelineStack::GetPipelineIndex(WeakRef<Pipeline> pipeline) {
 }
 
 void harmony::PipelineStack::MovePipelineUp(const PipelineHandle &pipelineHandle) {
+    OPTICK_EVENT();
     MovePipeline(pipelineHandle, true);
 }
 
 void harmony::PipelineStack::MovePipelineDown(const PipelineHandle &pipelineHandle) {
+    OPTICK_EVENT();
     MovePipeline(pipelineHandle, false);
 }
 
 void harmony::PipelineStack::AddPostProcessStage(WeakRef<PostProcessStage> postProcessStage, WeakRef<View> view) {
+    OPTICK_EVENT();
     InitializeStack(view);
     Ref<PostProcessStage> stage = postProcessStage.lock();
 
@@ -273,6 +286,7 @@ void harmony::PipelineStack::AddPostProcessStage(WeakRef<PostProcessStage> postP
 
 void harmony::PipelineStack::AddPostProcessStageAtIndex(WeakRef<PostProcessStage> postProcessStage, WeakRef<View> view,
                                                         int index) {
+    OPTICK_EVENT();
     AddPostProcessStage(postProcessStage, view);
     if (index < 0) {
         return;
@@ -295,6 +309,7 @@ void harmony::PipelineStack::AddPostProcessStageAtIndex(WeakRef<PostProcessStage
 }
 
 void harmony::PipelineStack::RemovePostProcessStage(WeakRef<PostProcessStage> postProcessStage, WeakRef<View> view) {
+    OPTICK_EVENT();
     Ref<PostProcessStage> p = postProcessStage.lock();
 
     if (!p) {
@@ -333,6 +348,7 @@ void harmony::PipelineStack::RemovePostProcessStage(WeakRef<PostProcessStage> po
 }
 
 int harmony::PipelineStack::GetPostProcessStageIndex(WeakRef<PostProcessStage> postProcessStage) {
+    OPTICK_EVENT();
     int index = -1;
 
     if (postProcessStage.expired()) {
@@ -352,14 +368,17 @@ int harmony::PipelineStack::GetPostProcessStageIndex(WeakRef<PostProcessStage> p
 }
 
 void harmony::PipelineStack::MovePostProcessStageUp(const std::string &stageName) {
+    OPTICK_EVENT();
     MovePostProcessStage(stageName, true);
 }
 
 void harmony::PipelineStack::MovePostProcessStageDown(const std::string &stageName) {
+    OPTICK_EVENT();
     MovePostProcessStage(stageName, false);
 }
 
 nlohmann::json harmony::PipelineStack::Serialize() {
+    OPTICK_EVENT();
     nlohmann::json j;
     auto pipelinesJson = nlohmann::json::array();
     for (auto pipeline: m_PipelineStack) {
@@ -378,6 +397,7 @@ nlohmann::json harmony::PipelineStack::Serialize() {
 }
 
 void harmony::PipelineStack::InitializeStack(WeakRef<View> view) {
+    OPTICK_EVENT();
     if (!p_Initialized) {
         Ref<View> _view = view.lock();
         std::vector<bgfx::TextureHandle> attachments = std::vector<bgfx::TextureHandle>();
@@ -429,6 +449,7 @@ void harmony::PipelineStack::InitializeStack(WeakRef<View> view) {
 }
 
 void harmony::PipelineStack::InitializePipeline(Ref<Pipeline> pipeline, WeakRef<View> view) {
+    OPTICK_EVENT();
     if (p_StackViewIDs.find(pipeline->m_Handle.Name) == p_StackViewIDs.end()) {
         p_StackViewIDs.emplace(pipeline->m_Handle.Name, std::vector<bgfx::ViewId>());
 
@@ -445,6 +466,7 @@ void harmony::PipelineStack::InitializePipeline(Ref<Pipeline> pipeline, WeakRef<
 }
 
 void harmony::PipelineStack::InitializePostProcessStage(Ref<PostProcessStage> stage, WeakRef<View> view) {
+    OPTICK_EVENT();
     if (p_StackViewIDs.find(stage->m_Name) == p_StackViewIDs.end()) {
         p_StackViewIDs.emplace(stage->m_Name, std::vector<bgfx::ViewId>());
 
@@ -465,6 +487,7 @@ void harmony::PipelineStack::InitializePostProcessStage(Ref<PostProcessStage> st
 }
 
 void harmony::PipelineStack::OnViewResized(WeakRef<View> view) {
+    OPTICK_EVENT();
     if (view.expired()) {
         harmony::log::error("PipelineStack : Cannot resize, view is expired.");
         return;
@@ -519,6 +542,7 @@ void harmony::PipelineStack::OnViewResized(WeakRef<View> view) {
 }
 
 void harmony::PipelineStack::SortPipelineStack() {
+    OPTICK_EVENT();
     bool sorted = false;
     int pipelineCounter = 0;
 
@@ -587,6 +611,7 @@ void harmony::PipelineStack::SortPipelineStack() {
 }
 
 void harmony::PipelineStack::MovePipeline(const PipelineHandle &pipelineHandle, bool moveUp) {
+    OPTICK_EVENT();
     int shiftDir = moveUp ? 1 : -1;
     int indexToShift = -1;
 
@@ -608,6 +633,7 @@ void harmony::PipelineStack::MovePipeline(const PipelineHandle &pipelineHandle, 
 }
 
 void harmony::PipelineStack::MovePostProcessStage(const std::string &postProcessStageName, bool moveUp) {
+    OPTICK_EVENT();
     int shiftDir = moveUp ? 1 : -1;
     int indexToShift = -1;
 
@@ -630,6 +656,7 @@ void harmony::PipelineStack::MovePostProcessStage(const std::string &postProcess
 }
 
 bgfx::TextureHandle harmony::PipelineStack::GetPipelineInitialDepth(PipelineHandle &handle) {
+    OPTICK_EVENT();
     if (p_StackData.find(handle.Name) == p_StackData.end()) {
         harmony::log::error("Pipeline with handle {} is not in this stack.", handle.Name);
         return bgfx::TextureHandle();
@@ -657,6 +684,7 @@ bgfx::TextureHandle harmony::PipelineStack::GetPipelineInitialDepth(PipelineHand
 }
 
 bgfx::TextureHandle harmony::PipelineStack::GetPipelineFinalDepth(PipelineHandle &handle) {
+    OPTICK_EVENT();
     if (p_StackData.find(handle.Name) == p_StackData.end()) {
         harmony::log::error("Pipeline with handle {} is not in this stack.", handle.Name);
         return bgfx::TextureHandle();

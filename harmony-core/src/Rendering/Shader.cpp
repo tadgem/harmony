@@ -7,14 +7,18 @@
 #include <bx/readerwriter.h>
 #include <bx/string.h>
 #include <bx/commandline.h>
+#include <optick.h>
 
 harmony::ShaderProgram::ShaderProgram(const std::string &name) : m_Name(name), m_Handle(BGFX_INVALID_HANDLE) {
+    OPTICK_EVENT();
 }
 
 harmony::ShaderProgram::ShaderProgram() : m_Handle(BGFX_INVALID_HANDLE) {
+    OPTICK_EVENT();
 }
 
 bool harmony::ShaderProgram::AddStage(ShaderStage::Type stageType, WeakRef<ShaderStage> shader) {
+    OPTICK_EVENT();
     if (m_Stages.find(stageType) != m_Stages.end()) {
         harmony::log::warn("Shader program already contains stage : %s",
                            ShaderStage::GetShaderStageNameFromEnum(stageType));
@@ -26,6 +30,7 @@ bool harmony::ShaderProgram::AddStage(ShaderStage::Type stageType, WeakRef<Shade
 }
 
 bool harmony::ShaderProgram::RemoveStage(ShaderStage::Type stageType) {
+    OPTICK_EVENT();
     if (m_Stages.find(stageType) != m_Stages.end()) {
         m_Stages.erase(stageType);
         return true;
@@ -34,6 +39,7 @@ bool harmony::ShaderProgram::RemoveStage(ShaderStage::Type stageType) {
 }
 
 void harmony::ShaderProgram::Build() {
+    OPTICK_EVENT();
     GetUniforms();
     if (m_Stages.find(ShaderStage::Type::Compute) != m_Stages.end()) {
         m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Compute].lock()->m_ProgramHandle, true);
@@ -51,12 +57,14 @@ void harmony::ShaderProgram::Build() {
 }
 
 void harmony::ShaderProgram::Destroy() {
+    OPTICK_EVENT();
     if (bgfx::isValid(m_Handle)) {
         bgfx::destroy(m_Handle);
     }
 }
 
 void harmony::ShaderProgram::GetUniforms() {
+    OPTICK_EVENT();
     m_Uniforms.clear();
     for (auto [type, s]: m_Stages) {
         Ref<ShaderStage> stage = s.lock();
@@ -106,6 +114,7 @@ void harmony::ShaderProgram::GetUniforms() {
 
 
 void harmony::ShaderProgram::UpdateUniforms(AssetManager &am) {
+    OPTICK_EVENT();
     std::map<std::string, glm::vec4> vec4s;
     std::map<std::string, glm::mat3> mat3s;
     std::map<std::string, glm::mat4> mat4s;
@@ -180,6 +189,7 @@ void harmony::ShaderProgram::UpdateUniforms(AssetManager &am) {
 }
 
 void harmony::ShaderProgram::AddUniformOverride(ShaderUniform &uniform) {
+    OPTICK_EVENT();
     if (std::find(m_ActiveUniformOverrides.begin(), m_ActiveUniformOverrides.end(), uniform) ==
         m_ActiveUniformOverrides.end()) {
         m_ActiveUniformOverrides.emplace_back(uniform);
@@ -189,6 +199,7 @@ void harmony::ShaderProgram::AddUniformOverride(ShaderUniform &uniform) {
 }
 
 void harmony::ShaderProgram::RemoveUniformOverride(ShaderUniform &uniform) {
+    OPTICK_EVENT();
     auto it = std::find(m_ActiveUniformOverrides.begin(), m_ActiveUniformOverrides.end(), uniform);
     if (it == m_ActiveUniformOverrides.end()) {
         harmony::log::warn("ShaderProgram : Uniform {} not marked as overriden for this shader.", uniform.Name);
@@ -198,6 +209,7 @@ void harmony::ShaderProgram::RemoveUniformOverride(ShaderUniform &uniform) {
 }
 
 void harmony::ShaderProgram::SetUniforms() {
+    OPTICK_EVENT();
     if (m_Vec4Values.size() > 0) {
         for (auto &[handle, value]: m_Vec4Values) {
             if (IsOverridenUniform(handle)) {
@@ -235,6 +247,7 @@ void harmony::ShaderProgram::SetUniforms() {
 }
 
 void harmony::ShaderProgram::Clear() {
+    OPTICK_EVENT();
     m_Vec4Values.clear();
     m_Mat3Values.clear();
     m_Mat4Values.clear();
@@ -242,6 +255,7 @@ void harmony::ShaderProgram::Clear() {
 }
 
 void harmony::ShaderProgram::UpdateUniform(ShaderUniform &uniform) {
+    OPTICK_EVENT();
     bool exists = false;
     switch (uniform.Type) {
         case bgfx::UniformType::Vec4:
@@ -260,6 +274,7 @@ void harmony::ShaderProgram::UpdateUniform(ShaderUniform &uniform) {
 }
 
 bool harmony::ShaderProgram::IsOverridenUniform(const ShaderUniform &uniform) {
+    OPTICK_EVENT();
     return std::find
                    (
                            m_ActiveUniformOverrides.begin(),
@@ -271,17 +286,21 @@ bool harmony::ShaderProgram::IsOverridenUniform(const ShaderUniform &uniform) {
 harmony::ShaderStage::ShaderStage(const std::string &name, const Type &shaderType)
         : Asset(AssetHandle{name, 0, GetTypeHash<ShaderStage>()}), m_Type(shaderType),
           m_ProgramHandle(BGFX_INVALID_HANDLE), m_Name(name) {
+    OPTICK_EVENT();
     m_BinaryPath = "assets/" + GetShaderRendererDirectory() + name + ".bin";
 }
 
 harmony::ShaderStage::ShaderStage() : Asset() {
+    OPTICK_EVENT();
 }
 
 harmony::ShaderStage::~ShaderStage() {
+    OPTICK_EVENT();
 }
 
 
 void harmony::ShaderStage::LoadShaderBinary() {
+    OPTICK_EVENT();
     if (bx::open(&_reader, m_BinaryPath.c_str())) {
         uint32_t size = static_cast<uint32_t>(bx::getSize(&_reader));
         const bgfx::Memory *mem = bgfx::alloc(size + 1);
@@ -295,6 +314,7 @@ void harmony::ShaderStage::LoadShaderBinary() {
 }
 
 std::string harmony::ShaderStage::GetShaderStageNameFromEnum(Type type) {
+    OPTICK_EVENT();
     std::string typeName = "";
 
     switch (type) {
@@ -313,11 +333,13 @@ std::string harmony::ShaderStage::GetShaderStageNameFromEnum(Type type) {
 }
 
 std::string harmony::ShaderStage::GetShaderRendererDirectory() {
+    OPTICK_EVENT();
     std::string shaderPath = "shaders/bin/" + GetShaderRendererName() + "/";
     return shaderPath;
 }
 
 std::string harmony::ShaderStage::GetShaderRendererName() {
+    OPTICK_EVENT();
     std::string shaderPath = "";
 
     switch (bgfx::getRendererType()) {
@@ -361,14 +383,17 @@ harmony::BuiltInShaderStage::BuiltInShaderStage(
         const std::string &name,
         const Type &shaderType,
         bgfx::EmbeddedShader embeddedShader) : ShaderStage(name, shaderType), p_EmbeddedShader(embeddedShader) {
+    OPTICK_EVENT();
 }
 
 void harmony::BuiltInShaderStage::LoadShaderBinary() {
+    OPTICK_EVENT();
     bgfx::RendererType::Enum type = bgfx::getRendererType();
     m_ProgramHandle = bgfx::createEmbeddedShader(&p_EmbeddedShader, type, m_Name.c_str());
     bgfx::setName(m_ProgramHandle, m_Name.c_str());
 }
 
 bool harmony::ShaderUniform::Valid() {
+    OPTICK_EVENT();
     return BgfxHandle.idx != UINT16_MAX;
 }

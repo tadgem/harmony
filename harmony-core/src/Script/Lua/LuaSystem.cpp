@@ -8,6 +8,7 @@
 #include "Core/Alias.h"
 #include "Core/Program.h"
 #include <string>
+#include <optick.h>
 
 harmony::LuaSystem::LuaSystem(AssetManager &am, Ref<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaSystem>()),
                                                                                   p_LuaProgramComponent(luaPc),
@@ -15,6 +16,7 @@ harmony::LuaSystem::LuaSystem(AssetManager &am, Ref<LuaProgramComponent> luaPc) 
 }
 
 void harmony::LuaSystem::Init(entt::registry &registry) {
+    OPTICK_EVENT();
 
     auto view = registry.view<LuaComponent>();
 
@@ -38,6 +40,7 @@ void harmony::LuaSystem::Init(entt::registry &registry) {
 }
 
 void harmony::LuaSystem::Update(entt::registry &registry) {
+    OPTICK_EVENT();
 
     auto view = registry.view<LuaComponent>();
     sol::state &state = p_LuaProgramComponent->p_State;
@@ -62,10 +65,12 @@ void harmony::LuaSystem::Update(entt::registry &registry) {
 }
 
 void harmony::LuaSystem::Render(entt::registry &registry) {
+    OPTICK_EVENT();
 
 }
 
 void harmony::LuaSystem::Cleanup(entt::registry &registry) {
+    OPTICK_EVENT();
 
     auto view = registry.view<LuaComponent>();
     sol::state &state = p_LuaProgramComponent->p_State;
@@ -86,6 +91,7 @@ void harmony::LuaSystem::Cleanup(entt::registry &registry) {
 }
 
 nlohmann::json harmony::LuaSystem::SerializeSystem(entt::registry &registry) {
+    OPTICK_EVENT();
 
     nlohmann::json j;
 
@@ -99,6 +105,7 @@ nlohmann::json harmony::LuaSystem::SerializeSystem(entt::registry &registry) {
 }
 
 void harmony::LuaSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+    OPTICK_EVENT();
 
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
@@ -116,13 +123,16 @@ void harmony::LuaSystem::DeserializeSystem(entt::registry &registry, nlohmann::j
 }
 
 void harmony::LuaSystem::Refresh() {
+    OPTICK_EVENT();
 }
 
 entt::entity harmony::LuaSystem::GetCurrentEntity() {
+    OPTICK_EVENT();
     return p_CurrentEntity;
 }
 
 void harmony::LuaSystem::UpdateScripts(WeakRef<Scene> scene) {
+    OPTICK_EVENT();
     if (scene.expired()) {
         harmony::log::error("LuaSystem : Cannot update scripts, scene is expired!");
         return;
@@ -159,6 +169,7 @@ void harmony::LuaSystem::UpdateScripts(WeakRef<Scene> scene) {
 }
 
 void harmony::LuaSystem::InitEntityScript(entt::entity e, entt::registry &r, sol::state &state, LuaComponent &lua) {
+    OPTICK_EVENT();
     String chunkName = std::to_string(static_cast<uint32_t>(e));
 
     sol::environment env(state, sol::create, state.globals());

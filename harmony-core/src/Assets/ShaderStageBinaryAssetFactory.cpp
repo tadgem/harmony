@@ -1,10 +1,13 @@
+#include <optick.h>
 #include "Assets/ShaderStageBinaryAssetFactory.h"
 
 harmony::ShaderStageBinaryAssetFactory::ShaderStageBinaryAssetFactory(Renderer &renderer) : p_Renderer(renderer) {
+    OPTICK_EVENT();
     m_Capabilities.AssetTypeHashes.push_back(GetTypeHash<ShaderStage>());
 }
 
 void harmony::ShaderStageBinaryAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry) {
+    OPTICK_EVENT();
     auto view = registry.view<AssetComponent<ShaderStage>, AssetHandle>();
 
     for (auto [e, shader, handle]: view.each()) {
@@ -43,7 +46,9 @@ void harmony::ShaderStageBinaryAssetFactory::LoadAssetData(const std::string &pa
 }
 
 void harmony::ShaderStageBinaryAssetFactory::UnloadAssetData(const std::string &path, entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 void harmony::ShaderStageBinaryAssetFactory::ClearLoadedData() {
+    OPTICK_EVENT();
 }

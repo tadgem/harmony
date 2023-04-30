@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "EditorApplication.h"
 #include "Rendering/Shapes.h"
 #include "ECS/MaterialSystem.h"
@@ -255,6 +256,7 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
     SetRunningStyle();
 
     while (p_Run) {
+        ProfilerBeginFrame();
         m_EditorFSM.Process();
         proc();
     }

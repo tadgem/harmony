@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "Rendering/Pipelines/PipelineDrawStage.h"
 #include "Rendering/Pipelines/PipelineStageRenderer.h"
 #include "Rendering/Renderer.h"
@@ -12,10 +13,12 @@ harmony::PipelineDrawStage::PipelineDrawStage(const std::string &name, Type stag
                                               Attachment::Type attachments) : PipelineStage(name, stageType,
                                                                                             attachments, shader,
                                                                                             stageRenderer) {
+    OPTICK_EVENT();
 }
 
 
 void harmony::PipelineDrawStage::PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) {
+    OPTICK_EVENT();
     Ref<View> _view = view.lock();
     bgfx::setViewTransform(viewId, &_view->m_View[0], &_view->m_Projection[0]);
     bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
@@ -33,6 +36,7 @@ void harmony::PipelineDrawStage::PreUpdate(entt::registry &registry, WeakRef<Vie
 }
 
 void harmony::PipelineDrawStage::PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) {
+    OPTICK_EVENT();
     Ref<ShaderProgram> pipelineShader = p_Shader.lock();
     for (WeakRef<ShaderDataSource> &source: p_DataSources) {
         if (source.expired()) continue;

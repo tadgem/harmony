@@ -1,16 +1,17 @@
+#include <optick.h>
 #include "Core/Scene.h"
 
 
 harmony::Scene::Scene() {
-
+    OPTICK_EVENT();
 }
 
 harmony::Scene::Scene(const std::string &name) : m_Name(name) {
-
+    OPTICK_EVENT();
 }
 
 void harmony::Scene::Deserialize(std::vector<Ref<System>> &systems) {
-
+    OPTICK_EVENT();
     m_Registry.clear();
     for (int i = 0; i < p_Entities.size(); i++) {
         m_Registry.create(p_Entities[i].m_Handle);
@@ -27,7 +28,7 @@ void harmony::Scene::Deserialize(std::vector<Ref<System>> &systems) {
 }
 
 void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<Ref<System>> &systems) {
-
+    OPTICK_EVENT();
     p_SystemSerializationAttributes.clear();
 
     for (int i = 0; i < systems.size(); i++) {
@@ -39,7 +40,7 @@ void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<Ref<Sy
 }
 
 harmony::Entity harmony::Scene::AddEntity() {
-
+    OPTICK_EVENT();
     entt::entity e = m_Registry.create();
     Entity entity = Entity();
     entity.m_Handle = e;

@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "Rendering/Pipelines/PipelineStageRenderers/MeshRenderer.h"
 #include "ECS/MeshComponent.h"
 #include "ECS/MaterialComponent.h"
@@ -7,7 +8,7 @@ harmony::MeshRenderer::MeshRenderer() : PipelineStageRenderer("MeshRenderer") {
 }
 
 void harmony::MeshRenderer::Draw(entt::registry &scene, Ref<ShaderProgram> shader, bgfx::ViewId viewId) {
-
+    OPTICK_EVENT();
     auto drawables = scene.view<MeshComponent, MaterialComponent, TransformComponent>();
     bool hasDrawn = false;
     for (auto [e, mesh, material, transform]: drawables.each()) {

@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "Rendering/Pipelines/PipelineStage.h"
 #include "Rendering/Pipelines/PipelineStageRenderer.h"
 #include "Rendering/View.h"
@@ -7,10 +8,12 @@ harmony::PipelineStage::PipelineStage(const std::string &name, Type pipelineStag
                                       WeakRef<ShaderProgram> shader, WeakRef<PipelineStageRenderer> stageRenderer)
         : m_Name(name), m_StageType(pipelineStageType), m_Attachments(attachments), p_Shader(shader),
           p_Renderer(stageRenderer) {
+    OPTICK_EVENT();
 }
 
 harmony::PipelineStage::Data
 harmony::PipelineStage::Init(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) {
+    OPTICK_EVENT();
     if (view.expired()) {
         harmony::log::error("trying to run pipeline init for view that does not exist.");
     }
@@ -121,9 +124,11 @@ harmony::PipelineStage::Init(entt::registry &registry, WeakRef<View> view, bgfx:
 }
 
 void harmony::PipelineStage::Cleanup(WeakRef<View> view, bgfx::ViewId viewId) {
+    OPTICK_EVENT();
 }
 
 void harmony::PipelineStage::AddShaderDataSource(WeakRef<ShaderDataSource> source) {
+    OPTICK_EVENT();
     if (source.expired()) return;
     for (int i = 0; i < p_DataSources.size(); i++) {
         if (p_DataSources[i].expired()) {
@@ -138,6 +143,7 @@ void harmony::PipelineStage::AddShaderDataSource(WeakRef<ShaderDataSource> sourc
 }
 
 nlohmann::json harmony::PipelineStage::Serialize() {
+    OPTICK_EVENT();
     nlohmann::json j;
     j[sk_PipelineStageName] = m_Name;
     j[sk_PipelineStageAttachments] = m_Attachments;
@@ -153,12 +159,14 @@ nlohmann::json harmony::PipelineStage::Serialize() {
 }
 
 void harmony::PipelineStage::Deserialize(nlohmann::json j) {
+    OPTICK_EVENT();
     m_Name = j[sk_PipelineStageName];
     m_Attachments = j[sk_PipelineStageAttachments];
     m_StageType = j[sk_PipelineStageType];
 }
 
 void harmony::PipelineStage::Data::Clear() {
+    OPTICK_EVENT();
     bgfx::destroy(m_FramebufferHandle);
     for (auto &[type, attachment]: m_Attachments) {
         bgfx::destroy(attachment.m_Handle);
@@ -167,6 +175,7 @@ void harmony::PipelineStage::Data::Clear() {
 }
 
 harmony::Attachment::Type harmony::PipelineStage::Data::GetDepthType() {
+    OPTICK_EVENT();
     if (m_Attachments.find(Attachment::Type::Depth16F) != m_Attachments.end()) {
         return Attachment::Type::Depth16F;
     }
@@ -181,6 +190,7 @@ harmony::Attachment::Type harmony::PipelineStage::Data::GetDepthType() {
 }
 
 harmony::Attachment::Type harmony::PipelineStage::Data::GetColorType() {
+    OPTICK_EVENT();
     if (m_Attachments.find(Attachment::Type::RGBA16F) != m_Attachments.end()) {
         return Attachment::Type::RGBA16F;
     }

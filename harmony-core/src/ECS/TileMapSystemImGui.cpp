@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "ECS/TileMapSystemImGui.h"
 #include "ECS/TileMapComponent.h"
 #include "ImGui/imgui.h"
@@ -5,13 +6,15 @@
 
 harmony::TileMapSystemImGui::TileMapSystemImGui(Ref<TileMapSystem> tileMapSystem) : System(
         GetTypeHash<TileMapSystemImGui>()), p_TileMapSystem(tileMapSystem) {
-
+    OPTICK_EVENT();
 }
 
 void harmony::TileMapSystemImGui::Init(entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 void harmony::TileMapSystemImGui::Update(entt::registry &registry) {
+    OPTICK_EVENT();
     auto view = registry.view<TileMapComponent>();
     if (ImGui::Begin("TileMapSystem : ImGui")) {
         if (ImGui::Button("Add TileMap Entity")) {
@@ -92,16 +95,20 @@ void harmony::TileMapSystemImGui::Update(entt::registry &registry) {
 }
 
 void harmony::TileMapSystemImGui::Render(entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 void harmony::TileMapSystemImGui::Cleanup(entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 nlohmann::json harmony::TileMapSystemImGui::SerializeSystem(entt::registry &registry) {
+    OPTICK_EVENT();
     return nlohmann::json();
 }
 
 void harmony::TileMapSystemImGui::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+    OPTICK_EVENT();
 }
 
 void harmony::TileMapSystemImGui::Refresh() {

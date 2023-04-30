@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "Rendering/ShaderDataSources/BlinnPhongDataSource.h"
 #include "ECS/LightComponents.h"
 #include "ECS/TransformComponent.h"
@@ -5,9 +6,11 @@
 #include "Core/Utils.h"
 
 harmony::BlinnPhongDataSource::BlinnPhongDataSource() : ShaderDataSource("BlinnPhong"), p_UniformsCollected(false) {
+    OPTICK_EVENT();
 }
 
 void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry &registry, Ref<ShaderProgram> shader) {
+    OPTICK_EVENT();
 
     if (!p_UniformsCollected) {
         GetShaderUniforms(shader);
@@ -88,10 +91,11 @@ void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry &registry, Ref<Sh
 }
 
 void harmony::BlinnPhongDataSource::OnPostUpdate(entt::registry &registry, Ref<ShaderProgram> shader) {
-
+    OPTICK_EVENT();
 }
 
 void harmony::BlinnPhongDataSource::GetShaderUniforms(Ref<ShaderProgram> shader) {
+    OPTICK_EVENT();
     for (ShaderUniform &uniform: shader->m_Uniforms) {
         // Light Params
         if (uniform.Name == g_LightParamsUniform) {

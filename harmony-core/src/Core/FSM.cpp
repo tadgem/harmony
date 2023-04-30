@@ -1,8 +1,10 @@
+#include <optick.h>
 #include "Core/FSM.h"
 #include "Core/Log.hpp"
 
 harmony::FSM::State::State(int state, std::function<int()> action, std::function<void()> entry,
                            std::function<void()> exit) : m_State(state), m_Action(action) {
+    OPTICK_EVENT();
     HasEntry = false;
     HasExit = false;
 
@@ -18,13 +20,16 @@ harmony::FSM::State::State(int state, std::function<int()> action, std::function
 }
 
 harmony::FSM::FSM() : p_CurrentState(UINT16_MAX), p_RunEntry(false) {
+    OPTICK_EVENT();
 }
 
 void harmony::FSM::SetStartingState(int state) {
+    OPTICK_EVENT();
     p_CurrentState = state;
 }
 
 void harmony::FSM::Process() {
+    OPTICK_EVENT();
     int index = -1;
     for (int i = 0; i < p_States.size(); i++) {
         if (p_States[i].m_State == p_CurrentState) {
@@ -79,6 +84,7 @@ void harmony::FSM::Process() {
 }
 
 void harmony::FSM::Trigger(int trigger) {
+    OPTICK_EVENT();
     for (int i = 0; i < p_Transitions.size(); i++) {
         if (p_Transitions[i].Trigger == trigger) {
             if (p_Transitions[i].SrcState == p_CurrentState) {
@@ -90,6 +96,7 @@ void harmony::FSM::Trigger(int trigger) {
 }
 
 void harmony::FSM::AddState(int state, std::function<int()> action) {
+    OPTICK_EVENT();
     for (int i = 0; i < p_States.size(); i++) {
         if (p_States[i].m_State == state) {
             harmony::log::error("Already have a state in machine for : {}", state);
@@ -103,6 +110,7 @@ void harmony::FSM::AddState(int state, std::function<int()> action) {
 }
 
 void harmony::FSM::AddStateEntry(int state, std::function<void()> entry) {
+    OPTICK_EVENT();
     for (int i = 0; i < p_States.size(); i++) {
         if (p_States[i].m_State == state) {
             p_States[i].m_EntryProcedure = entry;
@@ -112,6 +120,7 @@ void harmony::FSM::AddStateEntry(int state, std::function<void()> entry) {
 }
 
 void harmony::FSM::AddStateExit(int state, std::function<void()> exit) {
+    OPTICK_EVENT();
     for (int i = 0; i < p_States.size(); i++) {
         if (p_States[i].m_State == state) {
             p_States[i].m_ExitProcedure = exit;
@@ -121,6 +130,7 @@ void harmony::FSM::AddStateExit(int state, std::function<void()> exit) {
 }
 
 void harmony::FSM::AddTrigger(int trigger, int srcState, int dstState) {
+    OPTICK_EVENT();
     StateTransition transition{trigger, srcState, dstState};
 
     p_Transitions.emplace_back(transition);
@@ -128,6 +138,7 @@ void harmony::FSM::AddTrigger(int trigger, int srcState, int dstState) {
 }
 
 void harmony::FSM::TransitionState(int newState) {
+    OPTICK_EVENT();
     if (p_States[p_CurrentState].HasExit) {
         p_States[p_CurrentState].m_ExitProcedure();
     }

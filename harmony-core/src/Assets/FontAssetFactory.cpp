@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "Assets/FontAssetFactory.h"
 #include "Assets/FontAsset.h"
 #include "Core/Memory.h"
@@ -5,11 +6,13 @@
 #include "Rendering/VectorGraphics.h"
 
 harmony::FontAssetFactory::FontAssetFactory() {
+    OPTICK_EVENT();
     std::string fontTypeHash = GetTypeHash<FontAsset>();
     m_Capabilities.AssetTypeHashes.push_back(fontTypeHash);
 }
 
 void harmony::FontAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry) {
+    OPTICK_EVENT();
     AssetHandle assetHandle(path, 0, GetTypeHash<FontAsset>());
     Ref<FontAsset> font = CreateRef<FontAsset>(assetHandle);
 
@@ -28,6 +31,7 @@ void harmony::FontAssetFactory::LoadAssetData(const std::string &path, entt::reg
 }
 
 void harmony::FontAssetFactory::UnloadAssetData(const std::string &path, entt::registry &registry) {
+    OPTICK_EVENT();
     auto view = registry.view<AssetComponent<FontAsset>, AssetHandle>();
     entt::entity e;
     bool found = false;
@@ -44,7 +48,7 @@ void harmony::FontAssetFactory::UnloadAssetData(const std::string &path, entt::r
 }
 
 std::string harmony::FontAssetFactory::GetFontNameFromPath(const std::string &path) {
-
+    OPTICK_EVENT();
     std::string::size_type fsPos = path.find_last_of('/');
     std::string::size_type bsPos = path.find_last_of('\\');
     std::string temp;

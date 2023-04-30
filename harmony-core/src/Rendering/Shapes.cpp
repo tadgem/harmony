@@ -1,7 +1,8 @@
+#include <optick.h>
 #include "Rendering/Shapes.h"
 
 harmony::Cube::Cube(float size) : Mesh("builtin://cube", 0) {
-
+    OPTICK_EVENT();
     float side2 = size / 2.0f;
 
     std::vector<glm::vec3> positions = {
@@ -75,7 +76,7 @@ harmony::Cube::Cube(float size) : Mesh("builtin://cube", 0) {
 }
 
 harmony::Plane::Plane(float size) : Mesh("builtin://plane", 0) {
-
+    OPTICK_EVENT();
     float side2 = size / 2.0f;
 
     std::vector<glm::vec3> positions = {
@@ -113,6 +114,7 @@ harmony::Plane::Plane(float size) : Mesh("builtin://plane", 0) {
 bgfx::VertexLayout harmony::PosColorTexCoord0Vertex::ms_layout;
 
 void harmony::ScreenSpaceQuad(float _textureWidth, float _textureHeight) {
+    OPTICK_EVENT();
     if (6 == bgfx::getAvailTransientVertexBuffer(6, PosColorTexCoord0Vertex::ms_layout)) {
         bgfx::TransientVertexBuffer vb;
         bgfx::allocTransientVertexBuffer(&vb, 6, PosColorTexCoord0Vertex::ms_layout);

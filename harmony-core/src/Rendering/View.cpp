@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "Rendering/View.h"
 #include "Core/Log.hpp"
 
@@ -18,6 +19,7 @@ harmony::View::View(const std::string &name) :
         m_FOV(harmony::g_DefaultFOV),
         m_ProjectionType(harmony::ProjectionType::Perspective),
         p_Resized(false) {
+    OPTICK_EVENT();
 #if HARMONY_DEBUG
     m_ImGuiWindowWidth = 0;
     m_ImGuiWindowHeight = 0;
@@ -25,12 +27,15 @@ harmony::View::View(const std::string &name) :
 }
 
 void harmony::View::OnPreUpdate(entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 void harmony::View::OnPostUpdate(entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 void harmony::View::OnResized(uint32_t w, uint32_t h) {
+    OPTICK_EVENT();
     p_Resized = true;
     m_Width = w;
     m_Height = h;
@@ -39,6 +44,7 @@ void harmony::View::OnResized(uint32_t w, uint32_t h) {
 #if HARMONY_DEBUG
 
 void harmony::View::OnImGui() {
+    OPTICK_EVENT();
     ImVec2 dim = ImGui::GetContentRegionAvail();
     uint32_t currentWidth = static_cast<uint32_t>(dim.x);
     uint32_t currentHeight = static_cast<uint32_t>(dim.y);
@@ -58,12 +64,13 @@ void harmony::View::OnImGui() {
 }
 
 void harmony::View::OnImGuiOptions() {
-
+    OPTICK_EVENT();
 }
 
 #endif
 
 bool harmony::View::operator==(const View &other) {
+    OPTICK_EVENT();
     return other.m_Name == m_Name &&
            other.m_Width == m_Width &&
            other.m_Height == m_Height &&
@@ -71,6 +78,7 @@ bool harmony::View::operator==(const View &other) {
 }
 
 bool harmony::View::operator!=(const View &other) {
+    OPTICK_EVENT();
     return other.m_Name != m_Name ||
            other.m_Width != m_Width ||
            other.m_Height != m_Height ||
@@ -78,10 +86,12 @@ bool harmony::View::operator!=(const View &other) {
 }
 
 bool harmony::View::operator<(const View &other) {
+    OPTICK_EVENT();
     return false;
 }
 
 nlohmann::json harmony::View::Serialize() {
+    OPTICK_EVENT();
     auto j = nlohmann::json();
     j["name"] = m_Name;
     j["width"] = m_Width;
@@ -93,6 +103,7 @@ nlohmann::json harmony::View::Serialize() {
 }
 
 void harmony::View::Deserialize(nlohmann::json &json) {
+    OPTICK_EVENT();
     m_Name = json["name"];
     m_Width = json["width"];
     m_Height = json["height"];

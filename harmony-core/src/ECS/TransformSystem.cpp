@@ -7,10 +7,12 @@
 #include "Core/Log.hpp"
 #include <mutex>
 #include <execution>
+#include <optick.h>
 #include "Core/Thread.h"
 
 
 void ValidateAngles(glm::vec3 &input) {
+    OPTICK_EVENT();
 
     // need to perform these checks to avoid NaN values creating invalid model matrices.
     // tradeoff is that transform values are only accurate to 4 decimal places...
@@ -29,9 +31,11 @@ void ValidateAngles(glm::vec3 &input) {
 }
 
 harmony::TransformSystem::TransformSystem() : System(GetTypeHash<TransformSystem>()) {
+    OPTICK_EVENT();
 }
 
 void harmony::TransformSystem::Init(entt::registry &registry) {
+    OPTICK_EVENT();
     auto transformView = registry.view<TransformComponent>();
     glm::mat4 modelMatrix = glm::mat4(1.0);
     for (auto [entity, transform]: transformView.each()) {
@@ -57,10 +61,11 @@ static std::mutex s_TransformMutex;
 
 void harmony::TransformSystem::Update(entt::registry &registry) {
 
-
+    OPTICK_EVENT();
 }
 
 void harmony::TransformSystem::Render(entt::registry &registry) {
+    OPTICK_EVENT();
 
     auto transformView = registry.view<TransformComponent>();
 #define MT_IMPL
@@ -165,11 +170,11 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
 }
 
 void harmony::TransformSystem::Cleanup(entt::registry &registry) {
-
+    OPTICK_EVENT();
 }
 
 nlohmann::json harmony::TransformSystem::SerializeSystem(entt::registry &registry) {
-
+    OPTICK_EVENT();
     nlohmann::json j;
 
     auto view = registry.view<TransformComponent>();
@@ -182,7 +187,7 @@ nlohmann::json harmony::TransformSystem::SerializeSystem(entt::registry &registr
 }
 
 void harmony::TransformSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
-
+    OPTICK_EVENT();
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
         nlohmann::json transformJson = entry.value();
@@ -194,10 +199,11 @@ void harmony::TransformSystem::DeserializeSystem(entt::registry &registry, nlohm
 }
 
 void harmony::TransformSystem::Refresh() {
+    OPTICK_EVENT();
 }
 
 void harmony::TransformSystem::CalculateDirectionVectors(glm::vec3 eulerDegrees, TransformComponent &transform) {
-
+    OPTICK_EVENT();
     // x = pitch, y = yaw, z = roll
     glm::vec3 eulerRadians = Utils::CalculateVec3Radians(eulerDegrees);
 

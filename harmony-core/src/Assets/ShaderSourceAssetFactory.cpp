@@ -1,10 +1,13 @@
+#include <optick.h>
 #include "Assets/ShaderSourceAssetFactory.h"
 
 harmony::ShaderSourceAssetFactory::ShaderSourceAssetFactory() : AssetFactory() {
+    OPTICK_EVENT();
     m_Capabilities.AssetTypeHashes.push_back(GetTypeHash<ShaderSourceAsset>());
 }
 
 void harmony::ShaderSourceAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry) {
+    OPTICK_EVENT();
     std::string shaderName = path.substr(path.find_last_of("\\") + 1);
 
     ShaderStage::Type type = ShaderStage::Type::Unknown;
@@ -44,7 +47,10 @@ void harmony::ShaderSourceAssetFactory::LoadAssetData(const std::string &path, e
 }
 
 void harmony::ShaderSourceAssetFactory::UnloadAssetData(const std::string &path, entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
-void harmony::ShaderSourceAssetFactory::ClearLoadedData() {
+void harmony::ShaderSourceAssetFactory::ClearLoadedData()
+{
+    OPTICK_EVENT();
 }

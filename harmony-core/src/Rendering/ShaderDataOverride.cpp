@@ -1,9 +1,11 @@
+#include <optick.h>
 #include "Rendering/ShaderDataOverride.h"
 
 harmony::ShaderDataOverride::ShaderDataOverride() {
 }
 
 void harmony::ShaderDataOverride::AddVec4Override(ShaderUniform uniform, glm::vec4 value) {
+    OPTICK_EVENT();
     if (m_Vec4Overrides.find(uniform) != m_Vec4Overrides.end()) {
         harmony::log::warn("ShaderDataOverride : {} : Already contains uniform : {}", m_ShaderName, uniform.Name);
         return;
@@ -13,6 +15,7 @@ void harmony::ShaderDataOverride::AddVec4Override(ShaderUniform uniform, glm::ve
 }
 
 void harmony::ShaderDataOverride::AddMat3Override(ShaderUniform uniform, glm::mat3 value) {
+    OPTICK_EVENT();
     if (m_Mat3Overrides.find(uniform) != m_Mat3Overrides.end()) {
         harmony::log::warn("ShaderDataOverride : {} : Already contains uniform : {}", m_ShaderName, uniform.Name);
         return;
@@ -22,6 +25,7 @@ void harmony::ShaderDataOverride::AddMat3Override(ShaderUniform uniform, glm::ma
 }
 
 void harmony::ShaderDataOverride::AddMat4Override(ShaderUniform uniform, glm::mat4 value) {
+    OPTICK_EVENT();
     if (m_Mat4Overrides.find(uniform) != m_Mat4Overrides.end()) {
         harmony::log::warn("ShaderDataOverride : {} : Already contains uniform : {}", m_ShaderName, uniform.Name);
         return;
@@ -31,6 +35,7 @@ void harmony::ShaderDataOverride::AddMat4Override(ShaderUniform uniform, glm::ma
 }
 
 void harmony::ShaderDataOverride::AddTextureOverride(ShaderUniform uniform, BGFXTextureHandle value) {
+    OPTICK_EVENT();
     if (m_TextureOverrides.find(uniform) != m_TextureOverrides.end()) {
         harmony::log::warn("ShaderDataOverride : {} : Already contains uniform : {}", m_ShaderName, uniform.Name);
         return;
@@ -40,6 +45,7 @@ void harmony::ShaderDataOverride::AddTextureOverride(ShaderUniform uniform, BGFX
 }
 
 void harmony::ShaderDataOverride::UpdateOverrides(WeakRef<ShaderProgram> shaderWr, AssetManager &am) {
+    OPTICK_EVENT();
     std::map<std::string, glm::vec4> vec4s;
     std::map<std::string, glm::mat3> mat3s;
     std::map<std::string, glm::mat4> mat4s;
@@ -131,6 +137,7 @@ void harmony::ShaderDataOverride::UpdateOverrides(WeakRef<ShaderProgram> shaderW
 }
 
 void harmony::ShaderDataOverride::SetOverrides() {
+    OPTICK_EVENT();
     if (m_Vec4Overrides.size() > 0) {
         for (auto &[handle, value]: m_Vec4Overrides) {
             bgfx::setUniform(handle.BgfxHandle, &value[0]);
@@ -157,6 +164,7 @@ void harmony::ShaderDataOverride::SetOverrides() {
 }
 
 void harmony::ShaderDataOverride::Clear() {
+    OPTICK_EVENT();
     m_Vec4Overrides.clear();
     m_Mat3Overrides.clear();
     m_Mat4Overrides.clear();
@@ -164,6 +172,7 @@ void harmony::ShaderDataOverride::Clear() {
 }
 
 void harmony::ShaderDataOverride::UpdateUniform(ShaderUniform &uniform) {
+    OPTICK_EVENT();
     bool exists = false;
     switch (uniform.Type) {
         case bgfx::UniformType::Vec4:

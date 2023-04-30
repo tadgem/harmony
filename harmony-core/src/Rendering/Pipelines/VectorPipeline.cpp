@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "Rendering/Pipelines/VectorPipeline.h"
 #include "Rendering/View.h"
 #include "Core/Program.h"
@@ -6,13 +7,13 @@ harmony::VectorGraphicsStage::VectorGraphicsStage(VectorGraphics::Layer layer)
         : PipelineDrawStage("VectorGraphicsStage", PipelineDrawStage::Type::PrimaryDraw, WeakRef<ShaderProgram>(),
                             WeakRef<PipelineStageRenderer>(), harmony::Attachment::Type::RGBA16F),
           m_Layer(layer) {
-
+    OPTICK_EVENT();
 }
 
 harmony::PipelineDrawStage::Data
 harmony::VectorGraphicsStage::Init(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) {
 
-
+    OPTICK_EVENT();
     p_Shader = Program::Get()->m_Renderer.GetShader("NanoVG");
 
     Ref<View> _view = view.lock();
@@ -46,6 +47,7 @@ harmony::VectorGraphicsStage::Init(entt::registry &registry, WeakRef<View> view,
 }
 
 void harmony::VectorGraphicsStage::PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) {
+    OPTICK_EVENT();
     Ref<View> _view = view.lock();
     bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
     bgfx::setViewTransform(viewId, &_view->m_View[0], &_view->m_Projection[0]);
@@ -53,6 +55,7 @@ void harmony::VectorGraphicsStage::PreUpdate(entt::registry &registry, WeakRef<V
 }
 
 void harmony::VectorGraphicsStage::PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) {
+    OPTICK_EVENT();
     Ref<View> _view = view.lock();
     nvgEndFrame(p_VectorRenderers[_view->m_Name]);
     bgfx::touch(viewId);
@@ -60,6 +63,7 @@ void harmony::VectorGraphicsStage::PostUpdate(entt::registry &registry, WeakRef<
 }
 
 void harmony::VectorGraphicsStage::Cleanup(WeakRef<View> view, bgfx::ViewId viewId) {
+    OPTICK_EVENT();
     Ref<View> _view = view.lock();
     VectorGraphics::Get()->RemoveViewLayer(m_Layer, p_VectorRenderers[_view->m_Name]);
     p_VectorRenderers.erase(_view->m_Name);
@@ -68,6 +72,7 @@ void harmony::VectorGraphicsStage::Cleanup(WeakRef<View> view, bgfx::ViewId view
 
 harmony::VectorPipeline::VectorPipeline(VectorGraphics::Layer layer) : Pipeline(
         PipelineHandle("VectorGraphicsPipeline"), Pipeline::Type::ScreenSpace) {
+    OPTICK_EVENT();
     AddPipelineStage<VectorGraphicsStage>(layer);
     m_PostProcess = false;
 }

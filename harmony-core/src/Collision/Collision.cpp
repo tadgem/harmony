@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "Collision/Collision.h"
 
 
@@ -64,6 +65,7 @@ from "Graphics Gems", Academic Press, 1990
 //     } 
 
 harmony::AABB harmony::Collision::UpdateAABB(AABB aabb, glm::mat3 matrix, glm::vec3 position) {
+    OPTICK_EVENT();
     AABB original = aabb;
 
     float a, b;
@@ -109,12 +111,14 @@ harmony::AABB harmony::Collision::UpdateAABB(AABB aabb, glm::mat3 matrix, glm::v
 }
 
 bool harmony::Collision::Intersects(AABB a, AABB b) {
+    OPTICK_EVENT();
     return (a.Min.x <= b.Max.x && a.Max.x >= b.Min.x) &&
            (a.Min.y <= b.Max.y && a.Max.y >= b.Min.y) &&
            (a.Min.z <= b.Max.z && a.Max.z >= b.Min.z);
 }
 
 bool harmony::Collision::Intersects(Sphere a, Sphere b) {
+    OPTICK_EVENT();
     glm::vec3 apos = glm::vec3(a.PosR.x, a.PosR.y, a.PosR.z);
     glm::vec3 bpos = glm::vec3(b.PosR.x, b.PosR.y, b.PosR.z);
 
@@ -127,6 +131,7 @@ bool harmony::Collision::Intersects(Sphere a, Sphere b) {
 }
 
 bool harmony::Collision::Intersects(AABB a, Sphere b) {
+    OPTICK_EVENT();
     // https://stackoverflow.com/questions/28343716/sphere-intersection-test-of-aabb
     // if (C[i] < Bmin[i]) dmin += SQR(C[i] - Bmin[i]); else
     // if (C[i] > Bmax[i]) dmin += SQR(C[i] - Bmax[i]);
@@ -150,16 +155,19 @@ bool harmony::Collision::Intersects(AABB a, Sphere b) {
 }
 
 bool harmony::Collision::Intersects(Sphere a, AABB b) {
+    OPTICK_EVENT();
     return Intersects(b, a);
 }
 
 bool harmony::Collision::Intersects(AABB a, glm::vec3 b) {
+    OPTICK_EVENT();
     return b.x >= a.Min.x && b.x <= a.Max.x &&
            b.y >= a.Min.y && b.y <= a.Max.y &&
            b.z >= a.Min.z && b.x <= a.Max.z;
 }
 
 harmony::RayHit harmony::Collision::Intersects(Ray r, AABB aabb) {
+    OPTICK_EVENT();
 
     glm::vec3 tMin = (aabb.Min - r.Origin) / r.Direction;
     glm::vec3 tMax = (aabb.Max - r.Origin) / r.Direction;
@@ -178,6 +186,7 @@ harmony::RayHit harmony::Collision::Intersects(Ray r, AABB aabb) {
 }
 
 harmony::RayHit harmony::Collision::Intersects(Ray r, Sphere s) {
+    OPTICK_EVENT();
     // TODO rewrite as vectors.
     float cx = s.PosR[0];
     float cy = s.PosR[1];

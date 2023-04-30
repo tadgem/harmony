@@ -1,14 +1,18 @@
+#include <optick.h>
 #include "ECS/MeshSystem.h"
 #include "ECS/MeshComponent.h"
 #include "Core/Memory.h"
 
 harmony::MeshSystem::MeshSystem(AssetManager &am) : System(GetTypeHash<MeshSystem>()), p_AssetManager(am) {
+    OPTICK_EVENT();
 }
 
 void harmony::MeshSystem::Init(entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 void harmony::MeshSystem::Update(entt::registry &registry) {
+    OPTICK_EVENT();
 
     auto view = registry.view<MeshComponent>();
 
@@ -18,12 +22,15 @@ void harmony::MeshSystem::Update(entt::registry &registry) {
 }
 
 void harmony::MeshSystem::Render(entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 void harmony::MeshSystem::Cleanup(entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 nlohmann::json harmony::MeshSystem::SerializeSystem(entt::registry &registry) {
+    OPTICK_EVENT();
     nlohmann::json j;
 
     auto view = registry.view<MeshComponent>();
@@ -36,6 +43,7 @@ nlohmann::json harmony::MeshSystem::SerializeSystem(entt::registry &registry) {
 }
 
 void harmony::MeshSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+    OPTICK_EVENT();
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
         MeshComponent mc = entry.value();
@@ -47,9 +55,11 @@ void harmony::MeshSystem::DeserializeSystem(entt::registry &registry, nlohmann::
 }
 
 void harmony::MeshSystem::Refresh() {
+    OPTICK_EVENT();
 }
 
 void harmony::MeshSystem::UpdateMeshComponent(MeshComponent &mc) {
+    OPTICK_EVENT();
 
     bool meshValid = mc.MeshHandle.m_Layout.m_stride > 0;
     if (!meshValid) {

@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "Core/Memory.h"
 #include "ECS/LightSystem.h"
 #include "ECS/LightComponents.h"
@@ -10,13 +11,15 @@
 #endif
 
 harmony::LightSystem::LightSystem() : System(GetTypeHash<LightSystem>()) {
-
+    OPTICK_EVENT();
 }
 
 void harmony::LightSystem::Init(entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 void harmony::LightSystem::Update(entt::registry &registry) {
+    OPTICK_EVENT();
 
 #if HARMONY_DEBUG
     auto dlView = registry.view<DirectionalLight, TransformComponent>();
@@ -43,12 +46,15 @@ void harmony::LightSystem::Update(entt::registry &registry) {
 }
 
 void harmony::LightSystem::Render(entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 void harmony::LightSystem::Cleanup(entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 nlohmann::json harmony::LightSystem::SerializeSystem(entt::registry &registry) {
+    OPTICK_EVENT();
     nlohmann::json j;
 
     auto dlView = registry.view<DirectionalLight>();
@@ -79,6 +85,7 @@ nlohmann::json harmony::LightSystem::SerializeSystem(entt::registry &registry) {
 }
 
 void harmony::LightSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+    OPTICK_EVENT();
 
     nlohmann::json dlj = systemJson["DirectionalLight"];
     nlohmann::json plj = systemJson["PointLight"];
@@ -113,4 +120,5 @@ void harmony::LightSystem::DeserializeSystem(entt::registry &registry, nlohmann:
 }
 
 void harmony::LightSystem::Refresh() {
+    OPTICK_EVENT();
 }

@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "RuntimeProgram.h"
 #include "AssimpModelAssetFactory.h"
 #include "Assets/FontAssetFactory.h"
@@ -13,6 +14,7 @@
 #include "ECS/SimpleCollisionSystem.h"
 
 harmony::RuntimeProgram::RuntimeProgram(const std::string &name) : Program(name) {
+    OPTICK_EVENT();
     AddAssetTypeNames();
     AddAssetFactories();
     AddProgramComponents();
@@ -26,7 +28,7 @@ harmony::RuntimeProgram::RuntimeProgram(const std::string &name) : Program(name)
 }
 
 void harmony::RuntimeProgram::Run() {
-    
+    OPTICK_EVENT();
 
     Init();
     m_Renderer.Init();
@@ -41,12 +43,13 @@ void harmony::RuntimeProgram::Run() {
     SDL_SetRelativeMouseMode(SDL_TRUE);
 
     while (p_Run) {
+        ProfilerBeginFrame();
         OnRuntimeUpdate();
     }
 }
 
 void harmony::RuntimeProgram::Run(const std::string &projectPath) {
-    
+    OPTICK_EVENT();
     Init();
     m_Renderer.Init();
 
@@ -70,6 +73,7 @@ void harmony::RuntimeProgram::Run(const std::string &projectPath) {
 }
 
 void harmony::RuntimeProgram::AddAssetTypeNames() {
+    OPTICK_EVENT();
     m_AssetManager.AddAssetTypeName<Mesh>();
     m_AssetManager.AddAssetTypeName<Model>();
     m_AssetManager.AddAssetTypeName<Texture>();
@@ -77,6 +81,7 @@ void harmony::RuntimeProgram::AddAssetTypeNames() {
 }
 
 void harmony::RuntimeProgram::AddAssetFactories() {
+    OPTICK_EVENT();
     m_AssetManager.AddAssetFactory(CreateRef<TextureAssetFactory>(m_Renderer));
     m_AssetManager.AddAssetFactory(CreateRef<ShaderStageBinaryAssetFactory>(m_Renderer));
     m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>(m_Renderer));
@@ -86,10 +91,12 @@ void harmony::RuntimeProgram::AddAssetFactories() {
 }
 
 void harmony::RuntimeProgram::AddProgramComponents() {
+    OPTICK_EVENT();
     p_LuaProgramComponent = AddProgramComponent<LuaProgramComponent>().lock();
 }
 
 void harmony::RuntimeProgram::AddSystems() {
+    OPTICK_EVENT();
     AddSystem<TransformSystem>();
     AddSystem<CameraSystem>();
     AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
@@ -101,10 +108,12 @@ void harmony::RuntimeProgram::AddSystems() {
 }
 
 void harmony::RuntimeProgram::AddPipelineStageRenderers() {
+    OPTICK_EVENT();
     m_Renderer.AddPipelineStageRenderer(CreateRef<MeshRenderer>());
 }
 
 void harmony::RuntimeProgram::AddPipelineDrawStages() {
+    OPTICK_EVENT();
     Ref<PipelineDrawStage> normalStage = CreateRef<PipelineDrawStage>(
             "NormalStage",
             PipelineDrawStage::Type::PrimaryDraw,
@@ -137,15 +146,18 @@ void harmony::RuntimeProgram::AddPipelineDrawStages() {
 }
 
 void harmony::RuntimeProgram::AddPostProcessStages() {
+    OPTICK_EVENT();
 
 }
 
 void harmony::RuntimeProgram::AddShaderDataSources() {
+    OPTICK_EVENT();
     Ref<BlinnPhongDataSource> blinnPhong = CreateRef<BlinnPhongDataSource>();
     m_Renderer.AddShaderDataSource(blinnPhong);
 }
 
 void harmony::RuntimeProgram::InitializePipelines() {
+    OPTICK_EVENT();
     p_ForwardPipeline = CreateRef<Pipeline>(PipelineHandle("Forward Pipeline"), Pipeline::Type::Surface);
     p_VectorGraphicsPipeline = CreateRef<VectorPipeline>(VectorGraphics::Layer::One);
     p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
@@ -160,6 +172,7 @@ void harmony::RuntimeProgram::InitializePipelines() {
 }
 
 void harmony::RuntimeProgram::InitializeViews() {
+    OPTICK_EVENT();
     auto runtimeViewWr = m_Renderer.CreateView<RuntimeView>(*this);
 
     m_Renderer.AddViewPipeline(runtimeViewWr, p_ForwardPipeline);
@@ -171,16 +184,19 @@ void harmony::RuntimeProgram::InitializeViews() {
 
 
 void harmony::RuntimeProgram::LoadScene(const std::string &path) {
+    OPTICK_EVENT();
     Program::LoadScene(path);
     RunSystemInit();
 }
 
 void harmony::RuntimeProgram::OpenScene(uint32_t index) {
+    OPTICK_EVENT();
     Program::OpenScene(index);
     RunSystemInit();
 }
 
 int harmony::RuntimeProgram::OnRuntimeUpdate() {
+    OPTICK_EVENT();
     UpdateTimeVariables();
 
     HandleSDLEvent();
@@ -207,6 +223,7 @@ int harmony::RuntimeProgram::OnRuntimeUpdate() {
 }
 
 void harmony::RuntimeProgram::LoadBuiltInAssets() {
+    OPTICK_EVENT();
     AssetHandle cubeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Cube", CreateRef<Cube>(1.0f));
     Ref<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
     m_Renderer.SubmitMeshToGPU(cube);
@@ -216,7 +233,7 @@ void harmony::RuntimeProgram::LoadBuiltInAssets() {
 }
 
 void harmony::RuntimeProgram::ResizeApplicationWindow(int w, int h) {
-    
+    OPTICK_EVENT();
 
     Program::ResizeApplicationWindow(w, h);
     bgfx::setViewRect(p_PresentViewId, 0, 0, p_WindowWidth, p_WindowHeight);
@@ -225,6 +242,7 @@ void harmony::RuntimeProgram::ResizeApplicationWindow(int w, int h) {
 }
 
 void harmony::RuntimeProgram::PresentRuntimeImage() {
+    OPTICK_EVENT();
     bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_COLOR, 0);
     bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_DEPTH, 0, 1.0f);
     auto stack = m_Renderer.GetViewPipelineStack(p_RuntimeView->m_Name);

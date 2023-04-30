@@ -2,6 +2,7 @@
 #include <mutex>
 #include "Core/Thread.h"
 #include <execution>
+#include <optick.h>
 #include "ECS/SimpleCollisionSystem.h"
 #include "Core/Memory.h"
 #include "Core/Log.hpp"
@@ -19,11 +20,13 @@
 
 harmony::SimpleCollisionSystem::SimpleCollisionSystem(AssetManager &am) : System(GetTypeHash<SimpleCollisionSystem>()),
                                                                           p_AssetManager(am) {
+    OPTICK_EVENT();
 
     m_DebugDraw = true;
 }
 
 void harmony::SimpleCollisionSystem::Init(entt::registry &registry) {
+    OPTICK_EVENT();
 
     auto view = registry.view<TransformComponent, AABBColliderComponent>();
     for (auto [e, t, aabb]: view.each()) {
@@ -39,21 +42,23 @@ void harmony::SimpleCollisionSystem::Init(entt::registry &registry) {
 }
 
 void harmony::SimpleCollisionSystem::Update(entt::registry &registry) {
+    OPTICK_EVENT();
 
     PreUpdate(registry);
     UpdateColliders(registry);
 }
 
 void harmony::SimpleCollisionSystem::Render(entt::registry &registry) {
+    OPTICK_EVENT();
 
 }
 
 void harmony::SimpleCollisionSystem::Cleanup(entt::registry &registry) {
-
+    OPTICK_EVENT();
 }
 
 nlohmann::json harmony::SimpleCollisionSystem::SerializeSystem(entt::registry &registry) {
-
+    OPTICK_EVENT();
     nlohmann::json j;
 
     auto view = registry.view<AABBColliderComponent>();
@@ -71,7 +76,7 @@ nlohmann::json harmony::SimpleCollisionSystem::SerializeSystem(entt::registry &r
 }
 
 void harmony::SimpleCollisionSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
-
+    OPTICK_EVENT();
     auto aabbJson = systemJson["aabb"];
     for (auto entry = aabbJson.begin(); entry != aabbJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
@@ -94,6 +99,7 @@ void harmony::SimpleCollisionSystem::DeserializeSystem(entt::registry &registry,
 }
 
 void harmony::SimpleCollisionSystem::Refresh() {
+    OPTICK_EVENT();
 }
 
 static std::mutex s_AABBHitsMutex;
@@ -104,7 +110,7 @@ bool hit_sorter(harmony::Hit const &lhs, harmony::Hit const &rhs) {
 }
 
 std::vector<harmony::Hit> harmony::SimpleCollisionSystem::Raycast(Ray ray, entt::registry &registry) {
-
+    OPTICK_EVENT();
     // Ray - AABB Intersection Test
     auto hits = std::vector<Hit>();
     auto aabbView = registry.view<TransformComponent, AABBColliderComponent>();
@@ -200,7 +206,7 @@ struct EntityCollision {
 };
 
 void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry &registry) {
-
+    OPTICK_EVENT();
     auto aabbView = registry.view<TransformComponent, AABBColliderComponent>();
     auto sphereView = registry.view<TransformComponent, SphereColliderComponent>();
 
@@ -425,13 +431,13 @@ void harmony::SimpleCollisionSystem::UpdateColliders(entt::registry &registry) {
 }
 
 void harmony::SimpleCollisionSystem::PreUpdate(entt::registry &registry) {
-
+    OPTICK_EVENT();
 }
 
 #if HARMONY_DEBUG
 
 void harmony::SimpleCollisionSystem::DrawAABB(AABB &aabb, uint32_t color) {
-
+    OPTICK_EVENT();
     bx::Aabb bgfxAABB;
     bgfxAABB.max = bx::Vec3(aabb.Max.x, aabb.Max.y, aabb.Max.z);
     bgfxAABB.min = bx::Vec3(aabb.Min.x, aabb.Min.y, aabb.Min.z);
@@ -440,7 +446,7 @@ void harmony::SimpleCollisionSystem::DrawAABB(AABB &aabb, uint32_t color) {
 }
 
 void harmony::SimpleCollisionSystem::DrawSphere(glm::vec3 position, float radius, uint32_t color) {
-
+    OPTICK_EVENT();
     bx::Sphere bgfxSphere;
     bgfxSphere.center = bx::Vec3(position.x, position.y, position.z);
     bgfxSphere.radius = radius;

@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "Rendering/Views/RuntimeView.h"
 #include "ECS/CameraComponent.h"
 #include "Core/Program.h"
@@ -10,10 +11,12 @@
 #endif
 
 harmony::RuntimeView::RuntimeView(Program &prog) : View("RuntimeView"), p_Program(prog), p_Renderer(prog.m_Renderer) {
+    OPTICK_EVENT();
     CameraEntity = (entt::entity) UINT32_MAX;
 }
 
 void harmony::RuntimeView::OnPreUpdate(entt::registry &registry) {
+    OPTICK_EVENT();
     if (!registry.valid(CameraEntity)) {
         return;
     }
@@ -26,6 +29,7 @@ void harmony::RuntimeView::OnPreUpdate(entt::registry &registry) {
 }
 
 void harmony::RuntimeView::OnResized(uint32_t w, uint32_t h) {
+    OPTICK_EVENT();
     View::OnResized(w, h);
     if (p_Program.GetActiveScene().expired()) {
         return;
@@ -54,6 +58,7 @@ void harmony::RuntimeView::OnResized(uint32_t w, uint32_t h) {
 #if HARMONY_DEBUG
 
 void harmony::RuntimeView::OnImGui() {
+    OPTICK_EVENT();
     if (p_Program.GetActiveScene().expired()) {
         return;
     }
@@ -81,6 +86,7 @@ void harmony::RuntimeView::OnImGui() {
 
 
 void harmony::RuntimeView::OnImGuiOptions() {
+    OPTICK_EVENT();
     if (p_Program.GetActiveScene().expired()) {
         return;
     }
@@ -102,12 +108,14 @@ void harmony::RuntimeView::OnImGuiOptions() {
 }
 
 nlohmann::json harmony::RuntimeView::Serialize() {
+    OPTICK_EVENT();
     nlohmann::json j = View::Serialize();
     j["entity"] = CameraEntity;
     return j;
 }
 
 void harmony::RuntimeView::Deserialize(nlohmann::json &json) {
+    OPTICK_EVENT();
     View::Deserialize(json);
     CameraEntity = json["entity"];
 

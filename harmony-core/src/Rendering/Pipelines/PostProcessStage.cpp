@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "Rendering/Pipelines/PostProcessStage.h"
 #include "Rendering/View.h"
 #include "Rendering/Shapes.h"
@@ -5,15 +6,17 @@
 harmony::PostProcessStage::PostProcessStage(const std::string &name, Type stageType, WeakRef<ShaderProgram> shader,
                                             WeakRef<PipelineStageRenderer> stageRenderer, Attachment::Type attachments)
         : PipelineStage(name, stageType, attachments, shader, stageRenderer) {
+    OPTICK_EVENT();
 }
 
 void harmony::PostProcessStage::PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId,
                                           PipelineStage::Data data) {
-
+    OPTICK_EVENT();
 }
 
 void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId,
                                            PipelineStage::Data data) {
+    OPTICK_EVENT();
     Ref<ShaderProgram> s = p_Shader.lock();
     for (WeakRef<ShaderDataSource> &source: p_DataSources) {
         if (source.expired()) continue;

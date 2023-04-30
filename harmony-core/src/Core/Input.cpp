@@ -1,13 +1,16 @@
+#include <optick.h>
 #include "Core/Input.h"
 #include "Core/Program.h"
 #include "Core/Log.hpp"
 
 void harmony::Input::UpdateMouseScroll(float val) {
+    OPTICK_EVENT();
     p_MouseState.PreviousFrameScroll = p_MouseState.CurrentFrameScroll;
     p_MouseState.CurrentFrameScroll = val;
 }
 
 void harmony::Input::UpdateMousePosition(glm::vec2 mousePosition) {
+    OPTICK_EVENT();
     p_MouseState.PreviousFrameMouseLocation = p_MouseState.CurrentFrameMouseLocation;
     p_MouseState.CurrentFrameMouseLocation = mousePosition;
 
@@ -20,16 +23,19 @@ void harmony::Input::UpdateMousePosition(glm::vec2 mousePosition) {
 }
 
 void harmony::Input::UpdateMouseButton(Mouse::Button button, bool active) {
+    OPTICK_EVENT();
     p_MouseState.PreviousFrameButtonState[button] = p_MouseState.CurrentFrameButtonState[button];
     p_MouseState.CurrentFrameButtonState[button] = active;
 }
 
 void harmony::Input::UpdateKey(Key key, bool active) {
+    OPTICK_EVENT();
     p_KeyboardState.PreviousFrameKeyState[key] = p_KeyboardState.CurrentFrameKeyState[key];
     p_KeyboardState.CurrentFrameKeyState[key] = active;
 }
 
 void harmony::Input::UpdateGamepadButton(int gamepadIndex, Gamepad::Button button, bool active) {
+    OPTICK_EVENT();
     if (gamepadIndex >= g_NumGamepads) {
         harmony::log::error("Supplied gamepad index : {} but the maximum index is {}", gamepadIndex, g_NumGamepads - 1);
         return;
@@ -41,6 +47,7 @@ void harmony::Input::UpdateGamepadButton(int gamepadIndex, Gamepad::Button butto
 }
 
 void harmony::Input::UpdateGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigger, float value) {
+    OPTICK_EVENT();
     if (gamepadIndex >= g_NumGamepads) {
         harmony::log::error("Supplied gamepad index : {} but the maximum index is {}", gamepadIndex, g_NumGamepads - 1);
         return;
@@ -53,6 +60,7 @@ void harmony::Input::UpdateGamepadTrigger(int gamepadIndex, Gamepad::Trigger tri
 }
 
 void harmony::Input::UpdateGamepadStick(int gamepadIndex, Gamepad::Stick stick, glm::vec2 value) {
+    OPTICK_EVENT();
     if (gamepadIndex >= g_NumGamepads) {
         harmony::log::error("Supplied gamepad index : {} but the maximum index is {}", gamepadIndex, g_NumGamepads - 1);
         return;
@@ -65,53 +73,66 @@ void harmony::Input::UpdateGamepadStick(int gamepadIndex, Gamepad::Stick stick, 
 }
 
 void harmony::Input::OnControllerConnected(uint8_t index) {
+    OPTICK_EVENT();
     return;
 }
 
 void harmony::Input::OnControllerDisconnected(uint8_t index) {
+    OPTICK_EVENT();
 }
 
 glm::vec2 harmony::Input::GetMousePosition() {
+    OPTICK_EVENT();
     return p_MouseState.CurrentFrameMouseLocation;
 }
 
 glm::vec2 harmony::Input::GetMousePositionLastFrame() {
+    OPTICK_EVENT();
     return p_MouseState.PreviousFrameMouseLocation;
 }
 
 glm::vec2 harmony::Input::GetMouseVelocity() {
+    OPTICK_EVENT();
     return p_MouseState.CurrentFrameMouseVelocity;
 }
 
 glm::vec2 harmony::Input::GetMouseVelocityLastFrame() {
+    OPTICK_EVENT();
     return p_MouseState.PreviousFrameMouseVelocity;
 }
 
 bool harmony::Input::GetMouseButton(Mouse::Button button) {
+    OPTICK_EVENT();
     return p_MouseState.CurrentFrameButtonState[button];
 }
 
 bool harmony::Input::GetMouseButtonJustPressed(Mouse::Button button) {
+    OPTICK_EVENT();
     return p_MouseState.CurrentFrameButtonState[button] && !p_MouseState.PreviousFrameButtonState[button];
 }
 
 bool harmony::Input::GetMouseButtonJustReleased(Mouse::Button button) {
+    OPTICK_EVENT();
     return !p_MouseState.CurrentFrameButtonState[button] && p_MouseState.PreviousFrameButtonState[button];
 }
 
 bool harmony::Input::GetKey(Key key) {
+    OPTICK_EVENT();
     return p_KeyboardState.CurrentFrameKeyState[key];
 }
 
 bool harmony::Input::GetKeyJustPressed(Key key) {
+    OPTICK_EVENT();
     return p_KeyboardState.CurrentFrameKeyState[key] && !p_KeyboardState.PreviousFrameKeyState[key];
 }
 
 bool harmony::Input::GetKeyJustReleased(Key key) {
+    OPTICK_EVENT();
     return !p_KeyboardState.CurrentFrameKeyState[key] && p_KeyboardState.PreviousFrameKeyState[key];
 }
 
 bool harmony::Input::GetGamepadButton(int gamepadIndex, Gamepad::Button button) {
+    OPTICK_EVENT();
     if (gamepadIndex >= g_NumGamepads) {
         harmony::log::error(
                 "Attempting to retrieve gamepad state for index greater than number supported by harmony : ",
@@ -122,6 +143,7 @@ bool harmony::Input::GetGamepadButton(int gamepadIndex, Gamepad::Button button) 
 }
 
 bool harmony::Input::GetGamepadButtonJustPressed(int gamepadIndex, Gamepad::Button button) {
+    OPTICK_EVENT();
     if (gamepadIndex >= g_NumGamepads) {
         harmony::log::error(
                 "Attempting to retrieve gamepad state for index greater than number supported by harmony : ",
@@ -133,6 +155,7 @@ bool harmony::Input::GetGamepadButtonJustPressed(int gamepadIndex, Gamepad::Butt
 }
 
 bool harmony::Input::GetGamepadButtonJustReleased(int gamepadIndex, Gamepad::Button button) {
+    OPTICK_EVENT();
     if (gamepadIndex >= g_NumGamepads) {
         harmony::log::error(
                 "Attempting to retrieve gamepad state for index greater than number supported by harmony : ",
@@ -144,6 +167,7 @@ bool harmony::Input::GetGamepadButtonJustReleased(int gamepadIndex, Gamepad::But
 }
 
 float harmony::Input::GetGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigger) {
+    OPTICK_EVENT();
     if (gamepadIndex >= g_NumGamepads) {
         harmony::log::error(
                 "Attempting to retrieve gamepad state for index greater than number supported by harmony : ",
@@ -154,6 +178,7 @@ float harmony::Input::GetGamepadTrigger(int gamepadIndex, Gamepad::Trigger trigg
 }
 
 glm::vec2 harmony::Input::GetGamepadStick(int gamepadIndex, Gamepad::Stick stick) {
+    OPTICK_EVENT();
     if (gamepadIndex >= g_NumGamepads) {
         harmony::log::error(
                 "Attempting to retrieve gamepad state for index greater than number supported by harmony : ",
@@ -164,6 +189,7 @@ glm::vec2 harmony::Input::GetGamepadStick(int gamepadIndex, Gamepad::Stick stick
 }
 
 harmony::Key harmony::Input::GetKeyFromSDLKeycode(SDL_Keycode keyCode) {
+    OPTICK_EVENT();
     if (keyCode >= SDLK_0 && keyCode <= SDLK_9) {
         int diff = keyCode - SDLK_0;
         return static_cast<Key>((int) Key::Zero + diff);
@@ -240,6 +266,7 @@ harmony::Key harmony::Input::GetKeyFromSDLKeycode(SDL_Keycode keyCode) {
 }
 
 void harmony::Input::PostFrame() {
+    OPTICK_EVENT();
 
     for (int button = (int) Gamepad::Button::FaceNorth; button != (int) Gamepad::Button::Start; button++) {
         Gamepad::Button padButton = static_cast<Gamepad::Button>(button);
@@ -304,6 +331,7 @@ void harmony::Input::PostFrame() {
 }
 
 void harmony::Input::Init() {
+    OPTICK_EVENT();
     for (int i = 0; i < g_NumGamepads; i++) {
         p_GamepadStates.emplace_back(GamepadState());
     }

@@ -1,15 +1,18 @@
+#include <optick.h>
 #include "Script/Lua/LuaScriptAssetFactory.h"
 #include "Script/Lua/LuaScriptAsset.h"
 #include "Core/Utils.h"
 #include "Core/Log.hpp"
 
 harmony::LuaScriptAssetFactory::LuaScriptAssetFactory() {
+    OPTICK_EVENT();
     auto luaScriptTypeHash = GetTypeHash<LuaScriptAsset>();
 
     m_Capabilities.AssetTypeHashes.push_back(luaScriptTypeHash);
 }
 
 void harmony::LuaScriptAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry) {
+    OPTICK_EVENT();
     std::string source = Utils::LoadStringFromPath(path);
 
     if (source.empty()) {
@@ -27,6 +30,7 @@ void harmony::LuaScriptAssetFactory::LoadAssetData(const std::string &path, entt
 }
 
 void harmony::LuaScriptAssetFactory::UnloadAssetData(const std::string &path, entt::registry &registry) {
+    OPTICK_EVENT();
     std::vector<entt::entity> entitiesToDestroy;
 
     auto scriptView = registry.view<AssetComponent<LuaScriptAsset>, AssetHandle>();
@@ -42,5 +46,6 @@ void harmony::LuaScriptAssetFactory::UnloadAssetData(const std::string &path, en
 }
 
 void harmony::LuaScriptAssetFactory::ClearLoadedData() {
+    OPTICK_EVENT();
 
 }

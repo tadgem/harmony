@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "Assets/AssetManager.h"
 
 #include "Core/Log.hpp"
@@ -12,20 +13,23 @@
 #endif
 
 harmony::AssetManager::AssetManager() {
+    OPTICK_EVENT();
 }
 
 void harmony::AssetManager::UnloadAllAssets() {
+    OPTICK_EVENT();
 }
 
 #if HARMONY_DEBUG
 
 void harmony::AssetManager::OnImGui() {
-
+    OPTICK_EVENT();
 }
 
 #endif
 
 bool harmony::AssetManager::IsPathLoaded(const std::string path) {
+    OPTICK_EVENT();
     auto it = std::find(p_LoadedPaths.begin(), p_LoadedPaths.end(), path);
     if (it != p_LoadedPaths.end()) {
         return true;
@@ -35,6 +39,7 @@ bool harmony::AssetManager::IsPathLoaded(const std::string path) {
 }
 
 std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::string &path, std::string typeHash) {
+    OPTICK_EVENT();
     std::string cleanPath = path;
     auto project = Program::Get()->m_Project;
     if (project) {
@@ -61,6 +66,7 @@ std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::st
 }
 
 void harmony::AssetManager::UnloadAsset(AssetHandle &handle, std::string typeHash) {
+    OPTICK_EVENT();
     auto builtin = handle.Path.find("builtin");
     if (builtin >= 0 && builtin < handle.Path.size()) {
         return;
@@ -71,6 +77,7 @@ void harmony::AssetManager::UnloadAsset(AssetHandle &handle, std::string typeHas
 }
 
 std::vector<harmony::AssetHandle> harmony::AssetManager::GetAssetsAtPath(const std::string &path) {
+    OPTICK_EVENT();
     auto handles = std::vector<AssetHandle>();
     auto view = p_AssetRegistry.view<AssetHandle>();
 
@@ -84,11 +91,13 @@ std::vector<harmony::AssetHandle> harmony::AssetManager::GetAssetsAtPath(const s
 }
 
 void harmony::AssetManager::Clear() {
+    OPTICK_EVENT();
     p_LoadedPaths.clear();
     p_AssetRegistry.clear();
 }
 
 nlohmann::json harmony::AssetManager::Serialize() {
+    OPTICK_EVENT();
     nlohmann::json json;
     auto view = p_AssetRegistry.view<AssetHandle>();
 
@@ -103,6 +112,7 @@ nlohmann::json harmony::AssetManager::Serialize() {
 }
 
 void harmony::AssetManager::Deserialize(nlohmann::json &json) {
+    OPTICK_EVENT();
     for (auto j: json["assets"]) {
         AssetHandle handle = j;
 
@@ -115,6 +125,7 @@ void harmony::AssetManager::Deserialize(nlohmann::json &json) {
 }
 
 harmony::Ref<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory(std::string typeHash) {
+    OPTICK_EVENT();
     Ref<AssetFactory> factory = nullptr;
     for (int i = 0; i < p_AssetFactories.size(); i++) {
         if (!p_AssetFactories[i]->m_Capabilities.Contains(typeHash)) {
@@ -137,6 +148,7 @@ harmony::Ref<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory(std::
 }
 
 bool harmony::AssetManager::AddAssetFactory(Ref<AssetFactory> assetFactory) {
+    OPTICK_EVENT();
     if (std::find(p_AssetFactories.begin(), p_AssetFactories.end(), assetFactory) == p_AssetFactories.end()) {
         p_AssetFactories.emplace_back(assetFactory);
         return true;

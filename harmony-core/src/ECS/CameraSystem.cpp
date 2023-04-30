@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "ECS/CameraSystem.h"
 #include "ECS/CameraComponent.h"
 #include "ECS/TransformComponent.h"
@@ -12,13 +13,15 @@
 #endif
 
 harmony::CameraSystem::CameraSystem() : System(GetTypeHash<CameraSystem>()) {
+    OPTICK_EVENT();
 }
 
 void harmony::CameraSystem::Init(entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 void harmony::CameraSystem::Update(entt::registry &registry) {
-
+    OPTICK_EVENT();
     auto view = registry.view<TransformComponent, CameraComponent>();
 
     for (auto [entity, t, c]: view.each()) {
@@ -44,12 +47,15 @@ void harmony::CameraSystem::Update(entt::registry &registry) {
 }
 
 void harmony::CameraSystem::Render(entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 void harmony::CameraSystem::Cleanup(entt::registry &registry) {
+    OPTICK_EVENT();
 }
 
 nlohmann::json harmony::CameraSystem::SerializeSystem(entt::registry &registry) {
+    OPTICK_EVENT();
     nlohmann::json j;
 
     auto view = registry.view<CameraComponent>();
@@ -62,6 +68,7 @@ nlohmann::json harmony::CameraSystem::SerializeSystem(entt::registry &registry) 
 }
 
 void harmony::CameraSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+    OPTICK_EVENT();
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
         nlohmann::json transformJson = entry.value();
@@ -75,4 +82,5 @@ void harmony::CameraSystem::DeserializeSystem(entt::registry &registry, nlohmann
 }
 
 void harmony::CameraSystem::Refresh() {
+    OPTICK_EVENT();
 }

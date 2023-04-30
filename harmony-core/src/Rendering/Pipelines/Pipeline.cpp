@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <optick.h>
 #include "Rendering/Pipelines/Pipeline.h"
 #include "Rendering/Pipelines/PipelineDrawStage.h"
 #include "Rendering/View.h"
@@ -9,10 +10,12 @@ harmony::Pipeline::Pipeline(const PipelineHandle &handle, Pipeline::Type pipelin
                                                                                          m_Name(handle.Name),
                                                                                          m_Type(pipelineType),
                                                                                          m_PostProcess(true) {
+    OPTICK_EVENT();
 }
 
 std::vector<harmony::PipelineDrawStage::Data>
 harmony::Pipeline::Init(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds) {
+    OPTICK_EVENT();
 
     std::vector<PipelineDrawStage::Data> datas = std::vector<PipelineDrawStage::Data>();
     if (p_Stages.size() == 0) {
@@ -26,6 +29,7 @@ harmony::Pipeline::Init(entt::registry &registry, WeakRef<View> view, std::vecto
 }
 
 void harmony::Pipeline::AddPipelineStage(Ref<PipelineDrawStage> stage) {
+    OPTICK_EVENT();
 
     if (std::find(p_Stages.begin(), p_Stages.end(), stage) != p_Stages.end()) {
         harmony::log::warn("Pipeline : {} : already contains stage : {}", m_Name, stage->m_Name);
@@ -37,6 +41,7 @@ void harmony::Pipeline::AddPipelineStage(Ref<PipelineDrawStage> stage) {
 
 void harmony::Pipeline::PreUpdate(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds,
                                   std::vector<PipelineDrawStage::Data> data) {
+    OPTICK_EVENT();
 
     Ref<View> _v = view.lock();
     if (p_Stages.size() == 0) {
@@ -85,6 +90,7 @@ void harmony::Pipeline::PreUpdate(entt::registry &registry, WeakRef<View> view, 
 
 void harmony::Pipeline::PostUpdate(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds,
                                    std::vector<PipelineDrawStage::Data> data) {
+    OPTICK_EVENT();
 
     if (p_Stages.size() == 0) {
         return;
@@ -95,6 +101,7 @@ void harmony::Pipeline::PostUpdate(entt::registry &registry, WeakRef<View> view,
 }
 
 void harmony::Pipeline::Cleanup(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds) {
+    OPTICK_EVENT();
 
     if (p_Stages.size() == 0) {
         return;
@@ -106,11 +113,12 @@ void harmony::Pipeline::Cleanup(entt::registry &registry, WeakRef<View> view, st
 
 
 uint32_t harmony::Pipeline::NumPipelineStages() {
+    OPTICK_EVENT();
     return p_Stages.size();
 }
 
 bool harmony::Pipeline::HasDepth() {
-
+    OPTICK_EVENT();
     for (Ref<PipelineDrawStage> pipeline: p_Stages) {
         if (pipeline->m_HasDepthAttachment) {
             return true;
@@ -120,6 +128,7 @@ bool harmony::Pipeline::HasDepth() {
 }
 
 nlohmann::json harmony::Pipeline::Serialize() {
+    OPTICK_EVENT();
     auto json = nlohmann::json();
 
     json["pipeline"] = nlohmann::json();
@@ -135,6 +144,7 @@ nlohmann::json harmony::Pipeline::Serialize() {
 }
 
 void harmony::Pipeline::Deserialize(nlohmann::json &json) {
+    OPTICK_EVENT();
     m_Name = json["pipeline"]["name"];
     m_Handle = json["pipeline"]["handle"];
     m_Type = json["pipeline"]["type"];

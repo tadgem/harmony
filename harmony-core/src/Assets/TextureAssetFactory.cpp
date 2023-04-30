@@ -1,3 +1,4 @@
+#include <optick.h>
 #include "Assets/TextureAssetFactory.h"
 #include "ThirdParty/stb_image.h"
 #include "Rendering/Texture.h"
@@ -5,12 +6,14 @@
 #include "Core/Log.hpp"
 
 harmony::TextureAssetFactory::TextureAssetFactory(Renderer &renderer) : p_Renderer(renderer) {
+    OPTICK_EVENT();
     std::string textureTypeHash = GetTypeHash<Texture>();
 
     m_Capabilities.AssetTypeHashes.push_back(textureTypeHash);
 }
 
 void harmony::TextureAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry) {
+    OPTICK_EVENT();
     auto data = Utils::LoadBinaryFromPath(path);
     uint32_t dataSize = static_cast<uint32_t>(data.size());
 
@@ -39,6 +42,7 @@ void harmony::TextureAssetFactory::LoadAssetData(const std::string &path, entt::
 }
 
 void harmony::TextureAssetFactory::UnloadAssetData(const std::string &path, entt::registry &registry) {
+    OPTICK_EVENT();
     auto view = registry.view<AssetComponent<Texture>, AssetHandle>();
     entt::entity e;
     bool found = false;
