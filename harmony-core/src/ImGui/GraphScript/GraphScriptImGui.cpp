@@ -44,12 +44,21 @@ void harmony::GraphScriptImGuiEditor::Render() {
 
     if(p_ShowNodeSelector) {
         ImGui::SetNextWindowPos(p_MousePosition);
-        if (ImGui::Begin("Nodes"))
-        {
-            ImGui::MenuItem("Blep");
-            ImGui::MenuItem("Blop");
+        if (ImGui::Begin("Nodes")) {
+            for (auto availableNode: m_GraphScriptVM->m_AvailableNodes)
+            {
+                if(ImGui::MenuItem(availableNode->Name.c_str()))
+                {
+                    harmony::log::info("GraphScriptImGuiEditor : Adding node {} to graph {}", availableNode->Name, m_Graphs[p_SelectedGraphIndex]->m_Name);
+                    p_ShowNodeSelector = false;
+                }
+            }
         }
         ImGui::End();
     }
 
+}
+
+harmony::GraphScriptImGuiEditor::GraphScriptImGuiEditor(harmony::GraphScriptVM *vm) : m_GraphScriptVM(vm)
+{
 }

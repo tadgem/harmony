@@ -14,7 +14,7 @@
 #include "EditorView.h"
 #include "ECS/SimpleCollisionSystem.h"
 
-harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this) {
+harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this), m_GraphScriptEditor(new GraphScriptVM()) {
     OPTICK_EVENT();
     AddAssetTypeNames();
     AddAssetFactories();

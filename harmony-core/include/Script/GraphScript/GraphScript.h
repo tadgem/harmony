@@ -139,12 +139,13 @@ namespace harmony {
 
             void CallEntryPoint(EntryPointName &name);
 
-            Vector<Unique<IGraphNode>> m_GraphNodes;
-            Vector<Unique<IVariable>> m_Variables;
-            Vector<Unique<IConnection>> m_Connections;
-            Vector<Unique<EntryPointNode>> m_EntryPoints;
+            String                          m_Name;
+            Vector<Unique<IGraphNode>>      m_GraphNodes;
+            Vector<Unique<IVariable>>       m_Variables;
+            Vector<Unique<IConnection>>     m_Connections;
+            Vector<Unique<EntryPointNode>>  m_EntryPoints;
         protected:
-            Map<EntryPointName, Ops> p_Entries;
+            Map<EntryPointName, Ops>        p_Entries;
         };
 
     }

@@ -11,6 +11,10 @@ namespace harmony {
 
     class LuaSystem;
 
+    class GraphScriptProgramComponent;
+
+    class GraphScriptSystem;
+
     class SimpleCollisionSystem;
 
     class JoltPhysicsSystem;
@@ -60,8 +64,10 @@ namespace harmony {
         Ref<Pipeline> p_DebugPipeline;
         Ref<RuntimeView> p_RuntimeView;
 
-        Ref<LuaProgramComponent> p_LuaProgramComponent;
-        Ref<LuaSystem> p_LuaSystem;
+        Ref<LuaProgramComponent>            p_LuaProgramComponent;
+        Ref<LuaSystem>                      p_LuaSystem;
+        Ref<GraphScriptProgramComponent>    p_GraphScriptComponent;
+        Ref<GraphScriptSystem>              p_GraphScriptSystem;
         Ref<SimpleCollisionSystem> p_SimpleCollisionSystem;
         Ref<JoltPhysicsSystem> p_JoltPhysicsSystem;
 

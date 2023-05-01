@@ -12,6 +12,8 @@
 #include "Script/Lua/LuaScriptAssetFactory.h"
 #include "JoltPhysicsSystem.h"
 #include "ECS/SimpleCollisionSystem.h"
+#include "Script/GraphScript/GraphScriptProgramComponent.h"
+#include "Script/GraphScript/GraphScriptSystem.h"
 
 harmony::RuntimeProgram::RuntimeProgram(const std::string &name) : Program(name) {
     OPTICK_EVENT();
@@ -93,6 +95,7 @@ void harmony::RuntimeProgram::AddAssetFactories() {
 void harmony::RuntimeProgram::AddProgramComponents() {
     OPTICK_EVENT();
     p_LuaProgramComponent = AddProgramComponent<LuaProgramComponent>().lock();
+    p_GraphScriptComponent = AddProgramComponent<GraphScriptProgramComponent>().lock();
 }
 
 void harmony::RuntimeProgram::AddSystems() {
