@@ -94,7 +94,7 @@ void harmony::RuntimeProgram::AddAssetFactories() {
 
 void harmony::RuntimeProgram::AddProgramComponents() {
     OPTICK_EVENT();
-    p_LuaProgramComponent = AddProgramComponent<LuaProgramComponent>().lock();
+    p_LuaProgramComponent  = AddProgramComponent<LuaProgramComponent>().lock();
     p_GraphScriptComponent = AddProgramComponent<GraphScriptProgramComponent>().lock();
 }
 
@@ -106,8 +106,10 @@ void harmony::RuntimeProgram::AddSystems() {
     AddSystem<MeshSystem>(m_AssetManager);
     AddSystem<LightSystem>();
     p_LuaSystem = AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent).lock();
+    p_GraphScriptSystem = AddSystem<GraphScriptSystem>(p_GraphScriptComponent).lock();
     p_SimpleCollisionSystem = AddSystem<SimpleCollisionSystem>(m_AssetManager).lock();
     p_JoltPhysicsSystem = AddSystem<JoltPhysicsSystem>().lock();
+
 }
 
 void harmony::RuntimeProgram::AddPipelineStageRenderers() {

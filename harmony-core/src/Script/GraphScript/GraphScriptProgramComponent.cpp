@@ -32,3 +32,8 @@ nlohmann::json harmony::GraphScriptProgramComponent::ToJson() {
 void harmony::GraphScriptProgramComponent::FromJson(const nlohmann::json &json) {
 
 }
+
+harmony::GraphScriptProgramComponent::~GraphScriptProgramComponent()
+{
+    p_VM.reset();
+}

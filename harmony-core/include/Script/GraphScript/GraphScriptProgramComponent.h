@@ -16,6 +16,7 @@ namespace harmony
     {
     public:
         GraphScriptProgramComponent();
+        ~GraphScriptProgramComponent();
 
         void Init() override;
 
