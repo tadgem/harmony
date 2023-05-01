@@ -159,7 +159,7 @@ namespace harmony {
 
         void RemoveNode(GraphScript::IGraphNode *node);
 
-        Unique<GraphScript::Graph> Deserialize(nlohmann::json json);
+        Unique<GraphScript::Graph> DeserializeGraph(nlohmann::json json);
 
         Vector<GraphScript::IGraphNode *> m_AvailableNodes;
     };

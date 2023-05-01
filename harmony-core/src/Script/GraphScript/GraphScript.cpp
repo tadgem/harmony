@@ -82,7 +82,7 @@ void harmony::GraphScriptVM::RemoveNode(harmony::GraphScript::IGraphNode *node) 
     m_AvailableNodes.erase(it);
 }
 
-harmony::Unique<harmony::GraphScript::Graph> harmony::GraphScriptVM::Deserialize(nlohmann::json json) {
+harmony::Unique<harmony::GraphScript::Graph> harmony::GraphScriptVM::DeserializeGraph(nlohmann::json json) {
     return nullptr;
 }
 

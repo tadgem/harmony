@@ -20,6 +20,8 @@ void harmony::GraphScriptImGuiEditor::Render() {
             ImNodes::IsEditorHovered() && ImGui::IsKeyReleased(ImGuiKey_MouseRight)) {
             // ImNodes::SetNodeScreenSpacePos(1, ImGui::GetMousePos());
             harmony::log::info("Right clicked in GraphScript Editor");
+            p_MousePosition = ImGui::GetMousePos();
+            p_ShowNodeSelector = true;
         }
 
         ImNodes::MiniMap();
@@ -39,4 +41,15 @@ void harmony::GraphScriptImGuiEditor::Render() {
         }
     }
     ImGui::End();
+
+    if(p_ShowNodeSelector) {
+        ImGui::SetNextWindowPos(p_MousePosition);
+        if (ImGui::Begin("Nodes"))
+        {
+            ImGui::MenuItem("Blep");
+            ImGui::MenuItem("Blop");
+        }
+        ImGui::End();
+    }
+
 }

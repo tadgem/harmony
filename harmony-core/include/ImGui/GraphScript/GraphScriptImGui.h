@@ -20,6 +20,8 @@ namespace harmony {
         void Render();
 
     protected:
-        int m_SelectedGraphIndex;
+        ImVec2 p_MousePosition;
+        int p_SelectedGraphIndex;
+        bool p_ShowNodeSelector = false;
     };
 }
