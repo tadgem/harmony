@@ -23,6 +23,10 @@ void harmony::GraphScriptImGuiEditor::Render() {
             p_MousePosition = ImGui::GetMousePos();
             p_ShowNodeSelector = true;
         }
+        else if(ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
+        {
+            p_ShowNodeSelector = false;
+        }
 
         ImNodes::MiniMap();
         ImNodes::EndNodeEditor();
