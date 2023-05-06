@@ -26,6 +26,8 @@ namespace harmony
 
         void Cleanup() override;
 
+        GraphScriptVM* GetVM();
+
         nlohmann::json ToJson() override;
 
         void FromJson(const nlohmann::json &json) override;

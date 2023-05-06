@@ -19,7 +19,7 @@ void harmony::GraphScript::PrintNode::Deserialize() {
 
 }
 
-harmony::GraphScript::PrintNode::PrintNode() {
+harmony::GraphScript::PrintNode::PrintNode() : IGraphNode("Print") {
     m_StringInput = CreateUnique<IGraphNodeIOT<String>>();
 }
 
@@ -27,7 +27,7 @@ harmony::GraphScript::IGraphNode *harmony::GraphScript::PrintNode::Clone() {
     return new PrintNode();
 }
 
-harmony::GraphScript::EntryPointNode::EntryPointNode(const String &entryPointName) : m_Entry(entryPointName)
+harmony::GraphScript::EntryPointNode::EntryPointNode() : IGraphNode("EntryPoint")
 {
 
 }
@@ -54,7 +54,7 @@ void harmony::GraphScriptVM::AddNode(harmony::GraphScript::IGraphNode *node) {
         return;
     }
     if (std::find(m_AvailableNodes.begin(), m_AvailableNodes.end(), node) != m_AvailableNodes.end()) {
-        harmony::log::warn("GraphScriptVM : Already provided Node to VM : {}", node->Name);
+        harmony::log::warn("GraphScriptVM : Already provided Node to VM : {}", node->m_Name);
         return;
     }
     m_AvailableNodes.push_back(node);
@@ -68,7 +68,10 @@ harmony::GraphScriptVM::GraphScriptVM() {
 
 harmony::GraphScriptVM::~GraphScriptVM() {
     for (auto node: m_AvailableNodes) {
-        delete node;
+        if(node)
+        {
+            delete node;
+        }
     }
     m_AvailableNodes.clear();
 }
@@ -112,5 +115,14 @@ harmony::GraphScript::EntryPointName::EntryPointName(const std::string & name) {
     for (auto c: name) {
         m_id += c;
     }
+
+}
+
+harmony::GraphScript::EntryPointName::EntryPointName()
+{
+    m_id = INVALID_ENTRY_POINT_NAME;
+}
+
+harmony::GraphScript::IGraphNode::IGraphNode(const harmony::String &name) : m_Name(name) {
 
 }

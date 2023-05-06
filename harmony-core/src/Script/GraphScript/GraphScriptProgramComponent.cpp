@@ -7,6 +7,8 @@
 harmony::GraphScriptProgramComponent::GraphScriptProgramComponent()
 {
     p_VM = CreateUnique<GraphScriptVM>();
+    p_VM->AddNode(new GraphScript::PrintNode());
+    p_VM->AddNode(new GraphScript::EntryPointNode());
 }
 
 void harmony::GraphScriptProgramComponent::Init() {
@@ -36,4 +38,8 @@ void harmony::GraphScriptProgramComponent::FromJson(const nlohmann::json &json) 
 harmony::GraphScriptProgramComponent::~GraphScriptProgramComponent()
 {
     p_VM.reset();
+}
+
+harmony::GraphScriptVM *harmony::GraphScriptProgramComponent::GetVM() {
+    return p_VM.get();
 }

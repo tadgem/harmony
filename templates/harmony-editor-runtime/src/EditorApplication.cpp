@@ -13,8 +13,9 @@
 #include "AssimpModelAssetFactory.h"
 #include "EditorView.h"
 #include "ECS/SimpleCollisionSystem.h"
+#include "Script/GraphScript/GraphScriptProgramComponent.h"
 
-harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this), m_GraphScriptEditor(new GraphScriptVM()) {
+harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this), m_GraphScriptEditor(p_GraphScriptComponent->GetVM()) {
     OPTICK_EVENT();
     AddAssetTypeNames();
     AddAssetFactories();

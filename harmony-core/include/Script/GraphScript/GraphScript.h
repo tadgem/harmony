@@ -70,6 +70,8 @@ namespace harmony {
         class IGraphNode {
         public:
 
+            explicit IGraphNode(const String& name);
+
             virtual Ops Build() = 0;
 
             virtual nlohmann::json Serialize() = 0;
@@ -78,7 +80,7 @@ namespace harmony {
 
             virtual IGraphNode *Clone() = 0;
 
-            String Name;
+            const String m_Name;
             Vector<Unique<IGraphNodeIO>> m_Inputs;
             Vector<Unique<IGraphNodeIO>> m_Outputs;
 
@@ -104,8 +106,10 @@ namespace harmony {
         struct EntryPointName {
         public:
             explicit EntryPointName(const std::string &name);
-
+            EntryPointName();
             uint64_t m_id;
+
+            static const uint64_t INVALID_ENTRY_POINT_NAME = 0;
 
             inline bool operator==(const EntryPointName &rhs) { return m_id = rhs.m_id; }
 
@@ -116,7 +120,7 @@ namespace harmony {
 
         class EntryPointNode : public IGraphNode {
         public:
-            explicit EntryPointNode(const String &entryPointName);
+            EntryPointNode();
 
             Ops Build() override;
 

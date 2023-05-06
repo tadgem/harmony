@@ -51,9 +51,9 @@ void harmony::GraphScriptImGuiEditor::Render() {
         if (ImGui::Begin("Nodes")) {
             for (auto availableNode: m_GraphScriptVM->m_AvailableNodes)
             {
-                if(ImGui::MenuItem(availableNode->Name.c_str()))
+                if(ImGui::MenuItem(availableNode->m_Name.c_str()))
                 {
-                    harmony::log::info("GraphScriptImGuiEditor : Adding node {} to graph {}", availableNode->Name, m_Graphs[p_SelectedGraphIndex]->m_Name);
+                    harmony::log::info("GraphScriptImGuiEditor : Adding node {} to graph {}", availableNode->m_Name, m_Graphs[p_SelectedGraphIndex]->m_Name);
                     p_ShowNodeSelector = false;
                 }
             }
