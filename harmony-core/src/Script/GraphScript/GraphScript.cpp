@@ -48,7 +48,7 @@ harmony::GraphScript::IGraphNode *harmony::GraphScript::EntryPointNode::Clone() 
     return nullptr;
 }
 
-void harmony::GraphScriptNodeRegistry::AddNode(harmony::GraphScript::IGraphNode *node) {
+void harmony::GraphScript::NodeRegistry::AddNode(harmony::GraphScript::IGraphNode *node) {
     if (node == nullptr) {
         harmony::log::warn("GraphScriptVM : Provided Node is nullptr");
         return;
@@ -61,12 +61,12 @@ void harmony::GraphScriptNodeRegistry::AddNode(harmony::GraphScript::IGraphNode 
 
 }
 
-harmony::GraphScriptNodeRegistry::GraphScriptNodeRegistry() {
+harmony::GraphScript::NodeRegistry::NodeRegistry() {
     m_AvailableNodes = Vector<GraphScript::IGraphNode *>();
 }
 
 
-harmony::GraphScriptNodeRegistry::~GraphScriptNodeRegistry() {
+harmony::GraphScript::NodeRegistry::~NodeRegistry() {
     for (auto node: m_AvailableNodes) {
         if(node)
         {
@@ -76,7 +76,7 @@ harmony::GraphScriptNodeRegistry::~GraphScriptNodeRegistry() {
     m_AvailableNodes.clear();
 }
 
-void harmony::GraphScriptNodeRegistry::RemoveNode(harmony::GraphScript::IGraphNode *node) {
+void harmony::GraphScript::NodeRegistry::RemoveNode(harmony::GraphScript::IGraphNode *node) {
     auto it = std::find(m_AvailableNodes.begin(), m_AvailableNodes.end(), node);
     if (it == m_AvailableNodes.end()) {
         harmony::log::warn("GraphScriptVM : Node not found in VM available nodes");
@@ -85,9 +85,9 @@ void harmony::GraphScriptNodeRegistry::RemoveNode(harmony::GraphScript::IGraphNo
     m_AvailableNodes.erase(it);
 }
 
-void harmony::GraphScript::Graph::CallEntryPoint(EntryPointName &name) {
+void harmony::GraphScript::CompiledGraph::CallEntryPoint(EntryPointName &name) {
     if (p_Entries.find(name) == p_Entries.end()) {
-        harmony::log::warn("GraphScript : Graph : No entry point : {}", name.m_id);
+        harmony::log::warn("GraphScript : CompiledGraph : No entry point : {}", name.m_id);
         return;
     }
 
@@ -97,14 +97,6 @@ void harmony::GraphScript::Graph::CallEntryPoint(EntryPointName &name) {
         ops.m_Procs[i]();
     }
 
-}
-
-bool harmony::GraphScript::Graph::Build() {
-    return false;
-}
-
-nlohmann::json harmony::GraphScript::Graph::Serialize() {
-    return nlohmann::json();
 }
 
 harmony::GraphScript::EntryPointName::EntryPointName(const std::string & name) {

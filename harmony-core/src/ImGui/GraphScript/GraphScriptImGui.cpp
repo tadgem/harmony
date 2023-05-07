@@ -57,6 +57,6 @@ void harmony::GraphScriptImGuiEditor::Render() {
 
 }
 
-harmony::GraphScriptImGuiEditor::GraphScriptImGuiEditor(harmony::GraphScriptNodeRegistry *vm) : m_GraphScriptBuilder(vm)
+harmony::GraphScriptImGuiEditor::GraphScriptImGuiEditor(harmony::GraphScript::NodeRegistry *vm) : m_GraphScriptBuilder(vm)
 {
 }

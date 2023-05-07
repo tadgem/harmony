@@ -7,9 +7,9 @@
 harmony::GraphScriptProgramComponent::GraphScriptProgramComponent()
 {
     m_TypeHash = typeid(GraphScriptProgramComponent).hash_code();
-    p_Builder = CreateUnique<GraphScriptNodeRegistry>();
-    p_Builder->AddNode(new GraphScript::PrintNode());
-    p_Builder->AddNode(new GraphScript::EntryPointNode());
+    p_NodeRegistry = CreateUnique<GraphScript::NodeRegistry>();
+    p_NodeRegistry->AddNode(new GraphScript::PrintNode());
+    p_NodeRegistry->AddNode(new GraphScript::EntryPointNode());
 }
 
 void harmony::GraphScriptProgramComponent::Init() {
@@ -38,9 +38,9 @@ void harmony::GraphScriptProgramComponent::FromJson(const nlohmann::json &json) 
 
 harmony::GraphScriptProgramComponent::~GraphScriptProgramComponent()
 {
-    p_Builder.reset();
+    p_NodeRegistry.reset();
 }
 
-harmony::GraphScriptNodeRegistry *harmony::GraphScriptProgramComponent::GetBuilder()  {
-    return p_Builder.get();
+harmony::GraphScript::NodeRegistry *harmony::GraphScriptProgramComponent::GetNodeRegistry()   {
+    return p_NodeRegistry.get();
 }

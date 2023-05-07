@@ -16,10 +16,10 @@ void operator delete(void *memory, size_t size) {
 int main() {
     harmony::Editor app;
 
-    auto *graph = new harmony::GraphScript::Graph();
+    auto *graph = new harmony::GraphScript::CompiledGraph();
     auto graphScriptComponent = app.GetProgramComponent<harmony::GraphScriptProgramComponent>().lock();
 
-    harmony::GraphScriptNodeRegistry* vm = graphScriptComponent->GetBuilder();
+    harmony::GraphScript::NodeRegistry* vm = graphScriptComponent->GetNodeRegistry();
 
     auto proc = []() {
 

@@ -15,7 +15,7 @@
 #include "ECS/SimpleCollisionSystem.h"
 #include "Script/GraphScript/GraphScriptProgramComponent.h"
 
-harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this), m_GraphScriptEditor(p_GraphScriptComponent->GetBuilder()) {
+harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this), m_GraphScriptEditor(p_GraphScriptComponent->GetNodeRegistry()) {
     OPTICK_EVENT();
     m_Logger.Init();
     AddAssetTypeNames();

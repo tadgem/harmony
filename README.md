@@ -11,7 +11,7 @@ I started this project in March / April 2022. After having spent years working o
 + ECS Design
 + Modular Design for Engine Components + Game Systems. 
 + Serialization infrastructure using JSON.
-+ Pipeline Graph renderer architecture, which allows reuse of shared data and abstraction of resource generation.
++ Pipeline CompiledGraph renderer architecture, which allows reuse of shared data and abstraction of resource generation.
 + ShaderDataSource architecture which allows data binding code for shaders to be reused. 
 + Lua scripting support (LuaJIT + Lua available through use of a CMake option)
 + Jolt Physics Integration

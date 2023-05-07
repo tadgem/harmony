@@ -134,38 +134,42 @@ namespace harmony {
         };
 
 
-        class Graph {
+        class CompiledGraph {
         public:
-
-            bool Build();
-
-            nlohmann::json Serialize();
-
             void CallEntryPoint(EntryPointName &name);
 
+        protected:
+            Map<EntryPointName, Ops>        p_Entries;
+        };
+
+        class NodeRegistry {
+        public:
+            NodeRegistry();
+
+            ~NodeRegistry();
+
+            void AddNode(GraphScript::IGraphNode *node);
+
+            void RemoveNode(GraphScript::IGraphNode *node);
+
+            Vector<GraphScript::IGraphNode *> m_AvailableNodes;
+        };
+
+        class GraphBuilder
+        {
+        public:
             String                          m_Name;
             Vector<Unique<IGraphNode>>      m_GraphNodes;
             Vector<Unique<IVariable>>       m_Variables;
             Vector<Unique<IConnection>>     m_Connections;
             Vector<Unique<EntryPointNode>>  m_EntryPoints;
-        protected:
-            Map<EntryPointName, Ops>        p_Entries;
-        };
 
+
+            Unique<CompiledGraph> Build();
+            nlohmann::json Serialize();
+        };
     }
 
-    class GraphScriptNodeRegistry {
-    public:
-        GraphScriptNodeRegistry();
-
-        ~GraphScriptNodeRegistry();
-
-        void AddNode(GraphScript::IGraphNode *node);
-
-        void RemoveNode(GraphScript::IGraphNode *node);
-
-        Vector<GraphScript::IGraphNode *> m_AvailableNodes;
-    };
 }
 
 #endif //HARMONY_DOJO_GRAPHSCRIPT_H

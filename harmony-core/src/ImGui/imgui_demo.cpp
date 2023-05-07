@@ -1750,7 +1750,7 @@ static void ShowDemoWindowWidgets() {
         ImGui::TreePop();
     }
 
-    // Plot/Graph widgets are not very good.
+    // Plot/CompiledGraph widgets are not very good.
     // Consider using a third-party library such as ImPlot: https://github.com/epezent/implot
     // (see others https://github.com/ocornut/imgui/wiki/Useful-Extensions)
     IMGUI_DEMO_MARKER("Widgets/Plotting");

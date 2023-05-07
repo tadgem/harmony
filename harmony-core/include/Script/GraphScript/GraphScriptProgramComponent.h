@@ -10,7 +10,11 @@
 
 namespace harmony
 {
-    class GraphScriptNodeRegistry;
+
+    namespace GraphScript
+    {
+        class NodeRegistry;
+    }
 
     class GraphScriptProgramComponent : public ProgramComponent
     {
@@ -26,14 +30,14 @@ namespace harmony
 
         void Cleanup() override;
 
-        GraphScriptNodeRegistry* GetBuilder();
+        GraphScript::NodeRegistry* GetNodeRegistry();
 
         nlohmann::json ToJson() override;
 
         void FromJson(const nlohmann::json &json) override;
 
     protected:
-        Unique<GraphScriptNodeRegistry> p_Builder;
+        Unique<GraphScript::NodeRegistry> p_NodeRegistry;
 
     };
 }
