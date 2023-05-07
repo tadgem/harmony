@@ -27,17 +27,22 @@ void harmony::ImGuiLogger::Init()
 void harmony::ImGuiLogger::Render() {
 
     bool show = true;
-    if(ImGui::Begin("Console Log", &show,  ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
+    if(ImGui::Begin("Console Log", &show, ImGuiWindowFlags_NoDecoration  |ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
     {
-        ImVec2 currentWindowSize = ImGui::GetWindowSize();
+        ImVec2 currentWindowSize = ImGui::GetWindowContentRegionMax();
         float textHeight = ImGui::GetTextLineHeightWithSpacing();
         ImGuiTableFlags flags = ImGuiTableFlags_ScrollY | ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoKeepColumnsVisible;
         ImVec2 outer_size = ImVec2(0.0f, 0.0f);
 
-        int rounded = ((int) currentWindowSize.y / textHeight) - 3;
+        int rounded = ((int) currentWindowSize.y / textHeight) - 2;
         for(int i = 0; i < rounded; i++)
         {
             outer_size.y += textHeight;
+        }
+
+        if(outer_size.y >= currentWindowSize.y)
+        {
+            outer_size.y = currentWindowSize.y;
         }
 
         if(ImGui::BeginTable("Console", 4, flags, outer_size))
@@ -66,11 +71,14 @@ void harmony::ImGuiLogger::Render() {
                 ImGui::TextColored(col, msg.m_Msg.c_str());
             }
 
-            ImGui::EndTable();
-            if(ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+            auto scroll_y = ImGui::GetScrollY();
+            auto max_y = ImGui::GetScrollMaxY();
+            if(scroll_y >= max_y)
             {
                 ImGui::SetScrollHereY(1.0f);
             }
+
+            ImGui::EndTable();
         }
     }
 

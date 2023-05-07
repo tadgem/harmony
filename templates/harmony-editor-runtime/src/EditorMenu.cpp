@@ -1,7 +1,7 @@
 #include "EditorMenu.h"
 #include "ImGui/ImGuiFileDialog.h"
 #include "EditorApplication.h"
-
+#include "ImGui/icons_kenney.h"
 harmony::EditorMainMenuBar::EditorMainMenuBar(Editor &prog) : p_Prog(prog) {
     p_CreateProjectMenu = false;
     p_CreateSceneMenu = false;
@@ -67,7 +67,26 @@ void harmony::EditorMainMenuBar::MenuBar() {
             }
             ImGui::EndMenu();
         }
+        if (ImGui::BeginMenu("Run")) {
+            if (ImGui::MenuItem("Play")) {
+                p_Prog.m_EditorFSM.Trigger(Editor::Trigger::Play);
+            }
+
+            if (ImGui::MenuItem("Stop")) {
+                p_Prog.m_EditorFSM.Trigger(Editor::Trigger::Stop);
+            }
+            ImGui::EndMenu();
+        }
         m_MenuBarSize = ImGui::GetWindowSize();
+
+        ImVec2 cursorPos = ImGui::GetCursorPos();
+        ImVec2 iconSize = ImGui::CalcTextSize(ICON_KI_BUTTON_X);
+        float padding = 4.0f;
+        ImGui::SetCursorPos(ImVec2(m_MenuBarSize.x - iconSize.x - padding, cursorPos.y));
+        if(ImGui::Button(ICON_KI_BUTTON_X))
+        {
+            p_Prog.Exit();
+        }
     }
     ImGui::EndMainMenuBar();
 }

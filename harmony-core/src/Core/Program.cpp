@@ -124,7 +124,7 @@ void harmony::Program::InitSDL() {
     p_WindowHeight = rect.h;
 
     SDL_WindowFlags windowFlags = static_cast<SDL_WindowFlags>(SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE |
-                                                               SDL_WINDOW_MAXIMIZED);
+                                                               SDL_WINDOW_MAXIMIZED | SDL_WINDOW_BORDERLESS);
     // TODO: Add window resizing.
     p_Window = SDL_CreateWindow(
             p_AppName.c_str(),
@@ -367,16 +367,21 @@ void harmony::Program::UpdateTimeVariables() {
 void harmony::Program::ResizeApplicationWindow(int w, int h) {
     OPTICK_EVENT();
     harmony::log::info("Program : Window resized : Old size {},{} : New Size {},{}", p_WindowWidth, p_WindowHeight, w, h);
-    p_WindowWidth = static_cast<uint16_t>(w);
-    p_WindowHeight = static_cast<uint16_t>(h);
+    SDL_DisplayMode mode;
+    SDL_Rect rect;
+
+    SDL_GetWindowDisplayMode(p_Window, &mode);
+    SDL_GetDisplayUsableBounds(0, &rect);
+    mode.w = rect.w;
+    mode.h = rect.h;
+    SDL_SetWindowDisplayMode(p_Window, &mode);
+
+    p_WindowWidth = static_cast<uint16_t>(rect.w);
+    p_WindowHeight = static_cast<uint16_t>(rect.h);
+
     bgfx::reset(p_WindowWidth, p_WindowHeight, BGFX_RESET_VSYNC);
     ImGui::GetIO().DisplaySize = ImVec2(p_WindowWidth, p_WindowHeight);
-    SDL_SetWindowSize(p_Window, w, h);
-    SDL_DisplayMode mode;
-    SDL_GetWindowDisplayMode(p_Window, &mode);
-    mode.w = w;
-    mode.h = h;
-    SDL_SetWindowDisplayMode(p_Window, &mode);
+    SDL_SetWindowSize(p_Window, rect.w, rect.h);
 }
 
 void harmony::Program::HandleSDLEvent() {
@@ -912,4 +917,9 @@ void harmony::Program::Frame() {
 void harmony::Program::ProfilerBeginFrame()
 {
     OPTICK_FRAME("MainThread");
+}
+
+void harmony::Program::Exit()
+{
+    p_Run = false;
 }

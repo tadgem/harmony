@@ -42,6 +42,8 @@ namespace harmony {
 
         virtual void Run(const std::string &projectPath);
 
+        virtual void Exit();
+
         virtual void CreateProject(const std::string &name, const std::string &path);
 
         virtual void SaveProject();
