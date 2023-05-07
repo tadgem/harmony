@@ -634,14 +634,17 @@ void harmony::Program::CreateProject(const std::string &name, const std::string 
     CloseActiveProject();
     m_Project = CreateRef<Project>(name);
     p_LoadedProjectPath = path + "/" + name + ".harmonyproj";
+    harmony::log::info("Program : Created new project with name : {}", name);
 }
 
 void harmony::Program::SaveProject() {
     OPTICK_EVENT();
     if (m_Project == nullptr) {
-        harmony::log::warn("Program::SaveProject : cannot save project, as there is no active project.");
+        harmony::log::warn("Program : cannot save project, as there is no active project.");
         return;
     }
+
+    harmony::log::info("Program : Saving project to path : {}", p_LoadedProjectPath);
 
     m_Project->UpdateProjectComponentSerializationAttributes(p_ProgramComponents);
     m_Project->UpdateRendererSerializationAttributes(m_Renderer);
@@ -659,6 +662,8 @@ void harmony::Program::LoadProject(const std::string &path) {
         harmony::log::warn("Program : Cannot open project at path {}", path);
         return;
     }
+
+    harmony::log::info("Program : Loading project from path : {}", path);
 
     nlohmann::json projectJson = Utils::LoadJsonFromPath(path);
     m_Project = CreateRef<Project>(projectJson);
@@ -694,12 +699,12 @@ void harmony::Program::CloseActiveProject() {
 void harmony::Program::CreateScene(const std::string &name) {
     OPTICK_EVENT();
     if (m_Project == nullptr) {
-        harmony::log::warn("Program::CreateScene : No project loaded, cannot create scene");
+        harmony::log::warn("Program : No project loaded, cannot create scene");
     }
     if (p_ActiveScene != nullptr) {
         CloseActiveScene();
     }
-
+    harmony::log::info("Program : Creating new Scene");
     p_ActiveScene = CreateRef<Scene>(name);
 }
 
@@ -709,7 +714,7 @@ void harmony::Program::SaveScene(const std::string &path) {
         harmony::log::warn("Program::SaveScene : cannot save scene, as there is no active scene.");
         return;
     }
-
+    harmony::log::info("Program : Saving open scene to path {}", path );
     std::string cleanPath = path;
     if (m_Project) {
         std::string projectDir = m_Project->m_ProjectDirectory;
@@ -746,6 +751,7 @@ void harmony::Program::SaveScene(const std::string &path) {
 void harmony::Program::LoadScene(const std::string &path) {
     OPTICK_EVENT();
     CloseActiveScene();
+    harmony::log::info("Program : Loading scene from path : {}", path);
     nlohmann::json sceneJson = Utils::LoadJsonFromPath(path);
     p_ActiveScene = CreateRef<Scene>(sceneJson);
     p_ActiveScene->Deserialize(p_ECSSystems);
@@ -755,6 +761,9 @@ void harmony::Program::OpenScene(uint32_t index) {
     OPTICK_EVENT();
     CloseActiveScene();
     std::string scenePath = m_Project->m_SerializedScenes[index];
+
+    harmony::log::info("Program : Loading scene from index : {} : path : {}", index, scenePath);
+
     nlohmann::json sceneJson = Utils::LoadJsonFromPath(scenePath);
     p_ActiveScene = CreateRef<Scene>(sceneJson);
     p_ActiveScene->Deserialize(p_ECSSystems);
@@ -765,6 +774,8 @@ void harmony::Program::CloseActiveScene() {
     if (p_ActiveScene == nullptr) {
         return;
     }
+
+    harmony::log::info("Program : Closing active scene.");
 
     for (unsigned int i = 0; i < p_ECSSystems.size(); i++) {
         p_ECSSystems[i]->Refresh();
