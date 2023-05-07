@@ -48,7 +48,7 @@ harmony::GraphScript::IGraphNode *harmony::GraphScript::EntryPointNode::Clone() 
     return nullptr;
 }
 
-void harmony::GraphScriptVM::AddNode(harmony::GraphScript::IGraphNode *node) {
+void harmony::GraphScriptBuilder::AddNode(harmony::GraphScript::IGraphNode *node) {
     if (node == nullptr) {
         harmony::log::warn("GraphScriptVM : Provided Node is nullptr");
         return;
@@ -61,12 +61,12 @@ void harmony::GraphScriptVM::AddNode(harmony::GraphScript::IGraphNode *node) {
 
 }
 
-harmony::GraphScriptVM::GraphScriptVM() {
+harmony::GraphScriptBuilder::GraphScriptBuilder() {
     m_AvailableNodes = Vector<GraphScript::IGraphNode *>();
 }
 
 
-harmony::GraphScriptVM::~GraphScriptVM() {
+harmony::GraphScriptBuilder::~GraphScriptBuilder() {
     for (auto node: m_AvailableNodes) {
         if(node)
         {
@@ -76,7 +76,7 @@ harmony::GraphScriptVM::~GraphScriptVM() {
     m_AvailableNodes.clear();
 }
 
-void harmony::GraphScriptVM::RemoveNode(harmony::GraphScript::IGraphNode *node) {
+void harmony::GraphScriptBuilder::RemoveNode(harmony::GraphScript::IGraphNode *node) {
     auto it = std::find(m_AvailableNodes.begin(), m_AvailableNodes.end(), node);
     if (it == m_AvailableNodes.end()) {
         harmony::log::warn("GraphScriptVM : Node not found in VM available nodes");
@@ -85,7 +85,7 @@ void harmony::GraphScriptVM::RemoveNode(harmony::GraphScript::IGraphNode *node) 
     m_AvailableNodes.erase(it);
 }
 
-harmony::Unique<harmony::GraphScript::Graph> harmony::GraphScriptVM::DeserializeGraph(nlohmann::json json) {
+harmony::Unique<harmony::GraphScript::Graph> harmony::GraphScriptBuilder::DeserializeGraph(nlohmann::json json) {
     return nullptr;
 }
 

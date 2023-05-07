@@ -173,18 +173,20 @@ namespace harmony {
         template<typename T>
         WeakRef<T> GetProgramComponent() {
 
-            static_assert(std::is_base_of<ProgramComponent, T>("Not a program component"));
+            static_assert(std::is_base_of<ProgramComponent, T>(), "Not a program component");
             int index = -1;
             for (int i = 0; i < p_ProgramComponents.size(); i++) {
-                if (typeid(T).hash_code() == typeid(p_ProgramComponents[i]).hash_code()) {
+                auto typeHash = typeid(T).hash_code();
+                if (typeHash == p_ProgramComponents[i]->m_TypeHash) {
                     index = i;
+                    break;
                 }
             }
 
             if (index >= 0) {
-                return GetWeakRef<T>(p_ProgramComponents[index]);
+                return std::static_pointer_cast<T, ProgramComponent>(p_ProgramComponents[index]);
             } else {
-                return GetWeakRef<T>(nullptr);
+                return WeakRef<T>();
             }
         }
 
@@ -196,6 +198,7 @@ namespace harmony {
             for (int i = 0; i < p_ECSSystems.size(); i++) {
                 if (GetTypeHash<T>() == p_ECSSystems[i]->m_TypeHash) {
                     index = i;
+                    break;
                 }
             }
 

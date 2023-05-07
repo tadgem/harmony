@@ -11,14 +11,17 @@ void operator delete(void *memory, size_t size) {
 }
 
 #include "EditorApplication.h"
+#include "Script/GraphScript/GraphScriptProgramComponent.h"
 
 int main() {
     harmony::Editor app;
 
     auto *graph = new harmony::GraphScript::Graph();
+    auto graphScriptComponent = app.GetProgramComponent<harmony::GraphScriptProgramComponent>().lock();
+
+    harmony::GraphScriptBuilder* vm = graphScriptComponent->GetBuilder();
 
     // create a graph.
-
     app.m_GraphScriptEditor.AddGraph(graph);
 
     auto proc = []() {

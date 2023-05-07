@@ -15,7 +15,7 @@
 #include "ECS/SimpleCollisionSystem.h"
 #include "Script/GraphScript/GraphScriptProgramComponent.h"
 
-harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this), m_GraphScriptEditor(p_GraphScriptComponent->GetVM()) {
+harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this), m_GraphScriptEditor(p_GraphScriptComponent->GetBuilder()) {
     OPTICK_EVENT();
     m_Logger.Init();
     AddAssetTypeNames();
@@ -25,7 +25,6 @@ harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*th
     AddPipelineStageRenderers();
 
     AddEditorPanels();
-
 }
 
 void harmony::Editor::AddAssetTypeNames() {
@@ -40,6 +39,7 @@ void harmony::Editor::AddAssetFactories() {
 
 void harmony::Editor::AddProgramComponents() {
     OPTICK_EVENT();
+    RuntimeProgram::AddProgramComponents();
     auto assetHotReload = AddProgramComponent<AssetHotReload>(*this).lock();
     auto shaderProvider = CreateRef<ShaderHotReload>(*this);
     auto luaProvider = CreateRef<LuaScriptHotReload>(*this, p_LuaSystem);

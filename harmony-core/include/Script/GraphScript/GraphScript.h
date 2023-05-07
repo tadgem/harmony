@@ -154,11 +154,11 @@ namespace harmony {
 
     }
 
-    class GraphScriptVM {
+    class GraphScriptBuilder {
     public:
-        GraphScriptVM();
+        GraphScriptBuilder();
 
-        ~GraphScriptVM();
+        ~GraphScriptBuilder();
 
         void AddNode(GraphScript::IGraphNode *node);
 

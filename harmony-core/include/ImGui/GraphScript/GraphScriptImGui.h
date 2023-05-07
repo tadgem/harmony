@@ -12,7 +12,7 @@ namespace harmony {
     class GraphScriptImGuiEditor {
     public:
 
-        explicit GraphScriptImGuiEditor(GraphScriptVM* vm);
+        explicit GraphScriptImGuiEditor(GraphScriptBuilder* vm);
 
         Vector<GraphScript::Graph *> m_Graphs;
         Vector<ImGuiGraphState> m_GraphStates;
@@ -22,9 +22,9 @@ namespace harmony {
         void Render();
 
     protected:
-        ImVec2          p_MousePosition;
-        GraphScriptVM*  m_GraphScriptVM;
-        int             p_SelectedGraphIndex;
-        bool            p_ShowNodeSelector = false;
+        ImVec2                  p_MousePosition;
+        GraphScriptBuilder*     m_GraphScriptBuilder;
+        int                     p_SelectedGraphIndex;
+        bool                    p_ShowNodeSelector = false;
     };
 }
