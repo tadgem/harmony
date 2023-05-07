@@ -62,5 +62,7 @@ imgui.ini
 .vs/slnx.sqlite
 .vs/ProjectSettings.json
 .vs/CMakeWorkspaceSettings.json
+/.VSCodeCounter
+\.VSCodeCounter
 *.DS_Store
 *cmake-build-debug
