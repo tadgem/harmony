@@ -139,7 +139,8 @@ namespace harmony {
             void CallEntryPoint(EntryPointName &name);
 
         protected:
-            Map<EntryPointName, Ops>        p_Entries;
+            HashMap<uint64_t, Ops>          p_Entries;
+            Vector<Unique<IVariable>>       p_Variables;
         };
 
         class NodeRegistry {
