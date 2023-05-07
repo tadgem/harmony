@@ -114,3 +114,11 @@ harmony::GraphScript::EntryPointName::EntryPointName()
 harmony::GraphScript::IGraphNode::IGraphNode(const harmony::String &name) : m_Name(name) {
 
 }
+
+harmony::Unique<harmony::GraphScript::CompiledGraph> harmony::GraphScript::GraphBuilder::Build() {
+    return {};
+}
+
+nlohmann::json harmony::GraphScript::GraphBuilder::Serialize() {
+    return {};
+}
