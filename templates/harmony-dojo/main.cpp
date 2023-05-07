@@ -19,16 +19,12 @@ int main() {
     auto *graph = new harmony::GraphScript::Graph();
     auto graphScriptComponent = app.GetProgramComponent<harmony::GraphScriptProgramComponent>().lock();
 
-    harmony::GraphScriptBuilder* vm = graphScriptComponent->GetBuilder();
-
-    // create a graph.
-    app.m_GraphScriptEditor.AddGraph(graph);
+    harmony::GraphScriptNodeRegistry* vm = graphScriptComponent->GetBuilder();
 
     auto proc = []() {
 
     };
 
-    // app.Run("../../../projects/Test3/Test3.harmonyproj");
     app.Run("../../../../projects/JoltTest/JoltTest.harmonyproj", proc);
     return 0;
 }

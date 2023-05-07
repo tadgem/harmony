@@ -7,11 +7,6 @@
 #include "ImGui/imnodes.h"
 #include "SDL.h"
 
-void harmony::GraphScriptImGuiEditor::AddGraph(harmony::GraphScript::Graph *graph) {
-    m_Graphs.emplace_back(graph);
-    m_GraphStates.emplace_back(ImGuiGraphState());
-}
-
 void harmony::GraphScriptImGuiEditor::Render() {
     if (ImGui::Begin("GraphScripts")) {
         ImNodes::BeginNodeEditor();
@@ -53,8 +48,6 @@ void harmony::GraphScriptImGuiEditor::Render() {
             {
                 if(ImGui::MenuItem(availableNode->m_Name.c_str()))
                 {
-                    harmony::log::info("GraphScriptImGuiEditor : Adding node {} to graph {}", availableNode->m_Name, m_Graphs[p_SelectedGraphIndex]->m_Name);
-
                     p_ShowNodeSelector = false;
                 }
             }
@@ -64,6 +57,6 @@ void harmony::GraphScriptImGuiEditor::Render() {
 
 }
 
-harmony::GraphScriptImGuiEditor::GraphScriptImGuiEditor(harmony::GraphScriptBuilder *vm) : m_GraphScriptBuilder(vm)
+harmony::GraphScriptImGuiEditor::GraphScriptImGuiEditor(harmony::GraphScriptNodeRegistry *vm) : m_GraphScriptBuilder(vm)
 {
 }

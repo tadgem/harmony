@@ -154,17 +154,15 @@ namespace harmony {
 
     }
 
-    class GraphScriptBuilder {
+    class GraphScriptNodeRegistry {
     public:
-        GraphScriptBuilder();
+        GraphScriptNodeRegistry();
 
-        ~GraphScriptBuilder();
+        ~GraphScriptNodeRegistry();
 
         void AddNode(GraphScript::IGraphNode *node);
 
         void RemoveNode(GraphScript::IGraphNode *node);
-
-        Unique<GraphScript::Graph> DeserializeGraph(nlohmann::json json);
 
         Vector<GraphScript::IGraphNode *> m_AvailableNodes;
     };
