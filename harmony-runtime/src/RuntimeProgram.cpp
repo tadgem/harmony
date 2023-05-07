@@ -70,6 +70,7 @@ void harmony::RuntimeProgram::Run(const std::string &projectPath) {
     ResizeApplicationWindow(p_WindowWidth, p_WindowHeight);
 
     while (p_Run) {
+        ProfilerBeginFrame();
         OnRuntimeUpdate();
     }
 }

@@ -236,6 +236,7 @@ void harmony::Editor::Run() {
     SetRunningStyle();
 
     while (p_Run) {
+        ProfilerBeginFrame();
         m_EditorFSM.Process();
     }
 }
