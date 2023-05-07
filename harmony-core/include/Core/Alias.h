@@ -4,10 +4,16 @@
 #include <unordered_map>
 #include <vector>
 #include <string>
+#include <sstream>
+#include <ostream>
 #include <functional>
 
 namespace harmony {
     using String = std::string;
+
+    using StringStream = std::stringstream;
+
+    using OStream = std::ostream;
 
     template<typename T1, typename T2>
     using Map = std::map<T1, T2>;

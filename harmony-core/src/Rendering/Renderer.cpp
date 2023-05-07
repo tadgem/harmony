@@ -349,6 +349,7 @@ void harmony::Renderer::OnImGui() {
             ImGui::Indent();
             for (auto &[view, stack]: p_Views) {
                 if (ImGui::CollapsingHeader(view->m_Name.c_str())) {
+                    ImGui::Indent();
                     auto addPipelineNameHash = "##combo" + std::to_string(count);
                     count++;
                     ImGui::Text("Add Pipeline");
@@ -374,8 +375,8 @@ void harmony::Renderer::OnImGui() {
                         }
                         ImGui::EndCombo();
                     }
-                    ImGui::Indent();
                     if (ImGui::CollapsingHeader("Stack")) {
+                        ImGui::Indent();
                         ImGui::Text("Draw Pipelines");
                         ImGui::Indent();
                         int lastIndex = -1;
@@ -425,11 +426,12 @@ void harmony::Renderer::OnImGui() {
                             stack.RemovePostProcessStage(stack.m_PostProcessPipelineStack[indexToRemove], view);
                         }
                         ImGui::Unindent();
+                        ImGui::Unindent();
                     }
                     ImGui::Separator();
 
-                    ImGui::Unindent();
                     view->OnImGuiOptions();
+                    ImGui::Unindent();
                 }
             }
             ImGui::Unindent();

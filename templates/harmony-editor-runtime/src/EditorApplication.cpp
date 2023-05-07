@@ -17,6 +17,7 @@
 
 harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this), m_GraphScriptEditor(p_GraphScriptComponent->GetVM()) {
     OPTICK_EVENT();
+    m_Logger.Init();
     AddAssetTypeNames();
     AddAssetFactories();
     AddProgramComponents();
@@ -24,6 +25,7 @@ harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*th
     AddPipelineStageRenderers();
 
     AddEditorPanels();
+
 }
 
 void harmony::Editor::AddAssetTypeNames() {
@@ -299,6 +301,7 @@ void harmony::Editor::UpdateEditor() {
     p_MainMenuBar.OnImGui();
     GlobalDockspace();
 
+    m_Logger.Render();
     m_GraphScriptEditor.Render();
     m_Renderer.OnImGui();
     m_AssetManager.OnImGui();

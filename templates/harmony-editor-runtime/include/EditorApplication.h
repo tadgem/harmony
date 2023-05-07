@@ -6,7 +6,7 @@
 #include "EditorMenu.h"
 #include "Core/Alias.h"
 #include "ImGui/GraphScript/GraphScriptImGui.h"
-
+#include "ImGui/Logger.h"
 namespace harmony {
     class CameraSystem;
 
@@ -79,6 +79,7 @@ namespace harmony {
         FSM m_EditorFSM;
 
         harmony::GraphScriptImGuiEditor m_GraphScriptEditor;
+        harmony::ImGuiLogger m_Logger;
 
     protected:
         std::vector<Ref<Panel>> p_Panels;
