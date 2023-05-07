@@ -44,7 +44,7 @@ void harmony::GraphScriptImGuiEditor::Render() {
     if(p_ShowNodeSelector) {
         ImGui::SetNextWindowPos(p_MousePosition);
         if (ImGui::Begin("Nodes")) {
-            for (auto availableNode: m_GraphScriptBuilder->m_AvailableNodes)
+            for (auto availableNode: m_GraphScriptNodeRegistry->m_AvailableNodes)
             {
                 if(ImGui::MenuItem(availableNode->m_Name.c_str()))
                 {
@@ -57,6 +57,6 @@ void harmony::GraphScriptImGuiEditor::Render() {
 
 }
 
-harmony::GraphScriptImGuiEditor::GraphScriptImGuiEditor(harmony::GraphScript::NodeRegistry *vm) : m_GraphScriptBuilder(vm)
+harmony::GraphScriptImGuiEditor::GraphScriptImGuiEditor(harmony::GraphScript::NodeRegistry *vm) : m_GraphScriptNodeRegistry(vm)
 {
 }

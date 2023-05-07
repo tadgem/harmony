@@ -1,9 +1,9 @@
 #include "EditorPanel.h"
 #include "EditorUtils.h"
-#include "ECS/TransformComponent.h";
-#include "ECS/MeshComponent.h";
-#include "ECS/MaterialComponent.h";
-#include "ECS/LightComponents.h";
+#include "ECS/TransformComponent.h"
+#include "ECS/MeshComponent.h"
+#include "ECS/MaterialComponent.h"
+#include "ECS/LightComponents.h"
 #include "Rendering/Model.h"
 #include "ImGui/icons_font_awesome.h"
 #include "ImGui/ImGuiFileDialog.h"
