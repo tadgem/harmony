@@ -86,12 +86,12 @@ void harmony::GraphScript::NodeRegistry::RemoveNode(harmony::GraphScript::IGraph
 }
 
 void harmony::GraphScript::CompiledGraph::CallEntryPoint(EntryPointName &name) {
-    if (p_Entries.find(name) == p_Entries.end()) {
+    if (p_Entries.find(name.m_id) == p_Entries.end()) {
         harmony::log::warn("GraphScript : CompiledGraph : No entry point : {}", name.m_id);
         return;
     }
 
-    const Ops &ops = p_Entries[name];
+    const Ops &ops = p_Entries[name.m_id];
 
     for (int i = 0; i < ops.m_Procs.size(); i++) {
         ops.m_Procs[i]();
