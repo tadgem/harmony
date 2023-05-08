@@ -56,9 +56,15 @@ void harmony::ImGuiLogger::Render() {
 
             ImGui::TableHeadersRow();
 
+            static const int LOG_ENTRY_LIMIT = 200;
+            int streamSize = p_Stream.size() ;
+            int startIndex = streamSize - LOG_ENTRY_LIMIT;
+            if(startIndex < 0) startIndex = 0;
+
             // ThreadID : Time : Level : Message
-            for(auto msg : p_Stream)
+            for(int i = startIndex; i < streamSize; i++)
             {
+                auto& msg = p_Stream[i];
                 ImVec4 col = p_LevelInfos[msg.m_MsgLevel].m_LevelColour;
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
