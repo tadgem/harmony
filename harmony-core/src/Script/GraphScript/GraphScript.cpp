@@ -1,4 +1,6 @@
 #include "Script/GraphScript/GraphScript.h"
+#include "Script/GraphScript/GraphScriptAsset.h"
+#include "ThirdParty/json.hpp"
 #include "Core/Log.hpp"
 
 harmony::GraphScript::Ops harmony::GraphScript::PrintNode::Build() {

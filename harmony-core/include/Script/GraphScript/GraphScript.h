@@ -12,8 +12,30 @@
 namespace harmony {
     namespace GraphScript {
 
+        struct EntryPointName {
+        public:
+            explicit EntryPointName(const std::string &name);
+            EntryPointName();
+            uint64_t m_id;
+
+            static const uint64_t INVALID_ENTRY_POINT_NAME = 0;
+
+            inline bool operator==(const EntryPointName &rhs) { return m_id = rhs.m_id; }
+
+            inline bool operator!=(const EntryPointName &rhs) const { return m_id != rhs.m_id; }
+
+            inline bool operator<(const EntryPointName &rhs) const { return m_id < rhs.m_id; }
+        };
+
+        struct Ops {
+            Vector<Procedure> m_Procs;
+        };
+
         class IVariable {
             virtual void Dispose() = 0;
+        };
+
+        class IGraphNodeIO {
         };
 
         template<typename T>
@@ -42,16 +64,6 @@ namespace harmony {
             Unique<T> p_Value;
         };
 
-        struct Ops {
-            Vector<Procedure> m_Procs;
-        };
-
-        class IGraphNodeIO {
-        };
-
-        class ExecutionGraphNodeIO : public IGraphNodeIO {
-        };
-
         template<typename T>
         class IGraphNodeIOT : public IGraphNodeIO {
         public:
@@ -59,6 +71,9 @@ namespace harmony {
 
             T *m_Value = nullptr;
 
+        };
+
+        class ExecutionGraphNodeIO : public IGraphNodeIO {
         };
 
         class IConnection {
@@ -103,21 +118,6 @@ namespace harmony {
         public:
         };
 
-        struct EntryPointName {
-        public:
-            explicit EntryPointName(const std::string &name);
-            EntryPointName();
-            uint64_t m_id;
-
-            static const uint64_t INVALID_ENTRY_POINT_NAME = 0;
-
-            inline bool operator==(const EntryPointName &rhs) { return m_id = rhs.m_id; }
-
-            inline bool operator!=(const EntryPointName &rhs) const { return m_id != rhs.m_id; }
-
-            inline bool operator<(const EntryPointName &rhs) const { return m_id < rhs.m_id; }
-        };
-
         class EntryPointNode : public IGraphNode {
         public:
             EntryPointNode();
@@ -133,7 +133,6 @@ namespace harmony {
             EntryPointName m_Entry;
         };
 
-
         class CompiledGraph {
         public:
             void CallEntryPoint(EntryPointName &name);
@@ -141,6 +140,11 @@ namespace harmony {
         protected:
             HashMap<uint64_t, Ops>          p_Entries;
             Vector<Unique<IVariable>>       p_Variables;
+        };
+
+        class SerializedGraph
+        {
+
         };
 
         class NodeRegistry {
