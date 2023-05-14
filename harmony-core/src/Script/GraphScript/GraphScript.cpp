@@ -2,6 +2,7 @@
 #include "Script/GraphScript/GraphScriptAsset.h"
 #include "ThirdParty/json.hpp"
 #include "Core/Log.hpp"
+#include <chrono>
 
 harmony::GraphScript::Ops harmony::GraphScript::PrintNode::Build() {
     auto ops = Ops();
@@ -123,4 +124,13 @@ harmony::Unique<harmony::GraphScript::CompiledGraph> harmony::GraphScript::Graph
 
 nlohmann::json harmony::GraphScript::GraphBuilder::Serialize() {
     return {};
+}
+
+using namespace std::chrono;
+// lol please fix this.
+harmony::GraphScript::IGraphNodeIO::IGraphNodeIO() : m_ID(static_cast<uint64_t>(system_clock::now().time_since_epoch().count()))
+{}
+
+harmony::GraphScript::IGraphNodeIO::IGraphNodeIO(uint64_t id) : m_ID(id){
+
 }

@@ -36,6 +36,11 @@ namespace harmony {
         };
 
         class IGraphNodeIO {
+        public:
+            IGraphNodeIO();
+            IGraphNodeIO(uint64_t id);
+
+            const uint64_t m_ID;
         };
 
         template<typename T>
