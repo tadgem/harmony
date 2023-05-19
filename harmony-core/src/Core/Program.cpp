@@ -331,7 +331,7 @@ void harmony::Program::InitImGui() {
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-    imguiCreate(20.0f, p_ImGuiAllocator);
+    imguiCreate(16.0f, p_ImGuiAllocator);
 
 #if BX_PLATFORM_WINDOWS
     ImGui_ImplSDL2_InitForD3D(p_Window);
@@ -354,14 +354,13 @@ void harmony::Program::PreRunInit() {
 
 void harmony::Program::UpdateTimeVariables() {
     OPTICK_EVENT();
-    // Instrumentor::Get().ClearResults();
     int64_t now = bx::getHPCounter();
     static int64_t last = now;
     const int64_t frameTime = now - last;
     last = now;
-    const double freq = double(bx::getHPFrequency());
+    auto freq = double(bx::getHPFrequency());
 
-    Time::p_FrameTime = (double) (frameTime * 1.0 / freq);
+    Time::p_FrameTime = (double) (frameTime / freq);
 }
 
 void harmony::Program::ResizeApplicationWindow(int w, int h) {

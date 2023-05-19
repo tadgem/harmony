@@ -384,7 +384,7 @@ struct OcornutImguiContext {
                                                                           sizeof(s_robotoRegularTtf), _fontSize,
                                                                           &config, ranges);
             m_font[ImGui::Font::Mono] = io.Fonts->AddFontFromMemoryTTF((void *) s_robotoMonoRegularTtf,
-                                                                       sizeof(s_robotoMonoRegularTtf), _fontSize - 3.0f,
+                                                                       sizeof(s_robotoMonoRegularTtf), _fontSize,
                                                                        &config, ranges);
 
             config.MergeMode = true;

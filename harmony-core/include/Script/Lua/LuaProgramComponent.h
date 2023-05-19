@@ -23,6 +23,8 @@ namespace harmony {
     protected:
         sol::state p_State;
 
+        void RedirectPrintOutput();
+
         friend class LuaSystem;
     };
 }
