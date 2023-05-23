@@ -331,7 +331,7 @@ void harmony::Program::InitImGui() {
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-    imguiCreate(16.0f, p_ImGuiAllocator);
+    imguiCreate(18.0f, p_ImGuiAllocator);
 
 #if BX_PLATFORM_WINDOWS
     ImGui_ImplSDL2_InitForD3D(p_Window);
