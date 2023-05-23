@@ -1,16 +1,17 @@
 #pragma once
+
 #include <functional>
 #include <vector>
-namespace harmony
-{
-    class FSM
-    {
+
+namespace harmony {
+    class FSM {
     public:
         const unsigned char MAX_TRANSITIONS_PER_PROCESS = 8;
-        class State
-        {
+
+        class State {
         public:
-            State(int state, std::function<int()> action, std::function<void()> entry = NULL, std::function<void()> exit = NULL);
+            State(int state, std::function<int()> action, std::function<void()> entry = NULL,
+                  std::function<void()> exit = NULL);
 
             bool HasEntry;
             bool HasExit;
@@ -19,11 +20,11 @@ namespace harmony
             std::function<void()> m_ExitProcedure;
             std::function<int()> m_Action;
             const int m_State;
+
             friend class FSM;
         };
 
-        struct StateTransition
-        {
+        struct StateTransition {
             int Trigger;
             int SrcState;
             int DstState;
@@ -33,17 +34,21 @@ namespace harmony
         FSM();
 
         void SetStartingState(int state);
+
         void Process();
 
         void AddState(int state, std::function<int()> action);
+
         void AddStateEntry(int state, std::function<void()> entry);
+
         void AddStateExit(int state, std::function<void()> exit);
 
         void AddTrigger(int trigger, int srcState, int dstState);
+
         void Trigger(int trigger);
 
         // arbitrary, can probably be done in a better way but we are in trouble if we have an FSM with more than 65000 states.
-        inline static const int NO_TRIGGER = 65536; 
+        inline static const int NO_TRIGGER = 65536;
     protected:
         int p_PreviousState;
         int p_CurrentState;

@@ -1,22 +1,19 @@
 ![harmony logo](banner.jpg)
 # harmony
-## A cross platform engine focussed on being fun to use and easy to extend. 
-### Development Status : pre-alpha (all features unless stated otherwise are WIP)
+## Moddable and friendly cross platform game engine. 
 
-I started this project in March / April 2022. After having spent years working on games, I wanted to create my own engine that was free of the frustrations of other engines, its plain old C++, no fancy scripting variants ala unreal and no required paid membership to edit the source ala unity. If you know C++, you should be able to jump in to this with minimal effort. Each game using harmony has full access to the engine source and can extend the engine using C++ or the Scripting framework. Big heavy feature you don't want / need in your game? take it out, each feature has been designed to be as modular as possible, meaning if you want to take out a system, its usually just a single line of code.  The renderer introduces a stack based approach which allows for modularity when constructing render pipelines.
+Game engine with core focus on being fun to use and highly customizable. All software used to build harmony is open source, and can be substitued with whatever systems you see fit using the ECS infrastructure provided by the engine. Rendering is handled using `bgfx` with input/windowing/events etc. handled by `SDL2`
 
 #### Features :
 
-+ Editor + Runtime applications
++ Editor + Runtime applications (WIP)
 + ECS Design
 + Modular Design for Engine Components + Game Systems. 
-+ Serialization infrastructure using JSON.
-+ "Pipeline Stack" renderer architecture, which allows reuse of shared data and abstraction of resource generation.
++ Serialization infrastructure using JSON. (WIP)
++ GraphScript : in engine visual scripting language
++ Pipeline Graph renderer architecture, which allows reuse of shared data and abstraction of resource generation.
 + ShaderDataSource architecture which allows data binding code for shaders to be reused. 
-+ Lua scripting support (LuaJIT + Lua available through use of a CMake option)
-+ Jolt Physics Integration
-+ Arbitrary model loading (Thanks to assimp)
++ Lua scripting support (LuaJIT + Lua available through use of a CMake option) (WIP)
++ Jolt Physics Integration (WIP)
++ Arbitrary model loading (WIP)
 + Shader hot reload
-
-#### Help wanted!
-If you feel like you can contribute to the engine your input is wanted! please reach out for more info about getting setup with the project.

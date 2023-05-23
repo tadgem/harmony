@@ -8,112 +8,106 @@
 #include "Core/Alias.h"
 #include "Core/Program.h"
 #include <string>
+#include <optick.h>
 
-harmony::LuaSystem::LuaSystem(AssetManager& am, Ref<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaSystem>()), p_LuaProgramComponent(luaPc), p_AssetManager(am)
-{
+harmony::LuaSystem::LuaSystem(AssetManager &am, Ref<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaSystem>()),
+                                                                                  p_LuaProgramComponent(luaPc),
+                                                                                  p_AssetManager(am) {
 }
 
-void harmony::LuaSystem::Init(entt::registry& registry)
-{
-    HARMONY_PROFILE_FUNCTION()
+void harmony::LuaSystem::Init(entt::registry &registry) {
+    OPTICK_EVENT();
+
     auto view = registry.view<LuaComponent>();
 
-    sol::state& state = p_LuaProgramComponent->p_State;
-    for (auto [entity, lua] : view.each())
-    {
+    sol::state &state = p_LuaProgramComponent->p_State;
+    for (auto [entity, lua]: view.each()) {
         p_CurrentEntity = entity;
         InitEntityScript(entity, registry, state, lua);
 
-        if (lua.m_HasStart && lua.m_Start)
-        {
+        if (lua.m_HasStart && lua.m_Start) {
             sol::protected_function_result result = lua.m_Start();
-            if (!result.valid())
-            {
+            if (!result.valid()) {
                 sol::error err = result;
                 std::string what = err.what();
-                std::string entityStr = std::to_string((uint32_t)entity);
-                harmony::log::error("LuaSystem : InitEntityScript : Error : {} : in executing start() for Entity : {} : Script : {}", what, entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
+                std::string entityStr = std::to_string((uint32_t) entity);
+                harmony::log::error(
+                        "LuaSystem : InitEntityScript : Error : {} : in executing start() for Entity : {} : Script : {}",
+                        what, entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
             }
         }
     }
 }
 
-void harmony::LuaSystem::Update(entt::registry& registry)
-{
-    HARMONY_PROFILE_FUNCTION()
+void harmony::LuaSystem::Update(entt::registry &registry) {
+    OPTICK_EVENT();
+
     auto view = registry.view<LuaComponent>();
-    sol::state& state = p_LuaProgramComponent->p_State;
-    for (auto [entity, lua] : view.each())
-    {
+    sol::state &state = p_LuaProgramComponent->p_State;
+    for (auto [entity, lua]: view.each()) {
         p_CurrentEntity = entity;
-        if (lua.m_HasUpdate && lua.m_Update)
-        {
+        if (lua.m_HasUpdate && lua.m_Update) {
             try {
                 auto result = lua.m_Update();
-                if (!result.valid())
-                {
+                if (!result.valid()) {
                     sol::error err = result;
                     std::string what = err.what();
-                    std::string entityStr = std::to_string((uint32_t)entity);
-                    harmony::log::error("LuaSystem : Error : {} : in executing update() for Entity : {} : Script : {}", what, entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
+                    std::string entityStr = std::to_string((uint32_t) entity);
+                    harmony::log::error("LuaSystem : Error : {} : in executing update() for Entity : {} : Script : {}",
+                                        what, entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
                 }
             }
-            catch (...)
-            {
+            catch (...) {
                 harmony::log::error("LuaSystem : Failed running update, resetting.");
             }
         }
     }
 }
 
-void harmony::LuaSystem::Render(entt::registry& registry)
-{
-    HARMONY_PROFILE_FUNCTION()
+void harmony::LuaSystem::Render(entt::registry &registry) {
+    OPTICK_EVENT();
+
 }
 
-void harmony::LuaSystem::Cleanup(entt::registry& registry)
-{
-    HARMONY_PROFILE_FUNCTION()
+void harmony::LuaSystem::Cleanup(entt::registry &registry) {
+    OPTICK_EVENT();
+
     auto view = registry.view<LuaComponent>();
-    sol::state& state = p_LuaProgramComponent->p_State;
-    for (auto [entity, lua] : view.each())
-    {
+    sol::state &state = p_LuaProgramComponent->p_State;
+    for (auto [entity, lua]: view.each()) {
         p_CurrentEntity = entity;
 
-        if (lua.m_HasCleanup && lua.m_Cleanup)
-        {
+        if (lua.m_HasCleanup && lua.m_Cleanup) {
             auto result = lua.m_Cleanup();
-            if (!result.valid())
-            {
+            if (!result.valid()) {
                 sol::error err = result;
                 std::string what = err.what();
-                std::string entityStr = std::to_string((uint32_t)entity);
-                harmony::log::error("LuaSystem : Error : {} : in executing cleanup() for Entity : {} : Script : {}", what, entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
+                std::string entityStr = std::to_string((uint32_t) entity);
+                harmony::log::error("LuaSystem : Error : {} : in executing cleanup() for Entity : {} : Script : {}",
+                                    what, entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
             }
         }
     }
 }
 
-nlohmann::json harmony::LuaSystem::SerializeSystem(entt::registry& registry)
-{
-    HARMONY_PROFILE_FUNCTION()
+nlohmann::json harmony::LuaSystem::SerializeSystem(entt::registry &registry) {
+    OPTICK_EVENT();
+
     nlohmann::json j;
 
     auto view = registry.view<LuaComponent>();
 
-    for (auto [e, lua] : view.each())
-    {
+    for (auto [e, lua]: view.each()) {
         j[GetEntityKey(e)] = lua;
     }
 
     return j;
 }
 
-void harmony::LuaSystem::DeserializeSystem(entt::registry& registry, nlohmann::json systemJson)
-{
-    HARMONY_PROFILE_FUNCTION()
-    for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++)
-    {
+void harmony::LuaSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+    OPTICK_EVENT();
+
+    for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
         nlohmann::json luaJson = entry.value();
         LuaComponent lc;
@@ -128,41 +122,37 @@ void harmony::LuaSystem::DeserializeSystem(entt::registry& registry, nlohmann::j
     }
 }
 
-void harmony::LuaSystem::Refresh()
-{
+void harmony::LuaSystem::Refresh() {
+    OPTICK_EVENT();
 }
 
-entt::entity harmony::LuaSystem::GetCurrentEntity()
-{
+entt::entity harmony::LuaSystem::GetCurrentEntity() {
+    OPTICK_EVENT();
     return p_CurrentEntity;
 }
 
-void harmony::LuaSystem::UpdateScripts(WeakRef<Scene> scene)
-{
-    if (scene.expired())
-    {
+void harmony::LuaSystem::UpdateScripts(WeakRef<Scene> scene) {
+    OPTICK_EVENT();
+    if (scene.expired()) {
         harmony::log::error("LuaSystem : Cannot update scripts, scene is expired!");
         return;
     }
 
     auto scriptHandles = p_AssetManager.GetLoadedAssets<LuaScriptAsset>();
 
-    entt::registry& r = scene.lock()->m_Registry;
+    entt::registry &r = scene.lock()->m_Registry;
 
     auto luaView = r.view<LuaComponent>();
 
-    for (auto [e, lua] : luaView.each())
-    {
+    for (auto [e, lua]: luaView.each()) {
         auto luaScriptAsset = lua.m_LuaScriptAsset;
 
-        for (int i = 0; i < scriptHandles.size(); i++)
-        {
-            if (scriptHandles[i] == luaScriptAsset.m_Handle)
-            {
+        for (int i = 0; i < scriptHandles.size(); i++) {
+            if (scriptHandles[i] == luaScriptAsset.m_Handle) {
                 auto luaAsset = p_AssetManager.GetAsset<LuaScriptAsset>(scriptHandles[i]);
-                if (luaAsset.expired())
-                {
-                    harmony::log::warn("LuaSystem : Script with handle : {} : not found in asset manager.", scriptHandles[i].Path);
+                if (luaAsset.expired()) {
+                    harmony::log::warn("LuaSystem : Script with handle : {} : not found in asset manager.",
+                                       scriptHandles[i].Path);
                     break;
                 }
 
@@ -178,8 +168,8 @@ void harmony::LuaSystem::UpdateScripts(WeakRef<Scene> scene)
 
 }
 
-void harmony::LuaSystem::InitEntityScript(entt::entity e, entt::registry& r, sol::state& state, LuaComponent& lua)
-{
+void harmony::LuaSystem::InitEntityScript(entt::entity e, entt::registry &r, sol::state &state, LuaComponent &lua) {
+    OPTICK_EVENT();
     String chunkName = std::to_string(static_cast<uint32_t>(e));
 
     sol::environment env(state, sol::create, state.globals());
@@ -188,32 +178,30 @@ void harmony::LuaSystem::InitEntityScript(entt::entity e, entt::registry& r, sol
 
     auto compilationResult = state.do_string(lua.m_LuaScriptAsset.m_Script, env);
 
-    if (!compilationResult.valid())
-    {
+    if (!compilationResult.valid()) {
         sol::error err = compilationResult;
         std::string what = err.what();
-        std::string entityStr = std::to_string((uint32_t)e);
-        harmony::log::error("LuaSystem : InitEntityScript : Error : {} : in compiling file for Entity : {} : Script : {}", what, entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
+        std::string entityStr = std::to_string((uint32_t) e);
+        harmony::log::error(
+                "LuaSystem : InitEntityScript : Error : {} : in compiling file for Entity : {} : Script : {}", what,
+                entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
     }
 
     sol::function startFx = env["start"];
     sol::function updateFx = env["update"];
     sol::function cleanupFx = env["cleanup"];
 
-    if (startFx.valid())
-    {
+    if (startFx.valid()) {
         lua.m_HasStart = true;
         lua.m_Start = startFx;
     }
 
-    if (updateFx.valid())
-    {
+    if (updateFx.valid()) {
         lua.m_HasUpdate = true;
         lua.m_Update = updateFx;
     }
 
-    if (cleanupFx.valid())
-    {
+    if (cleanupFx.valid()) {
         lua.m_HasCleanup = true;
         lua.m_Cleanup = cleanupFx;
     }

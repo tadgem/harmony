@@ -1,14 +1,13 @@
 #pragma once
+
 #include "Core/Memory.h"
 #include "glm/glm.hpp"
 #include "ThirdParty/json.hpp"
-namespace harmony
-{
-    class Camera
-    {
+
+namespace harmony {
+    class Camera {
     public:
-        enum ProjectionType
-        {
+        enum ProjectionType {
             Orthorgraphic,
             Perspective
         };

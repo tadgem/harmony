@@ -1,6 +1,5 @@
 #include "GameProgram.h"
 
-harmony::GameProgram::GameProgram() : RuntimeProgram(GameName)
-{
+harmony::GameProgram::GameProgram() : RuntimeProgram(GameName) {
 
 }

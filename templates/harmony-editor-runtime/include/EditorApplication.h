@@ -1,74 +1,96 @@
 #pragma once
+
 #include "RuntimeProgram.h"
 #include "Core/FSM.h"
 #include "EditorPanel.h"
 #include "EditorMenu.h"
+#include "Core/Alias.h"
+#include "ImGui/GraphScript/GraphScriptImGui.h"
+#include "ImGui/Logger.h"
+namespace harmony {
+    class CameraSystem;
 
-namespace harmony
-{
-	class CameraSystem;
-	class EditorView;
-	class Editor : public RuntimeProgram
-	{
-	public:
+    class EditorView;
 
-		enum Mode
-		{
-			Edit,
-			Debug
-		};
+    class Editor : public RuntimeProgram {
+    public:
 
-		enum Trigger
-		{
-			Play,
-			Stop
-		};
+        enum Mode {
+            Edit,
+            Debug
+        };
 
-		Editor();
+        enum Trigger {
+            Play,
+            Stop
+        };
 
-		virtual void	AddAssetTypeNames() override;
-		virtual void	AddAssetFactories() override;
-		virtual void	AddProgramComponents() override;
-		virtual void	AddSystems() override;
-		virtual void	AddPipelineStageRenderers() override;
-		virtual void	InitializePipelines() override;
-		virtual void	InitializeViews() override;
-		
-		virtual void	SaveProject() override;
-		virtual void	LoadProject(const std::string& path) override;
+        Editor();
 
-		void 			AddEditorPanels();
+        virtual void AddAssetTypeNames() override;
+
+        virtual void AddAssetFactories() override;
+
+        virtual void AddProgramComponents() override;
+
+        virtual void AddSystems() override;
+
+        virtual void AddPipelineStageRenderers() override;
+
+        virtual void InitializePipelines() override;
+
+        virtual void InitializeViews() override;
+
+        virtual void SaveProject() override;
+
+        virtual void LoadProject(const std::string &path) override;
+
+        void AddEditorPanels();
 
 
-		int 			OnEditUpdate();
-		void 			OnEditExit();
+        int OnEditUpdate();
 
-		virtual int		OnRuntimeUpdate() override;
-		void 			OnRuntimeEntry();
-		void 			OnRuntimeExit();
+        void OnEditExit();
 
-		virtual void 	Run() override;
-		virtual void	Init() override;
-		void			Run(const std::string& projectPath);
+        virtual int OnRuntimeUpdate() override;
 
-		virtual void 	LoadScene(const std::string& path) override;
-		virtual void 	OpenScene(uint32_t index) override;
-		void 			UpdateEditor();
-		void 			GlobalDockspace();
-		void			SetRunningStyle();
-		virtual void LoadBuiltInAssets() override;
+        void OnRuntimeEntry();
 
-		FSM m_EditorFSM;
+        void OnRuntimeExit();
 
-	protected:		
-		std::vector<Ref<Panel>> p_Panels;
+        virtual void Run() override;
 
-		Ref<ScenePanel> 		p_ScenePanel;
-		Ref<EditorView> 		p_EditorView;
-		EditorMainMenuBar 		p_MainMenuBar;
+        virtual void Init() override;
 
-	private:
-		std::string p_LoadedScenePath;
-	};
+        void Run(const std::string &projectPath, harmony::Procedure proc = NULL);
+
+        virtual void LoadScene(const std::string &path) override;
+
+        virtual void OpenScene(uint32_t index) override;
+
+        void UpdateEditor();
+
+        void GlobalDockspace();
+
+        void SetRunningStyle();
+
+        virtual void LoadBuiltInAssets() override;
+
+        FSM m_EditorFSM;
+
+        harmony::GraphScriptImGuiEditor m_GraphScriptEditor;
+        harmony::ImGuiLogger m_Logger;
+
+    protected:
+        std::vector<Ref<Panel>> p_Panels;
+
+
+        Ref<ScenePanel> p_ScenePanel;
+        Ref<EditorView> p_EditorView;
+        EditorMainMenuBar p_MainMenuBar;
+
+    private:
+        std::string p_LoadedScenePath;
+    };
 
 };

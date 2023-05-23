@@ -1,8 +1,7 @@
 #pragma once
 
 #include "spdlog/spdlog.h"
-
-namespace harmony
-{
-	namespace log = spdlog;
+#include "spdlog/common.h"
+namespace harmony {
+    namespace log = spdlog;
 }
