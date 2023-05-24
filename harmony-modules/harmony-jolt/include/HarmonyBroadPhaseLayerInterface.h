@@ -26,45 +26,9 @@ namespace harmony {
         static constexpr uint8_t NUM_LAYERS(5);
     };
 
-    static inline bool BroadPhaseCanCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) {
-        switch (inLayer1) {
-            case Layers::NON_MOVING:
-                return inLayer2 == BroadPhaseLayers::MOVING;
-            case Layers::MOVING:
-                return inLayer2 == BroadPhaseLayers::NON_MOVING || inLayer2 == BroadPhaseLayers::MOVING ||
-                       inLayer2 == BroadPhaseLayers::SENSOR;
-            case Layers::DEBRIS:
-                return inLayer2 == BroadPhaseLayers::NON_MOVING;
-            case Layers::SENSOR:
-                return inLayer2 == BroadPhaseLayers::MOVING;
-            case Layers::UNUSED1:
-            case Layers::UNUSED2:
-            case Layers::UNUSED3:
-                return false;
-            default:
-                return false;
-        }
-    }
-
     /// Function that determines if two object layers can collide
     static inline bool ObjectCanCollide(JPH::ObjectLayer inObject1, JPH::ObjectLayer inObject2) {
-        switch (inObject1) {
-            case Layers::UNUSED1:
-            case Layers::UNUSED2:
-            case Layers::UNUSED3:
-            case Layers::UNUSED4:
-                return false;
-            case Layers::NON_MOVING:
-                return inObject2 == Layers::MOVING || inObject2 == Layers::DEBRIS;
-            case Layers::MOVING:
-                return inObject2 == Layers::NON_MOVING || inObject2 == Layers::MOVING || inObject2 == Layers::SENSOR;
-            case Layers::DEBRIS:
-                return inObject2 == Layers::NON_MOVING;
-            case Layers::SENSOR:
-                return inObject2 == Layers::MOVING;
-            default:
-                return false;
-        }
+
     };
 
     class HarmonyBroadPhaseLayerInterface : public JPH::BroadPhaseLayerInterface {
@@ -82,4 +46,22 @@ namespace harmony {
     protected:
         JPH::BroadPhaseLayer m_ObjectToBroadPhase[Layers::NUM_LAYERS];
     };
+
+    class HarmonyObjectVsBroadPhaseLayerFilter : public JPH::ObjectVsBroadPhaseLayerFilter
+    {
+    public:
+        HarmonyObjectVsBroadPhaseLayerFilter();
+
+        bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) const override;
+
+
+    };
+
+class HarmonyObjectLayerPairFilter : public JPH::ObjectLayerPairFilter
+{
+public:
+    bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::ObjectLayer inLayer2) const override;
+};
+
+
 }

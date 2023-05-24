@@ -18,7 +18,7 @@ int main()
 
 int main() {
     harmony::RuntimeProgram app;
-    app.Run("../../../../projects/Test3/Test3.harmonyproj");
+    app.Run("../../../../projects/JoltTest/JoltTest.harmonyproj");
 }
 
 #endif

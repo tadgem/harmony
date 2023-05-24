@@ -36,3 +36,50 @@ const char *harmony::HarmonyBroadPhaseLayerInterface::GetBroadPhaseLayerName(JPH
             return "INVALID";
     }
 }
+
+bool harmony::HarmonyObjectVsBroadPhaseLayerFilter::ShouldCollide(JPH::ObjectLayer inLayer1,
+                                                                  JPH::BroadPhaseLayer inLayer2) const {
+    switch (inLayer1) {
+        case Layers::NON_MOVING:
+            return inLayer2 == BroadPhaseLayers::MOVING;
+        case Layers::MOVING:
+            return inLayer2 == BroadPhaseLayers::NON_MOVING || inLayer2 == BroadPhaseLayers::MOVING ||
+                   inLayer2 == BroadPhaseLayers::SENSOR;
+        case Layers::DEBRIS:
+            return inLayer2 == BroadPhaseLayers::NON_MOVING;
+        case Layers::SENSOR:
+            return inLayer2 == BroadPhaseLayers::MOVING;
+        case Layers::UNUSED1:
+        case Layers::UNUSED2:
+        case Layers::UNUSED3:
+            return false;
+        default:
+            return false;
+    }
+}
+
+harmony::HarmonyObjectVsBroadPhaseLayerFilter::HarmonyObjectVsBroadPhaseLayerFilter():
+JPH::ObjectVsBroadPhaseLayerFilter()
+{
+
+}
+
+bool harmony::HarmonyObjectLayerPairFilter::ShouldCollide(JPH::ObjectLayer inLayer1, JPH::ObjectLayer inLayer2) const {
+    switch (inLayer1) {
+        case Layers::UNUSED1:
+        case Layers::UNUSED2:
+        case Layers::UNUSED3:
+        case Layers::UNUSED4:
+            return false;
+        case Layers::NON_MOVING:
+            return inLayer1 == Layers::MOVING || inLayer2 == Layers::DEBRIS;
+        case Layers::MOVING:
+            return inLayer1 == Layers::NON_MOVING || inLayer2 == Layers::MOVING || inLayer2 == Layers::SENSOR;
+        case Layers::DEBRIS:
+            return inLayer1 == Layers::NON_MOVING;
+        case Layers::SENSOR:
+            return inLayer1 == Layers::MOVING;
+        default:
+            return false;
+    }
+}

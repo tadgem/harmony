@@ -14,6 +14,10 @@ namespace JPH {
     class PhysicsSystem;
 
     class BodyInterface;
+
+    class ObjectVsBroadPhaseLayerFilter;
+
+    class ObjectLayerPairFilter;
 }
 namespace harmony {
     struct JoltBodyComponent;
@@ -84,6 +88,8 @@ namespace harmony {
         Unique<JPH::JobSystem> m_JobSystemValidating;        // The job system to use when validating determinism
         Unique<JPH::PhysicsSystem> m_PhysicsSystem;            // The physics system that simulates the world
         Unique<JPH::BroadPhaseLayerInterface> m_BroadPhaseLayerInterface;
+        Unique<JPH::ObjectVsBroadPhaseLayerFilter> m_ObjectVsBroadphaseFilter;
+        Unique<JPH::ObjectLayerPairFilter> m_ObjectLayerPairFilter;
         Unique<HarmonyBodyActivationListener> m_BodyActivationListener;
         Unique<HarmonyContactListener> m_ContactListener;          // Contact listener implementation
         Unique<HarmonyDebugRenderer> m_DebugRenderer;

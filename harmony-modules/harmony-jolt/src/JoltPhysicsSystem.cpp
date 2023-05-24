@@ -73,7 +73,9 @@ harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GetTypeHash<JoltPhysics
                                                                    s_ValidatingJobSystemNumThreads);
 
     m_BroadPhaseLayerInterface = CreateUnique<HarmonyBroadPhaseLayerInterface>();
+    m_ObjectVsBroadphaseFilter = CreateUnique<HarmonyObjectVsBroadPhaseLayerFilter>();
     m_BodyActivationListener = CreateUnique<HarmonyBodyActivationListener>();
+    m_ObjectLayerPairFilter = CreateUnique<HarmonyObjectLayerPairFilter>();
     m_DebugRenderer = CreateUnique<HarmonyDebugRenderer>();
 
 }
@@ -86,7 +88,7 @@ void harmony::JoltPhysicsSystem::Init(entt::registry &registry) {
     m_PhysicsSystem = CreateUnique<JPH::PhysicsSystem>();
 
     m_PhysicsSystem->Init(s_NumBodies, s_NumBodyMutexes, s_MaxBodyPairs, s_MaxContactConstraints,
-                          *m_BroadPhaseLayerInterface, BroadPhaseCanCollide, ObjectCanCollide);
+                          *m_BroadPhaseLayerInterface, *m_ObjectVsBroadphaseFilter, *m_ObjectLayerPairFilter);
     m_PhysicsSystem->SetPhysicsSettings(m_PhysicsSettings);
     m_PhysicsSystem->SetGravity(s_DefaultGravity);
 
