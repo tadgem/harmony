@@ -327,13 +327,10 @@ void harmony::Editor::SetRunningStyle() {
     // Photoshop style by Derydoca from ImThemes
     ImGuiStyle &style = ImGui::GetStyle();
 
-    style.Alpha = 1.0f;
-    style.DisabledAlpha = 0.6000000238418579f;
     style.DisplaySafeAreaPadding = ImVec2(0.0f, 0.0f);
-    style.WindowPadding = ImVec2(0.0f, 0.0f);
-    style.FramePadding = ImVec2(0.0f, 0.0f);
+    style.WindowPadding = ImVec2(1.0f, 1.0f);
+    style.FramePadding = ImVec2(1.0f, 1.0f);
     style.DisplayWindowPadding = ImVec2(0.0f, 0.0f);
-
 
     style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
     style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.4980392158031464f, 0.4980392158031464f, 0.4980392158031464f, 1.0f);

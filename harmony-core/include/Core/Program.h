@@ -142,6 +142,8 @@ namespace harmony {
         bool p_Run;
         bool p_ResizedThisFrame;
 
+        float p_DPIScale;
+
 
         SDL_Window *p_Window;
         bx::DefaultAllocator *p_ImGuiAllocator;

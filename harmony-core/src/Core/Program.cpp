@@ -7,6 +7,8 @@
 #include "bgfx/platform.h"
 #include "bx/timer.h"
 #include "SDL_syswm.h"
+#include "SDL_video.h"
+#include "SDL_misc.h"
 #if HARMONY_DEBUG
 #include "optick.h"
 
@@ -17,6 +19,10 @@
 #include "ImGui/backends/imgui_impl_sdl.h"
 #include "ImGui/robotomono_regular.ttf.h"
 #include "ImGui/imnodes.h"
+#endif
+
+#if BX_PLATFORM_WINDOWS
+#include "windows.h"
 #endif
 
 harmony::Program::Program(const std::string &name) : p_AppName(name), m_Renderer(m_AssetManager) {
@@ -41,6 +47,10 @@ harmony::Program::~Program() {
 
 void harmony::Program::Init() {
     OPTICK_EVENT();
+
+#if BX_PLATFORM_WINDOWS
+    SetProcessDPIAware();
+#endif
 
     harmony::log::info("Harmony Engine");
 
@@ -115,17 +125,24 @@ void harmony::Program::Cleanup() {
 void harmony::Program::InitSDL() {
     OPTICK_EVENT();
     // init SDL window
-    Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK ;
+    Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK;
     SDL_Init(flags);
 
     SDL_Rect rect;
     SDL_GetDisplayUsableBounds(0, &rect);
+    float ddpi, hdpi, vdpi;
+    SDL_GetDisplayDPI(0,&ddpi, &hdpi, &vdpi);
+
+    p_DPIScale = 1.0f;
+#if BX_PLATFORM_WINDOWS
+    p_DPIScale = ddpi / 96.0f;
+#endif
     p_WindowWidth = rect.w;
     p_WindowHeight = rect.h;
 
     SDL_WindowFlags windowFlags = static_cast<SDL_WindowFlags>(SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE |
                                                                SDL_WINDOW_MAXIMIZED | SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALLOW_HIGHDPI);
-    // TODO: Add window resizing.
+
     p_Window = SDL_CreateWindow(
             p_AppName.c_str(),
             SDL_WINDOWPOS_CENTERED,
@@ -138,6 +155,7 @@ void harmony::Program::InitSDL() {
         harmony::log::error("Window could not be created. SDL_Error: ", SDL_GetError());
         return;
     }
+
     harmony::log::info("SDL Initialized successfully");
 }
 
@@ -230,11 +248,6 @@ void harmony::Program::SetStyle() {
     OPTICK_EVENT();
     // Harmony style from ImThemes
     ImGuiStyle &style = ImGui::GetStyle();
-
-    style.DisplaySafeAreaPadding = ImVec2(0.0f, 0.0f);
-    style.WindowPadding = ImVec2(0.0f, 0.0f);
-    style.FramePadding = ImVec2(0.0f, 0.0f);
-    style.DisplayWindowPadding = ImVec2(0.0f, 0.0f);
 
     style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 0.9999899864196777f, 0.9999899864196777f, 1.0f);
     style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.6866884231567383f, 0.6866952776908875f, 0.6866907477378845f, 1.0f);
@@ -330,8 +343,14 @@ void harmony::Program::InitImGui() {
 
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-
-    imguiCreate(18.0f, p_ImGuiAllocator);
+    int ww, wh;
+    SDL_GetWindowSize(p_Window, &ww, &wh);
+    int displayIndex = SDL_GetWindowDisplayIndex(p_Window);
+    SDL_DisplayMode displayMode;
+    SDL_GetWindowDisplayMode(p_Window, &displayMode);
+    SDL_SysWMinfo info;
+    SDL_GetWindowWMInfo(p_Window, &info);
+    imguiCreate(20.0f * p_DPIScale, p_ImGuiAllocator);
 
 #if BX_PLATFORM_WINDOWS
     ImGui_ImplSDL2_InitForD3D(p_Window);

@@ -118,3 +118,4 @@ namespace ImGui
     void MyFunction(const char* name, const MyMatrix44& v);
 }
 */
+static const int HARMONY_IMGUI_ICON_SIZE = 30;
