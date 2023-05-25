@@ -119,12 +119,12 @@ void harmony::ShaderDataOverride::UpdateOverrides(WeakRef<ShaderProgram> shaderW
     for (auto &[uniformName, val]: textures) {
         for (int i = 0; i < m_AvailableOverrides.size(); i++) {
             if (m_AvailableOverrides[i].Name == uniformName) {
-                WeakRef<Texture> texWr = am.GetAsset<Texture>(val.Handle);
+                WeakRef<TextureAsset> texWr = am.GetAsset<TextureAsset>(val.Handle);
 
                 if (texWr.expired()) {
                     continue;
                 }
-                Ref<Texture> tex = texWr.lock();
+                Ref<TextureAsset> tex = texWr.lock();
                 val.BgfxHandle = tex->m_TextureHandle.BgfxHandle;
                 val.Handle = tex->m_TextureHandle.Handle;
                 val.Info = tex->m_TextureHandle.Info;

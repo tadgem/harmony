@@ -176,12 +176,12 @@ void harmony::ShaderProgram::UpdateUniforms(AssetManager &am) {
         for (auto &[handle, value]: m_TextureValues) {
             if (textures.find(handle.Name) != textures.end()) {
                 value = textures[handle.Name];
-                WeakRef<Texture> texWr = am.GetAsset<Texture>(value.Handle);
+                WeakRef<TextureAsset> texWr = am.GetAsset<TextureAsset>(value.Handle);
 
                 if (texWr.expired()) {
                     continue;
                 }
-                Ref<Texture> tex = texWr.lock();
+                Ref<TextureAsset> tex = texWr.lock();
                 value = tex->m_TextureHandle;
             }
         }

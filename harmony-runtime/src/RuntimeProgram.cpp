@@ -79,7 +79,7 @@ void harmony::RuntimeProgram::AddAssetTypeNames() {
     OPTICK_EVENT();
     m_AssetManager.AddAssetTypeName<Mesh>();
     m_AssetManager.AddAssetTypeName<Model>();
-    m_AssetManager.AddAssetTypeName<Texture>();
+    m_AssetManager.AddAssetTypeName<TextureAsset>();
     m_AssetManager.AddAssetTypeName<ShaderStage>();
 }
 

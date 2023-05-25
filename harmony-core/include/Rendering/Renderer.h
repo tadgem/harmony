@@ -79,7 +79,7 @@ namespace harmony {
 
         BGFXMeshHandle SubmitMeshToGPU(WeakRef<Mesh> mesh);
 
-        BGFXTextureHandle SubmitTextureToGPU(WeakRef<Texture> textureWeakRef);
+        BGFXTextureHandle SubmitTextureToGPU(WeakRef<TextureAsset> textureWeakRef);
 
         void RemoveView(WeakRef<View> view);
 

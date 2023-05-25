@@ -21,7 +21,7 @@ namespace harmony {
 
         std::vector<TileMapCell> Cells;
 
-        WeakRef<Texture> TileMapTexture;
+        WeakRef<TextureAsset> TileMapTexture;
 
     };
 };

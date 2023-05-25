@@ -19,15 +19,15 @@ namespace harmony
     {
     public:
 
-        void PreUpdate(entt::registry &registry, WeakRef<View> view);
-
-        void PostUpdate(entt::registry &registry, WeakRef<View> view);
-
-        std::vector<WeakRef<PipelineStage>> m_PipelineStages;
+        void Render(entt::registry &registry, WeakRef<View> view);
+        void Composite(entt::registry &registry, WeakRef<View> view);
 
         bgfx::ViewId m_FinalImageViewId;
         bgfx::FrameBufferHandle m_FinalFramebufferHandle;
         bgfx::TextureHandle m_FinalFramebufferAttachment;
+
+    private:
+        std::vector<WeakRef<PipelineStage>> p_PipelineStages;
 
     };
 }

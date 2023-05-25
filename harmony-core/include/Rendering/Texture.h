@@ -15,9 +15,9 @@ namespace harmony {
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(BGFXTextureHandle, Handle)
     };
 
-    class Texture : public Asset {
+    class TextureAsset : public Asset {
     public:
-        Texture(const std::string &path, bimg::ImageContainer *imageContainer);
+        TextureAsset(const std::string &path, bimg::ImageContainer *imageContainer);
 
         BGFXTextureHandle m_TextureHandle;
         bool m_SubmittedToGPU;

@@ -284,9 +284,9 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry &registry, en
         for (auto &[key, handle]: mc.Data.m_TextureOverrides) {
             std::string textureName = "Tex : " + handle.Handle.Path;
             ImGui::Text(textureName.c_str());
-            if (p_AssetManager.AssetTypeSelector<Texture>(key.Name, handle.Handle)) {
-                WeakRef<Texture> texWr = p_AssetManager.GetAsset<Texture>(handle.Handle);
-                Ref<Texture> tex = texWr.lock();
+            if (p_AssetManager.AssetTypeSelector<TextureAsset>(key.Name, handle.Handle)) {
+                auto texWr = p_AssetManager.GetAsset<TextureAsset>(handle.Handle);
+                auto tex = texWr.lock();
                 handle.BgfxHandle = tex->m_TextureHandle.BgfxHandle;
                 handle.Handle = tex->m_TextureHandle.Handle;
                 handle.Info = tex->m_TextureHandle.Info;
@@ -341,7 +341,7 @@ void harmony::AssetManagerPanel::OnImGui() {
         ImGui::Indent();
         const std::string textureAssetTitle = std::string(ICON_FA_FILE_IMAGE_O) + " Textures";
         ImGui::Text(textureAssetTitle.c_str());
-        std::vector<AssetHandle> texHandles = p_AssetManager.GetLoadedAssets<Texture>();
+        std::vector<AssetHandle> texHandles = p_AssetManager.GetLoadedAssets<TextureAsset>();
         if (ImGui::TreeNode("Textures")) {
             for (int i = 0; i < texHandles.size(); i++) {
                 ImGui::Text(texHandles[i].Path.c_str());
@@ -350,7 +350,7 @@ void harmony::AssetManagerPanel::OnImGui() {
 
             if (ImGui::Button("Load Texture")) {
                 ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Asset", ".png,.jpg", ".");
-                p_SelectedTypeHash = GetTypeHash<Texture>();
+                p_SelectedTypeHash = GetTypeHash<TextureAsset>();
             }
         }
 

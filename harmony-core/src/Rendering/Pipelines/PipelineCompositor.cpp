@@ -13,10 +13,13 @@
 #include "Rendering/View.h"
 #include "Rendering/Pipelines/PostProcessStage.h"
 
-void harmony::PipelineCompositor::PreUpdate(entt::registry &registry, harmony::WeakRef<harmony::View> view) {
+void harmony::PipelineCompositor::Render(entt::registry &registry, harmony::WeakRef<harmony::View> view)
+{
+    OPTICK_EVENT();
 
 }
 
-void harmony::PipelineCompositor::PostUpdate(entt::registry &registry, harmony::WeakRef<harmony::View> view) {
-
+void harmony::PipelineCompositor::Composite(entt::registry &registry, WeakRef<View> view)
+{
+    OPTICK_EVENT();
 }

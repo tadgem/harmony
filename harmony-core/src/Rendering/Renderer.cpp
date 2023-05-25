@@ -277,6 +277,7 @@ void harmony::Renderer::AddViewPostProcessStage(WeakRef<View> viewWeakRef, WeakR
 void harmony::Renderer::RefreshViews() {
     OPTICK_EVENT();
     for (auto &[view, stack]: p_Views) {
+        view->OnResized(view->m_Width, view->m_Height);
         stack.OnViewResized(view);
     }
 }
@@ -907,13 +908,13 @@ harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(WeakRef<Mesh> mesh) {
     return m;
 }
 
-harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture> textureWeakRef) {
+harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<TextureAsset> textureWeakRef) {
     OPTICK_EVENT();
     uint64_t flags = 0;
 
     BGFXTextureHandle handle;
 
-    Ref<Texture> texture = textureWeakRef.lock();
+    Ref<TextureAsset> texture = textureWeakRef.lock();
     handle.Handle = texture->m_Handle;
     bimg::ImageContainer *imageContainer = texture->p_ImageContainer;
 

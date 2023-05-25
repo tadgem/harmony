@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Core/Memory.h"
+#include "Core/Alias.h"
 #include "bgfx/bgfx.h"
 
 namespace harmony {
     struct BGFXFramebufferHandle {
-        bgfx::FrameBufferHandle m_Handle;
+        bgfx::FrameBufferHandle m_FB;
 
     };
 

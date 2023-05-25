@@ -63,7 +63,7 @@ void harmony::TileMapSystemImGui::Update(entt::registry &registry) {
         }
 
         std::string currentTexture = "";
-        Ref<Texture> texture = nullptr;
+        Ref<TextureAsset> texture = nullptr;
         /*if (!p_SelectedTexture.expired())
         {
             texture = p_SelectedTexture.lock();

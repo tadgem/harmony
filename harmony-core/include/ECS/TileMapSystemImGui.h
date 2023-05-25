@@ -23,8 +23,8 @@ namespace harmony {
 
     protected:
         Ref<TileMapSystem> p_TileMapSystem;
-        WeakRef<Texture> p_SelectedTexture;
+        WeakRef<TextureAsset> p_SelectedTexture;
         entt::entity p_SelectedTileMapEntity;
-        std::vector<WeakRef<Texture>> p_AvailableTextures;
+        std::vector<WeakRef<TextureAsset>> p_AvailableTextures;
     };
 };
