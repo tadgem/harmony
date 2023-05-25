@@ -445,6 +445,11 @@ void harmony::PipelineStack::InitializeStack(WeakRef<View> view) {
         bgfx::setViewName(m_FinalImageViewId, stackFinalViewName.c_str());
         bgfx::setViewRect(m_FinalImageViewId, 0, 0, (uint16_t) _view->m_Width, (uint16_t) _view->m_Height);
         p_Initialized = true;
+
+        if(m_FinalFramebufferHandle.idx > 128)
+        {
+            p_Initialized = false;
+        }
     }
 }
 
@@ -502,7 +507,11 @@ void harmony::PipelineStack::OnViewResized(WeakRef<View> view) {
             bgfx::setViewClear(viewIds[i], BGFX_CLEAR_COLOR, 0);
         }
     }
-
+    if(m_FinalFramebufferHandle.idx == UINT16_MAX)
+    {
+        harmony::log::error("PipelineStack : Cannot create framebuffer.");
+        return;
+    }
     bgfx::destroy(m_FinalFramebufferHandle);
     bgfx::destroy(m_FinalFramebufferAttachment);
 

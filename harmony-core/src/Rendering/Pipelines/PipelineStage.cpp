@@ -167,6 +167,11 @@ void harmony::PipelineStage::Deserialize(nlohmann::json j) {
 
 void harmony::PipelineStage::Data::Clear() {
     OPTICK_EVENT();
+    if(m_FramebufferHandle.idx == UINT16_MAX)
+    {
+        harmony::log::warn("PipelineStage : Cannot destroy framebuffer handle.");
+        return;
+    }
     bgfx::destroy(m_FramebufferHandle);
     for (auto &[type, attachment]: m_Attachments) {
         bgfx::destroy(attachment.m_Handle);
