@@ -85,12 +85,6 @@ void harmony::RuntimeView::OnImGui() {
         auto dim = ImGui::GetWindowSize();
         uint32_t w = static_cast<uint32_t>(dim.x);
         uint32_t h = static_cast<uint32_t>(dim.y);
-
-        if(w != m_Width || h != m_Height)
-        {
-            OnResized(w, h);
-        }
-
     }
     ImGui::End();
 }
