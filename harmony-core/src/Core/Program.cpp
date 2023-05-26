@@ -227,9 +227,41 @@ void harmony::Program::InitBGFX() {
 
 }
 
+void harmony::Program::InitImGui() {
+    OPTICK_EVENT();
+    ImGui::CreateContext();
+    ImNodes::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+    p_ImGuiAllocator = new bx::DefaultAllocator();
+
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    int ww, wh;
+    SDL_GetWindowSize(p_Window, &ww, &wh);
+    int displayIndex = SDL_GetWindowDisplayIndex(p_Window);
+    SDL_DisplayMode displayMode;
+    SDL_GetWindowDisplayMode(p_Window, &displayMode);
+    SDL_SysWMinfo info;
+    SDL_GetWindowWMInfo(p_Window, &info);
+    imguiCreate(20.0f * p_DPIScale, p_ImGuiAllocator);
+
+#if BX_PLATFORM_WINDOWS
+    ImGui_ImplSDL2_InitForD3D(p_Window);
+#elif BX_PLATFORM_OSX
+    ImGui_ImplSDL2_InitForMetal(p_Window);
+#elif BX_PLATFORM_LINUX || BX_PLATFORM_EMSCRIPTEN
+    ImGui_ImplSDL2_InitForOpenGL(p_Window, nullptr);
+#endif
+    harmony::log::info("Successfully initialized ImGui");
+}
+
 void harmony::Program::ListCapabilities() {
     OPTICK_EVENT();
     harmony::log::info("Program : BGFX : Capabilities");
+    harmony::log::info("Program : BGFX : Max Framebuffers : {}", m_Capabilities->limits.maxFrameBuffers);
+    harmony::log::info("Program : BGFX : Max Textures : {}", m_Capabilities->limits.maxTextures);
+    harmony::log::info("Program : BGFX : Max Num Views : {}", m_Capabilities->limits.maxViews);
+
     harmony::log::info("Program : BGFX : Alpha To Coverage? : {}",
                        m_Capabilities->supported && BGFX_CAPS_ALPHA_TO_COVERAGE);
     harmony::log::info("Program : BGFX : Support Compute? : {}", m_Capabilities->supported && BGFX_CAPS_COMPUTE);
@@ -332,34 +364,6 @@ void harmony::Program::SetStyle() {
     style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.800000011920929f, 0.800000011920929f, 0.800000011920929f,
                                                      0.3499999940395355f);
 
-}
-
-void harmony::Program::InitImGui() {
-    OPTICK_EVENT();
-    ImGui::CreateContext();
-    ImNodes::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
-    p_ImGuiAllocator = new bx::DefaultAllocator();
-
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-    int ww, wh;
-    SDL_GetWindowSize(p_Window, &ww, &wh);
-    int displayIndex = SDL_GetWindowDisplayIndex(p_Window);
-    SDL_DisplayMode displayMode;
-    SDL_GetWindowDisplayMode(p_Window, &displayMode);
-    SDL_SysWMinfo info;
-    SDL_GetWindowWMInfo(p_Window, &info);
-    imguiCreate(20.0f * p_DPIScale, p_ImGuiAllocator);
-
-#if BX_PLATFORM_WINDOWS
-    ImGui_ImplSDL2_InitForD3D(p_Window);
-#elif BX_PLATFORM_OSX
-    ImGui_ImplSDL2_InitForMetal(p_Window);
-#elif BX_PLATFORM_LINUX || BX_PLATFORM_EMSCRIPTEN
-    ImGui_ImplSDL2_InitForOpenGL(p_Window, nullptr);
-#endif
-    harmony::log::info("Successfully initialized ImGui");
 }
 
 void harmony::Program::PreRunInit() {
