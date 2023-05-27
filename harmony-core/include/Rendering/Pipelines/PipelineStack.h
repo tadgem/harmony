@@ -68,7 +68,7 @@ namespace harmony {
         std::vector<WeakRef<Pipeline>> m_PipelineStack;
         std::vector<WeakRef<PostProcessStage>> m_PostProcessPipelineStack;
 
-        inline static const Attachment::Type s_AccumulationBufferFormat = Attachment::RGBA16F;
+        inline static const AttachmentType s_AccumulationBufferFormat = AttachmentType::RGBA16F;
 
 
     protected:

@@ -227,7 +227,7 @@ void harmony::Program::InitBGFX() {
     for(int i = 0; i < numDisplays; i++)
     {
         SDL_Rect rect;
-        SDL_GetDisplayUsableBounds(i, &rect);
+        SDL_GetDisplayBounds(i, &rect);
 
         if(rect.w > maxWidth) maxWidth = rect.w;
         if(rect.h > maxHeight) maxHeight = rect.h;
@@ -274,7 +274,11 @@ void harmony::Program::ListCapabilities() {
     harmony::log::info("Program : BGFX : Capabilities");
     harmony::log::info("Program : BGFX : Max Framebuffers : {}", m_Capabilities->limits.maxFrameBuffers);
     harmony::log::info("Program : BGFX : Max Textures : {}", m_Capabilities->limits.maxTextures);
+    harmony::log::info("Program : BGFX : Max Texture Size : {}x{}", m_Capabilities->limits.maxTextureSize, m_Capabilities->limits.maxTextureSize);
+
     harmony::log::info("Program : BGFX : Max Num Views : {}", m_Capabilities->limits.maxViews);
+    harmony::log::info("Program : BGFX : Max Num Blits : {}", m_Capabilities->limits.maxBlits);
+    harmony::log::info("Program : BGFX : Max Num Draw Calls : {}", m_Capabilities->limits.maxDrawCalls);
 
     harmony::log::info("Program : BGFX : Alpha To Coverage? : {}",
                        m_Capabilities->supported && BGFX_CAPS_ALPHA_TO_COVERAGE);
@@ -460,6 +464,7 @@ harmony::Gamepad::Stick GetStickFromSDL(SDL_GameControllerAxis &sdlAxis) {
         case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_RIGHTY:
             return harmony::Gamepad::Stick::RS;
     }
+    return harmony::Gamepad::Stick::Invalid;
 }
 
 harmony::Gamepad::Trigger GetTriggerFromSDL(SDL_GameControllerAxis &sdlAxis) {
@@ -470,6 +475,7 @@ harmony::Gamepad::Trigger GetTriggerFromSDL(SDL_GameControllerAxis &sdlAxis) {
         case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
             return harmony::Gamepad::Trigger::RT;
     }
+    return harmony::Gamepad::Trigger::Invalid;
 }
 
 harmony::Gamepad::Button GetButtonFromSDL(uint8_t sdlButton) {

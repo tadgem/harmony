@@ -11,7 +11,7 @@ namespace harmony {
                 Type stageType,
                 WeakRef<ShaderProgram> shader,
                 WeakRef<PipelineStageRenderer> stageRenderer,
-                Attachment::Type attachments = (Attachment::Type) (Attachment::Type::RGBA8F));
+                AttachmentType attachments = (AttachmentType) (AttachmentType::RGBA8F));
 
         virtual void
         PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId, PipelineStage::Data data);

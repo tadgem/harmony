@@ -5,7 +5,7 @@
 
 harmony::VectorGraphicsStage::VectorGraphicsStage(VectorGraphics::Layer layer)
         : PipelineDrawStage("VectorGraphicsStage", PipelineDrawStage::Type::PrimaryDraw, WeakRef<ShaderProgram>(),
-                            WeakRef<PipelineStageRenderer>(), harmony::Attachment::Type::RGBA16F),
+                            WeakRef<PipelineStageRenderer>(), harmony::AttachmentType::RGBA16F),
           m_Layer(layer) {
     OPTICK_EVENT();
 }
@@ -18,7 +18,7 @@ harmony::VectorGraphicsStage::Init(entt::registry &registry, WeakRef<View> view,
 
     Ref<View> _view = view.lock();
     std::vector<bgfx::TextureHandle> fbAttachments = std::vector<bgfx::TextureHandle>();
-    std::map<Attachment::Type, Attachment> attachments = std::map<Attachment::Type, Attachment>();
+    std::map<AttachmentType, Attachment> attachments = std::map<AttachmentType, Attachment>();
     fbAttachments.emplace_back(
             bgfx::createTexture2D(
                     _view->m_Width, _view->m_Height, false, 1, bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_RT
@@ -27,9 +27,9 @@ harmony::VectorGraphicsStage::Init(entt::registry &registry, WeakRef<View> view,
     Attachment a
             {
                     fbAttachments[0],
-                    Attachment::Type::RGBA8F
+                    AttachmentType::RGBA8F
             };
-    attachments.emplace(Attachment::Type::RGBA8F, a);
+    attachments.emplace(AttachmentType::RGBA8F, a);
 
     m_HasHDRAttachment = false;
     m_HasDepthAttachment = false;

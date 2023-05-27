@@ -4,7 +4,7 @@
 #include "Rendering/View.h"
 #include "Core/SerializationKeys.h"
 
-harmony::PipelineStage::PipelineStage(const std::string &name, Type pipelineStageType, Attachment::Type attachments,
+harmony::PipelineStage::PipelineStage(const std::string &name, Type pipelineStageType, AttachmentType attachments,
                                       WeakRef<ShaderProgram> shader, WeakRef<PipelineStageRenderer> stageRenderer)
         : m_Name(name), m_StageType(pipelineStageType), m_Attachments(attachments), p_Shader(shader),
           p_Renderer(stageRenderer) {
@@ -19,35 +19,35 @@ harmony::PipelineStage::Init(entt::registry &registry, WeakRef<View> view, bgfx:
     }
 
     Ref<View> _view = view.lock();
-    std::map<Attachment::Type, Attachment> attachments = std::map<Attachment::Type, Attachment>();
+    std::map<AttachmentType, Attachment> attachments = std::map<AttachmentType, Attachment>();
     std::vector<bgfx::TextureHandle> attachmentTextureHandles = std::vector<bgfx::TextureHandle>();
 
-    if (m_Attachments && Attachment::Type::RGBA16F ||
-        m_Attachments && Attachment::Type::RGBA32F) {
+    if (m_Attachments && AttachmentType::RGBA16F ||
+        m_Attachments && AttachmentType::RGBA32F) {
         m_HasHDRAttachment = true;
     }
 
-    if (m_Attachments && Attachment::Type::Depth16F ||
-        m_Attachments && Attachment::Type::Depth24F ||
-        m_Attachments && Attachment::Type::Depth32F) {
+    if (m_Attachments && AttachmentType::Depth16F ||
+        m_Attachments && AttachmentType::Depth24F ||
+        m_Attachments && AttachmentType::Depth32F) {
         m_HasDepthAttachment = true;
     }
 
 
     if (m_HasHDRAttachment) {
         bgfx::TextureFormat::Enum format = bgfx::TextureFormat::Unknown;
-        Attachment::Type type = Attachment::Type::Unknown;
-        if (m_Attachments & Attachment::Type::RGBA16F) {
+        AttachmentType type = AttachmentType::Unknown;
+        if (m_Attachments & AttachmentType::RGBA16F) {
             format = bgfx::TextureFormat::RGBA16F;
-            type = Attachment::Type::RGBA16F;
-        } else if (m_Attachments & Attachment::Type::RGBA32F) {
+            type = AttachmentType::RGBA16F;
+        } else if (m_Attachments & AttachmentType::RGBA32F) {
             format = bgfx::TextureFormat::RGBA32F;
-            type = Attachment::Type::RGBA32F;
+            type = AttachmentType::RGBA32F;
         } else {
             harmony::log::warn("PipelineStage : {} : Invalid attachment format specified, defaulting to RGBA16F",
                                m_Name);
             format = bgfx::TextureFormat::RGBA16F;
-            type = Attachment::Type::RGBA16F;
+            type = AttachmentType::RGBA16F;
         }
         bgfx::TextureHandle textureHandle = bgfx::createTexture2D(
                 _view->m_Width, _view->m_Height, false, 1, format, BGFX_TEXTURE_RT | BGFX_TEXTURE_MSAA_SAMPLE
@@ -61,7 +61,7 @@ harmony::PipelineStage::Init(entt::registry &registry, WeakRef<View> view, bgfx:
         attachments.emplace(type, a);
         attachmentTextureHandles.emplace_back(textureHandle);
     } else {
-        Attachment::Type type = Attachment::Type::RGBA8F;
+        AttachmentType type = AttachmentType::RGBA8F;
         bgfx::TextureHandle textureHandle = bgfx::createTexture2D(
                 _view->m_Width, _view->m_Height, false, 1, bgfx::TextureFormat::BGRA8,
                 BGFX_TEXTURE_RT | BGFX_TEXTURE_MSAA_SAMPLE
@@ -77,21 +77,21 @@ harmony::PipelineStage::Init(entt::registry &registry, WeakRef<View> view, bgfx:
 
     if (m_HasDepthAttachment) {
         bgfx::TextureFormat::Enum format = bgfx::TextureFormat::Unknown;
-        Attachment::Type type = Attachment::Type::Unknown;
-        if (m_Attachments & Attachment::Type::Depth32F) {
+        AttachmentType type = AttachmentType::Unknown;
+        if (m_Attachments & AttachmentType::Depth32F) {
             format = bgfx::TextureFormat::D32F;
-            type = Attachment::Type::Depth32F;
-        } else if (m_Attachments & Attachment::Type::Depth24F) {
+            type = AttachmentType::Depth32F;
+        } else if (m_Attachments & AttachmentType::Depth24F) {
             format = bgfx::TextureFormat::D24F;
-            type = Attachment::Type::Depth24F;
-        } else if (m_Attachments & Attachment::Type::Depth16F) {
+            type = AttachmentType::Depth24F;
+        } else if (m_Attachments & AttachmentType::Depth16F) {
             format = bgfx::TextureFormat::D16F;
-            type = Attachment::Type::Depth16F;
+            type = AttachmentType::Depth16F;
         } else {
             harmony::log::warn("PipelineStage : {} : Invalid depth attachment format specified, defaulting to D16F",
                                m_Name);
             format = bgfx::TextureFormat::D16F;
-            type = Attachment::Type::Depth16F;
+            type = AttachmentType::Depth16F;
         }
         bgfx::TextureHandle textureHandle = bgfx::createTexture2D(
                 _view->m_Width, _view->m_Height, false, 1, format,
@@ -179,28 +179,28 @@ void harmony::PipelineStage::Data::Clear() {
     m_Attachments.clear();
 }
 
-harmony::Attachment::Type harmony::PipelineStage::Data::GetDepthType() {
+harmony::AttachmentType harmony::PipelineStage::Data::GetDepthType() {
     OPTICK_EVENT();
-    if (m_Attachments.find(Attachment::Type::Depth16F) != m_Attachments.end()) {
-        return Attachment::Type::Depth16F;
+    if (m_Attachments.find(AttachmentType::Depth16F) != m_Attachments.end()) {
+        return AttachmentType::Depth16F;
     }
-    if (m_Attachments.find(Attachment::Type::Depth24F) != m_Attachments.end()) {
-        return Attachment::Type::Depth24F;
+    if (m_Attachments.find(AttachmentType::Depth24F) != m_Attachments.end()) {
+        return AttachmentType::Depth24F;
     }
-    if (m_Attachments.find(Attachment::Type::Depth32F) != m_Attachments.end()) {
-        return Attachment::Type::Depth32F;
+    if (m_Attachments.find(AttachmentType::Depth32F) != m_Attachments.end()) {
+        return AttachmentType::Depth32F;
     }
 
-    return Attachment::Type::Unknown;
+    return AttachmentType::Unknown;
 }
 
-harmony::Attachment::Type harmony::PipelineStage::Data::GetColorType() {
+harmony::AttachmentType harmony::PipelineStage::Data::GetColorType() {
     OPTICK_EVENT();
-    if (m_Attachments.find(Attachment::Type::RGBA16F) != m_Attachments.end()) {
-        return Attachment::Type::RGBA16F;
+    if (m_Attachments.find(AttachmentType::RGBA16F) != m_Attachments.end()) {
+        return AttachmentType::RGBA16F;
     }
-    if (m_Attachments.find(Attachment::Type::RGBA32F) != m_Attachments.end()) {
-        return Attachment::Type::RGBA32F;
+    if (m_Attachments.find(AttachmentType::RGBA32F) != m_Attachments.end()) {
+        return AttachmentType::RGBA32F;
     }
-    return Attachment::Type::Unknown;
+    return AttachmentType::Unknown;
 }

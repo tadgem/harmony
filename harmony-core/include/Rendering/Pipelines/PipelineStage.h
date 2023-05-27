@@ -25,19 +25,19 @@ namespace harmony {
 
         struct Data {
             bgfx::FrameBufferHandle m_FramebufferHandle;
-            std::map<Attachment::Type, Attachment> m_Attachments;
+            std::map<AttachmentType, Attachment> m_Attachments;
 
             void Clear();
 
-            Attachment::Type GetDepthType();
+            AttachmentType GetDepthType();
 
-            Attachment::Type GetColorType();
+            AttachmentType GetColorType();
         };
 
         PipelineStage(
                 const std::string &name,
                 Type pipelineStageType,
-                Attachment::Type attachments,
+                AttachmentType attachments,
                 WeakRef<ShaderProgram> shader,
                 WeakRef<PipelineStageRenderer> stageRenderer);
 
@@ -64,7 +64,7 @@ namespace harmony {
         bool m_HasDepthAttachment;
 
         Type m_StageType;
-        Attachment::Type m_Attachments;
+        AttachmentType m_Attachments;
         std::string m_Name;
         WeakRef<ShaderProgram> p_Shader;
         WeakRef<PipelineStageRenderer> p_Renderer;

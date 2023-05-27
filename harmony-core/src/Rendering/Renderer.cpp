@@ -1173,7 +1173,7 @@ void harmony::Renderer::DeserializePipelines(nlohmann::json &json, AssetManager 
             harmony::log::debug("Renderer : Stage Json {}", dump);
             std::string stageName = stageJson[sk_PipelineStageName];
 
-            Attachment::Type stageAttachments = stageJson[sk_PipelineStageAttachments];
+            AttachmentType stageAttachments = stageJson[sk_PipelineStageAttachments];
             PipelineDrawStage::Type stageType = stageJson[sk_PipelineStageType];
 
             std::string stageShaderName = stageJson[sk_PipelineStageShader][sk_ShaderProgramName];
@@ -1226,7 +1226,7 @@ void harmony::Renderer::DeserializePostProcessStages(nlohmann::json &json, Asset
         }
 
         PipelineStage::Type type = postProcessJson[sk_PipelineStageType];
-        Attachment::Type attachments = postProcessJson[sk_PipelineStageAttachments];
+        AttachmentType attachments = postProcessJson[sk_PipelineStageAttachments];
 
         Ref<PostProcessStage> stage = CreateRef<PostProcessStage>(
                 name,
@@ -1351,7 +1351,7 @@ void harmony::Renderer::HandleStackPostProcess(Ref<View> view, PipelineStack &st
     data.m_FramebufferHandle = stack.m_PipelineStackAccumulationFB;
 
     Attachment colourAttachment{stack.m_PipelineStackAccumulationAttachment, stack.s_AccumulationBufferFormat};
-    Attachment depthAttachment{stack.GetFinalDepth(), Attachment::Depth16F};
+    Attachment depthAttachment{stack.GetFinalDepth(), AttachmentType::Depth16F};
 
     data.m_Attachments.emplace(colourAttachment.m_Type, colourAttachment);
     data.m_Attachments.emplace(depthAttachment.m_Type, depthAttachment);
@@ -1369,7 +1369,7 @@ void harmony::Renderer::HandleStackPostProcess(Ref<View> view, PipelineStack &st
         s->PostUpdate(registry, view, stack.p_StackViewIDs[s->m_Name][0], data);
 
         data = stack.p_StackData[s->m_Name][0];
-        data.m_Attachments[Attachment::Depth16F] = depthAttachment;
+        data.m_Attachments[AttachmentType::Depth16F] = depthAttachment;
     }
 
     // post processing image drawn first

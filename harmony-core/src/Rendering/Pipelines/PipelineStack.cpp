@@ -128,14 +128,14 @@ harmony::PipelineStack::PostUpdate(entt::registry &registry, WeakRef<View> view)
         for (auto &data: p_StackData[ph.Name]) {
             bgfx::TextureHandle th = BGFX_INVALID_HANDLE;
 
-            if (data.m_Attachments.find(Attachment::Type::RGBA8F) != data.m_Attachments.end()) {
-                th = data.m_Attachments[Attachment::Type::RGBA8F].m_Handle;
+            if (data.m_Attachments.find(AttachmentType::RGBA8F) != data.m_Attachments.end()) {
+                th = data.m_Attachments[AttachmentType::RGBA8F].m_Handle;
             }
-            if (data.m_Attachments.find(Attachment::Type::RGBA16F) != data.m_Attachments.end()) {
-                th = data.m_Attachments[Attachment::Type::RGBA16F].m_Handle;
+            if (data.m_Attachments.find(AttachmentType::RGBA16F) != data.m_Attachments.end()) {
+                th = data.m_Attachments[AttachmentType::RGBA16F].m_Handle;
             }
-            if (data.m_Attachments.find(Attachment::Type::RGBA32F) != data.m_Attachments.end()) {
-                th = data.m_Attachments[Attachment::Type::RGBA32F].m_Handle;
+            if (data.m_Attachments.find(AttachmentType::RGBA32F) != data.m_Attachments.end()) {
+                th = data.m_Attachments[AttachmentType::RGBA32F].m_Handle;
             }
 
             if (th.idx == bgfx::kInvalidHandle) {
@@ -674,16 +674,16 @@ bgfx::TextureHandle harmony::PipelineStack::GetPipelineInitialDepth(PipelineHand
     auto datas = p_StackData[handle.Name];
 
     for (auto data: datas) {
-        if (data.m_Attachments.find(Attachment::Type::Depth16F) != data.m_Attachments.end()) {
-            Attachment &a = data.m_Attachments[Attachment::Type::Depth16F];
+        if (data.m_Attachments.find(AttachmentType::Depth16F) != data.m_Attachments.end()) {
+            Attachment &a = data.m_Attachments[AttachmentType::Depth16F];
             return a.m_Handle;
         }
-        if (data.m_Attachments.find(Attachment::Type::Depth24F) != data.m_Attachments.end()) {
-            Attachment &a = data.m_Attachments[Attachment::Type::Depth24F];
+        if (data.m_Attachments.find(AttachmentType::Depth24F) != data.m_Attachments.end()) {
+            Attachment &a = data.m_Attachments[AttachmentType::Depth24F];
             return a.m_Handle;
         }
-        if (data.m_Attachments.find(Attachment::Type::Depth32F) != data.m_Attachments.end()) {
-            Attachment &a = data.m_Attachments[Attachment::Type::Depth32F];
+        if (data.m_Attachments.find(AttachmentType::Depth32F) != data.m_Attachments.end()) {
+            Attachment &a = data.m_Attachments[AttachmentType::Depth32F];
             return a.m_Handle;
         }
     }
@@ -703,16 +703,16 @@ bgfx::TextureHandle harmony::PipelineStack::GetPipelineFinalDepth(PipelineHandle
 
     for (int i = datas.size() - 1; i >= 0; i--) {
         auto data = datas[i];
-        if (data.m_Attachments.find(Attachment::Type::Depth16F) != data.m_Attachments.end()) {
-            Attachment &a = data.m_Attachments[Attachment::Type::Depth16F];
+        if (data.m_Attachments.find(AttachmentType::Depth16F) != data.m_Attachments.end()) {
+            Attachment &a = data.m_Attachments[AttachmentType::Depth16F];
             return a.m_Handle;
         }
-        if (data.m_Attachments.find(Attachment::Type::Depth24F) != data.m_Attachments.end()) {
-            Attachment &a = data.m_Attachments[Attachment::Type::Depth24F];
+        if (data.m_Attachments.find(AttachmentType::Depth24F) != data.m_Attachments.end()) {
+            Attachment &a = data.m_Attachments[AttachmentType::Depth24F];
             return a.m_Handle;
         }
-        if (data.m_Attachments.find(Attachment::Type::Depth32F) != data.m_Attachments.end()) {
-            Attachment &a = data.m_Attachments[Attachment::Type::Depth32F];
+        if (data.m_Attachments.find(AttachmentType::Depth32F) != data.m_Attachments.end()) {
+            Attachment &a = data.m_Attachments[AttachmentType::Depth32F];
             return a.m_Handle;
         }
     }

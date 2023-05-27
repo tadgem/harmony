@@ -65,7 +65,7 @@ void harmony::Pipeline::PreUpdate(entt::registry &registry, WeakRef<View> view, 
 
         auto srcData = data[i];
         auto dstData = data[nextIndex];
-        Attachment::Type srcDepthType = srcData.GetDepthType();
+        AttachmentType srcDepthType = srcData.GetDepthType();
         if (!srcDepthType == dstData.GetDepthType()) {
             continue;
         }

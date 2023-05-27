@@ -4,7 +4,7 @@
 #include "Rendering/Shapes.h"
 
 harmony::PostProcessStage::PostProcessStage(const std::string &name, Type stageType, WeakRef<ShaderProgram> shader,
-                                            WeakRef<PipelineStageRenderer> stageRenderer, Attachment::Type attachments)
+                                            WeakRef<PipelineStageRenderer> stageRenderer, AttachmentType attachments)
         : PipelineStage(name, stageType, attachments, shader, stageRenderer) {
     OPTICK_EVENT();
 }
@@ -51,10 +51,10 @@ void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakRef<Vie
         }
     }
 
-    Attachment::Type colourType = data.GetColorType();
-    Attachment::Type depthType = data.GetDepthType();
+    AttachmentType colourType = data.GetColorType();
+    AttachmentType depthType = data.GetDepthType();
 
-    if (colourType == Attachment::Unknown) {
+    if (colourType == AttachmentType::Unknown) {
         return;
     }
 
@@ -72,7 +72,7 @@ void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakRef<Vie
     bgfx::TextureHandle colourAttachment = data.m_Attachments[colourType].m_Handle;
     bgfx::setTexture(0, colourAttachmentUniform, colourAttachment);
 
-    if (hasDepth && depthType != Attachment::Unknown) {
+    if (hasDepth && depthType != AttachmentType::Unknown) {
         bgfx::TextureHandle depthAttachment = data.m_Attachments[depthType].m_Handle;
         if (depthAttachment.idx <= 4096) {
             bgfx::setTexture(1, depthAttachmentUniform, depthAttachment);
