@@ -777,7 +777,7 @@ void harmony::Program::LoadScene(const std::string &path) {
     nlohmann::json sceneJson = Utils::LoadJsonFromPath(path);
     p_ActiveScene = CreateRef<Scene>(sceneJson);
     p_ActiveScene->Deserialize(p_ECSSystems);
-    m_Renderer.RefreshViews();
+    // m_Renderer.RefreshViews();
 }
 
 void harmony::Program::OpenScene(uint32_t index) {
