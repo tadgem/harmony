@@ -1,5 +1,5 @@
 #include <algorithm>
-#include "Rendering/Shader.h"
+#include "Rendering/Shaders/Shader.h"
 
 #include "Core/Log.hpp"
 #include "Core/Utils.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Rendering/Shader.h"
+#include "Rendering/Shaders/Shader.h"
 #include "Rendering/Renderer.h"
 #include "Assets/AssetFactory.h"
 

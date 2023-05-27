@@ -3,7 +3,7 @@
 #include "AssimpModelAssetFactory.h"
 #include "Assets/FontAssetFactory.h"
 #include "Rendering/Views/RuntimeView.h"
-#include "Rendering/ShaderDataSources/BlinnPhongDataSource.h"
+#include "Rendering/Shaders/ShaderDataSources/BlinnPhongDataSource.h"
 #include "Rendering/Shapes.h"
 #include "Core/FSM.h"
 #include "ECS/LightSystem.h"

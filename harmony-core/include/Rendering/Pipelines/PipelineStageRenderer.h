@@ -3,7 +3,7 @@
 #include <string>
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
-#include "Rendering/Shader.h"
+#include "Rendering/Shaders/Shader.h"
 #include "ThirdParty/entt.hpp"
 #include "ThirdParty/json.hpp"
 

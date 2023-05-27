@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Rendering/ShaderDataSource.h"
+#include "Rendering/Shaders/ShaderDataSource.h"
 
 namespace harmony {
     class BlinnPhongDataSource : public ShaderDataSource {

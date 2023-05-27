@@ -1,5 +1,5 @@
 #include <optick.h>
-#include "Rendering/Texture.h"
+#include "Assets/TextureAsset.h"
 #include "bx/readerwriter.h"
 
 harmony::TextureAsset::TextureAsset(const std::string &path, bimg::ImageContainer *imageContainer) : Asset(

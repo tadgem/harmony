@@ -4,7 +4,7 @@
 #include "Core/Time.h"
 #include "Core/Input.h"
 #include "Rendering/GPUResourceManager.h"
-#include "Rendering/VectorGraphics.h"
+#include "Rendering/VectorGraphics/VectorGraphics.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
 #include "bx/timer.h"

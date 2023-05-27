@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Pipeline.h"
-#include "Rendering/VectorGraphics.h"
+#include "Rendering/VectorGraphics/VectorGraphics.h"
 
 namespace harmony {
     class VectorGraphicsStage : public PipelineDrawStage {

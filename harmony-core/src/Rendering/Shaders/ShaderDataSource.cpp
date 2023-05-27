@@ -1,5 +1,5 @@
 #include <optick.h>
-#include "Rendering/ShaderDataSource.h"
+#include "Rendering/Shaders/ShaderDataSource.h"
 
 harmony::ShaderDataSource::ShaderDataSource(const std::string &name) : m_Name(name) {
     OPTICK_EVENT();

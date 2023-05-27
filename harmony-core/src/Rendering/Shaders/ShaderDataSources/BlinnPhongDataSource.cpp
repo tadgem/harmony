@@ -1,8 +1,8 @@
 #include <optick.h>
-#include "Rendering/ShaderDataSources/BlinnPhongDataSource.h"
+#include "Rendering/Shaders/ShaderDataSources/BlinnPhongDataSource.h"
 #include "ECS/LightComponents.h"
 #include "ECS/TransformComponent.h"
-#include "Rendering/Shader.h"
+#include "Rendering/Shaders/Shader.h"
 #include "Core/Utils.h"
 
 harmony::BlinnPhongDataSource::BlinnPhongDataSource() : ShaderDataSource("BlinnPhong"), p_UniformsCollected(false) {

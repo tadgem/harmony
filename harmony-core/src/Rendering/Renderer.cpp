@@ -9,11 +9,11 @@
 #include "Core/Log.hpp"
 #include "Core/Time.h"
 #include "Core/SerializationKeys.h"
-#include "Rendering/BuiltinShaders.h"
+#include "Rendering/Shaders/BuiltinShaders.h"
 #include "Rendering/Shapes.h"
 #include "Rendering/View.h"
 #include "Rendering/Pipelines/PipelineStageRenderer.h"
-#include "Rendering/ShaderDataSource.h"
+#include "Rendering/Shaders/ShaderDataSource.h"
 #include "Rendering/Pipelines/PostProcessStage.h"
 #include "Rendering/Pipelines/PipelineDrawStage.h"
 

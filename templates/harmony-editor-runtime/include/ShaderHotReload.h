@@ -3,7 +3,7 @@
 #include "AssetHotReload.h"
 #include "Assets/Asset.h"
 #include "bx/platform.h"
-#include "Rendering/Shader.h"
+#include "Rendering/Shaders/Shader.h"
 
 namespace harmony {
     class Program;

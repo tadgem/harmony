@@ -1,5 +1,5 @@
 #include <optick.h>
-#include "Rendering/VectorGraphics.h"
+#include "Rendering/VectorGraphics/VectorGraphics.h"
 #include "Core/Log.hpp"
 
 harmony::VectorGraphics::VectorGraphics() {

@@ -2,15 +2,13 @@
 
 #include "Core/Memory.h"
 #include "Assets/AssetManager.h"
-#include "Rendering/Texture.h"
-#include "Rendering/Shader.h"
+#include "Assets/TextureAsset.h"
+#include "Shader.h"
 
 namespace harmony {
     class ShaderDataOverride {
     public:
         ShaderDataOverride();
-
-
         std::string m_ShaderName;
 
         std::vector<ShaderUniform> m_AvailableOverrides;

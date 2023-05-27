@@ -5,8 +5,8 @@
 #include "ThirdParty/json.hpp"
 #include "Rendering/Attachment.h"
 #include "PipelineHandle.h"
-#include "Rendering/Shader.h"
-#include "Rendering/ShaderDataSource.h"
+#include "Rendering/Shaders/Shader.h"
+#include "Rendering/Shaders/ShaderDataSource.h"
 
 namespace harmony {
     class View;

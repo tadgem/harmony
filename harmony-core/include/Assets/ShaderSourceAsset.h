@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Assets/Asset.h"
-#include "Rendering/Shader.h"
+#include "Rendering/Shaders/Shader.h"
 
 namespace harmony {
     class ShaderSourceAsset : public Asset {

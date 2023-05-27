@@ -24,7 +24,7 @@
 
 #include <stdlib.h>
 #include <math.h>
-#include "Rendering/nanovg/nanovg.h"
+#include "Rendering/VectorGraphics/nanovg/nanovg.h"
 
 #include <bgfx/bgfx.h>
 #include <bgfx/embedded_shader.h>
@@ -35,8 +35,8 @@
 
 BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4244); // warning C4244: '=' : conversion from '' to '', possible loss of data
 
-#include "Rendering/ShaderBinaries/vs_nanovg_fill.bin.h"
-#include "Rendering/ShaderBinaries/fs_nanovg_fill.bin.h"
+#include "Rendering/Shaders/ShaderBinaries/vs_nanovg_fill.bin.h"
+#include "Rendering/Shaders/ShaderBinaries/fs_nanovg_fill.bin.h"
 
 static const bgfx::EmbeddedShader s_embeddedShaders[] =
         {

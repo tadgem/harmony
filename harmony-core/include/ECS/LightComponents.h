@@ -1,7 +1,7 @@
 #pragma once
 
 #include "glm.hpp"
-#include "Rendering/ShaderUniform.h"
+#include "Rendering/Shaders/ShaderUniform.h"
 
 namespace harmony {
     struct DirectionalLight {

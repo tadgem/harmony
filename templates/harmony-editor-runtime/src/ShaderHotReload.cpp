@@ -3,7 +3,7 @@
 #include "Core/Memory.h"
 #include "Core/Log.hpp"
 #include "Rendering/Renderer.h"
-#include "Rendering/Shader.h"
+#include "Rendering/Shaders/Shader.h"
 #include "Assets/ShaderSourceAsset.h"
 #include <filesystem>
 

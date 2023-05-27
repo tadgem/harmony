@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Rendering/nanovg/nanovg.h"
+#include "Rendering/VectorGraphics/nanovg/nanovg.h"
 #include "bgfx/bgfx.h"
 #include "ThirdParty/json.hpp"
 

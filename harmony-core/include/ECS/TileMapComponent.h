@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Memory.h"
-#include "Rendering/Texture.h"
+#include "Assets/TextureAsset.h"
 
 namespace harmony {
     struct TileMapCell {

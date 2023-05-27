@@ -3,7 +3,7 @@
 #include "Assets/FontAsset.h"
 #include "Core/Memory.h"
 #include "Core/Utils.h"
-#include "Rendering/VectorGraphics.h"
+#include "Rendering/VectorGraphics/VectorGraphics.h"
 
 harmony::FontAssetFactory::FontAssetFactory() {
     OPTICK_EVENT();

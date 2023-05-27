@@ -7,8 +7,8 @@
 #include "Core/Memory.h"
 #include "Assets/Asset.h"
 #include "Assets/AssetManager.h"
-#include "Rendering/Texture.h"
-#include "Rendering/ShaderUniform.h"
+#include "Assets/TextureAsset.h"
+#include "ShaderUniform.h"
 
 namespace harmony {
     class ShaderStage : public Asset {
