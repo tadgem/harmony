@@ -15,6 +15,7 @@ namespace harmony {
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(BGFXTextureHandle, Handle)
     };
 
+    // TODO: Move to assets, need a pure rendering texture class.
     class TextureAsset : public Asset {
     public:
         TextureAsset(const std::string &path, bimg::ImageContainer *imageContainer);

@@ -3,21 +3,20 @@
 #include "Core/Log.hpp"
 #include "Core/Time.h"
 #include "Core/Input.h"
+#include "Rendering/GPUResourceManager.h"
+#include "Rendering/VectorGraphics.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
 #include "bx/timer.h"
 #include "SDL_syswm.h"
 #include "SDL_video.h"
-#include "SDL_misc.h"
+
 #if HARMONY_DEBUG
 #include "optick.h"
-
-#include "Rendering/VectorGraphics.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_bgfx.h"
 #include "ImGui/ImGuizmo.h"
 #include "ImGui/backends/imgui_impl_sdl.h"
-#include "ImGui/robotomono_regular.ttf.h"
 #include "ImGui/imnodes.h"
 #endif
 
@@ -222,9 +221,24 @@ void harmony::Program::InitBGFX() {
 
     harmony::log::info("Program : BGFX : Successfully initialized");
 
+    uint16_t maxWidth = 0, maxHeight = 0;
+    int numDisplays = SDL_GetNumVideoDisplays();
+
+    for(int i = 0; i < numDisplays; i++)
+    {
+        SDL_Rect rect;
+        SDL_GetDisplayUsableBounds(i, &rect);
+
+        if(rect.w > maxWidth) maxWidth = rect.w;
+        if(rect.h > maxHeight) maxHeight = rect.h;
+    }
+
+    GPUResourceManager::MAX_FRAMEBUFFER_RESOLUTION_X = maxWidth;
+    GPUResourceManager::MAX_FRAMEBUFFER_RESOLUTION_Y = maxHeight;
+
+
     m_Capabilities = (bgfx::Caps *) bgfx::getCaps();
     ListCapabilities();
-
 }
 
 void harmony::Program::InitImGui() {
