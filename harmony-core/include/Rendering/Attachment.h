@@ -48,11 +48,17 @@ namespace harmony {
         { Depth, "depth"}
     })
 
+    static uint32_t GetAttachmentTypePixelSize(AttachmentType type);
+
     struct Attachment {
 
-
-        bgfx::TextureHandle m_Handle;
+        ~Attachment();
+        bgfx::TextureHandle m_Handle { UINT16_MAX};
         AttachmentType m_Type;
+
+        uint32_t m_Width, m_Height;
+
+        uint32_t CalculateAttachmentSize();
 
         bool operator==(const Attachment &rhs) const {
             return m_Handle.idx == rhs.m_Handle.idx &&
