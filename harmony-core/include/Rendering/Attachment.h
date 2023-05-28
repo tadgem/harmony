@@ -10,7 +10,7 @@
 namespace harmony {
 
     enum AttachmentType : int {
-        Unknown = 1,
+        UnknownAttachmentType = 1,
         RGBA8F = 2,
         RGBA16F = 4,
         RGBA32F = 8,
@@ -37,7 +37,7 @@ namespace harmony {
     AttachmentType operator~(AttachmentType a);
 
     NLOHMANN_JSON_SERIALIZE_ENUM(AttachmentType, {
-        { Unknown, "unknown" },
+        { UnknownAttachmentType, "unknown" },
         { RGBA8F, "rgba8" },
         { RGBA16F, "rgba16" },
         { RGBA32F, "rgba32" },

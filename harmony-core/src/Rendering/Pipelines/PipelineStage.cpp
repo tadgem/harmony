@@ -36,11 +36,11 @@ harmony::PipelineStage::Init(entt::registry &registry, WeakRef<View> view, bgfx:
 
     if (m_HasHDRAttachment) {
         bgfx::TextureFormat::Enum format = bgfx::TextureFormat::Unknown;
-        AttachmentType type = AttachmentType::Unknown;
-        if (m_Attachments & AttachmentType::RGBA16F) {
+        AttachmentType type = AttachmentType::UnknownAttachmentType;
+        if (m_Attachments && AttachmentType::RGBA16F) {
             format = bgfx::TextureFormat::RGBA16F;
             type = AttachmentType::RGBA16F;
-        } else if (m_Attachments & AttachmentType::RGBA32F) {
+        } else if (m_Attachments && AttachmentType::RGBA32F) {
             format = bgfx::TextureFormat::RGBA32F;
             type = AttachmentType::RGBA32F;
         } else {
@@ -77,14 +77,14 @@ harmony::PipelineStage::Init(entt::registry &registry, WeakRef<View> view, bgfx:
 
     if (m_HasDepthAttachment) {
         bgfx::TextureFormat::Enum format = bgfx::TextureFormat::Unknown;
-        AttachmentType type = AttachmentType::Unknown;
-        if (m_Attachments & AttachmentType::Depth32F) {
+        AttachmentType type = AttachmentType::UnknownAttachmentType;
+        if (m_Attachments && AttachmentType::Depth32F) {
             format = bgfx::TextureFormat::D32F;
             type = AttachmentType::Depth32F;
-        } else if (m_Attachments & AttachmentType::Depth24F) {
+        } else if (m_Attachments && AttachmentType::Depth24F) {
             format = bgfx::TextureFormat::D24F;
             type = AttachmentType::Depth24F;
-        } else if (m_Attachments & AttachmentType::Depth16F) {
+        } else if (m_Attachments && AttachmentType::Depth16F) {
             format = bgfx::TextureFormat::D16F;
             type = AttachmentType::Depth16F;
         } else {
@@ -191,7 +191,7 @@ harmony::AttachmentType harmony::PipelineStage::Data::GetDepthType() {
         return AttachmentType::Depth32F;
     }
 
-    return AttachmentType::Unknown;
+    return AttachmentType::UnknownAttachmentType;
 }
 
 harmony::AttachmentType harmony::PipelineStage::Data::GetColorType() {
@@ -202,5 +202,5 @@ harmony::AttachmentType harmony::PipelineStage::Data::GetColorType() {
     if (m_Attachments.find(AttachmentType::RGBA32F) != m_Attachments.end()) {
         return AttachmentType::RGBA32F;
     }
-    return AttachmentType::Unknown;
+    return AttachmentType::UnknownAttachmentType;
 }

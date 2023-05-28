@@ -54,7 +54,7 @@ void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakRef<Vie
     AttachmentType colourType = data.GetColorType();
     AttachmentType depthType = data.GetDepthType();
 
-    if (colourType == AttachmentType::Unknown) {
+    if (colourType == AttachmentType::UnknownAttachmentType) {
         return;
     }
 
@@ -72,7 +72,7 @@ void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakRef<Vie
     bgfx::TextureHandle colourAttachment = data.m_Attachments[colourType].m_Handle;
     bgfx::setTexture(0, colourAttachmentUniform, colourAttachment);
 
-    if (hasDepth && depthType != AttachmentType::Unknown) {
+    if (hasDepth && depthType != AttachmentType::UnknownAttachmentType) {
         bgfx::TextureHandle depthAttachment = data.m_Attachments[depthType].m_Handle;
         if (depthAttachment.idx <= 4096) {
             bgfx::setTexture(1, depthAttachmentUniform, depthAttachment);

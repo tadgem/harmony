@@ -66,7 +66,7 @@ void harmony::Pipeline::PreUpdate(entt::registry &registry, WeakRef<View> view, 
         auto srcData = data[i];
         auto dstData = data[nextIndex];
         AttachmentType srcDepthType = srcData.GetDepthType();
-        if (!srcDepthType == dstData.GetDepthType()) {
+        if (!(srcDepthType == dstData.GetDepthType())) {
             continue;
         }
         // Get first view id of next pipeline
