@@ -68,7 +68,7 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
     OPTICK_EVENT();
 
     auto transformView = registry.view<TransformComponent>();
-#define MT_IMPL
+// #define MT_IMPL
 #ifdef MT_IMPL
 
     static const uint8_t NUM_GROUPS = 4;
