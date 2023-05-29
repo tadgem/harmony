@@ -27,9 +27,9 @@ harmony::VectorGraphicsStage::Init(entt::registry &registry, WeakRef<View> view,
     Attachment a
             {
                     fbAttachments[0],
-                    AttachmentType::RGBA8F
+                    AttachmentType::RGBA8
             };
-    attachments.emplace(AttachmentType::RGBA8F, a);
+    attachments.emplace(AttachmentType::RGBA8, a);
 
     m_HasHDRAttachment = false;
     m_HasDepthAttachment = false;

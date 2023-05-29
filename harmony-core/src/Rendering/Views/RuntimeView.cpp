@@ -52,8 +52,6 @@ void harmony::RuntimeView::OnResized(uint32_t w, uint32_t h) {
             c.Cam.Height = h;
         }
     }
-
-
 }
 
 

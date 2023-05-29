@@ -218,6 +218,7 @@ void harmony::Editor::OnRuntimeExit() {
     LoadScene(p_LoadedScenePath);
     p_EditorView->Camera.Focussed = true;
     SDL_SetRelativeMouseMode(SDL_FALSE);
+    m_Renderer.RefreshViews();
 }
 
 void harmony::Editor::Run() {

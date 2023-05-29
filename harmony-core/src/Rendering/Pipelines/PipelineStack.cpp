@@ -128,8 +128,8 @@ harmony::PipelineStack::PostUpdate(entt::registry &registry, WeakRef<View> view)
         for (auto &data: p_StackData[ph.Name]) {
             bgfx::TextureHandle th = BGFX_INVALID_HANDLE;
 
-            if (data.m_Attachments.find(AttachmentType::RGBA8F) != data.m_Attachments.end()) {
-                th = data.m_Attachments[AttachmentType::RGBA8F].m_Handle;
+            if (data.m_Attachments.find(AttachmentType::RGBA8) != data.m_Attachments.end()) {
+                th = data.m_Attachments[AttachmentType::RGBA8].m_Handle;
             }
             if (data.m_Attachments.find(AttachmentType::RGBA16F) != data.m_Attachments.end()) {
                 th = data.m_Attachments[AttachmentType::RGBA16F].m_Handle;

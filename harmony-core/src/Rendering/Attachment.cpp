@@ -44,7 +44,7 @@ harmony::AttachmentType harmony::operator~(harmony::AttachmentType a) {
 uint32_t harmony::GetAttachmentTypePixelSize(harmony::AttachmentType type) {
     uint32_t size = 0;
     switch (type) {
-        case AttachmentType::RGBA8F:
+        case AttachmentType::RGBA8:
             size = 4;
             break;
         case AttachmentType::RGBA16F:
@@ -65,6 +65,33 @@ uint32_t harmony::GetAttachmentTypePixelSize(harmony::AttachmentType type) {
 
 
     return size;
+}
+
+bgfx::TextureFormat::Enum harmony::GetBGFXTextureFormat(harmony::AttachmentType type) {
+    bgfx::TextureFormat::Enum format = bgfx::TextureFormat::Count;
+
+    switch (type) {
+        case AttachmentType::RGBA8:
+            format = bgfx::TextureFormat::RGBA8;
+            break;
+        case AttachmentType::RGBA16F:
+            format = bgfx::TextureFormat::RGBA16F;
+            break;
+        case AttachmentType::RGBA32F:
+            format = bgfx::TextureFormat::RGBA32F;
+            break;
+        case AttachmentType::Depth16F:
+            format = bgfx::TextureFormat::D16F;
+            break;
+        case AttachmentType::Depth24F:
+            format = bgfx::TextureFormat::D24F;
+            break;
+        case AttachmentType::Depth32F:
+            format = bgfx::TextureFormat::D32F;
+            break;
+    }
+    return format;
+
 }
 
 uint32_t harmony::Attachment::CalculateAttachmentSize() {

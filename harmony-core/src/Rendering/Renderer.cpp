@@ -278,7 +278,7 @@ void harmony::Renderer::RefreshViews() {
     OPTICK_EVENT();
     for (auto &[view, stack]: p_Views) {
         view->OnResized(view->m_Width, view->m_Height);
-        stack.OnViewResized(view);
+        // stack.OnViewResized(view);
     }
 }
 

@@ -9,12 +9,19 @@
 
 namespace harmony {
 
+    struct Resolution
+    {
+        uint16_t Width = 0, Height = 0;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Resolution, Width, Height)
+    };
+
     enum AttachmentType : int {
         UnknownAttachmentType = 1,
-        RGBA8F = 2,
+        RGBA8 = 2,
         RGBA16F = 4,
         RGBA32F = 8,
-        RGBA = RGBA8F | RGBA16F | RGBA32F,
+        RGBA = RGBA8 | RGBA16F | RGBA32F,
         Depth16F = 16,
         Depth24F = 32,
         Depth32F = 64,
@@ -38,7 +45,7 @@ namespace harmony {
 
     NLOHMANN_JSON_SERIALIZE_ENUM(AttachmentType, {
         { UnknownAttachmentType, "unknown" },
-        { RGBA8F, "rgba8" },
+        { RGBA8, "rgba8" },
         { RGBA16F, "rgba16" },
         { RGBA32F, "rgba32" },
         { RGBA, "rgba"},
@@ -48,7 +55,9 @@ namespace harmony {
         { Depth, "depth"}
     })
 
-    static uint32_t GetAttachmentTypePixelSize(AttachmentType type);
+    uint32_t GetAttachmentTypePixelSize(AttachmentType type);
+
+    bgfx::TextureFormat::Enum GetBGFXTextureFormat(AttachmentType type);
 
     struct Attachment {
 
@@ -56,7 +65,7 @@ namespace harmony {
         bgfx::TextureHandle m_Handle { UINT16_MAX};
         AttachmentType m_Type;
 
-        uint32_t m_Width, m_Height;
+        uint16_t m_Width, m_Height;
 
         uint32_t CalculateAttachmentSize();
 

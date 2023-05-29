@@ -61,7 +61,7 @@ harmony::PipelineStage::Init(entt::registry &registry, WeakRef<View> view, bgfx:
         attachments.emplace(type, a);
         attachmentTextureHandles.emplace_back(textureHandle);
     } else {
-        AttachmentType type = AttachmentType::RGBA8F;
+        AttachmentType type = AttachmentType::RGBA8;
         bgfx::TextureHandle textureHandle = bgfx::createTexture2D(
                 _view->m_Width, _view->m_Height, false, 1, bgfx::TextureFormat::BGRA8,
                 BGFX_TEXTURE_RT | BGFX_TEXTURE_MSAA_SAMPLE
