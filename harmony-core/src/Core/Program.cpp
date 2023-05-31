@@ -410,6 +410,8 @@ void harmony::Program::ResizeApplicationWindow(int w, int h) {
     SDL_DisplayMode mode;
     SDL_Rect rect;
 
+    bgfx::reset(w,h, BGFX_RESET_VSYNC);
+
     SDL_GetWindowDisplayMode(p_Window, &mode);
     SDL_GetDisplayUsableBounds(0, &rect);
     mode.w = rect.w;
@@ -419,7 +421,6 @@ void harmony::Program::ResizeApplicationWindow(int w, int h) {
     p_WindowWidth = static_cast<uint16_t>(rect.w);
     p_WindowHeight = static_cast<uint16_t>(rect.h);
 
-    bgfx::reset(p_WindowWidth, p_WindowHeight, BGFX_RESET_VSYNC);
     ImGui::GetIO().DisplaySize = ImVec2(p_WindowWidth, p_WindowHeight);
     SDL_SetWindowSize(p_Window, rect.w, rect.h);
 }
@@ -843,6 +844,8 @@ harmony::WeakRef<harmony::Scene> harmony::Program::GetActiveScene() {
 
 void harmony::Program::RunProgramComponentInit() {
     OPTICK_EVENT();
+    // TODO: Find better place for this
+    ResizeApplicationWindow(p_WindowWidth, p_WindowHeight);
     for (int i = 0; i < p_ProgramComponents.size(); i++) {
         p_ProgramComponents[i]->Init();
     }
