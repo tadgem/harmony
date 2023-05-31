@@ -68,7 +68,7 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
     OPTICK_EVENT();
 
     auto transformView = registry.view<TransformComponent>();
-// #define MT_IMPL
+#define MT_IMPL
 #ifdef MT_IMPL
 
     static const uint8_t NUM_GROUPS = 4;
@@ -137,12 +137,8 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
         ));
     }
 
-    while (futures.size() > 0) {
-        for (int i = futures.size() - 1; i >= 0; i--) {
-            if (is_ready<void>(futures[i])) {
-                futures.erase(futures.begin() + i);
-            }
-        }
+    for (int i = futures.size() - 1; i >= 0; i--) {
+        futures[i].wait();
     }
 #else
     glm::mat4 modelMatrix = glm::mat4(1.0);
