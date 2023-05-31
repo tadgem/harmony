@@ -66,20 +66,26 @@ void harmony::TransformSystem::Update(entt::registry &registry) {
 
 void harmony::TransformSystem::Render(entt::registry &registry) {
     OPTICK_EVENT();
-
+    OPTICK_EVENT("Build Transform View");
     auto transformView = registry.view<TransformComponent>();
 #define MT_IMPL
 #ifdef MT_IMPL
-
+    OPTICK_EVENT("Build group transform vectors");
     static const uint8_t NUM_GROUPS = 4;
     std::vector<TransformComponent *> transformGroups[NUM_GROUPS];
     size_t numTransforms = transformView.size();
     uint32_t groupSize = numTransforms / NUM_GROUPS;
+
     if (transformView.size() % NUM_GROUPS != 0) {
         groupSize++;
     }
+    if(groupSize < MINIMUM_GROUP_SIZE) {
+        groupSize = MINIMUM_GROUP_SIZE;
+    }
+
     uint32_t groupIndex = 0;
     uint32_t groupCount = 0;
+    uint32_t totalTransformsToProcess = 0;
 
     glm::mat4 modelMatrix = glm::mat4(1.0);
     for (auto [entity, transform]: transformView.each()) {
@@ -88,6 +94,8 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
             transform.Scale == transform.LastScale) {
             continue;
         }
+
+        totalTransformsToProcess++;
         if (transform.Scale != transform.LastScale) {
             transform.UpdateCollision = true;
         }
@@ -100,46 +108,49 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
             groupCount = 0;
         }
     }
-    std::vector<std::future<void>> futures;
-    for (int i = 0; i < NUM_GROUPS; i++) {
-        std::vector<TransformComponent *> tVec = transformGroups[i];
-        futures.emplace_back(ThreadPool.submit(
-                [tVec]() {
-                    for (int t = 0; t < tVec.size(); t++) {
-                        TransformComponent *transform = tVec[t];
-                        glm::mat4 modelMatrix = glm::mat4(1.0);
-                        glm::vec3 pos = glm::vec3(0.0);
-                        glm::vec3 eul = glm::vec3(0.0);
-                        glm::vec3 scl = glm::vec3(0.0);
 
-                        {
-                            pos = transform->Position;
-                            eul = transform->Euler;
-                            scl = transform->Scale;
+    if(totalTransformsToProcess == 0)
+    {
+        return;
+    }
+
+    bool useMT = true;
+
+    if(totalTransformsToProcess < groupSize) useMT = false;
+    if(groupSize < MINIMUM_GROUP_SIZE) useMT = false;
+
+    OPTICK_TAG("Number of transforms to process", totalTransformsToProcess);
+    if(useMT)
+    {
+        OPTICK_EVENT("Build group lambdas")
+        int emptyGroups = NUM_GROUPS - (groupIndex + 1);
+        std::vector<std::future<void>> futures;
+        for (int i = 0; i < NUM_GROUPS - emptyGroups; i++) {
+            std::vector<TransformComponent *> tVec = transformGroups[i];
+            futures.emplace_back(ThreadPool.submit(
+                    [tVec]() {
+                        for (int t = 0; t < tVec.size(); t++) {
+                            TransformComponent *transform = tVec[t];
+                            UpdateTransformComponent(transform);
                         }
-
-                        modelMatrix = glm::translate(modelMatrix, pos);
-                        ValidateAngles(eul);
-                        glm::quat rot = Utils::CalculateRotationQuat(eul);
-                        glm::mat4 localRotation = glm::mat4_cast(rot);
-                        glm::mat4 localScale = glm::mat4(1.0);
-                        localScale = glm::scale(localScale, scl);
-                        glm::mat4 finalMat = modelMatrix * localRotation * localScale;
-
-                        {
-                            transform->Model = finalMat;
-                            transform->Rotation = rot;
-                        }
-
-                        CalculateDirectionVectors(transform->Euler, *transform);
                     }
-                }
-        ));
+            ));
+        }
+        OPTICK_EVENT("Wait for futures to complete");
+        for (int i = futures.size() - 1; i >= 0; i--) {
+            futures[i].wait();
+        }
+    }
+    else
+    {
+        const int FIRST_GROUP_INDEX = 0;
+        OPTICK_EVENT("Too few transforms for threading, ST instead.")
+        for(int i = 0; i < transformGroups[FIRST_GROUP_INDEX].size(); i++)
+        {
+            UpdateTransformComponent(transformGroups[FIRST_GROUP_INDEX][i]);
+        }
     }
 
-    for (int i = futures.size() - 1; i >= 0; i--) {
-        futures[i].wait();
-    }
 #else
     glm::mat4 modelMatrix = glm::mat4(1.0);
     for (auto [entity, transform] : transformView.each())
@@ -227,4 +238,33 @@ void harmony::TransformSystem::CalculateDirectionVectors(glm::vec3 eulerDegrees,
     transform.Right = glm::normalize(transform.Right);
     transform.Up = glm::normalize(transform.Up);
 
+}
+
+void harmony::TransformSystem::UpdateTransformComponent(harmony::TransformComponent *transform)
+{
+    glm::mat4 modelMatrix = glm::mat4(1.0);
+    glm::vec3 pos = glm::vec3(0.0);
+    glm::vec3 eul = glm::vec3(0.0);
+    glm::vec3 scl = glm::vec3(0.0);
+
+    {
+        pos = transform->Position;
+        eul = transform->Euler;
+        scl = transform->Scale;
+    }
+
+    modelMatrix = glm::translate(modelMatrix, pos);
+    ValidateAngles(eul);
+    glm::quat rot = Utils::CalculateRotationQuat(eul);
+    glm::mat4 localRotation = glm::mat4_cast(rot);
+    glm::mat4 localScale = glm::mat4(1.0);
+    localScale = glm::scale(localScale, scl);
+    glm::mat4 finalMat = modelMatrix * localRotation * localScale;
+
+    {
+        transform->Model = finalMat;
+        transform->Rotation = rot;
+    }
+
+    CalculateDirectionVectors(transform->Euler, *transform);
 }
