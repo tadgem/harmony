@@ -95,7 +95,7 @@ bgfx::TextureFormat::Enum harmony::GetBGFXTextureFormat(harmony::AttachmentType 
 }
 
 uint32_t harmony::Attachment::CalculateAttachmentSize() {
-    return GetAttachmentTypePixelSize(m_Type) * m_Width * m_Height;
+    return GetAttachmentTypePixelSize(m_Type) * m_Resolution.Width * m_Resolution.Height;
 }
 
 harmony::Attachment::~Attachment()

@@ -2,11 +2,12 @@
 #include "Core/Log.hpp"
 #include "Rendering/GPUResourceManager.h"
 #include "Rendering/Renderer.h"
-harmony::Attachment harmony::Framebuffer::AddAttachment(harmony::AttachmentType attachmentType)
+harmony::Attachment harmony::Framebuffer::CreateAttachment(harmony::AttachmentType attachmentType)
 {
-    Attachment attachment;
     bgfx::TextureHandle textureHandle = CreateAttachmentInternal(m_FramebufferResolution, attachmentType);
+    Attachment attachment {textureHandle, attachmentType, m_FramebufferResolution};
 
+    p_Attachments.emplace_back(attachment);
 
     return attachment;
 }
@@ -96,6 +97,13 @@ harmony::Resolution harmony::Framebuffer::GetScaledResolution(harmony::Framebuff
             finalRes.Width = res.Width / 4;
             finalRes.Height = res.Height / 4;
             break;
+        case ResolutionType::EighthScale:
+            finalRes.Width = res.Width / 8;
+            finalRes.Height = res.Height / 8;
+            break;
+        case ResolutionType::SixteenthScale:
+            finalRes.Width = res.Width / 8;
+            finalRes.Height = res.Height / 8;
             break;
     }
 

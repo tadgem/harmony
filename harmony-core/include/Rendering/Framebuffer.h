@@ -12,6 +12,8 @@ namespace harmony {
             FullScale,
             HalfScale,
             QuarterScale,
+            EighthScale,
+            SixteenthScale,
             Custom
         };
 
@@ -19,6 +21,8 @@ namespace harmony {
             { FullScale, "full"},
             { HalfScale, "half"},
             { QuarterScale, "quarter"},
+            { EighthScale, "eighth"},
+            { SixteenthScale, "sixteenth"},
             { Custom, "custom"},
 
         })
@@ -26,7 +30,7 @@ namespace harmony {
         explicit Framebuffer(Resolution res, ResolutionType resolutionType = ResolutionType::FullScale);
         ~Framebuffer();
 
-        Attachment AddAttachment(AttachmentType attachmentType);
+        Attachment CreateAttachment(AttachmentType attachmentType);
 
         bool Build();
         bool IsBuilt();

@@ -65,7 +65,7 @@ namespace harmony {
         bgfx::TextureHandle m_Handle { UINT16_MAX};
         AttachmentType m_Type;
 
-        uint16_t m_Width, m_Height;
+        Resolution m_Resolution;
 
         uint32_t CalculateAttachmentSize();
 
