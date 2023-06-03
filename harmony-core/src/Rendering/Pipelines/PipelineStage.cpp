@@ -41,6 +41,7 @@ harmony::PipelineStage::Init(entt::registry &registry, WeakRef<View> view, bgfx:
     }
 
     fb->Build();
+    bgfx::setViewName(fb->m_ViewID, m_Name.c_str());
 
 //
 //

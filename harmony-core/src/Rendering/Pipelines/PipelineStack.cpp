@@ -414,6 +414,12 @@ void harmony::PipelineStack::InitializeStack(WeakRef<View> view) {
         m_PipelineStackNoPostProcessFB = CreateUnique<Framebuffer>(res);
         m_PipelineStackNoPostProcessFB->CreateAttachment(AttachmentType::RGBA32F);
         m_PipelineStackNoPostProcessFB->CreateAttachment(AttachmentType::Depth32F);
+
+        m_FinalFramebuffer->Build();
+        m_PipelineStackAccumulationFB->Build();
+        m_PipelineStackNoPostProcessFB->Build();
+
+        p_Initialized = true;
     }
 }
 
@@ -480,7 +486,7 @@ void harmony::PipelineStack::OnViewResized(WeakRef<View> view) {
         harmony::log::error("PipelineStack : Cannot create framebuffer.");
         return;
     }
-    bgfx::destroy(m_FinalFramebuffer->m_FBH);
+    // bgfx::destroy(m_FinalFramebuffer->m_FBH);
 
 //    for (auto [name, datas]: p_StackData) {
 //        for (int i = 0; i < datas.size(); i++) {
@@ -650,7 +656,7 @@ bgfx::TextureHandle harmony::PipelineStack::GetPipelineInitialDepth(PipelineHand
         }
     }
 
-    harmony::log::error("Pipeline with handle {} does not have a depth texture.", handle.Name);
+    // harmony::log::error("Pipeline with handle {} does not have a depth texture.", handle.Name);
     return bgfx::TextureHandle();
 }
 

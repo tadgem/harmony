@@ -77,7 +77,7 @@ harmony::Framebuffer::Framebuffer(Resolution res, harmony::Framebuffer::Resoluti
     }
 
     m_FramebufferResolution = GetScaledResolution(resType, {GPUResourceManager::GetMaxFramebufferWidth(), GPUResourceManager::GetMaxFramebufferHeight()});
-
+    m_VirtualResoltuion = m_FramebufferResolution;
 }
 
 harmony::Resolution harmony::Framebuffer::GetScaledResolution(harmony::Framebuffer::ResolutionType type, harmony::Resolution res) {
