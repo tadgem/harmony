@@ -5,7 +5,7 @@
 #include "Rendering/Shapes.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/View.h"
-#include "Rendering/Pipelines/PostProcessStage.h"
+#include "Rendering/Pipelines/PipelineStages/PostProcessStage.h"
 #include "Rendering/Attachment.h"
 #include "Rendering/GPUResourceManager.h"
 

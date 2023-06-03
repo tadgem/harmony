@@ -14,8 +14,8 @@
 #include "Rendering/View.h"
 #include "Rendering/Pipelines/PipelineStageRenderer.h"
 #include "Rendering/Shaders/ShaderDataSource.h"
-#include "Rendering/Pipelines/PostProcessStage.h"
-#include "Rendering/Pipelines/PipelineDrawStage.h"
+#include "Rendering/Pipelines/PipelineStages/PostProcessStage.h"
+#include "Rendering/Pipelines/PipelineStages/PipelineDrawStage.h"
 
 #if HARMONY_DEBUG
 

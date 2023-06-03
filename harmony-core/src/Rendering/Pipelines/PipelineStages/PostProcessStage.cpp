@@ -1,6 +1,6 @@
 #include <optick.h>
 #include <Rendering/Shapes.h>
-#include "Rendering/Pipelines/PostProcessStage.h"
+#include "Rendering/Pipelines/PipelineStages/PostProcessStage.h"
 #include "Rendering/View.h"
 #include "Rendering/Framebuffer.h"
 

@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <optick.h>
 #include "Rendering/Pipelines/Pipeline.h"
-#include "Rendering/Pipelines/PipelineDrawStage.h"
+#include "Rendering/Pipelines/PipelineStages/PipelineDrawStage.h"
 #include "Rendering/View.h"
 #include "Core/Log.hpp"
 #include "Rendering/Framebuffer.h"

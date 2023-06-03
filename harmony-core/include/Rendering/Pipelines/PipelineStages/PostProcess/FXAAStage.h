@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Rendering/Pipelines/PipelineDrawStage.h"
+#include "Rendering/Pipelines/PipelineStages/PipelineDrawStage.h"
 
 namespace harmony {
     class FXAAStage {

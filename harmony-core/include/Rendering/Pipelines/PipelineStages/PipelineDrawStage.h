@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PipelineStage.h"
+#include "Rendering/Pipelines/PipelineStage.h"
 
 namespace harmony {
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Rendering/Pipelines/Pipeline.h"
-#include "Rendering/Pipelines/PipelineDrawStage.h"
+#include "Rendering/Pipelines/PipelineStages/PipelineDrawStage.h"
 #include "Rendering/Debug/GfxDebug.h"
 
 namespace harmony {

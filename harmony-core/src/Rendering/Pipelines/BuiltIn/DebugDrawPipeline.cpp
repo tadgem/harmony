@@ -1,5 +1,5 @@
 #include <optick.h>
-#include "Rendering/Pipelines/PipelineStages/DebugDrawPipeline.h"
+#include "Rendering/Pipelines/BuiltIn/DebugDrawPipeline.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "Core/MathsUtils.h"
 #include "Core/Input.h"
