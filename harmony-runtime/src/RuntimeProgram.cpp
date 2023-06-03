@@ -140,9 +140,8 @@ void harmony::RuntimeProgram::AddPipelineDrawStages() {
             m_Renderer.GetShader("BlinnPhongTextured"),
             m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
-
-
     blinnPhongStage->AddShaderDataSource(m_Renderer.GetShaderDataSource("BlinnPhong"));
+
     m_Renderer.AddPipelineDrawStage(normalStage);
     m_Renderer.AddPipelineDrawStage(texturedMeshStage);
     m_Renderer.AddPipelineDrawStage(blinnPhongStage);

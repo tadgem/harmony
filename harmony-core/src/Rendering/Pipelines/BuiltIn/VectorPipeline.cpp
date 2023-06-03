@@ -1,5 +1,5 @@
 #include <optick.h>
-#include "Rendering/Pipelines/VectorPipeline.h"
+#include "Rendering/Pipelines/PipelineStages/VectorPipeline.h"
 #include "Rendering/View.h"
 #include "Core/Program.h"
 #include "Rendering/Framebuffer.h"
