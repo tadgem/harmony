@@ -1173,7 +1173,9 @@ void harmony::Renderer::DeserializePipelines(nlohmann::json &json, AssetManager 
             harmony::log::debug("Renderer : Stage Json {}", dump);
             std::string stageName = stageJson[sk_PipelineStageName];
 
-            AttachmentType stageAttachments = stageJson[sk_PipelineStageAttachments];
+            // AttachmentType stageAttachments = stageJson[sk_PipelineStageAttachments];
+            // TODO: This is obviously wrong we need to serialize this again somehow
+            Vector<AttachmentType> stageAttachments = {AttachmentType::RGBA32F, AttachmentType::Depth32F};
             PipelineDrawStage::Type stageType = stageJson[sk_PipelineStageType];
 
             std::string stageShaderName = stageJson[sk_PipelineStageShader][sk_ShaderProgramName];
@@ -1310,7 +1312,7 @@ harmony::Renderer::HandleStackPipelineAccumulation(Ref<View> view, PipelineStack
     view->OnPostUpdate(registry);
     auto texturesToBlit = stack.PostUpdate(registry, view);
 
-    bgfx::setViewClear(stack.m_PipelineStackAccumulationView, BGFX_CLEAR_COLOR, 0x00000000);
+    bgfx::setViewClear(stack.m_PipelineStackAccumulationFB->m_ViewID, BGFX_CLEAR_COLOR, 0x00000000);
 
     bool touchNoPostProcess = true;
     auto noPostProcess = std::vector<bgfx::TextureHandle>();
@@ -1321,23 +1323,23 @@ harmony::Renderer::HandleStackPipelineAccumulation(Ref<View> view, PipelineStack
             bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, h);
             ScreenSpaceQuad(view->m_Width, view->m_Height);
             bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
-            bgfx::submit(stack.m_PipelineStackAccumulationView, textureProg->m_Handle);
+            bgfx::submit(stack.m_PipelineStackAccumulationFB->m_ViewID, textureProg->m_Handle);
         } else {
             noPostProcess.emplace_back(h);
             touchNoPostProcess = false;
         }
     }
 
-    bgfx::setViewClear(stack.m_PipelineStackNoPostProcessView, BGFX_CLEAR_COLOR, 0x00000000);
+    bgfx::setViewClear(stack.m_PipelineStackNoPostProcessFB->m_ViewID, BGFX_CLEAR_COLOR, 0x00000000);
     if (touchNoPostProcess) {
-        bgfx::touch(stack.m_PipelineStackNoPostProcessView);
+        bgfx::touch(stack.m_PipelineStackNoPostProcessFB->m_ViewID);
     } else {
         for (auto th: noPostProcess) {
             bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, th);
             ScreenSpaceQuad(view->m_Width, view->m_Height);
             bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
 
-            bgfx::submit(stack.m_PipelineStackNoPostProcessView, textureProg->m_Handle);
+            bgfx::submit(stack.m_PipelineStackNoPostProcessFB->m_ViewID, textureProg->m_Handle);
         }
     }
 }
@@ -1345,16 +1347,8 @@ harmony::Renderer::HandleStackPipelineAccumulation(Ref<View> view, PipelineStack
 void harmony::Renderer::HandleStackPostProcess(Ref<View> view, PipelineStack &stack, Ref<ShaderProgram> textureProg,
                                                entt::registry &registry) {
     OPTICK_EVENT();
-    PipelineStage::Data data;
-
     // Initialize with final result from draw pipelines.
-    data.m_FramebufferHandle = stack.m_PipelineStackAccumulationFB;
-
-    Attachment colourAttachment{stack.m_PipelineStackAccumulationAttachment, stack.s_AccumulationBufferFormat};
-    Attachment depthAttachment{stack.GetFinalDepth(), AttachmentType::Depth16F};
-
-    data.m_Attachments.emplace(colourAttachment.m_Type, colourAttachment);
-    data.m_Attachments.emplace(depthAttachment.m_Type, depthAttachment);
+    Ref<Framebuffer> data = stack.m_PipelineStackAccumulationFB;
 
     for (int i = 0; i < stack.m_PostProcessPipelineStack.size(); i++) {
         WeakRef<PostProcessStage> stage = stack.m_PostProcessPipelineStack[i];
@@ -1369,19 +1363,19 @@ void harmony::Renderer::HandleStackPostProcess(Ref<View> view, PipelineStack &st
         s->PostUpdate(registry, view, stack.p_StackViewIDs[s->m_Name][0], data);
 
         data = stack.p_StackData[s->m_Name][0];
-        data.m_Attachments[AttachmentType::Depth16F] = depthAttachment;
+        // data.m_Attachments[AttachmentType::Depth16F] = depthAttachment;
     }
 
     // post processing image drawn first
-    bgfx::setViewClear(stack.m_FinalImageViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0F);
-    bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, data.m_Attachments[data.GetColorType()].m_Handle);
+    bgfx::setViewClear(stack.m_FinalFramebuffer->m_ViewID, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0F);
+    bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, data->m_Attachments[0].m_Handle);
     ScreenSpaceQuad(view->m_Width, view->m_Height);
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ADD);
-    bgfx::submit(stack.m_FinalImageViewId, textureProg->m_Handle);
+    bgfx::submit(stack.m_FinalFramebuffer->m_ViewID, textureProg->m_Handle);
 
     // next pipelines with no post processing drawn on top
-    bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, stack.m_PipelineStackNoPostProcessAttachment);
+    bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, stack.m_PipelineStackNoPostProcessFB->m_Attachments[0].m_Handle);
     ScreenSpaceQuad(view->m_Width, view->m_Height);
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ADD);
-    bgfx::submit(stack.m_FinalImageViewId, textureProg->m_Handle);
+    bgfx::submit(stack.m_FinalFramebuffer->m_ViewID, textureProg->m_Handle);
 }

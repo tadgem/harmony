@@ -3,6 +3,7 @@
 #include "PipelineStage.h"
 
 namespace harmony {
+
     class PostProcessStage : public PipelineStage {
     public:
 
@@ -11,13 +12,14 @@ namespace harmony {
                 Type stageType,
                 WeakRef<ShaderProgram> shader,
                 WeakRef<PipelineStageRenderer> stageRenderer,
-                AttachmentType attachments = (AttachmentType) (AttachmentType::RGBA8));
+                Vector<AttachmentType> attachments = Vector<AttachmentType>{AttachmentType::RGBA8});
 
         virtual void
-        PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId, PipelineStage::Data data);
+        PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId, Ref<Framebuffer> data);
 
         virtual void
-        PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId, PipelineStage::Data data);
+        PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId, Ref<Framebuffer> data);
 
+        static AttachmentType s_AttachmentType;
     };
 }

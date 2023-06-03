@@ -34,7 +34,6 @@ namespace harmony {
 
         bool Build();
         bool IsBuilt();
-        void Bind();
 
         Resolution m_VirtualResoltuion;
         Resolution m_FramebufferResolution;
@@ -43,6 +42,7 @@ namespace harmony {
         bgfx::ViewId m_ViewID;
 
         ResolutionType m_ResolutionType;
+        Vector<Attachment> m_Attachments;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(Framebuffer, m_ResolutionType, m_FramebufferResolution)
 
@@ -50,7 +50,6 @@ namespace harmony {
         void UpdateVirtualResolution(uint16_t w, uint16_t h);
         bgfx::TextureHandle CreateAttachmentInternal(Resolution res, AttachmentType type);
         Resolution GetScaledResolution(ResolutionType type, Resolution res);
-        Vector<Attachment> p_Attachments;
         friend class Renderer;
     };
 };

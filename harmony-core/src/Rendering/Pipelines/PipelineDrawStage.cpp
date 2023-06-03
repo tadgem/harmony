@@ -10,7 +10,7 @@
 
 harmony::PipelineDrawStage::PipelineDrawStage(const std::string &name, Type stageType, WeakRef<ShaderProgram> shader,
                                               WeakRef<PipelineStageRenderer> stageRenderer,
-                                              AttachmentType attachments) : PipelineStage(name, stageType,
+                                              Vector<AttachmentType> attachments) : PipelineStage(name, stageType,
                                                                                             attachments, shader,
                                                                                             stageRenderer) {
     OPTICK_EVENT();

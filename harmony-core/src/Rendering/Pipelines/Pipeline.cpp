@@ -4,7 +4,7 @@
 #include "Rendering/Pipelines/PipelineDrawStage.h"
 #include "Rendering/View.h"
 #include "Core/Log.hpp"
-
+#include "Rendering/Framebuffer.h"
 
 harmony::Pipeline::Pipeline(const PipelineHandle &handle, Pipeline::Type pipelineType) : m_Handle(handle),
                                                                                          m_Name(handle.Name),
@@ -13,11 +13,11 @@ harmony::Pipeline::Pipeline(const PipelineHandle &handle, Pipeline::Type pipelin
     OPTICK_EVENT();
 }
 
-std::vector<harmony::PipelineDrawStage::Data>
+std::vector<harmony::Ref<harmony::Framebuffer>>
 harmony::Pipeline::Init(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds) {
     OPTICK_EVENT();
 
-    std::vector<PipelineDrawStage::Data> datas = std::vector<PipelineDrawStage::Data>();
+    std::vector<Ref<Framebuffer>> datas = std::vector<Ref<Framebuffer>>();
     if (p_Stages.size() == 0) {
         return datas;
     }
@@ -40,7 +40,7 @@ void harmony::Pipeline::AddPipelineStage(Ref<PipelineDrawStage> stage) {
 }
 
 void harmony::Pipeline::PreUpdate(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds,
-                                  std::vector<PipelineDrawStage::Data> data) {
+                                  std::vector<Ref<Framebuffer>> data) {
     OPTICK_EVENT();
 
     Ref<View> _v = view.lock();
@@ -53,45 +53,12 @@ void harmony::Pipeline::PreUpdate(entt::registry &registry, WeakRef<View> view, 
 
     for (int i = 0; i < p_Stages.size(); i++) {
         p_Stages[i]->PreUpdate(registry, view, viewIds[i]);
-
-        int nextIndex = i + 1;
-        if (nextIndex >= p_Stages.size()) {
-            continue;
-        }
-
-        if (!p_Stages[nextIndex]->m_HasDepthAttachment) {
-            continue;
-        }
-
-        auto srcData = data[i];
-        auto dstData = data[nextIndex];
-        AttachmentType srcDepthType = srcData.GetDepthType();
-        if (!(srcDepthType == dstData.GetDepthType())) {
-            continue;
-        }
-        // Get first view id of next pipeline
-        bgfx::ViewId nextViewId = viewIds[nextIndex];
-        // Get tex handles for this stage final depth & next stage initial depth texture
-        bgfx::TextureHandle srcTexture = srcData.m_Attachments[srcDepthType].m_Handle;
-        bgfx::TextureHandle destTexture = dstData.m_Attachments[srcDepthType].m_Handle;
-        // this is blasphemy. Burn
-        if (srcTexture.idx >= 4096 || destTexture.idx >= 4096) {
-            continue;
-        }
-        bgfx::blit(
-                nextViewId,
-                destTexture,
-                0,
-                0,
-                srcTexture
-        );
     }
 }
 
 void harmony::Pipeline::PostUpdate(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds,
-                                   std::vector<PipelineDrawStage::Data> data) {
+                                   std::vector<Ref<Framebuffer>> data) {
     OPTICK_EVENT();
-
     if (p_Stages.size() == 0) {
         return;
     }

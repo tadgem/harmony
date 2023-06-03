@@ -6,7 +6,7 @@
 
 namespace harmony {
     class View;
-
+    class Framebuffer;
     class PostProcessStage;
 
     class PipelineStack {
@@ -55,15 +55,9 @@ namespace harmony {
 
         nlohmann::json Serialize();
 
-        bgfx::FrameBufferHandle m_FinalFramebufferHandle;
-        bgfx::FrameBufferHandle m_PipelineStackAccumulationFB;
-        bgfx::FrameBufferHandle m_PipelineStackNoPostProcessFB;
-        bgfx::ViewId m_FinalImageViewId;
-        bgfx::ViewId m_PipelineStackAccumulationView;
-        bgfx::ViewId m_PipelineStackNoPostProcessView;
-        bgfx::TextureHandle m_FinalFramebufferAttachment;
-        bgfx::TextureHandle m_PipelineStackAccumulationAttachment;
-        bgfx::TextureHandle m_PipelineStackNoPostProcessAttachment;
+        Ref<Framebuffer> m_FinalFramebuffer;
+        Ref<Framebuffer> m_PipelineStackAccumulationFB;
+        Ref<Framebuffer> m_PipelineStackNoPostProcessFB;
 
         std::vector<WeakRef<Pipeline>> m_PipelineStack;
         std::vector<WeakRef<PostProcessStage>> m_PostProcessPipelineStack;
@@ -91,7 +85,7 @@ namespace harmony {
         bgfx::TextureHandle GetPipelineFinalDepth(PipelineHandle &handle);
 
         std::map<std::string, std::vector<bgfx::ViewId>> p_StackViewIDs;
-        std::map<std::string, std::vector<PipelineStage::Data>> p_StackData;
+        std::map<std::string, std::vector<Ref<Framebuffer>>> p_StackData;
 
         bool p_Initialized;
 

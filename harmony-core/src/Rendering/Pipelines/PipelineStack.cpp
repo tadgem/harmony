@@ -6,21 +6,20 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/View.h"
 #include "Rendering/Pipelines/PostProcessStage.h"
+#include "Rendering/Attachment.h"
+#include "Rendering/GPUResourceManager.h"
 
 harmony::PipelineStack::PipelineStack() {
     OPTICK_EVENT();
     p_Initialized = false;
-    m_FinalImageViewId = Renderer::GetPresentViewID();
-    m_PipelineStackAccumulationView = Renderer::GetPresentViewID();
-    m_PipelineStackNoPostProcessView = Renderer::GetPresentViewID();
 }
 
 bgfx::TextureHandle harmony::PipelineStack::GetFinalImage() {
     OPTICK_EVENT();
-    if (!p_Initialized || m_FinalFramebufferHandle.idx >= 65534) {
+    if (!p_Initialized) {
         return bgfx::TextureHandle();
     }
-    return bgfx::getTexture(m_FinalFramebufferHandle);
+    return bgfx::getTexture(m_FinalFramebuffer->m_FBH);
 }
 
 bgfx::TextureHandle harmony::PipelineStack::GetFinalDepth() {
@@ -127,15 +126,13 @@ harmony::PipelineStack::PostUpdate(entt::registry &registry, WeakRef<View> view)
         auto ph = pipeline->m_Handle;
         for (auto &data: p_StackData[ph.Name]) {
             bgfx::TextureHandle th = BGFX_INVALID_HANDLE;
+            for(auto &attachment : data->m_Attachments)
+            {
+                if(attachment.m_Type & AttachmentType::RGBA)
+                {
+                    th = attachment.m_Handle;
+                }
 
-            if (data.m_Attachments.find(AttachmentType::RGBA8) != data.m_Attachments.end()) {
-                th = data.m_Attachments[AttachmentType::RGBA8].m_Handle;
-            }
-            if (data.m_Attachments.find(AttachmentType::RGBA16F) != data.m_Attachments.end()) {
-                th = data.m_Attachments[AttachmentType::RGBA16F].m_Handle;
-            }
-            if (data.m_Attachments.find(AttachmentType::RGBA32F) != data.m_Attachments.end()) {
-                th = data.m_Attachments[AttachmentType::RGBA32F].m_Handle;
             }
 
             if (th.idx == bgfx::kInvalidHandle) {
@@ -218,8 +215,8 @@ void harmony::PipelineStack::RemovePipeline(WeakRef<Pipeline> pipeline, WeakRef<
 
 
         for (auto &data: p_StackData[p->m_Handle.Name]) {
-            bgfx::destroy(data.m_FramebufferHandle);
-            for (auto &[type, attachment]: data.m_Attachments) {
+            bgfx::destroy(data->m_FBH);
+            for (auto &attachment: data->m_Attachments) {
                 bgfx::destroy(attachment.m_Handle);
             }
         }
@@ -331,8 +328,8 @@ void harmony::PipelineStack::RemovePostProcessStage(WeakRef<PostProcessStage> po
 
 
         for (auto &data: p_StackData[p->m_Name]) {
-            bgfx::destroy(data.m_FramebufferHandle);
-            for (auto &[type, attachment]: data.m_Attachments) {
+            bgfx::destroy(data->m_FBH);
+            for (auto & attachment: data->m_Attachments) {
                 bgfx::destroy(attachment.m_Handle);
             }
         }
@@ -399,57 +396,8 @@ nlohmann::json harmony::PipelineStack::Serialize() {
 void harmony::PipelineStack::InitializeStack(WeakRef<View> view) {
     OPTICK_EVENT();
     if (!p_Initialized) {
-        Ref<View> _view = view.lock();
-        std::vector<bgfx::TextureHandle> attachments = std::vector<bgfx::TextureHandle>();
-
-        m_PipelineStackAccumulationAttachment = bgfx::createTexture2D(
-                _view->m_Width, _view->m_Height, false, 1,
-                bgfx::TextureFormat::RGBA16F // TODO Link to s_AccumulationBufferFormat.
-                , BGFX_TEXTURE_RT | BGFX_TEXTURE_BLIT_DST
-        );
-
-        std::string stackAccumulationViewName = _view->m_Name + "-accumulate";
-
-        attachments.emplace_back(m_PipelineStackAccumulationAttachment);
-        m_PipelineStackAccumulationFB = bgfx::createFrameBuffer(attachments.size(), attachments.data(), false);
-        bgfx::setViewFrameBuffer(m_PipelineStackAccumulationView, m_PipelineStackAccumulationFB);
-        bgfx::setViewName(m_PipelineStackAccumulationView, stackAccumulationViewName.c_str());
-        bgfx::setViewRect(m_PipelineStackAccumulationView, 0, 0, (uint16_t) _view->m_Width, (uint16_t) _view->m_Height);
-        attachments.clear();
-
-        m_PipelineStackNoPostProcessAttachment = bgfx::createTexture2D(
-                _view->m_Width, _view->m_Height, false, 1,
-                bgfx::TextureFormat::RGBA16F // TODO Link to s_AccumulationBufferFormat.
-                , BGFX_TEXTURE_RT | BGFX_TEXTURE_BLIT_DST
-        );
-
-        std::string stackNoPostProcessViewName = _view->m_Name + "-no-post-process";
-
-        attachments.emplace_back(m_PipelineStackNoPostProcessAttachment);
-        m_PipelineStackNoPostProcessFB = bgfx::createFrameBuffer(attachments.size(), attachments.data(), false);
-        bgfx::setViewFrameBuffer(m_PipelineStackNoPostProcessView, m_PipelineStackNoPostProcessFB);
-        bgfx::setViewName(m_PipelineStackNoPostProcessView, stackNoPostProcessViewName.c_str());
-        bgfx::setViewRect(m_PipelineStackNoPostProcessView, 0, 0, (uint16_t) _view->m_Width,
-                          (uint16_t) _view->m_Height);
-        attachments.clear();
-
-        m_FinalFramebufferAttachment = bgfx::createTexture2D(
-                _view->m_Width, _view->m_Height, false, 1, bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_RT
-        );
-        attachments.emplace_back(m_FinalFramebufferAttachment);
-
-        std::string stackFinalViewName = _view->m_Name + "-final";
-
-        m_FinalFramebufferHandle = bgfx::createFrameBuffer(attachments.size(), attachments.data(), false);
-        bgfx::setViewFrameBuffer(m_FinalImageViewId, m_FinalFramebufferHandle);
-        bgfx::setViewName(m_FinalImageViewId, stackFinalViewName.c_str());
-        bgfx::setViewRect(m_FinalImageViewId, 0, 0, (uint16_t) _view->m_Width, (uint16_t) _view->m_Height);
-        p_Initialized = true;
-
-        if(m_FinalFramebufferHandle.idx > 128)
-        {
-            p_Initialized = false;
-        }
+        Resolution res {GPUResourceManager::GetMaxFramebufferWidth(), GPUResourceManager::GetMaxFramebufferHeight()};
+        m_FinalFramebuffer = CreateUnique<Framebuffer>(res);
     }
 }
 
@@ -484,9 +432,9 @@ void harmony::PipelineStack::InitializePostProcessStage(Ref<PostProcessStage> st
         }
     }
     entt::registry reg = entt::registry();
-    p_StackData[stage->m_Name] = std::vector<PipelineStage::Data>();
+    p_StackData[stage->m_Name] = std::vector<Ref<Framebuffer>>();
 
-    PipelineStage::Data data = stage->Init(reg, view, p_StackViewIDs[stage->m_Name][0]);
+    auto data = stage->Init(reg, view, p_StackViewIDs[stage->m_Name][0]);
 
     p_StackData[stage->m_Name].emplace_back(data);
 }
@@ -499,27 +447,26 @@ void harmony::PipelineStack::OnViewResized(WeakRef<View> view) {
     }
 
     p_Initialized = false;
-    bgfx::setViewClear(m_FinalImageViewId, BGFX_CLEAR_COLOR, 0);
-    bgfx::setViewClear(m_PipelineStackAccumulationView, BGFX_CLEAR_COLOR, 0);
+    bgfx::setViewClear(m_FinalFramebuffer->m_ViewID, BGFX_CLEAR_COLOR, 0);
+    bgfx::setViewClear(m_PipelineStackAccumulationFB->m_ViewID, BGFX_CLEAR_COLOR, 0);
 
     for (auto [name, viewIds]: p_StackViewIDs) {
         for (int i = 0; i < viewIds.size(); i++) {
             bgfx::setViewClear(viewIds[i], BGFX_CLEAR_COLOR, 0);
         }
     }
-    if(m_FinalFramebufferHandle.idx == UINT16_MAX)
+    if(!m_FinalFramebuffer->IsBuilt())
     {
         harmony::log::error("PipelineStack : Cannot create framebuffer.");
         return;
     }
-    bgfx::destroy(m_FinalFramebufferHandle);
-    bgfx::destroy(m_FinalFramebufferAttachment);
+    bgfx::destroy(m_FinalFramebuffer->m_FBH);
 
-    for (auto [name, datas]: p_StackData) {
-        for (int i = 0; i < datas.size(); i++) {
-            datas[i].Clear();
-        }
-    }
+//    for (auto [name, datas]: p_StackData) {
+//        for (int i = 0; i < datas.size(); i++) {
+//            datas[i]->Clear();
+//        }
+//    }
 
     p_StackData.clear();
 
@@ -674,17 +621,12 @@ bgfx::TextureHandle harmony::PipelineStack::GetPipelineInitialDepth(PipelineHand
     auto datas = p_StackData[handle.Name];
 
     for (auto data: datas) {
-        if (data.m_Attachments.find(AttachmentType::Depth16F) != data.m_Attachments.end()) {
-            Attachment &a = data.m_Attachments[AttachmentType::Depth16F];
-            return a.m_Handle;
-        }
-        if (data.m_Attachments.find(AttachmentType::Depth24F) != data.m_Attachments.end()) {
-            Attachment &a = data.m_Attachments[AttachmentType::Depth24F];
-            return a.m_Handle;
-        }
-        if (data.m_Attachments.find(AttachmentType::Depth32F) != data.m_Attachments.end()) {
-            Attachment &a = data.m_Attachments[AttachmentType::Depth32F];
-            return a.m_Handle;
+        for(auto & attachment : data->m_Attachments)
+        {
+            if(attachment.m_Type & AttachmentType::Depth)
+            {
+                return attachment.m_Handle;
+            }
         }
     }
 
@@ -703,17 +645,12 @@ bgfx::TextureHandle harmony::PipelineStack::GetPipelineFinalDepth(PipelineHandle
 
     for (int i = datas.size() - 1; i >= 0; i--) {
         auto data = datas[i];
-        if (data.m_Attachments.find(AttachmentType::Depth16F) != data.m_Attachments.end()) {
-            Attachment &a = data.m_Attachments[AttachmentType::Depth16F];
-            return a.m_Handle;
-        }
-        if (data.m_Attachments.find(AttachmentType::Depth24F) != data.m_Attachments.end()) {
-            Attachment &a = data.m_Attachments[AttachmentType::Depth24F];
-            return a.m_Handle;
-        }
-        if (data.m_Attachments.find(AttachmentType::Depth32F) != data.m_Attachments.end()) {
-            Attachment &a = data.m_Attachments[AttachmentType::Depth32F];
-            return a.m_Handle;
+        for(auto & attachment : data->m_Attachments)
+        {
+            if(attachment.m_Type & AttachmentType::Depth)
+            {
+                return attachment.m_Handle;
+            }
         }
     }
 }

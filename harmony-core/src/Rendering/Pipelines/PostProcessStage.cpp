@@ -1,21 +1,24 @@
 #include <optick.h>
+#include <Rendering/Shapes.h>
 #include "Rendering/Pipelines/PostProcessStage.h"
 #include "Rendering/View.h"
-#include "Rendering/Shapes.h"
+#include "Rendering/Framebuffer.h"
+
+harmony::AttachmentType harmony::PostProcessStage::s_AttachmentType = harmony::AttachmentType::RGBA8;
 
 harmony::PostProcessStage::PostProcessStage(const std::string &name, Type stageType, WeakRef<ShaderProgram> shader,
-                                            WeakRef<PipelineStageRenderer> stageRenderer, AttachmentType attachments)
+                                            WeakRef<PipelineStageRenderer> stageRenderer, Vector<AttachmentType> attachments)
         : PipelineStage(name, stageType, attachments, shader, stageRenderer) {
     OPTICK_EVENT();
 }
 
 void harmony::PostProcessStage::PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId,
-                                          PipelineStage::Data data) {
+                                          Ref<Framebuffer>) {
     OPTICK_EVENT();
 }
 
 void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId,
-                                           PipelineStage::Data data) {
+                                           Ref<Framebuffer> data) {
     OPTICK_EVENT();
     Ref<ShaderProgram> s = p_Shader.lock();
     for (WeakRef<ShaderDataSource> &source: p_DataSources) {
@@ -51,13 +54,6 @@ void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakRef<Vie
         }
     }
 
-    AttachmentType colourType = data.GetColorType();
-    AttachmentType depthType = data.GetDepthType();
-
-    if (colourType == AttachmentType::UnknownAttachmentType) {
-        return;
-    }
-
     for (WeakRef<ShaderDataSource> &source: p_DataSources) {
         if (source.expired()) continue;
         auto src = source.lock();
@@ -69,15 +65,9 @@ void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakRef<Vie
     bgfx::setViewClear(viewId, BGFX_CLEAR_COLOR, 0x00000000, 1.0f);
     bgfx::setViewRect(viewId, 0, 0, v->m_Width, v->m_Height);
 
-    bgfx::TextureHandle colourAttachment = data.m_Attachments[colourType].m_Handle;
+    bgfx::TextureHandle colourAttachment = data->m_Attachments[0].m_Handle;
     bgfx::setTexture(0, colourAttachmentUniform, colourAttachment);
 
-    if (hasDepth && depthType != AttachmentType::UnknownAttachmentType) {
-        bgfx::TextureHandle depthAttachment = data.m_Attachments[depthType].m_Handle;
-        if (depthAttachment.idx <= 4096) {
-            bgfx::setTexture(1, depthAttachmentUniform, depthAttachment);
-        }
-    }
     glm::vec4 params(v->m_Width, v->m_Height, 0, 0);
     if (hasParams) {
         bgfx::setUniform(postProcessParamsUniform, &params[0]);

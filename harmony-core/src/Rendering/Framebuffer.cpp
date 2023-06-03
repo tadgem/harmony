@@ -7,7 +7,7 @@ harmony::Attachment harmony::Framebuffer::CreateAttachment(harmony::AttachmentTy
     bgfx::TextureHandle textureHandle = CreateAttachmentInternal(m_FramebufferResolution, attachmentType);
     Attachment attachment {textureHandle, attachmentType, m_FramebufferResolution};
 
-    p_Attachments.emplace_back(attachment);
+    m_Attachments.emplace_back(attachment);
 
     return attachment;
 }
@@ -15,11 +15,17 @@ harmony::Attachment harmony::Framebuffer::CreateAttachment(harmony::AttachmentTy
 harmony::Framebuffer::~Framebuffer()
 {
     harmony::log::info("Framebuffer : Destructor called for framebuffer : {}. Attachments will be destroyed.", m_FBH.idx);
-    p_Attachments.clear();
+    m_Attachments.clear();
 }
 
 bool harmony::Framebuffer::Build() {
-    return false;
+    Vector<bgfx::TextureHandle> textureAttachments;
+    for(Attachment& a : m_Attachments)
+    {
+        textureAttachments.emplace_back(a.m_Handle);
+    }
+    m_FBH = bgfx::createFrameBuffer(textureAttachments.size(), textureAttachments.data());
+    return IsBuilt();
 }
 
 bgfx::TextureHandle harmony::Framebuffer::CreateAttachmentInternal(Resolution res, harmony::AttachmentType type)
@@ -29,11 +35,6 @@ bgfx::TextureHandle harmony::Framebuffer::CreateAttachmentInternal(Resolution re
     const uint64_t ATTACHMENT_FLAGS  = BGFX_TEXTURE_RT;
     bgfx::TextureFormat::Enum format = harmony::GetBGFXTextureFormat(type);
     return bgfx::createTexture2D(res.Width,res.Height,false, NUM_TEXTURE_LAYERS, format, ATTACHMENT_FLAGS);
-}
-
-void harmony::Framebuffer::Bind()
-{
-
 }
 
 bool harmony::Framebuffer::IsBuilt() {

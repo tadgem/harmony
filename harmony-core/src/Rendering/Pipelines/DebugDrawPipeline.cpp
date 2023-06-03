@@ -3,7 +3,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "Core/MathsUtils.h"
 #include "Core/Input.h"
-#include "Core/Log.hpp"
+#include "Rendering/Framebuffer.h"
 
 harmony::DebugDrawStage::DebugDrawStage(GfxDebug::Channel channel) : PipelineDrawStage("DebugDrawStage",
                                                                                        PipelineDrawStage::Type::PrimaryDraw,
@@ -13,7 +13,7 @@ harmony::DebugDrawStage::DebugDrawStage(GfxDebug::Channel channel) : PipelineDra
     OPTICK_EVENT();
 }
 
-harmony::PipelineDrawStage::Data
+harmony::Ref<harmony::Framebuffer>
 harmony::DebugDrawStage::Init(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) {
     OPTICK_EVENT();
     auto data = PipelineDrawStage::Init(registry, view, viewId);

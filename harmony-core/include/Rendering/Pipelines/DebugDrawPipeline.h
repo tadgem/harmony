@@ -5,11 +5,12 @@
 #include "Rendering/Debug/GfxDebug.h"
 
 namespace harmony {
+    class Framebuffer;
     class DebugDrawStage : public PipelineDrawStage {
     public:
         DebugDrawStage(GfxDebug::Channel channel);
 
-        virtual PipelineDrawStage::Data
+        virtual Ref<Framebuffer>
         Init(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) override;
 
         virtual void PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) override;

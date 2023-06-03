@@ -8,7 +8,7 @@
 
 namespace harmony {
     class View;
-
+    class Framebuffer;
     class Pipeline {
     public:
 
@@ -44,14 +44,14 @@ namespace harmony {
 
         virtual void AddPipelineStage(Ref<PipelineDrawStage> stage);
 
-        virtual std::vector<PipelineDrawStage::Data>
+        virtual std::vector<Ref<Framebuffer>>
         Init(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
 
         virtual void PreUpdate(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds,
-                               std::vector<PipelineDrawStage::Data> data);
+                               std::vector<Ref<Framebuffer>> data);
 
         virtual void PostUpdate(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds,
-                                std::vector<PipelineDrawStage::Data> data);
+                                std::vector<Ref<Framebuffer>> data);
 
         virtual void Cleanup(entt::registry &registry, WeakRef<View> view, std::vector<bgfx::ViewId> viewIds);
 

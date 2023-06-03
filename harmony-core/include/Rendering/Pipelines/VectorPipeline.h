@@ -9,7 +9,7 @@ namespace harmony {
 
         VectorGraphicsStage(VectorGraphics::Layer layer);
 
-        virtual PipelineDrawStage::Data
+        virtual Ref<Framebuffer>
         Init(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) override;
 
         virtual void PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) override;
