@@ -361,7 +361,10 @@ void nvgBeginFrame(NVGcontext *ctx, float windowWidth, float windowHeight, float
 /*	printf("Tris: draws:%d  fill:%d  stroke:%d  text:%d  TOT:%d\n",
 		ctx->drawCallCount, ctx->fillTriCount, ctx->strokeTriCount, ctx->textTriCount,
 		ctx->fillTriCount+ctx->strokeTriCount+ctx->textTriCount);*/
-
+    if(!ctx)
+    {
+        return;
+    }
     ctx->nstates = 0;
     nvgSave(ctx);
     nvgReset(ctx);
@@ -381,6 +384,10 @@ void nvgCancelFrame(NVGcontext *ctx) {
 }
 
 void nvgEndFrame(NVGcontext *ctx) {
+    if(!ctx)
+    {
+        return;
+    }
     ctx->params.renderFlush(ctx->params.userPtr);
     if (ctx->fontImageIdx != 0) {
         int fontImage = ctx->fontImages[ctx->fontImageIdx];

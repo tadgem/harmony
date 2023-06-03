@@ -88,6 +88,12 @@ void harmony::PipelineStack::PreUpdate(entt::registry &registry, WeakRef<View> v
         if (srcTexture.idx >= 4096 || destTexture.idx >= 4096) {
             continue;
         }
+
+        if(srcTexture.idx == 0 || destTexture.idx == 0)
+        {
+            continue;
+        }
+
         bgfx::blit(
                 nextViewId,
                 destTexture,
@@ -398,6 +404,16 @@ void harmony::PipelineStack::InitializeStack(WeakRef<View> view) {
     if (!p_Initialized) {
         Resolution res {GPUResourceManager::GetMaxFramebufferWidth(), GPUResourceManager::GetMaxFramebufferHeight()};
         m_FinalFramebuffer = CreateUnique<Framebuffer>(res);
+        m_FinalFramebuffer->CreateAttachment(AttachmentType::RGBA32F);
+        m_FinalFramebuffer->CreateAttachment(AttachmentType::Depth32F);
+
+        m_PipelineStackAccumulationFB = CreateUnique<Framebuffer>(res);
+        m_PipelineStackAccumulationFB->CreateAttachment(AttachmentType::RGBA32F);
+        m_PipelineStackAccumulationFB->CreateAttachment(AttachmentType::Depth32F);
+
+        m_PipelineStackNoPostProcessFB = CreateUnique<Framebuffer>(res);
+        m_PipelineStackNoPostProcessFB->CreateAttachment(AttachmentType::RGBA32F);
+        m_PipelineStackNoPostProcessFB->CreateAttachment(AttachmentType::Depth32F);
     }
 }
 
@@ -446,7 +462,11 @@ void harmony::PipelineStack::OnViewResized(WeakRef<View> view) {
         return;
     }
 
-    p_Initialized = false;
+    if(!p_Initialized)
+    {
+        return;
+    }
+
     bgfx::setViewClear(m_FinalFramebuffer->m_ViewID, BGFX_CLEAR_COLOR, 0);
     bgfx::setViewClear(m_PipelineStackAccumulationFB->m_ViewID, BGFX_CLEAR_COLOR, 0);
 

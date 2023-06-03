@@ -12,7 +12,7 @@ namespace harmony {
                 Type stageType,
                 WeakRef<ShaderProgram> shader,
                 WeakRef<PipelineStageRenderer> stageRenderer,
-                Vector<AttachmentType> attachments = Vector<AttachmentType>{AttachmentType::RGBA8});
+                Vector<AttachmentType> attachments);
 
         virtual void
         PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId, Ref<Framebuffer> data);

@@ -32,7 +32,7 @@ bgfx::TextureHandle harmony::Framebuffer::CreateAttachmentInternal(Resolution re
 {
     // TODO: Add support for mips
     const uint16_t NUM_TEXTURE_LAYERS = 1;
-    const uint64_t ATTACHMENT_FLAGS  = BGFX_TEXTURE_RT;
+    const uint64_t ATTACHMENT_FLAGS  = BGFX_TEXTURE_RT | BGFX_TEXTURE_BLIT_DST;
     bgfx::TextureFormat::Enum format = harmony::GetBGFXTextureFormat(type);
     return bgfx::createTexture2D(res.Width,res.Height,false, NUM_TEXTURE_LAYERS, format, ATTACHMENT_FLAGS);
 }

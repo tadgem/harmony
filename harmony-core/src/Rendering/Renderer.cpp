@@ -567,11 +567,13 @@ void harmony::Renderer::OnImGui() {
             if (ImGui::Button("Build")) {
                 std::string name = std::string(p_PipelinePostProcessStageNameInput);
                 Utils::TrimString(name);
+                Vector<AttachmentType> attachments {AttachmentType::RGBA8};
                 Ref<PostProcessStage> stage = CreateRef<PostProcessStage>(
                         name,
                         PipelineStage::Type::PostProcess, // TODO: Make selectable
                         p_SelectedShaderProgram,
-                        WeakRef<PipelineStageRenderer>()
+                        WeakRef<PipelineStageRenderer>(),
+                                attachments
                 );
                 AddPostProcessStage(stage);
                 p_CreatePostProcessStageWindow = false;
@@ -1228,8 +1230,8 @@ void harmony::Renderer::DeserializePostProcessStages(nlohmann::json &json, Asset
         }
 
         PipelineStage::Type type = postProcessJson[sk_PipelineStageType];
-        AttachmentType attachments = postProcessJson[sk_PipelineStageAttachments];
-
+        // AttachmentType attachments = postProcessJson[sk_PipelineStageAttachments];
+        Vector<AttachmentType> attachments {AttachmentType::RGBA8};
         Ref<PostProcessStage> stage = CreateRef<PostProcessStage>(
                 name,
                 type,

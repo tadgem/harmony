@@ -124,24 +124,21 @@ void harmony::RuntimeProgram::AddPipelineDrawStages() {
             "NormalStage",
             PipelineDrawStage::Type::PrimaryDraw,
             m_Renderer.GetShader("Normal"),
-            m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
-            (AttachmentType) (AttachmentType::RGBA16F | AttachmentType::Depth32F)
+            m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
 
     Ref<PipelineDrawStage> texturedMeshStage = CreateRef<PipelineDrawStage>(
             "TexturedMeshStage",
             PipelineDrawStage::Type::PrimaryDraw,
             m_Renderer.GetShader("TexturedMesh"),
-            m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
-            (AttachmentType) (AttachmentType::RGBA16F | AttachmentType::Depth32F)
+            m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
 
     Ref<PipelineDrawStage> blinnPhongStage = CreateRef<PipelineDrawStage>(
             "BlinnPhongTextured",
             PipelineDrawStage::Type::PrimaryDraw,
             m_Renderer.GetShader("BlinnPhongTextured"),
-            m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
-            (AttachmentType) (AttachmentType::RGBA16F | AttachmentType::Depth32F)
+            m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
 
 
