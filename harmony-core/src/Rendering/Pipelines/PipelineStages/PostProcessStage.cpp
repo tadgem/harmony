@@ -72,7 +72,7 @@ void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakRef<Vie
     if (hasParams) {
         bgfx::setUniform(postProcessParamsUniform, &params[0]);
     }
-    ScreenSpaceQuad(v->m_Width, v->m_Height);
+    ScreenSpaceQuad(static_cast<float>(v->m_Width), static_cast<float>(v->m_Height));
     bgfx::submit(viewId, s->m_Handle);
 }
 

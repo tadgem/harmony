@@ -10,6 +10,7 @@
 #include "Collision/Collision.h"
 #include "ECS/TransformComponent.h"
 #include "ECS/SimpleCollisionComponent.h"
+#include "Assets/AssetManager.h"
 #include "Rendering/Mesh.h"
 
 #if HARMONY_DEBUG

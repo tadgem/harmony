@@ -14,7 +14,7 @@ namespace harmony
     class PipelineV2
     {
     public:
-        explicit PipelineV2(std::string&& name);
+        explicit PipelineV2();
 
         template<typename T, typename ... Args>
         WeakRef<T>              AddPipelineStage(WeakRef<Framebuffer> fb, Args &&... args) {
@@ -35,8 +35,6 @@ namespace harmony
         virtual void            PreUpdate(entt::registry &registry, WeakRef<View> view);
 
         virtual void            PostUpdate(entt::registry &registry, WeakRef<View> view);
-
-        const String m_Name;
 
     protected:
         friend class Renderer;

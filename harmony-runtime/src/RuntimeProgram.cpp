@@ -142,9 +142,9 @@ void harmony::RuntimeProgram::AddPipelineDrawStages() {
     );
     blinnPhongStage->AddShaderDataSource(m_Renderer.GetShaderDataSource("BlinnPhong"));
 
-    m_Renderer.AddPipelineDrawStage(normalStage);
-    m_Renderer.AddPipelineDrawStage(texturedMeshStage);
-    m_Renderer.AddPipelineDrawStage(blinnPhongStage);
+    //// compositor  m_Renderer.AddPipelineDrawStage(normalStage);
+//    m_Renderer.AddPipelineDrawStage(texturedMeshStage);
+//    m_Renderer.AddPipelineDrawStage(blinnPhongStage);
 }
 
 void harmony::RuntimeProgram::AddPostProcessStages() {
@@ -160,25 +160,25 @@ void harmony::RuntimeProgram::AddShaderDataSources() {
 
 void harmony::RuntimeProgram::InitializePipelines() {
     OPTICK_EVENT();
-    p_ForwardPipeline = CreateRef<Pipeline>(PipelineHandle("Forward Pipeline"), Pipeline::Type::Surface);
-    p_VectorGraphicsPipeline = CreateRef<VectorPipeline>(VectorGraphics::Layer::One);
-    p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
-
-    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("NormalStage").lock());
-    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("TexturedMeshStage").lock());
-    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("BlinnPhongTextured").lock());
-
-    m_Renderer.AddPipeline(p_DebugPipeline);
-    m_Renderer.AddPipeline(p_ForwardPipeline);
-    m_Renderer.AddPipeline(p_VectorGraphicsPipeline);
+    // compositor p_ForwardPipeline = CreateRef<Pipeline>(PipelineHandle("Forward Pipeline"), Pipeline::Type::Surface);
+//    p_VectorGraphicsPipeline = CreateRef<VectorPipeline>(VectorGraphics::Layer::One);
+//    p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
+//
+//    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("NormalStage").lock());
+//    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("TexturedMeshStage").lock());
+//    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("BlinnPhongTextured").lock());
+//
+//    m_Renderer.AddPipeline(p_DebugPipeline);
+//    m_Renderer.AddPipeline(p_ForwardPipeline);
+//    m_Renderer.AddPipeline(p_VectorGraphicsPipeline);
 }
 
 void harmony::RuntimeProgram::InitializeViews() {
     OPTICK_EVENT();
     auto runtimeViewWr = m_Renderer.CreateView<RuntimeView>(*this);
 
-    m_Renderer.AddViewPipeline(runtimeViewWr, p_ForwardPipeline);
-    m_Renderer.AddViewPipeline(runtimeViewWr, p_VectorGraphicsPipeline);
+// compositor     m_Renderer.AddViewPipeline(runtimeViewWr, p_ForwardPipeline);
+//    m_Renderer.AddViewPipeline(runtimeViewWr, p_VectorGraphicsPipeline);
     m_Renderer.SetViewActive(runtimeViewWr, true);
 
     p_RuntimeView = runtimeViewWr.lock();
@@ -247,8 +247,8 @@ void harmony::RuntimeProgram::PresentRuntimeImage() {
     OPTICK_EVENT();
     bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_COLOR, 0);
     bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_DEPTH, 0, 1.0f);
-    auto stack = m_Renderer.GetViewPipelineStack(p_RuntimeView->m_Name);
-    bgfx::setTexture(0, m_Renderer.p_PresentProgramTextureHandle, stack.GetFinalImage(), BGFX_SAMPLER_POINT);
+    // compositor auto stack = m_Renderer.GetViewPipelineStack(p_RuntimeView->m_Name);
+    // compositor bgfx::setTexture(0, m_Renderer.p_PresentProgramTextureHandle, stack.GetFinalImage(), BGFX_SAMPLER_POINT);
     ScreenSpaceQuad(static_cast<float>(p_WindowWidth), static_cast<float>(p_WindowHeight));
     bgfx::submit(p_PresentViewId, m_Renderer.p_PresentProgram.lock()->m_Handle);
 }

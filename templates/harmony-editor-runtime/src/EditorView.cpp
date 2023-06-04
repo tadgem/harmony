@@ -143,10 +143,11 @@ void harmony::EditorView::OnImGui() {
 
     const std::string editorViewTitle = std::string(ICON_FA_VIDEO_CAMERA) + " Editor";
     glm::mat4 mat = glm::mat4(1.0);
-    PipelineStack &stack = p_Renderer.GetViewPipelineStack("Editor");
+    // compositor PipelineStack &stack = p_Renderer.GetViewPipelineStack("Editor");
     if (ImGui::Begin(editorViewTitle.c_str(), (bool *) 0, ImGuiWindowFlags_NoScrollbar)) {
         View::OnImGui();
-        bgfx::TextureHandle finalImageHandle = stack.GetFinalImage();
+        // compositor bgfx::TextureHandle finalImageHandle = stack.GetFinalImage();
+        bgfx::TextureHandle finalImageHandle {bgfx::kInvalidHandle};
         if (!bgfx::isValid(finalImageHandle)) {
             ImGui::End();
             return;

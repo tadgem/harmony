@@ -93,9 +93,9 @@ void harmony::Editor::InitializeViews() {
     RuntimeProgram::InitializeViews();
 
     auto editorViewWr = m_Renderer.CreateView<EditorView>(*this, p_ScenePanel);
-    m_Renderer.AddViewPipeline(editorViewWr, p_DebugPipeline);
-    m_Renderer.AddViewPipeline(editorViewWr, p_ForwardPipeline);
-    m_Renderer.AddViewPipeline(editorViewWr, p_VectorGraphicsPipeline);
+//    // compositor m_Renderer.AddViewPipeline(editorViewWr, p_DebugPipeline);
+//    m_Renderer.AddViewPipeline(editorViewWr, p_ForwardPipeline);
+//    m_Renderer.AddViewPipeline(editorViewWr, p_VectorGraphicsPipeline);
     m_Renderer.SetViewActive(editorViewWr, true);
 
     p_EditorView = editorViewWr.lock();

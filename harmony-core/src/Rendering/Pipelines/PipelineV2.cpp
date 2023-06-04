@@ -5,7 +5,7 @@
 #include "Rendering/GPUResourceManager.h"
 #include "Core/Memory.h"
 
-harmony::PipelineV2::PipelineV2(std::string &&name) : m_Name(std::move(name)) {
+harmony::PipelineV2::PipelineV2()  {
     p_FinalImageFramebuffer = CreateFrambufferInternal({AttachmentType::RGBA8}, Resolution::Type::FullScale);
 }
 
@@ -13,13 +13,13 @@ bool harmony::PipelineV2::AddPipelineStage(harmony::WeakRef<Framebuffer> fb, har
     auto framebuffer = fb.lock();
     if(!framebuffer)
     {
-        harmony::log::error("Pipeline : Cannot add PipelineStage to Pipeline {} : passed Framebuffer is expired.", m_Name);
+        harmony::log::error("Pipeline : Cannot add PipelineStage to Pipeline : passed Framebuffer is expired.");
         return false;
     }
 
     if(p_Stages.find(framebuffer) == p_Stages.end())
     {
-        harmony::log::error("Pipeline : Cannot add PipelineStage to Pipeline {} : passed Framebuffer is not part of this pipeline.", m_Name);
+        harmony::log::error("Pipeline : Cannot add PipelineStage to Pipeline {} : passed Framebuffer is not part of this pipeline.");
         return false;
     }
 
@@ -37,7 +37,7 @@ harmony::PipelineV2::AddFramebuffer(harmony::Vector<harmony::AttachmentType> att
 void harmony::PipelineV2::PreUpdate(entt::registry &registry, harmony::WeakRef<harmony::View> view) {
     if(!IsViewValid(view))
     {
-        harmony::log::error("Pipeline : {} : Cannot Pre-Update, view is expired!", m_Name);
+        harmony::log::error("Pipeline : {} : Cannot Pre-Update, view is expired!");
         return;
     }
 
@@ -53,7 +53,7 @@ void harmony::PipelineV2::PreUpdate(entt::registry &registry, harmony::WeakRef<h
 void harmony::PipelineV2::PostUpdate(entt::registry &registry, harmony::WeakRef<harmony::View> view) {
     if(!IsViewValid(view))
     {
-        harmony::log::error("Pipeline : {} : Cannot Post-Update, view is expired!", m_Name);
+        harmony::log::error("Pipeline : {} : Cannot Post-Update, view is expired!");
         return;
     }
 

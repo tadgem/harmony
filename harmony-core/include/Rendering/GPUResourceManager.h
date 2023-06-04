@@ -11,7 +11,7 @@
 namespace harmony
 {
     class Framebuffer;
-    class Attachment;
+    struct Attachment;
 
     class GPUResourceManager
     {

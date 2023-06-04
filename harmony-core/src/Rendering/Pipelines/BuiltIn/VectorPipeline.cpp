@@ -1,11 +1,12 @@
 #include <optick.h>
+#include <Rendering/Pipelines/PipelineStages/PipelineDrawStage.h>
 #include "Rendering/Pipelines/BuiltIn/VectorPipeline.h"
 #include "Rendering/View.h"
 #include "Core/Program.h"
 #include "Rendering/Framebuffer.h"
 
 harmony::VectorGraphicsStage::VectorGraphicsStage(VectorGraphics::Layer layer)
-        : PipelineDrawStage("VectorGraphicsStage", PipelineDrawStage::Type::PrimaryDraw, WeakRef<ShaderProgram>(),
+        : PipelineDrawStage("VectorGraphicsStage", PipelineStage::Type::PrimaryDraw, WeakRef<ShaderProgram>(),
                             WeakRef<PipelineStageRenderer>(), {harmony::AttachmentType::RGBA8}),
           m_Layer(layer) {
     OPTICK_EVENT();
@@ -14,7 +15,7 @@ harmony::VectorGraphicsStage::VectorGraphicsStage(VectorGraphics::Layer layer)
 harmony::Ref<harmony::Framebuffer>
 harmony::VectorGraphicsStage::Init(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) {
 
-    auto fb = PipelineDrawStage::Init(registry, view, viewId);
+    auto fb = PipelineStage::Init(registry, view, viewId);
     bgfx::setViewMode(viewId, bgfx::ViewMode::Sequential);
     bgfx::setViewName(viewId, "NanoVG");
 
@@ -42,12 +43,4 @@ void harmony::VectorGraphicsStage::Cleanup(WeakRef<View> view, bgfx::ViewId view
     Ref<View> _view = view.lock();
     VectorGraphics::Get()->RemoveViewLayer(m_Layer, p_VectorRenderers[_view->m_Name]);
     p_VectorRenderers.erase(_view->m_Name);
-}
-
-
-harmony::VectorPipeline::VectorPipeline(VectorGraphics::Layer layer) : Pipeline(
-        PipelineHandle("VectorGraphicsPipeline"), Pipeline::Type::ScreenSpace) {
-    OPTICK_EVENT();
-    AddPipelineStage<VectorGraphicsStage>(layer);
-    m_PostProcess = false;
 }

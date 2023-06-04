@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Rendering/Pipelines/Pipeline.h"
+#include "Rendering/Pipelines/PipelineStage.h"
 #include "Rendering/VectorGraphics/VectorGraphics.h"
 
 namespace harmony {
@@ -22,10 +22,5 @@ namespace harmony {
 
     protected:
         std::map<std::string, NVGcontext *> p_VectorRenderers;
-    };
-
-    class VectorPipeline : public Pipeline {
-    public:
-        VectorPipeline(VectorGraphics::Layer layer);
     };
 };

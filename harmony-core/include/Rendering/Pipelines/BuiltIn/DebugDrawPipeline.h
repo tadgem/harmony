@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Rendering/Pipelines/Pipeline.h"
 #include "Rendering/Pipelines/PipelineStages/PipelineDrawStage.h"
 #include "Rendering/Debug/GfxDebug.h"
 
@@ -27,10 +26,5 @@ namespace harmony {
     protected:
         std::map<std::string, DebugDrawEncoder *> p_DebugRenderers;
 
-    };
-
-    class DebugDrawPipeline : public Pipeline {
-    public:
-        DebugDrawPipeline(GfxDebug::Channel channel);
     };
 };

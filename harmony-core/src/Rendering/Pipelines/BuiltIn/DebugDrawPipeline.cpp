@@ -51,10 +51,3 @@ void harmony::DebugDrawStage::Cleanup(WeakRef<View> view, bgfx::ViewId viewId) {
     GfxDebug::Get()->RemoveViewChannel(m_Channel, debugEncoder);
     p_DebugRenderers.erase(_view->m_Name);
 }
-
-
-harmony::DebugDrawPipeline::DebugDrawPipeline(GfxDebug::Channel channel) : Pipeline(PipelineHandle("DebugDrawPipline"),
-                                                                                    Pipeline::Type::ScreenSpace) {
-    OPTICK_EVENT();
-    AddPipelineStage<DebugDrawStage>(channel);
-}
