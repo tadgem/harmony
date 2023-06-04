@@ -11,8 +11,3 @@ void harmony::DrawScreenTextureStage::PostUpdate(entt::registry &registry, harmo
                                                  bgfx::ViewId viewId) {
 
 }
-
-harmony::DrawScreenTextureStage::DrawScreenTextureStage(harmony::WeakRef<harmony::Framebuffer> fb) : PipelineStage("DrawScreenTexture"), m_FramebufferToDraw(fb)
-{
-
-}
