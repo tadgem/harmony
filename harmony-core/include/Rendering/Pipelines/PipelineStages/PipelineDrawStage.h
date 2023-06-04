@@ -14,9 +14,9 @@ namespace harmony {
                 WeakRef<PipelineStageRenderer> stageRenderer,
                 Vector<AttachmentType> attachments = {AttachmentType::RGBA8, AttachmentType::Depth32F});
 
-        virtual void PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId);
+        void PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) override;
 
-        virtual void PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId);
+        void PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) override;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineDrawStage, m_Name, m_StageType, p_Shader, m_Attachments)
 

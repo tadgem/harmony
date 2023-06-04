@@ -2,7 +2,7 @@
 #define HARMONY_CORE_RENDERING_PIPELINES_PIPELINEV2_H
 #include "Core/Alias.h"
 #include "Core/Memory.h"
-#include "Rendering/Attachment.h"
+#include "Rendering/TypeDef.h"
 #include "ThirdParty/entt.hpp"
 
 namespace harmony
@@ -14,33 +14,38 @@ namespace harmony
     class PipelineV2
     {
     public:
-        PipelineV2(std::string&& name);
+        explicit PipelineV2(std::string&& name);
 
         template<typename T, typename ... Args>
-        WeakRef<T> AddPipelineStage(Args &&... args) {
+        WeakRef<T>              AddPipelineStage(WeakRef<Framebuffer> fb, Args &&... args) {
             static_assert(std::is_base_of<PipelineStage, T>());
 
             Ref<T> stage = CreateRef<T>(std::forward<Args>(args)...);
-            p_Stages.emplace_back(stage);
-
-            return GetWeakRef<T>(stage);
+            if(AddPipelineStage(fb, stage))
+            {
+                return GetWeakRef<T>(stage);
+            }
+            return WeakRef<T>();
         }
 
-        WeakRef<Framebuffer> AddFramebuffer(Vector<AttachmentType> attachments);
+        bool                    AddPipelineStage(WeakRef<Framebuffer> fb, Ref<PipelineStage> stage);
 
-        void AddPipelineStage(Ref<PipelineStage> stage);
+        WeakRef<Framebuffer>    AddFramebuffer(Vector<AttachmentType> attachments, Resolution::Type resolutionType);
 
-        virtual void PreUpdate(entt::registry &registry, WeakRef<View> view);
-        virtual void PostUpdate(entt::registry &registry, WeakRef<View> view);
+        virtual void            PreUpdate(entt::registry &registry, WeakRef<View> view);
+
+        virtual void            PostUpdate(entt::registry &registry, WeakRef<View> view);
 
         const String m_Name;
 
     protected:
         friend class Renderer;
 
-        Vector<Ref<PipelineStage>>  p_Stages;
-        Vector<Ref<Framebuffer>>    p_PipelineFramebuffers;
-        Unique<Framebuffer>         p_FinalImageFramebuffer;
+        Ref<Framebuffer> CreateFrambufferInternal(Vector<AttachmentType> attachments, Resolution::Type resolutionType);
+        bool IsViewValid(WeakRef<View> view);
+
+        Map<Ref<Framebuffer>, Vector<Ref<PipelineStage>>>   p_Stages;
+        Ref<Framebuffer>                                    p_FinalImageFramebuffer;
     };
 }
 

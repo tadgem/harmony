@@ -75,3 +75,13 @@ void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakRef<Vie
     ScreenSpaceQuad(v->m_Width, v->m_Height);
     bgfx::submit(viewId, s->m_Handle);
 }
+
+void harmony::PostProcessStage::PreUpdate(entt::registry &registry, harmony::WeakRef<harmony::View> view,
+                                          bgfx::ViewId viewId) {
+
+}
+
+void harmony::PostProcessStage::PostUpdate(entt::registry &registry, harmony::WeakRef<harmony::View> view,
+                                           bgfx::ViewId viewId) {
+
+}

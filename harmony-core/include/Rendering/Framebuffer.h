@@ -2,32 +2,12 @@
 
 #include "Core/Alias.h"
 #include "Rendering/Attachment.h"
+
 namespace harmony {
 
     class Framebuffer {
     public:
-
-        enum ResolutionType
-        {
-            FullScale,
-            HalfScale,
-            QuarterScale,
-            EighthScale,
-            SixteenthScale,
-            Custom
-        };
-
-        NLOHMANN_JSON_SERIALIZE_ENUM(ResolutionType, {
-            { FullScale, "full"},
-            { HalfScale, "half"},
-            { QuarterScale, "quarter"},
-            { EighthScale, "eighth"},
-            { SixteenthScale, "sixteenth"},
-            { Custom, "custom"},
-
-        })
-
-        explicit Framebuffer(Resolution res, ResolutionType resolutionType = ResolutionType::FullScale);
+        explicit Framebuffer(Resolution res, Resolution::Type resolutionType = Resolution::Type::FullScale);
         ~Framebuffer();
 
         Attachment CreateAttachment(AttachmentType attachmentType);
@@ -41,7 +21,7 @@ namespace harmony {
         bgfx::FrameBufferHandle m_FBH;
         bgfx::ViewId m_ViewID;
 
-        ResolutionType m_ResolutionType;
+        Resolution::Type m_ResolutionType;
         Vector<Attachment> m_Attachments;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(Framebuffer, m_ResolutionType, m_FramebufferResolution)
@@ -49,7 +29,7 @@ namespace harmony {
     protected:
         void UpdateVirtualResolution(uint16_t w, uint16_t h);
         bgfx::TextureHandle CreateAttachmentInternal(Resolution res, AttachmentType type);
-        Resolution GetScaledResolution(ResolutionType type, Resolution res);
+        Resolution GetScaledResolution(Resolution::Type type, Resolution res);
         friend class Renderer;
     };
 };

@@ -20,6 +20,10 @@ namespace harmony {
         virtual void
         PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId, Ref<Framebuffer> data);
 
+        void PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) override;
+
+        void PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) override;
+
         static AttachmentType s_AttachmentType;
     };
 }

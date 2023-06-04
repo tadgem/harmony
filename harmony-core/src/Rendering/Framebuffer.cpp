@@ -64,13 +64,13 @@ void harmony::Framebuffer::UpdateVirtualResolution(uint16_t w, uint16_t h)
 
 }
 
-harmony::Framebuffer::Framebuffer(Resolution res, harmony::Framebuffer::ResolutionType resType)
+harmony::Framebuffer::Framebuffer(Resolution res, harmony::Resolution::Type resType)
 {
     m_FBH.idx = UINT16_MAX;
     m_ViewID = Renderer::GetViewID();
     m_ResolutionType = resType;
 
-    if(m_ResolutionType == ResolutionType::Custom)
+    if(m_ResolutionType == Resolution::Type::Custom)
     {
         m_FramebufferResolution = res;
         return;
@@ -80,29 +80,29 @@ harmony::Framebuffer::Framebuffer(Resolution res, harmony::Framebuffer::Resoluti
     m_VirtualResoltuion = m_FramebufferResolution;
 }
 
-harmony::Resolution harmony::Framebuffer::GetScaledResolution(harmony::Framebuffer::ResolutionType type, harmony::Resolution res) {
+harmony::Resolution harmony::Framebuffer::GetScaledResolution(harmony::Resolution::Type type, harmony::Resolution res) {
     Resolution finalRes {0,0};
 
     switch(m_ResolutionType)
     {
-        case ResolutionType::Custom:
-        case ResolutionType::FullScale:
+        case Resolution::Type::Custom:
+        case Resolution::Type::FullScale:
             finalRes.Width = res.Width;
             finalRes.Height = res.Height;
             break;
-        case ResolutionType::HalfScale:
+        case Resolution::Type::HalfScale:
             finalRes.Width =  res.Width / 2;
             finalRes.Height = res.Height / 2;
             break;
-        case ResolutionType::QuarterScale:
+        case Resolution::Type::QuarterScale:
             finalRes.Width = res.Width / 4;
             finalRes.Height = res.Height / 4;
             break;
-        case ResolutionType::EighthScale:
+        case Resolution::Type::EighthScale:
             finalRes.Width = res.Width / 8;
             finalRes.Height = res.Height / 8;
             break;
-        case ResolutionType::SixteenthScale:
+        case Resolution::Type::SixteenthScale:
             finalRes.Width = res.Width / 8;
             finalRes.Height = res.Height / 8;
             break;
