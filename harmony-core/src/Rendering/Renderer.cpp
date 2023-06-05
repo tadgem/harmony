@@ -631,7 +631,6 @@ nlohmann::json harmony::Renderer::Serialize() {
 
     json[sk_RendererName] = nlohmann::json();
     json[sk_RendererName][sk_RendererShaderCollection] = SerializeShaders();
-    json[sk_RendererName][sk_RendererPipelineCollection] = SerializePipelines();
     json[sk_RendererName][sk_RendererDrawStageCollection] = SerializePipelineDrawStages();
     json[sk_RendererName][sk_RendererPostProcessStageCollection] = SerializePostProcessStages();
     json[sk_RendererName][sk_RendererStageRendererCollection] = SerializePipelineStageRenderers();
@@ -647,7 +646,6 @@ void harmony::Renderer::Deserialize(AssetManager &am, nlohmann::json &json) {
     harmony::log::info("Renderer : Deserializing Project Renderer Data");
 
     DeserializeShaders(json, am);
-    DeserializePipelines(json, am);
     DeserializePipelineDrawStages(json, am);
     DeserializePostProcessStages(json, am);
     DeserializePipelineStageRenderers(json, am);
@@ -875,17 +873,6 @@ nlohmann::json harmony::Renderer::SerializeShaders() {
     return json;
 }
 
-nlohmann::json harmony::Renderer::SerializePipelines() {
-    OPTICK_EVENT();
-    auto json = nlohmann::json::array();
-    // compositor
-//    for (auto &pipeline: p_Pipelines) {
-//        json.emplace_back(pipeline->Serialize());
-//    }
-
-    return json;
-}
-
 nlohmann::json harmony::Renderer::SerializePipelineDrawStages() {
     OPTICK_EVENT();
     auto json = nlohmann::json::array();
@@ -1017,74 +1004,6 @@ void harmony::Renderer::DeserializeShaders(nlohmann::json &json, AssetManager &a
             harmony::log::info("Renderer : Loading surface shader {}", shaderName);
             BuildShader(shaderName, stages[ShaderStage::Type::Vertex], stages[ShaderStage::Type::Fragment]);
         }
-
-    }
-}
-
-void harmony::Renderer::DeserializePipelines(nlohmann::json &json, AssetManager &am) {
-    OPTICK_EVENT();
-    harmony::log::info("Renderer : Deserializing Pipelines");
-    for (auto pipelineJson: json[sk_RendererName][sk_RendererPipelineCollection]) {
-        auto stagesJson = pipelineJson[sk_PipelineObject][sk_PipelineStages];
-        std::string pipelineName = pipelineJson[sk_PipelineObject][sk_PipelineName];
-        PipelineHandle pipelineHandle{pipelineName};
-        // compositor
-        // Pipeline::Type pipelineType = pipelineJson[sk_PipelineObject][sk_PipelineType];
-        bool pipelineLoaded = false;
-        // compositor
-//        for (int i = 0; i < p_Pipelines.size(); i++) {
-//            if (p_Pipelines[i]->m_Handle == pipelineHandle) {
-//                pipelineLoaded = true;
-//                break;
-//            }
-//        }
-
-        if (pipelineLoaded) {
-            continue;
-        }
-        // compositor
-        //Ref<Pipeline> newPipeline = CreateRef<Pipeline>(pipelineHandle, pipelineType);
-
-        // harmony::log::info("Renderer : Creating serialized pipeline : {}", newPipeline->m_Name);
-
-        bool pipelineCreationSuccessful = true;
-
-        for (auto stageJson: stagesJson) {
-            auto dump = stageJson.dump();
-            harmony::log::debug("Renderer : Stage Json {}", dump);
-            std::string stageName = stageJson[sk_PipelineStageName];
-
-            // AttachmentType stageAttachments = stageJson[sk_PipelineStageAttachments];
-            // TODO: This is obviously wrong we need to serialize this again somehow
-            Vector<AttachmentType> stageAttachments = {AttachmentType::RGBA32F, AttachmentType::Depth32F};
-            PipelineDrawStage::Type stageType = stageJson[sk_PipelineStageType];
-
-            std::string stageShaderName = stageJson[sk_PipelineStageShader][sk_ShaderProgramName];
-            WeakRef<ShaderProgram> stageShader = GetShader(stageShaderName);
-
-            if (stageShader.expired()) {
-                harmony::log::warn("Renderer : Cannot deserialize pipeline stage {}, stage shader is not loaded! : {}",
-                                   stageName, stageShaderName);
-                pipelineCreationSuccessful = false;
-                break;
-            }
-            // TODO : Change me to use the serialized pipeline stage renderer.
-            // compositor
-//            Ref<PipelineDrawStage> pipelineStage = newPipeline->AddPipelineStage<PipelineDrawStage>(stageName,
-//                                                                                                    stageType,
-//                                                                                                    stageShader,
-//                                                                                                    GetPipelineStageRenderer(
-//                                                                                                            "MeshRenderer"),
-//                                                                                                    stageAttachments).lock();
-        }
-
-        if (pipelineCreationSuccessful) {
-            // compositor
-            // p_Pipelines.emplace_back(newPipeline);
-        } else {
-            harmony::log::error("Renderer : Failed to deserialize pipeline : {}", pipelineName);
-        }
-
 
     }
 }
