@@ -59,10 +59,8 @@ namespace harmony {
 
         void PresentRuntimeImage();
 
-        Ref<Pipeline> p_ForwardPipeline;
-        Ref<Pipeline> p_VectorGraphicsPipeline;
-        Ref<Pipeline> p_DebugPipeline;
-        Ref<RuntimeView> p_RuntimeView;
+        Ref<PipelineV2>     p_RuntimePipeline;
+        Ref<RuntimeView>    p_RuntimeView;
 
         Ref<LuaProgramComponent>            p_LuaProgramComponent;
         Ref<LuaSystem>                      p_LuaSystem;

@@ -9,9 +9,6 @@ namespace harmony {
     public:
         DebugDrawStage(GfxDebug::Channel channel);
 
-        virtual Ref<Framebuffer>
-        Init(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) override;
-
         virtual void PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) override;
 
         virtual void PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) override;

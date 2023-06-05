@@ -57,6 +57,27 @@ namespace harmony {
 
         std::vector<std::string> GetShaderNames();
 
+        void AddPipelineStage(Ref<PipelineStage> pipelineStage);
+
+        WeakRef<PipelineStage> GetPipelineStage(const std::string& name);
+
+        template<typename T>
+        WeakRef<T> GetPiplineStage(const std::string& name)
+        {
+            static_assert(std::is_base_of<View, T>(), "Renderer : Provided type is not a view!");
+            WeakRef<PipelineStage> stage = GetPipelineStage(name);
+            if(stage.expired())
+            {
+                return WeakRef<T>();
+            }
+            Ref<T> derivedStage = std::static_pointer_cast<T>(stage);
+            if(derivedStage)
+            {
+                return derivedStage;
+            }
+            return WeakRef<T>();
+        }
+
         void AddPipelineStageRenderer(Ref<PipelineStageRenderer> renderer);
 
         WeakRef<PipelineStageRenderer> GetPipelineStageRenderer(const std::string &name);
@@ -72,6 +93,8 @@ namespace harmony {
         void RemoveView(WeakRef<View> view);
 
         WeakRef<View> GetView(const std::string &name);
+
+        WeakRef<PipelineV2> GetViewPipeline(WeakRef<View> view);
 
         void SetViewActive(WeakRef<View> viewWeakRef, bool active);
 

@@ -79,12 +79,11 @@ harmony::Renderer::AddBuiltInShader(const std::string &progName, const std::stri
 
 void harmony::Renderer::AddBuiltInShaders() {
     OPTICK_EVENT();
-    p_PresentProgram = AddBuiltInShader("Present", "vs_present", "fs_present", 4, 5);
+    p_PresentProgram = AddBuiltInShader("TexturedMesh", "vs_simple_textured", "fs_simple_textured", 0, 1);
     p_PresentProgramTextureHandle = p_PresentProgram.lock()->m_Uniforms[0].BgfxHandle;
-    AddBuiltInShader("TexturedMesh", "vs_simple_textured", "fs_simple_textured", 0, 1);
     AddBuiltInShader("Normal", "vs_normal", "fs_normal", 2, 3);
-    AddBuiltInShader("NanoVG", "vs_nanovg_fill", "fs_nanovg_fill", 6, 7);
-    AddBuiltInShader("BlinnPhongTextured", "vs_blinn_phong_textured", "fs_blinn_phong_textured", 8, 9);
+    AddBuiltInShader("NanoVG", "vs_nanovg_fill", "fs_nanovg_fill", 4, 5);
+    AddBuiltInShader("BlinnPhongTextured", "vs_blinn_phong_textured", "fs_blinn_phong_textured", 6, 7);
 }
 
 harmony::WeakRef<harmony::ShaderProgram>
@@ -135,10 +134,27 @@ harmony::WeakRef<harmony::View> harmony::Renderer::GetView(const std::string &na
     return WeakRef<View>();
 }
 
+harmony::WeakRef<harmony::PipelineV2> harmony::Renderer::GetViewPipeline(WeakRef<View> view) {
+    OPTICK_EVENT();
+
+    if(view.expired())
+    {
+        harmony::log::error("Renderer : Cannot get view pipeline, passed view is expired.");
+        WeakRef<PipelineV2>();
+    }
+    auto v = view.lock();
+    if(p_Views.find(v) != p_Views.end())
+    {
+        return p_Views[v];
+    }
+
+    return WeakRef<PipelineV2>();
+}
+
 void harmony::Renderer::RemoveView(WeakRef<View> view) {
     OPTICK_EVENT();
     if (view.expired()) {
-        harmony::log::error("Removing expired view weak ref!");
+        harmony::log::error("Renderer : Removing expired view weak ref!");
         return;
     }
     {
@@ -194,6 +210,7 @@ void harmony::Renderer::OnPreUpdate(entt::registry &registry) {
 
         Ref<View> view = m_ActiveViews[i].lock();
         // compositor PipelineStack &stack = p_Views[view];
+        Ref<PipelineV2> pipeline = p_Views[view];
 
         if (view->p_Resized) {
             // compositor stack.OnViewResized(view);
@@ -201,6 +218,7 @@ void harmony::Renderer::OnPreUpdate(entt::registry &registry) {
         }
 
         view->OnPreUpdate(registry);
+        pipeline->PreUpdate(registry, view);
         // compositor stack.PreUpdate(registry, m_ActiveViews[i]);
     }
 }
@@ -215,7 +233,9 @@ void harmony::Renderer::OnPostUpdate(entt::registry &registry) {
         }
 
         Ref<View> view = m_ActiveViews[i].lock();
+        Ref<PipelineV2> pipeline = p_Views[view];
         Ref<ShaderProgram> prog = p_PresentProgram.lock();
+        pipeline->PostUpdate(registry, view);
         // compositor PipelineStack &stack = p_Views[view];
         // compositor HandleStackPipelineAccumulation(view, stack, prog, registry);
         // compositor HandleStackPostProcess(view, stack, prog, registry);
@@ -624,7 +644,6 @@ bgfx::ViewId harmony::Renderer::GetPresentViewID() {
     return v;
 }
 
-
 nlohmann::json harmony::Renderer::Serialize() {
     OPTICK_EVENT();
     auto json = nlohmann::json();
@@ -744,6 +763,36 @@ std::vector<std::string> harmony::Renderer::GetShaderNames() {
         shaders.push_back(shader->m_Name);
     }
     return shaders;
+}
+
+void harmony::Renderer::AddPipelineStage(Ref<PipelineStage> pipelineStage)
+{
+    if(!pipelineStage)
+    {
+        harmony::log::warn("Renderer : Invalid PipelineStage supplied, doing nothing.");
+        return;
+    }
+
+    if(std::find(p_PipelineStages.begin(), p_PipelineStages.end(),pipelineStage) != p_PipelineStages.end())
+    {
+        harmony::log::warn("Renderer : PipelineStage : {} : Already managed by renderer.", pipelineStage->m_Name);
+        return;
+    }
+
+    p_PipelineStages.emplace_back(pipelineStage);
+}
+
+harmony::WeakRef<harmony::PipelineStage> harmony::Renderer::GetPipelineStage(const std::string& name)
+{
+    for(auto p : p_PipelineStages)
+    {
+        if(p->m_Name == name)
+        {
+            return p;
+        }
+    }
+    harmony::log::warn("Renderer : GetPipelineStage : Cannot find PipelineStage : {}", name);
+    return WeakRef<PipelineStage>();
 }
 
 void harmony::Renderer::AddShaderDataSource(Ref<ShaderDataSource> dataSource) {

@@ -230,8 +230,8 @@ void harmony::Editor::Run() {
     AddPipelineDrawStages();
     AddPostProcessStages();
 
-    InitializePipelines();
     InitializeViews();
+    InitializePipelines();
     PreRunInit();
 
     SetRunningStyle();
@@ -268,8 +268,8 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
     AddPipelineDrawStages();
     AddPostProcessStages();
 
-    InitializePipelines();
     InitializeViews();
+    InitializePipelines();
 
     LoadProject(projectPath);
 

@@ -41,8 +41,6 @@ namespace harmony {
             { Compute, "compute" }
         })
 
-        virtual Ref<Framebuffer> Init(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId);
-
         virtual void PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) = 0;
         virtual void PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) = 0;
 

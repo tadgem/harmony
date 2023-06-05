@@ -37,8 +37,8 @@ void harmony::RuntimeProgram::Run() {
 
     AddPipelineDrawStages();
 
-    InitializePipelines();
     InitializeViews();
+    InitializePipelines();
 
     PreRunInit();
 
@@ -57,8 +57,8 @@ void harmony::RuntimeProgram::Run(const std::string &projectPath) {
 
     AddPipelineDrawStages();
 
-    InitializePipelines();
     InitializeViews();
+    InitializePipelines();
 
     PreRunInit();
 
@@ -140,16 +140,21 @@ void harmony::RuntimeProgram::AddPipelineDrawStages() {
             m_Renderer.GetShader("BlinnPhongTextured"),
             m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
+
+    Ref<VectorGraphicsStage> vectorGraphicsStage = CreateRef<VectorGraphicsStage>(VectorGraphics::Layer::One);
+    Ref<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Game);
+
     blinnPhongStage->AddShaderDataSource(m_Renderer.GetShaderDataSource("BlinnPhong"));
 
-    //// compositor  m_Renderer.AddPipelineDrawStage(normalStage);
-//    m_Renderer.AddPipelineDrawStage(texturedMeshStage);
-//    m_Renderer.AddPipelineDrawStage(blinnPhongStage);
+    m_Renderer.AddPipelineStage(normalStage);
+    m_Renderer.AddPipelineStage(texturedMeshStage);
+    m_Renderer.AddPipelineStage(blinnPhongStage);
+    m_Renderer.AddPipelineStage(vectorGraphicsStage);
+    m_Renderer.AddPipelineStage(debugDrawStage);
 }
 
 void harmony::RuntimeProgram::AddPostProcessStages() {
     OPTICK_EVENT();
-
 }
 
 void harmony::RuntimeProgram::AddShaderDataSources() {
@@ -171,6 +176,17 @@ void harmony::RuntimeProgram::InitializePipelines() {
 //    m_Renderer.AddPipeline(p_DebugPipeline);
 //    m_Renderer.AddPipeline(p_ForwardPipeline);
 //    m_Renderer.AddPipeline(p_VectorGraphicsPipeline);
+
+    auto mainFB = p_RuntimePipeline->AddFramebuffer({AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
+    auto vectorFB = p_RuntimePipeline->AddFramebuffer({AttachmentType::RGBA8}, Resolution::Type::FullScale);
+
+    p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("DebugDrawStage").lock());
+    p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("NormalStage").lock());
+    p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("TexturedMesh").lock());
+    p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("BlinnPhongTextured").lock());
+
+    p_RuntimePipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());
+
 }
 
 void harmony::RuntimeProgram::InitializeViews() {
@@ -180,8 +196,16 @@ void harmony::RuntimeProgram::InitializeViews() {
 // compositor     m_Renderer.AddViewPipeline(runtimeViewWr, p_ForwardPipeline);
 //    m_Renderer.AddViewPipeline(runtimeViewWr, p_VectorGraphicsPipeline);
     m_Renderer.SetViewActive(runtimeViewWr, true);
-
     p_RuntimeView = runtimeViewWr.lock();
+
+    auto pipelineWr = m_Renderer.GetViewPipeline(runtimeViewWr);
+    if(pipelineWr.expired())
+    {
+        harmony::log::error("RuntimeProgram : Failed to create a runtime view pipeline.");
+        return;
+    }
+    p_RuntimePipeline = pipelineWr.lock();
+
 }
 
 

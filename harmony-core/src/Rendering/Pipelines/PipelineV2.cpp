@@ -45,6 +45,11 @@ void harmony::PipelineV2::PreUpdate(entt::registry &registry, harmony::WeakRef<h
     {
         for(auto& stage : stages)
         {
+            if(!stage)
+            {
+                continue;
+            }
+
             stage->PreUpdate(registry, view, fb->m_ViewID);
         }
     }
@@ -61,6 +66,10 @@ void harmony::PipelineV2::PostUpdate(entt::registry &registry, harmony::WeakRef<
     {
         for(auto& stage : stages)
         {
+            if(!stage)
+            {
+                continue;
+            }
             stage->PostUpdate(registry, view, fb->m_ViewID);
         }
     }

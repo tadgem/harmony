@@ -12,16 +12,6 @@ harmony::VectorGraphicsStage::VectorGraphicsStage(VectorGraphics::Layer layer)
     OPTICK_EVENT();
 }
 
-harmony::Ref<harmony::Framebuffer>
-harmony::VectorGraphicsStage::Init(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) {
-
-    auto fb = PipelineStage::Init(registry, view, viewId);
-    bgfx::setViewMode(viewId, bgfx::ViewMode::Sequential);
-    bgfx::setViewName(viewId, "NanoVG");
-
-    return fb;
-}
-
 void harmony::VectorGraphicsStage::PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) {
     OPTICK_EVENT();
     Ref<View> _view = view.lock();
