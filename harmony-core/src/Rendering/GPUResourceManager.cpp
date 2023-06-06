@@ -12,9 +12,9 @@ uint16_t harmony::GPUResourceManager::GetMaxFramebufferHeight() {
     return MAX_FRAMEBUFFER_RESOLUTION_Y;
 }
 
-harmony::Ref<harmony::Framebuffer> harmony::GPUResourceManager::CreateFramebuffer(harmony::Resolution resolution,
+harmony::Ref<harmony::Framebuffer> harmony::GPUResourceManager::CreateFramebuffer(const std::string& name, harmony::Resolution resolution,
                                                                                   harmony::Resolution::Type resolutionType) {
-    return CreateRef<harmony::Framebuffer>(resolution, resolutionType);
+    return CreateRef<harmony::Framebuffer>(name, resolution, resolutionType);
 }
 
 harmony::Ref<harmony::Attachment>

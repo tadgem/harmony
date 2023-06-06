@@ -5,6 +5,7 @@
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
 #include "Core/Scene.h"
+#include "Rendering/View.h"
 #include "Rendering/Framebuffer.h"
 #include "Rendering/Pipelines/PipelineV2.h"
 #include "Rendering/Pipelines/PipelineStageRenderer.h"
@@ -17,7 +18,6 @@
 #include "ThirdParty/json.hpp"
 
 namespace harmony {
-    class Viewport;
 
     class ShaderDataSource;
 
@@ -29,7 +29,7 @@ namespace harmony {
         WeakRef<T> CreateView(Args &&... args) {
             static_assert(std::is_base_of<View, T>(), "Renderer : Provided type is not a view!");
             Ref<T> view = CreateRef<T>(std::forward<Args>(args)...);
-            p_Views.emplace(view, CreateRef<PipelineV2>());
+            p_Views.emplace(view, CreateRef<PipelineV2>(view->m_Name));
             return GetWeakRef<T>(view);
         }
 

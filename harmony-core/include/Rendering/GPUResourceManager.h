@@ -21,7 +21,7 @@ namespace harmony
         static uint16_t GetNumActiveFramebuffers();
         static uint16_t GetNumActiveAttachments();
 
-        static Ref<Framebuffer> CreateFramebuffer(Resolution resolution, Resolution::Type resolutionType);
+        static Ref<Framebuffer> CreateFramebuffer(const std::string& name, Resolution resolution, Resolution::Type resolutionType);
         static Ref<Attachment>  CreateAttachment(Resolution resolution, AttachmentType type);
 
     protected:

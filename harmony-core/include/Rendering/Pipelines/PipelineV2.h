@@ -14,7 +14,7 @@ namespace harmony
     class PipelineV2
     {
     public:
-        explicit PipelineV2();
+        explicit PipelineV2(const String& name);
 
         template<typename T, typename ... Args>
         WeakRef<T>              AddPipelineStage(WeakRef<Framebuffer> fb, Args &&... args) {
@@ -30,20 +30,28 @@ namespace harmony
 
         bool                    AddPipelineStage(WeakRef<Framebuffer> fb, Ref<PipelineStage> stage);
 
-        WeakRef<Framebuffer>    AddFramebuffer(Vector<AttachmentType> attachments, Resolution::Type resolutionType);
+        WeakRef<Framebuffer>    AddFramebuffer(const String& name, Vector<AttachmentType> attachments, Resolution::Type resolutionType);
 
         virtual void            PreUpdate(entt::registry &registry, WeakRef<View> view);
 
         virtual void            PostUpdate(entt::registry &registry, WeakRef<View> view);
 
+        virtual bool                    HasOutputFramebuffer();
+
+        virtual WeakRef<Framebuffer>    GetOutputFramebuffer();
+
+        virtual void                    SetOutputFramebuffer(WeakRef<Framebuffer> framebuffer);
+
+        const String m_Name;
+
     protected:
         friend class Renderer;
 
-        Ref<Framebuffer> CreateFrambufferInternal(Vector<AttachmentType> attachments, Resolution::Type resolutionType);
+        Ref<Framebuffer> CreateFrambufferInternal(const String& name, Vector<AttachmentType> attachments, Resolution::Type resolutionType);
         bool IsViewValid(WeakRef<View> view);
 
         Map<Ref<Framebuffer>, Vector<Ref<PipelineStage>>>   p_Stages;
-        Ref<Framebuffer>                                    p_FinalImageFramebuffer;
+        WeakRef<Framebuffer> p_OutputFramebuffer;
     };
 }
 

@@ -11,14 +11,15 @@ namespace harmony
     class DrawScreenTextureStage : public PipelineStage
     {
     public:
-        // DrawScreenTextureStage(WeakRef<Framebuffer> fb);
+        DrawScreenTextureStage(WeakRef<ShaderProgram> shader, AttachmentType type, WeakRef<Framebuffer> fb);
 
         void PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) override;
 
         void PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) override;
 
         WeakRef<Framebuffer> m_FramebufferToDraw;
-    public:
+    private:
+        static String GetName(WeakRef<Framebuffer> fb);
 
     };
 }

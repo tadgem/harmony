@@ -25,6 +25,7 @@ bool harmony::Framebuffer::Build() {
         textureAttachments.emplace_back(a.m_Handle);
     }
     m_FBH = bgfx::createFrameBuffer(textureAttachments.size(), textureAttachments.data());
+    bgfx::setViewFrameBuffer(m_ViewID, m_FBH);
     return IsBuilt();
 }
 
@@ -64,7 +65,7 @@ void harmony::Framebuffer::UpdateVirtualResolution(uint16_t w, uint16_t h)
 
 }
 
-harmony::Framebuffer::Framebuffer(Resolution res, harmony::Resolution::Type resType)
+harmony::Framebuffer::Framebuffer(const String& name,Resolution res, harmony::Resolution::Type resType) : m_Name(name)
 {
     m_FBH.idx = UINT16_MAX;
     m_ViewID = Renderer::GetViewID();

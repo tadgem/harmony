@@ -67,22 +67,27 @@ void harmony::RuntimeView::OnImGui() {
 
     const std::string runtimeViewTitle = std::string(ICON_FA_PLAY_CIRCLE) + " Runtime";
     glm::mat4 mat = glm::mat4(1.0);
-    // compositor PipelineStack &stack = p_Renderer.GetViewPipelineStack("RuntimeView");
+    auto pipeline = p_Renderer.GetViewPipeline("RuntimeView").lock();
     if (ImGui::Begin(runtimeViewTitle.c_str(), (bool *) 0, ImGuiWindowFlags_NoScrollbar)) {
         View::OnImGui();
-        // compositor bgfx::TextureHandle finalImageHandle = stack.GetFinalImage();
-//        if (!bgfx::isValid(finalImageHandle)) {
-//            ImGui::End();
-//            return;
-//        }
-//        ImGui::Image(
-//                finalImageHandle,
-//                ImGui::GetContentRegionAvail()
-//        );
+
+        if(!pipeline->HasOutputFramebuffer())
+        {
+            ImGui::End();
+            return;
+        }
+
+        bgfx::TextureHandle finalImageHandle = pipeline->GetOutputFramebuffer().lock()->m_Attachments[0].m_Handle;
+        if (!bgfx::isValid(finalImageHandle)) {
+            ImGui::End();
+            return;
+        }
+        ImGui::Image(
+                finalImageHandle,
+                ImGui::GetContentRegionAvail()
+        );
 
         auto dim = ImGui::GetWindowSize();
-        uint32_t w = static_cast<uint32_t>(dim.x);
-        uint32_t h = static_cast<uint32_t>(dim.y);
     }
     ImGui::End();
 }

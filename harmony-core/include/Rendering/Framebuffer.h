@@ -7,7 +7,7 @@ namespace harmony {
 
     class Framebuffer {
     public:
-        explicit Framebuffer(Resolution res, Resolution::Type resolutionType = Resolution::Type::FullScale);
+        explicit Framebuffer(const String& name, Resolution res, Resolution::Type resolutionType = Resolution::Type::FullScale);
         ~Framebuffer();
 
         Attachment CreateAttachment(AttachmentType attachmentType);
@@ -23,6 +23,8 @@ namespace harmony {
 
         Resolution::Type m_ResolutionType;
         Vector<Attachment> m_Attachments;
+
+        const String m_Name;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(Framebuffer, m_ResolutionType, m_FramebufferResolution)
 

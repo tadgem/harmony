@@ -4,6 +4,7 @@
 #include "Assets/FontAssetFactory.h"
 #include "Rendering/Views/RuntimeView.h"
 #include "Rendering/Shaders/ShaderDataSources/BlinnPhongDataSource.h"
+#include "Rendering/Pipelines/PipelineStages/DrawScreenTextureStage.h"
 #include "Rendering/Shapes.h"
 #include "Core/FSM.h"
 #include "ECS/LightSystem.h"
@@ -177,8 +178,20 @@ void harmony::RuntimeProgram::InitializePipelines() {
 //    m_Renderer.AddPipeline(p_ForwardPipeline);
 //    m_Renderer.AddPipeline(p_VectorGraphicsPipeline);
 
-    auto mainFB = p_RuntimePipeline->AddFramebuffer({AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
-    auto vectorFB = p_RuntimePipeline->AddFramebuffer({AttachmentType::RGBA8}, Resolution::Type::FullScale);
+    auto mainFB = p_RuntimePipeline->AddFramebuffer("Forward FB",{AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
+    auto vectorFB = p_RuntimePipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
+    auto outputFB = p_RuntimePipeline->AddFramebuffer("Output FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
+
+    auto screenShaderWR = m_Renderer.p_PresentProgram;
+
+    if(screenShaderWR.expired())
+    {
+        harmony::log::error("RuntimeProgram : Initialize Pipelines : Present Program is expired. This should never happen.");
+        return;
+    }
+
+    Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, mainFB);
+    Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, vectorFB);
 
     p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("DebugDrawStage").lock());
     p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("NormalStage").lock());
@@ -186,6 +199,11 @@ void harmony::RuntimeProgram::InitializePipelines() {
     p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("BlinnPhongTextured").lock());
 
     p_RuntimePipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());
+
+    p_RuntimePipeline->AddPipelineStage(outputFB, drawForwardStage);
+    p_RuntimePipeline->AddPipelineStage(outputFB, drawVectorStage);
+
+    p_RuntimePipeline->SetOutputFramebuffer(outputFB);
 
 }
 
