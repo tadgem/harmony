@@ -26,6 +26,8 @@ bool harmony::Framebuffer::Build() {
     }
     m_FBH = bgfx::createFrameBuffer(textureAttachments.size(), textureAttachments.data());
     bgfx::setViewFrameBuffer(m_ViewID, m_FBH);
+    bgfx::setViewName(m_ViewID, m_Name.c_str());
+    UpdateVirtualResolution(m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
     return IsBuilt();
 }
 
@@ -61,7 +63,7 @@ void harmony::Framebuffer::UpdateVirtualResolution(uint16_t w, uint16_t h)
     m_VirtualResoltuion = newVirtualResolution;
 
     bgfx::setViewRect(m_ViewID, 0, 0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
-    bgfx::setViewScissor(m_ViewID, 0, 0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
+    // bgfx::setViewScissor(m_ViewID, 0, 0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
 
 }
 
@@ -78,7 +80,7 @@ harmony::Framebuffer::Framebuffer(const String& name,Resolution res, harmony::Re
     }
 
     m_FramebufferResolution = GetScaledResolution(resType, {GPUResourceManager::GetMaxFramebufferWidth(), GPUResourceManager::GetMaxFramebufferHeight()});
-    m_VirtualResoltuion = m_FramebufferResolution;
+    UpdateVirtualResolution(m_FramebufferResolution.Width, m_FramebufferResolution.Height);
 }
 
 harmony::Resolution harmony::Framebuffer::GetScaledResolution(harmony::Resolution::Type type, harmony::Resolution res) {

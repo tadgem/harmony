@@ -121,7 +121,7 @@ harmony::Renderer::BuildShader(const std::string name, WeakRef<ShaderStage> comp
     return GetWeakRef<ShaderProgram>(prog);
 }
 
-uint32_t harmony::Renderer::p_ViewHandleCounter = 0;
+uint32_t harmony::Renderer::p_ViewHandleCounter = 2;
 uint32_t harmony::Renderer::p_PresentViewHandleCounter = 1;
 
 harmony::WeakRef<harmony::View> harmony::Renderer::GetView(const std::string &name) {

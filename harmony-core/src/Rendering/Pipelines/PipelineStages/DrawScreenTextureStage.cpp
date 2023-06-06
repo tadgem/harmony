@@ -5,6 +5,7 @@
 
 void harmony::DrawScreenTextureStage::PreUpdate(entt::registry &registry, harmony::WeakRef<harmony::View> view,
                                                 bgfx::ViewId viewId) {
+    bgfx::setViewClear(viewId, BGFX_CLEAR_COLOR, 0x00000000);
 
     if(m_FramebufferToDraw.expired())
     {
@@ -25,8 +26,8 @@ void harmony::DrawScreenTextureStage::PreUpdate(entt::registry &registry, harmon
     }
 
     bgfx::setTexture(0, pipelineShader->m_Uniforms[0].BgfxHandle, fb->m_Attachments[0].m_Handle);
-
     ScreenSpaceQuad(static_cast<float>(_view->m_Width), static_cast<float>(_view->m_Height));
+    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
     bgfx::submit(viewId, pipelineShader->m_Handle);
 }
 
