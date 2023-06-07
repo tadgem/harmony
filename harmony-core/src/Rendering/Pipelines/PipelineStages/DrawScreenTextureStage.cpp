@@ -15,7 +15,7 @@ void harmony::DrawScreenTextureStage::PreUpdate(entt::registry &registry, harmon
     auto fb = m_FramebufferToDraw.lock();
 
     Ref<View> _view = view.lock();
-    bgfx::setViewTransform(viewId, &_view->m_View[0], &_view->m_Projection[0]);
+    bgfx::setViewTransform(viewId, NULL, &_view->m_Projection[0]);
     bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
 
     Ref<ShaderProgram> pipelineShader = p_Shader.lock();
@@ -26,8 +26,8 @@ void harmony::DrawScreenTextureStage::PreUpdate(entt::registry &registry, harmon
     }
 
     bgfx::setTexture(0, pipelineShader->m_Uniforms[0].BgfxHandle, fb->m_Attachments[0].m_Handle);
-    ScreenSpaceQuad(static_cast<float>(_view->m_Width), static_cast<float>(_view->m_Height));
-    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
+    ScreenSpaceQuad(static_cast<float>(fb->m_VirtualResoltuion.Width), static_cast<float>(fb->m_VirtualResoltuion.Height));
+    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
     bgfx::submit(viewId, pipelineShader->m_Handle);
 }
 

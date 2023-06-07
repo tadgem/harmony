@@ -1756,4 +1756,3 @@ static const uint8_t vs_simple_textured_spv[1098] =
                 0x00,                                     // ........@.
         };
 
-

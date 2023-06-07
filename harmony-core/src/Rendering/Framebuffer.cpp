@@ -25,8 +25,10 @@ bool harmony::Framebuffer::Build() {
         textureAttachments.emplace_back(a.m_Handle);
     }
     m_FBH = bgfx::createFrameBuffer(textureAttachments.size(), textureAttachments.data());
+    bgfx::setViewMode(m_ViewID, bgfx::ViewMode::Sequential);
     bgfx::setViewFrameBuffer(m_ViewID, m_FBH);
     bgfx::setViewName(m_ViewID, m_Name.c_str());
+    bgfx::setViewRect(m_ViewID,0,0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
     UpdateVirtualResolution(m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
     return IsBuilt();
 }
@@ -35,7 +37,11 @@ bgfx::TextureHandle harmony::Framebuffer::CreateAttachmentInternal(Resolution re
 {
     // TODO: Add support for mips
     const uint16_t NUM_TEXTURE_LAYERS = 1;
-    const uint64_t ATTACHMENT_FLAGS  = BGFX_TEXTURE_RT | BGFX_TEXTURE_BLIT_DST;
+    uint64_t ATTACHMENT_FLAGS  = BGFX_TEXTURE_RT | BGFX_TEXTURE_BLIT_DST;
+    if(type & AttachmentType::Depth)
+    {
+        ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_STATE_DEPTH_TEST_LEQUAL;
+    }
     bgfx::TextureFormat::Enum format = harmony::GetBGFXTextureFormat(type);
     return bgfx::createTexture2D(res.Width,res.Height,false, NUM_TEXTURE_LAYERS, format, ATTACHMENT_FLAGS);
 }
