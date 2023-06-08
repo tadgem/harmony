@@ -203,7 +203,7 @@ void harmony::RuntimeProgram::InitializePipelines() {
     p_RuntimePipeline->AddPipelineStage(outputFB, drawForwardStage);
     p_RuntimePipeline->AddPipelineStage(outputFB, drawVectorStage);
 
-    p_RuntimePipeline->SetOutputFramebuffer(outputFB);
+    p_RuntimePipeline->SetOutputFramebuffer(mainFB);
 
 }
 
