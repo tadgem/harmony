@@ -85,8 +85,6 @@ def build_bintoexe_output_path(platform):
 
 def build_renderer_profile_name(shaderStage, platform):
     ret = renderer_shader_profile[platform]
-    if(platform < 2):
-        return dx_shader_types[shaderStage] + ret
     return ret
 
 def build_compile_command(shaderStage, platform):
