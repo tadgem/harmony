@@ -36,6 +36,6 @@ namespace harmony {
 
     inline static float s_texelHalf = 0.0f;
 
-    void ScreenSpaceQuad(float _textureWidth, float _textureHeight);
+    void ScreenSpaceQuad(float _textureWidth, float _textureHeight, float _width, float _height);
 
 };

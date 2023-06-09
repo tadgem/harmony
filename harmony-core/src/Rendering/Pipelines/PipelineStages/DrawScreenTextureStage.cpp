@@ -5,18 +5,15 @@
 
 void harmony::DrawScreenTextureStage::PreUpdate(entt::registry &registry, harmony::WeakRef<harmony::View> view,
                                                 bgfx::ViewId viewId) {
-    bgfx::setViewClear(viewId, BGFX_CLEAR_COLOR, 0x00000000);
-
     if(m_FramebufferToDraw.expired())
     {
         harmony::log::error("DrawScreenTextureStage : PreUpdate : cannot draw framebuffer, it is expired");
         return;
     }
     auto fb = m_FramebufferToDraw.lock();
-
-    Ref<View> _view = view.lock();
-    bgfx::setViewTransform(viewId, NULL, &_view->m_Projection[0]);
-    bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
+    auto v = view.lock();
+    bgfx::setViewTransform(viewId, NULL, NULL);
+    bgfx::setViewRect(viewId, 0, 0, v->m_Width, v->m_Height);
 
     Ref<ShaderProgram> pipelineShader = p_Shader.lock();
     for (WeakRef<ShaderDataSource> &source: p_DataSources) {
@@ -26,7 +23,7 @@ void harmony::DrawScreenTextureStage::PreUpdate(entt::registry &registry, harmon
     }
 
     bgfx::setTexture(0, pipelineShader->m_Uniforms[0].BgfxHandle, fb->m_Attachments[0].m_Handle);
-    ScreenSpaceQuad(static_cast<float>(fb->m_VirtualResoltuion.Width), static_cast<float>(fb->m_VirtualResoltuion.Height));
+    ScreenSpaceQuad(fb->m_FramebufferResolution.Width, fb->m_FramebufferResolution.Height,v->m_Width, v->m_Height);
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
     bgfx::submit(viewId, pipelineShader->m_Handle);
 }
