@@ -43,17 +43,17 @@ void harmony::ShaderProgram::Build() {
     GetUniforms();
     if (m_Stages.find(ShaderStage::Type::Compute) != m_Stages.end()) {
         m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Compute].lock()->m_ProgramHandle, true);
-        return;
     }
 
     if (m_Stages.find(ShaderStage::Type::Vertex) != m_Stages.end() &&
         m_Stages.find(ShaderStage::Type::Fragment) != m_Stages.end()) {
         m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Vertex].lock()->m_ProgramHandle,
                                        m_Stages[ShaderStage::Type::Fragment].lock()->m_ProgramHandle, true);
-        return;
     }
-
-    harmony::log::error("Failed to build shader! invalid combination provided.");
+    if(m_Handle.idx == bgfx::kInvalidHandle)
+    {
+        harmony::log::error("Shader : {} : Failed to build!.", m_Name);
+    }
 }
 
 void harmony::ShaderProgram::Destroy() {
