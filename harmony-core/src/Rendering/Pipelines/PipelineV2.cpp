@@ -46,6 +46,7 @@ void harmony::PipelineV2::PreUpdate(entt::registry &registry, harmony::WeakRef<h
     for(auto& [fb, stages] : p_Stages)
     {
         bgfx::setViewFrameBuffer(fb->m_ViewID, fb->m_FBH);
+        bgfx::setViewClear(fb->m_ViewID, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f, 0x00000000);
         for(auto& stage : stages)
         {
             if(!stage)

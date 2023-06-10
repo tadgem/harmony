@@ -201,7 +201,7 @@ void harmony::RuntimeProgram::InitializePipelines() {
     p_RuntimePipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());
 
     p_RuntimePipeline->AddPipelineStage(outputFB, drawForwardStage);
-    // p_RuntimePipeline->AddPipelineStage(outputFB, drawVectorStage);
+    p_RuntimePipeline->AddPipelineStage(outputFB, drawVectorStage);
 
     p_RuntimePipeline->SetOutputFramebuffer(outputFB);
 

@@ -1,4 +1,4 @@
-$input v_texcoord0, v_normal
+$input v_texcoord0
 
 /*
  * Copyright 2011-2022 Branimir Karadzic. All rights reserved.
@@ -12,7 +12,7 @@ SAMPLER2D(s_texColor, 0);
 void main()
 {
     vec4 color = texture2D(s_texColor, v_texcoord0);
-    if(color.w < 0.01)
+    if(color.w < 0.03)
     {
         discard;
     }
