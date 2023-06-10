@@ -22,3 +22,6 @@
 [submodule "submodules/optick"]
 	path = submodules/optick
 	url = https://github.com/tadgem/optick.git
+[submodule "bgfx.cmake"]
+	path = bgfx.cmake
+	url = https://github.com/tadgem/bgfx.cmake
