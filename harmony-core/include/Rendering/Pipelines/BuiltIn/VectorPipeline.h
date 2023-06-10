@@ -18,6 +18,6 @@ namespace harmony {
         VectorGraphics::Layer m_Layer;
 
     protected:
-        std::map<std::string, NVGcontext *> p_VectorRenderers;
+        NVGcontext * p_Context;
     };
 };

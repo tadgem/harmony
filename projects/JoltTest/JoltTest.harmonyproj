@@ -20,6 +20,11 @@
                 "Index": 0,
                 "Path": "assets\\brick.png",
                 "TypeHash": "harmony::TextureAsset"
+            },
+            {
+                "Index": 0,
+                "Path": "assets\\fonts\\carbontype.ttf",
+                "TypeHash": "harmony::FontAsset"
             }
         ]
     },
