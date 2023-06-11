@@ -192,9 +192,9 @@ void harmony::RuntimeProgram::InitializePipelines() {
         return;
     }
 
-    Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, mainFB);
-    Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, vectorFB);
-    Ref<DrawScreenTextureStage> drawFxaaStage = CreateRef<DrawScreenTextureStage>(fxaaShaderWr, AttachmentType::RGBA8, accumulateFB);
+    Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {mainFB});
+    Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {vectorFB});
+    Ref<DrawScreenTextureStage> drawFxaaStage = CreateRef<DrawScreenTextureStage>(fxaaShaderWr, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {accumulateFB});
 
     p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("DebugDrawStage").lock());
     p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("NormalStage").lock());
@@ -215,8 +215,6 @@ void harmony::RuntimeProgram::InitializeViews() {
     OPTICK_EVENT();
     auto runtimeViewWr = m_Renderer.CreateView<RuntimeView>(*this);
 
-// compositor     m_Renderer.AddViewPipeline(runtimeViewWr, p_ForwardPipeline);
-//    m_Renderer.AddViewPipeline(runtimeViewWr, p_VectorGraphicsPipeline);
     m_Renderer.SetViewActive(runtimeViewWr, true);
     p_RuntimeView = runtimeViewWr.lock();
 
@@ -291,8 +289,7 @@ void harmony::RuntimeProgram::ResizeApplicationWindow(int w, int h) {
 
 void harmony::RuntimeProgram::PresentRuntimeImage() {
     OPTICK_EVENT();
-    bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_COLOR, 0);
-    bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_DEPTH, 0, 1.0f);
+    bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
     auto pipeline = m_Renderer.GetViewPipeline(p_RuntimeView->m_Name);
     bgfx::setTexture(0, m_Renderer.p_PresentProgramTextureHandle, pipeline.lock()->GetOutputFramebuffer().lock()->m_Attachments[0].m_Handle, BGFX_SAMPLER_POINT);
     ScreenSpaceQuad(static_cast<float>(p_WindowWidth), static_cast<float>(p_WindowHeight), static_cast<float>(p_WindowWidth), static_cast<float>(p_WindowHeight));

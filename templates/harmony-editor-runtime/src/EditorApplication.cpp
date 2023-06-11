@@ -277,8 +277,6 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
 
     SetRunningStyle();
 
-    RuntimeProgram::ResizeApplicationWindow(0,0);
-
     while (p_Run) {
         ProfilerBeginFrame();
         m_EditorFSM.Process();

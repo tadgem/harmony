@@ -1,12 +1,6 @@
 $input v_texcoord0
 
-/*
- * Copyright 2011-2022 Branimir Karadzic. All rights reserved.
- * License: https://github.com/bkaradzic/bgfx/blob/master/LICENSE
- */
-
 #include "harmony_post_process.sh"
-
 
 SAMPLER2D(u_color,      0);
 
@@ -70,7 +64,7 @@ vec3 fxaa(vec2 uv, vec2 add)
 
 void main()
 {
-    vec2 offset = vec2(FXAA_SUBPIX_SHIFT, FXAA_SUBPIX_SHIFT);
+    vec2 offset = vec2(1.0 / u_viewRect.z, 1.0 / u_viewRect.w);
     vec3 col = fxaa(v_texcoord0, offset);
     gl_FragColor = vec4(col, 1.0);
 }

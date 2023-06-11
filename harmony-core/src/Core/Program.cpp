@@ -139,7 +139,7 @@ void harmony::Program::InitSDL() {
     p_WindowWidth = rect.w;
     p_WindowHeight = rect.h;
 
-    SDL_WindowFlags windowFlags = static_cast<SDL_WindowFlags>(SDL_WINDOW_SHOWN | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_ALLOW_HIGHDPI);
+    SDL_WindowFlags windowFlags = static_cast<SDL_WindowFlags>(SDL_WINDOW_SHOWN | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALLOW_HIGHDPI);
 
     p_Window = SDL_CreateWindow(
             p_AppName.c_str(),
@@ -417,8 +417,8 @@ void harmony::Program::ResizeApplicationWindow(int w, int h) {
     mode.h = rect.h;
     SDL_SetWindowDisplayMode(p_Window, &mode);
 
-    p_WindowWidth = static_cast<uint16_t>(rect.w);
-    p_WindowHeight = static_cast<uint16_t>(rect.h);
+    p_WindowWidth = static_cast<uint16_t>(w);
+    p_WindowHeight = static_cast<uint16_t>(h);
 
     ImGui::GetIO().DisplaySize = ImVec2(p_WindowWidth, p_WindowHeight);
     SDL_SetWindowSize(p_Window, rect.w, rect.h);
@@ -440,6 +440,10 @@ void harmony::Program::HandleSDLEvent() {
 
         if (sdlEvent.type == SDL_WINDOWEVENT) {
             if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED) {
+                if(p_WindowWidth == sdlEvent.window.data1 && p_WindowHeight == sdlEvent.window.data2)
+                {
+                    continue;
+                }
                 if (!p_ResizedThisFrame) {
                     ResizeApplicationWindow(sdlEvent.window.data1, sdlEvent.window.data2);
                     p_ResizedThisFrame = true;
@@ -843,8 +847,6 @@ harmony::WeakRef<harmony::Scene> harmony::Program::GetActiveScene() {
 
 void harmony::Program::RunProgramComponentInit() {
     OPTICK_EVENT();
-    // TODO: Find better place for this
-    ResizeApplicationWindow(p_WindowWidth, p_WindowHeight);
     for (int i = 0; i < p_ProgramComponents.size(); i++) {
         p_ProgramComponents[i]->Init();
     }
