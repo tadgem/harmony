@@ -1,4 +1,4 @@
-$input v_texcoord0, v_normal
+$input v_texcoord0
 
 /*
  * Copyright 2011-2022 Branimir Karadzic. All rights reserved.
@@ -9,7 +9,6 @@ $input v_texcoord0, v_normal
 
 
 SAMPLER2D(u_color,      0);
-SAMPLER2D(u_depth_att,  1);
 
 #define FXAA_SPAN_MAX 8.0
 #define FXAA_REDUCE_MUL   (1.0/FXAA_SPAN_MAX)
@@ -18,11 +17,17 @@ SAMPLER2D(u_depth_att,  1);
 
 vec3 fxaa(vec2 uv, vec2 add)
 {
+    vec4 rgba  = texture2D(u_color, uv);
+    if(rgba.w <= 0.03)
+    {
+        discard;
+    }
     vec3 rgbNW = texture2D(u_color, uv.yx).xyz;
     vec3 rgbNE = texture2D(u_color, uv + vec2(1,0)*add).xyz;
     vec3 rgbSW = texture2D(u_color, uv + vec2(0,1)*add).xyz;
     vec3 rgbSE = texture2D(u_color, uv + vec2(1,1)*add).xyz;
-    vec3 rgbM  = texture2D(u_color, uv).xyz;
+
+    vec3 rgbM  = rgba.xyz;
 
     vec3 luma = vec3(0.299, 0.587, 0.114);
     float lumaNW = dot(rgbNW, luma);
@@ -65,9 +70,7 @@ vec3 fxaa(vec2 uv, vec2 add)
 
 void main()
 {
-    vec4 color = texture2D(s_texColor, v_texcoord0);
-    color.x *= 0.8;
-    color.z *= 0.4;
-    color.z *= 0.4;
-    gl_FragColor = color;
+    vec2 offset = vec2(FXAA_SUBPIX_SHIFT, FXAA_SUBPIX_SHIFT);
+    vec3 col = fxaa(v_texcoord0, offset);
+    gl_FragColor = vec4(col, 1.0);
 }
