@@ -27,7 +27,7 @@ add_subdirectory(${ROOT_DIR}/submodules/optick ${CMAKE_CURRENT_BINARY_DIR}/optic
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 set(HARMONY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
 
-add_library(harmony-core STATIC ${CORE_HEADER_FILES} ${CORE_HEADERPP_FILES} ${CORE_SRC_FILES} src/ImGui/GraphScript/GraphScriptImGui.cpp include/Script/GraphScript/GraphScriptProgramComponent.h include/Script/GraphScript/GraphScriptSystem.h src/Script/GraphScript/GraphScriptProgramComponent.cpp src/Script/GraphScript/GraphScriptSystem.cpp include/Rendering/Pipelines/PipelineCompositor.h src/Rendering/Pipelines/PipelineCompositor.cpp)
+add_library(harmony-core STATIC ${CORE_HEADER_FILES} ${CORE_HEADERPP_FILES} ${CORE_SRC_FILES} src/Rendering/Texture.cpp src/Rendering/Pipelines/PipelineV2.cpp include/Rendering/TypeDef.h include/Rendering/Pipelines/PipelineStages/BlitStage.h src/Rendering/Pipelines/PipelineStages/BlitStage.cpp)
 set_property(TARGET harmony-core PROPERTY CXX_STANDARD 17)
 
 set(HARMONY_CORE_INCLUDES
@@ -49,11 +49,11 @@ endif ()
 if (HARMONY_USE_LUAJIT)
     add_subdirectory(${ROOT_DIR}/submodules/luajit-cmake ${CMAKE_CURRENT_BINARY_DIR}/luajit)
     set(HARMONY_CORE_INCLUDES ${HARMONY_CORE_INCLUDES} ${ROOT_DIR}/submodules/luajit-cmake/src CACHE INTERNAL "Harmony Core Includes")
-    target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bgfx glm OptickCore libluajit)
+    target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bimg_decode bgfx glm OptickCore libluajit)
 else ()
     add_subdirectory(${ROOT_DIR}/submodules/lua-cmake ${CMAKE_CURRENT_BINARY_DIR}/lua)
     set(HARMONY_CORE_INCLUDES ${HARMONY_CORE_INCLUDES} ${ROOT_DIR}/submodules/lua-cmake/upstream CACHE INTERNAL "Harmony Core Includes")
-    target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bgfx glm OptickCore lua)
+    target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bimg_decode bgfx glm OptickCore lua)
 endif ()
 
 if (MSVC)

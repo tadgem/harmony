@@ -93,9 +93,9 @@ void harmony::Editor::InitializeViews() {
     RuntimeProgram::InitializeViews();
 
     auto editorViewWr = m_Renderer.CreateView<EditorView>(*this, p_ScenePanel);
-    m_Renderer.AddViewPipeline(editorViewWr, p_DebugPipeline);
-    m_Renderer.AddViewPipeline(editorViewWr, p_ForwardPipeline);
-    m_Renderer.AddViewPipeline(editorViewWr, p_VectorGraphicsPipeline);
+//    // compositor m_Renderer.AddViewPipeline(editorViewWr, p_DebugPipeline);
+//    m_Renderer.AddViewPipeline(editorViewWr, p_ForwardPipeline);
+//    m_Renderer.AddViewPipeline(editorViewWr, p_VectorGraphicsPipeline);
     m_Renderer.SetViewActive(editorViewWr, true);
 
     p_EditorView = editorViewWr.lock();
@@ -218,6 +218,7 @@ void harmony::Editor::OnRuntimeExit() {
     LoadScene(p_LoadedScenePath);
     p_EditorView->Camera.Focussed = true;
     SDL_SetRelativeMouseMode(SDL_FALSE);
+    m_Renderer.RefreshViews();
 }
 
 void harmony::Editor::Run() {
@@ -229,8 +230,8 @@ void harmony::Editor::Run() {
     AddPipelineDrawStages();
     AddPostProcessStages();
 
-    InitializePipelines();
     InitializeViews();
+    InitializePipelines();
     PreRunInit();
 
     SetRunningStyle();
@@ -267,16 +268,14 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
     AddPipelineDrawStages();
     AddPostProcessStages();
 
-    InitializePipelines();
     InitializeViews();
+    InitializePipelines();
 
     LoadProject(projectPath);
 
     PreRunInit();
 
     SetRunningStyle();
-
-    RuntimeProgram::ResizeApplicationWindow(0,0);
 
     while (p_Run) {
         ProfilerBeginFrame();

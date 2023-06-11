@@ -207,10 +207,10 @@ void lua_DrawSphere(glm::vec3 p, float r) {
 
 void lua_SetColour(float r, float g, float b, float a) {
     char_int col;
-    col.chars[0] = r;
-    col.chars[1] = g;
-    col.chars[2] = b;
-    col.chars[3] = a;
+    col.chars[0] = static_cast<uint8_t>(r);
+    col.chars[1] = static_cast<uint8_t>(g);
+    col.chars[2] = static_cast<uint8_t>(b);
+    col.chars[3] = static_cast<uint8_t>(a);
 
     harmony::GfxDebug::Get()->setColor(harmony::GfxDebug::Channel::Editor, col.val);
 }

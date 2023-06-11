@@ -8,7 +8,7 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_bgfx.h"
 #include "Core/Program.h"
-#include "Rendering/Texture.h"
+#include "Assets/TextureAsset.h"
 
 #endif
 

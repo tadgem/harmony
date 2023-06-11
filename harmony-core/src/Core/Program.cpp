@@ -4,7 +4,7 @@
 #include "Core/Time.h"
 #include "Core/Input.h"
 #include "Rendering/GPUResourceManager.h"
-#include "Rendering/VectorGraphics.h"
+#include "Rendering/VectorGraphics/VectorGraphics.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
 #include "bx/timer.h"
@@ -139,8 +139,7 @@ void harmony::Program::InitSDL() {
     p_WindowWidth = rect.w;
     p_WindowHeight = rect.h;
 
-    SDL_WindowFlags windowFlags = static_cast<SDL_WindowFlags>(SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE |
-                                                               SDL_WINDOW_MAXIMIZED | SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALLOW_HIGHDPI);
+    SDL_WindowFlags windowFlags = static_cast<SDL_WindowFlags>(SDL_WINDOW_SHOWN | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALLOW_HIGHDPI);
 
     p_Window = SDL_CreateWindow(
             p_AppName.c_str(),
@@ -227,7 +226,7 @@ void harmony::Program::InitBGFX() {
     for(int i = 0; i < numDisplays; i++)
     {
         SDL_Rect rect;
-        SDL_GetDisplayUsableBounds(i, &rect);
+        SDL_GetDisplayBounds(i, &rect);
 
         if(rect.w > maxWidth) maxWidth = rect.w;
         if(rect.h > maxHeight) maxHeight = rect.h;
@@ -274,7 +273,11 @@ void harmony::Program::ListCapabilities() {
     harmony::log::info("Program : BGFX : Capabilities");
     harmony::log::info("Program : BGFX : Max Framebuffers : {}", m_Capabilities->limits.maxFrameBuffers);
     harmony::log::info("Program : BGFX : Max Textures : {}", m_Capabilities->limits.maxTextures);
+    harmony::log::info("Program : BGFX : Max Texture Size : {}x{}", m_Capabilities->limits.maxTextureSize, m_Capabilities->limits.maxTextureSize);
+
     harmony::log::info("Program : BGFX : Max Num Views : {}", m_Capabilities->limits.maxViews);
+    harmony::log::info("Program : BGFX : Max Num Blits : {}", m_Capabilities->limits.maxBlits);
+    harmony::log::info("Program : BGFX : Max Num Draw Calls : {}", m_Capabilities->limits.maxDrawCalls);
 
     harmony::log::info("Program : BGFX : Alpha To Coverage? : {}",
                        m_Capabilities->supported && BGFX_CAPS_ALPHA_TO_COVERAGE);
@@ -406,16 +409,17 @@ void harmony::Program::ResizeApplicationWindow(int w, int h) {
     SDL_DisplayMode mode;
     SDL_Rect rect;
 
+    bgfx::reset(w,h, BGFX_RESET_VSYNC);
+
     SDL_GetWindowDisplayMode(p_Window, &mode);
     SDL_GetDisplayUsableBounds(0, &rect);
     mode.w = rect.w;
     mode.h = rect.h;
     SDL_SetWindowDisplayMode(p_Window, &mode);
 
-    p_WindowWidth = static_cast<uint16_t>(rect.w);
-    p_WindowHeight = static_cast<uint16_t>(rect.h);
+    p_WindowWidth = static_cast<uint16_t>(w);
+    p_WindowHeight = static_cast<uint16_t>(h);
 
-    bgfx::reset(p_WindowWidth, p_WindowHeight, BGFX_RESET_VSYNC);
     ImGui::GetIO().DisplaySize = ImVec2(p_WindowWidth, p_WindowHeight);
     SDL_SetWindowSize(p_Window, rect.w, rect.h);
 }
@@ -436,6 +440,10 @@ void harmony::Program::HandleSDLEvent() {
 
         if (sdlEvent.type == SDL_WINDOWEVENT) {
             if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED) {
+                if(p_WindowWidth == sdlEvent.window.data1 && p_WindowHeight == sdlEvent.window.data2)
+                {
+                    continue;
+                }
                 if (!p_ResizedThisFrame) {
                     ResizeApplicationWindow(sdlEvent.window.data1, sdlEvent.window.data2);
                     p_ResizedThisFrame = true;
@@ -460,6 +468,7 @@ harmony::Gamepad::Stick GetStickFromSDL(SDL_GameControllerAxis &sdlAxis) {
         case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_RIGHTY:
             return harmony::Gamepad::Stick::RS;
     }
+    return harmony::Gamepad::Stick::Invalid;
 }
 
 harmony::Gamepad::Trigger GetTriggerFromSDL(SDL_GameControllerAxis &sdlAxis) {
@@ -470,6 +479,7 @@ harmony::Gamepad::Trigger GetTriggerFromSDL(SDL_GameControllerAxis &sdlAxis) {
         case SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
             return harmony::Gamepad::Trigger::RT;
     }
+    return harmony::Gamepad::Trigger::Invalid;
 }
 
 harmony::Gamepad::Button GetButtonFromSDL(uint8_t sdlButton) {

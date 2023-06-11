@@ -1,5 +1,5 @@
 #include "Script/Lua/LuaNanoVG.hpp"
-#include "Rendering/VectorGraphics.h"
+#include "Rendering/VectorGraphics/VectorGraphics.h"
 
 
 NVGcolor rgba(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {

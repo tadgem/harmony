@@ -6,7 +6,7 @@
 #include "Script/Lua/LuaScriptAsset.h"
 
 namespace harmony {
-    struct LuaComponent {
+    class LuaComponent {
     public:
         LuaComponent();
 

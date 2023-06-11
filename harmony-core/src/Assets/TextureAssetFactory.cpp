@@ -1,7 +1,7 @@
 #include <optick.h>
 #include "Assets/TextureAssetFactory.h"
 #include "ThirdParty/stb_image.h"
-#include "Rendering/Texture.h"
+#include "Assets/TextureAsset.h"
 #include "Core/Utils.h"
 #include "Core/Log.hpp"
 

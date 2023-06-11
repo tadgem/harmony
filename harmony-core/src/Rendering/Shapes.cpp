@@ -113,8 +113,13 @@ harmony::Plane::Plane(float size) : Mesh("builtin://plane", 0) {
 
 bgfx::VertexLayout harmony::PosColorTexCoord0Vertex::ms_layout;
 
-void harmony::ScreenSpaceQuad(float _textureWidth, float _textureHeight) {
+void harmony::ScreenSpaceQuad(float _textureWidth, float _textureHeight, float _width, float _height) {
     OPTICK_EVENT();
+//    ImVec2 texUvs {(float)m_Width / (float)GPUResourceManager::GetMaxFramebufferWidth(),
+//                   (float)m_Height / (float)GPUResourceManager::GetMaxFramebufferHeight()};
+    float desiredWidth = _width / _textureWidth;
+    float desiredHeight = _height / _textureHeight;
+
     if (6 == bgfx::getAvailTransientVertexBuffer(6, PosColorTexCoord0Vertex::ms_layout)) {
         bgfx::TransientVertexBuffer vb;
         bgfx::allocTransientVertexBuffer(&vb, 6, PosColorTexCoord0Vertex::ms_layout);
@@ -125,26 +130,26 @@ void harmony::ScreenSpaceQuad(float _textureWidth, float _textureHeight) {
         vertex[0].m_y = -1.0;
         vertex[0].m_z = 0.0;
         vertex[0].m_u = 0.0;
-        vertex[0].m_v = 1.0;
+        vertex[0].m_v = desiredHeight;
         // bottom right
         vertex[1].m_x = 1.0;
         vertex[1].m_y = -1.0;
         vertex[1].m_z = 0.0;
-        vertex[1].m_u = 1.0;
-        vertex[1].m_v = 1.0;
+        vertex[1].m_u = desiredWidth;
+        vertex[1].m_v = desiredHeight;
 
         // top right
         vertex[2].m_x = 1.0;
         vertex[2].m_y = 1.0;
         vertex[2].m_z = 0.0;
-        vertex[2].m_u = 1.0;
+        vertex[2].m_u = desiredWidth;
         vertex[2].m_v = 0.0;
 
         // top right
         vertex[3].m_x = 1.0;
         vertex[3].m_y = 1.0;
         vertex[3].m_z = 0.0;
-        vertex[3].m_u = 1.0;
+        vertex[3].m_u = desiredWidth;
         vertex[3].m_v = 0.0;
 
         // top left
@@ -159,7 +164,7 @@ void harmony::ScreenSpaceQuad(float _textureWidth, float _textureHeight) {
         vertex[5].m_y = -1.0;
         vertex[5].m_z = 0.0;
         vertex[5].m_u = 0.0;
-        vertex[5].m_v = 1.0;
+        vertex[5].m_v = desiredHeight;
 
         bgfx::setVertexBuffer(0, &vb);
     }

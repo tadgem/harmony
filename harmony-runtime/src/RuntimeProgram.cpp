@@ -3,7 +3,8 @@
 #include "AssimpModelAssetFactory.h"
 #include "Assets/FontAssetFactory.h"
 #include "Rendering/Views/RuntimeView.h"
-#include "Rendering/ShaderDataSources/BlinnPhongDataSource.h"
+#include "Rendering/Shaders/ShaderDataSources/BlinnPhongDataSource.h"
+#include "Rendering/Pipelines/PipelineStages/DrawScreenTextureStage.h"
 #include "Rendering/Shapes.h"
 #include "Core/FSM.h"
 #include "ECS/LightSystem.h"
@@ -37,8 +38,8 @@ void harmony::RuntimeProgram::Run() {
 
     AddPipelineDrawStages();
 
-    InitializePipelines();
     InitializeViews();
+    InitializePipelines();
 
     PreRunInit();
 
@@ -57,8 +58,8 @@ void harmony::RuntimeProgram::Run(const std::string &projectPath) {
 
     AddPipelineDrawStages();
 
-    InitializePipelines();
     InitializeViews();
+    InitializePipelines();
 
     PreRunInit();
 
@@ -124,36 +125,37 @@ void harmony::RuntimeProgram::AddPipelineDrawStages() {
             "NormalStage",
             PipelineDrawStage::Type::PrimaryDraw,
             m_Renderer.GetShader("Normal"),
-            m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
-            (Attachment::Type) (Attachment::Type::RGBA16F | Attachment::Type::Depth32F)
+            m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
 
     Ref<PipelineDrawStage> texturedMeshStage = CreateRef<PipelineDrawStage>(
             "TexturedMeshStage",
             PipelineDrawStage::Type::PrimaryDraw,
             m_Renderer.GetShader("TexturedMesh"),
-            m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
-            (Attachment::Type) (Attachment::Type::RGBA16F | Attachment::Type::Depth32F)
+            m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
 
     Ref<PipelineDrawStage> blinnPhongStage = CreateRef<PipelineDrawStage>(
             "BlinnPhongTextured",
             PipelineDrawStage::Type::PrimaryDraw,
             m_Renderer.GetShader("BlinnPhongTextured"),
-            m_Renderer.GetPipelineStageRenderer("MeshRenderer"),
-            (Attachment::Type) (Attachment::Type::RGBA16F | Attachment::Type::Depth32F)
+            m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
 
+    Ref<VectorGraphicsStage> vectorGraphicsStage = CreateRef<VectorGraphicsStage>(VectorGraphics::Layer::One);
+    Ref<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Game);
 
     blinnPhongStage->AddShaderDataSource(m_Renderer.GetShaderDataSource("BlinnPhong"));
-    m_Renderer.AddPipelineDrawStage(normalStage);
-    m_Renderer.AddPipelineDrawStage(texturedMeshStage);
-    m_Renderer.AddPipelineDrawStage(blinnPhongStage);
+
+    m_Renderer.AddPipelineStage(normalStage);
+    m_Renderer.AddPipelineStage(texturedMeshStage);
+    m_Renderer.AddPipelineStage(blinnPhongStage);
+    m_Renderer.AddPipelineStage(vectorGraphicsStage);
+    m_Renderer.AddPipelineStage(debugDrawStage);
 }
 
 void harmony::RuntimeProgram::AddPostProcessStages() {
     OPTICK_EVENT();
-
 }
 
 void harmony::RuntimeProgram::AddShaderDataSources() {
@@ -164,28 +166,66 @@ void harmony::RuntimeProgram::AddShaderDataSources() {
 
 void harmony::RuntimeProgram::InitializePipelines() {
     OPTICK_EVENT();
-    p_ForwardPipeline = CreateRef<Pipeline>(PipelineHandle("Forward Pipeline"), Pipeline::Type::Surface);
-    p_VectorGraphicsPipeline = CreateRef<VectorPipeline>(VectorGraphics::Layer::One);
-    p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
+    // compositor p_ForwardPipeline = CreateRef<Pipeline>(PipelineHandle("Forward Pipeline"), Pipeline::Type::Surface);
+//    p_VectorGraphicsPipeline = CreateRef<VectorPipeline>(VectorGraphics::Layer::One);
+//    p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
+//
+//    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("NormalStage").lock());
+//    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("TexturedMeshStage").lock());
+//    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("BlinnPhongTextured").lock());
+//
+//    m_Renderer.AddPipeline(p_DebugPipeline);
+//    m_Renderer.AddPipeline(p_ForwardPipeline);
+//    m_Renderer.AddPipeline(p_VectorGraphicsPipeline);
 
-    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("NormalStage").lock());
-    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("TexturedMeshStage").lock());
-    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("BlinnPhongTextured").lock());
+    auto mainFB = p_RuntimePipeline->AddFramebuffer("Forward FB",{AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
+    auto vectorFB = p_RuntimePipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
+    auto accumulateFB = p_RuntimePipeline->AddFramebuffer("Accumulate FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
+    auto finalFB = p_RuntimePipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
 
-    m_Renderer.AddPipeline(p_DebugPipeline);
-    m_Renderer.AddPipeline(p_ForwardPipeline);
-    m_Renderer.AddPipeline(p_VectorGraphicsPipeline);
+    auto screenShaderWR = m_Renderer.p_PresentProgram;
+    auto fxaaShaderWr = m_Renderer.GetShader("FXAA");
+
+    if(screenShaderWR.expired())
+    {
+        harmony::log::error("RuntimeProgram : Initialize Pipelines : Present Program is expired. This should never happen.");
+        return;
+    }
+
+    Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {mainFB});
+    Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {vectorFB});
+    Ref<DrawScreenTextureStage> drawFxaaStage = CreateRef<DrawScreenTextureStage>(fxaaShaderWr, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {accumulateFB});
+
+    p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("DebugDrawStage").lock());
+    p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("NormalStage").lock());
+    p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("TexturedMesh").lock());
+    p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("BlinnPhongTextured").lock());
+
+    p_RuntimePipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());
+
+    p_RuntimePipeline->AddPipelineStage(accumulateFB, drawForwardStage);
+    p_RuntimePipeline->AddPipelineStage(finalFB, drawFxaaStage);
+    p_RuntimePipeline->AddPipelineStage(finalFB, drawVectorStage);
+
+    p_RuntimePipeline->SetOutputFramebuffer(finalFB);
+
 }
 
 void harmony::RuntimeProgram::InitializeViews() {
     OPTICK_EVENT();
     auto runtimeViewWr = m_Renderer.CreateView<RuntimeView>(*this);
 
-    m_Renderer.AddViewPipeline(runtimeViewWr, p_ForwardPipeline);
-    m_Renderer.AddViewPipeline(runtimeViewWr, p_VectorGraphicsPipeline);
     m_Renderer.SetViewActive(runtimeViewWr, true);
-
     p_RuntimeView = runtimeViewWr.lock();
+
+    auto pipelineWr = m_Renderer.GetViewPipeline(runtimeViewWr);
+    if(pipelineWr.expired())
+    {
+        harmony::log::error("RuntimeProgram : Failed to create a runtime view pipeline.");
+        return;
+    }
+    p_RuntimePipeline = pipelineWr.lock();
+
 }
 
 
@@ -249,10 +289,9 @@ void harmony::RuntimeProgram::ResizeApplicationWindow(int w, int h) {
 
 void harmony::RuntimeProgram::PresentRuntimeImage() {
     OPTICK_EVENT();
-    bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_COLOR, 0);
-    bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_DEPTH, 0, 1.0f);
-    auto stack = m_Renderer.GetViewPipelineStack(p_RuntimeView->m_Name);
-    bgfx::setTexture(0, m_Renderer.p_PresentProgramTextureHandle, stack.GetFinalImage(), BGFX_SAMPLER_POINT);
-    ScreenSpaceQuad(static_cast<float>(p_WindowWidth), static_cast<float>(p_WindowHeight));
+    bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
+    auto pipeline = m_Renderer.GetViewPipeline(p_RuntimeView->m_Name);
+    bgfx::setTexture(0, m_Renderer.p_PresentProgramTextureHandle, pipeline.lock()->GetOutputFramebuffer().lock()->m_Attachments[0].m_Handle, BGFX_SAMPLER_POINT);
+    ScreenSpaceQuad(static_cast<float>(p_WindowWidth), static_cast<float>(p_WindowHeight), static_cast<float>(p_WindowWidth), static_cast<float>(p_WindowHeight));
     bgfx::submit(p_PresentViewId, m_Renderer.p_PresentProgram.lock()->m_Handle);
 }

@@ -1,17 +1,19 @@
 #pragma once
 
+#include "Core/Alias.h"
 #include "Core/Memory.h"
 #include "ThirdParty/entt.hpp"
 #include "ThirdParty/json.hpp"
 #include "Rendering/Attachment.h"
 #include "PipelineHandle.h"
-#include "Rendering/Shader.h"
-#include "Rendering/ShaderDataSource.h"
+#include "Rendering/Shaders/Shader.h"
+#include "Rendering/Shaders/ShaderDataSource.h"
 
 namespace harmony {
     class View;
 
     class PipelineStageRenderer;
+    class Framebuffer;
 
     class PipelineStage {
     public:
@@ -23,21 +25,10 @@ namespace harmony {
             Compute
         };
 
-        struct Data {
-            bgfx::FrameBufferHandle m_FramebufferHandle;
-            std::map<Attachment::Type, Attachment> m_Attachments;
-
-            void Clear();
-
-            Attachment::Type GetDepthType();
-
-            Attachment::Type GetColorType();
-        };
-
         PipelineStage(
                 const std::string &name,
                 Type pipelineStageType,
-                Attachment::Type attachments,
+                Vector<AttachmentType> requiredAttachments,
                 WeakRef<ShaderProgram> shader,
                 WeakRef<PipelineStageRenderer> stageRenderer);
 
@@ -50,7 +41,8 @@ namespace harmony {
             { Compute, "compute" }
         })
 
-        virtual Data Init(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId);
+        virtual void PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) = 0;
+        virtual void PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) = 0;
 
         virtual void Cleanup(WeakRef<View> view, bgfx::ViewId viewId);
 
@@ -64,8 +56,8 @@ namespace harmony {
         bool m_HasDepthAttachment;
 
         Type m_StageType;
-        Attachment::Type m_Attachments;
-        std::string m_Name;
+        Vector<AttachmentType> m_Attachments;
+        String m_Name;
         WeakRef<ShaderProgram> p_Shader;
         WeakRef<PipelineStageRenderer> p_Renderer;
 

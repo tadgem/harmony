@@ -4,7 +4,7 @@
 #include "glm/gtc/quaternion.hpp"
 #include "ThirdParty/json.hpp"
 
-#include "Rendering/ShaderUniform.h"
+#include "Rendering/Shaders/ShaderUniform.h"
 
 namespace harmony {
     struct TransformComponent {

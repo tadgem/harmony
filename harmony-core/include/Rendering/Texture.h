@@ -1,38 +1,17 @@
-#pragma once
+//
+// Created by Admin on 5/27/2023.
+//
 
-#include "Assets/Asset.h"
-#include "bgfx/bgfx.h"
-#include <bimg/bimg.h>
-#include <bimg/decode.h>
-
-namespace harmony {
-    struct BGFXTextureHandle {
-        bgfx::TextureHandle BgfxHandle = BGFX_INVALID_HANDLE;
-        bgfx::TextureInfo Info;
-        AssetHandle Handle;
-        uint8_t SamplerSlot;
-
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(BGFXTextureHandle, Handle)
-    };
-
-    // TODO: Move to assets, need a pure rendering texture class.
-    class TextureAsset : public Asset {
+#ifndef HARMONY_DOJO_TEXTURE_H
+#define HARMONY_DOJO_TEXTURE_H
+namespace harmony
+{
+    class Texture
+    {
     public:
-        TextureAsset(const std::string &path, bimg::ImageContainer *imageContainer);
-
-        BGFXTextureHandle m_TextureHandle;
-        bool m_SubmittedToGPU;
 
     protected:
-        bimg::ImageContainer *p_ImageContainer;
-        const bgfx::Memory *p_Memory;
 
-
-    private:
-        friend class TextureAssetFactory;
-
-        friend class Renderer;
-
-        static void BGFXImageReleaseCallback(void *_ptr, void *_userData);
     };
-};
+}
+#endif //HARMONY_DOJO_TEXTURE_H

@@ -1,23 +1,23 @@
 #pragma once
 
 #include <string>
+#include <Rendering/Pipelines/PipelineStages/PostProcessStage.h>
 #include "bgfx/bgfx.h"
 #include "Core/Memory.h"
 #include "Core/Scene.h"
+#include "Rendering/View.h"
 #include "Rendering/Framebuffer.h"
-#include "Rendering/Pipelines/Pipeline.h"
-#include "Rendering/Pipelines/PipelineStack.h"
+#include "Rendering/Pipelines/PipelineV2.h"
 #include "Rendering/Pipelines/PipelineStageRenderer.h"
 #include "Rendering/Mesh.h"
-#include "Rendering/Texture.h"
-#include "Rendering/Shader.h"
+#include "Assets/TextureAsset.h"
+#include "Rendering/Shaders/Shader.h"
 #include "Assets/AssetManager.h"
 #include "Assets/Asset.h"
 #include "glm/glm.hpp"
 #include "ThirdParty/json.hpp"
 
 namespace harmony {
-    class Viewport;
 
     class ShaderDataSource;
 
@@ -29,7 +29,7 @@ namespace harmony {
         WeakRef<T> CreateView(Args &&... args) {
             static_assert(std::is_base_of<View, T>(), "Renderer : Provided type is not a view!");
             Ref<T> view = CreateRef<T>(std::forward<Args>(args)...);
-            p_Views.emplace(view, PipelineStack());
+            p_Views.emplace(view, CreateRef<PipelineV2>(view->m_Name));
             return GetWeakRef<T>(view);
         }
 
@@ -57,17 +57,26 @@ namespace harmony {
 
         std::vector<std::string> GetShaderNames();
 
-        void AddPipelineDrawStage(Ref<PipelineDrawStage> drawStage);
+        void AddPipelineStage(Ref<PipelineStage> pipelineStage);
 
-        WeakRef<PipelineDrawStage> GetPipelineDrawStage(const std::string &name);
+        WeakRef<PipelineStage> GetPipelineStage(const std::string& name);
 
-        void AddPostProcessStage(Ref<PostProcessStage> postProcessStage);
-
-        WeakRef<PostProcessStage> GetPostProcessStage(const std::string &name);
-
-        void AddPipeline(Ref<Pipeline> pipeline);
-
-        WeakRef<Pipeline> GetPipeline(const PipelineHandle &handle);
+        template<typename T>
+        WeakRef<T> GetPiplineStage(const std::string& name)
+        {
+            static_assert(std::is_base_of<View, T>(), "Renderer : Provided type is not a view!");
+            WeakRef<PipelineStage> stage = GetPipelineStage(name);
+            if(stage.expired())
+            {
+                return WeakRef<T>();
+            }
+            Ref<T> derivedStage = std::static_pointer_cast<T>(stage);
+            if(derivedStage)
+            {
+                return derivedStage;
+            }
+            return WeakRef<T>();
+        }
 
         void AddPipelineStageRenderer(Ref<PipelineStageRenderer> renderer);
 
@@ -85,11 +94,9 @@ namespace harmony {
 
         WeakRef<View> GetView(const std::string &name);
 
+        WeakRef<PipelineV2> GetViewPipeline(WeakRef<View> view);
+
         void SetViewActive(WeakRef<View> viewWeakRef, bool active);
-
-        void AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline);
-
-        void AddViewPostProcessStage(WeakRef<View> viewWeakRef, WeakRef<PostProcessStage> stage);
 
         void RefreshViews();
 
@@ -99,7 +106,7 @@ namespace harmony {
 
         void OnPostUpdate(entt::registry &registry);
 
-        PipelineStack &GetViewPipelineStack(const std::string &viewName);
+        WeakRef<PipelineV2> GetViewPipeline(const std::string &viewName);
 
         static bgfx::ViewId GetViewID();
 
@@ -119,8 +126,6 @@ namespace harmony {
 
         bool PipelineStageRendererSelector(const std::string &selectorName,
                                            harmony::WeakRef<harmony::PipelineStageRenderer> renderer);
-
-        Pipeline::Type GetPipelineTypeFromName(const std::string &type);
 
         bool IsBuiltInShaderName(const std::string &name);
 
@@ -150,8 +155,6 @@ namespace harmony {
 
         nlohmann::json SerializeShaders();
 
-        nlohmann::json SerializePipelines();
-
         nlohmann::json SerializePipelineDrawStages();
 
         nlohmann::json SerializePostProcessStages();
@@ -166,8 +169,6 @@ namespace harmony {
 
         void DeserializeShaders(nlohmann::json &json, AssetManager &am);
 
-        void DeserializePipelines(nlohmann::json &json, AssetManager &am);
-
         void DeserializePipelineDrawStages(nlohmann::json &json, AssetManager &am);
 
         void DeserializePostProcessStages(nlohmann::json &json, AssetManager &am);
@@ -180,23 +181,15 @@ namespace harmony {
 
         void DeserializeActiveViews(nlohmann::json &json, AssetManager &am);
 
-        void HandleStackPipelineAccumulation(Ref<View> view, PipelineStack &stack, Ref<ShaderProgram> textureProg,
-                                             entt::registry &registry);
-
-        void HandleStackPostProcess(Ref<View> view, PipelineStack &stack, Ref<ShaderProgram> textureProg,
-                                    entt::registry &registry);
-
         static uint32_t p_PresentViewHandleCounter;
         static uint32_t p_ViewHandleCounter;
         static const uint32_t p_MaxViews = 255;
         AssetManager &p_AssetManager;
         int s_PresentShaderIndex;
 
-        std::map<Ref<View>, PipelineStack> p_Views;
+        std::map<Ref<View>, Ref<PipelineV2>> p_Views;
         std::vector<Ref<ShaderProgram>> p_Shaders;
-        std::vector<Ref<Pipeline>> p_Pipelines;
-        std::vector<Ref<PipelineDrawStage>> p_PipelineDrawStages;
-        std::vector<Ref<PostProcessStage>> p_PostProcessStages;
+        std::vector<Ref<PipelineStage>> p_PipelineStages;
         std::vector<Ref<PipelineStageRenderer>> p_PipelineStageRenderers;
         std::vector<Ref<ShaderDataSource>> p_ShaderDataSources;
         std::vector<WeakRef<ShaderProgram>> p_BuiltInShaders;

@@ -2,7 +2,7 @@
 
 #include "Rendering/Renderer.h"
 #include "ThirdParty/json.hpp"
-#include "Rendering/ShaderDataOverride.h"
+#include "Rendering/Shaders/ShaderDataOverride.h"
 
 namespace harmony {
     struct MaterialComponent {

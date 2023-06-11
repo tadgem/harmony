@@ -1,20 +1,37 @@
 #pragma once
 
 #include "Core/Alias.h"
-#include "bgfx/bgfx.h"
+#include "Rendering/Attachment.h"
 
 namespace harmony {
-    struct BGFXFramebufferHandle {
-        bgfx::FrameBufferHandle m_FB;
-
-    };
 
     class Framebuffer {
     public:
-        Framebuffer();
+        explicit Framebuffer(const String& name, Resolution res, Resolution::Type resolutionType = Resolution::Type::FullScale);
+        ~Framebuffer();
 
-        uint32_t m_Width;
-        uint32_t m_Height;
+        Attachment CreateAttachment(AttachmentType attachmentType);
 
+        bool Build();
+        bool IsBuilt();
+
+        Resolution m_VirtualResoltuion;
+        Resolution m_FramebufferResolution;
+
+        bgfx::FrameBufferHandle m_FBH;
+        bgfx::ViewId m_ViewID;
+
+        Resolution::Type m_ResolutionType;
+        Vector<Attachment> m_Attachments;
+
+        const String m_Name;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(Framebuffer, m_ResolutionType, m_FramebufferResolution)
+
+    protected:
+        void UpdateVirtualResolution(uint16_t w, uint16_t h);
+        bgfx::TextureHandle CreateAttachmentInternal(Resolution res, AttachmentType type);
+        Resolution GetScaledResolution(Resolution::Type type, Resolution res);
+        friend class Renderer;
     };
 };

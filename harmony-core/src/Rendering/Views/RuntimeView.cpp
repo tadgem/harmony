@@ -7,7 +7,7 @@
 
 #include "ImGui/imgui_bgfx.h"
 #include "ImGui/icons_font_awesome.h"
-
+#include "Rendering/GPUResourceManager.h"
 #endif
 
 harmony::RuntimeView::RuntimeView(Program &prog) : View("RuntimeView"), p_Program(prog), p_Renderer(prog.m_Renderer) {
@@ -52,8 +52,6 @@ void harmony::RuntimeView::OnResized(uint32_t w, uint32_t h) {
             c.Cam.Height = h;
         }
     }
-
-
 }
 
 
@@ -69,22 +67,33 @@ void harmony::RuntimeView::OnImGui() {
 
     const std::string runtimeViewTitle = std::string(ICON_FA_PLAY_CIRCLE) + " Runtime";
     glm::mat4 mat = glm::mat4(1.0);
-    PipelineStack &stack = p_Renderer.GetViewPipelineStack("RuntimeView");
+    auto pipeline = p_Renderer.GetViewPipeline("RuntimeView").lock();
     if (ImGui::Begin(runtimeViewTitle.c_str(), (bool *) 0, ImGuiWindowFlags_NoScrollbar)) {
         View::OnImGui();
-        bgfx::TextureHandle finalImageHandle = stack.GetFinalImage();
+
+        if(!pipeline->HasOutputFramebuffer())
+        {
+            ImGui::End();
+            return;
+        }
+
+        bgfx::TextureHandle finalImageHandle = pipeline->GetOutputFramebuffer().lock()->m_Attachments[0].m_Handle;
         if (!bgfx::isValid(finalImageHandle)) {
             ImGui::End();
             return;
         }
+
+        ImVec2 texUvs {(float)m_Width / (float)GPUResourceManager::GetMaxFramebufferWidth(),
+                       (float)m_Height / (float)GPUResourceManager::GetMaxFramebufferHeight()};
+
         ImGui::Image(
                 finalImageHandle,
-                ImGui::GetContentRegionAvail()
-        );
+                ImGui::GetContentRegionAvail(),
+                ImVec2{0.0f, 0.0f},
+                texUvs
+                );
 
         auto dim = ImGui::GetWindowSize();
-        uint32_t w = static_cast<uint32_t>(dim.x);
-        uint32_t h = static_cast<uint32_t>(dim.y);
     }
     ImGui::End();
 }

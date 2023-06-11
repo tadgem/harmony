@@ -9,13 +9,13 @@
 #include "Core/Log.hpp"
 #include "Core/Time.h"
 #include "Core/SerializationKeys.h"
-#include "Rendering/BuiltinShaders.h"
+#include "Rendering/Shaders/BuiltinShaders.h"
 #include "Rendering/Shapes.h"
 #include "Rendering/View.h"
 #include "Rendering/Pipelines/PipelineStageRenderer.h"
-#include "Rendering/ShaderDataSource.h"
-#include "Rendering/Pipelines/PostProcessStage.h"
-#include "Rendering/Pipelines/PipelineDrawStage.h"
+#include "Rendering/Shaders/ShaderDataSource.h"
+#include "Rendering/Pipelines/PipelineStages/PostProcessStage.h"
+#include "Rendering/Pipelines/PipelineStages/PipelineDrawStage.h"
 
 #if HARMONY_DEBUG
 
@@ -79,12 +79,12 @@ harmony::Renderer::AddBuiltInShader(const std::string &progName, const std::stri
 
 void harmony::Renderer::AddBuiltInShaders() {
     OPTICK_EVENT();
-    p_PresentProgram = AddBuiltInShader("Present", "vs_present", "fs_present", 4, 5);
+    p_PresentProgram = AddBuiltInShader("TexturedMesh", "vs_simple_textured", "fs_simple_textured", 0, 1);
     p_PresentProgramTextureHandle = p_PresentProgram.lock()->m_Uniforms[0].BgfxHandle;
-    AddBuiltInShader("TexturedMesh", "vs_simple_textured", "fs_simple_textured", 0, 1);
     AddBuiltInShader("Normal", "vs_normal", "fs_normal", 2, 3);
-    AddBuiltInShader("NanoVG", "vs_nanovg_fill", "fs_nanovg_fill", 6, 7);
-    AddBuiltInShader("BlinnPhongTextured", "vs_blinn_phong_textured", "fs_blinn_phong_textured", 8, 9);
+    AddBuiltInShader("NanoVG", "vs_nanovg_fill", "fs_nanovg_fill", 4, 5);
+    AddBuiltInShader("BlinnPhongTextured", "vs_blinn_phong_textured", "fs_blinn_phong_textured", 6, 7);
+    AddBuiltInShader("FXAA", "vs_simple_textured", "fs_fxaa", 0, 8);
 }
 
 harmony::WeakRef<harmony::ShaderProgram>
@@ -122,7 +122,7 @@ harmony::Renderer::BuildShader(const std::string name, WeakRef<ShaderStage> comp
     return GetWeakRef<ShaderProgram>(prog);
 }
 
-uint32_t harmony::Renderer::p_ViewHandleCounter = 0;
+uint32_t harmony::Renderer::p_ViewHandleCounter = 2;
 uint32_t harmony::Renderer::p_PresentViewHandleCounter = 1;
 
 harmony::WeakRef<harmony::View> harmony::Renderer::GetView(const std::string &name) {
@@ -135,10 +135,27 @@ harmony::WeakRef<harmony::View> harmony::Renderer::GetView(const std::string &na
     return WeakRef<View>();
 }
 
+harmony::WeakRef<harmony::PipelineV2> harmony::Renderer::GetViewPipeline(WeakRef<View> view) {
+    OPTICK_EVENT();
+
+    if(view.expired())
+    {
+        harmony::log::error("Renderer : Cannot get view pipeline, passed view is expired.");
+        WeakRef<PipelineV2>();
+    }
+    auto v = view.lock();
+    if(p_Views.find(v) != p_Views.end())
+    {
+        return p_Views[v];
+    }
+
+    return WeakRef<PipelineV2>();
+}
+
 void harmony::Renderer::RemoveView(WeakRef<View> view) {
     OPTICK_EVENT();
     if (view.expired()) {
-        harmony::log::error("Removing expired view weak ref!");
+        harmony::log::error("Renderer : Removing expired view weak ref!");
         return;
     }
     {
@@ -193,15 +210,17 @@ void harmony::Renderer::OnPreUpdate(entt::registry &registry) {
         }
 
         Ref<View> view = m_ActiveViews[i].lock();
-        PipelineStack &stack = p_Views[view];
+        // compositor PipelineStack &stack = p_Views[view];
+        Ref<PipelineV2> pipeline = p_Views[view];
 
         if (view->p_Resized) {
-            stack.OnViewResized(view);
+            // compositor stack.OnViewResized(view);
             view->p_Resized = false;
         }
 
         view->OnPreUpdate(registry);
-        stack.PreUpdate(registry, m_ActiveViews[i]);
+        pipeline->PreUpdate(registry, view);
+        // compositor stack.PreUpdate(registry, m_ActiveViews[i]);
     }
 }
 
@@ -215,70 +234,31 @@ void harmony::Renderer::OnPostUpdate(entt::registry &registry) {
         }
 
         Ref<View> view = m_ActiveViews[i].lock();
+        Ref<PipelineV2> pipeline = p_Views[view];
         Ref<ShaderProgram> prog = p_PresentProgram.lock();
-        PipelineStack &stack = p_Views[view];
-
-        HandleStackPipelineAccumulation(view, stack, prog, registry);
-        HandleStackPostProcess(view, stack, prog, registry);
+        pipeline->PostUpdate(registry, view);
+        // compositor PipelineStack &stack = p_Views[view];
+        // compositor HandleStackPipelineAccumulation(view, stack, prog, registry);
+        // compositor HandleStackPostProcess(view, stack, prog, registry);
     }
 }
 
-harmony::PipelineStack &harmony::Renderer::GetViewPipelineStack(const std::string &viewName) {
+harmony::WeakRef<harmony::PipelineV2> harmony::Renderer::GetViewPipeline(const std::string &viewName) {
     OPTICK_EVENT();
-    for (auto &[view, stack]: p_Views) {
+    for (auto &[view, p]: p_Views) {
         if (view->m_Name == viewName) {
-            return stack;
+            return p;
         }
     }
     harmony::log::error("No pipeline stack with name : {}", viewName);
-    // TODO: This is horrible, fix me
-    auto emptyStack = PipelineStack();
-    return emptyStack;
-}
-
-void harmony::Renderer::AddViewPipeline(WeakRef<View> viewWeakRef, WeakRef<Pipeline> pipeline) {
-    OPTICK_EVENT();
-    if (viewWeakRef.expired()) {
-        harmony::log::error("Trying to add pipeline association to a view which is expired.");
-        return;
-    }
-
-    Ref<View> view = viewWeakRef.lock();
-
-    if (pipeline.expired()) {
-        harmony::log::error("Trying to add pipeline to stack but pipeline is expired");
-        return;
-    }
-
-    Ref<Pipeline> p = pipeline.lock();
-
-    p_Views[view].AddPipeline(pipeline, view);
-}
-
-void harmony::Renderer::AddViewPostProcessStage(WeakRef<View> viewWeakRef, WeakRef<PostProcessStage> stage) {
-    OPTICK_EVENT();
-    if (viewWeakRef.expired()) {
-        harmony::log::error("Trying to add pipeline association to a view which is expired.");
-        return;
-    }
-
-    Ref<View> view = viewWeakRef.lock();
-
-    if (stage.expired()) {
-        harmony::log::error("Trying to add pipeline to stack but pipeline is expired");
-        return;
-    }
-
-    Ref<PostProcessStage> s = stage.lock();
-
-    p_Views[view].AddPostProcessStage(s, view);
+    return WeakRef<PipelineV2>();
 }
 
 void harmony::Renderer::RefreshViews() {
     OPTICK_EVENT();
     for (auto &[view, stack]: p_Views) {
         view->OnResized(view->m_Width, view->m_Height);
-        stack.OnViewResized(view);
+        // stack.OnViewResized(view);
     }
 }
 
@@ -308,9 +288,10 @@ void harmony::Renderer::OnImGui() {
         ImGui::Separator();
         if (ImGui::CollapsingHeader("[DrawStages]", ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Framed)) {
             ImGui::Indent();
-            for (auto &stage: p_PipelineDrawStages) {
-                ImGui::Text(stage->m_Name.c_str());
-            }
+            // compositor
+//            for (auto &stage: p_PipelineDrawStages) {
+//                ImGui::Text(stage->m_Name.c_str());
+//            }
             ImGui::Unindent();
             ImGui::Separator();
             if (ImGui::Button("Create Draw Stage")) {
@@ -321,9 +302,10 @@ void harmony::Renderer::OnImGui() {
         if (ImGui::CollapsingHeader("[PostProcessStages]",
                                     ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Framed)) {
             ImGui::Indent();
-            for (auto &stage: p_PostProcessStages) {
-                ImGui::Text(stage->m_Name.c_str());
-            }
+            // compositor
+//            for (auto &stage: p_PostProcessStages) {
+//                ImGui::Text(stage->m_Name.c_str());
+//            }
             ImGui::Unindent();
             ImGui::Separator();
             if (ImGui::Button("Create Post Process Stage")) {
@@ -331,112 +313,114 @@ void harmony::Renderer::OnImGui() {
             }
         }
         ImGui::Separator();
-        if (ImGui::CollapsingHeader("[Pipelines]")) {
-            for (auto &pipeline: p_Pipelines) {
-                ImGui::Text(pipeline->m_Name.c_str());
-                ImGui::Indent();
-                for (int i = 0; i < pipeline->NumPipelineStages(); i++) {
-                    ImGui::Text(pipeline->p_Stages[i]->m_Name.c_str());
-                }
-                ImGui::Unindent();
-            }
-            if (ImGui::Button("Create Pipeline")) {
-                p_CreatePipelineWindow = true;
-            }
-        }
+
+        // compositor
+//        if (ImGui::CollapsingHeader("[Pipelines]")) {
+//            for (auto &pipeline: p_Pipelines) {
+//                ImGui::Text(pipeline->m_Name.c_str());
+//                ImGui::Indent();
+//                for (int i = 0; i < pipeline->NumPipelineStages(); i++) {
+//                    ImGui::Text(pipeline->p_Stages[i]->m_Name.c_str());
+//                }
+//                ImGui::Unindent();
+//            }
+//            if (ImGui::Button("Create Pipeline")) {
+//                p_CreatePipelineWindow = true;
+//            }
+//        }
         ImGui::Separator();
-        if (ImGui::CollapsingHeader("[Views]")) {
-            int count = 0;
-            ImGui::Indent();
-            for (auto &[view, stack]: p_Views) {
-                if (ImGui::CollapsingHeader(view->m_Name.c_str())) {
-                    ImGui::Indent();
-                    auto addPipelineNameHash = "##combo" + std::to_string(count);
-                    count++;
-                    ImGui::Text("Add Pipeline");
-                    ImGui::SameLine();
-                    if (ImGui::BeginCombo(addPipelineNameHash.c_str(), "")) {
-                        for (int i = 0; i < p_Pipelines.size(); i++) {
-                            if (ImGui::Selectable(p_Pipelines[i]->m_Name.c_str(), false)) {
-                                AddViewPipeline(view, p_Pipelines[i]);
-                            }
-                        }
-                        ImGui::EndCombo();
-                    }
-
-                    auto addPostProcessNameHash = "##combo" + std::to_string(count);
-                    count++;
-                    ImGui::Text("Add Post Process Stage");
-                    ImGui::SameLine();
-                    if (ImGui::BeginCombo(addPostProcessNameHash.c_str(), "")) {
-                        for (int i = 0; i < p_PostProcessStages.size(); i++) {
-                            if (ImGui::Selectable(p_PostProcessStages[i]->m_Name.c_str(), false)) {
-                                AddViewPostProcessStage(view, p_PostProcessStages[i]);
-                            }
-                        }
-                        ImGui::EndCombo();
-                    }
-                    if (ImGui::CollapsingHeader("Stack")) {
-                        ImGui::Indent();
-                        ImGui::Text("Draw Pipelines");
-                        ImGui::Indent();
-                        int lastIndex = -1;
-                        for (int i = 0; i < stack.m_PipelineStack.size(); i++) {
-                            std::string indexString = std::to_string(i);
-                            std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + indexString;
-                            std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + indexString;
-                            if (ImGui::Button(downArrowText.c_str())) {
-                                stack.MovePipelineUp(stack.m_PipelineStack[i].lock()->m_Handle);
-                            }
-                            ImGui::SameLine();
-                            if (ImGui::Button(upArrowText.c_str())) {
-                                stack.MovePipelineDown(stack.m_PipelineStack[i].lock()->m_Handle);
-                            }
-                            ImGui::SameLine();
-                            std::string pipelineName = stack.m_PipelineStack[i].lock()->m_Name + " : " + indexString;
-                            ImGui::Text(pipelineName.c_str());
-                            lastIndex = i;
-                        }
-                        lastIndex += 1;
-                        ImGui::Unindent();
-                        ImGui::Text("Post Process Stages");
-                        ImGui::Indent();
-                        int indexToRemove = -1;
-                        for (int i = 0; i < stack.m_PostProcessPipelineStack.size(); i++) {
-                            std::string indexString = std::to_string(lastIndex + i);
-                            std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + indexString;
-                            std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + indexString;
-                            if (ImGui::Button(downArrowText.c_str())) {
-                                stack.MovePostProcessStageUp(stack.m_PostProcessPipelineStack[i].lock()->m_Name);
-                            }
-                            ImGui::SameLine();
-                            if (ImGui::Button(upArrowText.c_str())) {
-                                stack.MovePostProcessStageDown(stack.m_PostProcessPipelineStack[i].lock()->m_Name);
-                            }
-                            ImGui::SameLine();
-                            std::string pipelineName =
-                                    stack.m_PostProcessPipelineStack[i].lock()->m_Name + " : " + std::to_string(i);
-                            ImGui::Text(pipelineName.c_str());
-                            std::string binText = std::string(ICON_FA_TRASH) + "##" + indexString;
-                            ImGui::SameLine();
-                            if (ImGui::Button(binText.c_str())) {
-                                indexToRemove = i;
-                            }
-                        }
-                        if (indexToRemove >= 0) {
-                            stack.RemovePostProcessStage(stack.m_PostProcessPipelineStack[indexToRemove], view);
-                        }
-                        ImGui::Unindent();
-                        ImGui::Unindent();
-                    }
-                    ImGui::Separator();
-
-                    view->OnImGuiOptions();
-                    ImGui::Unindent();
-                }
-            }
-            ImGui::Unindent();
-        }
+//        if (ImGui::CollapsingHeader("[Views]")) {
+//            int count = 0;
+//            ImGui::Indent();
+//            for (auto &[view, stack]: p_Views) {
+//                if (ImGui::CollapsingHeader(view->m_Name.c_str())) {
+//                    ImGui::Indent();
+//                    auto addPipelineNameHash = "##combo" + std::to_string(count);
+//                    count++;
+//                    ImGui::Text("Add Pipeline");
+//                    ImGui::SameLine();
+//                    if (ImGui::BeginCombo(addPipelineNameHash.c_str(), "")) {
+//                        for (int i = 0; i < p_Pipelines.size(); i++) {
+//                            if (ImGui::Selectable(p_Pipelines[i]->m_Name.c_str(), false)) {
+//                                AddViewPipeline(view, p_Pipelines[i]);
+//                            }
+//                        }
+//                        ImGui::EndCombo();
+//                    }
+//
+//                    auto addPostProcessNameHash = "##combo" + std::to_string(count);
+//                    count++;
+//                    ImGui::Text("Add Post Process Stage");
+//                    ImGui::SameLine();
+//                    if (ImGui::BeginCombo(addPostProcessNameHash.c_str(), "")) {
+//                        for (int i = 0; i < p_PostProcessStages.size(); i++) {
+//                            if (ImGui::Selectable(p_PostProcessStages[i]->m_Name.c_str(), false)) {
+//                                AddViewPostProcessStage(view, p_PostProcessStages[i]);
+//                            }
+//                        }
+//                        ImGui::EndCombo();
+//                    }
+//                    if (ImGui::CollapsingHeader("Stack")) {
+//                        ImGui::Indent();
+//                        ImGui::Text("Draw Pipelines");
+//                        ImGui::Indent();
+//                        int lastIndex = -1;
+//                        for (int i = 0; i < stack.m_PipelineStack.size(); i++) {
+//                            std::string indexString = std::to_string(i);
+//                            std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + indexString;
+//                            std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + indexString;
+//                            if (ImGui::Button(downArrowText.c_str())) {
+//                                stack.MovePipelineUp(stack.m_PipelineStack[i].lock()->m_Handle);
+//                            }
+//                            ImGui::SameLine();
+//                            if (ImGui::Button(upArrowText.c_str())) {
+//                                stack.MovePipelineDown(stack.m_PipelineStack[i].lock()->m_Handle);
+//                            }
+//                            ImGui::SameLine();
+//                            std::string pipelineName = stack.m_PipelineStack[i].lock()->m_Name + " : " + indexString;
+//                            ImGui::Text(pipelineName.c_str());
+//                            lastIndex = i;
+//                        }
+//                        lastIndex += 1;
+//                        ImGui::Unindent();
+//                        ImGui::Text("Post Process Stages");
+//                        ImGui::Indent();
+//                        int indexToRemove = -1;
+//                        for (int i = 0; i < stack.m_PostProcessPipelineStack.size(); i++) {
+//                            std::string indexString = std::to_string(lastIndex + i);
+//                            std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + indexString;
+//                            std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + indexString;
+//                            if (ImGui::Button(downArrowText.c_str())) {
+//                                stack.MovePostProcessStageUp(stack.m_PostProcessPipelineStack[i].lock()->m_Name);
+//                            }
+//                            ImGui::SameLine();
+//                            if (ImGui::Button(upArrowText.c_str())) {
+//                                stack.MovePostProcessStageDown(stack.m_PostProcessPipelineStack[i].lock()->m_Name);
+//                            }
+//                            ImGui::SameLine();
+//                            std::string pipelineName =
+//                                    stack.m_PostProcessPipelineStack[i].lock()->m_Name + " : " + std::to_string(i);
+//                            ImGui::Text(pipelineName.c_str());
+//                            std::string binText = std::string(ICON_FA_TRASH) + "##" + indexString;
+//                            ImGui::SameLine();
+//                            if (ImGui::Button(binText.c_str())) {
+//                                indexToRemove = i;
+//                            }
+//                        }
+//                        if (indexToRemove >= 0) {
+//                            stack.RemovePostProcessStage(stack.m_PostProcessPipelineStack[indexToRemove], view);
+//                        }
+//                        ImGui::Unindent();
+//                        ImGui::Unindent();
+//                    }
+//                    ImGui::Separator();
+//
+//                    view->OnImGuiOptions();
+//                    ImGui::Unindent();
+//                }
+//            }
+//            ImGui::Unindent();
+//        }
     }
     ImGui::End();
 
@@ -519,13 +503,13 @@ void harmony::Renderer::OnImGui() {
                 }
 
                 if (canCreate) {
-                    Ref<Pipeline> pipeline = CreateRef<Pipeline>(PipelineHandle(pipelineName), Pipeline::Type::Surface);
-                    pipeline->AddPipelineStage<PipelineDrawStage>(pipelineName + ".surface",
-                                                                  PipelineDrawStage::Type::PrimaryDraw,
-                                                                  p_SelectedShaderProgram,
-                                                                  GetPipelineStageRenderer("MeshRenderer"));
-                    AddPipeline(pipeline);
-                    p_CreatePipelineWindow = false;
+//                    Ref<Pipeline> pipeline = CreateRef<Pipeline>(PipelineHandle(pipelineName), Pipeline::Type::Surface);
+//                    pipeline->AddPipelineStage<PipelineDrawStage>(pipelineName + ".surface",
+//                                                                  PipelineDrawStage::Type::PrimaryDraw,
+//                                                                  p_SelectedShaderProgram,
+//                                                                  GetPipelineStageRenderer("MeshRenderer"));
+//                    AddPipeline(pipeline);
+//                    p_CreatePipelineWindow = false;
                 }
 
             }
@@ -548,7 +532,7 @@ void harmony::Renderer::OnImGui() {
                         p_SelectedShaderProgram,
                         p_SelectedRenderer
                 );
-                AddPipelineDrawStage(stage);
+                // AddPipelineDrawStage(stage);
                 p_CreateDrawStageWindow = false;
             }
             ImGui::SameLine();
@@ -567,13 +551,15 @@ void harmony::Renderer::OnImGui() {
             if (ImGui::Button("Build")) {
                 std::string name = std::string(p_PipelinePostProcessStageNameInput);
                 Utils::TrimString(name);
+                Vector<AttachmentType> attachments {AttachmentType::RGBA8};
                 Ref<PostProcessStage> stage = CreateRef<PostProcessStage>(
                         name,
                         PipelineStage::Type::PostProcess, // TODO: Make selectable
                         p_SelectedShaderProgram,
-                        WeakRef<PipelineStageRenderer>()
+                        WeakRef<PipelineStageRenderer>(),
+                                attachments
                 );
-                AddPostProcessStage(stage);
+                // AddPostProcessStage(stage);
                 p_CreatePostProcessStageWindow = false;
             }
             ImGui::SameLine();
@@ -626,24 +612,6 @@ bool harmony::Renderer::PipelineStageRendererSelector(const std::string &selecto
 
     return selectedAsset;
 }
-
-harmony::Pipeline::Type harmony::Renderer::GetPipelineTypeFromName(const std::string &type) {
-    OPTICK_EVENT();
-    if (type.find("Compute") < type.size()) {
-        return Pipeline::Type::Compute;
-    }
-    if (type.find("ScreenSpace") < type.size()) {
-        return Pipeline::Type::ScreenSpace;
-    }
-    if (type.find("Surface") < type.size()) {
-        return Pipeline::Type::Surface;
-    }
-    if (type.find("PostProcess") < type.size()) {
-        return Pipeline::Type::PostProcess;
-    }
-
-}
-
 #endif
 
 bool harmony::Renderer::IsBuiltInShaderName(const std::string &name) {
@@ -677,14 +645,12 @@ bgfx::ViewId harmony::Renderer::GetPresentViewID() {
     return v;
 }
 
-
 nlohmann::json harmony::Renderer::Serialize() {
     OPTICK_EVENT();
     auto json = nlohmann::json();
 
     json[sk_RendererName] = nlohmann::json();
     json[sk_RendererName][sk_RendererShaderCollection] = SerializeShaders();
-    json[sk_RendererName][sk_RendererPipelineCollection] = SerializePipelines();
     json[sk_RendererName][sk_RendererDrawStageCollection] = SerializePipelineDrawStages();
     json[sk_RendererName][sk_RendererPostProcessStageCollection] = SerializePostProcessStages();
     json[sk_RendererName][sk_RendererStageRendererCollection] = SerializePipelineStageRenderers();
@@ -700,38 +666,12 @@ void harmony::Renderer::Deserialize(AssetManager &am, nlohmann::json &json) {
     harmony::log::info("Renderer : Deserializing Project Renderer Data");
 
     DeserializeShaders(json, am);
-    DeserializePipelines(json, am);
     DeserializePipelineDrawStages(json, am);
     DeserializePostProcessStages(json, am);
     DeserializePipelineStageRenderers(json, am);
     DeserializeShaderDataSources(json, am);
     DeserializeViews(json, am);
     DeserializeActiveViews(json, am);
-}
-
-void harmony::Renderer::AddPipeline(Ref<Pipeline> pipeline) {
-    OPTICK_EVENT();
-    if (pipeline) {
-        if (std::find(p_Pipelines.begin(), p_Pipelines.end(), pipeline) != p_Pipelines.end()) {
-            harmony::log::error("Already have a pipeline with name {} ", pipeline->m_Name);
-            return;
-        }
-        p_Pipelines.emplace_back(pipeline);
-
-    } else {
-        harmony::log::error("Invalid pipeline provided.");
-    }
-}
-
-harmony::WeakRef<harmony::Pipeline> harmony::Renderer::GetPipeline(const PipelineHandle &handle) {
-    OPTICK_EVENT();
-
-    for (int i = 0; i < p_Pipelines.size(); i++) {
-        if (p_Pipelines[i]->m_Handle == handle) {
-            return p_Pipelines[i];
-        }
-    }
-    return WeakRef<Pipeline>();
 }
 
 void harmony::Renderer::AddPipelineStageRenderer(Ref<PipelineStageRenderer> renderer) {
@@ -826,50 +766,34 @@ std::vector<std::string> harmony::Renderer::GetShaderNames() {
     return shaders;
 }
 
-void harmony::Renderer::AddPipelineDrawStage(Ref<PipelineDrawStage> drawStage) {
-    OPTICK_EVENT();
-    if (std::find(p_PipelineDrawStages.begin(), p_PipelineDrawStages.end(), drawStage) != p_PipelineDrawStages.end()) {
-        harmony::log::warn("Renderer : AddPipelineDrawStage : Draw Stage {} instance already managed by renderer",
-                           drawStage->m_Name);
+void harmony::Renderer::AddPipelineStage(Ref<PipelineStage> pipelineStage)
+{
+    if(!pipelineStage)
+    {
+        harmony::log::warn("Renderer : Invalid PipelineStage supplied, doing nothing.");
         return;
     }
 
-    p_PipelineDrawStages.emplace_back(drawStage);
-}
-
-harmony::WeakRef<harmony::PipelineDrawStage> harmony::Renderer::GetPipelineDrawStage(const std::string &name) {
-    OPTICK_EVENT();
-    for (int i = 0; i < p_PipelineDrawStages.size(); i++) {
-        if (p_PipelineDrawStages[i]->m_Name == name) {
-            return p_PipelineDrawStages[i];
-        }
-    }
-
-    return WeakRef<PipelineDrawStage>();
-}
-
-void harmony::Renderer::AddPostProcessStage(Ref<PostProcessStage> postProcessStage) {
-    OPTICK_EVENT();
-    if (std::find(p_PostProcessStages.begin(), p_PostProcessStages.end(), postProcessStage) !=
-        p_PostProcessStages.end()) {
-        harmony::log::warn(
-                "Renderer : AddPostProcessStage : Post Process Stage {} instance already managed by renderer",
-                postProcessStage->m_Name);
+    if(std::find(p_PipelineStages.begin(), p_PipelineStages.end(),pipelineStage) != p_PipelineStages.end())
+    {
+        harmony::log::warn("Renderer : PipelineStage : {} : Already managed by renderer.", pipelineStage->m_Name);
         return;
     }
 
-    p_PostProcessStages.emplace_back(postProcessStage);
+    p_PipelineStages.emplace_back(pipelineStage);
 }
 
-harmony::WeakRef<harmony::PostProcessStage> harmony::Renderer::GetPostProcessStage(const std::string &name) {
-    OPTICK_EVENT();
-    for (int i = 0; i < p_PostProcessStages.size(); i++) {
-        if (p_PostProcessStages[i]->m_Name == name) {
-            return p_PostProcessStages[i];
+harmony::WeakRef<harmony::PipelineStage> harmony::Renderer::GetPipelineStage(const std::string& name)
+{
+    for(auto p : p_PipelineStages)
+    {
+        if(p->m_Name == name)
+        {
+            return p;
         }
     }
-
-    return WeakRef<PostProcessStage>();
+    harmony::log::warn("Renderer : GetPipelineStage : Cannot find PipelineStage : {}", name);
+    return WeakRef<PipelineStage>();
 }
 
 void harmony::Renderer::AddShaderDataSource(Ref<ShaderDataSource> dataSource) {
@@ -999,22 +923,13 @@ nlohmann::json harmony::Renderer::SerializeShaders() {
     return json;
 }
 
-nlohmann::json harmony::Renderer::SerializePipelines() {
-    OPTICK_EVENT();
-    auto json = nlohmann::json::array();
-    for (auto &pipeline: p_Pipelines) {
-        json.emplace_back(pipeline->Serialize());
-    }
-
-    return json;
-}
-
 nlohmann::json harmony::Renderer::SerializePipelineDrawStages() {
     OPTICK_EVENT();
     auto json = nlohmann::json::array();
-    for (auto &drawStage: p_PipelineDrawStages) {
-        json.emplace_back(drawStage->Serialize());
-    }
+    // compositor
+//    for (auto &drawStage: p_PipelineDrawStages) {
+//        json.emplace_back(drawStage->Serialize());
+//    }
 
     return json;
 }
@@ -1022,9 +937,10 @@ nlohmann::json harmony::Renderer::SerializePipelineDrawStages() {
 nlohmann::json harmony::Renderer::SerializePostProcessStages() {
     OPTICK_EVENT();
     auto json = nlohmann::json::array();
-    for (auto &ppStage: p_PostProcessStages) {
-        json.emplace_back(ppStage->Serialize());
-    }
+    // compositor
+//    for (auto &ppStage: p_PostProcessStages) {
+//        json.emplace_back(ppStage->Serialize());
+//    }
 
     return json;
 }
@@ -1055,7 +971,8 @@ nlohmann::json harmony::Renderer::SerializeViews() {
     for (auto &[view, stack]: p_Views) {
         nlohmann::json viewJson;
         viewJson[sk_ViewData] = view->Serialize();
-        viewJson[sk_PipelineStack] = stack.Serialize();
+        // compositor
+        //viewJson[sk_PipelineStack] = stack.Serialize();
         json.emplace_back(viewJson);
 
     }
@@ -1141,69 +1058,6 @@ void harmony::Renderer::DeserializeShaders(nlohmann::json &json, AssetManager &a
     }
 }
 
-void harmony::Renderer::DeserializePipelines(nlohmann::json &json, AssetManager &am) {
-    OPTICK_EVENT();
-    harmony::log::info("Renderer : Deserializing Pipelines");
-    for (auto pipelineJson: json[sk_RendererName][sk_RendererPipelineCollection]) {
-        auto stagesJson = pipelineJson[sk_PipelineObject][sk_PipelineStages];
-        std::string pipelineName = pipelineJson[sk_PipelineObject][sk_PipelineName];
-        PipelineHandle pipelineHandle{pipelineName};
-        Pipeline::Type pipelineType = pipelineJson[sk_PipelineObject][sk_PipelineType];
-        bool pipelineLoaded = false;
-
-        for (int i = 0; i < p_Pipelines.size(); i++) {
-            if (p_Pipelines[i]->m_Handle == pipelineHandle) {
-                pipelineLoaded = true;
-                break;
-            }
-        }
-
-        if (pipelineLoaded) {
-            continue;
-        }
-
-        Ref<Pipeline> newPipeline = CreateRef<Pipeline>(pipelineHandle, pipelineType);
-
-        harmony::log::info("Renderer : Creating serialized pipeline : {}", newPipeline->m_Name);
-
-        bool pipelineCreationSuccessful = true;
-
-        for (auto stageJson: stagesJson) {
-            auto dump = stageJson.dump();
-            harmony::log::debug("Renderer : Stage Json {}", dump);
-            std::string stageName = stageJson[sk_PipelineStageName];
-
-            Attachment::Type stageAttachments = stageJson[sk_PipelineStageAttachments];
-            PipelineDrawStage::Type stageType = stageJson[sk_PipelineStageType];
-
-            std::string stageShaderName = stageJson[sk_PipelineStageShader][sk_ShaderProgramName];
-            WeakRef<ShaderProgram> stageShader = GetShader(stageShaderName);
-
-            if (stageShader.expired()) {
-                harmony::log::warn("Renderer : Cannot deserialize pipeline stage {}, stage shader is not loaded! : {}",
-                                   stageName, stageShaderName);
-                pipelineCreationSuccessful = false;
-                break;
-            }
-            // TODO : Change me to use the serialized pipeline stage renderer.
-            Ref<PipelineDrawStage> pipelineStage = newPipeline->AddPipelineStage<PipelineDrawStage>(stageName,
-                                                                                                    stageType,
-                                                                                                    stageShader,
-                                                                                                    GetPipelineStageRenderer(
-                                                                                                            "MeshRenderer"),
-                                                                                                    stageAttachments).lock();
-        }
-
-        if (pipelineCreationSuccessful) {
-            p_Pipelines.emplace_back(newPipeline);
-        } else {
-            harmony::log::error("Renderer : Failed to deserialize pipeline : {}", pipelineName);
-        }
-
-
-    }
-}
-
 void harmony::Renderer::DeserializePipelineDrawStages(nlohmann::json &json, AssetManager &am) {
     OPTICK_EVENT();
     harmony::log::info("TODO : Deserialize pipeline draw stages.");
@@ -1226,8 +1080,8 @@ void harmony::Renderer::DeserializePostProcessStages(nlohmann::json &json, Asset
         }
 
         PipelineStage::Type type = postProcessJson[sk_PipelineStageType];
-        Attachment::Type attachments = postProcessJson[sk_PipelineStageAttachments];
-
+        // AttachmentType attachments = postProcessJson[sk_PipelineStageAttachments];
+        Vector<AttachmentType> attachments {AttachmentType::RGBA8};
         Ref<PostProcessStage> stage = CreateRef<PostProcessStage>(
                 name,
                 type,
@@ -1235,8 +1089,8 @@ void harmony::Renderer::DeserializePostProcessStages(nlohmann::json &json, Asset
                 WeakRef<PipelineStageRenderer>(),
                 attachments
         );
-
-        AddPostProcessStage(stage);
+        // compositor
+        // AddPostProcessStage(stage);
     }
 
 }
@@ -1266,31 +1120,32 @@ void harmony::Renderer::DeserializeViews(nlohmann::json &json, AssetManager &am)
                 int stackIndex = 0;
                 for (auto pipelineHandleJson: pipelineStackJson[sk_PipelineStackPipelines]) {
                     PipelineHandle handle = pipelineHandleJson;
-                    WeakRef<Pipeline> pipeline = GetPipeline(handle);
-
-                    if (pipeline.expired()) {
-                        harmony::log::warn(
-                                "Renderer : Failed to add pipeline with handle {} to view {}, pipeline was not found!",
-                                handle.Name, viewName);
-                        continue;
-                    }
-
-                    stack.AddPipelineAtIndex(pipeline, view, stackIndex);
+                    // compositor
+//                    WeakRef<Pipeline> pipeline = GetPipeline(handle);
+//
+//                    if (pipeline.expired()) {
+//                        harmony::log::warn(
+//                                "Renderer : Failed to add pipeline with handle {} to view {}, pipeline was not found!",
+//                                handle.Name, viewName);
+//                        continue;
+//                    }
+//
+//                    stack.AddPipelineAtIndex(pipeline, view, stackIndex);
                     stackIndex++;
                 }
                 for (auto postProcess: pipelineStackJson[sk_PipelineStackPostProcessStages]) {
                     std::string name = postProcess[sk_PipelineStageName];
-                    WeakRef<PostProcessStage> pipeline = GetPostProcessStage(name);
+                    // compositor  WeakRef<PostProcessStage> pipeline = GetPostProcessStage(name);
 
-                    if (pipeline.expired()) {
-                        harmony::log::warn(
-                                "Renderer : Failed to add post process stage with name {} to view {}, pipeline was not found!",
-                                name, viewName);
-                        continue;
-                    }
-
-                    stack.AddPostProcessStageAtIndex(pipeline, view, stackIndex);
-                    stackIndex++;
+//                    if (pipeline.expired()) {
+//                        harmony::log::warn(
+//                                "Renderer : Failed to add post process stage with name {} to view {}, pipeline was not found!",
+//                                name, viewName);
+//                        continue;
+//                    }
+//
+//                    stack.AddPostProcessStageAtIndex(pipeline, view, stackIndex);
+//                    stackIndex++;
                 }
                 stackIndex = 0;
             }
@@ -1301,87 +1156,4 @@ void harmony::Renderer::DeserializeViews(nlohmann::json &json, AssetManager &am)
 void harmony::Renderer::DeserializeActiveViews(nlohmann::json &json, AssetManager &am) {
     OPTICK_EVENT();
     harmony::log::info("Renderer : Deserializing Active Views");
-}
-
-void
-harmony::Renderer::HandleStackPipelineAccumulation(Ref<View> view, PipelineStack &stack, Ref<ShaderProgram> textureProg,
-                                                   entt::registry &registry) {
-    OPTICK_EVENT();
-    view->OnPostUpdate(registry);
-    auto texturesToBlit = stack.PostUpdate(registry, view);
-
-    bgfx::setViewClear(stack.m_PipelineStackAccumulationView, BGFX_CLEAR_COLOR, 0x00000000);
-
-    bool touchNoPostProcess = true;
-    auto noPostProcess = std::vector<bgfx::TextureHandle>();
-    for (auto &[th, postProcess]: texturesToBlit) {
-        bgfx::TextureHandle h{th};
-        // do this better
-        if (postProcess) {
-            bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, h);
-            ScreenSpaceQuad(view->m_Width, view->m_Height);
-            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
-            bgfx::submit(stack.m_PipelineStackAccumulationView, textureProg->m_Handle);
-        } else {
-            noPostProcess.emplace_back(h);
-            touchNoPostProcess = false;
-        }
-    }
-
-    bgfx::setViewClear(stack.m_PipelineStackNoPostProcessView, BGFX_CLEAR_COLOR, 0x00000000);
-    if (touchNoPostProcess) {
-        bgfx::touch(stack.m_PipelineStackNoPostProcessView);
-    } else {
-        for (auto th: noPostProcess) {
-            bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, th);
-            ScreenSpaceQuad(view->m_Width, view->m_Height);
-            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_NORMAL);
-
-            bgfx::submit(stack.m_PipelineStackNoPostProcessView, textureProg->m_Handle);
-        }
-    }
-}
-
-void harmony::Renderer::HandleStackPostProcess(Ref<View> view, PipelineStack &stack, Ref<ShaderProgram> textureProg,
-                                               entt::registry &registry) {
-    OPTICK_EVENT();
-    PipelineStage::Data data;
-
-    // Initialize with final result from draw pipelines.
-    data.m_FramebufferHandle = stack.m_PipelineStackAccumulationFB;
-
-    Attachment colourAttachment{stack.m_PipelineStackAccumulationAttachment, stack.s_AccumulationBufferFormat};
-    Attachment depthAttachment{stack.GetFinalDepth(), Attachment::Depth16F};
-
-    data.m_Attachments.emplace(colourAttachment.m_Type, colourAttachment);
-    data.m_Attachments.emplace(depthAttachment.m_Type, depthAttachment);
-
-    for (int i = 0; i < stack.m_PostProcessPipelineStack.size(); i++) {
-        WeakRef<PostProcessStage> stage = stack.m_PostProcessPipelineStack[i];
-        if (stage.expired()) {
-            harmony::log::warn("Renderer : HandleStackPostProcess : View : {} : Invalid stage in post process",
-                               view->m_Name);
-            continue;
-        }
-
-        Ref<PostProcessStage> s = stage.lock();
-
-        s->PostUpdate(registry, view, stack.p_StackViewIDs[s->m_Name][0], data);
-
-        data = stack.p_StackData[s->m_Name][0];
-        data.m_Attachments[Attachment::Depth16F] = depthAttachment;
-    }
-
-    // post processing image drawn first
-    bgfx::setViewClear(stack.m_FinalImageViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0F);
-    bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, data.m_Attachments[data.GetColorType()].m_Handle);
-    ScreenSpaceQuad(view->m_Width, view->m_Height);
-    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ADD);
-    bgfx::submit(stack.m_FinalImageViewId, textureProg->m_Handle);
-
-    // next pipelines with no post processing drawn on top
-    bgfx::setTexture(0, textureProg->m_Uniforms[0].BgfxHandle, stack.m_PipelineStackNoPostProcessAttachment);
-    ScreenSpaceQuad(view->m_Width, view->m_Height);
-    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ADD);
-    bgfx::submit(stack.m_FinalImageViewId, textureProg->m_Handle);
 }
