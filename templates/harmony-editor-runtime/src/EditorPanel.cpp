@@ -15,6 +15,7 @@
 #include "ECS/SimpleCollisionComponent.h"
 #include "JoltComponents.h"
 #include "Assets/AssetManager.h"
+#include "Core/Input.h"
 
 harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program) {
 }
@@ -42,9 +43,37 @@ void harmony::ScenePanel::OnImGui() {
             if (counter > maxEntities) {
                 return;
             }
-            std::string entityName = entityNamePrefix + std::to_string(static_cast<uint32_t>(e));
-            if (ImGui::Selectable(entityName.c_str())) {
-                m_SelectedEntity = e;
+
+            if(!activeScene->m_Registry.any_of<EntityData>(e))
+            {
+                activeScene->m_Registry.emplace<EntityData>(e);
+            }
+
+            auto data = activeScene->m_Registry.get<EntityData>(e);
+
+            if(p_RenamingSelectedEntity)
+            {
+                ImGui::InputText(data.m_Name.c_str(), data.m_Name.data(), data.m_Name.size());
+
+                if(Input::GetKeyJustReleased(harmony::Key::Enter))
+                {
+                    p_RenamingSelectedEntity = false;
+                }
+            }
+            else
+            {
+                if (ImGui::Selectable(data.m_Name.c_str(), false, ImGuiSelectableFlags_AllowItemOverlap)) {
+                    m_SelectedEntity = e;
+                }
+                if(e == m_SelectedEntity)
+                {
+                    ImGui::SameLine();
+                    if(ImGui::Button("Rename"))
+                    {
+                        p_RenamingSelectedEntity = true;
+                    }
+                }
+
             }
             counter++;
         });

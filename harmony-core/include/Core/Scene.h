@@ -13,7 +13,7 @@ namespace harmony {
 
         Scene(const std::string &name);
 
-        Entity AddEntity();
+        Entity AddEntity(uint32_t index = UINT32_MAX);
 
         std::string m_Name;
         uint32_t m_NumEntities;

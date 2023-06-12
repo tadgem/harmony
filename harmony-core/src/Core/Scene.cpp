@@ -39,9 +39,15 @@ void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<Ref<Sy
     m_NumEntities = m_Registry.size();
 }
 
-harmony::Entity harmony::Scene::AddEntity() {
+harmony::Entity harmony::Scene::AddEntity(uint32_t index) {
     OPTICK_EVENT();
-    entt::entity e = m_Registry.create();
+    entt::entity e = (entt::entity)e;
+
+    if((uint32_t)e == UINT32_MAX)
+    {
+        e = m_Registry.create();
+    }
+
     Entity entity = Entity();
     entity.m_Handle = e;
     p_Entities.emplace_back(entity);

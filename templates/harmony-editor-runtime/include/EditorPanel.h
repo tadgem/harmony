@@ -22,6 +22,7 @@ namespace harmony {
 
     protected:
         Program &p_Prog;
+        bool p_RenamingSelectedEntity = false;
     };
 
     class AssetManagerPanel : public Panel {

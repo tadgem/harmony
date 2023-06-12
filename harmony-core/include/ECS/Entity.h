@@ -8,12 +8,15 @@ namespace harmony {
 
     struct EntityData
     {
+        EntityData();
+
         String m_Name;
         uint64_t m_LayerMask = 0; // TODO: do something with this.
         entt::entity m_Parent  {UINT32_MAX};
         bool m_Static = false;
+        bool m_Enabled = true;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(EntityData, m_Name, m_LayerMask, m_Parent, m_Static)
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(EntityData, m_Name, m_LayerMask, m_Parent, m_Static, m_Enabled)
 
     };
 

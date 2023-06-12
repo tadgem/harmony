@@ -7,6 +7,8 @@
 namespace harmony {
     class RuntimeView;
 
+    class EntityDataSystem;
+
     class LuaProgramComponent;
 
     class LuaSystem;
@@ -62,6 +64,7 @@ namespace harmony {
         Ref<PipelineV2>     p_RuntimePipeline;
         Ref<RuntimeView>    p_RuntimeView;
 
+        Ref<EntityDataSystem>               p_EntityDataSystem;
         Ref<LuaProgramComponent>            p_LuaProgramComponent;
         Ref<LuaSystem>                      p_LuaSystem;
         Ref<GraphScriptProgramComponent>    p_GraphScriptComponent;

@@ -7,6 +7,7 @@
 #include "Rendering/Pipelines/PipelineStages/DrawScreenTextureStage.h"
 #include "Rendering/Shapes.h"
 #include "Core/FSM.h"
+#include "ECS/EntityDataSystem.h"
 #include "ECS/LightSystem.h"
 #include "Script/Lua/LuaProgramComponent.h"
 #include "Script/Lua/LuaSystem.h"
@@ -111,6 +112,7 @@ void harmony::RuntimeProgram::AddSystems() {
     p_GraphScriptSystem = AddSystem<GraphScriptSystem>(p_GraphScriptComponent).lock();
     p_SimpleCollisionSystem = AddSystem<SimpleCollisionSystem>(m_AssetManager).lock();
     p_JoltPhysicsSystem = AddSystem<JoltPhysicsSystem>().lock();
+    p_EntityDataSystem = AddSystem<EntityDataSystem>().lock();
 
 }
 
@@ -166,17 +168,6 @@ void harmony::RuntimeProgram::AddShaderDataSources() {
 
 void harmony::RuntimeProgram::InitializePipelines() {
     OPTICK_EVENT();
-    // compositor p_ForwardPipeline = CreateRef<Pipeline>(PipelineHandle("Forward Pipeline"), Pipeline::Type::Surface);
-//    p_VectorGraphicsPipeline = CreateRef<VectorPipeline>(VectorGraphics::Layer::One);
-//    p_DebugPipeline = CreateRef<DebugDrawPipeline>(GfxDebug::Channel::Editor);
-//
-//    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("NormalStage").lock());
-//    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("TexturedMeshStage").lock());
-//    p_ForwardPipeline->AddPipelineStage(m_Renderer.GetPipelineDrawStage("BlinnPhongTextured").lock());
-//
-//    m_Renderer.AddPipeline(p_DebugPipeline);
-//    m_Renderer.AddPipeline(p_ForwardPipeline);
-//    m_Renderer.AddPipeline(p_VectorGraphicsPipeline);
 
     auto mainFB = p_RuntimePipeline->AddFramebuffer("Forward FB",{AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
     auto vectorFB = p_RuntimePipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);

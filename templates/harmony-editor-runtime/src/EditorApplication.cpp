@@ -286,14 +286,13 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
 
 void harmony::Editor::LoadScene(const std::string &path) {
     OPTICK_EVENT();
-    Program::LoadScene(path);
+    RuntimeProgram::LoadScene(path);
     p_LoadedScenePath = path;
-    p_SimpleCollisionSystem->Init(p_ActiveScene->m_Registry);
 }
 
 void harmony::Editor::OpenScene(uint32_t index) {
     OPTICK_EVENT();
-    Program::OpenScene(index);
+    RuntimeProgram::OpenScene(index);
     p_LoadedScenePath = m_Project->m_SerializedScenes[index];
     p_SimpleCollisionSystem->Init(p_ActiveScene->m_Registry);
 }
