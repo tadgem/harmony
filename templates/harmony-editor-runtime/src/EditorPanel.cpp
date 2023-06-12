@@ -49,13 +49,14 @@ void harmony::ScenePanel::OnImGui() {
                 activeScene->m_Registry.emplace<EntityData>(e);
             }
 
-            auto data = activeScene->m_Registry.get<EntityData>(e);
+            auto& data = activeScene->m_Registry.get<EntityData>(e);
 
-            if(p_RenamingSelectedEntity)
+            if(p_RenamingSelectedEntity && e == m_SelectedEntity)
             {
-                ImGui::InputText(data.m_Name.c_str(), data.m_Name.data(), data.m_Name.size());
-
-                if(Input::GetKeyJustReleased(harmony::Key::Enter))
+                if(ImGui::InputText("##rename", data.m_Name.data(), data.m_Name.capacity()))
+                {
+                }
+                if(ImGui::IsKeyDown(ImGuiKey_Enter))
                 {
                     p_RenamingSelectedEntity = false;
                 }
