@@ -139,7 +139,7 @@ void harmony::Program::InitSDL() {
     p_WindowWidth = rect.w;
     p_WindowHeight = rect.h;
 
-    SDL_WindowFlags windowFlags = static_cast<SDL_WindowFlags>(SDL_WINDOW_SHOWN | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALLOW_HIGHDPI);
+    SDL_WindowFlags windowFlags = static_cast<SDL_WindowFlags>(SDL_WINDOW_SHOWN | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 
     p_Window = SDL_CreateWindow(
             p_AppName.c_str(),
