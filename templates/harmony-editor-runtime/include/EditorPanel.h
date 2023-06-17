@@ -55,7 +55,14 @@ namespace harmony {
 
     class ComponentUI {
     public:
-        ComponentUI(const std::string name);
+
+        enum ImGuiParentType
+        {
+            TreeNode,
+            Custom,
+        };
+
+        ComponentUI(const std::string name, const ImGuiParentType uiType = ImGuiParentType::TreeNode);
 
         virtual void OnComponentImGui(entt::registry &registry, entt::entity entity) = 0;
 
@@ -74,6 +81,7 @@ namespace harmony {
             return reg.any_of<T>(e);
         }
 
+        const ImGuiParentType m_UiType;
     protected:
         const std::string p_ComponentName;
 
@@ -262,6 +270,24 @@ namespace harmony {
 
     };
 
+    class EntityDataComponentUI : public ComponentUI
+    {
+    public:
+        EntityDataComponentUI();
+
+        void OnComponentImGui(entt::registry &registry, entt::entity entity) override;
+
+        void AddComponent(entt::registry &registry, entt::entity entity) override;
+
+        void RemoveComponent(entt::registry &registry, entt::entity entity) override;
+
+        bool HasComponent(entt::registry &registry, entt::entity entity) override;
+
+        void Duplicate(entt::registry &registry, entt::entity original, entt::entity newCopy) override;
+
+    public:
+
+    };
 
     class EntityInspectorPanel : public Panel {
     public:

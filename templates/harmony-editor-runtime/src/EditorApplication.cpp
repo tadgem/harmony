@@ -70,6 +70,7 @@ void harmony::Editor::AddEditorPanels() {
     p_Panels.emplace_back(assetManagerPanel);
 
     Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, p_ScenePanel);
+    inspector->AddComponentUI<EntityDataComponentUI>();
     inspector->AddComponentUI<TransformComponentUI>();
     inspector->AddComponentUI<MeshComponentUI>(m_AssetManager);
     inspector->AddComponentUI<MaterialComponentUI>(m_Renderer, m_AssetManager);

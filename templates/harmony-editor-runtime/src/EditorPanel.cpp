@@ -87,7 +87,6 @@ harmony::EntityInspectorPanel::EntityInspectorPanel(Program &prog, Ref<ScenePane
                                                                                                  p_ScenePanel(
                                                                                                          scenePanel) {
 }
-
 void harmony::EntityInspectorPanel::OnImGui() {
     const std::string entityInspectorTitle = std::string(ICON_FA_INFO_CIRCLE) + " Inspector";
     if (ImGui::Begin(entityInspectorTitle.c_str())) {
@@ -112,6 +111,12 @@ void harmony::EntityInspectorPanel::OnImGui() {
 
         for (int i = 0; i < p_ComponentUIProviders.size(); i++) {
             if (!p_ComponentUIProviders[i]->HasComponent(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity)) {
+                continue;
+            }
+
+            if (p_ComponentUIProviders[i]->m_UiType == ComponentUI::ImGuiParentType::Custom)
+            {
+                p_ComponentUIProviders[i]->OnComponentImGui(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity);
                 continue;
             }
             if (ImGui::TreeNode(p_ComponentUIProviders[i]->GetComponentName().c_str())) {
@@ -198,7 +203,7 @@ void harmony::TransformComponentUI::Duplicate(entt::registry &registry, entt::en
     }
 }
 
-harmony::ComponentUI::ComponentUI(const std::string name) : p_ComponentName(name) {
+harmony::ComponentUI::ComponentUI(const std::string name, const ImGuiParentType uiType) : p_ComponentName(name), m_UiType(uiType) {
 }
 
 const std::string &harmony::ComponentUI::GetComponentName() {
@@ -814,3 +819,43 @@ void harmony::JoltBodyComponentUI::Duplicate(entt::registry &registry, entt::ent
         registry.emplace<JoltBodyComponent>(newCopy, t);
     }
 }
+
+harmony::EntityDataComponentUI::EntityDataComponentUI() : ComponentUI("Entity Data", ComponentUI::ImGuiParentType::Custom) {
+
+}
+
+void harmony::EntityDataComponentUI::OnComponentImGui(entt::registry &registry, entt::entity entity) {
+    if (registry.valid(entity) == false) {
+        return;
+    }
+    if (!HasComponent(registry, entity)) {
+        return;
+    }
+    EntityData& data = registry.get<EntityData>(entity);
+    ImGui::PushID((uint32_t)entity);
+    ImGui::Checkbox("##id_enabled", &data.m_Enabled);
+    ImGui::SameLine();
+    ImGui::Text(data.m_Name.c_str());
+    ImGui::SameLine();
+    ImGui::Checkbox("Static", &data.m_Static);
+    ImGui::Text("Parent : %u", (uint32_t)data.m_Parent);
+    ImGui::PopID();
+
+}
+
+void harmony::EntityDataComponentUI::AddComponent(entt::registry &registry, entt::entity entity) {
+
+}
+
+void harmony::EntityDataComponentUI::RemoveComponent(entt::registry &registry, entt::entity entity) {
+
+}
+
+bool harmony::EntityDataComponentUI::HasComponent(entt::registry &registry, entt::entity entity) {
+    return registry.any_of<EntityData>(entity);
+}
+
+void harmony::EntityDataComponentUI::Duplicate(entt::registry &registry, entt::entity original, entt::entity newCopy) {
+
+}
+
