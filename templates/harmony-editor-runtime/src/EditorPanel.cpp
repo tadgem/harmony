@@ -833,9 +833,9 @@ void harmony::EntityDataComponentUI::OnComponentImGui(entt::registry &registry, 
     }
     EntityData& data = registry.get<EntityData>(entity);
     ImGui::PushID((uint32_t)entity);
-    ImGui::Checkbox("##id_enabled", &data.m_Enabled);
-    ImGui::SameLine();
     ImGui::Text(data.m_Name.c_str());
+    ImGui::SameLine();
+    ImGui::Checkbox("Enabled", &data.m_Enabled);
     ImGui::SameLine();
     ImGui::Checkbox("Static", &data.m_Static);
     ImGui::Text("Parent : %u", (uint32_t)data.m_Parent);
