@@ -6,7 +6,7 @@
 #include "ECS/TransformComponent.h"
 
 #if HARMONY_DEBUG
-
+#include "Rendering/GPUResourceManager.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_bgfx.h"
 #include "ImGui/ImGuizmo.h"
@@ -143,19 +143,23 @@ void harmony::EditorView::OnImGui() {
 
     const std::string editorViewTitle = std::string(ICON_FA_VIDEO_CAMERA) + " Editor";
     glm::mat4 mat = glm::mat4(1.0);
-    // compositor PipelineStack &stack = p_Renderer.GetViewPipelineStack("Editor");
+    auto pipeline = p_Renderer.GetViewPipeline("Editor").lock();
     if (ImGui::Begin(editorViewTitle.c_str(), (bool *) 0, ImGuiWindowFlags_NoScrollbar)) {
         View::OnImGui();
-        // compositor bgfx::TextureHandle finalImageHandle = stack.GetFinalImage();
-        bgfx::TextureHandle finalImageHandle {bgfx::kInvalidHandle};
+        bgfx::TextureHandle finalImageHandle = pipeline->GetOutputFramebuffer().lock()->m_Attachments[0].m_Handle;
         if (!bgfx::isValid(finalImageHandle)) {
             ImGui::End();
             return;
         }
 
+        ImVec2 texUvs {(float)m_Width / (float)GPUResourceManager::GetMaxFramebufferWidth(),
+                       (float)m_Height / (float)GPUResourceManager::GetMaxFramebufferHeight()};
+
         ImGui::Image(
                 finalImageHandle,
-                ImGui::GetContentRegionAvail()
+                ImGui::GetContentRegionAvail(),
+                ImVec2{0.0f, 0.0f},
+                texUvs
         );
 
         if (ImGui::IsWindowFocused()) {

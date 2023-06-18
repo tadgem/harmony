@@ -1,4 +1,5 @@
 #include <optick.h>
+#include <Rendering/Pipelines/PipelineStages/DrawScreenTextureStage.h>
 #include "EditorApplication.h"
 #include "Rendering/Shapes.h"
 #include "ECS/MaterialSystem.h"
@@ -87,6 +88,37 @@ void harmony::Editor::AddEditorPanels() {
 void harmony::Editor::InitializePipelines() {
     OPTICK_EVENT();
     RuntimeProgram::InitializePipelines();
+
+    auto mainFB = p_EditorPipeline->AddFramebuffer("Forward FB",{AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
+    auto vectorFB = p_EditorPipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
+    // auto accumulateFB = p_RuntimePipeline->AddFramebuffer("Accumulate FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
+    auto finalFB = p_EditorPipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
+
+    auto screenShaderWR = m_Renderer.p_PresentProgram;
+    // auto fxaaShaderWr = m_Renderer.GetShader("FXAA");
+
+    if(screenShaderWR.expired())
+    {
+        harmony::log::error("RuntimeProgram : Initialize Pipelines : Present Program is expired. This should never happen.");
+        return;
+    }
+
+    Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {mainFB});
+    Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {vectorFB});
+    // Ref<DrawScreenTextureStage> drawFxaaStage = CreateRef<DrawScreenTextureStage>(fxaaShaderWr, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {accumulateFB});
+    Ref<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Editor);
+
+    p_EditorPipeline->AddPipelineStage(mainFB, debugDrawStage);
+    p_EditorPipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("NormalStage").lock());
+    p_EditorPipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("TexturedMesh").lock());
+    p_EditorPipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("BlinnPhongTextured").lock());
+
+    p_EditorPipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());
+
+    p_EditorPipeline->AddPipelineStage(finalFB, drawForwardStage);
+    p_EditorPipeline->AddPipelineStage(finalFB, drawVectorStage);
+
+    p_EditorPipeline->SetOutputFramebuffer(finalFB);
 }
 
 void harmony::Editor::InitializeViews() {
@@ -94,12 +126,15 @@ void harmony::Editor::InitializeViews() {
     RuntimeProgram::InitializeViews();
 
     auto editorViewWr = m_Renderer.CreateView<EditorView>(*this, p_ScenePanel);
-//    // compositor m_Renderer.AddViewPipeline(editorViewWr, p_DebugPipeline);
-//    m_Renderer.AddViewPipeline(editorViewWr, p_ForwardPipeline);
-//    m_Renderer.AddViewPipeline(editorViewWr, p_VectorGraphicsPipeline);
     m_Renderer.SetViewActive(editorViewWr, true);
-
     p_EditorView = editorViewWr.lock();
+    auto pipelineWR = m_Renderer.GetViewPipeline(editorViewWr);
+    if(pipelineWR.expired())
+    {
+        harmony::log::error("RuntimeProgram : Failed to create a runtime view pipeline.");
+        return;
+    }
+    p_EditorPipeline = pipelineWR.lock();
 }
 
 void harmony::Editor::SaveProject() {

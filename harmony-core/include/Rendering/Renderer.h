@@ -129,6 +129,10 @@ namespace harmony {
 
         bool IsBuiltInShaderName(const std::string &name);
 
+        // Misc & Helpers
+        WeakRef<ShaderProgram> p_PresentProgram;
+        bgfx::UniformHandle p_PresentProgramTextureHandle;
+
     protected:
         AssetHandle p_SelectedVertexAsset;
         AssetHandle p_SelectedFragmentAsset;
@@ -194,12 +198,7 @@ namespace harmony {
         std::vector<Ref<ShaderDataSource>> p_ShaderDataSources;
         std::vector<WeakRef<ShaderProgram>> p_BuiltInShaders;
 
-        // Misc & Helpers
-        WeakRef<ShaderProgram> p_PresentProgram;
-        bgfx::UniformHandle p_PresentProgramTextureHandle;
-
         friend class Program;
-
         friend class RuntimeProgram;
     };
 };

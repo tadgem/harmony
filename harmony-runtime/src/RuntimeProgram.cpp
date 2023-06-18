@@ -171,11 +171,11 @@ void harmony::RuntimeProgram::InitializePipelines() {
 
     auto mainFB = p_RuntimePipeline->AddFramebuffer("Forward FB",{AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
     auto vectorFB = p_RuntimePipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
-    auto accumulateFB = p_RuntimePipeline->AddFramebuffer("Accumulate FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
+    // auto accumulateFB = p_RuntimePipeline->AddFramebuffer("Accumulate FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
     auto finalFB = p_RuntimePipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
 
     auto screenShaderWR = m_Renderer.p_PresentProgram;
-    auto fxaaShaderWr = m_Renderer.GetShader("FXAA");
+    // auto fxaaShaderWr = m_Renderer.GetShader("FXAA");
 
     if(screenShaderWR.expired())
     {
@@ -185,7 +185,7 @@ void harmony::RuntimeProgram::InitializePipelines() {
 
     Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {mainFB});
     Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {vectorFB});
-    Ref<DrawScreenTextureStage> drawFxaaStage = CreateRef<DrawScreenTextureStage>(fxaaShaderWr, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {accumulateFB});
+    // Ref<DrawScreenTextureStage> drawFxaaStage = CreateRef<DrawScreenTextureStage>(fxaaShaderWr, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {accumulateFB});
 
     p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("DebugDrawStage").lock());
     p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("NormalStage").lock());
@@ -194,8 +194,7 @@ void harmony::RuntimeProgram::InitializePipelines() {
 
     p_RuntimePipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());
 
-    p_RuntimePipeline->AddPipelineStage(accumulateFB, drawForwardStage);
-    p_RuntimePipeline->AddPipelineStage(finalFB, drawFxaaStage);
+    p_RuntimePipeline->AddPipelineStage(finalFB, drawForwardStage);
     p_RuntimePipeline->AddPipelineStage(finalFB, drawVectorStage);
 
     p_RuntimePipeline->SetOutputFramebuffer(finalFB);
