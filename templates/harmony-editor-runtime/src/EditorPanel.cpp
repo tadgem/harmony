@@ -54,13 +54,8 @@ void harmony::ScenePanel::OnImGui() {
 
             if(p_RenamingSelectedEntity && e == m_SelectedEntity)
             {
-                if(ImGui::InputText("##rename", data.m_Name.data(), data.m_Name.capacity()))
-                {
-                }
-                if(ImGui::IsKeyDown(ImGuiKey_Enter))
-                {
-                    p_RenamingSelectedEntity = false;
-                }
+                ImGui::InputText("##rename", data.m_Name.data(), data.m_Name.capacity());
+                p_RenamingSelectedEntity = !ImGui::IsKeyDown(ImGuiKey_Enter);
             }
             else
             {
