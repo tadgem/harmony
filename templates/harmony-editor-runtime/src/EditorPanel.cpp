@@ -39,7 +39,6 @@ void harmony::ScenePanel::OnImGui() {
 
                 EntityData& payloadData = activeScene->m_Registry.get<EntityData>(payloadEntity);
                 payloadData.m_Parent = (entt::entity)UINT32_MAX;
-                int i =1;
             }
             ImGui::EndDragDropTarget();
         }
@@ -87,30 +86,7 @@ void harmony::ScenePanel::EntityImGui(entt::entity e, entt::registry& reg, bool 
         if (ImGui::TreeNodeEx("##id", ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_AllowItemOverlap)) {
             ImGui::SameLine();
             EntityNameRename(e, data);
-            if(ImGui::BeginDragDropSource())
-            {
-                ImGui::SetDragDropPayload("ENTITY", &e, sizeof(entt::entity));
-                ImGui::Text(data.m_Name.c_str());
-                ImGui::EndDragDropSource();
-            }
-            if(ImGui::BeginDragDropTarget())
-            {
-                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY")) {
-                    IM_ASSERT(payload->DataSize == sizeof(entt::entity));
-                    entt::entity* payloadEntity = (entt::entity*) payload->Data;
-
-                    if((uint32_t)*payloadEntity != UINT32_MAX)
-                    {
-                        auto& payloadData = reg.get<EntityData>(*payloadEntity);
-                        payloadData.m_Parent = e;
-
-                        *payloadEntity = (entt::entity)UINT32_MAX;
-
-                    }
-
-                }
-                ImGui::EndDragDropTarget();
-            }
+            EntityDragDrop(e, reg);
             reg.each([&](entt::entity compare)
              {
                 auto data = reg.get<EntityData>(compare);
@@ -134,30 +110,7 @@ void harmony::ScenePanel::EntityImGui(entt::entity e, entt::registry& reg, bool 
              });
             ImGui::SameLine();
             EntityNameRename(e, data);
-            if(ImGui::BeginDragDropSource())
-            {
-                ImGui::SetDragDropPayload("ENTITY", &e, sizeof(entt::entity));
-                ImGui::Text(data.m_Name.c_str());
-                ImGui::EndDragDropSource();
-            }
-            if(ImGui::BeginDragDropTarget())
-            {
-                if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY")) {
-                    IM_ASSERT(payload->DataSize == sizeof(entt::entity));
-                    entt::entity* payloadEntity = (entt::entity*) payload->Data;
-
-                    if((uint32_t)*payloadEntity != UINT32_MAX)
-                    {
-                        auto& payloadData = reg.get<EntityData>(*payloadEntity);
-                        payloadData.m_Parent = e;
-
-                        *payloadEntity = (entt::entity)UINT32_MAX;
-
-                    }
-
-                }
-                ImGui::EndDragDropTarget();
-            }
+            EntityDragDrop(e, reg);
         }
 
 
@@ -175,6 +128,36 @@ void harmony::ScenePanel::EntityNameRename(entt::entity e, harmony::EntityData& 
     if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
     {
         p_RenamingSelectedEntity = true;
+    }
+
+}
+
+void harmony::ScenePanel::EntityDragDrop(entt::entity e, entt::registry &reg)
+{
+    EntityData& data = reg.get<EntityData>(e);
+    if(ImGui::BeginDragDropSource())
+    {
+        ImGui::SetDragDropPayload("ENTITY", &e, sizeof(entt::entity));
+        ImGui::Text(data.m_Name.c_str());
+        ImGui::EndDragDropSource();
+    }
+    if(ImGui::BeginDragDropTarget())
+    {
+        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY")) {
+            IM_ASSERT(payload->DataSize == sizeof(entt::entity));
+            entt::entity* payloadEntity = (entt::entity*) payload->Data;
+
+            if((uint32_t)*payloadEntity != UINT32_MAX)
+            {
+                auto& payloadData = reg.get<EntityData>(*payloadEntity);
+                payloadData.m_Parent = e;
+
+                *payloadEntity = (entt::entity)UINT32_MAX;
+
+            }
+
+        }
+        ImGui::EndDragDropTarget();
     }
 
 }

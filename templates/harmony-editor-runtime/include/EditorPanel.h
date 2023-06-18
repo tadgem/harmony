@@ -26,6 +26,7 @@ namespace harmony {
     protected:
         void EntityImGui(entt::entity e, entt::registry& reg, bool topLevel = false);
         void EntityNameRename(entt::entity e, EntityData& data);
+        void EntityDragDrop(entt::entity e, entt::registry& reg);
         Program &p_Prog;
         bool p_RenamingSelectedEntity = false;
         Vector<entt::entity> p_FrameHandledEntities;
