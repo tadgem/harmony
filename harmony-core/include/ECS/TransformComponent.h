@@ -33,6 +33,7 @@ namespace harmony {
 
         glm::quat Rotation;
         glm::mat4 Model;
+        glm::mat4 LocalModel;
 
         bool UpdateCollision;
 

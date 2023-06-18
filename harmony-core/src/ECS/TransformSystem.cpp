@@ -9,7 +9,7 @@
 #include <execution>
 #include <optick.h>
 #include "Core/Thread.h"
-
+#include "ECS/Entity.h"
 
 void ValidateAngles(glm::vec3 &input) {
     OPTICK_EVENT();
@@ -67,16 +67,16 @@ void harmony::TransformSystem::Update(entt::registry &registry) {
 void harmony::TransformSystem::Render(entt::registry &registry) {
     OPTICK_EVENT();
     OPTICK_EVENT("Build Transform View");
-    auto transformView = registry.view<TransformComponent>();
+    auto transformView = registry.view<EntityData, TransformComponent>();
 #define MT_IMPL
 #ifdef MT_IMPL
     OPTICK_EVENT("Build group transform vectors");
     static const uint8_t NUM_GROUPS = 4;
     std::vector<TransformComponent *> transformGroups[NUM_GROUPS];
-    size_t numTransforms = transformView.size();
+    size_t numTransforms = transformView.size_hint();
     uint32_t groupSize = numTransforms / NUM_GROUPS;
 
-    if (transformView.size() % NUM_GROUPS != 0) {
+    if (transformView.size_hint() % NUM_GROUPS != 0) {
         groupSize++;
     }
     if(groupSize < MINIMUM_GROUP_SIZE) {
@@ -88,10 +88,10 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
     uint32_t totalTransformsToProcess = 0;
 
     glm::mat4 modelMatrix = glm::mat4(1.0);
-    for (auto [entity, transform]: transformView.each()) {
+    for (auto [entity, data, transform]: transformView.each()) {
         if (transform.Position == transform.LastPosition &&
             transform.Euler == transform.LastEuler &&
-            transform.Scale == transform.LastScale) {
+            transform.Scale == transform.LastScale && data.m_Parent == (entt::entity)UINT32_MAX) {
             continue;
         }
 
@@ -169,10 +169,39 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
         CalculateDirectionVectors(transform.Euler, transform);
         }
 #endif
-    for (auto [entity, transform]: transformView.each()) {
+    Vector<glm::mat4> matrices;
+    for (auto [entity, data, transform]: transformView.each()) {
+        matrices.clear();
         transform.LastPosition = transform.Position;
         transform.LastScale = transform.Scale;
         transform.LastEuler = transform.Euler;
+        transform.LocalModel = transform.Model;
+
+        matrices.emplace_back(transform.Model);
+
+        uint32_t parent = (uint32_t)data.m_Parent;
+        if(parent == UINT32_MAX) {
+            continue;
+        }
+        while(parent != UINT32_MAX) {
+            if(parent == UINT32_MAX) {
+                break;
+            }
+            auto& t = registry.get<TransformComponent>((entt::entity)parent);
+            auto& data = registry.get<EntityData>((entt::entity)parent);
+            matrices.emplace_back(t.Model);
+            parent = (uint32_t)data.m_Parent;
+        }
+
+        glm::mat4 m = matrices[0];
+
+        for(int i = 1; i < matrices.size(); i++)
+        {
+            m = m * matrices[i];
+        }
+
+        transform.Model = m;
+
     }
 }
 

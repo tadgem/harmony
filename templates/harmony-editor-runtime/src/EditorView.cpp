@@ -191,10 +191,10 @@ void harmony::EditorView::OnImGui() {
                 &m_Projection[0][0],
                 p_Op,
                 ImGuizmo::MODE::WORLD,
-                &tc.Model[0][0]
+                &tc.LocalModel[0][0]
         )) {
             float matrixTranslation[3], matrixRotation[3], matrixScale[3];
-            ImGuizmo::DecomposeMatrixToComponents(&tc.Model[0][0], matrixTranslation, matrixRotation, matrixScale);
+            ImGuizmo::DecomposeMatrixToComponents(&tc.LocalModel[0][0], matrixTranslation, matrixRotation, matrixScale);
 
             if (p_Op == ImGuizmo::OPERATION::TRANSLATE) {
                 tc.Position.x = matrixTranslation[0];
