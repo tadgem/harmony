@@ -48,6 +48,7 @@ void harmony::ScenePanel::OnImGui() {
             {
                 activeScene->m_Registry.emplace<EntityData>(e);
             }
+            ImGui::PushID((uint32_t)e);
 
             auto& data = activeScene->m_Registry.get<EntityData>(e);
 
@@ -66,6 +67,25 @@ void harmony::ScenePanel::OnImGui() {
                 if (ImGui::Selectable(data.m_Name.c_str(), false, ImGuiSelectableFlags_AllowItemOverlap)) {
                     m_SelectedEntity = e;
                 }
+                if(ImGui::BeginDragDropSource())
+                {
+                    ImGui::SetDragDropPayload("ENTITY", &e, sizeof(entt::entity));
+                    ImGui::Text(data.m_Name.c_str());
+                    ImGui::EndDragDropSource();
+                }
+
+                if(ImGui::BeginDragDropTarget())
+                {
+                    if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY")) {
+                        IM_ASSERT(payload->DataSize == sizeof(entt::entity));
+                        entt::entity payloadEntity = *(entt::entity*) payload->Data;
+
+                        auto& payloadData = activeScene->m_Registry.get<EntityData>(payloadEntity);
+                        payloadData.m_Parent = e;
+                    }
+                    ImGui::EndDragDropTarget();
+                }
+
                 if(e == m_SelectedEntity)
                 {
                     ImGui::SameLine();
@@ -76,6 +96,7 @@ void harmony::ScenePanel::OnImGui() {
                 }
 
             }
+            ImGui::PopID();
             counter++;
         });
 
