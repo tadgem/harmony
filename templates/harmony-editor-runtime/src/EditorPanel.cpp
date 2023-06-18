@@ -21,6 +21,7 @@ harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program) {
 }
 
 void harmony::ScenePanel::OnImGui() {
+    p_FrameHandledEntities.clear();
     const std::string scenePanelTitle = std::string(ICON_FA_GLOBE) + " Scene";
     if (ImGui::Begin(scenePanelTitle.c_str())) {
         auto activeSceneWr = p_Prog.GetActiveScene();
@@ -29,74 +30,98 @@ void harmony::ScenePanel::OnImGui() {
             ImGui::End();
             return;
         }
-
         Ref<Scene> activeScene = activeSceneWr.lock();
 
         if (ImGui::Button("Add Entity")) {
             activeScene->AddEntity();
         }
-        const std::string entityNamePrefix = "Entity ";
+
         ImGui::Separator();
-        const static int maxEntities = 50;
-        int counter = 0;
-        activeScene->m_Registry.each([&](entt::entity e) {
-            if (counter > maxEntities) {
-                return;
-            }
-
-            if(!activeScene->m_Registry.any_of<EntityData>(e))
-            {
-                activeScene->m_Registry.emplace<EntityData>(e);
-            }
-            ImGui::PushID((uint32_t)e);
-
-            auto& data = activeScene->m_Registry.get<EntityData>(e);
-
-            if(p_RenamingSelectedEntity && e == m_SelectedEntity)
-            {
-                ImGui::InputText("##rename", data.m_Name.data(), data.m_Name.capacity());
-                p_RenamingSelectedEntity = !ImGui::IsKeyDown(ImGuiKey_Enter);
-            }
-            else
-            {
-                if (ImGui::Selectable(data.m_Name.c_str(), false, ImGuiSelectableFlags_AllowItemOverlap)) {
-                    m_SelectedEntity = e;
-                }
-                if(ImGui::BeginDragDropSource())
-                {
-                    ImGui::SetDragDropPayload("ENTITY", &e, sizeof(entt::entity));
-                    ImGui::Text(data.m_Name.c_str());
-                    ImGui::EndDragDropSource();
-                }
-
-                if(ImGui::BeginDragDropTarget())
-                {
-                    if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY")) {
-                        IM_ASSERT(payload->DataSize == sizeof(entt::entity));
-                        entt::entity payloadEntity = *(entt::entity*) payload->Data;
-
-                        auto& payloadData = activeScene->m_Registry.get<EntityData>(payloadEntity);
-                        payloadData.m_Parent = e;
-                    }
-                    ImGui::EndDragDropTarget();
-                }
-
-                if(e == m_SelectedEntity)
-                {
-                    ImGui::SameLine();
-                    if(ImGui::Button("Rename"))
-                    {
-                        p_RenamingSelectedEntity = true;
-                    }
-                }
-
-            }
-            ImGui::PopID();
-            counter++;
-        });
-
+        activeScene->m_Registry.each([&](entt::entity e) {EntityImGui(e, activeScene->m_Registry);});
     }
     ImGui::End();
+}
+
+void harmony::ScenePanel::EntityImGui(entt::entity e, entt::registry& reg)
+{
+    if(std::find(p_FrameHandledEntities.begin(), p_FrameHandledEntities.end(), e) != p_FrameHandledEntities.end())
+    {
+        return;
+    }
+
+    p_FrameHandledEntities.emplace_back(e);
+    if(!reg.any_of<EntityData>(e))
+    {
+        reg.emplace<EntityData>(e);
+    }
+    auto& data = reg.get<EntityData>(e);
+
+    ImGui::PushID((uint32_t)e);
+    if(p_RenamingSelectedEntity && e == m_SelectedEntity)
+    {
+        ImGui::InputText("##rename", data.m_Name.data(), data.m_Name.capacity());
+        p_RenamingSelectedEntity = !ImGui::IsKeyDown(ImGuiKey_Enter);
+    }
+    else
+    {
+        if (ImGui::TreeNodeEx("##id", ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_AllowItemOverlap)) {
+            reg.each([&](entt::entity compare)
+             {
+                auto data = reg.get<EntityData>(compare);
+                if(data.m_Parent == e)
+                {
+                    EntityImGui(compare, reg);
+                }
+             }
+            );
+            ImGui::TreePop();
+        }
+        else
+        {
+            reg.each([&](entt::entity compare)
+             {
+                 auto data = reg.get<EntityData>(compare);
+                 if(data.m_Parent == e)
+                 {
+                     p_FrameHandledEntities.emplace_back(compare);
+                 }
+             });
+        }
+        ImGui::SameLine();
+        if(ImGui::Selectable(data.m_Name.c_str()))
+        {
+            m_SelectedEntity = e;
+        }
+        if(ImGui::BeginDragDropSource())
+        {
+            ImGui::SetDragDropPayload("ENTITY", &e, sizeof(entt::entity));
+            ImGui::Text(data.m_Name.c_str());
+            ImGui::EndDragDropSource();
+        }
+
+        if(ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY")) {
+                IM_ASSERT(payload->DataSize == sizeof(entt::entity));
+                entt::entity payloadEntity = *(entt::entity*) payload->Data;
+
+                auto& payloadData = reg.get<EntityData>(payloadEntity);
+                payloadData.m_Parent = e;
+            }
+            ImGui::EndDragDropTarget();
+        }
+
+        if(e == m_SelectedEntity)
+        {
+            ImGui::SameLine();
+            if(ImGui::Button("Rename"))
+            {
+                p_RenamingSelectedEntity = true;
+            }
+        }
+
+    }
+    ImGui::PopID();
 }
 
 harmony::EntityInspectorPanel::EntityInspectorPanel(Program &prog, Ref<ScenePanel> scenePanel) : p_Prog(prog),

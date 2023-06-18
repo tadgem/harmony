@@ -14,7 +14,7 @@ harmony::Attachment harmony::Framebuffer::CreateAttachment(harmony::AttachmentTy
 
 harmony::Framebuffer::~Framebuffer()
 {
-    harmony::log::info("Framebuffer : Destructor called for framebuffer : {}. Attachments will be destroyed.", m_FBH.idx);
+    // harmony::log::info("Framebuffer : Destructor called for framebuffer : {}. Attachments will be destroyed.", m_FBH.idx);
     m_Attachments.clear();
 }
 

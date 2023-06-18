@@ -21,8 +21,10 @@ namespace harmony {
         virtual void OnImGui() override;
 
     protected:
+        void EntityImGui(entt::entity e, entt::registry& reg);
         Program &p_Prog;
         bool p_RenamingSelectedEntity = false;
+        Vector<entt::entity> p_FrameHandledEntities;
     };
 
     class AssetManagerPanel : public Panel {
