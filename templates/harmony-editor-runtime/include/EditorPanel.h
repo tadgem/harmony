@@ -6,6 +6,9 @@
 #include "ThirdParty/entt.hpp"
 
 namespace harmony {
+
+    struct EntityData;
+
     class Panel {
     public:
         virtual void OnImGui() = 0;
@@ -21,7 +24,8 @@ namespace harmony {
         virtual void OnImGui() override;
 
     protected:
-        void EntityImGui(entt::entity e, entt::registry& reg);
+        void EntityImGui(entt::entity e, entt::registry& reg, bool topLevel = false);
+        void EntityNameRename(entt::entity e, EntityData& data);
         Program &p_Prog;
         bool p_RenamingSelectedEntity = false;
         Vector<entt::entity> p_FrameHandledEntities;
