@@ -175,9 +175,8 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
         transform.LastPosition = transform.Position;
         transform.LastScale = transform.Scale;
         transform.LastEuler = transform.Euler;
-        transform.LocalModel = transform.Model;
 
-        matrices.emplace_back(transform.Model);
+        matrices.emplace_back(transform.LocalModel);
 
         uint32_t parent = (uint32_t)data.m_Parent;
         if(parent == UINT32_MAX) {
@@ -291,7 +290,7 @@ void harmony::TransformSystem::UpdateTransformComponent(harmony::TransformCompon
     glm::mat4 finalMat = modelMatrix * localRotation * localScale;
 
     {
-        transform->Model = finalMat;
+        transform->LocalModel = finalMat;
         transform->Rotation = rot;
     }
 
