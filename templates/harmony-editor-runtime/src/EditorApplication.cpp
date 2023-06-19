@@ -91,11 +91,9 @@ void harmony::Editor::InitializePipelines() {
 
     auto mainFB = p_EditorPipeline->AddFramebuffer("Forward FB",{AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
     auto vectorFB = p_EditorPipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
-    // auto accumulateFB = p_RuntimePipeline->AddFramebuffer("Accumulate FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
     auto finalFB = p_EditorPipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
 
     auto screenShaderWR = m_Renderer.p_PresentProgram;
-    // auto fxaaShaderWr = m_Renderer.GetShader("FXAA");
 
     if(screenShaderWR.expired())
     {
