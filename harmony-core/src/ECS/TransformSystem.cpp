@@ -192,9 +192,9 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
             parent = (uint32_t)data.m_Parent;
         }
 
-        glm::mat4 m = matrices[0];
+        glm::mat4 m = matrices[matrices.size() - 1];
 
-        for(int i = 1; i < matrices.size(); i++)
+        for(int i = matrices.size() - 2; i >= 0; i--)
         {
             m = m * matrices[i];
         }
