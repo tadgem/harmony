@@ -194,7 +194,8 @@ void harmony::EditorView::OnImGui() {
                 ImGuizmo::MODE::WORLD,
                 &tc.Model[0][0],
                 &diffMatrix[0][0]
-        )) {
+        ))
+        {
             float matrixTranslation[3], matrixRotation[3], matrixScale[3];
             ImGuizmo::DecomposeMatrixToComponents(&diffMatrix[0][0], matrixTranslation, matrixRotation, matrixScale);
 
@@ -216,12 +217,6 @@ void harmony::EditorView::OnImGui() {
                 tc.Scale.z += matrixScale[2];
             }
 
-
-//            ImGuizmo::RecomposeMatrixFromComponents(
-//                    matrixTranslation,
-//                    matrixRotation,
-//                    matrixScale,
-//                    &tc.Model[0][0]);
         }
         if (Input::GetMouseButton(Mouse::Button::Right)) {
             ImGui::End();
