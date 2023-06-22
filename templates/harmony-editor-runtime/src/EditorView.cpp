@@ -184,6 +184,7 @@ void harmony::EditorView::OnImGui() {
         }
 
         TransformComponent &tc = scene->m_Registry.get<TransformComponent>(p_ScenePanel->m_SelectedEntity);
+        glm::mat4 diffMatrix = glm::mat4(1.0);
         ImGuizmo::SetOrthographic(false);
         ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
         if (ImGuizmo::Manipulate(
@@ -191,34 +192,36 @@ void harmony::EditorView::OnImGui() {
                 &m_Projection[0][0],
                 p_Op,
                 ImGuizmo::MODE::WORLD,
-                &tc.LocalModel[0][0]
+                &tc.Model[0][0],
+                &diffMatrix[0][0]
         )) {
             float matrixTranslation[3], matrixRotation[3], matrixScale[3];
-            ImGuizmo::DecomposeMatrixToComponents(&tc.LocalModel[0][0], matrixTranslation, matrixRotation, matrixScale);
+            ImGuizmo::DecomposeMatrixToComponents(&diffMatrix[0][0], matrixTranslation, matrixRotation, matrixScale);
 
             if (p_Op == ImGuizmo::OPERATION::TRANSLATE) {
-                tc.Position.x = matrixTranslation[0];
-                tc.Position.y = matrixTranslation[1];
-                tc.Position.z = matrixTranslation[2];
+                tc.Position.x += matrixTranslation[0];
+                tc.Position.y += matrixTranslation[1];
+                tc.Position.z += matrixTranslation[2];
             }
 
             if (p_Op == ImGuizmo::OPERATION::ROTATE) {
-                tc.Euler.x = matrixRotation[0];
-                tc.Euler.y = matrixRotation[1];
-                tc.Euler.z = matrixRotation[2];
+                tc.Euler.x += matrixRotation[0];
+                tc.Euler.y += matrixRotation[1];
+                tc.Euler.z += matrixRotation[2];
             }
 
             if (p_Op == ImGuizmo::OPERATION::SCALE) {
-                tc.Scale.x = matrixScale[0];
-                tc.Scale.y = matrixScale[1];
-                tc.Scale.z = matrixScale[2];
+                tc.Scale.x += matrixScale[0];
+                tc.Scale.y += matrixScale[1];
+                tc.Scale.z += matrixScale[2];
             }
 
-            ImGuizmo::RecomposeMatrixFromComponents(
-                    matrixTranslation,
-                    matrixRotation,
-                    matrixScale,
-                    &tc.Model[0][0]);
+
+//            ImGuizmo::RecomposeMatrixFromComponents(
+//                    matrixTranslation,
+//                    matrixRotation,
+//                    matrixScale,
+//                    &tc.Model[0][0]);
         }
         if (Input::GetMouseButton(Mouse::Button::Right)) {
             ImGui::End();
