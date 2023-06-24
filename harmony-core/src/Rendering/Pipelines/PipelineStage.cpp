@@ -8,7 +8,7 @@
 harmony::PipelineStage::PipelineStage(const std::string &name, Type pipelineStageType, Vector<AttachmentType> requiredAttachments,
                                       WeakRef<ShaderProgram> shader, WeakRef<PipelineStageRenderer> stageRenderer)
         : m_Name(name), m_StageType(pipelineStageType), m_Attachments(requiredAttachments), p_Shader(shader),
-          p_Renderer(stageRenderer) {
+          p_Renderer(stageRenderer.lock()) {
     OPTICK_EVENT();
 }
 
@@ -39,10 +39,10 @@ nlohmann::json harmony::PipelineStage::Serialize() {
     j[sk_PipelineStageType] = m_StageType;
     j[sk_PipelineStageShader] = *p_Shader.lock();
 
-    if (p_Renderer.expired()) {
+    if (p_Renderer) {
         j[sk_PipelineStageRenderer] = nlohmann::json();
     } else {
-        j[sk_PipelineStageRenderer] = *p_Renderer.lock();
+        j[sk_PipelineStageRenderer] = *p_Renderer;
     }
     return j;
 }

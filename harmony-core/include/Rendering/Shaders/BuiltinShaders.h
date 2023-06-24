@@ -10,6 +10,8 @@
 #include "Rendering/Shaders/ShaderBinaries/vs_blinn_phong_textured.bin.h"
 #include "Rendering/Shaders/ShaderBinaries/fs_blinn_phong_textured.bin.h"
 #include "Rendering/Shaders/ShaderBinaries/fs_fxaa.bin.h"
+#include "Rendering/Shaders/ShaderBinaries/vs_sky.bin.h"
+#include "Rendering/Shaders/ShaderBinaries/fs_sky.bin.h"
 #include "bgfx/embedded_shader.h"
 
 static const bgfx::EmbeddedShader s_BuiltInShader[] =
@@ -23,5 +25,7 @@ static const bgfx::EmbeddedShader s_BuiltInShader[] =
                 BGFX_EMBEDDED_SHADER(vs_blinn_phong_textured),
                 BGFX_EMBEDDED_SHADER(fs_blinn_phong_textured),
                 BGFX_EMBEDDED_SHADER(fs_fxaa),
+                BGFX_EMBEDDED_SHADER(vs_sky),
+                BGFX_EMBEDDED_SHADER(fs_sky),
                 BGFX_EMBEDDED_SHADER_END()
         };

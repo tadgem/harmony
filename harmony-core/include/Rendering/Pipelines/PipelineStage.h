@@ -59,7 +59,7 @@ namespace harmony {
         Vector<AttachmentType> m_Attachments;
         String m_Name;
         WeakRef<ShaderProgram> p_Shader;
-        WeakRef<PipelineStageRenderer> p_Renderer;
+        Ref<PipelineStageRenderer> p_Renderer;
 
     protected:
         std::vector<WeakRef<ShaderDataSource>> p_DataSources;

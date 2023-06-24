@@ -24,7 +24,6 @@ void harmony::PipelineDrawStage::PreUpdate(entt::registry &registry, WeakRef<Vie
     bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
 
     Ref<ShaderProgram> pipelineShader = p_Shader.lock();
-    Ref<PipelineStageRenderer> pipelineRenderer = p_Renderer.lock();
 
     for (WeakRef<ShaderDataSource> &source: p_DataSources) {
         if (source.expired()) continue;
@@ -32,7 +31,7 @@ void harmony::PipelineDrawStage::PreUpdate(entt::registry &registry, WeakRef<Vie
         src->OnPreUpdate(registry, pipelineShader);
     }
     // Per instance uniforms should be handled by material.
-    pipelineRenderer->Draw(registry, pipelineShader, viewId);
+    p_Renderer->Draw(registry, pipelineShader, viewId);
 }
 
 void harmony::PipelineDrawStage::PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) {

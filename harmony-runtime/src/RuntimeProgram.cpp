@@ -16,7 +16,7 @@
 #include "ECS/SimpleCollisionSystem.h"
 #include "Script/GraphScript/GraphScriptProgramComponent.h"
 #include "Script/GraphScript/GraphScriptSystem.h"
-
+#include "Rendering/Pipelines/PipelineStages/SkyStage.h"
 harmony::RuntimeProgram::RuntimeProgram(const std::string &name) : Program(name) {
     OPTICK_EVENT();
     AddAssetTypeNames();
@@ -144,11 +144,16 @@ void harmony::RuntimeProgram::AddPipelineDrawStages() {
             m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
 
+    Ref<SkyStage> skyStage = CreateRef<SkyStage>(
+            m_Renderer.GetShader("Sky")
+            );
+
     Ref<VectorGraphicsStage> vectorGraphicsStage = CreateRef<VectorGraphicsStage>(VectorGraphics::Layer::One);
     Ref<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Game);
 
     blinnPhongStage->AddShaderDataSource(m_Renderer.GetShaderDataSource("BlinnPhong"));
 
+    m_Renderer.AddPipelineStage(skyStage);
     m_Renderer.AddPipelineStage(normalStage);
     m_Renderer.AddPipelineStage(texturedMeshStage);
     m_Renderer.AddPipelineStage(blinnPhongStage);
@@ -169,9 +174,10 @@ void harmony::RuntimeProgram::AddShaderDataSources() {
 void harmony::RuntimeProgram::InitializePipelines() {
     OPTICK_EVENT();
 
+    auto skyFB = p_RuntimePipeline->AddFramebuffer("Sky FB",{AttachmentType::RGBA16F}, Resolution::Type::FullScale);
     auto mainFB = p_RuntimePipeline->AddFramebuffer("Forward FB",{AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
-    auto vectorFB = p_RuntimePipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
-    auto finalFB = p_RuntimePipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
+    auto vectorFB = p_RuntimePipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA16F}, Resolution::Type::FullScale);
+    auto finalFB = p_RuntimePipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA16F}, Resolution::Type::FullScale);
 
     auto screenShaderWR = m_Renderer.p_PresentProgram;
 
@@ -181,10 +187,12 @@ void harmony::RuntimeProgram::InitializePipelines() {
         return;
     }
 
+    Ref<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {skyFB});
     Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {mainFB});
     Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {vectorFB});
     // Ref<DrawScreenTextureStage> drawFxaaStage = CreateRef<DrawScreenTextureStage>(fxaaShaderWr, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {accumulateFB});
 
+    p_RuntimePipeline->AddPipelineStage(skyFB, m_Renderer.GetPipelineStage("SkyStage").lock());
     p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("DebugDrawStage").lock());
     p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("NormalStage").lock());
     p_RuntimePipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("TexturedMesh").lock());
@@ -192,6 +200,7 @@ void harmony::RuntimeProgram::InitializePipelines() {
 
     p_RuntimePipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());
 
+    p_RuntimePipeline->AddPipelineStage(finalFB, drawSkyStage);
     p_RuntimePipeline->AddPipelineStage(finalFB, drawForwardStage);
     p_RuntimePipeline->AddPipelineStage(finalFB, drawVectorStage);
 

@@ -85,6 +85,7 @@ void harmony::Renderer::AddBuiltInShaders() {
     AddBuiltInShader("NanoVG", "vs_nanovg_fill", "fs_nanovg_fill", 4, 5);
     AddBuiltInShader("BlinnPhongTextured", "vs_blinn_phong_textured", "fs_blinn_phong_textured", 6, 7);
     AddBuiltInShader("FXAA", "vs_simple_textured", "fs_fxaa", 0, 8);
+    AddBuiltInShader("Sky", "vs_sky", "fs_sky", 9, 10);
 }
 
 harmony::WeakRef<harmony::ShaderProgram>
