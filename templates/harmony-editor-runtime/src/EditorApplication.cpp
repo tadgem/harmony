@@ -89,6 +89,7 @@ void harmony::Editor::InitializePipelines() {
     OPTICK_EVENT();
     RuntimeProgram::InitializePipelines();
 
+    auto skyFB = p_EditorPipeline->AddFramebuffer("Sky FB",{AttachmentType::RGBA16F}, Resolution::Type::FullScale);
     auto mainFB = p_EditorPipeline->AddFramebuffer("Forward FB",{AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
     auto vectorFB = p_EditorPipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
     auto finalFB = p_EditorPipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
@@ -101,11 +102,13 @@ void harmony::Editor::InitializePipelines() {
         return;
     }
 
+    Ref<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {skyFB});
     Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {mainFB});
     Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {vectorFB});
     // Ref<DrawScreenTextureStage> drawFxaaStage = CreateRef<DrawScreenTextureStage>(fxaaShaderWr, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {accumulateFB});
     Ref<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Editor);
 
+    p_EditorPipeline->AddPipelineStage(skyFB, m_Renderer.GetPipelineStage("SkyStage").lock());
     p_EditorPipeline->AddPipelineStage(mainFB, debugDrawStage);
     p_EditorPipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("NormalStage").lock());
     p_EditorPipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("TexturedMesh").lock());
@@ -113,6 +116,7 @@ void harmony::Editor::InitializePipelines() {
 
     p_EditorPipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());
 
+    p_EditorPipeline->AddPipelineStage(finalFB, drawSkyStage);
     p_EditorPipeline->AddPipelineStage(finalFB, drawForwardStage);
     p_EditorPipeline->AddPipelineStage(finalFB, drawVectorStage);
 
