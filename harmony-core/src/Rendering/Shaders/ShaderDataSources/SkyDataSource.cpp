@@ -62,15 +62,27 @@ void harmony::SkyDataSource::OnPreUpdate(entt::registry &registry, harmony::Ref<
         break;
     }
 
-    for(auto[e, sky] : skyView.each())
-    {
-        p_Parameters[0] = sky.SunSize;
-        p_Parameters[1] = sky.SunBloom;
-        p_Parameters[2] = sky.Exposition;
-        p_Parameters[3] += Time::GetFrameTime();
+    float SunSize = 0.02f;
+    float SunBloom = 0.2f;
+    float Exposition = 0.1f;
+    float Turbidity = 1.95f;
 
-        ComputePerezCoeff(sky.Turbidity);
-    }
+//    for(auto[e, sky] : skyView.each())
+//    {
+//        p_Parameters[0] = sky.SunSize;
+//        p_Parameters[1] = sky.SunBloom;
+//        p_Parameters[2] = sky.Exposition;
+//        p_Parameters[3] += Time::GetFrameTime();
+//
+//        ComputePerezCoeff(sky.Turbidity);
+//    }
+
+    p_Parameters[0] = SunSize;
+    p_Parameters[1] = SunBloom;
+    p_Parameters[2] = Exposition;
+    p_Parameters[3] += Time::GetFrameTime();
+
+    ComputePerezCoeff(Turbidity);
 
     bgfx::setUniform(m_SkyLuminanceXYZUniform, &p_SkyLuminanceXYZ[0]);
     bgfx::setUniform(m_SunDirectionUniform.BgfxHandle, &p_SunDirection[0]);

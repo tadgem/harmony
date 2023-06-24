@@ -10,9 +10,9 @@ namespace harmony
     struct SkyComponent
     {
         float SunSize = 0.02f;
-        float SunBloom = 3.0f;
+        float SunBloom = 0.2f;
         float Exposition = 0.1f;
-        float Turbidity = 2.15f;
+        float Turbidity = 1.95f;
     };
 }
 
