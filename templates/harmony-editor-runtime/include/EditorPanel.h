@@ -154,6 +154,21 @@ namespace harmony {
         virtual void Duplicate(entt::registry &registry, entt::entity original, entt::entity newCopy) override;
     };
 
+    class SkyComponentUI : public ComponentUI {
+    public:
+        SkyComponentUI();
+
+        void OnComponentImGui(entt::registry &registry, entt::entity entity) override;
+
+        void AddComponent(entt::registry &registry, entt::entity entity) override;
+
+        void RemoveComponent(entt::registry &registry, entt::entity entity) override;
+
+        bool HasComponent(entt::registry &registry, entt::entity entity) override;
+
+        void Duplicate(entt::registry &registry, entt::entity original, entt::entity newCopy) override;
+    };
+
     class MeshComponentUI : public ComponentUI {
     public:
         MeshComponentUI(AssetManager &am);

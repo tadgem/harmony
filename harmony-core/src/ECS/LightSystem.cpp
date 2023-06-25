@@ -2,7 +2,7 @@
 #include "Core/Memory.h"
 #include "ECS/LightSystem.h"
 #include "ECS/LightComponents.h"
-
+#include "ECS/SkyComponent.h"
 #if HARMONY_DEBUG
 
 #include "ECS/TransformComponent.h"
@@ -60,10 +60,12 @@ nlohmann::json harmony::LightSystem::SerializeSystem(entt::registry &registry) {
     auto dlView = registry.view<DirectionalLight>();
     auto plView = registry.view<PointLight>();
     auto slView = registry.view<SpotLight>();
+    auto skyView = registry.view<SkyComponent>();
 
     nlohmann::json dlj;
     nlohmann::json plj;
     nlohmann::json slj;
+    nlohmann::json skyj;
 
     for (auto [e, dl]: dlView.each()) {
         dlj[GetEntityKey(e)] = dl;
@@ -76,10 +78,14 @@ nlohmann::json harmony::LightSystem::SerializeSystem(entt::registry &registry) {
     for (auto [e, sl]: slView.each()) {
         slj[GetEntityKey(e)] = sl;
     }
+    for (auto [e, sky]: skyView.each()) {
+        skyj[GetEntityKey(e)] = sky;
+    }
 
     j["DirectionalLight"] = dlj;
     j["PointLight"] = plj;
     j["SpotLight"] = slj;
+    j["Sky"] = skyj;
 
     return j;
 }
@@ -90,6 +96,7 @@ void harmony::LightSystem::DeserializeSystem(entt::registry &registry, nlohmann:
     nlohmann::json dlj = systemJson["DirectionalLight"];
     nlohmann::json plj = systemJson["PointLight"];
     nlohmann::json slj = systemJson["SpotLight"];
+    nlohmann::json skyj = systemJson["Sky"];
 
     for (auto entry = dlj.begin(); entry != dlj.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
@@ -116,6 +123,15 @@ void harmony::LightSystem::DeserializeSystem(entt::registry &registry, nlohmann:
         SpotLight dl;
         transformJson.get_to<SpotLight>(dl);
         registry.emplace<SpotLight>(e, dl);
+    }
+
+    for (auto entry = skyj.begin(); entry != skyj.end(); entry++) {
+        entt::entity e = GetEntityFromKey(entry.key());
+        nlohmann::json skyJson = entry.value();
+
+        SkyComponent sky;
+        skyJson.get_to<SkyComponent>(sky);
+        registry.emplace<SkyComponent>(e, sky);
     }
 }
 

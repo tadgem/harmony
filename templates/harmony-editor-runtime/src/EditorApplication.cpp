@@ -79,6 +79,7 @@ void harmony::Editor::AddEditorPanels() {
     inspector->AddComponentUI<DirectionalLightComponentUI>();
     inspector->AddComponentUI<PointLightComponentUI>();
     inspector->AddComponentUI<SpotLightComponentUI>();
+    inspector->AddComponentUI<SkyComponentUI>();
     inspector->AddComponentUI<LuaScriptComponentUI>(m_AssetManager);
     inspector->AddComponentUI<JoltBodyComponentUI>();
 

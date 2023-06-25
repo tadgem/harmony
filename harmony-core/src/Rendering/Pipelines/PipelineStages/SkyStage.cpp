@@ -8,7 +8,7 @@
 #include "Rendering/Pipelines/PipelineStageRenderers/SubDivScreenQuadRenderer.h"
 #include "Rendering/View.h"
 harmony::SkyStage::SkyStage(WeakRef<ShaderProgram> shaderProgram) : PipelineStage("SkyStage", PipelineStage::Type::PrimaryDraw,
-                                                                                  {AttachmentType::RGBA16F}, shaderProgram , CreateRef<SubDivScreenQuadRenderer>(16,16))
+                                                                                  {AttachmentType::RGBA16F}, shaderProgram , CreateRef<SubDivScreenQuadRenderer>(64,64))
 {
     p_Src = CreateRef<SkyDataSource>();
     AddShaderDataSource(p_Src);

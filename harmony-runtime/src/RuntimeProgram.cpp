@@ -46,6 +46,8 @@ void harmony::RuntimeProgram::Run() {
 
     SDL_SetRelativeMouseMode(SDL_TRUE);
 
+    m_Renderer.RefreshViews();
+
     while (p_Run) {
         ProfilerBeginFrame();
         OnRuntimeUpdate();

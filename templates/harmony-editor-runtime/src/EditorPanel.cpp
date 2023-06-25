@@ -16,7 +16,7 @@
 #include "JoltComponents.h"
 #include "Assets/AssetManager.h"
 #include "Core/Input.h"
-
+#include "ECS/SkyComponent.h"
 harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program) {
 }
 
@@ -941,3 +941,47 @@ void harmony::EntityDataComponentUI::Duplicate(entt::registry &registry, entt::e
 
 }
 
+void harmony::SkyComponentUI::OnComponentImGui(entt::registry &registry, entt::entity entity) {
+    if (registry.valid(entity) == false) {
+        return;
+    }
+    if (!HasComponent(registry, entity)) {
+        return;
+    }
+    ImGui::PushID((uint32_t)entity);
+    SkyComponent& sky = registry.get<SkyComponent>(entity);
+    ImGui::SliderFloat("Sun Bloom", &sky.SunBloom, 0.0f, 100.0f);
+    ImGui::SliderFloat("Sun Size", &sky.SunSize, 0.0f, 0.2f);
+    ImGui::SliderFloat("Exposition", &sky.Exposition, 0.0f, 1.0f);
+    ImGui::SliderFloat("Turbidity", &sky.Turbidity, 1.95f, 10.0f);
+    // ImGui::ColorEdit3("Sky Luminance", &sky.SkyLuminance[0]);
+    ImGui::PopID();
+
+}
+
+void harmony::SkyComponentUI::AddComponent(entt::registry &registry, entt::entity entity)
+{
+    registry.emplace<SkyComponent>(entity);
+}
+
+void harmony::SkyComponentUI::RemoveComponent(entt::registry &registry, entt::entity entity) {
+    if (HasComponent(registry, entity)) {
+        registry.remove<SkyComponent>(entity);
+    }
+}
+
+bool harmony::SkyComponentUI::HasComponent(entt::registry &registry, entt::entity entity) {
+    return registry.any_of<SkyComponent>(entity);
+}
+
+void harmony::SkyComponentUI::Duplicate(entt::registry &registry, entt::entity original, entt::entity newCopy) {
+    if (HasComponent(registry, original)) {
+        SkyComponent t = registry.get<SkyComponent>(original);
+        registry.emplace<SkyComponent>(newCopy, t);
+    }
+}
+
+harmony::SkyComponentUI::SkyComponentUI()  : ComponentUI("Sky")
+{
+
+}
