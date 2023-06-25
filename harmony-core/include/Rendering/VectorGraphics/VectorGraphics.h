@@ -4,6 +4,9 @@
 #include "bgfx/bgfx.h"
 #include "ThirdParty/json.hpp"
 
+// #define MACRO(s, ...) printf(s, __VA_ARGS__)
+#define HARMONY_VG_DEF(funcName, ...) void funcName(Layer layer, __VA_ARGS__);
+
 namespace harmony {
     class VectorGraphics {
     protected:
@@ -34,25 +37,16 @@ namespace harmony {
         })
 
         static VectorGraphics *Get();
-
         NVGcontext *AddViewLayer(Layer layer, bgfx::ViewId viewId);
-
         void RemoveViewLayer(Layer layer, NVGcontext *renderer);
-
         void AddFont(const std::string &name, std::vector<uint8_t> data);
-
         void RemoveFont(const std::string &name);
 
-        void FontFace(Layer layer, const char *font);
-
-        void FontSize(Layer layer, float size);
-
-        void FontBlur(Layer layer, int blur);
-
-        void FillColor(Layer layer, NVGcolor color);
-
-        void Text(Layer layer, float x, float y, const char *str);
-
+        HARMONY_VG_DEF(FontFace, const char* font)
+        HARMONY_VG_DEF(FontSize, float size);
+        HARMONY_VG_DEF(FontBlur, int blur);
+        HARMONY_VG_DEF(FillColor, NVGcolor color);
+        HARMONY_VG_DEF(Text, float x, float y, const char *str);
 
     protected:
         std::map<Layer, std::vector<NVGcontext *>> p_VectorRenderers;
@@ -60,6 +54,6 @@ namespace harmony {
 
         friend class FontAssetFactory;
 
-        inline static const int s_UseEdgeAA = 1;
+        inline static const int s_UseEdgeAA = 0;
     };
 }

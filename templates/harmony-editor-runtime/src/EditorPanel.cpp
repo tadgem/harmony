@@ -938,7 +938,10 @@ bool harmony::EntityDataComponentUI::HasComponent(entt::registry &registry, entt
 }
 
 void harmony::EntityDataComponentUI::Duplicate(entt::registry &registry, entt::entity original, entt::entity newCopy) {
-
+    if (HasComponent(registry, original)) {
+        EntityData t = registry.get<EntityData>(original);
+        registry.emplace<EntityData>(newCopy, t);
+    }
 }
 
 void harmony::SkyComponentUI::OnComponentImGui(entt::registry &registry, entt::entity entity) {
@@ -954,7 +957,6 @@ void harmony::SkyComponentUI::OnComponentImGui(entt::registry &registry, entt::e
     ImGui::SliderFloat("Sun Size", &sky.SunSize, 0.0f, 0.2f);
     ImGui::SliderFloat("Exposition", &sky.Exposition, 0.0f, 1.0f);
     ImGui::SliderFloat("Turbidity", &sky.Turbidity, 1.95f, 10.0f);
-    // ImGui::ColorEdit3("Sky Luminance", &sky.SkyLuminance[0]);
     ImGui::PopID();
 
 }

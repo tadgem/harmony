@@ -2,6 +2,22 @@
 #include "Rendering/VectorGraphics/VectorGraphics.h"
 #include "Core/Log.hpp"
 
+//void harmony::VectorGraphics::Text(Layer layer, float x, float y, const char *str) {
+//    OPTICK_EVENT();
+//    for (NVGcontext *context: p_VectorRenderers[layer]) {
+//        nvgText(context, x, y, str, NULL);
+//    }
+//}
+
+#define ARG_PACK(...) __VA_ARGS__
+
+#define HARMONY_VG_IMPL(funcName, nanoVgName, nanoVgFuncImpl, ...) void harmony::VectorGraphics::funcName(Layer layer, __VA_ARGS__) \
+{\
+OPTICK_EVENT();\
+for (NVGcontext *context: p_VectorRenderers[layer]) {\
+nanoVgName(context, nanoVgFuncImpl);}}\
+
+
 harmony::VectorGraphics::VectorGraphics() {
     OPTICK_EVENT();
     p_VectorRenderers.emplace(Layer::One, std::vector<NVGcontext *>());
@@ -69,37 +85,8 @@ void harmony::VectorGraphics::RemoveFont(const std::string &name) {
     p_FontDatas.erase(name);
 }
 
-void harmony::VectorGraphics::FontFace(Layer layer, const char *font) {
-    OPTICK_EVENT();
-    for (NVGcontext *context: p_VectorRenderers[layer]) {
-        nvgFontFace(context, font);
-    }
-}
-
-void harmony::VectorGraphics::FontSize(Layer layer, float size) {
-    OPTICK_EVENT();
-    for (NVGcontext *context: p_VectorRenderers[layer]) {
-        nvgFontSize(context, size);
-    }
-}
-
-void harmony::VectorGraphics::FontBlur(Layer layer, int size) {
-    OPTICK_EVENT();
-    for (NVGcontext *context: p_VectorRenderers[layer]) {
-        nvgFontBlur(context, size);
-    }
-}
-
-void harmony::VectorGraphics::FillColor(Layer layer, NVGcolor color) {
-    OPTICK_EVENT();
-    for (NVGcontext *context: p_VectorRenderers[layer]) {
-        nvgFillColor(context, color);
-    }
-}
-
-void harmony::VectorGraphics::Text(Layer layer, float x, float y, const char *str) {
-    OPTICK_EVENT();
-    for (NVGcontext *context: p_VectorRenderers[layer]) {
-        nvgText(context, x, y, str, NULL);
-    }
-}
+HARMONY_VG_IMPL(FontFace, nvgFontFace, ARG_PACK(font), const char* font)
+HARMONY_VG_IMPL(Text, nvgText, ARG_PACK(x,y,str, NULL), float x, float y, const char *str)
+HARMONY_VG_IMPL(FontSize, nvgFontSize, ARG_PACK(size), float size);
+HARMONY_VG_IMPL(FontBlur, nvgFontBlur, ARG_PACK(size), int size);
+HARMONY_VG_IMPL(FillColor, nvgFillColor, ARG_PACK(color), NVGcolor color);
