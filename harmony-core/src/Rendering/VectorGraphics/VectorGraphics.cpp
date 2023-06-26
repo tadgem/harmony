@@ -13,9 +13,11 @@
 
 #define HARMONY_VG_IMPL(funcName, nanoVgName, nanoVgFuncImpl, ...) void harmony::VectorGraphics::funcName(Layer layer, __VA_ARGS__) \
 {\
-OPTICK_EVENT();\
-for (NVGcontext *context: p_VectorRenderers[layer]) {\
-nanoVgName(context, nanoVgFuncImpl);}}\
+    OPTICK_EVENT();\
+    for (NVGcontext *context: p_VectorRenderers[layer]) {\
+        nanoVgName(context, nanoVgFuncImpl);\
+    }\
+}
 
 
 harmony::VectorGraphics::VectorGraphics() {
@@ -90,3 +92,5 @@ HARMONY_VG_IMPL(Text, nvgText, ARG_PACK(x,y,str, NULL), float x, float y, const 
 HARMONY_VG_IMPL(FontSize, nvgFontSize, ARG_PACK(size), float size);
 HARMONY_VG_IMPL(FontBlur, nvgFontBlur, ARG_PACK(size), int size);
 HARMONY_VG_IMPL(FillColor, nvgFillColor, ARG_PACK(color), NVGcolor color);
+
+
