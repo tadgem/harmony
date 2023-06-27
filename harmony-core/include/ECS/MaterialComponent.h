@@ -4,10 +4,12 @@
 #include "ThirdParty/json.hpp"
 #include "Rendering/Shaders/ShaderDataOverride.h"
 
-namespace harmony {
-    struct MaterialComponent {
-        ShaderDataOverride Data;
+namespace harmony
+{
+	struct MaterialComponent
+	{
+		ShaderDataOverride Data;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(MaterialComponent, Data);
-    };
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(MaterialComponent, Data);
+	};
 };

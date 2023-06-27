@@ -23,6 +23,7 @@
 
 struct SDL_Window;
 struct SDL_Renderer;
+
 typedef union SDL_Event SDL_Event;
 
 IMGUI_IMPL_API bool ImGui_ImplSDL2_InitForOpenGL(SDL_Window *window, void *sdl_gl_context);
@@ -44,5 +45,8 @@ IMGUI_IMPL_API bool ImGui_ImplSDL2_ProcessEvent(const SDL_Event *event);
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 
 static inline void
-ImGui_ImplSDL2_NewFrame(SDL_Window *) { ImGui_ImplSDL2_NewFrame(); } // 1.84: removed unnecessary parameter
+ImGui_ImplSDL2_NewFrame(SDL_Window *)
+{
+	ImGui_ImplSDL2_NewFrame();
+} // 1.84: removed unnecessary parameter
 #endif

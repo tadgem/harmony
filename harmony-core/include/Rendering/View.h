@@ -2,66 +2,61 @@
 
 #include "Core/Memory.h"
 #include "ThirdParty/entt.hpp"
-#include "glm/glm.hpp"
 #include "ThirdParty/json.hpp"
 #include "bgfx/bgfx.h"
+#include "glm/glm.hpp"
 
-namespace harmony {
-    inline static const uint32_t g_InitialWidth = 1024;
-    inline static const uint32_t g_InitialHeight = 600;
-    inline static const float g_DefaultFOV = 75.0f;
+namespace harmony
+{
+	inline static const uint32_t g_InitialWidth = 1024;
 
-    enum class ProjectionType {
-        Orthographic,
-        Perspective
-    };
+	inline static const uint32_t g_InitialHeight = 600;
 
-    NLOHMANN_JSON_SERIALIZE_ENUM(ProjectionType, {
-        { ProjectionType::Orthographic, "Orthographic" },
-        { ProjectionType::Perspective, "Perspective" },
-    })
+	inline static const float g_DefaultFOV = 75.0f;
 
-    class View {
-    public:
+	enum class ProjectionType
+	{
+		Orthographic,
+		Perspective
+	};
 
-        View(const std::string &name);
+	NLOHMANN_JSON_SERIALIZE_ENUM(ProjectionType,
+								 {
+									 { ProjectionType::Orthographic, "Orthographic" },
+									 { ProjectionType::Perspective, "Perspective" },
+								 })
 
-        virtual void OnPreUpdate(entt::registry &registry);
-
-        virtual void OnPostUpdate(entt::registry &registry);
-
-        virtual void OnResized(uint32_t w, uint32_t h);
-
-        virtual nlohmann::json Serialize();
-
-        virtual void Deserialize(nlohmann::json &json);
+	class View
+	{
+	public:
+		View(const std::string &name);
+		virtual void OnPreUpdate(entt::registry &registry);
+		virtual void OnPostUpdate(entt::registry &registry);
+		virtual void OnResized(uint32_t w, uint32_t h);
+		virtual nlohmann::json Serialize();
+		virtual void Deserialize(nlohmann::json &json);
 
 #if HARMONY_DEBUG
 
-        virtual void OnImGui();
-
-        virtual void OnImGuiOptions();
-
-        uint32_t m_ImGuiWindowWidth;
-        uint32_t m_ImGuiWindowHeight;
+		virtual void OnImGui();
+		virtual void OnImGuiOptions();
+		uint32_t m_ImGuiWindowWidth;
+		uint32_t m_ImGuiWindowHeight;
 #endif
 
-        bool operator==(const View &other);
+		bool operator==(const View &other);
+		bool operator!=(const View &other);
+		bool operator<(const View &other);
+		std::string m_Name;
+		uint32_t m_Width;
+		uint32_t m_Height;
+		glm::mat4 m_View;
+		glm::mat4 m_Projection;
+		float m_FOV;
+		ProjectionType m_ProjectionType;
 
-        bool operator!=(const View &other);
-
-        bool operator<(const View &other);
-
-        std::string m_Name;
-        uint32_t m_Width;
-        uint32_t m_Height;
-        glm::mat4 m_View;
-        glm::mat4 m_Projection;
-        float m_FOV;
-        ProjectionType m_ProjectionType;
-    protected:
-        friend class Renderer;
-
-        bool p_Resized;
-    };
-};
+	protected:
+		friend class Renderer;
+		bool p_Resized;
+	};
+}; // namespace harmony

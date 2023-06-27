@@ -1,25 +1,29 @@
 #pragma once
 
-#include <string>
-#include "bgfx/bgfx.h"
 #include "Core/Memory.h"
 #include "Rendering/Shaders/Shader.h"
 #include "ThirdParty/entt.hpp"
 #include "ThirdParty/json.hpp"
+#include "bgfx/bgfx.h"
+#include <string>
 
-namespace harmony {
-    class Drawable;
+namespace harmony
+{
+	class Drawable;
+	class PipelineStageRenderer
+	{
+	public:
+		PipelineStageRenderer(const std::string &name);
 
-    class PipelineStageRenderer {
-    public:
-        PipelineStageRenderer(const std::string &name);
+		// need to think of a way to type constrain this to
+		// the correct derivative of drawable.
+		virtual void Draw(entt::registry &scene, Ref<ShaderProgram> shader,
+						  bgfx::ViewId viewId)
+		{
+		}
 
-        // need to think of a way to type constrain this to
-        // the correct derivative of drawable.
-        virtual void Draw(entt::registry &scene, Ref<ShaderProgram> shader, bgfx::ViewId viewId) {}
+		std::string m_Name;
 
-        std::string m_Name;
-
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStageRenderer, m_Name);
-    };
-};
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStageRenderer, m_Name);
+	};
+}; // namespace harmony

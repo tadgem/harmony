@@ -7,22 +7,21 @@
 
 #include "Rendering/Pipelines/PipelineStageRenderer.h"
 
-namespace harmony {
-    class SubDivScreenQuadRenderer : public PipelineStageRenderer {
-    public:
-        SubDivScreenQuadRenderer(uint16_t wcount, uint16_t hcount);
+namespace harmony
+{
+	class SubDivScreenQuadRenderer : public PipelineStageRenderer
+	{
+	public:
+		SubDivScreenQuadRenderer(uint16_t wcount, uint16_t hcount);
+		void Draw(entt::registry &scene, Ref<ShaderProgram> shader,
+				  bgfx::ViewId viewId) override;
 
-        void Draw(entt::registry &scene, Ref<ShaderProgram> shader, bgfx::ViewId viewId) override;
+	protected:
+		bgfx::VertexBufferHandle p_VBH;
+		bgfx::IndexBufferHandle p_IBH;
+		void CreateMesh(uint16_t w, uint16_t h);
+		void DrawMesh(bgfx::ViewId viewId, Ref<ShaderProgram> shader);
+	};
+} // namespace harmony
 
-    protected:
-        bgfx::VertexBufferHandle p_VBH;
-        bgfx::IndexBufferHandle p_IBH;
-
-        void CreateMesh(uint16_t w, uint16_t h);
-
-        void DrawMesh(bgfx::ViewId viewId, Ref<ShaderProgram> shader);
-
-    };
-}
-
-#endif //HARMONY_DOJO_SUBDIVSCREENQUADRENDERER_H
+#endif // HARMONY_DOJO_SUBDIVSCREENQUADRENDERER_H

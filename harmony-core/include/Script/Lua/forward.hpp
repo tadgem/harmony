@@ -2,22 +2,23 @@
 
 // Copyright (c) 2013-2020 Rapptz, ThePhD and contributors
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy of
-// this software and associated documentation files (the "Software"), to deal in
-// the Software without restriction, including without limitation the rights to
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-// the Software, and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 // This file was generated with a script.
 // Generated 2022-06-25 08:14:19.328625 UTC
@@ -40,27 +41,31 @@
 #define SOL_VERSION_MINOR 2
 #define SOL_VERSION_PATCH 3
 #define SOL_VERSION_STRING "3.2.3"
-#define SOL_VERSION ((SOL_VERSION_MAJOR * 100000) + (SOL_VERSION_MINOR * 100) + (SOL_VERSION_PATCH))
+#define SOL_VERSION                                                            \
+  ((SOL_VERSION_MAJOR * 100000) + (SOL_VERSION_MINOR * 100) +                  \
+   (SOL_VERSION_PATCH))
 
 #define SOL_TOKEN_TO_STRING_POST_EXPANSION_I_(_TOKEN) #_TOKEN
-#define SOL_TOKEN_TO_STRING_I_(_TOKEN) SOL_TOKEN_TO_STRING_POST_EXPANSION_I_(_TOKEN)
+#define SOL_TOKEN_TO_STRING_I_(_TOKEN)                                         \
+  SOL_TOKEN_TO_STRING_POST_EXPANSION_I_(_TOKEN)
 
 #define SOL_CONCAT_TOKENS_POST_EXPANSION_I_(_LEFT, _RIGHT) _LEFT##_RIGHT
-#define SOL_CONCAT_TOKENS_I_(_LEFT, _RIGHT) SOL_CONCAT_TOKENS_POST_EXPANSION_I_(_LEFT, _RIGHT)
+#define SOL_CONCAT_TOKENS_I_(_LEFT, _RIGHT)                                    \
+  SOL_CONCAT_TOKENS_POST_EXPANSION_I_(_LEFT, _RIGHT)
 
 #define SOL_RAW_IS_ON(OP_SYMBOL) ((3 OP_SYMBOL 3) != 0)
 #define SOL_RAW_IS_OFF(OP_SYMBOL) ((3 OP_SYMBOL 3) == 0)
 #define SOL_RAW_IS_DEFAULT_ON(OP_SYMBOL) ((3 OP_SYMBOL 3) > 3)
 #define SOL_RAW_IS_DEFAULT_OFF(OP_SYMBOL) ((3 OP_SYMBOL 3 OP_SYMBOL 3) < 0)
 
-#define SOL_IS_ON(OP_SYMBOL) SOL_RAW_IS_ON(OP_SYMBOL ## _I_)
-#define SOL_IS_OFF(OP_SYMBOL) SOL_RAW_IS_OFF(OP_SYMBOL ## _I_)
-#define SOL_IS_DEFAULT_ON(OP_SYMBOL) SOL_RAW_IS_DEFAULT_ON(OP_SYMBOL ## _I_)
-#define SOL_IS_DEFAULT_OFF(OP_SYMBOL) SOL_RAW_IS_DEFAULT_OFF(OP_SYMBOL ## _I_)
+#define SOL_IS_ON(OP_SYMBOL) SOL_RAW_IS_ON(OP_SYMBOL##_I_)
+#define SOL_IS_OFF(OP_SYMBOL) SOL_RAW_IS_OFF(OP_SYMBOL##_I_)
+#define SOL_IS_DEFAULT_ON(OP_SYMBOL) SOL_RAW_IS_DEFAULT_ON(OP_SYMBOL##_I_)
+#define SOL_IS_DEFAULT_OFF(OP_SYMBOL) SOL_RAW_IS_DEFAULT_OFF(OP_SYMBOL##_I_)
 
-#define SOL_ON          |
-#define SOL_OFF         ^
-#define SOL_DEFAULT_ON  +
+#define SOL_ON |
+#define SOL_OFF ^
+#define SOL_DEFAULT_ON +
 #define SOL_DEFAULT_OFF -
 
 #if defined(SOL_BUILD_CXX_MODE)
@@ -88,14 +93,14 @@
 #endif
 
 #if SOL_IS_ON(SOL_BUILD_C_MODE)
+#include <limits.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <limits.h>
 #else
 
+#include <climits>
 #include <cstddef>
 #include <cstdint>
-#include <climits>
 
 #endif
 
@@ -235,7 +240,7 @@
 #endif
 
 #define SOL_PLATFORM_APPLE_IPHONE_I_ SOL_OFF
-#define SOL_PLATFORM_BSDLIKE_I_      SOL_OFF
+#define SOL_PLATFORM_BSDLIKE_I_ SOL_OFF
 
 #if defined(SOL_IN_DEBUG_DETECTED)
 #if SOL_IN_DEBUG_DETECTED != 0
@@ -246,7 +251,8 @@
 #elif !defined(NDEBUG)
 #if SOL_IS_ON(SOL_COMPILER_VCXX) && defined(_DEBUG)
 #define SOL_DEBUG_BUILD_I_ SOL_ON
-#elif (SOL_IS_ON(SOL_COMPILER_CLANG) || SOL_IS_ON(SOL_COMPILER_GCC)) && !defined(__OPTIMIZE__)
+#elif (SOL_IS_ON(SOL_COMPILER_CLANG) || SOL_IS_ON(SOL_COMPILER_GCC)) && \
+    !defined(__OPTIMIZE__)
 #define SOL_DEBUG_BUILD_I_ SOL_ON
 #else
 #define SOL_DEBUG_BUILD_I_ SOL_OFF
@@ -373,7 +379,7 @@
 #else
 #define SOL_SAFE_FUNCTION_OBJECTS_I_ SOL_OFF
 #endif
-#elif defined (SOL_SAFE_FUNCTION_OBJECTS)
+#elif defined(SOL_SAFE_FUNCTION_OBJECTS)
 #if SOL_SAFE_FUNCTION_OBJECTS != 0
 #define SOL_SAFE_FUNCTION_OBJECTS_I_ SOL_ON
 #else
@@ -523,7 +529,8 @@
 #else
 #define SOL_NIL_I_ SOL_ON
 #endif
-#elif defined(__MAC_OS_X_VERSION_MAX_ALLOWED) || defined(__OBJC__) || defined(nil)
+#elif defined(__MAC_OS_X_VERSION_MAX_ALLOWED) || defined(__OBJC__) || \
+    defined(nil)
 #define SOL_NIL_I_ SOL_DEFAULT_OFF
 #else
 #define SOL_NIL_I_ SOL_DEFAULT_ON
@@ -537,7 +544,8 @@
 #endif
 #else
 #define SOL_USERTYPE_TYPE_BINDING_INFO_I_ SOL_DEFAULT_ON
-#endif // We should generate a my_type.__type table with lots of class information for usertypes
+#endif // We should generate a my_type.__type table with lots of class
+// information for usertypes
 
 #if defined(SOL_AUTOMAGICAL_TYPES_BY_DEFAULT)
 #if (SOL_AUTOMAGICAL_TYPES_BY_DEFAULT != 0)
@@ -586,20 +594,23 @@
 #else
 #if defined(__cpp_noexcept_function_type)
 #define SOL_USE_NOEXCEPT_FUNCTION_TYPE_I_ SOL_ON
-#elif SOL_IS_ON(SOL_COMPILER_VCXX) && (defined(_MSVC_LANG) && (_MSVC_LANG < 201403L))
+#elif SOL_IS_ON(SOL_COMPILER_VCXX) && \
+    (defined(_MSVC_LANG) && (_MSVC_LANG < 201403L))
 // There is a bug in the VC++ compiler??
 // on /std:c++latest under x86 conditions (VS 15.5.2),
 // compiler errors are tossed for noexcept markings being on function types
-// that are identical in every other way to their non-noexcept marked types function types...
-// VS 2019: There is absolutely a bug.
+// that are identical in every other way to their non-noexcept marked types
+// function types... VS 2019: There is absolutely a bug.
 #define SOL_USE_NOEXCEPT_FUNCTION_TYPE_I_ SOL_OFF
 #else
 #define SOL_USE_NOEXCEPT_FUNCTION_TYPE_I_ SOL_DEFAULT_ON
 #endif
 #endif // noexcept is part of a function's type
 
-#if defined(SOL_STACK_STRING_OPTIMIZATION_SIZE) && SOL_STACK_STRING_OPTIMIZATION_SIZE > 0
-#define SOL_OPTIMIZATION_STRING_CONVERSION_STACK_SIZE_I_ SOL_STACK_STRING_OPTIMIZATION_SIZE
+#if defined(SOL_STACK_STRING_OPTIMIZATION_SIZE) && \
+    SOL_STACK_STRING_OPTIMIZATION_SIZE > 0
+#define SOL_OPTIMIZATION_STRING_CONVERSION_STACK_SIZE_I_                       \
+  SOL_STACK_STRING_OPTIMIZATION_SIZE
 #else
 #define SOL_OPTIMIZATION_STRING_CONVERSION_STACK_SIZE_I_ 1024
 #endif
@@ -704,7 +715,7 @@
 #define SOL_CONTAINER_START_INDEX_I_ 1
 #endif
 
-#if defined (SOL_NO_MEMORY_ALIGNMENT)
+#if defined(SOL_NO_MEMORY_ALIGNMENT)
 #if (SOL_NO_MEMORY_ALIGNMENT != 0)
 #define SOL_ALIGN_MEMORY_I_ SOL_OFF
 #else
@@ -741,7 +752,8 @@
 #define SOL_INSIDE_UNREAL_ENGINE_I_ SOL_OFF
 #endif
 #else
-#if defined(UE_BUILD_DEBUG) || defined(UE_BUILD_DEVELOPMENT) || defined(UE_BUILD_TEST) || defined(UE_BUILD_SHIPPING) || defined(UE_SERVER)
+#if defined(UE_BUILD_DEBUG) || defined(UE_BUILD_DEVELOPMENT) || \
+    defined(UE_BUILD_TEST) || defined(UE_BUILD_SHIPPING) || defined(UE_SERVER)
 #define SOL_INSIDE_UNREAL_ENGINE_I_ SOL_DEFAULT_ON
 #else
 #define SOL_INSIDE_UNREAL_ENGINE_I_ SOL_DEFAULT_OFF
@@ -843,21 +855,23 @@
 // beginning of sol/prologue.hpp
 
 #if defined(SOL_PROLOGUE_I_)
-#error "[sol2] Library Prologue was already included in translation unit and not properly ended with an epilogue."
+#error                                                                         \
+	"[sol2] Library Prologue was already included in translation unit and not properly ended with an epilogue."
 #endif
 
 #define SOL_PROLOGUE_I_ 1
 
 #if SOL_IS_ON(SOL_BUILD_CXX_MODE)
-#define _FWD(...) static_cast<decltype( __VA_ARGS__ )&&>( __VA_ARGS__ )
+#define _FWD(...) static_cast<decltype(__VA_ARGS__) &&>(__VA_ARGS__)
 
 #if SOL_IS_ON(SOL_COMPILER_GCC) || SOL_IS_ON(SOL_COMPILER_CLANG)
-#define _MOVE(...) static_cast<__typeof( __VA_ARGS__ )&&>( __VA_ARGS__ )
+#define _MOVE(...) static_cast<__typeof(__VA_ARGS__) &&>(__VA_ARGS__)
 #else
 
 #include <type_traits>
 
-#define _MOVE(...) static_cast<::std::remove_reference_t<( __VA_ARGS__ )>&&>( __VA_OPT__(,) )
+#define _MOVE(...)                                                             \
+  static_cast<::std::remove_reference_t<(__VA_ARGS__)> &&>(__VA_OPT__(, ))
 #endif
 #endif
 
@@ -940,7 +954,8 @@
 #define SOL_API_LINKAGE_I_ SOL_API_LINKAGE
 #else
 #if SOL_IS_ON(SOL_DLL)
-#if SOL_IS_ON(SOL_COMPILER_VCXX) || SOL_IS_ON(SOL_PLATFORM_WINDOWS) || SOL_IS_ON(SOL_PLATFORM_CYGWIN)
+#if SOL_IS_ON(SOL_COMPILER_VCXX) || SOL_IS_ON(SOL_PLATFORM_WINDOWS) || \
+    SOL_IS_ON(SOL_PLATFORM_CYGWIN)
 // MSVC Compiler; or, Windows, or Cygwin platforms
 #if SOL_IS_ON(SOL_BUILD)
 // Building the library
@@ -965,10 +980,10 @@
 #elif SOL_IS_ON(SOL_UNITY_BUILD)
 // Built-in library, like how stb typical works
 #if SOL_IS_ON(SOL_HEADER_ONLY)
-    // Header only, so functions are defined "inline"
+// Header only, so functions are defined "inline"
 #define SOL_API_LINKAGE_I_ inline
 #else
-    // Not header only, so seperately compiled files
+// Not header only, so seperately compiled files
 #define SOL_API_LINKAGE_I_ extern
 #endif
 #else
@@ -1081,9 +1096,9 @@
 
 // end of sol/version.hpp
 
-#include <utility>
-#include <type_traits>
 #include <string_view>
+#include <type_traits>
+#include <utility>
 
 #if SOL_IS_ON(SOL_USE_CXX_LUA) || SOL_IS_ON(SOL_USE_CXX_LUAJIT)
 struct lua_State;
@@ -1093,249 +1108,195 @@ struct lua_State;
 }
 #endif // C++ Mangling for Lua vs. Not
 
-namespace sol {
+namespace sol
+{
 
-    enum class type;
+	enum class type;
+	class stateless_reference;
+	template<bool b> class basic_reference;
 
-    class stateless_reference;
+	using reference = basic_reference<false>;
+	using main_reference = basic_reference<true>;
 
-    template<bool b>
-    class basic_reference;
+	class stateless_stack_reference;
+	class stack_reference;
+	template<typename A> class basic_bytecode;
+	struct lua_value;
+	struct proxy_base_tag;
+	template<typename> struct proxy_base;
+	template<typename, typename> struct table_proxy;
+	template<bool, typename> class basic_table_core;
 
-    using reference = basic_reference<false>;
-    using main_reference = basic_reference<true>;
+	template<bool b> using table_core = basic_table_core<b, reference>;
+	template<bool b> using main_table_core = basic_table_core<b, main_reference>;
+	template<bool b> using stack_table_core = basic_table_core<b, stack_reference>;
+	template<typename base_type>
+	using basic_table = basic_table_core<false, base_type>;
+	using table = table_core<false>;
+	using global_table = table_core<true>;
+	using main_table = main_table_core<false>;
+	using main_global_table = main_table_core<true>;
+	using stack_table = stack_table_core<false>;
+	using stack_global_table = stack_table_core<true>;
 
-    class stateless_stack_reference;
+	template<typename> struct basic_lua_table;
+	using lua_table = basic_lua_table<reference>;
+	using stack_lua_table = basic_lua_table<stack_reference>;
 
-    class stack_reference;
+	template<typename T, typename base_type> class basic_usertype;
 
-    template<typename A>
-    class basic_bytecode;
+	template<typename T> using usertype = basic_usertype<T, reference>;
+	template<typename T> using stack_usertype = basic_usertype<T, stack_reference>;
 
-    struct lua_value;
+	template<typename base_type> class basic_metatable;
 
-    struct proxy_base_tag;
-    template<typename>
-    struct proxy_base;
-    template<typename, typename>
-    struct table_proxy;
+	using metatable = basic_metatable<reference>;
+	using stack_metatable = basic_metatable<stack_reference>;
 
-    template<bool, typename>
-    class basic_table_core;
+	template<typename base_t> struct basic_environment;
+	using environment = basic_environment<reference>;
+	using main_environment = basic_environment<main_reference>;
+	using stack_environment = basic_environment<stack_reference>;
 
-    template<bool b>
-    using table_core = basic_table_core<b, reference>;
-    template<bool b>
-    using main_table_core = basic_table_core<b, main_reference>;
-    template<bool b>
-    using stack_table_core = basic_table_core<b, stack_reference>;
-    template<typename base_type>
-    using basic_table = basic_table_core<false, base_type>;
-    using table = table_core<false>;
-    using global_table = table_core<true>;
-    using main_table = main_table_core<false>;
-    using main_global_table = main_table_core<true>;
-    using stack_table = stack_table_core<false>;
-    using stack_global_table = stack_table_core<true>;
+	template<typename T, bool> class basic_function;
+	template<typename T, bool, typename H> class basic_protected_function;
 
-    template<typename>
-    struct basic_lua_table;
-    using lua_table = basic_lua_table<reference>;
-    using stack_lua_table = basic_lua_table<stack_reference>;
-
-    template<typename T, typename base_type>
-    class basic_usertype;
-
-    template<typename T>
-    using usertype = basic_usertype<T, reference>;
-    template<typename T>
-    using stack_usertype = basic_usertype<T, stack_reference>;
-
-    template<typename base_type>
-    class basic_metatable;
-
-    using metatable = basic_metatable<reference>;
-    using stack_metatable = basic_metatable<stack_reference>;
-
-    template<typename base_t>
-    struct basic_environment;
-    using environment = basic_environment<reference>;
-    using main_environment = basic_environment<main_reference>;
-    using stack_environment = basic_environment<stack_reference>;
-
-    template<typename T, bool>
-    class basic_function;
-
-    template<typename T, bool, typename H>
-    class basic_protected_function;
-
-    using unsafe_function = basic_function<reference, false>;
-    using safe_function = basic_protected_function<reference, false, reference>;
-    using main_unsafe_function = basic_function<main_reference, false>;
-    using main_safe_function = basic_protected_function<main_reference, false, reference>;
-    using stack_unsafe_function = basic_function<stack_reference, false>;
-    using stack_safe_function = basic_protected_function<stack_reference, false, reference>;
-    using stack_aligned_unsafe_function = basic_function<stack_reference, true>;
-    using stack_aligned_safe_function = basic_protected_function<stack_reference, true, reference>;
-    using protected_function = safe_function;
-    using main_protected_function = main_safe_function;
-    using stack_protected_function = stack_safe_function;
-    using stack_aligned_protected_function = stack_aligned_safe_function;
+	using unsafe_function = basic_function<reference, false>;
+	using safe_function = basic_protected_function<reference, false, reference>;
+	using main_unsafe_function = basic_function<main_reference, false>;
+	using main_safe_function =
+			basic_protected_function<main_reference, false, reference>;
+	using stack_unsafe_function = basic_function<stack_reference, false>;
+	using stack_safe_function =
+			basic_protected_function<stack_reference, false, reference>;
+	using stack_aligned_unsafe_function = basic_function<stack_reference, true>;
+	using stack_aligned_safe_function =
+			basic_protected_function<stack_reference, true, reference>;
+	using protected_function = safe_function;
+	using main_protected_function = main_safe_function;
+	using stack_protected_function = stack_safe_function;
+	using stack_aligned_protected_function = stack_aligned_safe_function;
 #if SOL_IS_ON(SOL_SAFE_FUNCTION_OBJECTS)
-    using function = protected_function;
-    using main_function = main_protected_function;
-    using stack_function = stack_protected_function;
-    using stack_aligned_function = stack_aligned_safe_function;
+	using function = protected_function;
+	using main_function = main_protected_function;
+	using stack_function = stack_protected_function;
+	using stack_aligned_function = stack_aligned_safe_function;
 #else
-    using function = unsafe_function;
-    using main_function = main_unsafe_function;
-    using stack_function = stack_unsafe_function;
-    using stack_aligned_function = stack_aligned_unsafe_function;
+	using function = unsafe_function;
+	using main_function = main_unsafe_function;
+	using stack_function = stack_unsafe_function;
+	using stack_aligned_function = stack_aligned_unsafe_function;
 #endif
-    using stack_aligned_stack_handler_function = basic_protected_function<stack_reference, true, stack_reference>;
+	using stack_aligned_stack_handler_function =
+			basic_protected_function<stack_reference, true, stack_reference>;
 
-    struct unsafe_function_result;
-    struct protected_function_result;
-    using safe_function_result = protected_function_result;
+	struct unsafe_function_result;
+	struct protected_function_result;
+	using safe_function_result = protected_function_result;
 #if SOL_IS_ON(SOL_SAFE_FUNCTION_OBJECTS)
-    using function_result = safe_function_result;
+	using function_result = safe_function_result;
 #else
-    using function_result = unsafe_function_result;
+	using function_result = unsafe_function_result;
 #endif
 
-    template<typename base_t>
-    class basic_object_base;
+	template<typename base_t> class basic_object_base;
+	template<typename base_t> class basic_object;
+	template<typename base_t> class basic_userdata;
+	template<typename base_t> class basic_lightuserdata;
+	template<typename base_t> class basic_coroutine;
+	template<typename base_t> class basic_packaged_coroutine;
+	template<typename base_t> class basic_thread;
 
-    template<typename base_t>
-    class basic_object;
+	using object = basic_object<reference>;
+	using userdata = basic_userdata<reference>;
+	using lightuserdata = basic_lightuserdata<reference>;
+	using thread = basic_thread<reference>;
+	using coroutine = basic_coroutine<reference>;
+	using packaged_coroutine = basic_packaged_coroutine<reference>;
+	using main_object = basic_object<main_reference>;
+	using main_userdata = basic_userdata<main_reference>;
+	using main_lightuserdata = basic_lightuserdata<main_reference>;
+	using main_coroutine = basic_coroutine<main_reference>;
+	using stack_object = basic_object<stack_reference>;
+	using stack_userdata = basic_userdata<stack_reference>;
+	using stack_lightuserdata = basic_lightuserdata<stack_reference>;
+	using stack_thread = basic_thread<stack_reference>;
+	using stack_coroutine = basic_coroutine<stack_reference>;
 
-    template<typename base_t>
-    class basic_userdata;
+	struct stack_proxy_base;
+	struct stack_proxy;
+	struct variadic_args;
+	struct variadic_results;
+	struct stack_count;
+	struct this_state;
+	struct this_main_state;
+	struct this_environment;
+	class state_view;
+	class state;
+	template<typename T> struct as_table_t;
+	template<typename T> struct as_container_t;
+	template<typename T> struct nested;
+	template<typename T> struct light;
+	template<typename T> struct user;
+	template<typename T> struct as_args_t;
+	template<typename T> struct protect_t;
+	template<typename F, typename... Policies> struct policy_wrapper;
+	template<typename T> struct usertype_traits;
+	template<typename T> struct unique_usertype_traits;
+	template<typename... Args> struct types
+	{
+		typedef std::make_index_sequence<sizeof...(Args)> indices;
 
-    template<typename base_t>
-    class basic_lightuserdata;
+		static constexpr std::size_t size()
+		{
+			return sizeof...(Args);
+		}
+	};
+	template<typename T> struct derive : std::false_type
+	{
+		typedef types<> type;
+	};
+	template<typename T> struct base : std::false_type
+	{
+		typedef types<> type;
+	};
+	template<typename T> struct weak_derive
+	{
+		static bool value;
+	};
 
-    template<typename base_t>
-    class basic_coroutine;
+	template<typename T> bool weak_derive<T>::value = false;
 
-    template<typename base_t>
-    class basic_packaged_coroutine;
-
-    template<typename base_t>
-    class basic_thread;
-
-    using object = basic_object<reference>;
-    using userdata = basic_userdata<reference>;
-    using lightuserdata = basic_lightuserdata<reference>;
-    using thread = basic_thread<reference>;
-    using coroutine = basic_coroutine<reference>;
-    using packaged_coroutine = basic_packaged_coroutine<reference>;
-    using main_object = basic_object<main_reference>;
-    using main_userdata = basic_userdata<main_reference>;
-    using main_lightuserdata = basic_lightuserdata<main_reference>;
-    using main_coroutine = basic_coroutine<main_reference>;
-    using stack_object = basic_object<stack_reference>;
-    using stack_userdata = basic_userdata<stack_reference>;
-    using stack_lightuserdata = basic_lightuserdata<stack_reference>;
-    using stack_thread = basic_thread<stack_reference>;
-    using stack_coroutine = basic_coroutine<stack_reference>;
-
-    struct stack_proxy_base;
-    struct stack_proxy;
-    struct variadic_args;
-    struct variadic_results;
-    struct stack_count;
-    struct this_state;
-    struct this_main_state;
-    struct this_environment;
-
-    class state_view;
-
-    class state;
-
-    template<typename T>
-    struct as_table_t;
-    template<typename T>
-    struct as_container_t;
-    template<typename T>
-    struct nested;
-    template<typename T>
-    struct light;
-    template<typename T>
-    struct user;
-    template<typename T>
-    struct as_args_t;
-    template<typename T>
-    struct protect_t;
-    template<typename F, typename... Policies>
-    struct policy_wrapper;
-
-    template<typename T>
-    struct usertype_traits;
-    template<typename T>
-    struct unique_usertype_traits;
-
-    template<typename... Args>
-    struct types {
-        typedef std::make_index_sequence<sizeof...(Args)> indices;
-
-        static constexpr std::size_t size() {
-            return sizeof...(Args);
-        }
-    };
-
-    template<typename T>
-    struct derive : std::false_type {
-        typedef types<> type;
-    };
-
-    template<typename T>
-    struct base : std::false_type {
-        typedef types<> type;
-    };
-
-    template<typename T>
-    struct weak_derive {
-        static bool value;
-    };
-
-    template<typename T>
-    bool weak_derive<T>::value = false;
-
-    namespace stack {
-        struct record;
-    }
+	namespace stack
+	{
+		struct record;
+	}
 
 #if SOL_IS_OFF(SOL_USE_BOOST)
 
-    template<class T>
-    class optional;
-
-    template<class T>
-    class optional<T &>;
+	template<class T> class optional;
+	template<class T> class optional<T &>;
 
 #endif
 
-    using check_handler_type = int(lua_State *, int, type, type, const char *);
+	using check_handler_type = int(lua_State *, int, type, type, const char *);
 
 } // namespace sol
 
-#define SOL_BASE_CLASSES(T, ...)                       \
-    namespace sol {                                   \
-        template <>                                  \
-        struct base<T> : std::true_type {            \
-            typedef ::sol::types<__VA_ARGS__> type; \
-        };                                           \
-    }                                                 \
-    void a_sol3_detail_function_decl_please_no_collide()
-#define SOL_DERIVED_CLASSES(T, ...)                    \
-    namespace sol {                                   \
-        template <>                                  \
-        struct derive<T> : std::true_type {          \
-            typedef ::sol::types<__VA_ARGS__> type; \
-        };                                           \
-    }                                                 \
-    void a_sol3_detail_function_decl_please_no_collide()
+#define SOL_BASE_CLASSES(T, ...)                                               \
+  namespace sol {                                                              \
+  template <> struct base<T> : std::true_type {                                \
+    typedef ::sol::types<__VA_ARGS__> type;                                    \
+  };                                                                           \
+  }                                                                            \
+  void a_sol3_detail_function_decl_please_no_collide()
+#define SOL_DERIVED_CLASSES(T, ...)                                            \
+  namespace sol {                                                              \
+  template <> struct derive<T> : std::true_type {                              \
+    typedef ::sol::types<__VA_ARGS__> type;                                    \
+  };                                                                           \
+  }                                                                            \
+  void a_sol3_detail_function_decl_please_no_collide()
 
 #endif // SOL_FORWARD_HPP
 // end of sol/forward.hpp

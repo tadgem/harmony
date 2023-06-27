@@ -2,6 +2,7 @@
 
 #include "sol.hpp"
 
-namespace harmony {
-    void InitNanoVG(sol::state &state);
+namespace harmony
+{
+	void InitNanoVG(sol::state &state);
 }

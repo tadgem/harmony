@@ -3,12 +3,13 @@
 #include "Assets/Asset.h"
 #include "Rendering/Shaders/Shader.h"
 
-namespace harmony {
-    class ShaderSourceAsset : public Asset {
-    public:
-        ShaderSourceAsset(const std::string &path, ShaderStage::Type type);
-
-        ShaderStage::Type m_StageType;
-        std::string m_Source;
-    };
+namespace harmony
+{
+	class ShaderSourceAsset : public Asset
+	{
+	public:
+		ShaderSourceAsset(const std::string &path, ShaderStage::Type type);
+		ShaderStage::Type m_StageType;
+		std::string m_Source;
+	};
 }

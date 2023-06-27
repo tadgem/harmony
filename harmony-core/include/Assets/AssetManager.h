@@ -14,130 +14,137 @@
 #include "ThirdParty/entt.hpp"
 #include  "ImGui/imgui.h"
 
-namespace harmony {
+namespace harmony
+{
 
-    class AssetManager {
-    public:
-        AssetManager();
+	class AssetManager
+	{
+	public:
+		AssetManager();
+		bool AddAssetFactory(Ref<AssetFactory> assetFactory);
+		void UnloadAllAssets();
 
-        bool AddAssetFactory(Ref<AssetFactory> assetFactory);
+		template<typename T>
+		bool AddAssetTypeName()
+		{
+			size_t typeHash = typeid(T).hash_code();
 
-        void UnloadAllAssets();
+			if (p_AssetTypeNames.find(typeHash) == p_AssetTypeNames.end())
+			{
+				std::string typeName = typeid(T).name();
+				p_AssetTypeNames.emplace(typeHash, typeName);
+				return true;
+			}
+			return false;
+		}
 
+		std::vector<AssetHandle> LoadAsset(const std::string &path, std::string typeHash);
 
-        template<typename T>
-        bool AddAssetTypeName() {
-            size_t typeHash = typeid(T).hash_code();
+		template<typename T>
+		std::vector<AssetHandle> LoadAsset(const std::string &path)
+		{
+			std::string typeHash = GetTypeHash<T>();
 
-            if (p_AssetTypeNames.find(typeHash) == p_AssetTypeNames.end()) {
-                std::string typeName = typeid(T).name();
-                p_AssetTypeNames.emplace(typeHash, typeName);
-                return true;
-            }
-            return false;
-        }
+			return LoadAsset(path, typeHash);
+		}
 
-        std::vector<AssetHandle> LoadAsset(const std::string &path, std::string typeHash);
+		void UnloadAsset(AssetHandle &handle, std::string typeHash);
 
-        template<typename T>
-        std::vector<AssetHandle> LoadAsset(const std::string &path) {
-            std::string typeHash = GetTypeHash<T>();
+		template<typename T>
+		void UnloadAsset(AssetHandle &handle)
+		{
+			std::string typeHash = GetTypeHash<T>();
+			UnloadAsset(handle, typeHash);
+		}
 
-            return LoadAsset(path, typeHash);
-        }
+		bool IsPathLoaded(const std::string path);
 
-        void UnloadAsset(AssetHandle &handle, std::string typeHash);
+		template<typename T>
+		std::vector<AssetHandle> GetLoadedAssets()
+		{
+			std::vector<AssetHandle> assets;
+			auto view = p_AssetRegistry.view<AssetComponent<T>>();
+			for (auto [entity, asset]: view.each())
+			{
+				assets.emplace_back(asset.Handle);
+			}
+			return assets;
+		}
 
-        template<typename T>
-        void UnloadAsset(AssetHandle &handle) {
-            std::string typeHash = GetTypeHash<T>();
-            UnloadAsset(handle, typeHash);
-        }
+		std::vector<AssetHandle> GetAssetsAtPath(const std::string &path);
 
-        bool IsPathLoaded(const std::string path);
+		template<typename T>
+		WeakRef<T> GetAsset(const AssetHandle &assetHandle)
+		{
+			auto view = p_AssetRegistry.view<AssetComponent<T>>();
+			for (auto [entity, asset]: view.each())
+			{
+				if (asset.Handle == assetHandle)
+				{
+					return asset.Asset;
+				}
+			}
+			return WeakRef<T>();
 
+		}
 
-        template<typename T>
-        std::vector<AssetHandle> GetLoadedAssets() {
-            std::vector<AssetHandle> assets;
-            auto view = p_AssetRegistry.view<AssetComponent<T>>();
-            for (auto [entity, asset]: view.each()) {
-                assets.emplace_back(asset.Handle);
-            }
-            return assets;
-        }
+		void Clear();
+		nlohmann::json Serialize();
+		void Deserialize(nlohmann::json &json);
 
-        std::vector<AssetHandle> GetAssetsAtPath(const std::string &path);
+		template<typename T>
+		AssetHandle AddBuiltInAsset(const std::string &path, Ref<T> asset)
+		{
+			static_assert(std::is_base_of<Asset, T>());
+			AssetHandle handle;
+			handle.Path = path;
+			handle.Index = 0;
+			handle.TypeHash = GetTypeHash<T>();
 
-        template<typename T>
-        WeakRef<T> GetAsset(const AssetHandle &assetHandle) {
-            auto view = p_AssetRegistry.view<AssetComponent<T>>();
-            for (auto [entity, asset]: view.each()) {
-                if (asset.Handle == assetHandle) {
-                    return asset.Asset;
-                }
-            }
-            return WeakRef<T>();
+			AssetComponent<T> ac;
+			ac.Asset = asset;
+			ac.Handle = handle;
 
-        }
+			entt::entity e = p_AssetRegistry.create();
+			p_AssetRegistry.emplace<AssetComponent<T>>(e, ac);
+			p_AssetRegistry.emplace<AssetHandle>(e, handle);
 
-        void Clear();
-
-        nlohmann::json Serialize();
-
-        void Deserialize(nlohmann::json &json);
-
-        template<typename T>
-        AssetHandle AddBuiltInAsset(const std::string &path, Ref<T> asset) {
-            static_assert(std::is_base_of<Asset, T>());
-            AssetHandle handle;
-            handle.Path = path;
-            handle.Index = 0;
-            handle.TypeHash = GetTypeHash<T>();
-
-            AssetComponent<T> ac;
-            ac.Asset = asset;
-            ac.Handle = handle;
-
-            entt::entity e = p_AssetRegistry.create();
-            p_AssetRegistry.emplace<AssetComponent<T>>(e, ac);
-            p_AssetRegistry.emplace<AssetHandle>(e, handle);
-
-            return handle;
-        }
+			return handle;
+		}
 
 #if HARMONY_DEBUG
 
-        void OnImGui();
+		void OnImGui();
 
+		template<typename T>
+		bool AssetTypeSelector(const std::string &selectorName, harmony::AssetHandle &handle,
+							   const std::string &preview = "")
+		{
+			static_assert(std::is_base_of<Asset, T>());
+			bool selectedAsset = false;
+			std::vector<harmony::AssetHandle> assets = GetLoadedAssets<T>();
+			if (ImGui::BeginCombo(selectorName.c_str(), preview.c_str()))
+			{
+				for (int i = 0; i < assets.size(); i++)
+				{
+					if (ImGui::Selectable(assets[i].Path.c_str()))
+					{
+						handle = assets[i];
+						selectedAsset = true;
+					}
+				}
+				ImGui::EndCombo();
+			}
 
-        template<typename T>
-        bool AssetTypeSelector(const std::string &selectorName, harmony::AssetHandle &handle,
-                               const std::string &preview = "") {
-            static_assert(std::is_base_of<Asset, T>());
-            bool selectedAsset = false;
-            std::vector<harmony::AssetHandle> assets = GetLoadedAssets<T>();
-            if (ImGui::BeginCombo(selectorName.c_str(), preview.c_str())) {
-                for (int i = 0; i < assets.size(); i++) {
-                    if (ImGui::Selectable(assets[i].Path.c_str())) {
-                        handle = assets[i];
-                        selectedAsset = true;
-                    }
-                }
-                ImGui::EndCombo();
-            }
-
-            return selectedAsset;
-        }
-
+			return selectedAsset;
+		}
 
 #endif
-    protected:
-        Ref<AssetFactory> GetAssetFactory(std::string typeHash);
-
-        std::vector<Ref<AssetFactory>> p_AssetFactories;
-        std::unordered_map<size_t, std::string> p_AssetTypeNames;
-        std::vector<std::string> p_LoadedPaths;
-        entt::registry p_AssetRegistry;
-    };
+	protected:
+		Ref<AssetFactory> GetAssetFactory(std::string typeHash);
+		std::vector<Ref<AssetFactory>> p_AssetFactories;
+		std::unordered_map<size_t, std::string> p_AssetTypeNames;
+		std::vector<std::string> p_LoadedPaths;
+		entt::registry p_AssetRegistry;
+	};
 }
