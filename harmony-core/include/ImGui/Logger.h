@@ -1,24 +1,22 @@
 #pragma once
+
 #include "Core/Alias.h"
 #include "Core/Log.hpp"
 #include "spdlog/logger.h"
 #include "ImGui/imgui.h"
 
-namespace harmony
-{
-    class ImGuiLogger
-    {
+namespace harmony {
+    class ImGuiLogger {
     public:
 
         struct Message {
-            String                  m_Msg;
-            log::level::level_enum  m_MsgLevel;
-            size_t                  m_ThreadID;
-            long long               m_Time;
+            String m_Msg;
+            log::level::level_enum m_MsgLevel;
+            size_t m_ThreadID;
+            long long m_Time;
         };
 
-        struct LevelInfo
-        {
+        struct LevelInfo {
             String m_LevelName;
             ImVec4 m_LevelColour;
         };
@@ -26,8 +24,8 @@ namespace harmony
         ImGuiLogger() = default;
 
         void Init();
-        void Render();
 
+        void Render();
 
 
     private:

@@ -8,18 +8,16 @@
 #include "Core/ProgramComponent.h"
 #include "Core/Memory.h"
 
-namespace harmony
-{
+namespace harmony {
 
-    namespace GraphScript
-    {
+    namespace GraphScript {
         class NodeRegistry;
     }
 
-    class GraphScriptProgramComponent : public ProgramComponent
-    {
+    class GraphScriptProgramComponent : public ProgramComponent {
     public:
         GraphScriptProgramComponent();
+
         ~GraphScriptProgramComponent();
 
         void Init() override;
@@ -30,7 +28,7 @@ namespace harmony
 
         void Cleanup() override;
 
-        GraphScript::NodeRegistry* GetNodeRegistry();
+        GraphScript::NodeRegistry *GetNodeRegistry();
 
         nlohmann::json ToJson() override;
 

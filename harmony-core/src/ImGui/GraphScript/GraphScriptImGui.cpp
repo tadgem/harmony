@@ -17,9 +17,7 @@ void harmony::GraphScriptImGuiEditor::Render() {
             harmony::log::info("Right clicked in GraphScript Editor");
             p_MousePosition = ImGui::GetMousePos();
             p_ShowNodeSelector = true;
-        }
-        else if(ImGui::IsKeyReleased(ImGuiKey_MouseLeft))
-        {
+        } else if (ImGui::IsKeyReleased(ImGuiKey_MouseLeft)) {
             p_ShowNodeSelector = false;
         }
 
@@ -41,13 +39,11 @@ void harmony::GraphScriptImGuiEditor::Render() {
     }
     ImGui::End();
 
-    if(p_ShowNodeSelector) {
+    if (p_ShowNodeSelector) {
         ImGui::SetNextWindowPos(p_MousePosition);
         if (ImGui::Begin("Nodes")) {
-            for (auto availableNode: m_GraphScriptNodeRegistry->m_AvailableNodes)
-            {
-                if(ImGui::MenuItem(availableNode->m_Name.c_str()))
-                {
+            for (auto availableNode: m_GraphScriptNodeRegistry->m_AvailableNodes) {
+                if (ImGui::MenuItem(availableNode->m_Name.c_str())) {
                     p_ShowNodeSelector = false;
                 }
             }
@@ -57,6 +53,6 @@ void harmony::GraphScriptImGuiEditor::Render() {
 
 }
 
-harmony::GraphScriptImGuiEditor::GraphScriptImGuiEditor(harmony::GraphScript::NodeRegistry *vm) : m_GraphScriptNodeRegistry(vm)
-{
+harmony::GraphScriptImGuiEditor::GraphScriptImGuiEditor(harmony::GraphScript::NodeRegistry *vm)
+        : m_GraphScriptNodeRegistry(vm) {
 }

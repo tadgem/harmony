@@ -7716,7 +7716,7 @@ void ImGui::FocusTopMostWindowUnderOne(ImGuiWindow *under_this_window, ImGuiWind
 void ImGui::SetCurrentFont(ImFont *font) {
     ImGuiContext &g = *GImGui;
     IM_ASSERT(font &&
-              font->IsLoaded());    // Font Atlas not created. Did you call io.Fonts->GetTexDataAsRGBA32 / GetTexDataAsAlpha8 ?
+                      font->IsLoaded());    // Font Atlas not created. Did you call io.Fonts->GetTexDataAsRGBA32 / GetTexDataAsAlpha8 ?
     IM_ASSERT(font->Scale > 0.0f);
     g.Font = font;
     g.FontBaseSize = ImMax(1.0f, g.IO.FontGlobalScale * g.Font->FontSize * g.Font->Scale);
@@ -12962,12 +12962,10 @@ static void WindowSettingsHandler_ReadLine(ImGuiContext *, ImGuiSettingsHandler 
     else if (sscanf(line, "DockId=0x%X,%d", &u1, &i) == 2) {
         settings->DockId = u1;
         settings->DockOrder = (short) i;
-    }
-    else if (sscanf(line, "DockId=0x%X", &u1) == 1) {
+    } else if (sscanf(line, "DockId=0x%X", &u1) == 1) {
         settings->DockId = u1;
         settings->DockOrder = -1;
-    }
-    else if (sscanf(line, "ClassId=0x%X", &u1) == 1) { settings->ClassId = u1; }
+    } else if (sscanf(line, "ClassId=0x%X", &u1) == 1) { settings->ClassId = u1; }
 }
 
 // Apply to existing windows (if any)
@@ -17592,8 +17590,7 @@ static void ImGui::DockSettingsHandler_ReadLine(ImGuiContext *ctx, ImGuiSettings
     else if (strncmp(line, "DockSpace", 9) == 0) {
         line = ImStrSkipBlank(line + strlen("DockSpace"));
         node.Flags |= ImGuiDockNodeFlags_DockSpace;
-    }
-    else return;
+    } else return;
     if (sscanf(line, "ID=0x%08X%n", &node.ID, &r) == 1) { line += r; } else return;
     if (sscanf(line, " Parent=0x%08X%n", &node.ParentNodeId, &r) == 1) {
         line += r;
@@ -17607,13 +17604,11 @@ static void ImGui::DockSettingsHandler_ReadLine(ImGuiContext *ctx, ImGuiSettings
         if (sscanf(line, " Pos=%i,%i%n", &x, &y, &r) == 2) {
             line += r;
             node.Pos = ImVec2ih((short) x, (short) y);
-        }
-        else return;
+        } else return;
         if (sscanf(line, " Size=%i,%i%n", &x, &y, &r) == 2) {
             line += r;
             node.Size = ImVec2ih((short) x, (short) y);
-        }
-        else return;
+        } else return;
     } else {
         if (sscanf(line, " SizeRef=%i,%i%n", &x, &y, &r) == 2) {
             line += r;
@@ -18149,16 +18144,13 @@ void ImGui::ShowMetricsWindow(bool *p_open) {
                 ImGuiTableColumn *c = &table->Columns[n];
                 return ImRect(c->MinX, table->InnerClipRect.Min.y, c->MaxX,
                               table->InnerClipRect.Min.y + table_instance->LastOuterHeight);
-            }
-            else if (rect_type == TRT_ColumnsWorkRect) {
+            } else if (rect_type == TRT_ColumnsWorkRect) {
                 ImGuiTableColumn *c = &table->Columns[n];
                 return ImRect(c->WorkMinX, table->WorkRect.Min.y, c->WorkMaxX, table->WorkRect.Max.y);
-            }
-            else if (rect_type == TRT_ColumnsClipRect) {
+            } else if (rect_type == TRT_ColumnsClipRect) {
                 ImGuiTableColumn *c = &table->Columns[n];
                 return c->ClipRect;
-            }
-            else if (rect_type == TRT_ColumnsContentHeadersUsed) {
+            } else if (rect_type == TRT_ColumnsContentHeadersUsed) {
                 ImGuiTableColumn *c = &table->Columns[n];
                 return ImRect(c->WorkMinX, table->InnerClipRect.Min.y, c->ContentMaxXHeadersUsed,
                               table->InnerClipRect.Min.y + table_instance->LastFirstRowHeight);
@@ -18167,13 +18159,11 @@ void ImGui::ShowMetricsWindow(bool *p_open) {
                 ImGuiTableColumn *c = &table->Columns[n];
                 return ImRect(c->WorkMinX, table->InnerClipRect.Min.y, c->ContentMaxXHeadersIdeal,
                               table->InnerClipRect.Min.y + table_instance->LastFirstRowHeight);
-            }
-            else if (rect_type == TRT_ColumnsContentFrozen) {
+            } else if (rect_type == TRT_ColumnsContentFrozen) {
                 ImGuiTableColumn *c = &table->Columns[n];
                 return ImRect(c->WorkMinX, table->InnerClipRect.Min.y, c->ContentMaxXFrozen,
                               table->InnerClipRect.Min.y + table_instance->LastFirstRowHeight);
-            }
-            else if (rect_type == TRT_ColumnsContentUnfrozen) {
+            } else if (rect_type == TRT_ColumnsContentUnfrozen) {
                 ImGuiTableColumn *c = &table->Columns[n];
                 return ImRect(c->WorkMinX, table->InnerClipRect.Min.y + table_instance->LastFirstRowHeight,
                               c->ContentMaxXUnfrozen, table->InnerClipRect.Max.y);
@@ -18191,12 +18181,10 @@ void ImGui::ShowMetricsWindow(bool *p_open) {
             else if (rect_type == WRT_Content) {
                 ImVec2 min = window->InnerRect.Min - window->Scroll + window->WindowPadding;
                 return ImRect(min, min + window->ContentSize);
-            }
-            else if (rect_type == WRT_ContentIdeal) {
+            } else if (rect_type == WRT_ContentIdeal) {
                 ImVec2 min = window->InnerRect.Min - window->Scroll + window->WindowPadding;
                 return ImRect(min, min + window->ContentSizeIdeal);
-            }
-            else if (rect_type == WRT_ContentRegionRect) { return window->ContentRegionRect; }
+            } else if (rect_type == WRT_ContentRegionRect) { return window->ContentRegionRect; }
             IM_ASSERT(0);
             return ImRect();
         }

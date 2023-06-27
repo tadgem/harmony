@@ -4,10 +4,8 @@
 
 #ifndef HARMONY_DOJO_TEXTURE_H
 #define HARMONY_DOJO_TEXTURE_H
-namespace harmony
-{
-    class Texture
-    {
+namespace harmony {
+    class Texture {
     public:
 
     protected:

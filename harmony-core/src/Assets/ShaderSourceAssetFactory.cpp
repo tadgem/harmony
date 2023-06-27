@@ -50,7 +50,6 @@ void harmony::ShaderSourceAssetFactory::UnloadAssetData(const std::string &path,
     OPTICK_EVENT();
 }
 
-void harmony::ShaderSourceAssetFactory::ClearLoadedData()
-{
+void harmony::ShaderSourceAssetFactory::ClearLoadedData() {
     OPTICK_EVENT();
 }

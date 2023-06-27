@@ -13,6 +13,7 @@ namespace harmony {
     class View;
 
     class PipelineStageRenderer;
+
     class Framebuffer;
 
     class PipelineStage {
@@ -42,6 +43,7 @@ namespace harmony {
         })
 
         virtual void PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) = 0;
+
         virtual void PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) = 0;
 
         virtual void Cleanup(WeakRef<View> view, bgfx::ViewId viewId);

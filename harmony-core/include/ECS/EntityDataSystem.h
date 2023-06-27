@@ -4,11 +4,11 @@
 
 #ifndef HARMONY_DOJO_ENTITYDATASYSTEM_H
 #define HARMONY_DOJO_ENTITYDATASYSTEM_H
+
 #include "ECS/System.h"
-namespace harmony
-{
-    class EntityDataSystem : public System
-    {
+
+namespace harmony {
+    class EntityDataSystem : public System {
     public:
         EntityDataSystem();
 

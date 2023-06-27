@@ -13,13 +13,17 @@ harmony::Scene::Scene(const std::string &name) : m_Name(name) {
 void harmony::Scene::Deserialize(std::vector<Ref<System>> &systems) {
     OPTICK_EVENT();
     m_Registry.clear();
-    for (int i = 0; i < p_Entities.size(); i++) {
+    for (int i = 0; i < p_Entities.size(); i++)
+    {
         m_Registry.create(p_Entities[i].m_Handle);
     }
 
-    for (auto &[systemTypeHash, json]: p_SystemSerializationAttributes) {
-        for (int i = 0; i < systems.size(); i++) {
-            if (systems[i]->m_TypeHash == systemTypeHash) {
+    for (auto &[systemTypeHash, json]: p_SystemSerializationAttributes)
+    {
+        for (int i = 0; i < systems.size(); i++)
+        {
+            if (systems[i]->m_TypeHash == systemTypeHash)
+            {
                 systems[i]->DeserializeSystem(m_Registry, json);
                 break;
             }
@@ -31,7 +35,8 @@ void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<Ref<Sy
     OPTICK_EVENT();
     p_SystemSerializationAttributes.clear();
 
-    for (int i = 0; i < systems.size(); i++) {
+    for (int i = 0; i < systems.size(); i++)
+    {
         Ref<System> system = systems[i];
         nlohmann::json sceneSystemJson = system->SerializeSystem(m_Registry);
         p_SystemSerializationAttributes.emplace(system->m_TypeHash, sceneSystemJson);
@@ -41,9 +46,9 @@ void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<Ref<Sy
 
 harmony::Entity harmony::Scene::AddEntity(uint32_t index) {
     OPTICK_EVENT();
-    entt::entity e = (entt::entity)index;
+    entt::entity e = (entt::entity) index;
 
-    if((uint32_t)e == UINT32_MAX)
+    if ((uint32_t) e == UINT32_MAX)
     {
         e = m_Registry.create();
     }

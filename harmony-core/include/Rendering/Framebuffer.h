@@ -7,12 +7,15 @@ namespace harmony {
 
     class Framebuffer {
     public:
-        explicit Framebuffer(const String& name, Resolution res, Resolution::Type resolutionType = Resolution::Type::FullScale);
+        explicit Framebuffer(const String &name, Resolution res,
+                             Resolution::Type resolutionType = Resolution::Type::FullScale);
+
         ~Framebuffer();
 
         Attachment CreateAttachment(AttachmentType attachmentType);
 
         bool Build();
+
         bool IsBuilt();
 
         Resolution m_VirtualResoltuion;
@@ -30,8 +33,11 @@ namespace harmony {
 
     protected:
         void UpdateVirtualResolution(uint16_t w, uint16_t h);
+
         bgfx::TextureHandle CreateAttachmentInternal(Resolution res, AttachmentType type);
+
         Resolution GetScaledResolution(Resolution::Type type, Resolution res);
+
         friend class Renderer;
     };
 };

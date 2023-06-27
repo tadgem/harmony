@@ -16,8 +16,7 @@ harmony::VectorGraphicsStage::VectorGraphicsStage(VectorGraphics::Layer layer)
 void harmony::VectorGraphicsStage::PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId) {
     OPTICK_EVENT();
 
-    if(!p_Context)
-    {
+    if (!p_Context) {
         p_Context = VectorGraphics::Get()->AddViewLayer(m_Layer, viewId);
     }
     Ref<View> _view = view.lock();

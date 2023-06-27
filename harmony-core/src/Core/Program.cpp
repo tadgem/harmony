@@ -12,16 +12,20 @@
 #include "SDL_video.h"
 
 #if HARMONY_DEBUG
+
 #include "optick.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_bgfx.h"
 #include "ImGui/ImGuizmo.h"
 #include "ImGui/backends/imgui_impl_sdl.h"
 #include "ImGui/imnodes.h"
+
 #endif
 
 #if BX_PLATFORM_WINDOWS
+
 #include "windows.h"
+
 #endif
 
 harmony::Program::Program(const std::string &name) : p_AppName(name), m_Renderer(m_AssetManager) {
@@ -130,7 +134,7 @@ void harmony::Program::InitSDL() {
     SDL_Rect rect;
     SDL_GetDisplayUsableBounds(0, &rect);
     float ddpi, hdpi, vdpi;
-    SDL_GetDisplayDPI(0,&ddpi, &hdpi, &vdpi);
+    SDL_GetDisplayDPI(0, &ddpi, &hdpi, &vdpi);
 
     p_DPIScale = 1.0f;
 #if BX_PLATFORM_WINDOWS
@@ -139,7 +143,8 @@ void harmony::Program::InitSDL() {
     p_WindowWidth = rect.w;
     p_WindowHeight = rect.h;
 
-    SDL_WindowFlags windowFlags = static_cast<SDL_WindowFlags>(SDL_WINDOW_SHOWN | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+    SDL_WindowFlags windowFlags = static_cast<SDL_WindowFlags>(SDL_WINDOW_SHOWN | SDL_WINDOW_MAXIMIZED |
+                                                               SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 
     p_Window = SDL_CreateWindow(
             p_AppName.c_str(),
@@ -223,13 +228,12 @@ void harmony::Program::InitBGFX() {
     uint16_t maxWidth = 0, maxHeight = 0;
     int numDisplays = SDL_GetNumVideoDisplays();
 
-    for(int i = 0; i < numDisplays; i++)
-    {
+    for (int i = 0; i < numDisplays; i++) {
         SDL_Rect rect;
         SDL_GetDisplayBounds(i, &rect);
 
-        if(rect.w > maxWidth) maxWidth = rect.w;
-        if(rect.h > maxHeight) maxHeight = rect.h;
+        if (rect.w > maxWidth) maxWidth = rect.w;
+        if (rect.h > maxHeight) maxHeight = rect.h;
     }
 
     GPUResourceManager::MAX_FRAMEBUFFER_RESOLUTION_X = maxWidth;
@@ -273,7 +277,8 @@ void harmony::Program::ListCapabilities() {
     harmony::log::info("Program : BGFX : Capabilities");
     harmony::log::info("Program : BGFX : Max Framebuffers : {}", m_Capabilities->limits.maxFrameBuffers);
     harmony::log::info("Program : BGFX : Max Textures : {}", m_Capabilities->limits.maxTextures);
-    harmony::log::info("Program : BGFX : Max Texture Size : {}x{}", m_Capabilities->limits.maxTextureSize, m_Capabilities->limits.maxTextureSize);
+    harmony::log::info("Program : BGFX : Max Texture Size : {}x{}", m_Capabilities->limits.maxTextureSize,
+                       m_Capabilities->limits.maxTextureSize);
 
     harmony::log::info("Program : BGFX : Max Num Views : {}", m_Capabilities->limits.maxViews);
     harmony::log::info("Program : BGFX : Max Num Blits : {}", m_Capabilities->limits.maxBlits);
@@ -405,11 +410,12 @@ void harmony::Program::UpdateTimeVariables() {
 
 void harmony::Program::ResizeApplicationWindow(int w, int h) {
     OPTICK_EVENT();
-    harmony::log::info("Program : Window resized : Old size {},{} : New Size {},{}", p_WindowWidth, p_WindowHeight, w, h);
+    harmony::log::info("Program : Window resized : Old size {},{} : New Size {},{}", p_WindowWidth, p_WindowHeight, w,
+                       h);
     SDL_DisplayMode mode;
     SDL_Rect rect;
 
-    bgfx::reset(w,h, BGFX_RESET_VSYNC);
+    bgfx::reset(w, h, BGFX_RESET_VSYNC);
 
     SDL_GetWindowDisplayMode(p_Window, &mode);
     SDL_GetDisplayUsableBounds(0, &rect);
@@ -440,8 +446,7 @@ void harmony::Program::HandleSDLEvent() {
 
         if (sdlEvent.type == SDL_WINDOWEVENT) {
             if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED) {
-                if(p_WindowWidth == sdlEvent.window.data1 && p_WindowHeight == sdlEvent.window.data2)
-                {
+                if (p_WindowWidth == sdlEvent.window.data1 && p_WindowHeight == sdlEvent.window.data2) {
                     continue;
                 }
                 if (!p_ResizedThisFrame) {
@@ -760,7 +765,7 @@ void harmony::Program::SaveScene(const std::string &path) {
         harmony::log::warn("Program::SaveScene : cannot save scene, as there is no active scene.");
         return;
     }
-    harmony::log::info("Program : Saving open scene to path {}", path );
+    harmony::log::info("Program : Saving open scene to path {}", path);
     std::string cleanPath = path;
     if (m_Project) {
         std::string projectDir = m_Project->m_ProjectDirectory;
@@ -974,12 +979,10 @@ void harmony::Program::Frame() {
     // Instrumentor::Get().ClearResults();
 }
 
-void harmony::Program::ProfilerBeginFrame()
-{
+void harmony::Program::ProfilerBeginFrame() {
     OPTICK_FRAME("MainThread");
 }
 
-void harmony::Program::Exit()
-{
+void harmony::Program::Exit() {
     p_Run = false;
 }

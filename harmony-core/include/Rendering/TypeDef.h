@@ -8,13 +8,10 @@
 #include "ThirdParty/json.hpp"
 #include "bgfx/bgfx.h"
 
-namespace harmony
-{
-    struct Resolution
-    {
+namespace harmony {
+    struct Resolution {
         uint16_t Width = 0, Height = 0;
-        enum Type
-        {
+        enum Type {
             FullScale,
             HalfScale,
             QuarterScale,
@@ -24,18 +21,17 @@ namespace harmony
         };
 
         NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
-            { FullScale, "full"},
-            { HalfScale, "half"},
-            { QuarterScale, "quarter"},
-            { EighthScale, "eighth"},
-            { SixteenthScale, "sixteenth"},
-            { Custom, "custom"},
+            { FullScale, "full" },
+            { HalfScale, "half" },
+            { QuarterScale, "quarter" },
+            { EighthScale, "eighth" },
+            { SixteenthScale, "sixteenth" },
+            { Custom, "custom" },
 
         })
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(Resolution, Width, Height)
     };
-
 
 
     enum AttachmentType : int {
@@ -70,11 +66,11 @@ namespace harmony
         { RGBA8, "rgba8" },
         { RGBA16F, "rgba16" },
         { RGBA32F, "rgba32" },
-        { RGBA, "rgba"},
+        { RGBA, "rgba" },
         { Depth16F, "d16" },
         { Depth24F, "d24" },
         { Depth32F, "d32" },
-        { Depth, "depth"}
+        { Depth, "depth" }
     })
 
     uint32_t GetAttachmentTypePixelSize(AttachmentType type);

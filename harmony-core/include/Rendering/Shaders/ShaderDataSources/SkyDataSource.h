@@ -4,6 +4,7 @@
 
 #ifndef HARMONY_DOJO_SKYDATASOURCE_H
 #define HARMONY_DOJO_SKYDATASOURCE_H
+
 #include "Rendering/Shaders/ShaderDataSource.h"
 
 namespace harmony {
@@ -13,19 +14,22 @@ namespace harmony {
         SkyDataSource();
 
 
-        void OnPreUpdate(entt::registry &registry, Ref<ShaderProgram> shader) override ;
-        void OnPostUpdate(entt::registry &registry, Ref<ShaderProgram> shader) override ;
+        void OnPreUpdate(entt::registry &registry, Ref<ShaderProgram> shader) override;
+
+        void OnPostUpdate(entt::registry &registry, Ref<ShaderProgram> shader) override;
 
     protected:
         bool p_UniformsCollected;
+
         void CollectUniforms(Ref<ShaderProgram> prog);
+
         void ComputePerezCoeff(float _turbidity);
 
 
-        const std::string g_ParametersUniformName       = "u_parameters";
-        const std::string g_SunDirectionUniformName     = "u_sunDirection";
-        const std::string g_SkyLuminanceXYZUniformName  = "u_skyLuminanceXYZ";
-        const std::string g_PerezCoeffUniformName       = "u_perezCoeff";
+        const std::string g_ParametersUniformName = "u_parameters";
+        const std::string g_SunDirectionUniformName = "u_sunDirection";
+        const std::string g_SkyLuminanceXYZUniformName = "u_skyLuminanceXYZ";
+        const std::string g_PerezCoeffUniformName = "u_perezCoeff";
 
         glm::vec4 p_SunDirection;
         glm::vec4 p_SkyLuminanceXYZ;

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Core/Alias.h"
 #include "ThirdParty/entt.hpp"
 #include "ThirdParty/json.hpp"
@@ -6,13 +7,12 @@
 
 namespace harmony {
 
-    struct EntityData
-    {
+    struct EntityData {
         EntityData();
 
         String m_Name;
         uint64_t m_LayerMask = 0; // TODO: do something with this.
-        entt::entity m_Parent  {UINT32_MAX};
+        entt::entity m_Parent{UINT32_MAX};
         bool m_Static = false;
         bool m_Enabled = true;
 

@@ -19,8 +19,7 @@ void harmony::DebugDrawStage::PreUpdate(entt::registry &registry, WeakRef<View> 
     bgfx::setViewClear(viewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x0000000, 1.0f);
     bgfx::setViewTransform(viewId, &_view->m_View[0], &_view->m_Projection[0]);
     bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
-    if(p_DebugRenderers.find(_view->m_Name) == p_DebugRenderers.end())
-    {
+    if (p_DebugRenderers.find(_view->m_Name) == p_DebugRenderers.end()) {
         p_DebugRenderers.emplace(_view->m_Name, GfxDebug::Get()->AddViewChannel(m_Channel));
     }
 

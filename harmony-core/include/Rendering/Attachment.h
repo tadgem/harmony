@@ -4,13 +4,15 @@
 
 #ifndef HARMONY_CORE_TEXTURE_H
 #define HARMONY_CORE_TEXTURE_H
+
 #include "Rendering/TypeDef.h"
 
 namespace harmony {
 
     struct Attachment {
         ~Attachment();
-        bgfx::TextureHandle m_Handle { UINT16_MAX};
+
+        bgfx::TextureHandle m_Handle{UINT16_MAX};
         AttachmentType m_Type;
 
         Resolution m_Resolution;

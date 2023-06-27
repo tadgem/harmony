@@ -1,6 +1,7 @@
 #include "Rendering/Attachment.h"
 #include "Rendering/GPUResourceManager.h"
 #include "Core/Log.hpp"
+
 harmony::AttachmentType harmony::operator|(harmony::AttachmentType a, harmony::AttachmentType b) {
     return static_cast<AttachmentType>(static_cast<int>(a) | static_cast<int>(b));
 }
@@ -98,10 +99,8 @@ uint32_t harmony::Attachment::CalculateAttachmentSize() {
     return GetAttachmentTypePixelSize(m_Type) * m_Resolution.Width * m_Resolution.Height;
 }
 
-harmony::Attachment::~Attachment()
-{
-    if(m_Handle.idx == UINT16_MAX)
-    {
+harmony::Attachment::~Attachment() {
+    if (m_Handle.idx == UINT16_MAX) {
         return;
     }
     // TODO: We should limit the texture handle to scope of attachment

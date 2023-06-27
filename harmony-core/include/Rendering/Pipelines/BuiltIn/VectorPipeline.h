@@ -18,6 +18,6 @@ namespace harmony {
         VectorGraphics::Layer m_Layer;
 
     protected:
-        NVGcontext * p_Context;
+        NVGcontext *p_Context;
     };
 };

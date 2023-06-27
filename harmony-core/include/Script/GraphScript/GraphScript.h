@@ -15,7 +15,9 @@ namespace harmony {
         struct EntryPointName {
         public:
             explicit EntryPointName(const std::string &name);
+
             EntryPointName();
+
             uint64_t m_id;
 
             static const uint64_t INVALID_ENTRY_POINT_NAME = 0;
@@ -38,6 +40,7 @@ namespace harmony {
         class IGraphNodeIO {
         public:
             IGraphNodeIO();
+
             IGraphNodeIO(uint64_t id);
 
             const uint64_t m_ID;
@@ -90,7 +93,7 @@ namespace harmony {
         class IGraphNode {
         public:
 
-            explicit IGraphNode(const String& name);
+            explicit IGraphNode(const String &name);
 
             virtual Ops Build() = 0;
 
@@ -143,12 +146,11 @@ namespace harmony {
             void CallEntryPoint(EntryPointName &name);
 
         protected:
-            HashMap<uint64_t, Ops>          p_Entries;
-            Vector<Unique<IVariable>>       p_Variables;
+            HashMap<uint64_t, Ops> p_Entries;
+            Vector<Unique<IVariable>> p_Variables;
         };
 
-        class SerializedGraph
-        {
+        class SerializedGraph {
 
         };
 
@@ -165,17 +167,17 @@ namespace harmony {
             Vector<GraphScript::IGraphNode *> m_AvailableNodes;
         };
 
-        class GraphBuilder
-        {
+        class GraphBuilder {
         public:
-            String                          m_Name;
-            Vector<Unique<IGraphNode>>      m_GraphNodes;
-            Vector<Unique<IVariable>>       m_Variables;
-            Vector<Unique<IConnection>>     m_Connections;
-            Vector<Unique<EntryPointNode>>  m_EntryPoints;
+            String m_Name;
+            Vector<Unique<IGraphNode>> m_GraphNodes;
+            Vector<Unique<IVariable>> m_Variables;
+            Vector<Unique<IConnection>> m_Connections;
+            Vector<Unique<EntryPointNode>> m_EntryPoints;
 
 
             Unique<CompiledGraph> Build();
+
             nlohmann::json Serialize();
         };
     }

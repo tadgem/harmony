@@ -77,7 +77,7 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
     if (transformView.size_hint() % NUM_GROUPS != 0) {
         groupSize++;
     }
-    if(groupSize < MINIMUM_GROUP_SIZE) {
+    if (groupSize < MINIMUM_GROUP_SIZE) {
         groupSize = MINIMUM_GROUP_SIZE;
     }
 
@@ -101,19 +101,17 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
         }
     }
 
-    if(totalTransformsToProcess == 0)
-    {
+    if (totalTransformsToProcess == 0) {
         return;
     }
 
     bool useMT = true;
 
-    if(totalTransformsToProcess < groupSize) useMT = false;
-    if(groupSize < MINIMUM_GROUP_SIZE) useMT = false;
+    if (totalTransformsToProcess < groupSize) useMT = false;
+    if (groupSize < MINIMUM_GROUP_SIZE) useMT = false;
 
     OPTICK_TAG("Number of transforms to process", totalTransformsToProcess);
-    if(useMT)
-    {
+    if (useMT) {
         OPTICK_EVENT("Build group lambdas")
         int emptyGroups = NUM_GROUPS - (groupIndex + 1);
         std::vector<std::future<void>> futures;
@@ -132,13 +130,10 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
         for (int i = futures.size() - 1; i >= 0; i--) {
             futures[i].wait();
         }
-    }
-    else
-    {
+    } else {
         const int FIRST_GROUP_INDEX = 0;
         OPTICK_EVENT("Too few transforms for threading, ST instead.")
-        for(int i = 0; i < transformGroups[FIRST_GROUP_INDEX].size(); i++)
-        {
+        for (int i = 0; i < transformGroups[FIRST_GROUP_INDEX].size(); i++) {
             UpdateTransformComponent(transformGroups[FIRST_GROUP_INDEX][i]);
         }
     }
@@ -150,27 +145,25 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
         transform.LastScale = transform.Scale;
         transform.LastEuler = transform.Euler;
 
-        uint32_t parent = (uint32_t)data.m_Parent;
+        uint32_t parent = (uint32_t) data.m_Parent;
 
-        while(parent != UINT32_MAX) {
-            if(parent == UINT32_MAX) {
+        while (parent != UINT32_MAX) {
+            if (parent == UINT32_MAX) {
                 break;
             }
-            auto& t = registry.get<TransformComponent>((entt::entity)parent);
-            auto& data = registry.get<EntityData>((entt::entity)parent);
+            auto &t = registry.get<TransformComponent>((entt::entity) parent);
+            auto &data = registry.get<EntityData>((entt::entity) parent);
             matrices.emplace_back(t.LocalModel);
-            parent = (uint32_t)data.m_Parent;
+            parent = (uint32_t) data.m_Parent;
         }
-        if(matrices.empty())
-        {
+        if (matrices.empty()) {
             transform.Model = transform.LocalModel;
             continue;
         }
 
         glm::mat4 m = matrices[matrices.size() - 1];
 
-        for(int i = matrices.size() - 2; i >= 0; i--)
-        {
+        for (int i = matrices.size() - 2; i >= 0; i--) {
             m *= matrices[i];
         }
 
@@ -244,8 +237,7 @@ void harmony::TransformSystem::CalculateDirectionVectors(glm::vec3 eulerDegrees,
 
 }
 
-void harmony::TransformSystem::UpdateTransformComponent(harmony::TransformComponent *transform)
-{
+void harmony::TransformSystem::UpdateTransformComponent(harmony::TransformComponent *transform) {
     glm::mat4 modelMatrix = glm::mat4(1.0);
     glm::vec3 pos = glm::vec3(0.0);
     glm::vec3 eul = glm::vec3(0.0);

@@ -3,6 +3,7 @@
 #include "ECS/LightSystem.h"
 #include "ECS/LightComponents.h"
 #include "ECS/SkyComponent.h"
+
 #if HARMONY_DEBUG
 
 #include "ECS/TransformComponent.h"

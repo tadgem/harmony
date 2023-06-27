@@ -139,14 +139,12 @@ harmony::WeakRef<harmony::View> harmony::Renderer::GetView(const std::string &na
 harmony::WeakRef<harmony::PipelineV2> harmony::Renderer::GetViewPipeline(WeakRef<View> view) {
     OPTICK_EVENT();
 
-    if(view.expired())
-    {
+    if (view.expired()) {
         harmony::log::error("Renderer : Cannot get view pipeline, passed view is expired.");
         WeakRef<PipelineV2>();
     }
     auto v = view.lock();
-    if(p_Views.find(v) != p_Views.end())
-    {
+    if (p_Views.find(v) != p_Views.end()) {
         return p_Views[v];
     }
 
@@ -552,13 +550,13 @@ void harmony::Renderer::OnImGui() {
             if (ImGui::Button("Build")) {
                 std::string name = std::string(p_PipelinePostProcessStageNameInput);
                 Utils::TrimString(name);
-                Vector<AttachmentType> attachments {AttachmentType::RGBA8};
+                Vector<AttachmentType> attachments{AttachmentType::RGBA8};
                 Ref<PostProcessStage> stage = CreateRef<PostProcessStage>(
                         name,
                         PipelineStage::Type::PostProcess, // TODO: Make selectable
                         p_SelectedShaderProgram,
                         WeakRef<PipelineStageRenderer>(),
-                                attachments
+                        attachments
                 );
                 // AddPostProcessStage(stage);
                 p_CreatePostProcessStageWindow = false;
@@ -613,6 +611,7 @@ bool harmony::Renderer::PipelineStageRendererSelector(const std::string &selecto
 
     return selectedAsset;
 }
+
 #endif
 
 bool harmony::Renderer::IsBuiltInShaderName(const std::string &name) {
@@ -767,16 +766,13 @@ std::vector<std::string> harmony::Renderer::GetShaderNames() {
     return shaders;
 }
 
-void harmony::Renderer::AddPipelineStage(Ref<PipelineStage> pipelineStage)
-{
-    if(!pipelineStage)
-    {
+void harmony::Renderer::AddPipelineStage(Ref<PipelineStage> pipelineStage) {
+    if (!pipelineStage) {
         harmony::log::warn("Renderer : Invalid PipelineStage supplied, doing nothing.");
         return;
     }
 
-    if(std::find(p_PipelineStages.begin(), p_PipelineStages.end(),pipelineStage) != p_PipelineStages.end())
-    {
+    if (std::find(p_PipelineStages.begin(), p_PipelineStages.end(), pipelineStage) != p_PipelineStages.end()) {
         harmony::log::warn("Renderer : PipelineStage : {} : Already managed by renderer.", pipelineStage->m_Name);
         return;
     }
@@ -784,12 +780,9 @@ void harmony::Renderer::AddPipelineStage(Ref<PipelineStage> pipelineStage)
     p_PipelineStages.emplace_back(pipelineStage);
 }
 
-harmony::WeakRef<harmony::PipelineStage> harmony::Renderer::GetPipelineStage(const std::string& name)
-{
-    for(auto p : p_PipelineStages)
-    {
-        if(p->m_Name == name)
-        {
+harmony::WeakRef<harmony::PipelineStage> harmony::Renderer::GetPipelineStage(const std::string &name) {
+    for (auto p: p_PipelineStages) {
+        if (p->m_Name == name) {
             return p;
         }
     }
@@ -1082,7 +1075,7 @@ void harmony::Renderer::DeserializePostProcessStages(nlohmann::json &json, Asset
 
         PipelineStage::Type type = postProcessJson[sk_PipelineStageType];
         // AttachmentType attachments = postProcessJson[sk_PipelineStageAttachments];
-        Vector<AttachmentType> attachments {AttachmentType::RGBA8};
+        Vector<AttachmentType> attachments{AttachmentType::RGBA8};
         Ref<PostProcessStage> stage = CreateRef<PostProcessStage>(
                 name,
                 type,

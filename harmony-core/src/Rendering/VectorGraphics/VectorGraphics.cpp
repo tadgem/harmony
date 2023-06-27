@@ -87,10 +87,14 @@ void harmony::VectorGraphics::RemoveFont(const std::string &name) {
     p_FontDatas.erase(name);
 }
 
-HARMONY_VG_IMPL(FontFace, nvgFontFace, ARG_PACK(font), const char* font)
-HARMONY_VG_IMPL(Text, nvgText, ARG_PACK(x,y,str, NULL), float x, float y, const char *str)
+HARMONY_VG_IMPL(FontFace, nvgFontFace, ARG_PACK(font), const char *font)
+
+HARMONY_VG_IMPL(Text, nvgText, ARG_PACK(x, y, str, NULL), float x, float y, const char *str)
+
 HARMONY_VG_IMPL(FontSize, nvgFontSize, ARG_PACK(size), float size);
+
 HARMONY_VG_IMPL(FontBlur, nvgFontBlur, ARG_PACK(size), int size);
+
 HARMONY_VG_IMPL(FillColor, nvgFillColor, ARG_PACK(color), NVGcolor color);
 
 

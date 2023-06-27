@@ -8,21 +8,26 @@
 #include <cstdint>
 #include "Core/Memory.h"
 #include "Rendering/TypeDef.h"
-namespace harmony
-{
+
+namespace harmony {
     class Framebuffer;
+
     struct Attachment;
 
-    class GPUResourceManager
-    {
+    class GPUResourceManager {
     public:
         static uint16_t GetMaxFramebufferWidth();
+
         static uint16_t GetMaxFramebufferHeight();
+
         static uint16_t GetNumActiveFramebuffers();
+
         static uint16_t GetNumActiveAttachments();
 
-        static Ref<Framebuffer> CreateFramebuffer(const std::string& name, Resolution resolution, Resolution::Type resolutionType);
-        static Ref<Attachment>  CreateAttachment(Resolution resolution, AttachmentType type);
+        static Ref<Framebuffer>
+        CreateFramebuffer(const std::string &name, Resolution resolution, Resolution::Type resolutionType);
+
+        static Ref<Attachment> CreateAttachment(Resolution resolution, AttachmentType type);
 
     protected:
         static uint16_t MAX_FRAMEBUFFER_RESOLUTION_X;

@@ -50,8 +50,7 @@ void harmony::ShaderProgram::Build() {
         m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Vertex].lock()->m_ProgramHandle,
                                        m_Stages[ShaderStage::Type::Fragment].lock()->m_ProgramHandle, true);
     }
-    if(m_Handle.idx == bgfx::kInvalidHandle)
-    {
+    if (m_Handle.idx == bgfx::kInvalidHandle) {
         harmony::log::error("Shader : {} : Failed to build!.", m_Name);
     }
 }

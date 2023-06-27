@@ -8,12 +8,10 @@
 #include "ECS/System.h"
 #include "Core/Memory.h"
 
-namespace harmony
-{
+namespace harmony {
     class GraphScriptProgramComponent;
 
-    class GraphScriptSystem : public System
-    {
+    class GraphScriptSystem : public System {
     public:
         GraphScriptSystem(Ref<GraphScriptProgramComponent> gspc);
 

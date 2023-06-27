@@ -29,7 +29,7 @@ namespace harmony {
 
         const int MINIMUM_GROUP_SIZE = 64;
 
-        static void UpdateTransformComponent(TransformComponent* transform);
+        static void UpdateTransformComponent(TransformComponent *transform);
 
         static void CalculateDirectionVectors(glm::vec3 eulerDegrees, TransformComponent &transform);
     };

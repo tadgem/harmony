@@ -9,6 +9,7 @@ namespace harmony {
     class ShaderDataOverride {
     public:
         ShaderDataOverride();
+
         std::string m_ShaderName;
 
         std::vector<ShaderUniform> m_AvailableOverrides;

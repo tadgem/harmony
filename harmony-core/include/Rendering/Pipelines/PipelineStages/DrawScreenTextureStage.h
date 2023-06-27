@@ -4,12 +4,11 @@
 
 #ifndef HARMONY_DOJO_DRAWSCREENTEXTURESTAGE_H
 #define HARMONY_DOJO_DRAWSCREENTEXTURESTAGE_H
+
 #include "Rendering/Pipelines/PipelineStage.h"
 
-namespace harmony
-{
-    class DrawScreenTextureStage : public PipelineStage
-    {
+namespace harmony {
+    class DrawScreenTextureStage : public PipelineStage {
     public:
         DrawScreenTextureStage(WeakRef<ShaderProgram> shader, AttachmentType type, Vector<WeakRef<Framebuffer>> fbs);
 

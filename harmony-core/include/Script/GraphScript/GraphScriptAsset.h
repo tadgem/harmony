@@ -3,10 +3,8 @@
 #include <utility>
 #include "Assets/Asset.h"
 
-namespace harmony::GraphScript
-{
-    class GraphScriptAsset
-    {
+namespace harmony::GraphScript {
+    class GraphScriptAsset {
     public:
         explicit GraphScriptAsset(nlohmann::json graphScriptJson) : m_JSON(std::move(graphScriptJson)) {};
 

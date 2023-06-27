@@ -1084,8 +1084,7 @@ struct ImPool {
         if (idx == Buf.Size) {
             Buf.resize(Buf.Size + 1);
             FreeIdx++;
-        }
-        else { FreeIdx = *(int *) &Buf[idx]; }
+        } else { FreeIdx = *(int *) &Buf[idx]; }
         IM_PLACEMENT_NEW(&Buf[idx]) T();
         AliveCount++;
         return &Buf[idx];

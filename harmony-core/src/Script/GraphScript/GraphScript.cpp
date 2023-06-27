@@ -30,8 +30,7 @@ harmony::GraphScript::IGraphNode *harmony::GraphScript::PrintNode::Clone() {
     return new PrintNode();
 }
 
-harmony::GraphScript::EntryPointNode::EntryPointNode() : IGraphNode("EntryPoint")
-{
+harmony::GraphScript::EntryPointNode::EntryPointNode() : IGraphNode("EntryPoint") {
 
 }
 
@@ -71,8 +70,7 @@ harmony::GraphScript::NodeRegistry::NodeRegistry() {
 
 harmony::GraphScript::NodeRegistry::~NodeRegistry() {
     for (auto node: m_AvailableNodes) {
-        if(node)
-        {
+        if (node) {
             delete node;
         }
     }
@@ -102,15 +100,14 @@ void harmony::GraphScript::CompiledGraph::CallEntryPoint(EntryPointName &name) {
 
 }
 
-harmony::GraphScript::EntryPointName::EntryPointName(const std::string & name) {
+harmony::GraphScript::EntryPointName::EntryPointName(const std::string &name) {
     for (auto c: name) {
         m_id += c;
     }
 
 }
 
-harmony::GraphScript::EntryPointName::EntryPointName()
-{
+harmony::GraphScript::EntryPointName::EntryPointName() {
     m_id = INVALID_ENTRY_POINT_NAME;
 }
 
@@ -127,10 +124,11 @@ nlohmann::json harmony::GraphScript::GraphBuilder::Serialize() {
 }
 
 using namespace std::chrono;
-// lol please fix this.
-harmony::GraphScript::IGraphNodeIO::IGraphNodeIO() : m_ID(static_cast<uint64_t>(system_clock::now().time_since_epoch().count()))
-{}
 
-harmony::GraphScript::IGraphNodeIO::IGraphNodeIO(uint64_t id) : m_ID(id){
+// lol please fix this.
+harmony::GraphScript::IGraphNodeIO::IGraphNodeIO() : m_ID(
+        static_cast<uint64_t>(system_clock::now().time_since_epoch().count())) {}
+
+harmony::GraphScript::IGraphNodeIO::IGraphNodeIO(uint64_t id) : m_ID(id) {
 
 }

@@ -37,15 +37,23 @@ namespace harmony {
         })
 
         static VectorGraphics *Get();
+
         NVGcontext *AddViewLayer(Layer layer, bgfx::ViewId viewId);
+
         void RemoveViewLayer(Layer layer, NVGcontext *renderer);
+
         void AddFont(const std::string &name, std::vector<uint8_t> data);
+
         void RemoveFont(const std::string &name);
 
-        HARMONY_VG_DEF(FontFace, const char* font)
+        HARMONY_VG_DEF(FontFace, const char *font)
+
         HARMONY_VG_DEF(FontSize, float size);
+
         HARMONY_VG_DEF(FontBlur, int blur);
+
         HARMONY_VG_DEF(FillColor, NVGcolor color);
+
         HARMONY_VG_DEF(Text, float x, float y, const char *str);
 
     protected:

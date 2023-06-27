@@ -2,67 +2,64 @@
 #include "Core/Log.hpp"
 #include "Rendering/GPUResourceManager.h"
 #include "Rendering/Renderer.h"
-harmony::Attachment harmony::Framebuffer::CreateAttachment(harmony::AttachmentType attachmentType)
-{
+
+harmony::Attachment harmony::Framebuffer::CreateAttachment(harmony::AttachmentType attachmentType) {
     bgfx::TextureHandle textureHandle = CreateAttachmentInternal(m_FramebufferResolution, attachmentType);
-    Attachment attachment {textureHandle, attachmentType, m_FramebufferResolution};
+    Attachment attachment{textureHandle, attachmentType, m_FramebufferResolution};
 
     m_Attachments.emplace_back(attachment);
 
     return attachment;
 }
 
-harmony::Framebuffer::~Framebuffer()
-{
+harmony::Framebuffer::~Framebuffer() {
     // harmony::log::info("Framebuffer : Destructor called for framebuffer : {}. Attachments will be destroyed.", m_FBH.idx);
     m_Attachments.clear();
 }
 
 bool harmony::Framebuffer::Build() {
     Vector<bgfx::TextureHandle> textureAttachments;
-    for(Attachment& a : m_Attachments)
-    {
+    for (Attachment &a: m_Attachments) {
         textureAttachments.emplace_back(a.m_Handle);
     }
     m_FBH = bgfx::createFrameBuffer(textureAttachments.size(), textureAttachments.data());
     bgfx::setViewMode(m_ViewID, bgfx::ViewMode::Sequential);
     bgfx::setViewFrameBuffer(m_ViewID, m_FBH);
     bgfx::setViewName(m_ViewID, m_Name.c_str());
-    bgfx::setViewRect(m_ViewID,0,0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
+    bgfx::setViewRect(m_ViewID, 0, 0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
     UpdateVirtualResolution(m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
     return IsBuilt();
 }
 
-bgfx::TextureHandle harmony::Framebuffer::CreateAttachmentInternal(Resolution res, harmony::AttachmentType type)
-{
+bgfx::TextureHandle harmony::Framebuffer::CreateAttachmentInternal(Resolution res, harmony::AttachmentType type) {
     // TODO: Add support for mips
     const uint16_t NUM_TEXTURE_LAYERS = 1;
-    uint64_t ATTACHMENT_FLAGS  = BGFX_TEXTURE_RT | BGFX_TEXTURE_BLIT_DST;
-    if(type & AttachmentType::Depth)
-    {
+    uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_TEXTURE_BLIT_DST;
+    if (type & AttachmentType::Depth) {
         ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_STATE_DEPTH_TEST_LEQUAL;
     }
     bgfx::TextureFormat::Enum format = harmony::GetBGFXTextureFormat(type);
-    return bgfx::createTexture2D(res.Width,res.Height,false, NUM_TEXTURE_LAYERS, format, ATTACHMENT_FLAGS);
+    return bgfx::createTexture2D(res.Width, res.Height, false, NUM_TEXTURE_LAYERS, format, ATTACHMENT_FLAGS);
 }
 
 bool harmony::Framebuffer::IsBuilt() {
     return m_FBH.idx != UINT16_MAX;
 }
 
-void harmony::Framebuffer::UpdateVirtualResolution(uint16_t w, uint16_t h)
-{
-    Resolution newVirtualResolution = GetScaledResolution(m_ResolutionType, {w,h});
+void harmony::Framebuffer::UpdateVirtualResolution(uint16_t w, uint16_t h) {
+    Resolution newVirtualResolution = GetScaledResolution(m_ResolutionType, {w, h});
 
-    if(newVirtualResolution.Width > m_FramebufferResolution.Width)
-    {
-        harmony::log::warn("Framebuffer : ID {} : new virtual width is greater than the framebuffer resolution! : Requested width : {} : Framebuffer Width : {}", m_FBH.idx, newVirtualResolution.Width, m_FramebufferResolution.Width);
+    if (newVirtualResolution.Width > m_FramebufferResolution.Width) {
+        harmony::log::warn(
+                "Framebuffer : ID {} : new virtual width is greater than the framebuffer resolution! : Requested width : {} : Framebuffer Width : {}",
+                m_FBH.idx, newVirtualResolution.Width, m_FramebufferResolution.Width);
         newVirtualResolution.Width = m_FramebufferResolution.Width;
     }
 
-    if(newVirtualResolution.Height > m_FramebufferResolution.Height)
-    {
-        harmony::log::warn("Framebuffer : ID {} : new virtual height is greater than the framebuffer resolution! : Requested height : {} : Framebuffer Height : {}", m_FBH.idx, newVirtualResolution.Height, m_FramebufferResolution.Height);
+    if (newVirtualResolution.Height > m_FramebufferResolution.Height) {
+        harmony::log::warn(
+                "Framebuffer : ID {} : new virtual height is greater than the framebuffer resolution! : Requested height : {} : Framebuffer Height : {}",
+                m_FBH.idx, newVirtualResolution.Height, m_FramebufferResolution.Height);
         newVirtualResolution.Height = m_FramebufferResolution.Height;
     }
 
@@ -73,34 +70,33 @@ void harmony::Framebuffer::UpdateVirtualResolution(uint16_t w, uint16_t h)
 
 }
 
-harmony::Framebuffer::Framebuffer(const String& name,Resolution res, harmony::Resolution::Type resType) : m_Name(name)
-{
+harmony::Framebuffer::Framebuffer(const String &name, Resolution res, harmony::Resolution::Type resType) : m_Name(
+        name) {
     m_FBH.idx = UINT16_MAX;
     m_ViewID = Renderer::GetViewID();
     m_ResolutionType = resType;
 
-    if(m_ResolutionType == Resolution::Type::Custom)
-    {
+    if (m_ResolutionType == Resolution::Type::Custom) {
         m_FramebufferResolution = res;
         return;
     }
 
-    m_FramebufferResolution = GetScaledResolution(resType, {GPUResourceManager::GetMaxFramebufferWidth(), GPUResourceManager::GetMaxFramebufferHeight()});
+    m_FramebufferResolution = GetScaledResolution(resType, {GPUResourceManager::GetMaxFramebufferWidth(),
+                                                            GPUResourceManager::GetMaxFramebufferHeight()});
     UpdateVirtualResolution(m_FramebufferResolution.Width, m_FramebufferResolution.Height);
 }
 
 harmony::Resolution harmony::Framebuffer::GetScaledResolution(harmony::Resolution::Type type, harmony::Resolution res) {
-    Resolution finalRes {0,0};
+    Resolution finalRes{0, 0};
 
-    switch(m_ResolutionType)
-    {
+    switch (m_ResolutionType) {
         case Resolution::Type::Custom:
         case Resolution::Type::FullScale:
             finalRes.Width = res.Width;
             finalRes.Height = res.Height;
             break;
         case Resolution::Type::HalfScale:
-            finalRes.Width =  res.Width / 2;
+            finalRes.Width = res.Width / 2;
             finalRes.Height = res.Height / 2;
             break;
         case Resolution::Type::QuarterScale:

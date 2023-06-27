@@ -15,23 +15,22 @@ void harmony::DrawScreenTextureStage::PreUpdate(entt::registry &registry, harmon
         auto src = source.lock();
         src->OnPreUpdate(registry, pipelineShader);
     }
-    if(m_FramebuffersToDraw.empty())
-    {
+    if (m_FramebuffersToDraw.empty()) {
         harmony::log::error("DrawScreenTextureStage : PreUpdate : cannot draw framebuffer, no framebuffers passed.");
         return;
     }
     float fbWidth = 0;
     float fbHeight = 0;
-    for(int i = 0; i < m_FramebuffersToDraw.size(); i++)
-    {
-        if(pipelineShader->m_Uniforms.size() == i)
-        {
-            harmony::log::error("DrawScreenTextureStage : PreUpdate : Shader does not have uniform for framebuffer at sampler index {}.", i);
+    for (int i = 0; i < m_FramebuffersToDraw.size(); i++) {
+        if (pipelineShader->m_Uniforms.size() == i) {
+            harmony::log::error(
+                    "DrawScreenTextureStage : PreUpdate : Shader does not have uniform for framebuffer at sampler index {}.",
+                    i);
             return;
         }
-        if(i == 0 && m_FramebuffersToDraw[i].expired())
-        {
-            harmony::log::error("DrawScreenTextureStage : PreUpdate : cannot draw framebuffer, colour buffer is expired.");
+        if (i == 0 && m_FramebuffersToDraw[i].expired()) {
+            harmony::log::error(
+                    "DrawScreenTextureStage : PreUpdate : cannot draw framebuffer, colour buffer is expired.");
             return;
         }
         auto fb = m_FramebuffersToDraw[i].lock();
@@ -40,7 +39,7 @@ void harmony::DrawScreenTextureStage::PreUpdate(entt::registry &registry, harmon
         fbHeight = fb->m_FramebufferResolution.Height;
     }
 
-    ScreenSpaceQuad(fbWidth, fbHeight,v->m_Width, v->m_Height);
+    ScreenSpaceQuad(fbWidth, fbHeight, v->m_Width, v->m_Height);
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
     bgfx::submit(viewId, pipelineShader->m_Handle);
 }
@@ -56,15 +55,15 @@ void harmony::DrawScreenTextureStage::PostUpdate(entt::registry &registry, harmo
 
 }
 
-harmony::DrawScreenTextureStage::DrawScreenTextureStage(WeakRef<ShaderProgram> shader, AttachmentType type, Vector<WeakRef<Framebuffer>> fbs) : PipelineStage(GetName(fbs[0]), PipelineStage::Type::PrimaryDraw, {type}, shader , WeakRef<PipelineStageRenderer>())
-{
+harmony::DrawScreenTextureStage::DrawScreenTextureStage(WeakRef<ShaderProgram> shader, AttachmentType type,
+                                                        Vector<WeakRef<Framebuffer>> fbs) : PipelineStage(
+        GetName(fbs[0]), PipelineStage::Type::PrimaryDraw, {type}, shader, WeakRef<PipelineStageRenderer>()) {
     m_FramebuffersToDraw = fbs;
 }
 
 harmony::String harmony::DrawScreenTextureStage::GetName(WeakRef<Framebuffer> fb) {
     String name = "DrawScreenTextureStage_";
-    if(fb.expired())
-    {
+    if (fb.expired()) {
         return name;
     }
     auto _fb = fb.lock();

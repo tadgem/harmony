@@ -7,12 +7,12 @@
 
 #include "Rendering/Pipelines/PipelineStage.h"
 
-namespace harmony
-{
+namespace harmony {
     class ShaderProgram;
+
     class SkyDataSource;
-    class SkyStage : public PipelineStage
-    {
+
+    class SkyStage : public PipelineStage {
     public:
 
         SkyStage(WeakRef<ShaderProgram> shaderProgram);

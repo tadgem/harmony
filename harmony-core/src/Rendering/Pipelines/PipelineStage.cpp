@@ -5,7 +5,9 @@
 #include "Core/SerializationKeys.h"
 #include "Rendering/Framebuffer.h"
 #include "Rendering/GPUResourceManager.h"
-harmony::PipelineStage::PipelineStage(const std::string &name, Type pipelineStageType, Vector<AttachmentType> requiredAttachments,
+
+harmony::PipelineStage::PipelineStage(const std::string &name, Type pipelineStageType,
+                                      Vector<AttachmentType> requiredAttachments,
                                       WeakRef<ShaderProgram> shader, WeakRef<PipelineStageRenderer> stageRenderer)
         : m_Name(name), m_StageType(pipelineStageType), m_Attachments(requiredAttachments), p_Shader(shader),
           p_Renderer(stageRenderer.lock()) {

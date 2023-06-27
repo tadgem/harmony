@@ -4,11 +4,11 @@
 
 #ifndef HARMONY_DOJO_SUBDIVSCREENQUADRENDERER_H
 #define HARMONY_DOJO_SUBDIVSCREENQUADRENDERER_H
+
 #include "Rendering/Pipelines/PipelineStageRenderer.h"
-namespace harmony
-{
-    class SubDivScreenQuadRenderer : public PipelineStageRenderer
-    {
+
+namespace harmony {
+    class SubDivScreenQuadRenderer : public PipelineStageRenderer {
     public:
         SubDivScreenQuadRenderer(uint16_t wcount, uint16_t hcount);
 
@@ -17,7 +17,9 @@ namespace harmony
     protected:
         bgfx::VertexBufferHandle p_VBH;
         bgfx::IndexBufferHandle p_IBH;
+
         void CreateMesh(uint16_t w, uint16_t h);
+
         void DrawMesh(bgfx::ViewId viewId, Ref<ShaderProgram> shader);
 
     };

@@ -184,7 +184,7 @@ namespace {
                 int old = gl->ctextures;
                 gl->ctextures = (gl->ctextures == 0) ? 2 : gl->ctextures * 2;
                 gl->textures = (struct GLNVGtexture *) bx::realloc(gl->allocator, gl->textures,
-                                                                  sizeof(struct GLNVGtexture) * gl->ctextures);
+                                                                   sizeof(struct GLNVGtexture) * gl->ctextures);
                 bx::memSet(&gl->textures[old], 0xff, (gl->ctextures - old) * sizeof(struct GLNVGtexture));
 
                 if (gl->textures == NULL) {
@@ -725,7 +725,7 @@ namespace {
         if (gl->ncalls + 1 > gl->ccalls) {
             gl->ccalls = gl->ccalls == 0 ? 32 : gl->ccalls * 2;
             gl->calls = (struct GLNVGcall *) bx::realloc(gl->allocator, gl->calls,
-                                                        sizeof(struct GLNVGcall) * gl->ccalls);
+                                                         sizeof(struct GLNVGcall) * gl->ccalls);
         }
         ret = &gl->calls[gl->ncalls++];
         bx::memSet(ret, 0, sizeof(struct GLNVGcall));

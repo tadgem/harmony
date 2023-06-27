@@ -8,6 +8,7 @@
 #include "ImGui/imgui_bgfx.h"
 #include "ImGui/icons_font_awesome.h"
 #include "Rendering/GPUResourceManager.h"
+
 #endif
 
 harmony::RuntimeView::RuntimeView(Program &prog) : View("RuntimeView"), p_Program(prog), p_Renderer(prog.m_Renderer) {
@@ -71,8 +72,7 @@ void harmony::RuntimeView::OnImGui() {
     if (ImGui::Begin(runtimeViewTitle.c_str(), (bool *) 0, ImGuiWindowFlags_NoScrollbar)) {
         View::OnImGui();
 
-        if(!pipeline->HasOutputFramebuffer())
-        {
+        if (!pipeline->HasOutputFramebuffer()) {
             ImGui::End();
             return;
         }
@@ -83,15 +83,15 @@ void harmony::RuntimeView::OnImGui() {
             return;
         }
 
-        ImVec2 texUvs {(float)m_Width / (float)GPUResourceManager::GetMaxFramebufferWidth(),
-                       (float)m_Height / (float)GPUResourceManager::GetMaxFramebufferHeight()};
+        ImVec2 texUvs{(float) m_Width / (float) GPUResourceManager::GetMaxFramebufferWidth(),
+                      (float) m_Height / (float) GPUResourceManager::GetMaxFramebufferHeight()};
 
         ImGui::Image(
                 finalImageHandle,
                 ImGui::GetContentRegionAvail(),
                 ImVec2{0.0f, 0.0f},
                 texUvs
-                );
+        );
 
         auto dim = ImGui::GetWindowSize();
     }

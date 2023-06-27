@@ -5,6 +5,7 @@
 
 namespace harmony {
     class Framebuffer;
+
     class DebugDrawStage : public PipelineDrawStage {
     public:
         DebugDrawStage(GfxDebug::Channel channel);
