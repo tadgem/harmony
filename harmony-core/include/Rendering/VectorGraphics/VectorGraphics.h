@@ -50,7 +50,6 @@ namespace harmony
 		HARMONY_VG_DEF(FontSize, float size);
 		HARMONY_VG_DEF(FontBlur, int blur);
 		HARMONY_VG_DEF(Text, float x, float y, const char *str);
-		HARMONY_VG_DEF(FontBlur, float blur);
 		HARMONY_VG_DEF(TextLetterSpacing, float spacing);
 		HARMONY_VG_DEF(TextLineHeight, float lineHeight);
 		HARMONY_VG_DEF(TextAlign, int align);
