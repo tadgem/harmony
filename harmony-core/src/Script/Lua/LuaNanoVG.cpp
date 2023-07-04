@@ -1,6 +1,6 @@
 #include "Script/Lua/LuaNanoVG.hpp"
 #include "Rendering/VectorGraphics/VectorGraphics.h"
-
+#define HARMONY_LUA_VG_BIND(X)     nvg["X"] = &harmony::VectorGraphics::X;
 NVGcolor rgba(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
 	return nvgRGBA(r, g, b, a);
@@ -9,30 +9,6 @@ NVGcolor rgba(unsigned char r, unsigned char g, unsigned char b, unsigned char a
 NVGcolor rgb(unsigned char r, unsigned char g, unsigned char b)
 {
 	return nvgRGB(r, g, b);
-}
-
-void beginPath()
-{
-}
-
-void rect(float x, float y, float w, float h)
-{
-}
-
-void circle(float cx, float cy, float r)
-{
-}
-
-void pathWinding(int dir)
-{
-}
-
-void fillColor(NVGcolor color)
-{
-}
-
-void fill(NVGcolor color)
-{
 }
 
 void harmony::InitNanoVG(sol::state &state)
@@ -124,11 +100,57 @@ void harmony::InitNanoVG(sol::state &state)
 	nvg.set_function("rgb", rgb);
 	nvg.set_function("rgba", rgba);
 
-	nvg.set_function("beginPath", beginPath);
-	nvg.set_function("rect", rect);
-	nvg.set_function("circle", circle);
-	nvg.set_function("pathWinding", pathWinding);
-	nvg.set_function("fill", fill);
-	nvg.set_function("fillColor", fillColor);
-
+    HARMONY_LUA_VG_BIND(FontFace)
+    HARMONY_LUA_VG_BIND(FontSize);
+    HARMONY_LUA_VG_BIND(FontBlur);
+    HARMONY_LUA_VG_BIND(Text);
+    HARMONY_LUA_VG_BIND(TextLetterSpacing);
+    HARMONY_LUA_VG_BIND(TextLineHeight);
+    HARMONY_LUA_VG_BIND(TextAlign);
+    HARMONY_LUA_VG_BIND(FontFaceId);
+    HARMONY_LUA_VG_BIND(TextBox);
+    HARMONY_LUA_VG_BIND(ShapeAntiAlias);
+    HARMONY_LUA_VG_BIND(StrokeColor);
+    HARMONY_LUA_VG_BIND(StrokePaint);
+    HARMONY_LUA_VG_BIND(FillColor);
+    HARMONY_LUA_VG_BIND(FillPaint);
+    HARMONY_LUA_VG_BIND(MiterLimit);
+    HARMONY_LUA_VG_BIND(StrokeWidth);
+    HARMONY_LUA_VG_BIND(LineCap);
+    HARMONY_LUA_VG_BIND(LineJoin);
+    HARMONY_LUA_VG_BIND(GlobalAlpha);
+    HARMONY_LUA_VG_BIND(ResetTransform);
+    HARMONY_LUA_VG_BIND(Transform);
+    HARMONY_LUA_VG_BIND(Translate);
+    HARMONY_LUA_VG_BIND(Rotate);
+    HARMONY_LUA_VG_BIND(SkewX);
+    HARMONY_LUA_VG_BIND(SkewY);
+    HARMONY_LUA_VG_BIND(Scale);
+    HARMONY_LUA_VG_BIND(CurrentTransform);
+    HARMONY_LUA_VG_BIND(UpdateImage);
+    HARMONY_LUA_VG_BIND(ImageSize);
+    HARMONY_LUA_VG_BIND(DeleteImage);
+    HARMONY_LUA_VG_BIND(Scissor);
+    HARMONY_LUA_VG_BIND(IntersectScissor);
+    HARMONY_LUA_VG_BIND(ResetScissor);
+    HARMONY_LUA_VG_BIND(BeginPath);
+    HARMONY_LUA_VG_BIND(MoveTo);
+    HARMONY_LUA_VG_BIND(LineTo);
+    HARMONY_LUA_VG_BIND(BezierTo)
+    HARMONY_LUA_VG_BIND(QuadTo);
+    HARMONY_LUA_VG_BIND(ArcTo);
+    HARMONY_LUA_VG_BIND(ClosePath);
+    HARMONY_LUA_VG_BIND(PathWinding);
+    HARMONY_LUA_VG_BIND(Arc);
+    HARMONY_LUA_VG_BIND(Rect);
+    HARMONY_LUA_VG_BIND(RoundedRect);
+    HARMONY_LUA_VG_BIND(RoundedRectVarying);
+    HARMONY_LUA_VG_BIND(Ellipse);
+    HARMONY_LUA_VG_BIND(Circle);
+    HARMONY_LUA_VG_BIND(Fill);
+    HARMONY_LUA_VG_BIND(Stroke);
+    HARMONY_LUA_VG_BIND(LinearGradient)
+    HARMONY_LUA_VG_BIND(BoxGradient)
+    HARMONY_LUA_VG_BIND(RadialGradient)
+    HARMONY_LUA_VG_BIND(ImagePattern)
 }

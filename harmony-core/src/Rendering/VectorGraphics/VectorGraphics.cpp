@@ -2,13 +2,6 @@
 #include "Rendering/VectorGraphics/VectorGraphics.h"
 #include "Core/Log.hpp"
 
-//void harmony::VectorGraphics::Text(Layer layer, float x, float y, const char *str) {
-//    OPTICK_EVENT();
-//    for (NVGcontext *context: p_VectorRenderers[layer]) {
-//        nvgText(context, x, y, str, NULL);
-//    }
-//}
-
 #define ARG_PACK(...) __VA_ARGS__
 
 #define HARMONY_VG_IMPL(FUNC_NAME, nanoVgFuncImpl, ...) void harmony::VectorGraphics::FUNC_NAME(Layer layer, __VA_ARGS__) \
@@ -19,6 +12,16 @@
     }\
 }
 
+#define HARMONY_VG_IMPL_WITH_RETURN(FUNC_NAME, T, nanoVgFuncImpl, ...) T harmony::VectorGraphics::FUNC_NAME(Layer layer, __VA_ARGS__) \
+{\
+    OPTICK_EVENT();\
+    T empty;\
+    for (NVGcontext *context: p_VectorRenderers[layer]) {\
+        empty = nvg##FUNC_NAME(context, nanoVgFuncImpl);\
+    }\
+    return empty;\
+}
+
 #define HARMONY_VG_PROC(FUNC_NAME) void harmony::VectorGraphics::FUNC_NAME(Layer layer) \
 {\
     OPTICK_EVENT();\
@@ -27,7 +30,10 @@
     }\
 }
 
-harmony::VectorGraphics::VectorGraphics()
+harmony::Map<harmony::VectorGraphics::Layer, harmony::Vector<NVGcontext *>> harmony::VectorGraphics::p_VectorRenderers = harmony::Map<harmony::VectorGraphics::Layer,harmony::Vector<NVGcontext*>>();
+harmony::Map<harmony::String, harmony::Vector<uint8_t>> harmony::VectorGraphics::p_FontDatas = harmony::Map<harmony::String, harmony::Vector<uint8_t>>();
+
+void harmony::VectorGraphics::Init()
 {
 	OPTICK_EVENT();
 	p_VectorRenderers.emplace(Layer::One, std::vector<NVGcontext *>());
@@ -38,17 +44,6 @@ harmony::VectorGraphics::VectorGraphics()
 	p_VectorRenderers.emplace(Layer::Six, std::vector<NVGcontext *>());
 	p_VectorRenderers.emplace(Layer::Seven, std::vector<NVGcontext *>());
 	p_VectorRenderers.emplace(Layer::Eight, std::vector<NVGcontext *>());
-}
-
-harmony::VectorGraphics *harmony::VectorGraphics::Get()
-{
-	OPTICK_EVENT();
-	if (p_Instance)
-	{
-		return p_Instance;
-	}
-	p_Instance = new VectorGraphics();
-	return p_Instance;
 }
 
 NVGcontext *harmony::VectorGraphics::AddViewLayer(Layer layer, bgfx::ViewId viewId)
@@ -119,7 +114,6 @@ HARMONY_VG_IMPL(TextLetterSpacing, ARG_PACK(spacing), float spacing);
 HARMONY_VG_IMPL(TextLineHeight, ARG_PACK(lineHeight), float lineHeight);
 HARMONY_VG_IMPL(TextAlign, ARG_PACK(align), int align);
 HARMONY_VG_IMPL(FontFaceId, ARG_PACK(font), int font);
-HARMONY_VG_IMPL(Text, ARG_PACK(x,y,string,end), float x, float y, const char *string, const char *end);
 HARMONY_VG_IMPL(TextBox, ARG_PACK(x,y,breakRowWidth, string, end), float x, float y, float breakRowWidth,
 			   const char *string, const char *end);
 HARMONY_VG_IMPL(ShapeAntiAlias,ARG_PACK(enabled),  int enabled);
@@ -166,3 +160,16 @@ HARMONY_VG_IMPL(Ellipse,ARG_PACK(cx,cy,rx,ry),  float cx, float cy, float rx, fl
 HARMONY_VG_IMPL(Circle,ARG_PACK(cx,cy,r),  float cx, float cy, float r);
 HARMONY_VG_PROC(Fill);
 HARMONY_VG_PROC(Stroke);
+
+HARMONY_VG_IMPL_WITH_RETURN(LinearGradient, NVGpaint, ARG_PACK(sx,sy,ex,ey,icol,ocol), float sx, float sy,
+                           float ex, float ey, NVGcolor icol, NVGcolor ocol);
+
+HARMONY_VG_IMPL_WITH_RETURN(BoxGradient, NVGpaint, ARG_PACK(x,y,w,h,r,f,icol,ocol), float x, float y,float w,
+                           float h, float r, float f, NVGcolor icol,
+                           NVGcolor ocol);
+HARMONY_VG_IMPL_WITH_RETURN(RadialGradient, NVGpaint , ARG_PACK(cx,cy,inr,outr,icol,ocol), float cx, float cy,
+                           float inr, float outr, NVGcolor icol,
+                           NVGcolor ocol);
+HARMONY_VG_IMPL_WITH_RETURN(ImagePattern, NVGpaint, ARG_PACK(ox,oy,ex,ey,angle,image,alpha),float ox, float oy,
+                           float ex, float ey, float angle, int image,
+                           float alpha);

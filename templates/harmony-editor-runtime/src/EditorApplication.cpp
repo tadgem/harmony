@@ -176,11 +176,11 @@ int harmony::Editor::OnEditUpdate() {
         p_LightSystem->Update(p_ActiveScene->m_Registry);
         p_SimpleCollisionSystem->Update(p_ActiveScene->m_Registry);
 
-        VectorGraphics::Get()->FontSize(VectorGraphics::One, 20.0f);
-        VectorGraphics::Get()->FontFace(VectorGraphics::One, "carbontype");
-        VectorGraphics::Get()->FontBlur(VectorGraphics::One, 0);
-        VectorGraphics::Get()->FillColor(VectorGraphics::One, nvgRGBA(220, 220, 220, 160));
-        VectorGraphics::Get()->Text(VectorGraphics::One, 0.0f, 30.0f, "carbontype");
+        VectorGraphics::FontSize(VectorGraphics::One, 20.0f);
+        VectorGraphics::FontFace(VectorGraphics::One, "carbontype");
+        VectorGraphics::FontBlur(VectorGraphics::One, 0);
+        VectorGraphics::FillColor(VectorGraphics::One, nvgRGBA(220, 220, 220, 160));
+        VectorGraphics::Text(VectorGraphics::One, 0.0f, 30.0f, "carbontype");
         p_TransformSystem->Render(p_ActiveScene->m_Registry);
     }
 

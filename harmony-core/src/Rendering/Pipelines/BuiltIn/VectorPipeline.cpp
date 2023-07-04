@@ -20,7 +20,7 @@ void harmony::VectorGraphicsStage::PreUpdate(entt::registry &registry, WeakRef<V
 
 	if (!p_Context)
 	{
-		p_Context = VectorGraphics::Get()->AddViewLayer(m_Layer, viewId);
+		p_Context = VectorGraphics::AddViewLayer(m_Layer, viewId);
 	}
 	Ref<View> _view = view.lock();
 	bgfx::setViewRect(viewId, 0, 0, _view->m_Width, _view->m_Height);
@@ -41,6 +41,6 @@ void harmony::VectorGraphicsStage::Cleanup(WeakRef<View> view, bgfx::ViewId view
 {
 	OPTICK_EVENT();
 	Ref<View> _view = view.lock();
-	VectorGraphics::Get()->RemoveViewLayer(m_Layer, p_Context);
+	VectorGraphics::RemoveViewLayer(m_Layer, p_Context);
 	p_Context = nullptr;
 }
