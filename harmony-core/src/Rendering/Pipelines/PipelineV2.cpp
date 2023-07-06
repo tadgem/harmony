@@ -141,3 +141,15 @@ void harmony::PipelineV2::SetOutputFramebuffer(harmony::WeakRef<harmony::Framebu
 
 	p_OutputFramebuffer = framebuffer;
 }
+
+harmony::WeakRef<harmony::Framebuffer> harmony::PipelineV2::TryGetFramebuffer(const harmony::String &name)
+{
+	for(auto& [fb, stages] : p_Stages)
+	{
+		if(fb->m_Name == name)
+		{
+			return fb;
+		}
+	}
+	return harmony::WeakRef<harmony::Framebuffer>();
+}

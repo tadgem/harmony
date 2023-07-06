@@ -35,6 +35,9 @@ namespace harmony
 											Resolution::Type resolutionType);
 		virtual void PreUpdate(entt::registry &registry, WeakRef<View> view);
 		virtual void PostUpdate(entt::registry &registry, WeakRef<View> view);
+
+		virtual WeakRef<Framebuffer> TryGetFramebuffer(const String& name);
+
 		virtual bool HasOutputFramebuffer();
 		virtual WeakRef<Framebuffer> GetOutputFramebuffer();
 		virtual void SetOutputFramebuffer(WeakRef<Framebuffer> framebuffer);

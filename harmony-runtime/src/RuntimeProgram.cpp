@@ -17,6 +17,8 @@
 #include "Script/GraphScript/GraphScriptProgramComponent.h"
 #include "Script/GraphScript/GraphScriptSystem.h"
 #include "Rendering/Pipelines/PipelineStages/SkyStage.h"
+#include "Rendering/Modules/Moebius/MoebiusModule.h"
+
 harmony::RuntimeProgram::RuntimeProgram(const std::string &name) : Program(name) {
     OPTICK_EVENT();
     AddAssetTypeNames();
@@ -179,18 +181,8 @@ void harmony::RuntimeProgram::InitializePipelines() {
     auto skyFB = p_RuntimePipeline->AddFramebuffer("Sky FB",{AttachmentType::RGBA16F}, Resolution::Type::FullScale);
     auto forwardFB = p_RuntimePipeline->AddFramebuffer("Forward FB",{AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
     auto vectorFB = p_RuntimePipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA16F}, Resolution::Type::FullScale);
-	auto deferredFB = p_RuntimePipeline->AddFramebuffer("Deferred FB",
-														{
-															AttachmentType::RGBA32F, // 0: Position
-														 	AttachmentType::RGBA32F, // 1: Normal
-														 	AttachmentType::RGBA16F //  2: Colour
-														},
-														Resolution::Type::FullScale);
-	auto moebiusFB = p_RuntimePipeline->AddFramebuffer("Moebius FB",
-													   {
-															AttachmentType::RGBA8
-													   },
-													   Resolution::Type::FullScale);
+
+	auto moebiusFB = Moebius::AddMoebiusToPipeline(m_Renderer, p_RuntimePipeline);
 
     auto finalFB = p_RuntimePipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA16F}, Resolution::Type::FullScale);
 

@@ -9,7 +9,6 @@ namespace harmony
 	void InitHarmonyRendering(sol::state &state, sol::table &h);
 	void InitHarmonyInput(sol::state &state, sol::table &h);
 	void InitHarmonyECS(sol::state &state, sol::table &h);
-	void InitHarmonyCollision(sol::state &state, sol::table &h);
 	void InitHarmonyTime(sol::state &state, sol::table &h);
 	void InitGLM(sol::state &state, sol::table &h);
 

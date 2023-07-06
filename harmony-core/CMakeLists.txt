@@ -27,7 +27,7 @@ add_subdirectory(${ROOT_DIR}/submodules/optick ${CMAKE_CURRENT_BINARY_DIR}/optic
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 set(HARMONY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
 
-add_library(harmony-core STATIC ${CORE_HEADER_FILES} ${CORE_HEADERPP_FILES} ${CORE_SRC_FILES} src/Rendering/Texture.cpp src/Rendering/Pipelines/PipelineV2.cpp include/Rendering/TypeDef.h include/Rendering/Pipelines/PipelineStages/BlitStage.h src/Rendering/Pipelines/PipelineStages/BlitStage.cpp include/Rendering/Shaders/ShaderDataSources/SkyDataSource.h src/Rendering/Shaders/ShaderDataSources/SkyDataSource.cpp include/Rendering/Pipelines/PipelineStageRenderers/SubDivScreenQuadRenderer.h src/Rendering/Pipelines/PipelineStageRenderers/SubDivScreenQuadRenderer.cpp)
+add_library(harmony-core STATIC ${CORE_HEADER_FILES} ${CORE_HEADERPP_FILES} ${CORE_SRC_FILES} src/Rendering/Texture.cpp src/Rendering/Pipelines/PipelineV2.cpp include/Rendering/TypeDef.h include/Rendering/Pipelines/PipelineStages/BlitStage.h src/Rendering/Pipelines/PipelineStages/BlitStage.cpp include/Rendering/Shaders/ShaderDataSources/SkyDataSource.h src/Rendering/Shaders/ShaderDataSources/SkyDataSource.cpp include/Rendering/Pipelines/PipelineStageRenderers/SubDivScreenQuadRenderer.h src/Rendering/Pipelines/PipelineStageRenderers/SubDivScreenQuadRenderer.cpp src/Rendering/Modules/Moebius/MoebiusModule.cpp)
 set_property(TARGET harmony-core PROPERTY CXX_STANDARD 17)
 
 set(HARMONY_CORE_INCLUDES

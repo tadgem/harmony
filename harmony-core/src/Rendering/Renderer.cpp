@@ -90,6 +90,7 @@ void harmony::Renderer::AddBuiltInShaders()
 	AddBuiltInShader("BlinnPhongTextured", "vs_blinn_phong_textured", "fs_blinn_phong_textured", 6, 7);
 	AddBuiltInShader("FXAA", "vs_simple_textured", "fs_fxaa", 0, 8);
 	AddBuiltInShader("Sky", "vs_sky", "fs_sky", 9, 10);
+	AddBuiltInShader("DeferredGBuffer", "vs_deferred_geom", "fs_deferred_geom", 11,12);
 }
 
 harmony::WeakRef<harmony::ShaderProgram>

@@ -164,6 +164,21 @@ void lua_OpenScene(uint32_t index)
 	harmony::Program::Get()->OpenScene(index);
 }
 
+harmony::ShaderProgram* lua_GetShader(const std::string& name)
+{
+	auto r = lua_GetRenderer();
+	if(r)
+	{
+		auto swr = r->GetShader(name);
+		if(!swr.expired())
+		{
+			auto s = swr.lock();
+			return s.get();
+		}
+	}
+	return nullptr;
+}
+
 harmony::View *lua_GetView(const std::string &viewName)
 {
 	auto r = lua_GetRenderer();
@@ -266,13 +281,11 @@ void harmony::InitHarmony(sol::state &state)
 	sol::table i = state.create_named_table("input");
 	sol::table t = state.create_named_table("time");
 	sol::table m = state.create_named_table("math");
-	sol::table c = state.create_named_table("collision");
 	InitGLM(state, m);
 	InitHarmonyTime(state, t);
 	InitHarmonyRendering(state, h);
 	InitHarmonyInput(state, i);
 	InitHarmonyECS(state, h);
-	InitHarmonyCollision(state, c);
 #if HARMONY_DEBUG
 	sol::table d = state.create_named_table("debug");
 	InitHarmonyDebug(state, d);
@@ -292,23 +305,29 @@ void harmony::InitHarmonyDebug(sol::state &state, sol::table &h)
 
 void harmony::InitHarmonyAssets(sol::state &state, sol::table &h)
 {
-	h.new_usertype<harmony::AssetHandle>("assetHandle", "path", &AssetHandle::Path, "index", &AssetHandle::Index,
+	h.new_usertype<harmony::AssetHandle>("AssetHandle", "path", &AssetHandle::Path, "index", &AssetHandle::Index,
 										 "typeHash", &AssetHandle::TypeHash);
 }
 
 void harmony::InitHarmonyRendering(sol::state &state, sol::table &h)
 {
-	auto viewDef = h.new_usertype<harmony::View>("view", "width", &harmony::View::m_Width, "height",
+	auto viewDef = h.new_usertype<harmony::View>("View", "width", &harmony::View::m_Width, "height",
 												 &harmony::View::m_Height);
-	auto rendererDef = h.new_usertype<harmony::Renderer>("renderer");
+	auto rendererDef = h.new_usertype<harmony::Renderer>("Renderer");
+
+	auto shaderDef = h.new_usertype<harmony::ShaderProgram>("ShaderProgram", "name", &harmony::ShaderProgram::m_Name);
+
+	auto pipelineStageRenderer = h.new_usertype<harmony::PipelineStageRenderer>("PipelineStageRenderer");
+
 	h["GetRenderer"] = &lua_GetRenderer;
 	h["GetView"] = &lua_GetView;
 	h["GetViewEntity"] = &lua_GetViewEntity;
+	h["GetShader"] = &lua_GetShader;
 }
 
 void harmony::InitHarmonyInput(sol::state &state, sol::table &h)
 {
-	h.new_enum("gamePadButton",
+	h.new_enum("GamePadButton",
 			   "FaceNorth", harmony::Gamepad::Button::FaceNorth,
 			   "FaceEast", harmony::Gamepad::Button::FaceEast,
 			   "FaceSouth", harmony::Gamepad::Button::FaceSouth,
@@ -324,23 +343,23 @@ void harmony::InitHarmonyInput(sol::state &state, sol::table &h)
 			   "Start", harmony::Gamepad::Button::Start
 	);
 
-	h.new_enum("gamePadStick",
+	h.new_enum("GamePadStick",
 			   "LS", harmony::Gamepad::Stick::LS,
 			   "RS", harmony::Gamepad::Stick::RS
 	);
 
-	h.new_enum("gamePadTrigger",
+	h.new_enum("GamePadTrigger",
 			   "LT", harmony::Gamepad::Trigger::LT,
 			   "RT", harmony::Gamepad::Trigger::RT
 	);
 
-	h.new_enum("mouseButton",
+	h.new_enum("MouseButton",
 			   "Left", harmony::Mouse::Button::Left,
 			   "Right", harmony::Mouse::Button::Right,
 			   "Middle", harmony::Mouse::Button::Middle
 	);
 
-	h.new_enum("key",
+	h.new_enum("Key",
 			   "A", harmony::Key::A,
 			   "B", harmony::Key::B,
 			   "C", harmony::Key::C,
@@ -441,13 +460,13 @@ void harmony::InitHarmonyInput(sol::state &state, sol::table &h)
 void harmony::InitHarmonyECS(sol::state &state, sol::table &h)
 {
 	// High level
-	auto entityHandleDef = h.new_usertype<entt::entity>("entity_handle");
-	auto entityDef = h.new_usertype<harmony::LuaScriptEntity>("entity", "handle", &harmony::Entity::m_Handle);
-	auto registryDef = h.new_usertype<entt::registry>("registry");
-	auto sceneDef = h.new_usertype<harmony::Scene>("scene", "name", &harmony::Scene::m_Name, "registry",
+	auto entityHandleDef = h.new_usertype<entt::entity>("EntityHandle");
+	auto entityDef = h.new_usertype<harmony::LuaScriptEntity>("Entity", "handle", &harmony::Entity::m_Handle);
+	auto registryDef = h.new_usertype<entt::registry>("Registry");
+	auto sceneDef = h.new_usertype<harmony::Scene>("Scene", "name", &harmony::Scene::m_Name, "registry",
 												   &harmony::Scene::m_Registry);
 
-	h.new_usertype<harmony::TransformComponent>("transform",
+	h.new_usertype<harmony::TransformComponent>("Transform",
 												"position", &TransformComponent::Position,
 												"euler", &TransformComponent::Euler,
 												"scale", &TransformComponent::Scale,
@@ -456,34 +475,34 @@ void harmony::InitHarmonyECS(sol::state &state, sol::table &h)
 												"up", &TransformComponent::Up
 	);
 
-	h.new_usertype<harmony::MeshComponent>("mesh",
+	h.new_usertype<harmony::MeshComponent>("Mesh",
 										   "mesh", &MeshComponent::MeshAsset,
 										   "castShadow", &MeshComponent::CastShadow
 	);
 
-	h.new_usertype<harmony::MaterialComponent>("material");
+	h.new_usertype<harmony::MaterialComponent>("Material");
 
-	h.new_usertype<harmony::Camera>("camera",
+	h.new_usertype<harmony::Camera>("Camera",
 									"fov", &harmony::Camera::FOV,
 									"nearClip", &harmony::Camera::NearClipPlane,
 									"farClip", &harmony::Camera::FarClipPlane);
 
-	h.new_usertype<harmony::CameraComponent>("cameraComponent",
+	h.new_usertype<harmony::CameraComponent>("CameraComponent",
 											 "cam", &harmony::CameraComponent::Cam);
 
-	h.new_usertype<harmony::DirectionalLight>("directionalLight",
+	h.new_usertype<harmony::DirectionalLight>("DirectionalLight",
 											  "diffuse", &harmony::DirectionalLight::Diffuse,
 											  "ambient", &harmony::DirectionalLight::Ambient
 	);
 
-	h.new_usertype<harmony::PointLight>("pointLight",
+	h.new_usertype<harmony::PointLight>("PointLight",
 										"diffuse", &harmony::PointLight::Diffuse,
 										"ambient", &harmony::PointLight::Ambient,
 										"radius", &harmony::PointLight::Radius,
 										"intensity", &harmony::PointLight::Intensity
 	);
 
-	h.new_usertype<harmony::SpotLight>("spotLight",
+	h.new_usertype<harmony::SpotLight>("SpotLight",
 									   "diffuse", &harmony::SpotLight::Diffuse,
 									   "ambient", &harmony::SpotLight::Ambient,
 									   "radius", &harmony::SpotLight::Radius,
@@ -491,11 +510,11 @@ void harmony::InitHarmonyECS(sol::state &state, sol::table &h)
 									   "intensity", &harmony::SpotLight::Intensity
 	);
 
-	h.new_usertype<harmony::AABBColliderComponent>("aabb",
+	h.new_usertype<harmony::AABBColliderComponent>("AABB",
 												   "colliders", &AABBColliderComponent::m_Colliders
 	);
 
-	h.new_usertype<harmony::SphereColliderComponent>("sphere",
+	h.new_usertype<harmony::SphereColliderComponent>("Sphere",
 													 "colliders", &SphereColliderComponent::m_Colliders,
 													 "radius", &SphereColliderComponent::m_Radius
 	);
@@ -534,13 +553,6 @@ void harmony::InitHarmonyECS(sol::state &state, sol::table &h)
 	entityDef["SetSphere"] = &harmony::LuaScriptEntity::SetSphere;
 }
 
-void harmony::InitHarmonyCollision(sol::state &state, sol::table &h)
-{
-	h.new_usertype<harmony::SimpleCollisionSystem>("collision");
-	h.new_usertype<harmony::Ray>("ray", "origin", &harmony::Ray::Origin, "direction", &harmony::Ray::Direction);
-	h.new_usertype<harmony::Hit>("hit", "position", &harmony::Hit::Position, "hit", &harmony::Hit::DidHit);
-	h["raycast"] = &lua_Raycast;
-}
 
 void harmony::InitHarmonyTime(sol::state &state, sol::table &h)
 {
