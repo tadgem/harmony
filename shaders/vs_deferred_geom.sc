@@ -14,7 +14,7 @@ void main()
 	gl_Position = spos;
 
 	v_wpos = spos.xyz;
-
+	vec4 snorm = mul(u_modelViewProj, vec4(a_normal, 1.0));
 	v_normal    = a_normal.xyz;
 
 	v_texcoord0 = a_texcoord0;

@@ -83,6 +83,11 @@ void harmony::ImGuiLogger::Render()
 				ImGui::TableSetColumnIndex(2);
 				ImGui::TextColored(col, p_LevelInfos[msg.m_MsgLevel].m_LevelName.c_str());
 				ImGui::TableSetColumnIndex(3);
+				if(msg.m_Msg.size() > 100)
+				{
+					ImGui::TextColored(col, "Truncated");
+					continue;
+				}
 				ImGui::TextColored(col, msg.m_Msg.c_str());
 			}
 

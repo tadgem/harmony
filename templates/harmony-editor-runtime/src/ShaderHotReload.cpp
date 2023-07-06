@@ -6,6 +6,10 @@
 #include "Rendering/Shaders/Shader.h"
 #include "Assets/ShaderSourceAsset.h"
 #include <filesystem>
+#include <chrono>
+#include <thread>
+
+
 
 harmony::ShaderHotReload::ShaderHotReload(Program &prog) : AssetHotReloadProvider("Shader"), p_Program(prog),
                                                            p_Renderer(prog.m_Renderer) {
@@ -41,7 +45,6 @@ void harmony::ShaderHotReload::Init() {
 
 void
 harmony::ShaderHotReload::OnChange(const std::string &filename, const std::string &directory, efsw::Action action) {
-	ReloadTrackedShaders();
 	harmony::log::info("ShaderHotReload : Path : {}, Change Type : TODO", filename);
     // ignore changes to include shader files
     if (filename.find("include") < filename.size()) {
@@ -91,6 +94,10 @@ harmony::ShaderHotReload::OnChange(const std::string &filename, const std::strin
 					found = true;
 					finalPath = path;
 				}
+				if(path == filename)
+				{
+					found = true;
+				}
 			}
             if (!found) {
                 harmony::log::warn("shader not being tracked by hot reload.");
@@ -102,6 +109,8 @@ harmony::ShaderHotReload::OnChange(const std::string &filename, const std::strin
             if (CompileShader(shaderName) > 0) {
                 harmony::log::error("Failed to compile shader : {}", filename);
             }
+
+			return;
         }
         if (filename.find(".bin") < filename.size()) {
             std::string rendererName = ShaderStage::GetShaderRendererName();
@@ -113,6 +122,13 @@ harmony::ShaderHotReload::OnChange(const std::string &filename, const std::strin
                     p_LoadedShaderBinaries[shaderName]->LoadShaderBinary();
                     p_Program.m_Renderer.ReloadAllShaders();
                 }
+				else
+				{
+					auto handle = p_Program.m_AssetManager.LoadAsset<ShaderStage>(shaderName);
+					Ref<ShaderStage> stage = p_Program.m_AssetManager.GetAsset<ShaderStage>(handle[0]).lock();
+					p_LoadedShaderBinaries.emplace(shaderName, stage);
+					ReloadTrackedShaders();
+				}
             }
 
         }
@@ -196,7 +212,7 @@ int harmony::ShaderHotReload::CompileShader(const std::string &shaderName) {
     // varying def arg
     compileCommand += " --varyingdef ";
     //varying def path
-    compileCommand += varyingDefPath;
+    compileCommand += std::filesystem::current_path().string() + "\\" + varyingDefPath;
     //profile arg
     compileCommand += " -p ";
 
@@ -206,12 +222,7 @@ int harmony::ShaderHotReload::CompileShader(const std::string &shaderName) {
         case bgfx::RendererType::Direct3D9:
         case bgfx::RendererType::Direct3D11:
         case bgfx::RendererType::Direct3D12:
-            if (shaderStage == "f") {
-                profileName = "p" + p_RendererProfileMapping[shaderRendererName];
-                break;
-            }
-
-            profileName = shaderStage + p_RendererProfileMapping[shaderRendererName];
+            profileName = p_RendererProfileMapping[shaderRendererName];
             break;
         default:
             profileName = p_RendererProfileMapping[shaderRendererName];
@@ -221,7 +232,10 @@ int harmony::ShaderHotReload::CompileShader(const std::string &shaderName) {
     compileCommand += profileName;
 
     harmony::log::info("ShaderHotReload : final compile command for input file {} : {}", shaderName, compileCommand);
-    return system(compileCommand.c_str());
+    auto ret =  system(compileCommand.c_str());
+	std::chrono::milliseconds timespan(500);
+	std::this_thread::sleep_for(timespan);
 
+	return ret;
 }
 
