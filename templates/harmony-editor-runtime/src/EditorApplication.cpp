@@ -1,5 +1,6 @@
 #include <optick.h>
 #include <Rendering/Pipelines/PipelineStages/DrawScreenTextureStage.h>
+#include <Rendering/Modules/Moebius/MoebiusModule.h>
 #include "EditorApplication.h"
 #include "Rendering/Shapes.h"
 #include "ECS/MaterialSystem.h"
@@ -95,6 +96,7 @@ void harmony::Editor::InitializePipelines() {
     auto vectorFB = p_EditorPipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
     auto finalFB = p_EditorPipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
 
+	auto moebiusFB = Moebius::AddMoebiusToPipeline(m_Renderer, p_EditorPipeline);
     auto screenShaderWR = m_Renderer.p_PresentProgram;
 
     if(screenShaderWR.expired())
@@ -108,6 +110,7 @@ void harmony::Editor::InitializePipelines() {
     Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {vectorFB});
     // Ref<DrawScreenTextureStage> drawFxaaStage = CreateRef<DrawScreenTextureStage>(fxaaShaderWr, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {accumulateFB});
     Ref<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Editor);
+	Ref<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {moebiusFB});
 
     p_EditorPipeline->AddPipelineStage(skyFB, m_Renderer.GetPipelineStage("SkyStage").lock());
     p_EditorPipeline->AddPipelineStage(mainFB, debugDrawStage);
@@ -119,6 +122,7 @@ void harmony::Editor::InitializePipelines() {
 
     p_EditorPipeline->AddPipelineStage(finalFB, drawSkyStage);
     p_EditorPipeline->AddPipelineStage(finalFB, drawForwardStage);
+	p_EditorPipeline->AddPipelineStage(finalFB, drawMoebiusStage);
     p_EditorPipeline->AddPipelineStage(finalFB, drawVectorStage);
 
     p_EditorPipeline->SetOutputFramebuffer(finalFB);
@@ -316,6 +320,13 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
 
     SetRunningStyle();
 
+	if(m_Project)
+	{
+		if(m_Project->m_SerializedScenes.size() > 0)
+		{
+			LoadScene(m_Project->m_SerializedScenes[0]);
+		}
+	}
     while (p_Run) {
         ProfilerBeginFrame();
         m_EditorFSM.Process();

@@ -41,7 +41,8 @@ void harmony::ShaderHotReload::Init() {
 
 void
 harmony::ShaderHotReload::OnChange(const std::string &filename, const std::string &directory, efsw::Action action) {
-    harmony::log::info("ShaderHotReload : Path : {}, Change Type : TODO", filename);
+	ReloadTrackedShaders();
+	harmony::log::info("ShaderHotReload : Path : {}, Change Type : TODO", filename);
     // ignore changes to include shader files
     if (filename.find("include") < filename.size()) {
         return;
@@ -81,13 +82,23 @@ harmony::ShaderHotReload::OnChange(const std::string &filename, const std::strin
         if (filename.find(".sc") < filename.size()) {
             // Update shader text...
             std::string newText = Utils::LoadStringFromPath("assets/shaders" + filename);
-            if (p_LoadedShaderSources.find(filename) == p_LoadedShaderSources.end()) {
+			std::string finalPath = filename;
+			bool found = false;
+			for(auto& [path, data] : p_LoadedShaderSources)
+			{
+				if(path.find(filename))
+				{
+					found = true;
+					finalPath = path;
+				}
+			}
+            if (!found) {
                 harmony::log::warn("shader not being tracked by hot reload.");
                 return;
             }
             // recompile shader
-            size_t lastIndex = filename.find(".sc");
-            std::string shaderName = filename.substr(0, lastIndex);
+            size_t lastIndex = finalPath.find(".sc");
+            std::string shaderName = finalPath.substr(0, lastIndex);
             if (CompileShader(shaderName) > 0) {
                 harmony::log::error("Failed to compile shader : {}", filename);
             }

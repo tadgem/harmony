@@ -11,7 +11,7 @@
 harmony::WeakRef<harmony::Framebuffer> harmony::Moebius::AddMoebiusToPipeline(Renderer& renderer, harmony::Ref<harmony::PipelineV2> pipeline)
 {
 
-
+	// Create GBuffer FB
 	auto gbufferFB = pipeline->AddFramebuffer("GBuffer",
 														{
 																AttachmentType::RGBA32F, // 0: Position
@@ -19,22 +19,24 @@ harmony::WeakRef<harmony::Framebuffer> harmony::Moebius::AddMoebiusToPipeline(Re
 																AttachmentType::RGBA16F //  2: Colour
 														},
 														Resolution::Type::FullScale);
-
+	// Create Moebius Effect FB
 	auto moebiusFB = pipeline->AddFramebuffer("Moebius FB",
 													   {
 															   AttachmentType::RGBA8
 													   },
 													   Resolution::Type::FullScale);
 
+	// Create pipeline draw stage to render g-buffer data
 	Ref<PipelineDrawStage> gBufferStage = CreateRef<PipelineDrawStage>(
 			"GBufferStage",
 			PipelineDrawStage::Type::PrimaryDraw,
 			renderer.GetShader("DeferredGBuffer"),
 			renderer.GetPipelineStageRenderer("MeshRenderer")
 	);
-
+	// Get Moebius Shader
 	Ref<ShaderProgram> moebiusShader = renderer.GetShader("Moebius").lock();
 
+	// Create a quad renderer
 	Ref<ScreenQuadRenderer> quadRenderer = CreateRef<ScreenQuadRenderer>();
 	renderer.AddPipelineStageRenderer(quadRenderer);
 
