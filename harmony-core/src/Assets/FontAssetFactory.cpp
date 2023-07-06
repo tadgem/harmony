@@ -21,7 +21,7 @@ void harmony::FontAssetFactory::LoadAssetData(const std::string &path, entt::reg
 	std::string cleanFontName = GetFontNameFromPath(path);
 	font->m_CleanName = cleanFontName;
 	// make available to vg renderer
-	VectorGraphics::Get()->AddFont(cleanFontName, fontData);
+	VectorGraphics::AddFont(cleanFontName, fontData);
 
 	AssetComponent<FontAsset> fontComponent{font, assetHandle};
 	entt::entity e = registry.create();

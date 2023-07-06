@@ -69,6 +69,8 @@ void harmony::Program::Init()
 	InitSDL();
 	InitBGFX();
 	InitImGui();
+
+    VectorGraphics::Init();
 }
 
 void harmony::Program::LoadBuiltInAssets()
