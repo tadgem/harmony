@@ -29,7 +29,7 @@ void harmony::SkyStage::PreUpdate(entt::registry &registry, harmony::WeakRef<har
 	{
 		src.lock()->OnPreUpdate(registry, p_Shader.lock());
 	}
-	p_Renderer->Draw(registry, p_Shader.lock(), viewId);
+	p_Renderer->Draw(registry, p_Shader.lock(), view.lock(), viewId);
 }
 
 void

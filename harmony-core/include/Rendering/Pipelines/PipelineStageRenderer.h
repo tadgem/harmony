@@ -9,7 +9,7 @@
 
 namespace harmony
 {
-	class Drawable;
+	class View;
 	class PipelineStageRenderer
 	{
 	public:
@@ -17,7 +17,7 @@ namespace harmony
 
 		// need to think of a way to type constrain this to
 		// the correct derivative of drawable.
-		virtual void Draw(entt::registry &scene, Ref<ShaderProgram> shader,
+		virtual void Draw(entt::registry &scene, Ref<ShaderProgram> shader, Ref<View> view,
 						  bgfx::ViewId viewId)
 		{
 		}

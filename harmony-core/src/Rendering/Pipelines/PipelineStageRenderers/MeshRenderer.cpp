@@ -8,7 +8,7 @@ harmony::MeshRenderer::MeshRenderer() : PipelineStageRenderer("MeshRenderer")
 {
 }
 
-void harmony::MeshRenderer::Draw(entt::registry &scene, Ref<ShaderProgram> shader, bgfx::ViewId viewId)
+void harmony::MeshRenderer::Draw(entt::registry &scene, Ref<ShaderProgram> shader, Ref<View> view,bgfx::ViewId viewId)
 {
 	OPTICK_EVENT();
 	auto drawables = scene.view<MeshComponent, MaterialComponent, TransformComponent>();

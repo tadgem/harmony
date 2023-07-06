@@ -1,0 +1,18 @@
+//
+// Created by liam_ on 7/6/2023.
+//
+#include "Rendering/Pipelines/PipelineStageRenderers/ScreenQuadRenderer.h"
+#include "Rendering/Shapes.h"
+#include "Rendering/View.h"
+#include "Rendering/GPUResourceManager.h"
+void harmony::ScreenQuadRenderer::Draw(entt::registry &scene, harmony::Ref<harmony::ShaderProgram> shader,Ref<View> view, bgfx::ViewId viewId)
+{
+	ScreenSpaceQuad(view->m_Width, view->m_Height , view->m_Width, view->m_Height);
+	bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
+	bgfx::submit(viewId, shader->m_Handle);
+}
+
+harmony::ScreenQuadRenderer::ScreenQuadRenderer() : PipelineStageRenderer("ScreenQuadRenderer")
+{
+
+}

@@ -13,6 +13,7 @@
 #include "Rendering/Shaders/ShaderBinaries/vs_simple_textured.bin.h"
 #include "Rendering/Shaders/ShaderBinaries/vs_sky.bin.h"
 #include "Rendering/Shaders/ShaderBinaries/vs_deferred_geom.bin.h"
+#include "Rendering/Shaders/ShaderBinaries/fs_moebius.bin.h"
 #include "Shader.h"
 #include "bgfx/embedded_shader.h"
 
@@ -30,4 +31,5 @@ static const bgfx::EmbeddedShader s_BuiltInShader[] = {
 		BGFX_EMBEDDED_SHADER(fs_sky),
 		BGFX_EMBEDDED_SHADER(vs_deferred_geom),
 		BGFX_EMBEDDED_SHADER(fs_deferred_geom),
+		BGFX_EMBEDDED_SHADER(fs_moebius),
 		BGFX_EMBEDDED_SHADER_END()};

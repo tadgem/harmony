@@ -91,6 +91,7 @@ void harmony::Renderer::AddBuiltInShaders()
 	AddBuiltInShader("FXAA", "vs_simple_textured", "fs_fxaa", 0, 8);
 	AddBuiltInShader("Sky", "vs_sky", "fs_sky", 9, 10);
 	AddBuiltInShader("DeferredGBuffer", "vs_deferred_geom", "fs_deferred_geom", 11,12);
+	AddBuiltInShader("Moebius", "vs_simple_textured", "fs_moebius", 0,13);
 }
 
 harmony::WeakRef<harmony::ShaderProgram>

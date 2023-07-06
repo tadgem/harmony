@@ -36,7 +36,7 @@ void harmony::PipelineDrawStage::PreUpdate(entt::registry &registry, WeakRef<Vie
 		src->OnPreUpdate(registry, pipelineShader);
 	}
 	// Per instance uniforms should be handled by material.
-	p_Renderer->Draw(registry, pipelineShader, viewId);
+	p_Renderer->Draw(registry, pipelineShader, _view,  viewId);
 }
 
 void harmony::PipelineDrawStage::PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId)

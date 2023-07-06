@@ -5,11 +5,14 @@
 #include "Rendering/Pipelines/PipelineV2.h"
 #include "Rendering/Framebuffer.h"
 #include "Rendering/Pipelines/PipelineStages/PipelineDrawStage.h"
+#include "Rendering/Shaders/ShaderDataSources/DeferredDataSource.h"
+#include "Rendering/Pipelines/PipelineStageRenderers/ScreenQuadRenderer.h"
+
 harmony::WeakRef<harmony::Framebuffer> harmony::Moebius::AddMoebiusToPipeline(Renderer& renderer, harmony::Ref<harmony::PipelineV2> pipeline)
 {
 
 
-	auto deferredFB = pipeline->AddFramebuffer("Deferred FB",
+	auto gbufferFB = pipeline->AddFramebuffer("GBuffer",
 														{
 																AttachmentType::RGBA32F, // 0: Position
 																AttachmentType::RGBA32F, // 1: Normal
@@ -24,15 +27,34 @@ harmony::WeakRef<harmony::Framebuffer> harmony::Moebius::AddMoebiusToPipeline(Re
 													   Resolution::Type::FullScale);
 
 	Ref<PipelineDrawStage> gBufferStage = CreateRef<PipelineDrawStage>(
-			"DeferredGBuffer",
+			"GBufferStage",
 			PipelineDrawStage::Type::PrimaryDraw,
 			renderer.GetShader("DeferredGBuffer"),
 			renderer.GetPipelineStageRenderer("MeshRenderer")
 	);
 
-	renderer.AddPipelineStage(gBufferStage);
+	Ref<ShaderProgram> moebiusShader = renderer.GetShader("Moebius").lock();
 
-	pipeline->AddPipelineStage(deferredFB, gBufferStage);
+	Ref<ScreenQuadRenderer> quadRenderer = CreateRef<ScreenQuadRenderer>();
+	renderer.AddPipelineStageRenderer(quadRenderer);
+
+	Ref<PipelineDrawStage> moebiusStage = CreateRef<PipelineDrawStage>(
+			"Moebius",
+			PipelineDrawStage::Type::PrimaryDraw,
+			moebiusShader,
+			quadRenderer
+	);
+
+	Ref<DeferredDataSource> deferredDataSource = CreateRef<DeferredDataSource>(gbufferFB.lock());
+	renderer.AddShaderDataSource(deferredDataSource);
+
+	moebiusStage->AddShaderDataSource(deferredDataSource);
+
+	renderer.AddPipelineStage(gBufferStage);
+	renderer.AddPipelineStage(moebiusStage);
+
+	pipeline->AddPipelineStage(gbufferFB, gBufferStage);
+	pipeline->AddPipelineStage(moebiusFB, moebiusStage);
 
 	return moebiusFB;
 }

@@ -4,7 +4,7 @@
 #include "Rendering/Pipelines/PipelineStageRenderers/SubDivScreenQuadRenderer.h"
 #include "Core/Alias.h"
 
-void harmony::SubDivScreenQuadRenderer::Draw(entt::registry &scene, harmony::Ref<harmony::ShaderProgram> shader,
+void harmony::SubDivScreenQuadRenderer::Draw(entt::registry &scene, harmony::Ref<harmony::ShaderProgram> shader,Ref<View> view,
 											 bgfx::ViewId viewId)
 {
 	DrawMesh(viewId, shader);

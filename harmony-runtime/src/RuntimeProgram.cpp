@@ -197,6 +197,7 @@ void harmony::RuntimeProgram::InitializePipelines() {
     Ref<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {skyFB});
     Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {forwardFB});
     Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {vectorFB});
+	Ref<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {moebiusFB});
 
     p_RuntimePipeline->AddPipelineStage(skyFB, m_Renderer.GetPipelineStage("SkyStage").lock());
     p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("DebugDrawStage").lock());
@@ -208,6 +209,7 @@ void harmony::RuntimeProgram::InitializePipelines() {
 
     p_RuntimePipeline->AddPipelineStage(finalFB, drawSkyStage);
     p_RuntimePipeline->AddPipelineStage(finalFB, drawForwardStage);
+	p_RuntimePipeline->AddPipelineStage(finalFB, drawMoebiusStage);
     p_RuntimePipeline->AddPipelineStage(finalFB, drawVectorStage);
 
     p_RuntimePipeline->SetOutputFramebuffer(finalFB);

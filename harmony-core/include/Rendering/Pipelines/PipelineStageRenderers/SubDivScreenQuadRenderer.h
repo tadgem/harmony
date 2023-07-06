@@ -13,7 +13,7 @@ namespace harmony
 	{
 	public:
 		SubDivScreenQuadRenderer(uint16_t wcount, uint16_t hcount);
-		void Draw(entt::registry &scene, Ref<ShaderProgram> shader,
+		void Draw(entt::registry &scene, Ref<ShaderProgram> shader,Ref<View> view,
 				  bgfx::ViewId viewId) override;
 
 	protected:
