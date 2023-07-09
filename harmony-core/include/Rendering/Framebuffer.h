@@ -16,6 +16,9 @@ namespace harmony
 		Attachment CreateAttachment(AttachmentType attachmentType);
 		bool Build();
 		bool IsBuilt();
+		void Resize(uint16_t w, uint16_t h);
+		void Clear();
+
 		Resolution m_VirtualResoltuion;
 		Resolution m_FramebufferResolution;
 		bgfx::FrameBufferHandle m_FBH;

@@ -16,7 +16,8 @@ harmony::WeakRef<harmony::Framebuffer> harmony::Moebius::AddMoebiusToPipeline(Re
 														{
 																AttachmentType::RGBA32F, // 0: Position
 																AttachmentType::RGBA32F, // 1: Normal
-																AttachmentType::RGBA16F //  2: Colour
+																AttachmentType::RGBA16F, // 2: Colour
+																AttachmentType::Depth32F // 3: Depth
 														},
 														Resolution::Type::FullScale);
 	// Create Moebius Effect FB

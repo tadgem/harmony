@@ -239,18 +239,16 @@ void harmony::Renderer::OnPreUpdate(entt::registry &registry)
 		}
 
 		Ref<View> view = m_ActiveViews[i].lock();
-		// compositor PipelineStack &stack = p_Views[view];
 		Ref<PipelineV2> pipeline = p_Views[view];
 
 		if (view->p_Resized)
 		{
-			// compositor stack.OnViewResized(view);
+			pipeline->Resize(registry, view);
 			view->p_Resized = false;
 		}
 
 		view->OnPreUpdate(registry);
 		pipeline->PreUpdate(registry, view);
-		// compositor stack.PreUpdate(registry, m_ActiveViews[i]);
 	}
 }
 

@@ -321,6 +321,7 @@ void harmony::Program::ListCapabilities()
 	harmony::log::info("Program : BGFX : Texture Readback? : {}",
 					   m_Capabilities->supported && BGFX_CAPS_TEXTURE_READ_BACK);
 	harmony::log::info("Program : BGFX : Image R/W? : {}", m_Capabilities->supported && BGFX_CAPS_IMAGE_RW);
+	harmony::log::info("Program : BGFX : Autogen Mips? : {}", m_Capabilities->supported && BGFX_CAPS_FORMAT_TEXTURE_MIP_AUTOGEN);
 }
 
 void harmony::Program::SetStyle()

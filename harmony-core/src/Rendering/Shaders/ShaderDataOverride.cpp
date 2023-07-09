@@ -198,7 +198,8 @@ void harmony::ShaderDataOverride::SetOverrides()
 	{
 		for (auto &[handle, value]: m_TextureOverrides)
 		{
-			bgfx::setTexture(value.SamplerSlot, handle.BgfxHandle, value.BgfxHandle);
+			uint64_t flags = BGFX_SAMPLER_MIP_POINT | BGFX_SAMPLER_UVW_CLAMP;
+			bgfx::setTexture(value.SamplerSlot, handle.BgfxHandle, value.BgfxHandle, flags);
 		}
 	}
 }

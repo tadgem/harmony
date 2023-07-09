@@ -150,14 +150,15 @@ void harmony::AssimpModelAssetFactory::UnloadAssetData(const String &path, entt:
 
 void harmony::AssimpModelAssetFactory::LoadAssetData(const String &path, entt::registry &registry) {
 
+	p_Meshes.clear();
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(path,
                                              aiProcess_Triangulate |
-                                             aiProcess_FlipUVs |
                                              aiProcess_CalcTangentSpace |
-                                             aiProcess_GenSmoothNormals |
                                              aiProcess_OptimizeMeshes |
                                              aiProcess_OptimizeGraph |
+											 aiProcess_FindInvalidData |
+											 aiProcess_FixInfacingNormals |
                                              aiProcess_GenBoundingBoxes
     );
     //

@@ -129,3 +129,16 @@ harmony::Resolution harmony::Framebuffer::GetScaledResolution(harmony::Resolutio
 
 	return finalRes;
 }
+
+void harmony::Framebuffer::Resize(uint16_t w, uint16_t h)
+{
+	Clear();
+	UpdateVirtualResolution(w,h);
+}
+
+void harmony::Framebuffer::Clear()
+{
+	bgfx::setViewRect(m_ViewID, 0,0, m_FramebufferResolution.Width, m_FramebufferResolution.Height);
+	bgfx::setViewClear(m_ViewID, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
+	bgfx::setViewRect(m_ViewID, 0,0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
+}

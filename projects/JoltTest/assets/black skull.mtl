@@ -1,0 +1,12 @@
+newmtl default11
+Ns 100.000
+d 1.00000
+illum 2
+Kd 1.00000 1.00000 1.00000
+Ka 0.00000 0.00000 0.00000
+Ks 1.00000 1.00000 1.00000
+Ke 0.00000e+0 0.00000e+0 0.00000e+0
+map_Kd black skull_BaseColor.png
+map_Ks black skull_Roughness.png
+bump black skull_Displacement.png
+map_bump black skull_Normal.png

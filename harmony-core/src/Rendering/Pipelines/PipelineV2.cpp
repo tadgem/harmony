@@ -1,10 +1,10 @@
+#include "Core/Log.hpp"
+#include "Core/Memory.h"
 #include "Rendering/Pipelines/PipelineV2.h"
 #include "Rendering/Pipelines/PipelineStage.h"
 #include "Rendering/Framebuffer.h"
-#include "Core/Log.hpp"
+#include "Rendering/View.h"
 #include "Rendering/GPUResourceManager.h"
-#include "Core/Memory.h"
-
 harmony::PipelineV2::PipelineV2(const String &name) : m_Name(name)
 {
 	p_OutputFramebuffer = WeakRef<Framebuffer>();
@@ -152,4 +152,19 @@ harmony::WeakRef<harmony::Framebuffer> harmony::PipelineV2::TryGetFramebuffer(co
 		}
 	}
 	return harmony::WeakRef<harmony::Framebuffer>();
+}
+
+void harmony::PipelineV2::Resize(entt::registry &registry, harmony::WeakRef<harmony::View> view)
+{
+	auto v = view.lock();
+	if(!v)
+	{
+		harmony::log::error("PipelineV2 : Cannot resize view, expired.");
+		return;
+	}
+
+	for(auto& [fb, stages] : p_Stages)
+	{
+		fb->Resize(v->m_Width, v->m_Height);
+	}
 }
