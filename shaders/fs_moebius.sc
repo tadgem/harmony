@@ -8,52 +8,109 @@ SAMPLER2D(u_pos,      0);
 SAMPLER2D(u_normal,   1);
 SAMPLER2D(u_color,    2);
 
-vec4 sobel(sampler2D tex, vec2 uv)
-{
-    vec4 n[9];
-    mat3 m;
-	KernelLuma(tex, uv, n);
 
-    vec4 sobel_edge_h = n[2] + (2.0*n[5]) + n[8] - (n[0] + (2.0*n[3]) + n[6]);
-  	vec4 sobel_edge_v = n[0] + (2.0*n[1]) + n[2] - (n[6] + (2.0*n[7]) + n[8]);
-	vec4 sobel = sqrt((sobel_edge_h * sobel_edge_h) + (sobel_edge_v * sobel_edge_v));
+// ref: (in japanese)
+// https://imagingsolution.net/imaging/canny-edge-detector/
+#define tickness 1.0
+#define STRENGTH 1.0
 
-    return sobel;
+float getAve(sampler2D _tex, vec2 uv){
+    vec3 rgb = texture2D(_tex, uv).rgb;
+    vec3 lum = vec3(0.299, 0.587, 0.114);
+    return dot(lum, rgb);
 }
 
-float get_sobel_max(vec4 sobelCol)
-{
-    return (sobelCol.x + sobelCol.y + sobelCol.z) / 3.0;
+// Detect edge.
+vec4 sobel(sampler2D _tex, vec2 fragCoord, vec2 dir){
+    vec2 resolution = u_viewRect.zw;
+    vec2 uv = fragCoord/resolution;
+    vec2 texel = vec2(1.0, 1.0) / resolution;
+    float np = getAve(_tex, uv + (vec2(-1,+1) + dir ) * texel * tickness);
+    float zp = getAve(_tex, uv + (vec2( 0,+1) + dir ) * texel * tickness);
+    float pp = getAve(_tex, uv + (vec2(+1,+1) + dir ) * texel * tickness);
+    
+    float nz = getAve(_tex, uv + (vec2(-1, 0) + dir ) * texel * tickness);
+    // zz = 0
+    float pz = getAve(_tex, uv + (vec2(+1, 0) + dir ) * texel * tickness);
+    
+    float nn = getAve(_tex, uv + (vec2(-1,-1) + dir ) * texel * tickness);
+    float zn = getAve(_tex, uv + (vec2( 0,-1) + dir ) * texel * tickness);
+    float pn = getAve(_tex, uv + (vec2(+1,-1) + dir ) * texel * tickness);
+    
+    // np zp pp
+    // nz zz pz
+    // nn zn pn
+    
+    #if 0
+    float gx = (np*-1. + nz*-2. + nn*-1. + pp*1. + pz*2. + pn*1.);
+    float gy = (np*-1. + zp*-2. + pp*-1. + nn*1. + zn*2. + pn*1.);
+    #else
+    // https://www.shadertoy.com/view/Wds3Rl
+    float gx = (np*-3. + nz*-10. + nn*-3. + pp*3. + pz*10. + pn*3.);
+    float gy = (np*-3. + zp*-10. + pp*-3. + nn*3. + zn*10. + pn*3.);
+    #endif
+    
+    vec2 G = vec2(gx,gy);
+    
+    float grad = length(G);
+    
+    float angle = atan2(G.y, G.x);
+    
+    return vec4(G, grad, angle);
+}
+
+// Make edge thinner.
+vec2 hysteresisThr(vec2 fragCoord, float mn, float mx){
+
+    vec4 edge = sobel(u_color, fragCoord, vec2(0,0));
+
+    vec2 dir = vec2(cos(edge.w), sin(edge.w));
+    dir *= vec2(-1,1); // rotate 90 degrees.
+    
+    vec4 edgep = sobel(u_color, fragCoord, dir);
+    vec4 edgen = sobel(u_color, fragCoord, -dir);
+
+    if(edge.z < edgep.z || edge.z < edgen.z ) edge.z = 0.;
+    
+    return vec2(
+        (edge.z > mn) ? edge.z : 0.,
+        (edge.z > mx) ? edge.z : 0.
+    );
+}
+
+float cannyEdge(vec2 fragCoord, float mn, float mx){
+
+    vec2 np = hysteresisThr(fragCoord + vec2(-1,+1), mn, mx);
+    vec2 zp = hysteresisThr(fragCoord + vec2( 0,+1), mn, mx);
+    vec2 pp = hysteresisThr(fragCoord + vec2(+1,+1), mn, mx);
+    
+    vec2 nz = hysteresisThr(fragCoord + vec2(-1, 0), mn, mx);
+    vec2 zz = hysteresisThr(fragCoord + vec2( 0, 0), mn, mx);
+    vec2 pz = hysteresisThr(fragCoord + vec2(+1, 0), mn, mx);
+    
+    vec2 nn = hysteresisThr(fragCoord + vec2(-1,-1), mn, mx);
+    vec2 zn = hysteresisThr(fragCoord + vec2( 0,-1), mn, mx);
+    vec2 pn = hysteresisThr(fragCoord + vec2(+1,-1), mn, mx);
+    
+    // np zp pp
+    // nz zz pz
+    // nn zn pn
+    //return min(1., step(1e-3, zz.x) * (zp.y + nz.y + pz.y + zn.y)*8.);
+    //return min(1., step(1e-3, zz.x) * (np.y + pp.y + nn.y + pn.y)*8.);
+    return min(1., step(1e-2, zz.x*8.) * smoothstep(.0, .3, np.y + zp.y + pp.y + nz.y + pz.y + nn.y + zn.y + pn.y)*8.);
 }
 
 void main()
 {
-    float noiseFactor = 0.0303;
+    vec2 pixelCoord = v_texcoord0.xy;
+    vec4 pixelColour = texture2D(u_color, pixelCoord);
 
-    vec2 pixelCoord = v_texcoord0.xy * u_viewRect.zw;
-	float random = ShadertoyNoise(pixelCoord) * noiseFactor;
-
-    vec2 uv = vec2(v_texcoord0.x + random, v_texcoord0.y + random);
-    //vec2 uv = vec2(v_texcoord0.x, v_texcoord0.y);
-    vec4 col  = sobel(u_color, uv);
-
-    float finalMax = get_sobel_max(col);
-    if(finalMax < THRESHOLD)
+    if(pixelColour.w < 0.05)
     {
-        vec4 tex = texture2D(u_color, v_texcoord0);
-        if(tex.w < 0.05)
-        {
-            discard;
-        }
-        vec4 final = vec4(0.765,0.67, 0.644, 1.0);
-        gl_FragColor = final;
-    }
-    else
-    {
-        vec4 final = vec4(0.0, 0.0, 0.0, finalMax);
-        gl_FragColor = final;
-    }
+        discard;
+    } 
 
-    //gl_FragColor = step(THRESHOLD, finalMax) * vec4(finalMax, finalMax, finalMax, 1.0);
-
+    float edge = cannyEdge(pixelCoord, 1.0 - STRENGTH, 1.0 - STRENGTH);
+    vec3 col = mix(vec3(0.875,0.835,0.749), vec3(0.145,0.118,0.055), 1.-edge);    
+    gl_FragColor = vec4(col,1.0);
 }
