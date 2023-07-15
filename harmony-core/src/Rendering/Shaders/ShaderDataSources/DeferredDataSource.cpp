@@ -51,7 +51,7 @@ void harmony::DeferredDataSource::OnPreUpdate(entt::registry &registry, harmony:
 
 	if(m_DepthTextureUniform.BgfxHandle.idx != UINT16_MAX)
 	{
-		bgfx::setTexture(4,  m_UVTextureUniform.BgfxHandle, fb->m_Attachments[4].m_Handle);
+		bgfx::setTexture(4,  m_DepthTextureUniform.BgfxHandle, fb->m_Attachments[4].m_Handle);
 	}
 }
 

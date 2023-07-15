@@ -20,3 +20,10 @@ void Kernel(sampler2D _tex, vec2 uv, inout vec4 n[9])
 	n[7] = texture2D(_tex, uv + vec2(0.0, h));
 	n[8] = texture2D(_tex, uv + vec2(  w, h));
 }
+
+// Usage
+//	vec2 pixelCoord = texCoord.xy * u_viewRect.zw;
+//	float random = ShadertoyNoise(pixelCoord + vec2(314.0, 159.0)*u_frameIdx);
+float ShadertoyNoise (vec2 uv) {
+	return fract(sin(dot(uv.xy, vec2(12.9898,78.233))) * 43758.5453123);
+}

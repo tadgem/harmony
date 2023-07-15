@@ -12,9 +12,10 @@ SAMPLER2D(u_uv,         3);
 SAMPLER2D(u_depth,      4);
 //SAMPLER2D(u_crossHatch, 5);
 
-// ref: (in japanese)
-#define tickness 1.0
-#define STRENGTH 0.8
+// Params
+#define THICKNESS 1.3
+#define STRENGTH 1.03
+#define NOISE_SCALE 0.0002
 
 float getAve(vec2 uv){
     vec3 rgb = texture2D(u_color, uv).rgb;
@@ -27,30 +28,29 @@ vec4 sobel(sampler2D _tex, vec2 fragCoord, vec2 dir){
     vec2 resolution = u_viewRect.zw;
     vec2 uv = fragCoord;
     vec2 texel = vec2(1.0, 1.0) / resolution;
-    float np = getAve(uv + (vec2(-1,+1) + dir ) * texel * tickness);
-    float zp = getAve(uv + (vec2( 0,+1) + dir ) * texel * tickness);
-    float pp = getAve(uv + (vec2(+1,+1) + dir ) * texel * tickness);
+    float np = getAve(uv + (vec2(-1,+1) + dir ) * texel * THICKNESS);
+    float zp = getAve(uv + (vec2( 0,+1) + dir ) * texel * THICKNESS);
+    float pp = getAve(uv + (vec2(+1,+1) + dir ) * texel * THICKNESS);
 
-    float nz = getAve(uv + (vec2(-1, 0) + dir ) * texel * tickness);
+    float nz = getAve(uv + (vec2(-1, 0) + dir ) * texel * THICKNESS);
     // zz = 0
-    float pz = getAve(uv + (vec2(+1, 0) + dir ) * texel * tickness);
+    float pz = getAve(uv + (vec2(+1, 0) + dir ) * texel * THICKNESS);
 
-    float nn = getAve(uv + (vec2(-1,-1) + dir ) * texel * tickness);
-    float zn = getAve(uv + (vec2( 0,-1) + dir ) * texel * tickness);
-    float pn = getAve(uv + (vec2(+1,-1) + dir ) * texel * tickness);
+    float nn = getAve(uv + (vec2(-1,-1) + dir ) * texel * THICKNESS);
+    float zn = getAve(uv + (vec2( 0,-1) + dir ) * texel * THICKNESS);
+    float pn = getAve(uv + (vec2(+1,-1) + dir ) * texel * THICKNESS);
 
     // np zp pp
     // nz zz pz
     // nn zn pn
 
-    #if 0
-    float gx = (np-1. + nz-2. + nn-1. + pp * 1. + pz * 2. + pn * 1.);
-    float gy = (np-1. + zp-2. + pp-1. + nn * 1. + zn * 2. + pn * 1.);
-    #else
-    // https://www.shadertoy.com/view/Wds3Rl
-    float gx = (np*-3. + nz*-10. + nn*-3. + pp * 3. + pz * 10. + pn * 3.);
-    float gy = (np*-3. + zp*-10. + pp*-3. + nn * 3. + zn * 10. + pn * 3.);
-    #endif
+    // #if 0
+    float gx = (np*-1. + nz*-2. + nn*-1. + pp * 1. + pz * 2. + pn * 1.);
+    float gy = (np*-1. + zp*-2. + pp*-1. + nn * 1. + zn * 2. + pn * 1.);
+    // #else
+    // float gx = (np*-3. + nz*-10. + nn*-3. + pp * 3. + pz * 10. + pn * 3.);
+    // float gy = (np*-3. + zp*-10. + pp*-3. + nn * 3. + zn * 10. + pn * 3.);
+    // #endif
 
     vec2 G = vec2(gx,gy);
 
@@ -104,16 +104,19 @@ float cannyEdge(vec2 fragCoord, float mn, float mx){
 
 void main()
 {
-    vec2 pixelCoord = v_texcoord0.xy;
+    float xNoise = ShadertoyNoise(v_texcoord0.xy) * NOISE_SCALE;
+    float yNoise = ShadertoyNoise(v_texcoord0.yx) * NOISE_SCALE;
+    vec2 pixelCoord = v_texcoord0.xy + vec2(xNoise, yNoise);
     vec4 pixelColour = texture2D(u_color, pixelCoord);
     vec3 pixelPosition = texture2D(u_pos, pixelCoord).xyz;
-    vec3 pixelNormal = texture2D(u_normal, pixelCoord).xyz;
+    vec3 pixelNormal = texture2D(u_normal, v_texcoord0.xy).xyz;
+    vec3 pixelDepth = texture2D(u_depth, v_texcoord0.xy).xyz;
     if(pixelColour.w < 0.05)
     {
         discard;
     } 
 
-    float edge = cannyEdge(pixelCoord, 1.0 - STRENGTH, 1.0 - STRENGTH);
+    float edge = cannyEdge(pixelCoord, 1.0 - (pixelDepth.x * STRENGTH), 1.0 -  (pixelDepth.x * STRENGTH));
     vec3 col = mix(vec3(0.145,0.118,0.055), pixelColour.xyz,  1.-edge);
     vec3 ambient = vec3(0.0,0.0,0.0);
     vec3 spec = vec3(0.0,0.0,0.0);
@@ -136,5 +139,5 @@ void main()
 
     float mag = length(output);
 
-    gl_FragColor = vec4(col * mag,1.0);
+    gl_FragColor = vec4(col,1.0);
 }
