@@ -11,7 +11,7 @@ SAMPLER2D(u_color,    2);
 
 // ref: (in japanese)
 // https://imagingsolution.net/imaging/canny-edge-detector/
-#define tickness 1.0
+#define tickness 4.0
 #define STRENGTH 1.0
 
 float getAve(sampler2D _tex, vec2 uv){
@@ -111,6 +111,6 @@ void main()
     } 
 
     float edge = cannyEdge(pixelCoord, 1.0 - STRENGTH, 1.0 - STRENGTH);
-    vec3 col = mix(vec3(0.875,0.835,0.749), vec3(0.145,0.118,0.055), 1.-edge);    
+    vec3 col = mix(vec3(0.145,0.118,0.055),vec3(0.875,0.835,0.749),  1.-edge);    
     gl_FragColor = vec4(col,1.0);
 }
