@@ -97,7 +97,7 @@ float cannyEdge(vec2 fragCoord, float mn, float mx){
     // nn zn pn
     //return min(1., step(1e-3, zz.x) * (zp.y + nz.y + pz.y + zn.y)*8.);
     //return min(1., step(1e-3, zz.x) * (np.y + pp.y + nn.y + pn.y)*8.);
-    return min(1., step(1e-2, zz.x*8.) * smoothstep(.0, .3, np.y + zp.y + pp.y + nz.y + pz.y + nn.y + zn.y + pn.y)*8.);
+    return min(1., step(1e-2, zz.x*8.0) * smoothstep(.0, .3, np.y + zp.y + pp.y + nz.y + pz.y + nn.y + zn.y + pn.y)*8.);
 }
 
 void main()

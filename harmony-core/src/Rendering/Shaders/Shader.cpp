@@ -56,8 +56,9 @@ void harmony::ShaderProgram::Build()
 	if (m_Stages.find(ShaderStage::Type::Vertex) != m_Stages.end() &&
 		m_Stages.find(ShaderStage::Type::Fragment) != m_Stages.end())
 	{
-		m_Handle = bgfx::createProgram(m_Stages[ShaderStage::Type::Vertex].lock()->m_ProgramHandle,
-									   m_Stages[ShaderStage::Type::Fragment].lock()->m_ProgramHandle, true);
+		auto vertStage = m_Stages[ShaderStage::Type::Vertex].lock();
+		auto fragStage = m_Stages[ShaderStage::Type::Fragment].lock();
+		m_Handle = bgfx::createProgram(vertStage->m_ProgramHandle,fragStage->m_ProgramHandle, false);
 	}
 	if (m_Handle.idx == bgfx::kInvalidHandle)
 	{
@@ -377,7 +378,7 @@ void harmony::ShaderStage::LoadShaderBinary()
 	}
 	else
 	{
-		harmony::log::error("Failed to load shader binary at path : {}", m_BinaryPath);
+		harmony::log::error("Shader : {} : Failed to load shader binary at path : {}", m_Name, m_BinaryPath);
 	}
 }
 

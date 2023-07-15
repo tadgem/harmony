@@ -58,8 +58,6 @@ namespace harmony {
 
         void OnRuntimeExit();
 
-        virtual void Run() override;
-
         virtual void Init() override;
 
         void Run(const std::string &projectPath, harmony::Procedure proc = NULL);

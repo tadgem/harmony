@@ -76,7 +76,7 @@ void harmony::Framebuffer::UpdateVirtualResolution(uint16_t w, uint16_t h)
 	m_VirtualResoltuion = newVirtualResolution;
 
 	bgfx::setViewRect(m_ViewID, 0, 0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
-	// bgfx::setViewScissor(m_ViewID, 0, 0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
+	//bgfx::setViewScissor(m_ViewID, 0, 0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
 
 }
 

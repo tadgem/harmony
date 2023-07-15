@@ -2,13 +2,17 @@
 #include "Core/Program.h"
 #include "Core/Memory.h"
 #include "Core/Log.hpp"
-#include "Rendering/Renderer.h"
 #include "Rendering/Shaders/Shader.h"
 #include "Assets/ShaderSourceAsset.h"
 #include <filesystem>
 #include <chrono>
 #include <thread>
-
+#include <cstdio>
+#include <iostream>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <array>
 
 
 harmony::ShaderHotReload::ShaderHotReload(Program &prog) : AssetHotReloadProvider("Shader"), p_Program(prog),
@@ -45,7 +49,7 @@ void harmony::ShaderHotReload::Init() {
 
 void
 harmony::ShaderHotReload::OnChange(const std::string &filename, const std::string &directory, efsw::Action action) {
-	harmony::log::info("ShaderHotReload : Path : {}, Change Type : TODO", filename);
+	harmony::log::info("ShaderHotReload : {} : {} : {}", GetActionName(action), directory, filename);
     // ignore changes to include shader files
     if (filename.find("include") < filename.size()) {
         return;
@@ -64,7 +68,7 @@ harmony::ShaderHotReload::OnChange(const std::string &filename, const std::strin
                 p_LoadedShaderSources.emplace(filename, source);
                 ReloadTrackedShaders();
             } else {
-                harmony::log::error("Failed to compile shader : {}", filename);
+                harmony::log::error("ShaderHotReload : Failed to compile shader : {}", filename);
             }
         }
         if (filename.find(".bin") < filename.size()) {
@@ -89,7 +93,7 @@ harmony::ShaderHotReload::OnChange(const std::string &filename, const std::strin
 			bool found = false;
 			for(auto& [path, data] : p_LoadedShaderSources)
 			{
-				if(path.find(filename))
+				if(path.find(filename) < path.size())
 				{
 					found = true;
 					finalPath = path;
@@ -100,14 +104,14 @@ harmony::ShaderHotReload::OnChange(const std::string &filename, const std::strin
 				}
 			}
             if (!found) {
-                harmony::log::warn("shader not being tracked by hot reload.");
+                harmony::log::warn("ShaderHotRelaod : {} not being tracked by hot reload.", filename);
                 return;
             }
             // recompile shader
             size_t lastIndex = finalPath.find(".sc");
             std::string shaderName = finalPath.substr(0, lastIndex);
             if (CompileShader(shaderName) > 0) {
-                harmony::log::error("Failed to compile shader : {}", filename);
+                harmony::log::error("ShaderHotRelaod : Failed to compile shader : {}", filename);
             }
 
 			return;
@@ -117,6 +121,9 @@ harmony::ShaderHotReload::OnChange(const std::string &filename, const std::strin
             if (directory.find(rendererName) < directory.size()) {
                 size_t lastIndex = filename.find(".bin");
                 std::string shaderName = filename.substr(0, lastIndex);
+
+				std::chrono::milliseconds timespan(500);
+				std::this_thread::sleep_for(timespan);
 
                 if (p_LoadedShaderBinaries.find(shaderName) != p_LoadedShaderBinaries.end()) {
                     p_LoadedShaderBinaries[shaderName]->LoadShaderBinary();
@@ -232,10 +239,29 @@ int harmony::ShaderHotReload::CompileShader(const std::string &shaderName) {
     compileCommand += profileName;
 
     harmony::log::info("ShaderHotReload : final compile command for input file {} : {}", shaderName, compileCommand);
-    auto ret =  system(compileCommand.c_str());
-	std::chrono::milliseconds timespan(500);
-	std::this_thread::sleep_for(timespan);
+    auto ret =  Exec(compileCommand.c_str());
 
-	return ret;
+	harmony::log::info("ShaderHotReload : Compile Result : {}", ret);
+
+	return 0;
+}
+
+harmony::String harmony::ShaderHotReload::Exec(const char *command)
+{
+	std::array<char, 128> buffer;
+	std::string result;
+	#if BX_PLATFORM_WINDOWS
+	std::unique_ptr<FILE, decltype(&_pclose)> pipe(_popen(command, "r"), _pclose);
+	#else
+	std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command, "r"), pclose);
+	#endif
+	if (!pipe) {
+		throw std::runtime_error("popen() failed!");
+	}
+	while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+		result += buffer.data();
+	}
+
+	return result;
 }
 

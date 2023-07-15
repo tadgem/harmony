@@ -26,6 +26,7 @@ namespace harmony {
         std::string p_ShaderCompilerLocation;
 
         int CompileShader(const std::string &shaderName);
+		String Exec(const char* command);
 
         void ReloadTrackedShaders();
 

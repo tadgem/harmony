@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Core/Alias.h"
 #include "Core/Memory.h"
 #include "Core/ProgramComponent.h"
 #include "efsw/efsw.hpp"
@@ -15,6 +15,8 @@ namespace harmony {
         virtual void OnChange(const std::string &filename, const std::string &directory, efsw::Action action) = 0;
 
         const std::string &m_Name;
+
+		String GetActionName(efsw::Action action);
     };
 
     class Program;

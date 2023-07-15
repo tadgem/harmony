@@ -35,7 +35,7 @@ harmony::WeakRef<harmony::Framebuffer> harmony::Moebius::AddMoebiusToPipeline(Re
 			renderer.GetPipelineStageRenderer("MeshRenderer")
 	);
 	// Get Moebius Shader
-	Ref<ShaderProgram> moebiusShader = renderer.GetShader("Moebius").lock();
+	Ref<ShaderProgram> moebiusShader = renderer.GetShader("Moebius2").lock();
 
 	// Create a quad renderer
 	Ref<ScreenQuadRenderer> quadRenderer = CreateRef<ScreenQuadRenderer>();

@@ -33,28 +33,6 @@ harmony::RuntimeProgram::RuntimeProgram(const std::string &name) : Program(name)
     p_PresentViewId = (bgfx::ViewId) 255;
 }
 
-void harmony::RuntimeProgram::Run() {
-    OPTICK_EVENT();
-
-    Init();
-    m_Renderer.Init();
-
-    AddPipelineDrawStages();
-
-    InitializeViews();
-    InitializePipelines();
-
-    PreRunInit();
-
-    SDL_SetRelativeMouseMode(SDL_TRUE);
-
-    m_Renderer.RefreshViews();
-
-    while (p_Run) {
-        ProfilerBeginFrame();
-        OnRuntimeUpdate();
-    }
-}
 
 void harmony::RuntimeProgram::Run(const std::string &projectPath) {
     OPTICK_EVENT();
@@ -63,15 +41,15 @@ void harmony::RuntimeProgram::Run(const std::string &projectPath) {
 
     AddPipelineDrawStages();
 
-    InitializeViews();
-    InitializePipelines();
-
     PreRunInit();
 
     SDL_SetRelativeMouseMode(SDL_TRUE);
 
     LoadProject(projectPath);
     OpenScene(0);
+
+    InitializeViews();
+    InitializePipelines();
 
     ResizeApplicationWindow(p_WindowWidth, p_WindowHeight);
 

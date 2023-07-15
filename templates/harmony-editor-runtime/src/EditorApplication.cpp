@@ -264,27 +264,6 @@ void harmony::Editor::OnRuntimeExit() {
     m_Renderer.RefreshViews();
 }
 
-void harmony::Editor::Run() {
-    OPTICK_EVENT();
-
-    Init();
-    m_Renderer.Init();
-
-    AddPipelineDrawStages();
-    AddPostProcessStages();
-
-    InitializeViews();
-    InitializePipelines();
-    PreRunInit();
-
-    SetRunningStyle();
-
-    while (p_Run) {
-        ProfilerBeginFrame();
-        m_EditorFSM.Process();
-    }
-}
-
 void harmony::Editor::Init() {
     OPTICK_EVENT();
     Program::Init();
@@ -312,7 +291,6 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
     AddPostProcessStages();
 
     InitializeViews();
-    InitializePipelines();
 
     LoadProject(projectPath);
 
@@ -327,7 +305,10 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
 			LoadScene(m_Project->m_SerializedScenes[0]);
 		}
 	}
-    while (p_Run) {
+
+    InitializePipelines();
+
+	while (p_Run) {
         ProfilerBeginFrame();
         m_EditorFSM.Process();
         proc();
