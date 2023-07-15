@@ -10,13 +10,12 @@ $output v_wpos, v_normal, v_texcoord0
 
 void main()
 {
-	vec4 spos = mul(u_modelViewProj, vec4(a_position, 1.0));
-	mat4 transposeModel = transpose(u_model[0]);
-	vec4 viewNormal 	= mul(transposeModel, vec4(a_normal.xyz, 1.0));
+	vec4 spos = mul(u_model[0], vec4(a_position, 1.0));
+	vec4 viewNormal 	= mul(u_model[0], vec4(a_normal.xyz, 1.0));
 
-	gl_Position = spos;
+	gl_Position 	= mul(u_modelViewProj, vec4(a_position, 1.0) );;
 	v_texcoord0 = a_texcoord0;
 
 	v_wpos 		= spos.xyz;
-	v_normal    = a_normal.xyz;
+	v_normal    = viewNormal.xyz;
 }

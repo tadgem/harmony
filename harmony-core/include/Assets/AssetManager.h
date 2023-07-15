@@ -88,6 +88,13 @@ namespace harmony
 
 		}
 
+		template<typename T>
+		WeakRef<T> GetAsset(const std::string& assetHandle)
+		{
+			AssetHandle h = { assetHandle, 0, GetTypeHash<T>()};
+			return GetAsset<T>(h);
+		}
+
 		void Clear();
 		nlohmann::json Serialize();
 		void Deserialize(nlohmann::json &json);

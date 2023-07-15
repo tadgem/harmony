@@ -8,8 +8,9 @@
 #include "Rendering/Shaders/ShaderDataSources/DeferredDataSource.h"
 #include "Rendering/Pipelines/PipelineStageRenderers/ScreenQuadRenderer.h"
 #include "Rendering/Shaders/ShaderDataSources/BlinnPhongDataSource.h"
+#include "Rendering/Shaders/ShaderDataSources/TextureAssetSource.h"
 
-harmony::WeakRef<harmony::Framebuffer> harmony::Moebius::AddMoebiusToPipeline(Renderer& renderer, harmony::Ref<harmony::PipelineV2> pipeline)
+harmony::WeakRef<harmony::Framebuffer> harmony::Moebius::AddMoebiusToPipeline(Renderer& renderer, harmony::Ref<harmony::PipelineV2> pipeline, Ref<TextureAsset> crossHatchTexture)
 {
 
 	// Create GBuffer FB
@@ -52,8 +53,12 @@ harmony::WeakRef<harmony::Framebuffer> harmony::Moebius::AddMoebiusToPipeline(Re
 	Ref<DeferredDataSource> deferredDataSource = CreateRef<DeferredDataSource>(gbufferFB.lock());
 	renderer.AddShaderDataSource(deferredDataSource);
 
+	Ref<TextureAssetSource> crosshatchTextureSource = CreateRef<TextureAssetSource>(5, "u_crossHatch", crossHatchTexture);
+	renderer.AddShaderDataSource(crosshatchTextureSource);
+
 	moebiusStage->AddShaderDataSource(deferredDataSource);
 	moebiusStage->AddShaderDataSource(renderer.GetShaderDataSource("BlinnPhong"));
+	moebiusStage->AddShaderDataSource(crosshatchTextureSource);
 
 	renderer.AddPipelineStage(gBufferStage);
 	renderer.AddPipelineStage(moebiusStage);

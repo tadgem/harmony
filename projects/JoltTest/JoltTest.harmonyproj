@@ -1,1 +1,316 @@
-{"m_AssetManagerSerializationAttributes":{"assets":[{"Index":0,"Path":"assets\\concrerte.jpg","TypeHash":"harmony::TextureAsset"},{"Index":0,"Path":"builtin/Plane","TypeHash":"harmony::Mesh"},{"Index":0,"Path":"builtin/Cube","TypeHash":"harmony::Mesh"},{"Index":0,"Path":"fs_moebius2","TypeHash":"harmony::ShaderStage"},{"Index":0,"Path":"vs_moebius2","TypeHash":"harmony::ShaderStage"},{"Index":0,"Path":"assets\\default_Base_Color.png","TypeHash":"harmony::TextureAsset"},{"Index":0,"Path":"assets\\scene.gltf","TypeHash":"harmony::Model"},{"Index":0,"Path":"assets\\scene.gltf","TypeHash":"harmony::Mesh"},{"Index":0,"Path":"assets\\scripts\\test.lua","TypeHash":"harmony::LuaScriptAsset"},{"Index":0,"Path":"assets\\brick.png","TypeHash":"harmony::TextureAsset"},{"Index":0,"Path":"assets\\fonts\\carbontype.ttf","TypeHash":"harmony::FontAsset"},{"Index":0,"Path":"assets\\scripts\\sun_rotate.lua","TypeHash":"harmony::LuaScriptAsset"},{"Index":0,"Path":"vs_moebius2.sc","TypeHash":"harmony::ShaderSourceAsset"},{"Index":0,"Path":"fs_moebius2.sc","TypeHash":"harmony::ShaderSourceAsset"}]},"m_ImGuiIniPath":"JoltTest_ImGui.ini","m_ProjectName":"JoltTest","m_RendererSerializationAttributes":{"renderer":{"active_views":[{"entity":4294967295,"fov":75.0,"height":718,"name":"RuntimeView","projectionType":"Perspective","width":1803},{"fov":75.0,"height":609,"name":"Editor","projectionType":"Perspective","width":1803}],"draw-stages":[],"pipeline-stage-renderers":[{"m_Name":"MeshRenderer"},{"m_Name":"ScreenQuadRenderer"},{"m_Name":"ScreenQuadRenderer"}],"post-process-stages":[],"shader-data-sources":[{"m_Name":"BlinnPhong"},{"m_Name":"DeferredDataSource"},{"m_Name":"DeferredDataSource"}],"shaders":[{"program":{"m_Name":"TexturedMesh","m_Stages":[[0,null],[1,null]]}},{"program":{"m_Name":"Normal","m_Stages":[[0,null],[1,null]]}},{"program":{"m_Name":"NanoVG","m_Stages":[[0,null],[1,null]]}},{"program":{"m_Name":"BlinnPhongTextured","m_Stages":[[0,null],[1,null]]}},{"program":{"m_Name":"FXAA","m_Stages":[[0,null],[1,null]]}},{"program":{"m_Name":"Sky","m_Stages":[[0,null],[1,null]]}},{"program":{"m_Name":"DeferredGBuffer","m_Stages":[[0,null],[1,null]]}},{"program":{"m_Name":"Moebius","m_Stages":[[0,null],[1,null]]}},{"program":{"m_Name":"Moebius2","m_Stages":[[0,{"m_Handle":{"Index":0,"Path":"vs_moebius2","TypeHash":"harmony::ShaderStage"},"m_Name":"vs_moebius2","m_Type":0}],[1,{"m_Handle":{"Index":0,"Path":"fs_moebius2","TypeHash":"harmony::ShaderStage"},"m_Name":"fs_moebius2","m_Type":1}]]}}],"views":[{"view":{"fov":75.0,"height":609,"name":"Editor","projectionType":"Perspective","width":1803}},{"view":{"entity":4294967295,"fov":75.0,"height":718,"name":"RuntimeView","projectionType":"Perspective","width":1803}}]}},"m_SerializedScenes":["Jolt1.harmonyscene","MoebiusTest.harmonyscene"],"p_ProgramComponentSerializationAttributes":[[8582238114910567705,null],[14829735431805717965,null]]}
+{
+    "m_AssetManagerSerializationAttributes": {
+        "assets": [
+            {
+                "Index": 0,
+                "Path": "assets\\concrerte.jpg",
+                "TypeHash": "harmony::TextureAsset"
+            },
+            {
+                "Index": 0,
+                "Path": "builtin/Plane",
+                "TypeHash": "harmony::Mesh"
+            },
+            {
+                "Index": 0,
+                "Path": "builtin/Cube",
+                "TypeHash": "harmony::Mesh"
+            },
+            {
+                "Index": 0,
+                "Path": "fs_moebius2",
+                "TypeHash": "harmony::ShaderStage"
+            },
+            {
+                "Index": 0,
+                "Path": "vs_moebius2",
+                "TypeHash": "harmony::ShaderStage"
+            },
+            {
+                "Index": 0,
+                "Path": "assets\\default_Base_Color.png",
+                "TypeHash": "harmony::TextureAsset"
+            },
+            {
+                "Index": 0,
+                "Path": "assets\\scene.gltf",
+                "TypeHash": "harmony::Model"
+            },
+            {
+                "Index": 0,
+                "Path": "assets\\scene.gltf",
+                "TypeHash": "harmony::Mesh"
+            },
+            {
+                "Index": 0,
+                "Path": "assets\\scripts\\test.lua",
+                "TypeHash": "harmony::LuaScriptAsset"
+            },
+            {
+                "Index": 0,
+                "Path": "assets\\brick.png",
+                "TypeHash": "harmony::TextureAsset"
+            },
+            {
+                "Index": 0,
+                "Path": "assets\\crosshatch.png",
+                "TypeHash": "harmony::TextureAsset"
+            },
+            {
+                "Index": 0,
+                "Path": "assets\\fonts\\carbontype.ttf",
+                "TypeHash": "harmony::FontAsset"
+            },
+            {
+                "Index": 0,
+                "Path": "assets\\scripts\\sun_rotate.lua",
+                "TypeHash": "harmony::LuaScriptAsset"
+            },
+            {
+                "Index": 0,
+                "Path": "vs_moebius2.sc",
+                "TypeHash": "harmony::ShaderSourceAsset"
+            },
+            {
+                "Index": 0,
+                "Path": "fs_moebius2.sc",
+                "TypeHash": "harmony::ShaderSourceAsset"
+            }
+        ]
+    },
+    "m_ImGuiIniPath": "JoltTest_ImGui.ini",
+    "m_ProjectName": "JoltTest",
+    "m_RendererSerializationAttributes": {
+        "renderer": {
+            "active_views": [
+                {
+                    "entity": 4294967295,
+                    "fov": 75.0,
+                    "height": 718,
+                    "name": "RuntimeView",
+                    "projectionType": "Perspective",
+                    "width": 1803
+                },
+                {
+                    "fov": 75.0,
+                    "height": 609,
+                    "name": "Editor",
+                    "projectionType": "Perspective",
+                    "width": 1803
+                }
+            ],
+            "draw-stages": [],
+            "pipeline-stage-renderers": [
+                {
+                    "m_Name": "MeshRenderer"
+                },
+                {
+                    "m_Name": "ScreenQuadRenderer"
+                },
+                {
+                    "m_Name": "ScreenQuadRenderer"
+                }
+            ],
+            "post-process-stages": [],
+            "shader-data-sources": [
+                {
+                    "m_Name": "BlinnPhong"
+                },
+                {
+                    "m_Name": "DeferredDataSource"
+                },
+                {
+                    "m_Name": "DeferredDataSource"
+                }
+            ],
+            "shaders": [
+                {
+                    "program": {
+                        "m_Name": "TexturedMesh",
+                        "m_Stages": [
+                            [
+                                0,
+                                null
+                            ],
+                            [
+                                1,
+                                null
+                            ]
+                        ]
+                    }
+                },
+                {
+                    "program": {
+                        "m_Name": "Normal",
+                        "m_Stages": [
+                            [
+                                0,
+                                null
+                            ],
+                            [
+                                1,
+                                null
+                            ]
+                        ]
+                    }
+                },
+                {
+                    "program": {
+                        "m_Name": "NanoVG",
+                        "m_Stages": [
+                            [
+                                0,
+                                null
+                            ],
+                            [
+                                1,
+                                null
+                            ]
+                        ]
+                    }
+                },
+                {
+                    "program": {
+                        "m_Name": "BlinnPhongTextured",
+                        "m_Stages": [
+                            [
+                                0,
+                                null
+                            ],
+                            [
+                                1,
+                                null
+                            ]
+                        ]
+                    }
+                },
+                {
+                    "program": {
+                        "m_Name": "FXAA",
+                        "m_Stages": [
+                            [
+                                0,
+                                null
+                            ],
+                            [
+                                1,
+                                null
+                            ]
+                        ]
+                    }
+                },
+                {
+                    "program": {
+                        "m_Name": "Sky",
+                        "m_Stages": [
+                            [
+                                0,
+                                null
+                            ],
+                            [
+                                1,
+                                null
+                            ]
+                        ]
+                    }
+                },
+                {
+                    "program": {
+                        "m_Name": "DeferredGBuffer",
+                        "m_Stages": [
+                            [
+                                0,
+                                null
+                            ],
+                            [
+                                1,
+                                null
+                            ]
+                        ]
+                    }
+                },
+                {
+                    "program": {
+                        "m_Name": "Moebius",
+                        "m_Stages": [
+                            [
+                                0,
+                                null
+                            ],
+                            [
+                                1,
+                                null
+                            ]
+                        ]
+                    }
+                },
+                {
+                    "program": {
+                        "m_Name": "Moebius2",
+                        "m_Stages": [
+                            [
+                                0,
+                                {
+                                    "m_Handle": {
+                                        "Index": 0,
+                                        "Path": "vs_moebius2",
+                                        "TypeHash": "harmony::ShaderStage"
+                                    },
+                                    "m_Name": "vs_moebius2",
+                                    "m_Type": 0
+                                }
+                            ],
+                            [
+                                1,
+                                {
+                                    "m_Handle": {
+                                        "Index": 0,
+                                        "Path": "fs_moebius2",
+                                        "TypeHash": "harmony::ShaderStage"
+                                    },
+                                    "m_Name": "fs_moebius2",
+                                    "m_Type": 1
+                                }
+                            ]
+                        ]
+                    }
+                }
+            ],
+            "views": [
+                {
+                    "view": {
+                        "fov": 75.0,
+                        "height": 609,
+                        "name": "Editor",
+                        "projectionType": "Perspective",
+                        "width": 1803
+                    }
+                },
+                {
+                    "view": {
+                        "entity": 4294967295,
+                        "fov": 75.0,
+                        "height": 718,
+                        "name": "RuntimeView",
+                        "projectionType": "Perspective",
+                        "width": 1803
+                    }
+                }
+            ]
+        }
+    },
+    "m_SerializedScenes": [
+        "Jolt1.harmonyscene",
+        "MoebiusTest.harmonyscene"
+    ],
+    "p_ProgramComponentSerializationAttributes": [
+        [
+            8582238114910567705,
+            null
+        ],
+        [
+            14829735431805717965,
+            null
+        ]
+    ]
+}

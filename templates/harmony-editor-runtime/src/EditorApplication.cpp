@@ -96,7 +96,8 @@ void harmony::Editor::InitializePipelines() {
     auto vectorFB = p_EditorPipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
     auto finalFB = p_EditorPipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
 
-	auto moebiusFB = Moebius::AddMoebiusToPipeline(m_Renderer, p_EditorPipeline);
+	auto crosshatchTexture = m_AssetManager.GetAsset<TextureAsset>("assets\\crosshatch.png");
+	auto moebiusFB = Moebius::AddMoebiusToPipeline(m_Renderer, p_EditorPipeline, crosshatchTexture.lock());
     auto screenShaderWR = m_Renderer.p_PresentProgram;
 
     if(screenShaderWR.expired())
@@ -301,9 +302,9 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
 
 	if(m_Project)
 	{
-		if(m_Project->m_SerializedScenes.size() > 0)
+		if(m_Project->m_SerializedScenes.size() > 1)
 		{
-			LoadScene(m_Project->m_SerializedScenes[0]);
+			LoadScene(m_Project->m_SerializedScenes[1]);
 		}
 	}
 

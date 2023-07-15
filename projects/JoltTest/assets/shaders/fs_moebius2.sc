@@ -3,20 +3,18 @@ $input v_texcoord0
 #include "harmony_shader.sh"
 #include "harmony_forward.sh"
 
-#define THRESHOLD 1.0
-
 SAMPLER2D(u_pos,        0);
 SAMPLER2D(u_normal,     1);
 SAMPLER2D(u_color,      2);
 SAMPLER2D(u_uv,         3);
 SAMPLER2D(u_depth,      4);
-//SAMPLER2D(u_crossHatch, 5);
+SAMPLER2D(u_crossHatch, 5);
 
 // Params
-#define THICKNESS 1.3
-#define STRENGTH 1.03
-#define NOISE_SCALE 0.0002
-
+#define THICKNESS 1.0
+#define STRENGTH 1.0
+#define NOISE_SCALE 0.0004
+#define CROSSHATCH_TILE 24
 float getAve(vec2 uv){
     vec3 rgb = texture2D(u_color, uv).rgb;
     vec3 lum = vec3(0.299, 0.587, 0.114);
@@ -107,17 +105,22 @@ void main()
     float xNoise = ShadertoyNoise(v_texcoord0.xy) * NOISE_SCALE;
     float yNoise = ShadertoyNoise(v_texcoord0.yx) * NOISE_SCALE;
     vec2 pixelCoord = v_texcoord0.xy + vec2(xNoise, yNoise);
-    vec4 pixelColour = texture2D(u_color, pixelCoord);
-    vec3 pixelPosition = texture2D(u_pos, pixelCoord).xyz;
-    vec3 pixelNormal = texture2D(u_normal, v_texcoord0.xy).xyz;
-    vec3 pixelDepth = texture2D(u_depth, v_texcoord0.xy).xyz;
+    vec4 pixelColour        = texture2D(u_color, pixelCoord);
     if(pixelColour.w < 0.05)
     {
         discard;
     } 
-
+    vec3 pixelPosition      = texture2D(u_pos, pixelCoord).xyz;
+    vec3 pixelNormal        = texture2D(u_normal, v_texcoord0.xy).xyz;
+    vec3 pixelDepth         = texture2D(u_depth, v_texcoord0.xy).xyz;
+    
+    vec4 pixelUV            = texture2D(u_uv, v_texcoord0.xy);
+    vec2 crosshatchTiling = vec2(CROSSHATCH_TILE, CROSSHATCH_TILE);
+    vec4 pixelCrosshatch    = texture2D(u_crossHatch, (pixelUV.xy + vec2(xNoise, yNoise)) * crosshatchTiling);
+    
+    vec3 outlineColor = vec3(0.145,0.118,0.055);
     float edge = cannyEdge(pixelCoord, 1.0 - (pixelDepth.x * STRENGTH), 1.0 -  (pixelDepth.x * STRENGTH));
-    vec3 col = mix(vec3(0.145,0.118,0.055), pixelColour.xyz,  1.-edge);
+    vec3 col = mix(outlineColor, pixelColour.xyz,  1.-edge);
     vec3 ambient = vec3(0.0,0.0,0.0);
     vec3 spec = vec3(0.0,0.0,0.0);
     vec3 output     = vec3(0.0, 0.0, 0.0);
@@ -137,7 +140,29 @@ void main()
         output += BlinnPhong_Spot(i, pixelPosition, pixelNormal, ambient, col, spec, shininess);
     }
 
+    float crosshatch = 0.0;
     float mag = length(output);
+    float magLo = 1.0;
+    
+    if(mag < 0.8)
+    {
+        magLo = 0.8;
+        crosshatch += pixelCrosshatch.z;
+    }
+     
+    if(mag < 0.55)
+    {
+        magLo = 0.55;
+        crosshatch += pixelCrosshatch.y;
+    }
+    if(mag < 0.24)
+    {
+        magLo = 0.24;
+        crosshatch += pixelCrosshatch.x;
+    }
 
-    gl_FragColor = vec4(col,1.0);
+    
+    col = mix(col, outlineColor, crosshatch);
+
+    gl_FragColor = vec4(col, 1.0);
 }

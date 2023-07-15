@@ -11,7 +11,7 @@ namespace harmony
 	class Moebius
 	{
 	public:
-		static WeakRef<Framebuffer> AddMoebiusToPipeline(Renderer& renderer, Ref<PipelineV2> pipeline);
+		static WeakRef<Framebuffer> AddMoebiusToPipeline(Renderer& renderer, Ref<PipelineV2> pipeline, Ref<TextureAsset> crossHatchTexture);
 
 	};
 }

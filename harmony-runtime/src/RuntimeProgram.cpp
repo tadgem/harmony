@@ -161,7 +161,8 @@ void harmony::RuntimeProgram::InitializePipelines() {
     auto forwardFB = p_RuntimePipeline->AddFramebuffer("Forward FB",{AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
     auto vectorFB = p_RuntimePipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA16F}, Resolution::Type::FullScale);
 
-	auto moebiusFB = Moebius::AddMoebiusToPipeline(m_Renderer, p_RuntimePipeline);
+	auto crosshatchTexture = m_AssetManager.GetAsset<TextureAsset>("assets\\crosshatch.png");
+	auto moebiusFB = Moebius::AddMoebiusToPipeline(m_Renderer, p_RuntimePipeline, crosshatchTexture.lock());
 
     auto finalFB = p_RuntimePipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA16F}, Resolution::Type::FullScale);
 

@@ -76,7 +76,7 @@ void harmony::Framebuffer::UpdateVirtualResolution(uint16_t w, uint16_t h)
 	m_VirtualResoltuion = newVirtualResolution;
 
 	bgfx::setViewRect(m_ViewID, 0, 0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
-	//bgfx::setViewScissor(m_ViewID, 0, 0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
+	bgfx::setViewScissor(m_ViewID, 0, 0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
 
 }
 
@@ -139,6 +139,8 @@ void harmony::Framebuffer::Resize(uint16_t w, uint16_t h)
 void harmony::Framebuffer::Clear()
 {
 	bgfx::setViewRect(m_ViewID, 0,0, m_FramebufferResolution.Width, m_FramebufferResolution.Height);
+	bgfx::setViewScissor(m_ViewID, 0, 0, m_FramebufferResolution.Width, m_FramebufferResolution.Height);
 	bgfx::setViewClear(m_ViewID, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
 	bgfx::setViewRect(m_ViewID, 0,0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
+	bgfx::setViewScissor(m_ViewID, 0, 0, m_VirtualResoltuion.Width, m_VirtualResoltuion.Height);
 }
