@@ -22,7 +22,12 @@ void harmony::RuntimeView::OnPreUpdate(entt::registry &registry)
 	OPTICK_EVENT();
 	if (!registry.valid(CameraEntity))
 	{
-		return;
+		auto cview = registry.view<CameraComponent>();
+		for(auto [ e, c] : cview.each())
+		{
+			CameraEntity = e;
+			break;
+		}
 	}
 	if (registry.any_of<CameraComponent>(CameraEntity))
 	{

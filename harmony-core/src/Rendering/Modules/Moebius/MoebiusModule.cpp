@@ -7,6 +7,7 @@
 #include "Rendering/Pipelines/PipelineStages/PipelineDrawStage.h"
 #include "Rendering/Shaders/ShaderDataSources/DeferredDataSource.h"
 #include "Rendering/Pipelines/PipelineStageRenderers/ScreenQuadRenderer.h"
+#include "Rendering/Shaders/ShaderDataSources/BlinnPhongDataSource.h"
 
 harmony::WeakRef<harmony::Framebuffer> harmony::Moebius::AddMoebiusToPipeline(Renderer& renderer, harmony::Ref<harmony::PipelineV2> pipeline)
 {

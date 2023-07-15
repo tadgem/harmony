@@ -12,7 +12,6 @@ SAMPLER2D(u_color,      2);
 //SAMPLER2D(u_crossHatch, 5);
 
 // ref: (in japanese)
-// https://imagingsolution.net/imaging/canny-edge-detector/
 #define tickness 1.0
 #define STRENGTH 0.8
 

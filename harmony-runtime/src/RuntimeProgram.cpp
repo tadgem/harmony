@@ -41,6 +41,8 @@ void harmony::RuntimeProgram::Run(const std::string &projectPath) {
 
     AddPipelineDrawStages();
 
+    InitializeViews();
+
     PreRunInit();
 
     SDL_SetRelativeMouseMode(SDL_TRUE);
@@ -48,7 +50,6 @@ void harmony::RuntimeProgram::Run(const std::string &projectPath) {
     LoadProject(projectPath);
     OpenScene(0);
 
-    InitializeViews();
     InitializePipelines();
 
     ResizeApplicationWindow(p_WindowWidth, p_WindowHeight);

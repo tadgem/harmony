@@ -294,6 +294,7 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
 
     LoadProject(projectPath);
 
+
     PreRunInit();
 
     SetRunningStyle();
