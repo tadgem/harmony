@@ -1,14 +1,15 @@
 $input v_texcoord0
 
 #include "harmony_shader.sh"
+#include "harmony_forward.sh"
 
 #define THRESHOLD 1.0
 
 SAMPLER2D(u_pos,        0);
 SAMPLER2D(u_normal,     1);
 SAMPLER2D(u_color,      2);
-//SAMPLER2D(u_depth,      3);
-//SAMPLER2D(u_uv,         4);
+SAMPLER2D(u_uv,         3);
+SAMPLER2D(u_depth,      4);
 //SAMPLER2D(u_crossHatch, 5);
 
 // ref: (in japanese)
@@ -105,7 +106,8 @@ void main()
 {
     vec2 pixelCoord = v_texcoord0.xy;
     vec4 pixelColour = texture2D(u_color, pixelCoord);
-
+    vec3 pixelPosition = texture2D(u_pos, pixelCoord).xyz;
+    vec3 pixelNormal = texture2D(u_normal, pixelCoord).xyz;
     if(pixelColour.w < 0.05)
     {
         discard;
@@ -113,5 +115,26 @@ void main()
 
     float edge = cannyEdge(pixelCoord, 1.0 - STRENGTH, 1.0 - STRENGTH);
     vec3 col = mix(vec3(0.145,0.118,0.055), pixelColour.xyz,  1.-edge);
-    gl_FragColor = vec4(col,1.0);
+    vec3 ambient = vec3(0.0,0.0,0.0);
+    vec3 spec = vec3(0.0,0.0,0.0);
+    vec3 output     = vec3(0.0, 0.0, 0.0);
+    float shininess = 0.0;
+    if(DirectionalLight_Active > 0)
+    {
+        output += BlinnPhong_Directional(pixelPosition, pixelNormal, ambient, col, spec, shininess);
+    }
+
+    for(int i = 0; i < PointLights_NumActive; i++)
+    {
+        output += BlinnPhong_Point(i, pixelPosition, pixelNormal, ambient, col, spec, shininess);
+    }
+
+    for(int i = 0; i < SpotLights_NumActive; i++)
+    {
+        output += BlinnPhong_Spot(i, pixelPosition, pixelNormal, ambient, col, spec, shininess);
+    }
+
+    float mag = length(output);
+
+    gl_FragColor = vec4(col * mag,1.0);
 }

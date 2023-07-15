@@ -63,6 +63,12 @@ void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry &registry, Ref<Sh
 	{
 		return;
 	}
+
+	if(!m_LightParamsUniform.Valid())
+	{
+		return;
+	}
+
 	bgfx::setUniform(m_LightParamsUniform, &m_LightParams[0]);
 
 	if (dirLightActive)

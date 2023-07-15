@@ -158,8 +158,7 @@ void harmony::AssimpModelAssetFactory::LoadAssetData(const String &path, entt::r
                                              aiProcess_OptimizeMeshes |
                                              aiProcess_OptimizeGraph |
 											 aiProcess_FindInvalidData |
-											 aiProcess_FixInfacingNormals |
-                                             aiProcess_GenBoundingBoxes
+											 aiProcess_GenBoundingBoxes
     );
     //
     if (scene == nullptr) {

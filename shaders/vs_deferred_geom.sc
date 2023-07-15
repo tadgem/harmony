@@ -18,5 +18,5 @@ void main()
 	v_texcoord0 = a_texcoord0;
 
 	v_wpos 		= spos.xyz;
-	v_normal    = viewNormal.xyz;
+	v_normal    = a_normal.xyz;
 }

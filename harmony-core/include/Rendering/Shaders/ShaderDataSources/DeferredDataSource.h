@@ -28,10 +28,15 @@ namespace harmony
 		const std::string g_Position = "u_pos";
 		const std::string g_Normal = "u_normal";
 		const std::string g_Color = "u_color";
+		const std::string g_UV = "u_uv";
+		const std::string g_Depth = "u_depth";
+
 
 		ShaderUniform m_PositionTextureUniform;
 		ShaderUniform m_NormalTextureUniform;
 		ShaderUniform m_ColorTextureUniform;
+		ShaderUniform m_UVTextureUniform;
+		ShaderUniform m_DepthTextureUniform;
 	};
 }
 

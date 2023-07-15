@@ -18,7 +18,8 @@ harmony::WeakRef<harmony::Framebuffer> harmony::Moebius::AddMoebiusToPipeline(Re
 																AttachmentType::RGBA32F, // 0: Position
 																AttachmentType::RGBA32F, // 1: Normal
 																AttachmentType::RGBA16F, // 2: Colour
-																AttachmentType::Depth32F // 3: Depth
+																AttachmentType::RGBA32F, // 3: UVs
+																AttachmentType::Depth32F // 4: Depth
 														},
 														Resolution::Type::FullScale);
 	// Create Moebius Effect FB
@@ -48,11 +49,11 @@ harmony::WeakRef<harmony::Framebuffer> harmony::Moebius::AddMoebiusToPipeline(Re
 			moebiusShader,
 			quadRenderer
 	);
-
 	Ref<DeferredDataSource> deferredDataSource = CreateRef<DeferredDataSource>(gbufferFB.lock());
 	renderer.AddShaderDataSource(deferredDataSource);
 
 	moebiusStage->AddShaderDataSource(deferredDataSource);
+	moebiusStage->AddShaderDataSource(renderer.GetShaderDataSource("BlinnPhong"));
 
 	renderer.AddPipelineStage(gBufferStage);
 	renderer.AddPipelineStage(moebiusStage);

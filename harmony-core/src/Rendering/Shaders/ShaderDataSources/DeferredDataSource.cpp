@@ -43,6 +43,16 @@ void harmony::DeferredDataSource::OnPreUpdate(entt::registry &registry, harmony:
 	{
 		bgfx::setTexture(2,  m_ColorTextureUniform.BgfxHandle, fb->m_Attachments[2].m_Handle);
 	}
+
+	if(m_UVTextureUniform.BgfxHandle.idx != UINT16_MAX)
+	{
+		bgfx::setTexture(3,  m_UVTextureUniform.BgfxHandle, fb->m_Attachments[3].m_Handle);
+	}
+
+	if(m_DepthTextureUniform.BgfxHandle.idx != UINT16_MAX)
+	{
+		bgfx::setTexture(4,  m_UVTextureUniform.BgfxHandle, fb->m_Attachments[4].m_Handle);
+	}
 }
 
 void harmony::DeferredDataSource::OnPostUpdate(entt::registry &registry, harmony::Ref<harmony::ShaderProgram> shader)
@@ -69,6 +79,18 @@ void harmony::DeferredDataSource::CollectUniforms(harmony::Ref<harmony::ShaderPr
 		if (uniform.Name == g_Color)
 		{
 			m_ColorTextureUniform = uniform;
+			continue;
+		}
+
+		if (uniform.Name == g_UV)
+		{
+			m_UVTextureUniform = uniform;
+			continue;
+		}
+
+		if (uniform.Name == g_Depth)
+		{
+			m_DepthTextureUniform = uniform;
 			continue;
 		}
 	}
