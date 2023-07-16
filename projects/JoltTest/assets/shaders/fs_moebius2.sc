@@ -12,9 +12,12 @@ SAMPLER2D(u_crossHatch, 5);
 
 // Params
 #define THICKNESS 1.0
-#define STRENGTH 1.0
-#define NOISE_SCALE 0.0003
-#define CROSSHATCH_TILE 28
+// inverse, effective 0.0-0.1 range
+#define STRENGTH 0.075
+#define NOISE_SCALE 0.0001
+#define CROSSHATCH_TILE 6
+#define LIGHT_MAX 0.25
+
 float getAve(vec2 uv){
     vec3 rgb = texture2D(u_color, uv).rgb;
     vec3 lum = vec3(0.299, 0.587, 0.114);
@@ -119,7 +122,7 @@ void main()
     vec4 pixelCrosshatch    = texture2D(u_crossHatch, (pixelUV.xy + vec2(xNoise, yNoise)) * crosshatchTiling);
     
     vec3 outlineColor = vec3(0.1,0.1,0.1);
-    float edge = cannyEdge(pixelCoord, 1.0 - (toClipSpaceDepth(pixelDepth.x) * STRENGTH), 1.0 -  (toClipSpaceDepth(pixelDepth.x)  * STRENGTH));
+    float edge = cannyEdge(pixelCoord, (toClipSpaceDepth(pixelDepth.x) * STRENGTH), (toClipSpaceDepth(pixelDepth.x)  * STRENGTH));
     vec3 col = mix(outlineColor, pixelColour.xyz,  1.-edge);
     vec3 ambient = vec3(0.0,0.0,0.0);
     vec3 spec = vec3(0.0,0.0,0.0);
@@ -142,7 +145,7 @@ void main()
 
     float crosshatch = 0.0;
     float mag = length(output);
-    float lightMax = 1.0;
+    float lightMax = LIGHT_MAX;
     float partialLit = lightMax * 1.0;
     float partialOccluded = lightMax * 0.75;
     float occluded = lightMax * 0.5;
@@ -151,16 +154,19 @@ void main()
     crosshatch += (pixelCrosshatch.y * (1.0 -mag) * partialOccluded);
     crosshatch += (pixelCrosshatch.x * (1.0 -mag) * occluded);
     
-    vec3 finalColor = toAcesFilmic(col * normalize(output));
+    vec3 finalColor = toAcesFilmic(col * output);
+
+    finalColor = mix(finalColor, col, 1.0-mag);
+    if(crosshatch  > 0.1)    
+    {
+        crosshatch = 1.0;
+    }
     
     if(crosshatch < 0.0)
     {
         crosshatch  = 0.0;
     }
-    else if(crosshatch > 0.1)
-    {
-        crosshatch = 1.0;
-    }
+
     col = mix(finalColor, outlineColor, crosshatch);
 
     gl_FragColor = vec4(col, 1.0);

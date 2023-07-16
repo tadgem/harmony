@@ -122,8 +122,8 @@ void harmony::Editor::InitializePipelines() {
     p_EditorPipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());
 
     p_EditorPipeline->AddPipelineStage(finalFB, drawSkyStage);
-    p_EditorPipeline->AddPipelineStage(finalFB, drawForwardStage);
 	p_EditorPipeline->AddPipelineStage(finalFB, drawMoebiusStage);
+    p_EditorPipeline->AddPipelineStage(finalFB, drawForwardStage);
     p_EditorPipeline->AddPipelineStage(finalFB, drawVectorStage);
 
     p_EditorPipeline->SetOutputFramebuffer(finalFB);
