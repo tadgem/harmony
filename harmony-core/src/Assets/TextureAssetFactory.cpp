@@ -4,6 +4,7 @@
 #include "Assets/TextureAsset.h"
 #include "Core/Utils.h"
 #include "Core/Log.hpp"
+#include "bimg/encode.h"
 
 harmony::TextureAssetFactory::TextureAssetFactory(Renderer &renderer) : p_Renderer(renderer)
 {
@@ -25,8 +26,9 @@ void harmony::TextureAssetFactory::LoadAssetData(const std::string &path, entt::
 		return;
 	}
 
-	bimg::ImageContainer *imageContainer = bimg::imageParse(&p_Allocator, data.data(), dataSize);
-
+	bimg::ImageContainer *rawImageContainer = bimg::imageParse(&p_Allocator, data.data(), dataSize);
+	bimg::ImageContainer *rgbaImageContainer = bimg::imageConvert(&p_Allocator, bimg::TextureFormat::RGBA8, *rawImageContainer);
+	bimg::ImageContainer* imageContainer = bimg::imageGenerateMips(&p_Allocator, *rgbaImageContainer);
 	if (imageContainer == NULL)
 	{
 		harmony::log::error("TextureAssetFactory : Failed to create image container for texture data at path : {}",

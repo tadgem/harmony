@@ -302,9 +302,9 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
 
 	if(m_Project)
 	{
-		if(m_Project->m_SerializedScenes.size() > 1)
+		if(m_Project->m_SerializedScenes.size() > 0)
 		{
-			LoadScene(m_Project->m_SerializedScenes[1]);
+			LoadScene(m_Project->m_SerializedScenes[0]);
 		}
 	}
 
