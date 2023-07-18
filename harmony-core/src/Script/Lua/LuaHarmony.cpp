@@ -521,7 +521,7 @@ void harmony::InitHarmonyECS(sol::state &state, sol::table &h)
 
 	h.set_function("LoadScene", lua_LoadScene);
 	h.set_function("OpenScene", lua_OpenScene);
-	h.set_function("GetScene", lua_GetActiveScene);
+	h.set_function("GetForegroundScene", lua_GetActiveScene);
 	h.set_function("GetEntity", lua_GetEntity);
 
 	sceneDef["AddEntity"] = lua_AddEntity;
