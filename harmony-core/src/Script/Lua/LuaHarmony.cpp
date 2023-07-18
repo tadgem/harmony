@@ -569,6 +569,8 @@ void harmony::InitGLM(sol::state &state, sol::table &h)
 	auto vec4type = h.new_usertype<glm::vec4>("vec4", "x", &glm::vec4::x, "y", &glm::vec4::y, "z", &glm::vec4::z, "z",
 											  &glm::vec4::w);
 
+	vec2type.set(sol::meta_function::addition, &lua_Vec2Add);
+
 	h["addVec2"] = lua_Vec2Add;
 	h["subVec2"] = lua_Vec2Subtract;
 	h["mulVec2"] = lua_Vec2Multiply;

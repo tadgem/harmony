@@ -14,9 +14,10 @@ SAMPLER2D(u_crossHatch, 5);
 #define THICKNESS 1.0
 // inverse, effective 0.0-0.1 range
 #define STRENGTH 0.075
-#define NOISE_SCALE 0.0001
-#define CROSSHATCH_TILE 6
+#define NOISE_SCALE 0.0005
+#define CROSSHATCH_TILE 24
 #define LIGHT_MAX 0.25
+#define LIGHT_FACTOR 1.0
 
 float getAve(vec2 uv){
     vec3 rgb = texture2D(u_color, uv).rgb;
@@ -153,10 +154,13 @@ void main()
     crosshatch += (pixelCrosshatch.z * (1.0 -mag) * partialLit);
     crosshatch += (pixelCrosshatch.y * (1.0 -mag) * partialOccluded);
     crosshatch += (pixelCrosshatch.x * (1.0 -mag) * occluded);
-    
-    vec3 finalColor = toAcesFilmic(col * output);
 
-    finalColor = mix(finalColor, col, 1.0-mag);
+    if(mag < 0.01)
+    {
+        output = vec3(0.1, 0.1, 0.1);
+    }
+    
+    vec3 finalColor = col * (normalize(output) * LIGHT_FACTOR);
     if(crosshatch  > 0.1)    
     {
         crosshatch = 1.0;
