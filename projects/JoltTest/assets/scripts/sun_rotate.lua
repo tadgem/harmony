@@ -24,5 +24,7 @@ function update()
     GetView()
     viewEntity = harmony.GetEntity()
     t = viewEntity:GetTransform()
-    t.euler.x = t.euler.x + deltaTime
+    rotation = math.vec3:new()
+    rotation.x = deltaTime
+    t.euler = t.euler * rotation
 end

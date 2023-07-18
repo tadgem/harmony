@@ -569,23 +569,25 @@ void harmony::InitGLM(sol::state &state, sol::table &h)
 	auto vec4type = h.new_usertype<glm::vec4>("vec4", "x", &glm::vec4::x, "y", &glm::vec4::y, "z", &glm::vec4::z, "z",
 											  &glm::vec4::w);
 
-	vec2type.set(sol::meta_function::addition, &lua_Vec2Add);
+	// Todo add matrix support
 
-	h["addVec2"] = lua_Vec2Add;
-	h["subVec2"] = lua_Vec2Subtract;
-	h["mulVec2"] = lua_Vec2Multiply;
-	h["mulVec2f"] = lua_Vec2MulF;
-	h["normVec2"] = lua_Vec2Norm;
-	h["addVec3"] = lua_Vec3Add;
-	h["subVec3"] = lua_Vec3Subtract;
-	h["mulVec3"] = lua_Vec3Multiply;
-	h["mulVec3f"] = lua_Vec3MulF;
-	h["normVec3"] = lua_Vec3Norm;
-	h["addVec4"] = lua_Vec4Add;
-	h["subVec4"] = lua_Vec4Subtract;
-	h["mulVec4"] = lua_Vec4Multiply;
-	h["mulVec4f"] = lua_Vec4MulF;
-	h["normVec4"] = lua_Vec4Norm;
+	vec2type.set(sol::meta_function::multiplication, &lua_Vec2Multiply);
+	vec2type.set(sol::meta_function::addition, &lua_Vec2Add);
+	vec2type.set(sol::meta_function::subtraction, &lua_Vec2Subtract);
+	vec2type.set("Normalize", &lua_Vec2Norm);
+	vec2type.set("Multiply", &lua_Vec2MulF);
+	
+	vec3type.set(sol::meta_function::multiplication, &lua_Vec3Multiply);
+	vec3type.set(sol::meta_function::addition, &lua_Vec3Add);
+	vec3type.set(sol::meta_function::subtraction, &lua_Vec3Subtract);
+	vec3type.set("Normalize", &lua_Vec3Norm);
+	vec3type.set("Multiply", &lua_Vec3MulF);
+
+	vec4type.set(sol::meta_function::multiplication, &lua_Vec4Multiply);
+	vec4type.set(sol::meta_function::addition, &lua_Vec4Add);
+	vec4type.set(sol::meta_function::subtraction, &lua_Vec4Subtract);
+	vec4type.set("Normalize", &lua_Vec4Norm);
+	vec4type.set("Multiply", &lua_Vec4MulF);
 
 	h["abs"] = lua_Abs;
 	h["random"] = lua_Random;
