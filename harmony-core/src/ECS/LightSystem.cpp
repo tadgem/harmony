@@ -30,7 +30,7 @@ void harmony::LightSystem::Update(entt::registry &registry)
 	auto plView = registry.view<PointLight, TransformComponent>();
 	auto slView = registry.view<SpotLight, TransformComponent>();
 	GfxDebug::Get()->setWireframe(GfxDebug::Editor, true);
-
+	GfxDebug::Get()->setColor(GfxDebug::Editor, 0x44FFFFFF);
 	for (auto [e, dl, t]: dlView.each())
 	{
 		auto b = bx::Vec3(0.0f, 0.0f, 0.0f);
@@ -39,7 +39,10 @@ void harmony::LightSystem::Update(entt::registry &registry)
 	}
 	for (auto [e, p, t]: plView.each())
 	{
-		GfxDebug::Get()->drawOrb(GfxDebug::Editor, t.Position.x, t.Position.y, t.Position.z, p.Radius);
+		bx::Sphere s;
+		s.center = bx::Vec3(t.Position.x, t.Position.y, t.Position.z);
+		s.radius = sqrt(p.Radius);
+		GfxDebug::Get()->draw(GfxDebug::Editor, s);
 	}
 
 	for (auto [e, s, t]: slView.each())

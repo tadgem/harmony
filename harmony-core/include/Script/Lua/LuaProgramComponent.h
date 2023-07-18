@@ -1,10 +1,13 @@
 #pragma once
 
 #include "Core/ProgramComponent.h"
+#include "Core/Alias.h"
+#include "Assets/Asset.h"
 #include "sol.hpp"
 
 namespace harmony
 {
+	class LuaScriptAsset;
 	class LuaProgramComponent : public ProgramComponent
 	{
 	public:
@@ -15,6 +18,9 @@ namespace harmony
 		virtual void Cleanup() override;
 		virtual nlohmann::json ToJson() override;
 		virtual void FromJson(const nlohmann::json &json) override;
+
+		Vector<AssetHandle> 			m_LuaProgramScripts;
+		Vector<WeakRef<LuaScriptAsset>> m_LuaScriptAssets;
 
 	protected:
 		sol::state p_State;

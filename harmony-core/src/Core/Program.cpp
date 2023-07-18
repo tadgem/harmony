@@ -791,6 +791,17 @@ void harmony::Program::LoadProject(const std::string &path)
 	m_AssetManager.Deserialize(m_Project->m_AssetManagerSerializationAttributes);
 	m_Renderer.Deserialize(m_AssetManager, m_Project->m_RendererSerializationAttributes);
 
+	for(auto [typeHash, json] : m_Project->p_ProgramComponentSerializationAttributes)
+	{
+		for (unsigned int i = 0; i < p_ProgramComponents.size(); i++)
+		{
+			if(p_ProgramComponents[i]->m_TypeHash == typeHash)
+			{
+				p_ProgramComponents[i]->FromJson(json);
+			}
+		}
+	}
+
 	p_LoadedProjectPath = m_Project->m_ProjectDirectory + "/" + m_Project->m_ProjectName + ".harmonyproj";
 
 	RunProgramComponentInit();

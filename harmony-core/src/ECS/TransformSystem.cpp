@@ -180,6 +180,12 @@ void harmony::TransformSystem::Render(entt::registry &registry)
 			{
 				break;
 			}
+			if(!registry.any_of<TransformComponent>((entt::entity)parent))
+			{
+				data.m_Parent = (entt::entity)UINT32_MAX;
+				parent = (uint32_t) data.m_Parent;
+				continue;
+			}
 			auto &t = registry.get<TransformComponent>((entt::entity) parent);
 			auto &data = registry.get<EntityData>((entt::entity) parent);
 			matrices.emplace_back(t.LocalModel);
