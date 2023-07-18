@@ -558,7 +558,7 @@ void harmony::InitHarmonyTime(sol::state &state, sol::table &h)
 {
 	h["GetFrameTime"] = &Time::GetFrameTime;
 	h["GetFrameTimeUnscaled"] = &Time::GetFrameTimeUnscaled;
-	h["GetTimeScale"] = &Time::GetTimeScale;
+	h["GetTimeccale"] = &Time::GetTimeScale;
 	h["SetTimescale"] = &Time::SetTimeScale;
 }
 
