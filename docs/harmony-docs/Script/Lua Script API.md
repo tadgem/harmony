@@ -9,21 +9,45 @@
 
 # Maths
 ### Types
-- `vec2`
+ - `vec2`
 	- `x`:  `float`
 	- `y`:  `float`
-- `vec3`
-	- `x`: `float`
-	- `y`: `float`
-	- `z`: `float`
+	- Members
+	- `operator *` : `vec2`: Multiply with another vec2
+	- `operator +` : `vec2`: Add another vec2
+	- `operator -` : `vec2`: Subtract another vec2
+	- `Normalize()` :`vec2`: Convert vec2 to unit
+	- `Multiply(float)` : `vec2` : Multiply each element by a scalar
+	- `Magnitude()` : `float` : Return the magnitude of the vector
+
+ - `vec3`
+	- `x`:  `float`
+	- `y`:  `float`
+	- `z`:  `float`
+	- Members
+	- `operator *` : `vec3`: Multiply with another vec3
+	- `operator +` : `vec3`: Add another vec3
+	- `operator -` : `vec3`: Subtract another vec3
+	- `Normalize()` :`vec3`: Convert vec3 to unit
+	- `Multiply(float)` : `vec3` : Multiply each element by a scalar
+	- `Magnitude()` : `float` : Return the magnitude of the vector
+
 - `vec4`
-	- `x`: `float`
-	- `y`: `float`
-	- `z`: `float`
-	- `w`: `float`
-	
+	- `x`:  `float`
+	- `y`:  `float`
+	- `z`:  `float`
+	- `w`:  `float`
+	- Members
+	- `operator *` : `vec4`: Multiply with another vec4
+	- `operator +` : `vec4`: Add another vec4
+	- `operator -` : `vec4`: Subtract another vec4
+	- `Normalize()` :`vec4`: Convert vec4 to unit
+	- `Multiply(float)` : `vec4` : Multiply each element by a scalar
+	- `Magnitude()` : `float` : Return the magnitude of the vector
+
 ### Methods
-// TODO : Can we reimplement maths functions as operators?
+- `math.Abs(float)` : `float` : Return the absolute value of a scalar.
+- `math.Random()` : `float` : Return a random float in range 0 - 1.
 
 # Input
 ### Types

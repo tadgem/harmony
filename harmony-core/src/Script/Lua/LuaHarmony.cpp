@@ -39,6 +39,11 @@ glm::vec2 lua_Vec2Norm(glm::vec2 &a)
 	return glm::normalize(a);
 }
 
+float lua_Vec2Mag(glm::vec2 &a)
+{
+    return glm::length(a);
+}
+
 glm::vec3 lua_Vec3Multiply(glm::vec3 &a, glm::vec3 &b)
 {
 	return a * b;
@@ -64,6 +69,11 @@ glm::vec3 lua_Vec3Norm(glm::vec3 &a)
 	return glm::normalize(a);
 }
 
+float lua_Vec3Mag(glm::vec3 &a)
+{
+    return glm::length(a);
+}
+
 glm::vec3 lua_Vec4Multiply(glm::vec3 &a, glm::vec3 &b)
 {
 	return a * b;
@@ -87,6 +97,11 @@ glm::vec4 lua_Vec4MulF(glm::vec4 &a, float b)
 glm::vec4 lua_Vec4Norm(glm::vec4 &a)
 {
 	return glm::normalize(a);
+}
+
+float lua_Vec4Mag(glm::vec4 &a)
+{
+    return glm::length(a);
 }
 
 float lua_Abs(float v)
@@ -576,19 +591,24 @@ void harmony::InitGLM(sol::state &state, sol::table &h)
 	vec2type.set(sol::meta_function::subtraction, &lua_Vec2Subtract);
 	vec2type.set("Normalize", &lua_Vec2Norm);
 	vec2type.set("Multiply", &lua_Vec2MulF);
-	
-	vec3type.set(sol::meta_function::multiplication, &lua_Vec3Multiply);
+    vec2type.set("Magnitude", &lua_Vec2Mag);
+
+
+    vec3type.set(sol::meta_function::multiplication, &lua_Vec3Multiply);
 	vec3type.set(sol::meta_function::addition, &lua_Vec3Add);
 	vec3type.set(sol::meta_function::subtraction, &lua_Vec3Subtract);
 	vec3type.set("Normalize", &lua_Vec3Norm);
 	vec3type.set("Multiply", &lua_Vec3MulF);
+    vec3type.set("Magnitude", &lua_Vec3Mag);
 
-	vec4type.set(sol::meta_function::multiplication, &lua_Vec4Multiply);
+    vec4type.set(sol::meta_function::multiplication, &lua_Vec4Multiply);
 	vec4type.set(sol::meta_function::addition, &lua_Vec4Add);
 	vec4type.set(sol::meta_function::subtraction, &lua_Vec4Subtract);
 	vec4type.set("Normalize", &lua_Vec4Norm);
 	vec4type.set("Multiply", &lua_Vec4MulF);
+    vec4type.set("Magnitude", &lua_Vec4Mag);
 
-	h["abs"] = lua_Abs;
+
+    h["abs"] = lua_Abs;
 	h["random"] = lua_Random;
 }

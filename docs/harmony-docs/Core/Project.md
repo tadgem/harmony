@@ -1,0 +1,1 @@
+A Project is an object which holds all of the serialized information associated with a harmony project. When a project is saved, it stores the state of all `ProgramComponents`, the `AssetManager` & `Renderer`. It also stores the paths of all of the currently available scenes (referred to as `SerializedScenes`).

@@ -1,0 +1,1 @@
+A scene is a container of entities and their various components that compromise an environment/level/menu. Scenes contain a registry which store all the entities and any associated `Component`s they have. 
