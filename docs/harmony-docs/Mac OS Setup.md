@@ -12,4 +12,5 @@
 - navigate in Terminal to `templates/harmony-dojo`
 - Create a build dir : `mkdir build`  then  `cd build`
 - Generate Xcode project files : `cmake -G Xcode -T buildsystem=1 ..`
-- 
+- From Target drop down in Xcode, select `harmony-dojo`
+- Profit
