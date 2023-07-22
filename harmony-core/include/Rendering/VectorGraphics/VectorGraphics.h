@@ -6,9 +6,6 @@
 #include "bgfx/bgfx.h"
 
 // #define MACRO(s, ...) printf(s, __VA_ARGS__)
-#define HARMONY_VG_DEF(funcName, ...) static void funcName(Layer layer, __VA_ARGS__);
-#define HARMONY_VG_DEF_WITH_RETURN(funcName, T, ...)                           \
-  static T funcName(Layer layer, __VA_ARGS__);
 
 namespace harmony
 {
@@ -43,72 +40,118 @@ namespace harmony
 		static void RemoveViewLayer(Layer layer, NVGcontext *renderer);
 		static void AddFont(const std::string &name, std::vector<uint8_t> data);
 		static void RemoveFont(const std::string &name);
-		HARMONY_VG_DEF(FontFace, const char *font)
-		HARMONY_VG_DEF(FontSize, float size);
-		HARMONY_VG_DEF(FontBlur, int blur);
-		HARMONY_VG_DEF(Text, float x, float y, const char *str);
-		HARMONY_VG_DEF(TextLetterSpacing, float spacing);
-		HARMONY_VG_DEF(TextLineHeight, float lineHeight);
-		HARMONY_VG_DEF(TextAlign, int align);
-		HARMONY_VG_DEF(FontFaceId, int font);
-		HARMONY_VG_DEF(TextBox, float x, float y, float breakRowWidth,
-					   const char *string, const char *end);
-		HARMONY_VG_DEF(ShapeAntiAlias, int enabled);
-		HARMONY_VG_DEF(StrokeColor, NVGcolor color);
-		HARMONY_VG_DEF(StrokePaint, NVGpaint paint);
-		HARMONY_VG_DEF(FillColor, NVGcolor color);
-		HARMONY_VG_DEF(FillPaint, NVGpaint paint);
-		HARMONY_VG_DEF(MiterLimit, float limit);
-		HARMONY_VG_DEF(StrokeWidth, float size);
-		HARMONY_VG_DEF(LineCap, int cap);
-		HARMONY_VG_DEF(LineJoin, int join);
-		HARMONY_VG_DEF(GlobalAlpha, float alpha);
-		HARMONY_VG_DEF(ResetTransform);
-		HARMONY_VG_DEF(Transform, float a, float b, float c, float d, float e,
-					   float f);
-		HARMONY_VG_DEF(Translate, float x, float y);
-		HARMONY_VG_DEF(Rotate, float angle);
-		HARMONY_VG_DEF(SkewX, float angle);
-		HARMONY_VG_DEF(SkewY, float angle);
-		HARMONY_VG_DEF(Scale, float x, float y);
-		HARMONY_VG_DEF(CurrentTransform, float *xform);
-		HARMONY_VG_DEF(UpdateImage, int image, const unsigned char *data);
-		HARMONY_VG_DEF(ImageSize, int image, int *w, int *h);
-		HARMONY_VG_DEF(DeleteImage, int image);
-		HARMONY_VG_DEF(Scissor, float x, float y, float w, float h);
-		HARMONY_VG_DEF(IntersectScissor, float x, float y, float w, float h);
-		HARMONY_VG_DEF(ResetScissor);
-		HARMONY_VG_DEF(BeginPath);
-		HARMONY_VG_DEF(MoveTo, float x, float y);
-		HARMONY_VG_DEF(LineTo, float x, float y);
-		HARMONY_VG_DEF(BezierTo, float c1x, float c1y, float c2x, float c2y, float x,
-					   float y);
-		HARMONY_VG_DEF(QuadTo, float cx, float cy, float x, float y);
-		HARMONY_VG_DEF(ArcTo, float x1, float y1, float x2, float y2, float radius);
-		HARMONY_VG_DEF(ClosePath);
-		HARMONY_VG_DEF(PathWinding, int dir);
-		HARMONY_VG_DEF(Arc, float cx, float cy, float r, float a0, float a1, int dir);
-		HARMONY_VG_DEF(Rect, float x, float y, float w, float h);
-		HARMONY_VG_DEF(RoundedRect, float x, float y, float w, float h, float r);
-		HARMONY_VG_DEF(RoundedRectVarying, float x, float y, float w, float h,
-					   float radTopLeft, float radTopRight, float radBottomRight,
-					   float radBottomLeft);
-		HARMONY_VG_DEF(Ellipse, float cx, float cy, float rx, float ry);
-		HARMONY_VG_DEF(Circle, float cx, float cy, float r);
-		HARMONY_VG_DEF(Fill);
-		HARMONY_VG_DEF(Stroke);
 
-		HARMONY_VG_DEF_WITH_RETURN(LinearGradient, NVGpaint, float sx, float sy,
-								   float ex, float ey, NVGcolor icol, NVGcolor ocol);
-		HARMONY_VG_DEF_WITH_RETURN(BoxGradient, NVGpaint, float x, float y, float w,
-								   float h, float r, float f, NVGcolor icol,
-								   NVGcolor ocol);
-		HARMONY_VG_DEF_WITH_RETURN(RadialGradient, NVGpaint, float cx, float cy,
-								   float inr, float outr, NVGcolor icol,
-								   NVGcolor ocol);
-		HARMONY_VG_DEF_WITH_RETURN(ImagePattern, NVGpaint, float ox, float oy,
-								   float ex, float ey, float angle, int image,
-								   float alpha);
+        static void FontFace(Layer layer, const char *font);
+
+        static void FontSize(Layer layer, float size);
+
+        static void FontBlur(Layer layer, int blur);
+
+        static void Text(Layer layer, float x, float y, const char *str);
+
+        static void TextLetterSpacing(Layer layer, float spacing);
+
+        static void TextLineHeight(Layer layer, float lineHeight);
+
+        static void TextAlign(Layer layer, int align);
+
+        static void FontFaceId(Layer layer, int font);
+
+        static void TextBox(Layer layer, float x, float y, float breakRowWidth, const char *string, const char *end);
+
+        static void ShapeAntiAlias(Layer layer, int enabled);
+
+        static void StrokeColor(Layer layer, NVGcolor color);
+
+        static void StrokePaint(Layer layer, NVGpaint paint);
+
+        static void FillColor(Layer layer, NVGcolor color);
+
+        static void FillPaint(Layer layer, NVGpaint paint);
+
+        static void MiterLimit(Layer layer, float limit);
+
+        static void StrokeWidth(Layer layer, float size);
+
+        static void LineCap(Layer layer, int cap);
+
+        static void LineJoin(Layer layer, int join);
+
+        static void GlobalAlpha(Layer layer, float alpha);
+
+        static void ResetTransform(Layer layer);
+
+        static void Transform(Layer layer, float a, float b, float c, float d, float e, float f);
+
+        static void Translate(Layer layer, float x, float y);
+
+        static void Rotate(Layer layer, float angle);
+
+        static void SkewX(Layer layer, float angle);
+
+        static void SkewY(Layer layer, float angle);
+
+        static void Scale(Layer layer, float x, float y);
+
+        static void CurrentTransform(Layer layer, float *xform);
+
+        static void UpdateImage(Layer layer, int image, const unsigned char *data);
+
+        static void ImageSize(Layer layer, int image, int *w, int *h);
+
+        static void DeleteImage(Layer layer, int image);
+
+        static void Scissor(Layer layer, float x, float y, float w, float h);
+
+        static void IntersectScissor(Layer layer, float x, float y, float w, float h);
+
+        static void ResetScissor(Layer layer);
+
+        static void BeginPath(Layer layer);
+
+        static void MoveTo(Layer layer, float x, float y);
+
+        static void LineTo(Layer layer, float x, float y);
+
+        static void BezierTo(Layer layer, float c1x, float c1y, float c2x, float c2y, float x, float y);
+
+        static void QuadTo(Layer layer, float cx, float cy, float x, float y);
+
+        static void ArcTo(Layer layer, float x1, float y1, float x2, float y2, float radius);
+
+        static void ClosePath(Layer layer);
+
+        static void PathWinding(Layer layer, int dir);
+
+        static void Arc(Layer layer, float cx, float cy, float r, float a0, float a1, int dir);
+
+        static void Rect(Layer layer, float x, float y, float w, float h);
+
+        static void RoundedRect(Layer layer, float x, float y, float w, float h, float r);
+
+        static void
+        RoundedRectVarying(Layer layer, float x, float y, float w, float h, float radTopLeft, float radTopRight,
+                           float radBottomRight, float radBottomLeft);
+
+        static void Ellipse(Layer layer, float cx, float cy, float rx, float ry);
+
+        static void Circle(Layer layer, float cx, float cy, float r);
+
+        static void Fill(Layer layer);
+
+        static void Stroke(Layer layer);
+
+        static NVGpaint
+        LinearGradient(Layer layer, float sx, float sy, float ex, float ey, NVGcolor icol, NVGcolor ocol);
+
+        static NVGpaint
+        BoxGradient(Layer layer, float x, float y, float w, float h, float r, float f, NVGcolor icol, NVGcolor ocol);
+
+        static NVGpaint
+        RadialGradient(Layer layer, float cx, float cy, float inr, float outr, NVGcolor icol, NVGcolor ocol);
+
+        static NVGpaint
+        ImagePattern(Layer layer, float ox, float oy, float ex, float ey, float angle, int image, float alpha);
 
 	protected:
 		static Map<Layer, Vector<NVGcontext *>> p_VectorRenderers;
