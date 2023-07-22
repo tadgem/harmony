@@ -3,6 +3,7 @@
 - Install CMake + Python :
 	  `brew install cmake`
 	  `brew install python`
+- from Terminal run `python3 -m pip install dearpygui`
 - Download and install GitHub Desktop : https://desktop.github.com
 - Sign in to your GitHub account in GitHub Desktop
 - Download + install VSCode
