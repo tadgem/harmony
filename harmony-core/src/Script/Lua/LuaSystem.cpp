@@ -132,6 +132,12 @@ void harmony::LuaSystem::DeserializeSystem(entt::registry &registry, nlohmann::j
 		luaJson.get_to<LuaComponent>(lc);
 		AssetHandle ah = lc.m_LuaScriptAsset.m_Handle;
 		auto luaWr = p_AssetManager.GetAsset<LuaScriptAsset>(lc.m_LuaScriptAsset.m_Handle);
+        if(luaWr.expired())
+        {
+            harmony::log::warn("LuaSystem : Could not find asset with handle : {}", ah.Path);
+            continue;
+        }
+        
 		lc.m_LuaScriptAsset = *luaWr.lock();
 
 		lc.m_LuaScriptAsset.m_Handle = ah;

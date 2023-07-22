@@ -68,3 +68,4 @@ imgui.ini
 \.VSCodeCounter
 *.DS_Store
 *cmake-build-debug
+*xcode

@@ -2724,7 +2724,7 @@ static const uint8_t vs_blinn_phong_textured_glsl[10775] = {
 		0x00, // yz;.}..
 };
 
-static const uint8_t vs_blinn_phong_textured_metal[1329] = {
+static const uint8_t vs_blinn_phong_textured_mtl[1329] = {
 		0x56, 0x53, 0x48, 0x0b, 0x00, 0x00, 0x00, 0x00,
 		0x69, 0x70, 0x14, 0x34, 0x02, 0x00, 0x0f,
 		0x75, // VSH.....ip.4...u

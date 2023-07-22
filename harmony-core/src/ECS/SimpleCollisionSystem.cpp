@@ -131,49 +131,49 @@ std::vector<harmony::Hit> harmony::SimpleCollisionSystem::Raycast(Ray ray, entt:
 	// Ray - AABB Intersection Test
 	auto hits = std::vector<Hit>();
 	auto aabbView = registry.view<TransformComponent, AABBColliderComponent>();
-	std::for_each(
-			std::execution::par,
-			aabbView.begin(),
-			aabbView.end(),
-			[&ray, &hits, &aabbView](const auto &e)
-			{
-				AABBColliderComponent &aabb = aabbView.get<AABBColliderComponent>(e);
-				auto hitPos = Collision::Intersects(ray, aabb.m_Frame);
-				if (hitPos.Position.w > 0.0f)
-				{
-					Hit h;
-					h.Position = glm::vec3(hitPos.Position.x, hitPos.Position.y, hitPos.Position.z);
-					h.DidHit = true;
-					h.Entity = e;
-					std::lock_guard<std::mutex> hitLock(s_AABBHitsMutex);
-					hits.push_back(h);
-				}
-			}
-	);
+	// std::for_each(
+	// 		std::execution::par,
+	// 		aabbView.begin(),
+	// 		aabbView.end(),
+	// 		[&ray, &hits, &aabbView](const auto &e)
+	// 		{
+	// 			AABBColliderComponent &aabb = aabbView.get<AABBColliderComponent>(e);
+	// 			auto hitPos = Collision::Intersects(ray, aabb.m_Frame);
+	// 			if (hitPos.Position.w > 0.0f)
+	// 			{
+	// 				Hit h;
+	// 				h.Position = glm::vec3(hitPos.Position.x, hitPos.Position.y, hitPos.Position.z);
+	// 				h.DidHit = true;
+	// 				h.Entity = e;
+	// 				std::lock_guard<std::mutex> hitLock(s_AABBHitsMutex);
+	// 				hits.push_back(h);
+	// 			}
+	// 		}
+	// );
 
 	// Ray - Sphere Intersection Test
 	auto sphereView = registry.view<TransformComponent, SphereColliderComponent>();
-	std::for_each(
-			std::execution::par,
-			sphereView.begin(),
-			sphereView.end(),
-			[&ray, &hits, &sphereView](const auto &e)
-			{
-				SphereColliderComponent &s = sphereView.get<SphereColliderComponent>(e);
-				TransformComponent &t = sphereView.get<TransformComponent>(e);
-				auto hitPos = Collision::Intersects(ray, harmony::Sphere{glm::vec4(t.Position, s.m_Radius)});
-				if (hitPos.Position.w > 0.0f)
-				{
-					Hit h;
-					h.Position = glm::vec3(hitPos.Position);
-					h.DidHit = true;
-					h.Entity = e;
-					h.Distance = hitPos.Distance;
-					std::lock_guard<std::mutex> hitLock(s_SphereHitsMutex);
-					hits.push_back(h);
-				}
-			}
-	);
+	// std::for_each(
+	// 		std::execution::par,
+	// 		sphereView.begin(),
+	// 		sphereView.end(),
+	// 		[&ray, &hits, &sphereView](const auto &e)
+	// 		{
+	// 			SphereColliderComponent &s = sphereView.get<SphereColliderComponent>(e);
+	// 			TransformComponent &t = sphereView.get<TransformComponent>(e);
+	// 			auto hitPos = Collision::Intersects(ray, harmony::Sphere{glm::vec4(t.Position, s.m_Radius)});
+	// 			if (hitPos.Position.w > 0.0f)
+	// 			{
+	// 				Hit h;
+	// 				h.Position = glm::vec3(hitPos.Position);
+	// 				h.DidHit = true;
+	// 				h.Entity = e;
+	// 				h.Distance = hitPos.Distance;
+	// 				std::lock_guard<std::mutex> hitLock(s_SphereHitsMutex);
+	// 				hits.push_back(h);
+	// 			}
+	// 		}
+	// );
 
 	// Sort hits by distance.
 	std::sort(hits.begin(), hits.end(), hit_sorter);

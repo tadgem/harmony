@@ -4,6 +4,7 @@
 #include "Core/Memory.h"
 #include "Jolt/Jolt.h"
 #include "Jolt/Physics/PhysicsSettings.h"
+#include "JoltComponents.h"
 #include <Jolt/Core/TempAllocator.h>
 
 namespace JPH {
@@ -29,8 +30,6 @@ namespace harmony {
     class HarmonyDebugRenderer;
 
     class TransformComponent;
-
-    enum JoltBodyShape;
 
     class JoltPhysicsSystem : public System {
     public:

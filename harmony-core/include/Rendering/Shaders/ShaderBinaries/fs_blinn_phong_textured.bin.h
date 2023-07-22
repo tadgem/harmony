@@ -6482,7 +6482,7 @@ static const uint8_t fs_blinn_phong_textured_glsl[14454] = {
 		0x00, // );.}..
 };
 
-static const uint8_t fs_blinn_phong_textured_metal[3852] = {
+static const uint8_t fs_blinn_phong_textured_mtl[3852] = {
 		0x46, 0x53, 0x48, 0x0b, 0x69, 0x70, 0x14, 0x34, 0x00, 0x00, 0x00,
 		0x00, 0x11, 0x00, 0x1a,
 		0x44, // FSH.ip.4.......D
