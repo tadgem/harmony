@@ -5,6 +5,7 @@
 #include "assimp/cimport.h"
 #include "assimp/mesh.h"
 #include "assimp/scene.h"
+#include "Core/Utils.h"
 
 static glm::vec3 AssimpToGLM(aiVector3D aiVec) {
     return glm::vec3(aiVec.x, aiVec.y, aiVec.z);
@@ -151,8 +152,9 @@ void harmony::AssimpModelAssetFactory::UnloadAssetData(const String &path, entt:
 void harmony::AssimpModelAssetFactory::LoadAssetData(const String &path, entt::registry &registry) {
 
 	p_Meshes.clear();
+    std::string cleanPath = Utils::GetCleanPlatformPath(path);
     Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile(path,
+    const aiScene *scene = importer.ReadFile(cleanPath,
                                              aiProcess_Triangulate |
                                              aiProcess_CalcTangentSpace |
                                              aiProcess_OptimizeMeshes |
@@ -166,17 +168,17 @@ void harmony::AssimpModelAssetFactory::LoadAssetData(const String &path, entt::r
         return;
     }
     //
-    ProcessNode(path, scene->mRootNode, scene);
+    ProcessNode(cleanPath, scene->mRootNode, scene);
     String modelName = String(scene->mName.C_Str());
     Ref<Model> model = CreateRef<Model>(modelName);
-    AssetHandle handle(path, 0, GetTypeHash<Model>());
+    AssetHandle handle(cleanPath, 0, GetTypeHash<Model>());
 
     for (int i = 0; i < p_Meshes.size(); i++) {
         Ref<Mesh> meshAsset = std::static_pointer_cast<Mesh, Asset>(p_Meshes[i]);
 
         p_Renderer.SubmitMeshToGPU(meshAsset);
 
-        AssetHandle meshHandle(path, i, GetTypeHash<Mesh>());
+        AssetHandle meshHandle(cleanPath, i, GetTypeHash<Mesh>());
         AssetComponent<Mesh> meshComponent{meshAsset, meshHandle};
         entt::entity e = registry.create();
         registry.emplace<AssetComponent<Mesh>>(e, meshComponent);

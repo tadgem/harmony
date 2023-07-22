@@ -17,12 +17,13 @@ harmony::TextureAssetFactory::TextureAssetFactory(Renderer &renderer) : p_Render
 void harmony::TextureAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry)
 {
 	OPTICK_EVENT();
-	auto data = Utils::LoadBinaryFromPath(path);
+    std::string cleanPath = Utils::GetCleanPlatformPath(path);
+	auto data = Utils::LoadBinaryFromPath(cleanPath);
 	uint32_t dataSize = static_cast<uint32_t>(data.size());
 
 	if (data.size() == 0)
 	{
-		harmony::log::error("TextureAssetFactory : Failed to load texture data at path : {}", path);
+		harmony::log::error("TextureAssetFactory : Failed to load texture data at path : {}", cleanPath);
 		return;
 	}
 
@@ -32,10 +33,10 @@ void harmony::TextureAssetFactory::LoadAssetData(const std::string &path, entt::
 	if (imageContainer == NULL)
 	{
 		harmony::log::error("TextureAssetFactory : Failed to create image container for texture data at path : {}",
-							path);
+                            cleanPath);
 	}
 
-	Ref<TextureAsset> textureAsset = CreateRef<TextureAsset>(path, imageContainer);
+	Ref<TextureAsset> textureAsset = CreateRef<TextureAsset>(cleanPath, imageContainer);
 	AssetHandle handle{path, 0, GetTypeHash<TextureAsset>()};
 	AssetComponent<TextureAsset> textureComponent{textureAsset, handle};
 	entt::entity e = registry.create();

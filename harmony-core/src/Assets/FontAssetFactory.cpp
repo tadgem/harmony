@@ -15,10 +15,11 @@ harmony::FontAssetFactory::FontAssetFactory()
 void harmony::FontAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry)
 {
 	OPTICK_EVENT();
-	AssetHandle assetHandle(path, 0, GetTypeHash<FontAsset>());
+    std::string cleanPath = Utils::GetCleanPlatformPath(path);
+	AssetHandle assetHandle(cleanPath, 0, GetTypeHash<FontAsset>());
 	Ref<FontAsset> font = CreateRef<FontAsset>(assetHandle);
-	std::vector<uint8_t> fontData = Utils::LoadBinaryFromPath(path);
-	std::string cleanFontName = GetFontNameFromPath(path);
+	std::vector<uint8_t> fontData = Utils::LoadBinaryFromPath(cleanPath);
+	std::string cleanFontName = GetFontNameFromPath(cleanPath);
 	font->m_CleanName = cleanFontName;
 	// make available to vg renderer
 	VectorGraphics::AddFont(cleanFontName, fontData);

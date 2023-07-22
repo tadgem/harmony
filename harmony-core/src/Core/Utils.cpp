@@ -5,13 +5,11 @@
 
 #include "bgfx/bgfx.h"
 
+
 std::string harmony::Utils::LoadStringFromPath(const std::string &path)
 {
 	OPTICK_EVENT();
-	std::string finalPath = path;
-#if BX_PLATFORM_LINUX
-	finalPath = "./" + path;
-#endif
+    std::string finalPath = GetCleanPlatformPath(path);
 
 	std::ifstream inputFile = std::ifstream(finalPath, std::ios::in | std::ios::binary);
 
@@ -19,8 +17,13 @@ std::string harmony::Utils::LoadStringFromPath(const std::string &path)
 	{
 		return std::string();
 	}
+    
+    if(!std::filesystem::exists(finalPath))
+    {
+        return std::string();
+    }
 
-	size_t fileSize = std::filesystem::file_size(path);
+	size_t fileSize = std::filesystem::file_size(finalPath);
 	std::string content(fileSize, '\0');
 	inputFile.read(content.data(), fileSize);
 
@@ -140,3 +143,21 @@ bool harmony::Utils::FileExists(const std::string &filepath)
 	OPTICK_EVENT();
 	return std::filesystem::exists(filepath);
 }
+
+std::string harmony::Utils::GetCleanPlatformPath(const std::string &path) { 
+    std::string finalPath = path;
+#if !(BX_PLATFORM_WINDOWS)
+    finalPath = "./" + path;
+    const std::string find = "\\";
+    const std::string replace = "/";
+
+    std::string::size_type n = 0;
+    while ( ( n = finalPath.find( find) ) != std::string::npos )
+    {
+        finalPath.replace( n, find.size(), replace );
+        n += replace.size();
+    }
+#endif
+    return finalPath;
+}
+
