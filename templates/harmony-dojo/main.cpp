@@ -25,6 +25,6 @@ int main() {
 
     };
 
-    app.Run("../../../../projects/JoltTest/JoltTest.harmonyproj", proc);
+    app.Run("../../../projects/JoltTest/JoltTest.harmonyproj", proc);
     return 0;
 }

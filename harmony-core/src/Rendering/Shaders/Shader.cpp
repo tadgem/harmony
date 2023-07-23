@@ -352,6 +352,7 @@ harmony::ShaderStage::ShaderStage(const std::string &name, const Type &shaderTyp
 {
 	OPTICK_EVENT();
 	m_BinaryPath = "assets/" + GetShaderRendererDirectory() + name + ".bin";
+    m_BinaryPath = Utils::GetCleanPlatformPath(m_BinaryPath);
 }
 
 harmony::ShaderStage::ShaderStage() : Asset()
