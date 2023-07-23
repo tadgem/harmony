@@ -1,3 +1,4 @@
+- Install Obsidian
 - Install Xcode from App Store
 - Install brew : https://brew.sh : Copy command, open Terminal, paste + run command
 - Install CMake + Python :
@@ -7,8 +8,6 @@
 - Download and install GitHub Desktop : https://desktop.github.com
 - Sign in to your GitHub account in GitHub Desktop
 - Download + install VSCode
-- In browser, navigate to vulkan.lunarg.com
-- Download + Install Vulkan SDK for MacOS
 - Clone harmony repo through GitHub desktop
 - Open harmony repo in VSCode
 - Open terminal in VSCode
