@@ -78,7 +78,7 @@ void harmony::MeshSystem::UpdateMeshComponent(MeshComponent &mc)
 		WeakRef<Mesh> meshAssetWr = p_AssetManager.GetAsset<Mesh>(mc.MeshAsset);
 		if (meshAssetWr.expired())
 		{
-			harmony::log::warn("Asset not loaded at path: ", mc.MeshAsset.Path);
+			harmony::log::warn("Asset not loaded at path : {}", mc.MeshAsset.Path);
 			return;
 		}
 		Ref<Mesh> meshAsset = meshAssetWr.lock();

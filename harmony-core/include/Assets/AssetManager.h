@@ -76,13 +76,23 @@ namespace harmony
 		template<typename T>
 		WeakRef<T> GetAsset(const AssetHandle &assetHandle)
 		{
+            std::string cleanAssetPath = Utils::GetCleanPlatformPath(assetHandle.Path);
+            AssetHandle temp { cleanAssetPath, assetHandle.Index, assetHandle.TypeHash};
+            if(!assetHandle.Path.find("builtin"))
+            {
+                temp.Path = assetHandle.Path;
+            }
 			auto view = p_AssetRegistry.view<AssetComponent<T>>();
 			for (auto [entity, asset]: view.each())
 			{
-				if (asset.Handle == assetHandle)
+				if (!temp.Path.find(asset.Handle.Path))
 				{
 					return asset.Asset;
 				}
+                else if(!assetHandle.Path.find(asset.Handle.Path))
+                {
+                    return asset.Asset;
+                }
 			}
 			return WeakRef<T>();
 
