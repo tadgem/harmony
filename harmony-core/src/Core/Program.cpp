@@ -215,8 +215,11 @@ void harmony::Program::InitBGFX()
 #endif
 
 	bgfx::Init bgfx_init;
-
-	bgfx_init.type = bgfx::RendererType::Count; // auto choose renderer
+#if !BX_PLATFORM_WINDOWS
+    bgfx_init.type = bgfx::RendererType::Vulkan; // auto choose renderer
+#else
+    bgfx_init.type = bgfx::RendererType::Count; // auto choose renderer
+#endif
 	bgfx_init.resolution.width = p_WindowWidth;
 	bgfx_init.resolution.height = p_WindowHeight;
 	bgfx_init.resolution.reset = BGFX_RESET_VSYNC;

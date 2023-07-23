@@ -157,14 +157,14 @@ void harmony::RuntimeProgram::AddShaderDataSources() {
 void harmony::RuntimeProgram::InitializePipelines() {
     OPTICK_EVENT();
 
-    auto skyFB = p_RuntimePipeline->AddFramebuffer("Sky FB",{AttachmentType::RGBA16F}, Resolution::Type::FullScale);
+    auto skyFB = p_RuntimePipeline->AddFramebuffer("Sky FB",{AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
     auto forwardFB = p_RuntimePipeline->AddFramebuffer("Forward FB",{AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
-    auto vectorFB = p_RuntimePipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA16F}, Resolution::Type::FullScale);
+    auto vectorFB = p_RuntimePipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
 
 	auto crosshatchTexture = m_AssetManager.GetAsset<TextureAsset>("assets\\crosshatch.png");
 	auto moebiusFB = Moebius::AddMoebiusToPipeline(m_Renderer, p_RuntimePipeline, crosshatchTexture.lock());
 
-    auto finalFB = p_RuntimePipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA16F}, Resolution::Type::FullScale);
+    auto finalFB = p_RuntimePipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
 
     auto screenShaderWR = m_Renderer.p_PresentProgram;
 
