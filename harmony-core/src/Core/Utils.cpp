@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <optick.h>
 
-#include "bgfx/bgfx.h"
+#include "bx/platform.h"
 
 
 std::string harmony::Utils::LoadStringFromPath(const std::string &path)

@@ -1,4 +1,5 @@
 #include "Core/Memory.h"
+#include "bx/platform.h"
 
 void *operator new(size_t size) {
     harmony::Memory::AddAllocatedMemory(size);
@@ -24,7 +25,11 @@ int main() {
     auto proc = []() {
 
     };
-
+#if BX_PLATFORM_WINDOWS
+    app.Run("../../../../projects/JoltTest/JoltTest.harmonyproj", proc);
+#else
     app.Run("../../../projects/JoltTest/JoltTest.harmonyproj", proc);
+
+#endif
     return 0;
 }
