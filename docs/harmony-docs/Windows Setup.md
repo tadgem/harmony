@@ -5,7 +5,7 @@
 - from Terminal run `python -m pip install dearpygui`
 - Download and install GitHub Desktop : https://desktop.github.com
 - Sign in to your GitHub account in GitHub Desktop
-- Download + install VSCode
+- Download + install VSCode : https://code.visualstudio.com/download
 - Clone harmony repo through GitHub desktop
 - Open harmony repo in VS2022 (as a folder)
 - Setup CMake VS Settings 
