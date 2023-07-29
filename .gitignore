@@ -48,6 +48,7 @@ imgui.ini
 *\cmake-build-release-visual-studio*
 *\cmake-build-minsizerel-visual-studio*
 *\cmake-build-relwithdebinfo-visual-studio*
+*\cmake-build-debug-clang*
 *\win
 */.vscode
 *\.vscode
@@ -69,3 +70,4 @@ imgui.ini
 *.DS_Store
 *cmake-build-debug
 *xcode
+CppProperties.json
