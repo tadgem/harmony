@@ -155,6 +155,15 @@ void harmony::Editor::LoadProject(const std::string &path) {
     OPTICK_EVENT();
     Program::LoadProject(path);
     LoadImGuiSettings();
+
+    if (m_Project)
+    {
+        InitializePipelines();
+    }
+    else
+    {
+        harmony::log::error("Editor : Failed to load project at path : {}", path);
+    }
 }
 
 int harmony::Editor::OnEditUpdate() {
@@ -307,8 +316,6 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
 			LoadScene(m_Project->m_SerializedScenes[0]);
 		}
 	}
-
-    InitializePipelines();
 
 	while (p_Run) {
         ProfilerBeginFrame();
