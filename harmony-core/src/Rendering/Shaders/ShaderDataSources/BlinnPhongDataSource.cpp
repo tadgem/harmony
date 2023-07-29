@@ -14,6 +14,11 @@ void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry &registry, Ref<Sh
 {
 	OPTICK_EVENT();
 
+	if (!shader)
+	{
+		return;
+	}
+
 	if (!p_UniformsCollected)
 	{
 		GetShaderUniforms(shader);

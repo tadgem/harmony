@@ -50,6 +50,8 @@ void harmony::ShaderSourceAssetFactory::LoadAssetData(const std::string &path, e
 	entt::entity e = registry.create();
 	registry.emplace<AssetComponent<ShaderSourceAsset>>(e, sourceComponent);
 	registry.emplace<AssetHandle>(e, handle);
+
+	harmony::log::info("ShaderSourceAssetFactory : Loaded shader source asset from path : {}", path);
 }
 
 void harmony::ShaderSourceAssetFactory::UnloadAssetData(const std::string &path, entt::registry &registry)

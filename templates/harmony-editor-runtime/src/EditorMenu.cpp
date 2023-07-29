@@ -92,7 +92,9 @@ void harmony::EditorMainMenuBar::MenuBar() {
 }
 
 void harmony::EditorMainMenuBar::Dialogs() {
-    ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
+    auto io = ImGui::GetIO();
+    ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
     if (ImGuiFileDialog::Instance()->Display("HarmonyOpenProject")) {
         // action if OK
         if (ImGuiFileDialog::Instance()->IsOk()) {
@@ -102,7 +104,8 @@ void harmony::EditorMainMenuBar::Dialogs() {
         ImGuiFileDialog::Instance()->Close();
     }
 
-    ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
     if (ImGuiFileDialog::Instance()->Display("HarmonySaveScene")) {
         // action if OK
         if (ImGuiFileDialog::Instance()->IsOk()) {

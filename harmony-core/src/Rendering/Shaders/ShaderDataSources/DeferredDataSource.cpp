@@ -13,6 +13,11 @@ harmony::DeferredDataSource::DeferredDataSource(Ref<Framebuffer> gBuffer) : Shad
 
 void harmony::DeferredDataSource::OnPreUpdate(entt::registry &registry, harmony::Ref<harmony::ShaderProgram> shader)
 {
+	if (!shader)
+	{
+		return;
+	}
+
 	if(!p_UniformsCollected)
 	{
 		CollectUniforms(shader);

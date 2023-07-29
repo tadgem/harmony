@@ -6,6 +6,10 @@
 
 void harmony::TextureAssetSource::OnPreUpdate(entt::registry &registry, harmony::Ref<harmony::ShaderProgram> shader)
 {
+	if (!shader)
+	{
+		return;
+	}
 	ShaderDataSource::OnPreUpdate(registry, shader);
 	if(!p_UniformsCollected)
 	{

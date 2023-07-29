@@ -17,6 +17,7 @@ void harmony::ShaderStageBinaryAssetFactory::LoadAssetData(const std::string &pa
 		if (handle.Path == path)
 		{
 			// shader already exists
+			harmony::log::info("ShaderStageBinaryAssetFactory : Binary at path : {} : is already tracked, reloading binary.", path);
 			shader.Asset->LoadShaderBinary();
 
 			return;
@@ -40,8 +41,18 @@ void harmony::ShaderStageBinaryAssetFactory::LoadAssetData(const std::string &pa
 		type = ShaderStage::Type::Compute;
 	}
 
+	harmony::log::info("ShaderStageBinaryAssetFactory : Attempting to load shader stage binary at path : {}", path);
+
 	Ref<ShaderStage> shaderStage = CreateRef<ShaderStage>(path, type);
 	shaderStage->LoadShaderBinary();
+
+	if (shaderStage->m_ProgramHandle.idx == UINT16_MAX)
+	{
+		harmony::log::error("ShaderStageBinaryAssetFactory : Failed to load shader stage binary at path : {}", path);
+		return;
+	}
+
+	harmony::log::info("ShaderStageBinaryAssetFactory : Successfully loaded shader stage binary at path : {} : ProgramHandle : {} ", path, shaderStage->m_ProgramHandle.idx);
 
 	AssetHandle handle(path, 0, GetTypeHash<ShaderStage>());
 	AssetComponent<ShaderStage> stageComponent{shaderStage, handle};
