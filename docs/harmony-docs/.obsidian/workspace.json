@@ -37,7 +37,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Mac OS Setup.md",
+                "file": "Windows Setup.md",
                 "mode": "source",
                 "source": false
               }
@@ -47,18 +47,18 @@
         "currentTab": 2
       },
       {
-        "id": "c6c82446339cc4d1",
+        "id": "679986e65cb8c6b2",
         "type": "tabs",
         "children": [
           {
-            "id": "891babef055f9c58",
+            "id": "a4e0da2d55a0f87b",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Script/Lua Script API.md",
+                "file": "Windows Setup.md",
                 "mode": "preview",
-                "source": true
+                "source": false
               }
             }
           }
@@ -128,7 +128,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Mac OS Setup.md",
+                "file": "Windows Setup.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -145,7 +145,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Mac OS Setup.md",
+                "file": "Windows Setup.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -168,7 +168,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Mac OS Setup.md"
+                "file": "Windows Setup.md"
               }
             }
           }
@@ -189,9 +189,11 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "72c40108cdb14873",
+  "active": "a4e0da2d55a0f87b",
   "lastOpenFiles": [
     "Script/Lua Script API.md",
+    "Windows Setup.md",
+    "Mac OS Setup.md",
     "Rendering/View.md",
     "Rendering/Texture.md",
     "Rendering/ShaderDataSource.md",
@@ -206,7 +208,6 @@
     "Core/Project.md",
     "Core/ProgramComponent.md",
     "Core/Component.md",
-    "Mac OS Setup.md",
     "Rendering/Pipeline.md",
     "Core",
     "Rendering/High Level Architecture.md",
