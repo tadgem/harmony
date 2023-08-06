@@ -7,9 +7,9 @@
 - Sign in to your GitHub account in GitHub Desktop
 - Download + install VSCode : https://code.visualstudio.com/download
 - Clone harmony repo through GitHub desktop
-- Open harmony repo in VS2022 (as a folder)
-- Setup CMake VS Settings 
-	- in VS2022 -> Solution Explorer -> Find the root CMakeLists.txt -> Right Click and "Configure Projects"
+- Open harmony repo in VSCode (as a folder)
+- Setup CMake VSCode Settings 
+	- in VSCode -> Solution Explorer -> Find the root CMakeLists.txt -> Right Click and "Configure Projects"
 	- More than likely this will produce errors, open the harmony repo in VSCode.
 	- There should be 2 files in the root of the repo now `CMakeSettings.json` and `CppProperties.json`
 	- `CMakeSettings.json` should look like the following:
