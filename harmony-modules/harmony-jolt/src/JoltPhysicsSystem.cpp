@@ -109,31 +109,20 @@ void harmony::JoltPhysicsSystem::Init(entt::registry &registry) {
     }
 
     m_PhysicsSystem->OptimizeBroadPhase();
+
+	// hack to get bodies drawing properly in editor
+	p_Running = false;
 }
 
 void harmony::JoltPhysicsSystem::Update(entt::registry &registry) {
+	p_Running = true;
     float deltaTime = static_cast<float>(Time::GetFrameTime());
     m_PhysicsSystem->Update(deltaTime, s_CollisionSteps, s_IntegrationSubSteps, m_TempAllocator.get(),
                             m_JobSystem.get());
-    JPH::BodyManager::DrawSettings settings;
 
-#ifdef HARMONY_DEBUG
-    if (m_DrawDebug) {
-        JPH::DebugRenderer *dr = m_DebugRenderer.get();
-        m_PhysicsSystem->DrawBodies(settings, dr);
-        m_PhysicsSystem->DrawConstraints(dr);
-    }
-#endif
     auto bodyView = registry.view<TransformComponent, JoltBodyComponent>();
 
     for (auto [e, t, b]: bodyView.each()) {
-        if (t.UpdateCollision) {
-            b.RequiresUpdate = true;
-            t.UpdateCollision = false;
-        }
-        if (b.RequiresUpdate) {
-            InitBody(e, t, b);
-        }
 
         if (b.MotionType == JPH::EMotionType::Dynamic) {
             auto pos = b.Body->GetPosition();
@@ -156,9 +145,30 @@ void harmony::JoltPhysicsSystem::Update(entt::registry &registry) {
 
 void harmony::JoltPhysicsSystem::Render(entt::registry &registry) {
 
+	if(!p_Running)
+	{
+		auto bodyView = registry.view<TransformComponent, JoltBodyComponent>();
+		for (auto [e, t, b]: bodyView.each())
+		{
+			if (t.UpdateCollision)
+			{
+				UpdateBody(e, t, b);
+			}
+		}
+	}
+#ifdef HARMONY_DEBUG
+	JPH::BodyManager::DrawSettings settings;
+	if (m_DrawDebug) {
+		JPH::DebugRenderer *dr = m_DebugRenderer.get();
+		m_PhysicsSystem->DrawBodies(settings, dr);
+		m_PhysicsSystem->DrawConstraints(dr);
+	}
+#endif
 }
 
-void harmony::JoltPhysicsSystem::Cleanup(entt::registry &registry) {
+void harmony::JoltPhysicsSystem::Cleanup(entt::registry &registry)
+{
+	p_Running = false;
 }
 
 nlohmann::json harmony::JoltPhysicsSystem::SerializeSystem(entt::registry &registry) {
@@ -215,11 +225,13 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent &t,
     if (b.Body != nullptr) {
         if (b.Body->IsActive() || b.Body->IsInBroadPhase()) {
             m_BodyInterface->RemoveBody(b.Body->GetID());
-        }
+		}
         b.Body = nullptr;
+		return;
     }
 
     JPH::BodyCreationSettings bodyCreationSettings;
+
     switch (b.Shape) {
         case JoltBodyShape::Box: {
             b.ShapePtr = new JPH::BoxShape(JPH::Vec3(t.Scale.x / 2.0f, t.Scale.y / 2.0f, t.Scale.x / 2.0f));
@@ -244,6 +256,7 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent &t,
             break;
     }
     bodyCreationSettings.SetShape(b.ShapePtr);
+	// todo: account for transform hierarchy
     bodyCreationSettings.mPosition = JPH::Vec3(t.Position.x, t.Position.y, t.Position.z);
     bodyCreationSettings.mRotation = JPH::Quat(t.Rotation.x, t.Rotation.y, t.Rotation.z, t.Rotation.w);
 
@@ -261,4 +274,14 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent &t,
     m_BodyInterface->AddBody(b.Body->GetID(), JPH::EActivation::Activate);
 
     b.RequiresUpdate = false;
+}
+
+
+void harmony::JoltPhysicsSystem::UpdateBody(entt::entity e, TransformComponent &t, JoltBodyComponent &b) {
+	if (b.Body != nullptr) {
+		if (b.Body->IsActive() || b.Body->IsInBroadPhase()) {
+			b.Body->SetPositionAndRotationInternal(JPH::Vec3(t.Position.x , t.Position.y, t.Position.z), JPH::Quat(t.Rotation.x, t.Rotation.y, t.Rotation.z, t.Rotation.w));
+		}
+		return;
+	}
 }

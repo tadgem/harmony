@@ -14,7 +14,6 @@
 #include "Assets/ShaderSourceAssetFactory.h"
 #include "AssimpModelAssetFactory.h"
 #include "EditorView.h"
-#include "ECS/SimpleCollisionSystem.h"
 #include "Script/GraphScript/GraphScriptProgramComponent.h"
 
 harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this), m_GraphScriptEditor(p_GraphScriptComponent->GetNodeRegistry()) {
@@ -188,8 +187,6 @@ int harmony::Editor::OnEditUpdate() {
         p_TransformSystem->Update(p_ActiveScene->m_Registry);
         p_CameraSystem->Update(p_ActiveScene->m_Registry);
         p_LightSystem->Update(p_ActiveScene->m_Registry);
-        p_SimpleCollisionSystem->Update(p_ActiveScene->m_Registry);
-
         VectorGraphics::FontSize(VectorGraphics::One, 20.0f);
         VectorGraphics::FontFace(VectorGraphics::One, "carbontype");
         VectorGraphics::FontBlur(VectorGraphics::One, 0);
@@ -198,10 +195,12 @@ int harmony::Editor::OnEditUpdate() {
         p_TransformSystem->Render(p_ActiveScene->m_Registry);
     }
 
+    RunProgramComponentRender();
+	RunSystemRender();
 
     RunRendererPostUpdate();
 
-    RunProgramComponentRender();
+
 
     Input::PostFrame();
 
@@ -237,13 +236,11 @@ int harmony::Editor::OnRuntimeUpdate() {
 
     RunSystemUpdate();
 
-    RunSystemRender();
-
-    RunRendererPostUpdate();
-
     RunProgramComponentRender();
 
     RunSystemRender();
+
+    RunRendererPostUpdate();
 
     UpdateEditor();
 
@@ -334,7 +331,6 @@ void harmony::Editor::OpenScene(uint32_t index) {
     OPTICK_EVENT();
     RuntimeProgram::OpenScene(index);
     p_LoadedScenePath = m_Project->m_SerializedScenes[index];
-    p_SimpleCollisionSystem->Init(p_ActiveScene->m_Registry);
 }
 
 void harmony::Editor::UpdateEditor() {

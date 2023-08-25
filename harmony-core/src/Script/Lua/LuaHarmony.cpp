@@ -9,8 +9,6 @@
 #include "Rendering/Views/RuntimeView.h"
 #include "glm.hpp"
 #include "glm/detail/type_mat3x3.hpp"
-#include "ECS/SimpleCollisionSystem.h"
-#include "ECS/SimpleCollisionComponent.h"
 #include "Collision/CollisionShapes.h"
 #include "Rendering/Debug/GfxDebug.h"
 
@@ -134,30 +132,6 @@ harmony::Renderer *lua_GetRenderer()
 	return nullptr;
 }
 
-harmony::SimpleCollisionSystem *s_Instance = nullptr;
-
-harmony::SimpleCollisionSystem *lua_GetCollisionSystem()
-{
-	if (s_Instance)
-	{
-		return s_Instance;
-
-	}
-	auto prog = harmony::Program::Get();
-
-	if (prog)
-	{
-		auto sysWr = prog->GetSystem<harmony::SimpleCollisionSystem>();
-		if (!sysWr.expired())
-		{
-			s_Instance = sysWr.lock().get();
-			return s_Instance;
-		}
-	}
-
-	return nullptr;
-}
-
 harmony::LuaScriptEntity lua_GetEntity()
 {
 	auto lwr = harmony::Program::Get()->GetSystem<harmony::LuaSystem>();
@@ -233,21 +207,6 @@ harmony::LuaScriptEntity lua_GetViewEntity(harmony::View *view)
 		}
 	}
 	return harmony::LuaScriptEntity();
-}
-
-std::vector<harmony::Hit> lua_Raycast(glm::vec3 origin, glm::vec3 dir)
-{
-	auto collisionSystem = lua_GetCollisionSystem();
-	auto scene = lua_GetActiveScene();
-
-	if (scene && collisionSystem)
-	{
-		harmony::Ray ray{origin, dir};
-		return collisionSystem->Raycast(ray, scene->m_Registry);
-	}
-
-	auto hits = std::vector<harmony::Hit>();
-	return hits;
 }
 
 #if HARMONY_DEBUG
@@ -525,15 +484,6 @@ void harmony::InitHarmonyECS(sol::state &state, sol::table &h)
 									   "intensity", &harmony::SpotLight::Intensity
 	);
 
-	h.new_usertype<harmony::AABBColliderComponent>("AABB",
-												   "colliders", &AABBColliderComponent::m_Colliders
-	);
-
-	h.new_usertype<harmony::SphereColliderComponent>("Sphere",
-													 "colliders", &SphereColliderComponent::m_Colliders,
-													 "radius", &SphereColliderComponent::m_Radius
-	);
-
 	h.set_function("LoadScene", lua_LoadScene);
 	h.set_function("OpenScene", lua_OpenScene);
 	h.set_function("GetForegroundScene", lua_GetActiveScene);
@@ -559,13 +509,6 @@ void harmony::InitHarmonyECS(sol::state &state, sol::table &h)
 	entityDef["GetMaterial"] = &harmony::LuaScriptEntity::GetMaterial;
 	entityDef["SetMaterial"] = &harmony::LuaScriptEntity::SetMaterial;
 
-	entityDef["AddAABB"] = &harmony::LuaScriptEntity::AddAABB;
-	entityDef["GetAABB"] = &harmony::LuaScriptEntity::GetAABB;
-	entityDef["SetAABB"] = &harmony::LuaScriptEntity::SetAABB;
-
-	entityDef["AddSphere"] = &harmony::LuaScriptEntity::AddSphere;
-	entityDef["GetSphere"] = &harmony::LuaScriptEntity::GetSphere;
-	entityDef["SetSphere"] = &harmony::LuaScriptEntity::SetSphere;
 }
 
 

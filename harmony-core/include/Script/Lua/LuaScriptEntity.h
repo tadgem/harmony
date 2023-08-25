@@ -5,7 +5,6 @@
 #include "ECS/LightComponents.h"
 #include "ECS/MaterialComponent.h"
 #include "ECS/MeshComponent.h"
-#include "ECS/SimpleCollisionComponent.h"
 #include "ECS/TransformComponent.h"
 
 namespace harmony
@@ -29,12 +28,6 @@ namespace harmony
 		MaterialComponent *AddMaterial();
 		MaterialComponent *GetMaterial();
 		void SetMaterial(MaterialComponent *c);
-		AABBColliderComponent *AddAABB();
-		AABBColliderComponent *GetAABB();
-		void SetAABB(AABBColliderComponent *c);
-		SphereColliderComponent *AddSphere();
-		SphereColliderComponent *GetSphere();
-		void SetSphere(SphereColliderComponent *c);
 		bool Valid();
 
 	protected:

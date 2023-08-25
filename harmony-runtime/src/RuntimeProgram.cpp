@@ -13,7 +13,6 @@
 #include "Script/Lua/LuaSystem.h"
 #include "Script/Lua/LuaScriptAssetFactory.h"
 #include "JoltPhysicsSystem.h"
-#include "ECS/SimpleCollisionSystem.h"
 #include "Script/GraphScript/GraphScriptProgramComponent.h"
 #include "Script/GraphScript/GraphScriptSystem.h"
 #include "Rendering/Pipelines/PipelineStages/SkyStage.h"
@@ -93,7 +92,6 @@ void harmony::RuntimeProgram::AddSystems() {
     AddSystem<LightSystem>();
     p_LuaSystem = AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent).lock();
     p_GraphScriptSystem = AddSystem<GraphScriptSystem>(p_GraphScriptComponent).lock();
-    p_SimpleCollisionSystem = AddSystem<SimpleCollisionSystem>(m_AssetManager).lock();
     p_JoltPhysicsSystem = AddSystem<JoltPhysicsSystem>().lock();
     p_EntityDataSystem = AddSystem<EntityDataSystem>().lock();
 
