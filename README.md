@@ -9,8 +9,7 @@ Game engine with core focus on being fun to use and highly customizable. All sof
 + Editor + Runtime applications (WIP)
 + ECS Design
 + Modular Design for Engine Components + Game Systems. 
-+ Serialization infrastructure using JSON. (WIP)
-+ GraphScript : in engine visual scripting language
++ Serialization infrastructure using JSON.
 + Pipeline Graph renderer architecture, which allows reuse of shared data and abstraction of resource generation.
 + ShaderDataSource architecture which allows data binding code for shaders to be reused. 
 + Lua scripting support (LuaJIT + Lua available through use of a CMake option) (WIP)
