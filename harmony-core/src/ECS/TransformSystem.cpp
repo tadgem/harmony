@@ -101,6 +101,16 @@ void harmony::TransformSystem::Render(entt::registry &registry)
 		{
 			transform.UpdateCollision = true;
 		}
+		if (transform.Position != transform.LastPosition)
+		{
+			transform.UpdateCollision = true;
+		}
+
+		if (transform.Euler != transform.LastEuler)
+		{
+			transform.UpdateCollision = true;
+		}
+
 		transformGroups[groupIndex].push_back(&transform);
 
 		groupCount++;

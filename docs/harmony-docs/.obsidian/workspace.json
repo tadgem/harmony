@@ -4,62 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "a4d85494ce49df47",
+        "id": "83a3365d29511116",
         "type": "tabs",
         "children": [
           {
-            "id": "8007bdce1c6422db",
+            "id": "89798df24156d716",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Rendering/ShaderDataOverride.md",
-                "mode": "source",
-                "source": true
-              }
-            }
-          },
-          {
-            "id": "14c9af17388a1fab",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Script/Lua Script API.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "72c40108cdb14873",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Windows Setup.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          }
-        ],
-        "currentTab": 2
-      },
-      {
-        "id": "679986e65cb8c6b2",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "a4e0da2d55a0f87b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Windows Setup.md",
-                "mode": "preview",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -128,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Windows Setup.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -145,7 +97,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Windows Setup.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -167,12 +118,11 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "Windows Setup.md"
-              }
+              "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -189,10 +139,10 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "a4e0da2d55a0f87b",
+  "active": "3c0b6a68cf38db59",
   "lastOpenFiles": [
-    "Script/Lua Script API.md",
     "Windows Setup.md",
+    "Script/Lua Script API.md",
     "Mac OS Setup.md",
     "Rendering/View.md",
     "Rendering/Texture.md",

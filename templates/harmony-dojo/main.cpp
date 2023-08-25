@@ -26,7 +26,7 @@ int main() {
 
     };
 #if BX_PLATFORM_WINDOWS
-    app.Run("../../../../../projects/JoltTest/JoltTest.harmonyproj", proc);
+    app.Run("../../../../projects/JoltTest/JoltTest.harmonyproj", proc);
 #else
     app.Run("../../../projects/JoltTest/JoltTest.harmonyproj", proc);
 
