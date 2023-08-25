@@ -317,6 +317,7 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
 	while (p_Run) {
         ProfilerBeginFrame();
         m_EditorFSM.Process();
+		if(proc == NULL) continue;
         proc();
     }
 }

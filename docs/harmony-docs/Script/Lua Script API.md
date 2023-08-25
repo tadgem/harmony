@@ -132,6 +132,12 @@
 - `GetForegroundScene()` : `Scene` : Try to return the foreground scene, if one exists.
 - `GetEntity()` : `Entity` : Get the entity that this script is attached to (Behavioural scripts only)
 
+
+# VG
+### Types
+
+### Methods
+
 # Debug
 ### Types
 

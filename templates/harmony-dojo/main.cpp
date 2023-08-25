@@ -17,16 +17,8 @@ void operator delete(void *memory, size_t size) {
 int main() {
     harmony::Editor app;
 
-    auto *graph = new harmony::GraphScript::CompiledGraph();
-    auto graphScriptComponent = app.GetProgramComponent<harmony::GraphScriptProgramComponent>().lock();
-
-    harmony::GraphScript::NodeRegistry* vm = graphScriptComponent->GetNodeRegistry();
-
-    auto proc = []() {
-
-    };
 #if BX_PLATFORM_WINDOWS
-    app.Run("../../../../projects/JoltTest/JoltTest.harmonyproj", proc);
+    app.Run("../../../../projects/JoltTest/JoltTest.harmonyproj", NULL);
 #else
     app.Run("../../../projects/JoltTest/JoltTest.harmonyproj", proc);
 
