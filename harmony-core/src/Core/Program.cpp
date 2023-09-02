@@ -867,6 +867,11 @@ void harmony::Program::SaveScene(const std::string &path)
 			cleanPath.erase(pos, projectDir.length() + 1);
 		}
 	}
+	else
+	{
+		harmony::log::warn("Program::SaveScene : cannot save scene, as there is no active project.");
+		return;
+	}
 
 	p_ActiveScene->UpdateSceneSystemSerializationAttributes(p_ECSSystems);
 	nlohmann::json sceneJson = *p_ActiveScene;
@@ -886,10 +891,6 @@ void harmony::Program::SaveScene(const std::string &path)
 		{
 			removeIndex = i;
 		}
-	}
-	if (removeIndex > 0)
-	{
-		m_Project->m_SerializedScenes.erase(m_Project->m_SerializedScenes.begin() + removeIndex);
 	}
 	if (findIndex < 0)
 	{

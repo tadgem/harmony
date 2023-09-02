@@ -37,7 +37,7 @@ void harmony::EditorMainMenuBar::MenuBar() {
                     for (int i = 0; i < p_Prog.m_Project->m_SerializedScenes.size(); i++) {
                         std::string sceneName = p_Prog.m_Project->m_SerializedScenes[i].c_str();
                         if (ImGui::MenuItem(sceneName.c_str())) {
-                            p_Prog.OpenScene(i);
+                            p_Prog.LoadScene(sceneName);
                             break;
                         }
                     }

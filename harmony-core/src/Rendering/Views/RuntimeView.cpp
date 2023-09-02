@@ -28,6 +28,10 @@ void harmony::RuntimeView::OnPreUpdate(entt::registry &registry)
 			CameraEntity = e;
 			break;
 		}
+		if (!registry.valid(CameraEntity))
+		{
+			return;
+		}
 	}
 	if (registry.any_of<CameraComponent>(CameraEntity))
 	{
