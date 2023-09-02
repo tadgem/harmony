@@ -293,6 +293,36 @@ void harmony::InitHarmonyRendering(sol::state &state, sol::table &h)
 
 	auto pipelineStageRenderer = h.new_usertype<harmony::PipelineStageRenderer>("PipelineStageRenderer");
 
+	// Pipeline def
+	// add pipeline stage def
+	// add franebuffer def
+	// get/has/set output framebuffer
+
+	// framebuffer def
+	// virtual + real resolution 
+	// attachments
+	// resolution type
+	// name
+
+	// attachment type def
+	// attachment type enum def
+	// resolution
+	
+	// resolution type def
+
+	// pipeline draw stage def
+	// basically just creation? 
+	
+	// screen quad renderer type def
+
+	// shader data source def (& ability to create one in Lua) 
+
+	// texture asset def
+
+	// renderer
+	// get / add shader data source
+	// get / add shader
+	// get / add pipeline stage renderer
 	h["GetRenderer"] = &lua_GetRenderer;
 	h["GetView"] = &lua_GetView;
 	h["GetViewEntity"] = &lua_GetViewEntity;
