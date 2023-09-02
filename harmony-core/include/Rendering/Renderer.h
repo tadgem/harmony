@@ -96,6 +96,8 @@ namespace harmony
 		void Deserialize(AssetManager &am, nlohmann::json &json);
 		std::vector<WeakRef<View>> m_ActiveViews;
 
+		WeakRef<ShaderProgram> p_PresentProgram;
+		bgfx::UniformHandle p_PresentProgramTextureHandle;
 #if HARMONY_DEBUG
 
 		void OnImGui();
@@ -106,8 +108,6 @@ namespace harmony
 				harmony::WeakRef<harmony::PipelineStageRenderer> renderer);
 		bool IsBuiltInShaderName(const std::string &name);
 		// Misc & Helpers
-		WeakRef<ShaderProgram> p_PresentProgram;
-		bgfx::UniformHandle p_PresentProgramTextureHandle;
 
 	protected:
 		AssetHandle p_SelectedVertexAsset;

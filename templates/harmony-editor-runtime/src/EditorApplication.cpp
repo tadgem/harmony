@@ -341,9 +341,10 @@ void harmony::Editor::UpdateEditor() {
 
     m_Logger.Render();
     m_GraphScriptEditor.Render();
+#if HARMONY_DEBUG
     m_Renderer.OnImGui();
     m_AssetManager.OnImGui();
-
+#endif
     for (int i = 0; i < p_Panels.size(); i++) {
         p_Panels[i]->OnImGui();
     }

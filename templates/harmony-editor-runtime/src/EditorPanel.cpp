@@ -11,8 +11,6 @@
 #include "Assets/FontAsset.h"
 #include "ECS/CameraComponent.h"
 #include "Script/Lua/LuaComponent.h"
-#include "ECS/SimpleCollisionSystem.h"
-#include "ECS/SimpleCollisionComponent.h"
 #include "JoltComponents.h"
 #include "Assets/AssetManager.h"
 #include "Core/Input.h"
@@ -757,98 +755,6 @@ void harmony::LuaScriptComponentUI::Duplicate(entt::registry &registry, entt::en
         LuaComponent t = registry.get<LuaComponent>(original);
         registry.emplace<LuaComponent>(newCopy, t);
     }
-}
-
-
-harmony::AABBComponentUI::AABBComponentUI(AssetManager &am) : ComponentUI("AABB Collider"), p_AssetManager(am) {
-}
-
-void harmony::AABBComponentUI::OnComponentImGui(entt::registry &registry, entt::entity entity) {
-    if (registry.valid(entity) == false) {
-        return;
-    }
-    if (HasComponent(registry, entity) == false) {
-        return;
-    }
-
-    AABBColliderComponent &aabb = registry.get<AABBColliderComponent>(entity);
-
-    AssetHandle ah;
-    if (p_AssetManager.AssetTypeSelector<Mesh>("Mesh Asset", ah, aabb.m_MeshHandle.Path)) {
-        aabb.m_MeshHandle = ah;
-    }
-}
-
-void harmony::AABBComponentUI::AddComponent(entt::registry &registry, entt::entity entity) {
-    registry.emplace<AABBColliderComponent>(entity);
-}
-
-void harmony::AABBComponentUI::RemoveComponent(entt::registry &registry, entt::entity entity) {
-    if (HasComponent(registry, entity)) {
-        registry.remove<AABBColliderComponent>(entity);
-    }
-}
-
-bool harmony::AABBComponentUI::HasComponent(entt::registry &registry, entt::entity entity) {
-    return registry.any_of<AABBColliderComponent>(entity);
-}
-
-void harmony::AABBComponentUI::Duplicate(entt::registry &registry, entt::entity original, entt::entity newCopy) {
-    if (HasComponent(registry, original)) {
-        AABBColliderComponent t = registry.get<AABBColliderComponent>(original);
-        registry.emplace<AABBColliderComponent>(newCopy, t);
-    }
-}
-
-harmony::SphereComponentUI::SphereComponentUI() : ComponentUI("Sphere Collider") {
-}
-
-void harmony::SphereComponentUI::OnComponentImGui(entt::registry &registry, entt::entity entity) {
-    if (registry.valid(entity) == false) {
-        return;
-    }
-    if (HasComponent(registry, entity) == false) {
-        return;
-    }
-    SphereColliderComponent &s = registry.get<SphereColliderComponent>(entity);
-
-    ImGui::DragFloat("Radius", &s.m_Radius, 1.0f, 0.0, 5000.0f);
-}
-
-void harmony::SphereComponentUI::AddComponent(entt::registry &registry, entt::entity entity) {
-    registry.emplace<SphereColliderComponent>(entity);
-}
-
-void harmony::SphereComponentUI::RemoveComponent(entt::registry &registry, entt::entity entity) {
-    if (HasComponent(registry, entity)) {
-        registry.remove<SphereColliderComponent>(entity);
-    }
-}
-
-bool harmony::SphereComponentUI::HasComponent(entt::registry &registry, entt::entity entity) {
-    return registry.any_of<SphereColliderComponent>(entity);
-}
-
-void harmony::SphereComponentUI::Duplicate(entt::registry &registry, entt::entity original, entt::entity newCopy) {
-    if (HasComponent(registry, original)) {
-        SphereColliderComponent t = registry.get<SphereColliderComponent>(original);
-        registry.emplace<SphereColliderComponent>(newCopy, t);
-    }
-}
-
-harmony::SimpleCollisionSystemPanel::SimpleCollisionSystemPanel(Program &program) : p_Prog(program) {
-    p_CollisionSystem = p_Prog.GetSystem<SimpleCollisionSystem>().lock();
-}
-
-void harmony::SimpleCollisionSystemPanel::OnImGui() {
-    const std::string collisionTitle = std::string(ICON_FA_MAP) + " Collision System";
-
-    if (ImGui::Begin(collisionTitle.c_str())) {
-        if (ImGui::RadioButton("Draw Debug", p_CollisionSystem->m_DebugDraw)) {
-            p_CollisionSystem->m_DebugDraw = !p_CollisionSystem->m_DebugDraw;
-        }
-    }
-    ImGui::End();
 }
 
 harmony::JoltBodyComponentUI::JoltBodyComponentUI() : ComponentUI("Jolt Body") {
