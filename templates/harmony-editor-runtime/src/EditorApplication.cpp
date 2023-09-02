@@ -108,7 +108,6 @@ void harmony::Editor::InitializePipelines() {
     Ref<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {skyFB});
     Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {mainFB});
     Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {vectorFB});
-    // Ref<DrawScreenTextureStage> drawFxaaStage = CreateRef<DrawScreenTextureStage>(fxaaShaderWr, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {accumulateFB});
     Ref<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Editor);
 	Ref<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {moebiusFB});
 
@@ -192,17 +191,12 @@ int harmony::Editor::OnEditUpdate() {
 
     RunProgramComponentRender();
 	RunSystemRender();
-
     RunRendererPostUpdate();
-
-
-
     Input::PostFrame();
 
     UpdateEditor();
 
     ImGuiPostUpdate();
-
     Frame();
 
     return FSM::NO_TRIGGER;
