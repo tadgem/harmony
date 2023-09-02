@@ -1,5 +1,5 @@
 #include "Core/Memory.h"
-#include "bx/platform.h"
+#include "EditorApplication.h"
 #include <filesystem> 
 
 void *operator new(size_t size) {
@@ -12,19 +12,12 @@ void operator delete(void *memory, size_t size) {
     free(memory);
 }
 
-#include "EditorApplication.h"
-#include "Script/GraphScript/GraphScriptProgramComponent.h"
 
 int main() {
     harmony::Editor app;
 
     std::cout << std::filesystem::current_path() << std::endl;
+    app.Run("../../../../../../projects/JoltTest/JoltTest.harmonyproj", NULL);
 
-#if BX_PLATFORM_WINDOWS
-    app.Run("../../projects/JoltTest/JoltTest.harmonyproj", NULL);
-#else
-    app.Run("../../../projects/JoltTest/JoltTest.harmonyproj", proc);
-
-#endif
     return 0;
 }

@@ -47,8 +47,10 @@ harmony::Program::~Program()
 {
 	OPTICK_EVENT();
 
-	ImNodes::DestroyContext();
-	ImGui::DestroyContext();
+	// TODO: Cleanup contexts
+	// FB is being released elsewhere causing BGFX to panic.
+	// ImNodes::DestroyContext();
+	// ImGui::DestroyContext();
 }
 
 void harmony::Program::Init()
