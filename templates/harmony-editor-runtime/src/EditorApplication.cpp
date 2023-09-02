@@ -187,11 +187,6 @@ int harmony::Editor::OnEditUpdate() {
         p_TransformSystem->Update(p_ActiveScene->m_Registry);
         p_CameraSystem->Update(p_ActiveScene->m_Registry);
         p_LightSystem->Update(p_ActiveScene->m_Registry);
-        VectorGraphics::FontSize(VectorGraphics::One, 20.0f);
-        VectorGraphics::FontFace(VectorGraphics::One, "carbontype");
-        VectorGraphics::FontBlur(VectorGraphics::One, 0);
-        VectorGraphics::FillColor(VectorGraphics::One, nvgRGBA(220, 220, 220, 160));
-        VectorGraphics::Text(VectorGraphics::One, 0.0f, 30.0f, "carbontype");
         p_TransformSystem->Render(p_ActiveScene->m_Registry);
     }
 
