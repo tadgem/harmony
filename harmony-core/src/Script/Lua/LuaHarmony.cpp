@@ -11,7 +11,7 @@
 #include "glm/detail/type_mat3x3.hpp"
 #include "Collision/CollisionShapes.h"
 #include "Rendering/Debug/GfxDebug.h"
-
+#include "Rendering/Pipelines/PipelineStages/PipelineDrawStage.h"
 glm::vec2 lua_Vec2Multiply(glm::vec2 &a, glm::vec2 &b)
 {
 	return a * b;
@@ -293,24 +293,58 @@ void harmony::InitHarmonyRendering(sol::state &state, sol::table &h)
 
 	auto pipelineStageRenderer = h.new_usertype<harmony::PipelineStageRenderer>("PipelineStageRenderer");
 
-	// Pipeline def
-	// add pipeline stage def
-	// add franebuffer def
-	// get/has/set output framebuffer
+	auto attachmentTypeEnumDef = h.new_enum("AttachmentType",
+		"UnknownAttachmentType", AttachmentType::UnknownAttachmentType,
+		"RGBA8", AttachmentType::RGBA8,
+		"RGBA16F", AttachmentType::RGBA16F,
+		"RGBA32F", AttachmentType::RGBA32F,
+		"RGBA", AttachmentType::RGBA,
+		"Depth16f", AttachmentType::Depth16F,
+		"Depth24f", AttachmentType::Depth24F,
+		"Depth32f", AttachmentType::Depth32F,
+		"Depth", AttachmentType::Depth
+	);
+
+	auto resolutionTypeEnumDef = h.new_enum("ResolutionType",
+		"FullScale", Resolution::Type::FullScale,
+		"HalfScale", Resolution::Type::HalfScale,
+		"QuarterScale", Resolution::Type::QuarterScale,
+		"EighthScale", Resolution::Type::EighthScale,
+		"SixteenthScale", Resolution::Type::SixteenthScale,
+		"Custom", Resolution::Type::Custom
+	);
+
+	// resolution type def
+	
+
+	// attachment type def
+	auto attachmentDef = h.new_usertype<harmony::Attachment>("Attachment");
+
+
 
 	// framebuffer def
+	auto framebufferDef = h.new_usertype<harmony::PipelineV2>("Framebuffer");
 	// virtual + real resolution 
 	// attachments
 	// resolution type
 	// name
 
-	// attachment type def
-	// attachment type enum def
-	// resolution
+
+	// Pipeline def
+	auto pipelineDef = h.new_usertype<harmony::PipelineV2>("Pipeline");
+	pipelineDef["AddPipelineStage"] = &harmony::PipelineV2::AddPipelineStage;
+	pipelineDef["AddFramebuffer"] = &harmony::PipelineV2::AddFramebuffer;
+	pipelineDef["GetOutputFramebuffer"] = &harmony::PipelineV2::GetOutputFramebuffer;
+	pipelineDef["HasOutputFramebuffer"] = &harmony::PipelineV2::HasOutputFramebuffer;
+	pipelineDef["SetOutputFramebuffer"] = &harmony::PipelineV2::SetOutputFramebuffer;
+
+
 	
-	// resolution type def
+
+	
 
 	// pipeline draw stage def
+	auto pipelineDrawStageDef = h.new_usertype<harmony::PipelineDrawStage>("Pipeline");
 	// basically just creation? 
 	
 	// screen quad renderer type def
