@@ -15,6 +15,8 @@
 #include "Assets/AssetManager.h"
 #include "Core/Input.h"
 #include "ECS/SkyComponent.h"
+#include "Script/Lua/LuaProgramComponent.h"
+
 harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program) {
 }
 
@@ -549,6 +551,45 @@ void harmony::AssetManagerPanel::OnImGui() {
         }
         ImGuiFileDialog::Instance()->Close();
     }
+}
+
+harmony::LuaScriptPanel::LuaScriptPanel(Program& prog) : p_Program(prog), p_AssetManager(prog.m_AssetManager), p_Lua(prog.GetProgramComponent<LuaProgramComponent>())
+{
+}
+
+void harmony::LuaScriptPanel::OnImGui()
+{
+    auto lua = p_Lua.lock();
+    if (ImGui::Begin("LuaScript")) {
+
+        if (!lua)
+        {
+            p_Lua = p_Program.GetProgramComponent<LuaProgramComponent>();
+            ImGui::End();
+            return;
+        }
+        AssetHandle ah;
+        if (p_AssetManager.AssetTypeSelector<LuaScriptAsset>("Add Progam Script", ah)) {
+            if (std::find(lua->m_LuaProgramScripts.begin(), lua->m_LuaProgramScripts.end(), ah) != lua->m_LuaProgramScripts.end())
+            {
+                harmony::log::warn("LuaScript : Script : {} is already a program script", ah.Path); 
+            }
+            else
+            {
+                lua->m_LuaProgramScripts.emplace_back(ah);
+            }
+        }
+
+        ImGui::Text("Running Program Scripts");
+        ImGui::Indent();
+        for (int i = 0; i < lua->m_LuaProgramScripts.size(); i++)
+        {
+            ImGui::Text(lua->m_LuaProgramScripts[i].Path.c_str());
+        }
+        ImGui::Unindent();
+
+    }
+    ImGui::End();
 }
 
 harmony::CameraComponentUI::CameraComponentUI(Renderer &r) : ComponentUI("Camera"), p_Renderer(r) {

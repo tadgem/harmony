@@ -45,19 +45,18 @@ namespace harmony {
         Program &p_Prog;
     };
 
-    class SimpleCollisionSystem;
-
-    class SimpleCollisionSystemPanel : public Panel {
+    class LuaProgramComponent;
+    class LuaScriptPanel : public Panel
+    {
     public:
-
-        SimpleCollisionSystemPanel(Program &program);
+        LuaScriptPanel(Program& prog);
 
         virtual void OnImGui() override;
 
     protected:
-        std::string p_SelectedTypeHash;
-        Ref<SimpleCollisionSystem> p_CollisionSystem;
-        Program &p_Prog;
+        WeakRef<LuaProgramComponent> p_Lua;
+        Program& p_Program;
+        AssetManager& p_AssetManager;
     };
 
     class ComponentUI {

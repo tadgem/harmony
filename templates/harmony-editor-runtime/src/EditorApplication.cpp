@@ -68,7 +68,10 @@ void harmony::Editor::AddEditorPanels() {
     p_Panels.emplace_back(p_ScenePanel);
 
     Ref<AssetManagerPanel> assetManagerPanel = CreateRef<AssetManagerPanel>(*this);
+    Ref<LuaScriptPanel> luaScriptPanel = CreateRef<LuaScriptPanel>(*this);
+
     p_Panels.emplace_back(assetManagerPanel);
+    p_Panels.emplace_back(luaScriptPanel);
 
     Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, p_ScenePanel);
     inspector->AddComponentUI<EntityDataComponentUI>();

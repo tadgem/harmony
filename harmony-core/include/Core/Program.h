@@ -131,8 +131,8 @@ namespace harmony
 			int index = -1;
 			for (int i = 0; i < p_ProgramComponents.size(); i++)
 			{
-				auto typeHash = typeid(T).hash_code();
-				if (typeHash == p_ProgramComponents[i]->m_TypeHash)
+				auto typeHash = GetTypeHash<T>();
+				if (typeHash == GetTypeHash<decltype(p_ProgramComponents[i])>());
 				{
 					index = i;
 					break;

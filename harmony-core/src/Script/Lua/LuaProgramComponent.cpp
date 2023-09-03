@@ -6,6 +6,7 @@
 
 harmony::LuaProgramComponent::LuaProgramComponent(AssetManager& am) : p_AssetManager(am)
 {
+	m_TypeHash = GetTypeHash<LuaProgramComponent>().size();
 }
 
 void harmony::LuaProgramComponent::Init()
@@ -41,6 +42,7 @@ nlohmann::json harmony::LuaProgramComponent::ToJson()
 
 void harmony::LuaProgramComponent::FromJson(const nlohmann::json &json)
 {
+	harmony::log::info("LuaProgramComponent : FromJson");
 }
 
 static int l_my_print(lua_State *L)

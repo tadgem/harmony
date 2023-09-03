@@ -20,10 +20,10 @@ namespace harmony
 		virtual nlohmann::json ToJson() override;
 		virtual void FromJson(const nlohmann::json &json) override;
 
+		Vector<AssetHandle> 			m_LuaProgramScripts;
 	protected:
 		AssetManager&					p_AssetManager;
 		sol::state						p_State;
-		Vector<AssetHandle> 			p_LuaProgramScripts;
 		Vector<WeakRef<LuaScriptAsset>> p_LuaScriptAssets;
 		
 		void RedirectPrintOutput();
