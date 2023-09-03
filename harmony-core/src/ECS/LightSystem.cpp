@@ -41,7 +41,7 @@ void harmony::LightSystem::Update(entt::registry &registry)
 	{
 		bx::Sphere s;
 		s.center = bx::Vec3(t.Position.x, t.Position.y, t.Position.z);
-		s.radius = sqrt(p.Radius);
+		s.radius = p.Radius;
 		GfxDebug::Get()->draw(GfxDebug::Editor, s);
 	}
 

@@ -79,7 +79,7 @@ void harmony::RuntimeProgram::AddAssetFactories() {
 
 void harmony::RuntimeProgram::AddProgramComponents() {
     OPTICK_EVENT();
-    p_LuaProgramComponent  = AddProgramComponent<LuaProgramComponent>().lock();
+    p_LuaProgramComponent  = AddProgramComponent<LuaProgramComponent>(m_AssetManager).lock();
     p_GraphScriptComponent = AddProgramComponent<GraphScriptProgramComponent>().lock();
 }
 

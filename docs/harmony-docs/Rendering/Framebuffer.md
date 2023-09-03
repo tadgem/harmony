@@ -1,0 +1,1 @@
+A framebuffer is a render destination that contains N number of [[Attachment]] . Framebuffers are typically what [[Pipeline]]s will draw in to. 

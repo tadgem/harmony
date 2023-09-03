@@ -4,7 +4,7 @@
 #include "Script/Lua/LuaHarmony.hpp"
 #include "Core/Log.hpp"
 
-harmony::LuaProgramComponent::LuaProgramComponent()
+harmony::LuaProgramComponent::LuaProgramComponent(AssetManager& am) : p_AssetManager(am)
 {
 }
 

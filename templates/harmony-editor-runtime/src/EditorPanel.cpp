@@ -648,8 +648,8 @@ void harmony::PointLightComponentUI::OnComponentImGui(entt::registry &registry, 
 
     ImGui::ColorEdit4("Diffuse", &pl.Diffuse[0]);
     ImGui::ColorEdit4("Ambient", &pl.Ambient[0]);
-    ImGui::SliderFloat("Range", &pl.Radius, 0.0f, 500.0f);
-    ImGui::SliderFloat("Intensity", &pl.Intensity, 0.0f, 1000.0f);
+    ImGui::DragFloat("Range", &pl.Radius, 1.0f,  0.0f, 1000.0f);
+    ImGui::DragFloat("Intensity", &pl.Intensity, 1.0f,  0.0f, 1000.0f);
 }
 
 void harmony::PointLightComponentUI::AddComponent(entt::registry &registry, entt::entity entity) {
@@ -688,9 +688,9 @@ void harmony::SpotLightComponentUI::OnComponentImGui(entt::registry &registry, e
 
     ImGui::ColorEdit4("Diffuse", &sl.Diffuse[0]);
     ImGui::ColorEdit4("Ambient", &sl.Ambient[0]);
-    ImGui::SliderFloat("Range", &sl.Radius, 0.0f, 100.0f);
-    ImGui::SliderFloat("Angle", &sl.Angle, 0.0f, 3.14f);
-    ImGui::SliderFloat("Intensity", &sl.Intensity, 0.0f, 1000.0f);
+    ImGui::DragFloat("Range", &sl.Radius, 1.0f, 0.0f, 100.0f);
+    ImGui::DragFloat("Angle", &sl.Angle, 1.0f, 0.0f, 3.14f);
+    ImGui::DragFloat("Intensity", &sl.Intensity, 1.0f, 0.0f, 1000.0f);
 }
 
 void harmony::SpotLightComponentUI::AddComponent(entt::registry &registry, entt::entity entity) {
