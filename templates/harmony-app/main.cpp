@@ -1,5 +1,6 @@
 #include "SDL_main.h"
 #include "RuntimeProgram.h"
+#include <filesystem>
 
 #if __WINRT__
 int SDL_main(int argc, char* argv[])
@@ -18,7 +19,8 @@ int main()
 
 int main() {
     harmony::RuntimeProgram app;
-    app.Run("../../../../projects/JoltTest/JoltTest.harmonyproj");
+    std::cout << "Current Path : " << std::filesystem::current_path() << "\n";
+    app.Run("../../../../../../projects/JoltTest/JoltTest.harmonyproj");
 }
 
 #endif

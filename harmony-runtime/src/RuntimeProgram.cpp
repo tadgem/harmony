@@ -274,7 +274,8 @@ void harmony::RuntimeProgram::PresentRuntimeImage() {
     OPTICK_EVENT();
     bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
     auto pipeline = m_Renderer.GetViewPipeline(p_RuntimeView->m_Name);
-    bgfx::setTexture(0, m_Renderer.p_PresentProgramTextureHandle, pipeline.lock()->GetOutputFramebuffer().lock()->m_Attachments[0].m_Handle, BGFX_SAMPLER_POINT);
-    ScreenSpaceQuad(static_cast<float>(p_WindowWidth), static_cast<float>(p_WindowHeight), static_cast<float>(p_WindowWidth), static_cast<float>(p_WindowHeight));
+    auto fb = pipeline.lock()->GetOutputFramebuffer().lock();
+    bgfx::setTexture(0, m_Renderer.p_PresentProgramTextureHandle, fb->m_Attachments[0].m_Handle, BGFX_SAMPLER_POINT);
+    ScreenSpaceQuad(static_cast<float>(fb->m_FramebufferResolution.Width), static_cast<float>(fb->m_FramebufferResolution.Height), static_cast<float>(p_WindowWidth), static_cast<float>(p_WindowHeight));
     bgfx::submit(p_PresentViewId, m_Renderer.p_PresentProgram.lock()->m_Handle);
 }
