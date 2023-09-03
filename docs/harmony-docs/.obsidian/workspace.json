@@ -23,12 +23,8 @@
             "id": "130a3d41026852af",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Rendering/Texture.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "graph",
+              "state": {}
             }
           }
         ],
@@ -98,7 +94,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Rendering/Texture.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +110,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Rendering/Texture.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -137,9 +131,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "Rendering/Texture.md"
-              }
+              "state": {}
             }
           }
         ],
@@ -162,23 +154,23 @@
   },
   "active": "130a3d41026852af",
   "lastOpenFiles": [
+    "Core/Component.md",
+    "Core/System.md",
+    "Rendering/Texture.md",
     "Rendering/Shader.md",
     "Rendering/PipelineStageRenderer.md",
     "Rendering/Pipeline.md",
     "Rendering/Framebuffer.md",
     "Rendering/Attachment.md",
-    "Core/System.md",
     "Core/Scene.md",
     "Core/Project.md",
     "Core/ProgramComponent.md",
-    "Core/Component.md",
     "Misc/Setup/Windows Setup.md",
     "Misc/Setup/Mac OS Setup.md",
     "Misc/Setup",
     "Misc",
     "Script/Lua Script API.md",
     "Rendering/View.md",
-    "Rendering/Texture.md",
     "Rendering/ShaderDataSource.md",
     "Rendering/ShaderDataOverride.md",
     "Rendering/Mesh.md",

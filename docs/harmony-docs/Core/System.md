@@ -1,6 +1,6 @@
 `System`s allow you to modularly add functionality to a harmony program, without the need to make any changes to the core program source. The primary difference between a `ProgramComponent` and a `System` is that `Systems` run on the data provided by a scene, and do not function without an active scene. 
 
-`System`s have multiple overridable methods that are run at various stages of the Scene lifecycle.
+`System`s have multiple overridable methods that are run at various stages of the Scene lifecycle. Typically a system will create a view from the registry which contains the [[Component]]s the system cares about and will operate on. 
 
 `Init();`  
 This method is invoked once a `Scene` is loaded. 
