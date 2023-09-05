@@ -10,10 +10,10 @@ harmony::AssetHandle::AssetHandle()
 	OPTICK_EVENT();
 	Path = "";
 	Index = UINT32_MAX;
-	TypeHash = "";
+	TypeHash = GET_TYPE_HASH(AssetHandle);
 }
 
-harmony::AssetHandle::AssetHandle(std::string path, uint32_t index, std::string typeHash)
+harmony::AssetHandle::AssetHandle(std::string path, uint32_t index, HashString typeHash)
 {
 	OPTICK_EVENT();
 	Path = path;

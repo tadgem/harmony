@@ -1,7 +1,7 @@
 #include <optick.h>
 #include "Rendering/Mesh.h"
 
-harmony::Mesh::Mesh(const std::string &path, uint32_t index) : Asset(AssetHandle{path, index, GetTypeHash<Mesh>()})
+harmony::Mesh::Mesh(const std::string &path, uint32_t index) : Asset(AssetHandle{path, index, GET_TYPE_HASH(Mesh)})
 {
 	OPTICK_EVENT();
 	m_SubmittedToGpu = false;

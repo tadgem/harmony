@@ -10,9 +10,9 @@ namespace harmony
 
 	struct AssetFactoryCapabilities
 	{
-		std::vector<std::string> AssetTypeHashes;
+		std::vector<HashString> AssetTypeHashes;
 
-		bool Contains(std::string typeHash)
+		bool Contains(HashString typeHash)
 		{
 			bool found = false;
 			for (int i = 0; i < AssetTypeHashes.size(); i++)

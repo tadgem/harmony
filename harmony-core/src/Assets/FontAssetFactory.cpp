@@ -4,11 +4,11 @@
 #include "Core/Memory.h"
 #include "Core/Utils.h"
 #include "Rendering/VectorGraphics/VectorGraphics.h"
-
+#include "Core/TypeDef.h"
 harmony::FontAssetFactory::FontAssetFactory()
 {
 	OPTICK_EVENT();
-	std::string fontTypeHash = GetTypeHash<FontAsset>();
+	HashString fontTypeHash = GET_TYPE_HASH(FontAsset);
 	m_Capabilities.AssetTypeHashes.push_back(fontTypeHash);
 }
 
@@ -16,7 +16,7 @@ void harmony::FontAssetFactory::LoadAssetData(const std::string &path, entt::reg
 {
 	OPTICK_EVENT();
     std::string cleanPath = Utils::GetCleanPlatformPath(path);
-	AssetHandle assetHandle(cleanPath, 0, GetTypeHash<FontAsset>());
+	AssetHandle assetHandle(cleanPath, 0, GET_TYPE_HASH(FontAsset));
 	Ref<FontAsset> font = CreateRef<FontAsset>(assetHandle);
 	std::vector<uint8_t> fontData = Utils::LoadBinaryFromPath(cleanPath);
 	std::string cleanFontName = GetFontNameFromPath(cleanPath);

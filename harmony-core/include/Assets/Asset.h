@@ -2,16 +2,16 @@
 
 #include "ThirdParty/json.hpp"
 #include "Core/Memory.h"
-
+#include "Core/TypeDef.h"
 namespace harmony
 {
 	struct AssetHandle
 	{
 		AssetHandle();
-		AssetHandle(std::string path, uint32_t index, std::string typeHash);
+		AssetHandle(std::string path, uint32_t index, HashString typeHash);
 		std::string Path;
 		uint32_t Index;
-		std::string TypeHash;
+		HashString TypeHash;
 		bool operator==(AssetHandle other);
 
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetHandle, Path, Index, TypeHash)

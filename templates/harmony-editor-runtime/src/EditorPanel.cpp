@@ -464,7 +464,7 @@ void harmony::AssetManagerPanel::OnImGui() {
 
             if (ImGui::Button("Load Texture")) {
                 ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Asset", ".png,.jpg", ".");
-                p_SelectedTypeHash = GetTypeHash<TextureAsset>();
+                p_SelectedTypeHash = GET_TYPE_HASH(TextureAsset);
             }
         }
 
@@ -480,7 +480,7 @@ void harmony::AssetManagerPanel::OnImGui() {
             if (ImGui::Button("Load Mesh/Model")) {
                 ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Model",
                                                         ".fbx,.obj,.dae,.gltf,.blend", ".");
-                p_SelectedTypeHash = GetTypeHash<Model>();
+                p_SelectedTypeHash = GET_TYPE_HASH(Model);
             }
         }
 
@@ -495,7 +495,7 @@ void harmony::AssetManagerPanel::OnImGui() {
             ImGui::TreePop();
             if (ImGui::Button("Load Shader Source")) {
                 ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Source", ".sc,.sh", ".");
-                p_SelectedTypeHash = GetTypeHash<ShaderSourceAsset>();
+                p_SelectedTypeHash = GET_TYPE_HASH(ShaderSourceAsset);
             }
         }
 
@@ -521,7 +521,7 @@ void harmony::AssetManagerPanel::OnImGui() {
             ImGui::TreePop();
             if (ImGui::Button("Load Font")) {
                 ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Source", ".ttf", ".");
-                p_SelectedTypeHash = GetTypeHash<FontAsset>();
+                p_SelectedTypeHash = GET_TYPE_HASH(FontAsset);
             }
         }
 
@@ -536,7 +536,7 @@ void harmony::AssetManagerPanel::OnImGui() {
             ImGui::TreePop();
             if (ImGui::Button("Load Script")) {
                 ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Script", ".lua", ".");
-                p_SelectedTypeHash = GetTypeHash<LuaScriptAsset>();
+                p_SelectedTypeHash = GET_TYPE_HASH(LuaScriptAsset);
             }
         }
         ImGui::Unindent();

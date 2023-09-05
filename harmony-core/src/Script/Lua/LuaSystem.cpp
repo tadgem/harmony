@@ -10,7 +10,7 @@
 #include <string>
 #include <optick.h>
 
-harmony::LuaSystem::LuaSystem(AssetManager &am, Ref<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaSystem>()),
+harmony::LuaSystem::LuaSystem(AssetManager &am, Ref<LuaProgramComponent> luaPc) : System(GET_TYPE_HASH(LuaSystem)),
 																				  p_LuaProgramComponent(luaPc),
 																				  p_AssetManager(am)
 {

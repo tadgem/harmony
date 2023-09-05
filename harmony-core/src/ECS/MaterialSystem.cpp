@@ -3,7 +3,7 @@
 #include "ECS/MaterialComponent.h"
 
 harmony::MaterialSystem::MaterialSystem(Renderer &renderer, AssetManager &assetManager) : System(
-		GetTypeHash<MaterialSystem>()), p_Renderer(renderer), p_AssetManager(assetManager)
+		GET_TYPE_HASH(MaterialSystem)), p_Renderer(renderer), p_AssetManager(assetManager)
 {
 	OPTICK_EVENT();
 }

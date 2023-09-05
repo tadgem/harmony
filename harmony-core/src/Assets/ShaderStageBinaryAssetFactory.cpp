@@ -4,7 +4,7 @@
 harmony::ShaderStageBinaryAssetFactory::ShaderStageBinaryAssetFactory(Renderer &renderer) : p_Renderer(renderer)
 {
 	OPTICK_EVENT();
-	m_Capabilities.AssetTypeHashes.push_back(GetTypeHash<ShaderStage>());
+	m_Capabilities.AssetTypeHashes.push_back(GET_TYPE_HASH(ShaderStage));
 }
 
 void harmony::ShaderStageBinaryAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry)
@@ -54,7 +54,7 @@ void harmony::ShaderStageBinaryAssetFactory::LoadAssetData(const std::string &pa
 
 	harmony::log::info("ShaderStageBinaryAssetFactory : Successfully loaded shader stage binary at path : {} : ProgramHandle : {} ", path, shaderStage->m_ProgramHandle.idx);
 
-	AssetHandle handle(path, 0, GetTypeHash<ShaderStage>());
+	AssetHandle handle(path, 0, GET_TYPE_HASH(ShaderStage));
 	AssetComponent<ShaderStage> stageComponent{shaderStage, handle};
 	entt::entity e = registry.create();
 	registry.emplace<AssetComponent<ShaderStage>>(e, stageComponent);

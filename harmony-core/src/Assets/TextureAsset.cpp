@@ -3,7 +3,7 @@
 #include "bx/readerwriter.h"
 
 harmony::TextureAsset::TextureAsset(const std::string &path, bimg::ImageContainer *imageContainer) : Asset(
-		AssetHandle{path, 0, GetTypeHash<TextureAsset>()}), p_ImageContainer(imageContainer)
+		AssetHandle{path, 0, GET_TYPE_HASH(TextureAsset)}), p_ImageContainer(imageContainer)
 {
 	OPTICK_EVENT();
 	m_SubmittedToGPU = false;

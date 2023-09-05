@@ -11,7 +11,7 @@ harmony::ModelHandle harmony::ModelHandle::CreateNew()
 	return handle;
 }
 
-harmony::Model::Model(const String &name) : Asset(AssetHandle{name, 0, GetTypeHash<Model>()}), m_Name(name)
+harmony::Model::Model(const String &name) : Asset(AssetHandle{name, 0, GET_TYPE_HASH(Model)}), m_Name(name)
 {
 	OPTICK_EVENT();
 }

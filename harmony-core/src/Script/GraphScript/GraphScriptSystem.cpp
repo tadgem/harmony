@@ -5,7 +5,7 @@
 #include "Script/GraphScript/GraphScriptSystem.h"
 
 harmony::GraphScriptSystem::GraphScriptSystem(harmony::Ref<harmony::GraphScriptProgramComponent> gspc)
-		: System(GetTypeHash<GraphScriptSystem>()), p_ProgramComponent(gspc)
+		: System(GET_TYPE_HASH(GraphScriptSystem)), p_ProgramComponent(gspc)
 {
 
 }

@@ -131,8 +131,8 @@ namespace harmony
 			int index = -1;
 			for (int i = 0; i < p_ProgramComponents.size(); i++)
 			{
-				auto typeHash = GetTypeHash<T>();
-				if (typeHash == GetTypeHash<decltype(p_ProgramComponents[i])>());
+				auto typeHash = GET_TYPE_HASH(T);
+				if (typeHash == p_ProgramComponents[i]->m_TypeHash);
 				{
 					index = i;
 					break;
@@ -157,7 +157,7 @@ namespace harmony
 			int index = -1;
 			for (int i = 0; i < p_ECSSystems.size(); i++)
 			{
-				if (GetTypeHash<T>() == p_ECSSystems[i]->m_TypeHash)
+				if (GET_TYPE_HASH(T) == p_ECSSystems[i]->m_TypeHash)
 				{
 					index = i;
 					break;

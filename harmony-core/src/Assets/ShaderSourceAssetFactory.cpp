@@ -1,10 +1,10 @@
 #include <optick.h>
 #include "Assets/ShaderSourceAssetFactory.h"
-
+#include "Core/TypeDef.h"
 harmony::ShaderSourceAssetFactory::ShaderSourceAssetFactory() : AssetFactory()
 {
 	OPTICK_EVENT();
-	m_Capabilities.AssetTypeHashes.push_back(GetTypeHash<ShaderSourceAsset>());
+	m_Capabilities.AssetTypeHashes.push_back(GET_TYPE_HASH(ShaderSourceAsset));
 }
 
 void harmony::ShaderSourceAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry)
@@ -45,7 +45,7 @@ void harmony::ShaderSourceAssetFactory::LoadAssetData(const std::string &path, e
 		cleanPath = path;
 	}
 	Ref<ShaderSourceAsset> sourceAsset = CreateRef<ShaderSourceAsset>(cleanPath, type);
-	AssetHandle handle{cleanPath, 0, GetTypeHash<ShaderSourceAsset>()};
+	AssetHandle handle{cleanPath, 0, GET_TYPE_HASH(ShaderSourceAsset)};
 	AssetComponent<ShaderSourceAsset> sourceComponent{sourceAsset, handle};
 	entt::entity e = registry.create();
 	registry.emplace<AssetComponent<ShaderSourceAsset>>(e, sourceComponent);

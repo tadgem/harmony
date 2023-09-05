@@ -22,7 +22,7 @@ namespace harmony
 		friend class Program;
 		void UpdateSceneSystemSerializationAttributes(std::vector<Ref<System>> &systems);
 		void Deserialize(std::vector<Ref<System>> &systems);
-		std::map<std::string, nlohmann::json> p_SystemSerializationAttributes;
+		std::map<uint64_t, nlohmann::json> p_SystemSerializationAttributes;
 		std::vector<Entity> p_Entities;
 	public:
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(Scene, m_Name, m_NumEntities, p_Entities, p_SystemSerializationAttributes)

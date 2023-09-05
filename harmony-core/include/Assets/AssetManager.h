@@ -27,33 +27,33 @@ namespace harmony
 		template<typename T>
 		bool AddAssetTypeName()
 		{
-			size_t typeHash = typeid(T).hash_code();
+			HashString typeHash = GET_TYPE_HASH(T);
 
 			if (p_AssetTypeNames.find(typeHash) == p_AssetTypeNames.end())
 			{
 				std::string typeName = typeid(T).name();
-				p_AssetTypeNames.emplace(typeHash, typeName);
+				p_AssetTypeNames.emplace(typeHash.m_Value, typeName);
 				return true;
 			}
 			return false;
 		}
 
-		std::vector<AssetHandle> LoadAsset(const std::string &path, std::string typeHash);
+		std::vector<AssetHandle> LoadAsset(const std::string &path, HashString typeHash);
 
 		template<typename T>
 		std::vector<AssetHandle> LoadAsset(const std::string &path)
 		{
-			std::string typeHash = GetTypeHash<T>();
+			HashString typeHash = GET_TYPE_HASH(T);
 
 			return LoadAsset(path, typeHash);
 		}
 
-		void UnloadAsset(AssetHandle &handle, std::string typeHash);
+		void UnloadAsset(AssetHandle &handle, HashString typeHash);
 
 		template<typename T>
 		void UnloadAsset(AssetHandle &handle)
 		{
-			std::string typeHash = GetTypeHash<T>();
+			std::string typeHash = GET_TYPE_HASH(T);
 			UnloadAsset(handle, typeHash);
 		}
 
@@ -101,7 +101,7 @@ namespace harmony
 		template<typename T>
 		WeakRef<T> GetAsset(const std::string& assetHandle)
 		{
-			AssetHandle h = { assetHandle, 0, GetTypeHash<T>()};
+			AssetHandle h = { assetHandle, 0, GET_TYPE_HASH(T)};
 			return GetAsset<T>(h);
 		}
 
@@ -116,7 +116,7 @@ namespace harmony
 			AssetHandle handle;
 			handle.Path = path;
 			handle.Index = 0;
-			handle.TypeHash = GetTypeHash<T>();
+			handle.TypeHash = GET_TYPE_HASH(T);
 
 			AssetComponent<T> ac;
 			ac.Asset = asset;
@@ -158,9 +158,9 @@ namespace harmony
 
 #endif
 	protected:
-		Ref<AssetFactory> GetAssetFactory(std::string typeHash);
+		Ref<AssetFactory> GetAssetFactory(HashString typeHash);
 		std::vector<Ref<AssetFactory>> p_AssetFactories;
-		std::unordered_map<size_t, std::string> p_AssetTypeNames;
+		std::unordered_map<uint64_t, std::string> p_AssetTypeNames;
 		std::vector<std::string> p_LoadedPaths;
 		entt::registry p_AssetRegistry;
 	};

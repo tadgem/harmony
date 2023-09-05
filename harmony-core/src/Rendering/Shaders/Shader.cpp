@@ -347,7 +347,7 @@ bool harmony::ShaderProgram::IsOverridenUniform(const ShaderUniform &uniform)
 }
 
 harmony::ShaderStage::ShaderStage(const std::string &name, const Type &shaderType)
-		: Asset(AssetHandle{name, 0, GetTypeHash<ShaderStage>()}), m_Type(shaderType),
+		: Asset(AssetHandle{name, 0, GET_TYPE_HASH(ShaderStage)}), m_Type(shaderType),
 		  m_ProgramHandle(BGFX_INVALID_HANDLE), m_Name(name)
 {
 	OPTICK_EVENT();

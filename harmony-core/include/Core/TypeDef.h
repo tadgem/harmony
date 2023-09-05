@@ -9,6 +9,7 @@ namespace harmony
 {
     struct HashString
     {
+        HashString() { m_Value = 0; }
         HashString(const String& input);
         uint64_t m_Value;
 

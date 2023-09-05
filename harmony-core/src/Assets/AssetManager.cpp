@@ -43,7 +43,7 @@ bool harmony::AssetManager::IsPathLoaded(const std::string path)
 	return false;
 }
 
-std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::string &path, std::string typeHash)
+std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::string &path, HashString typeHash)
 {
 	OPTICK_EVENT();
 	std::string cleanPath = path;
@@ -75,7 +75,7 @@ std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::st
 	return GetAssetsAtPath(cleanPath);
 }
 
-void harmony::AssetManager::UnloadAsset(AssetHandle &handle, std::string typeHash)
+void harmony::AssetManager::UnloadAsset(AssetHandle &handle, HashString typeHash)
 {
 	OPTICK_EVENT();
 	auto builtin = handle.Path.find("builtin");
@@ -144,7 +144,7 @@ void harmony::AssetManager::Deserialize(nlohmann::json &json)
 	}
 }
 
-harmony::Ref<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory(std::string typeHash)
+harmony::Ref<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory(HashString typeHash)
 {
 	OPTICK_EVENT();
 	Ref<AssetFactory> factory = nullptr;

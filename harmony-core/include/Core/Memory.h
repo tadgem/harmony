@@ -114,27 +114,6 @@ namespace harmony
 #endif
 
 	template<typename T>
-	static std::string GetTypeHash()
-	{
-		std::string typeName = typeid(T).name();
-#ifdef _WIN32
-		std::regex regex("((class )|(struct )|(enum ))(.*)");
-		auto begin = std::sregex_iterator(typeName.begin(), typeName.end(), regex);
-		auto end = std::sregex_iterator();
-		for (std::sregex_iterator i = begin; i != end; ++i)
-		{
-			std::smatch match = *i;
-			std::string match_str = match[match.size() - 1];
-			typeName = match_str;
-		}
-#endif
-#if defined(__APPLE__) || defined(__unix__) || defined(__unix)
-		typeName = ParseUnixTypeName(typeName);
-#endif
-		return typeName;
-	}
-
-	template<typename T>
 	using Unique = std::unique_ptr<T>;
 
 	template<typename T, typename ... Args>

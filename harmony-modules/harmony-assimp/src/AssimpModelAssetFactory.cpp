@@ -6,6 +6,7 @@
 #include "assimp/mesh.h"
 #include "assimp/scene.h"
 #include "Core/Utils.h"
+#include "Core/TypeDef.h"
 
 static glm::vec3 AssimpToGLM(aiVector3D aiVec) {
     return glm::vec3(aiVec.x, aiVec.y, aiVec.z);
@@ -21,8 +22,8 @@ static harmony::String AssimpToSTD(aiString str) {
 
 harmony::AssimpModelAssetFactory::AssimpModelAssetFactory(Renderer &renderer)
         : harmony::AssetFactory(), p_Renderer(renderer) {
-    String modelTypeHash = GetTypeHash<Model>();
-    String meshTypeHash = GetTypeHash<Mesh>();
+    HashString modelTypeHash = GET_TYPE_HASH(Model);
+    HashString meshTypeHash = GET_TYPE_HASH(Mesh);
 
     m_Capabilities.AssetTypeHashes.push_back(modelTypeHash);
     m_Capabilities.AssetTypeHashes.push_back(meshTypeHash);
@@ -171,14 +172,14 @@ void harmony::AssimpModelAssetFactory::LoadAssetData(const String &path, entt::r
     ProcessNode(cleanPath, scene->mRootNode, scene);
     String modelName = String(scene->mName.C_Str());
     Ref<Model> model = CreateRef<Model>(modelName);
-    AssetHandle handle(cleanPath, 0, GetTypeHash<Model>());
+    AssetHandle handle(cleanPath, 0, GET_TYPE_HASH(Model));
 
     for (int i = 0; i < p_Meshes.size(); i++) {
         Ref<Mesh> meshAsset = std::static_pointer_cast<Mesh, Asset>(p_Meshes[i]);
 
         p_Renderer.SubmitMeshToGPU(meshAsset);
 
-        AssetHandle meshHandle(cleanPath, i, GetTypeHash<Mesh>());
+        AssetHandle meshHandle(cleanPath, i, GET_TYPE_HASH(Mesh));
         AssetComponent<Mesh> meshComponent{meshAsset, meshHandle};
         entt::entity e = registry.create();
         registry.emplace<AssetComponent<Mesh>>(e, meshComponent);
