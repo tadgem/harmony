@@ -800,7 +800,7 @@ void harmony::Program::LoadProject(const std::string &path)
 	{
 		for (unsigned int i = 0; i < p_ProgramComponents.size(); i++)
 		{
-			if(p_ProgramComponents[i]->m_TypeHash == typeHash)
+			if(p_ProgramComponents[i]->m_TypeHash.m_Value == typeHash)
 			{
 				p_ProgramComponents[i]->FromJson(json);
 			}

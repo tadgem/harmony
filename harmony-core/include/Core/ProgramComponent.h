@@ -1,10 +1,11 @@
 #pragma once
 
 #include "ThirdParty/json.hpp"
-
+#include "Core/TypeDef.h"
 namespace harmony {
     class ProgramComponent {
     public:
+
 
         virtual ~ProgramComponent() {};
 
@@ -20,10 +21,11 @@ namespace harmony {
 
         virtual void FromJson(const nlohmann::json &json) = 0;
 
-        size_t m_TypeHash;
+        HashString m_TypeHash;
     protected:
         friend class Program;
 
+        ProgramComponent(const HashString& typeHash);
         virtual void Refresh() {};
     };
 };

@@ -28,7 +28,8 @@ namespace harmony
 		std::string m_ProjectName;
 		std::string m_ProjectDirectory;
 		std::string m_ImGuiIniPath;
-		std::map<size_t, nlohmann::json> p_ProgramComponentSerializationAttributes;
+		// TODO the key to this really should be a hashstring...
+		std::map<uint64_t, nlohmann::json> p_ProgramComponentSerializationAttributes;
 		nlohmann::json m_AssetManagerSerializationAttributes;
 		nlohmann::json m_RendererSerializationAttributes;
 		std::vector<std::string> m_SerializedScenes;

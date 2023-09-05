@@ -4,9 +4,8 @@
 #include "Script/GraphScript/GraphScriptProgramComponent.h"
 #include "Script/GraphScript/GraphScript.h"
 
-harmony::GraphScriptProgramComponent::GraphScriptProgramComponent()
+harmony::GraphScriptProgramComponent::GraphScriptProgramComponent() : ProgramComponent(GET_TYPE_HASH(GraphScriptProgramComponent))
 {
-	m_TypeHash = typeid(GraphScriptProgramComponent).hash_code();
 	p_NodeRegistry = CreateUnique<GraphScript::NodeRegistry>();
 	p_NodeRegistry->AddNode(new GraphScript::PrintNode());
 	p_NodeRegistry->AddNode(new GraphScript::EntryPointNode());

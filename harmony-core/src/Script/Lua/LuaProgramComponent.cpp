@@ -4,9 +4,9 @@
 #include "Script/Lua/LuaHarmony.hpp"
 #include "Core/Log.hpp"
 
-harmony::LuaProgramComponent::LuaProgramComponent(AssetManager& am) : p_AssetManager(am)
+harmony::LuaProgramComponent::LuaProgramComponent(AssetManager& am) : ProgramComponent(GET_TYPE_HASH(LuaProgramComponent)), p_AssetManager(am)
 {
-	m_TypeHash = GetTypeHash<LuaProgramComponent>().size();
+	
 }
 
 void harmony::LuaProgramComponent::Init()
