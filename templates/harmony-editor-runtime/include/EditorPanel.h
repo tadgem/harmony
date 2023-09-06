@@ -24,9 +24,12 @@ namespace harmony {
         virtual void OnImGui() override;
 
     protected:
-        void EntityImGui(entt::entity e, entt::registry& reg, bool topLevel = false);
-        void EntityNameRename(entt::entity e, EntityData& data);
-        void EntityDragDrop(entt::entity e, entt::registry& reg);
+        void EntityImGui(entt::entity e, entt::registry &reg, bool topLevel = false);
+
+        void EntityNameRename(entt::entity e, EntityData &data);
+
+        void EntityDragDrop(entt::entity e, entt::registry &reg);
+
         Program &p_Prog;
         bool p_RenamingSelectedEntity = false;
         Vector<entt::entity> p_FrameHandledEntities;
@@ -46,24 +49,23 @@ namespace harmony {
     };
 
     class LuaProgramComponent;
-    class LuaScriptPanel : public Panel
-    {
+
+    class LuaScriptPanel : public Panel {
     public:
-        LuaScriptPanel(Program& prog);
+        LuaScriptPanel(Program &prog);
 
         virtual void OnImGui() override;
 
     protected:
         WeakRef<LuaProgramComponent> p_Lua;
-        Program& p_Program;
-        AssetManager& p_AssetManager;
+        Program &p_Program;
+        AssetManager &p_AssetManager;
     };
 
     class ComponentUI {
     public:
 
-        enum ImGuiParentType
-        {
+        enum ImGuiParentType {
             TreeNode,
             Custom,
         };
@@ -291,8 +293,7 @@ namespace harmony {
 
     };
 
-    class EntityDataComponentUI : public ComponentUI
-    {
+    class EntityDataComponentUI : public ComponentUI {
     public:
         EntityDataComponentUI();
 

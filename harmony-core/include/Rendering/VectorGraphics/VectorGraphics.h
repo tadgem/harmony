@@ -7,39 +7,40 @@
 
 // #define MACRO(s, ...) printf(s, __VA_ARGS__)
 
-namespace harmony
-{
-	class VectorGraphics
-	{
-	public:
-		enum Layer : char
-		{
-			One,
-			Two,
-			Three,
-			Four,
-			Five,
-			Six,
-			Seven,
-			Eight
-		};
+namespace harmony {
+    class VectorGraphics {
+    public:
+        enum Layer : char {
+            One,
+            Two,
+            Three,
+            Four,
+            Five,
+            Six,
+            Seven,
+            Eight
+        };
 
-		NLOHMANN_JSON_SERIALIZE_ENUM(Layer, {
-			{ One, "1" },
-			{ Two, "2" },
-			{ Three, "3" },
-			{ Four, "4" },
-			{ Five, "5" },
-			{ Six, "6" },
-			{ Seven, "7" },
-			{ Eight, "8" },
-		})
+        NLOHMANN_JSON_SERIALIZE_ENUM(Layer, {
+            { One, "1" },
+            { Two, "2" },
+            { Three, "3" },
+            { Four, "4" },
+            { Five, "5" },
+            { Six, "6" },
+            { Seven, "7" },
+            { Eight, "8" },
+        })
 
         static void Init();
-		static NVGcontext *AddViewLayer(Layer layer, bgfx::ViewId viewId);
-		static void RemoveViewLayer(Layer layer, NVGcontext *renderer);
-		static void AddFont(const std::string &name, std::vector<uint8_t> data);
-		static void RemoveFont(const std::string &name);
+
+        static NVGcontext *AddViewLayer(Layer layer, bgfx::ViewId viewId);
+
+        static void RemoveViewLayer(Layer layer, NVGcontext *renderer);
+
+        static void AddFont(const std::string &name, std::vector<uint8_t> data);
+
+        static void RemoveFont(const std::string &name);
 
         static void FontFace(Layer layer, const char *font);
 
@@ -153,10 +154,12 @@ namespace harmony
         static NVGpaint
         ImagePattern(Layer layer, float ox, float oy, float ex, float ey, float angle, int image, float alpha);
 
-	protected:
-		static Map<Layer, Vector<NVGcontext *>> p_VectorRenderers;
-		static Map<String, Vector<uint8_t>> p_FontDatas;
-		friend class FontAssetFactory;
-		inline static const int s_UseEdgeAA = 0;
-	};
+    protected:
+        static Map<Layer, Vector<NVGcontext *>> p_VectorRenderers;
+        static Map<String, Vector<uint8_t>> p_FontDatas;
+
+        friend class FontAssetFactory;
+
+        inline static const int s_UseEdgeAA = 0;
+    };
 } // namespace harmony

@@ -6,7 +6,7 @@
 namespace harmony {
     class System {
     public:
-        System(const HashString& typeHash) : m_TypeHash(typeHash) {}
+        System(const HashString &typeHash) : m_TypeHash(typeHash) {}
 
         virtual ~System() {};
 

@@ -7,30 +7,44 @@
 #include "ECS/MeshComponent.h"
 #include "ECS/TransformComponent.h"
 
-namespace harmony
-{
-	class Scene;
-	class LuaScriptEntity : public Entity
-	{
-	public:
-		LuaScriptEntity();
-		LuaScriptEntity(Scene *scene, entt::entity entity);
-		void Destroy();
-		TransformComponent *AddTransform();
-		TransformComponent *GetTransform();
-		void SetTransform(TransformComponent *t);
-		MeshComponent *AddMesh();
-		MeshComponent *GetMesh();
-		void SetMesh(MeshComponent *m);
-		CameraComponent *AddCamera();
-		CameraComponent *GetCamera();
-		void SetCamera(CameraComponent *c);
-		MaterialComponent *AddMaterial();
-		MaterialComponent *GetMaterial();
-		void SetMaterial(MaterialComponent *c);
-		bool Valid();
+namespace harmony {
+    class Scene;
 
-	protected:
-		Scene *p_Scene;
-	};
+    class LuaScriptEntity : public Entity {
+    public:
+        LuaScriptEntity();
+
+        LuaScriptEntity(Scene *scene, entt::entity entity);
+
+        void Destroy();
+
+        TransformComponent *AddTransform();
+
+        TransformComponent *GetTransform();
+
+        void SetTransform(TransformComponent *t);
+
+        MeshComponent *AddMesh();
+
+        MeshComponent *GetMesh();
+
+        void SetMesh(MeshComponent *m);
+
+        CameraComponent *AddCamera();
+
+        CameraComponent *GetCamera();
+
+        void SetCamera(CameraComponent *c);
+
+        MaterialComponent *AddMaterial();
+
+        MaterialComponent *GetMaterial();
+
+        void SetMaterial(MaterialComponent *c);
+
+        bool Valid();
+
+    protected:
+        Scene *p_Scene;
+    };
 } // namespace harmony

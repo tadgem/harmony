@@ -3,40 +3,40 @@
 #include "ThirdParty/json.hpp"
 #include "Core/Memory.h"
 #include "Core/TypeDef.h"
-namespace harmony
-{
-	struct AssetHandle
-	{
-		AssetHandle();
-		AssetHandle(std::string path, uint32_t index, HashString typeHash);
-		std::string Path;
-		uint32_t Index;
-		HashString TypeHash;
-		bool operator==(AssetHandle other);
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetHandle, Path, Index, TypeHash)
-	};
-	template<typename T>
-	struct AssetComponent
-	{
-		Ref<T> Asset;
-		AssetHandle Handle;
+namespace harmony {
+    struct AssetHandle {
+        AssetHandle();
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetComponent<T>, Handle)
-	};
-	class Asset
-	{
-	public:
-		Asset(AssetHandle handle);
+        AssetHandle(std::string path, uint32_t index, HashString typeHash);
 
-		Asset()
-		{
-		}
+        std::string Path;
+        uint32_t Index;
+        HashString TypeHash;
 
-		AssetHandle m_Handle;
+        bool operator==(AssetHandle other);
 
-		virtual ~Asset()
-		{
-		}
-	};
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetHandle, Path, Index, TypeHash)
+    };
+
+    template<typename T>
+    struct AssetComponent {
+        Ref<T> Asset;
+        AssetHandle Handle;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetComponent<T>, Handle)
+    };
+
+    class Asset {
+    public:
+        Asset(AssetHandle handle);
+
+        Asset() {
+        }
+
+        AssetHandle m_Handle;
+
+        virtual ~Asset() {
+        }
+    };
 };

@@ -2,6 +2,7 @@
 #include "ImGui/ImGuiFileDialog.h"
 #include "EditorApplication.h"
 #include "ImGui/icons_kenney.h"
+
 harmony::EditorMainMenuBar::EditorMainMenuBar(Editor &prog) : p_Prog(prog) {
     p_CreateProjectMenu = false;
     p_CreateSceneMenu = false;
@@ -83,8 +84,7 @@ void harmony::EditorMainMenuBar::MenuBar() {
         ImVec2 iconSize = ImGui::CalcTextSize(ICON_KI_BUTTON_X);
         float padding = 4.0f;
         ImGui::SetCursorPos(ImVec2(m_MenuBarSize.x - iconSize.x - padding, cursorPos.y));
-        if(ImGui::Button(ICON_KI_BUTTON_X))
-        {
+        if (ImGui::Button(ICON_KI_BUTTON_X)) {
             p_Prog.Exit();
         }
     }
@@ -94,7 +94,8 @@ void harmony::EditorMainMenuBar::MenuBar() {
 void harmony::EditorMainMenuBar::Dialogs() {
     auto io = ImGui::GetIO();
     ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_Always,
+                            ImVec2(0.5f, 0.5f));
     if (ImGuiFileDialog::Instance()->Display("HarmonyOpenProject")) {
         // action if OK
         if (ImGuiFileDialog::Instance()->IsOk()) {
@@ -105,7 +106,8 @@ void harmony::EditorMainMenuBar::Dialogs() {
     }
 
     ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
+    ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_Always,
+                            ImVec2(0.5f, 0.5f));
     if (ImGuiFileDialog::Instance()->Display("HarmonySaveScene")) {
         // action if OK
         if (ImGuiFileDialog::Instance()->IsOk()) {

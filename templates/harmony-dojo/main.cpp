@@ -1,6 +1,6 @@
 #include "Core/Memory.h"
 #include "EditorApplication.h"
-#include <filesystem> 
+#include <filesystem>
 
 void *operator new(size_t size) {
     harmony::Memory::AddAllocatedMemory(size);

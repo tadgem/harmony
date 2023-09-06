@@ -8,27 +8,32 @@
 #include "Core/Memory.h"
 #include "ECS/System.h"
 
-namespace harmony
-{
-	class GraphScriptProgramComponent;
-	class GraphScriptSystem : public System
-	{
-	public:
-		GraphScriptSystem(Ref<GraphScriptProgramComponent> gspc);
-		void Init(entt::registry &registry) override;
-		void Update(entt::registry &registry) override;
-		void Render(entt::registry &registry) override;
-		void Cleanup(entt::registry &registry) override;
-		nlohmann::json SerializeSystem(entt::registry &registry) override;
-		void DeserializeSystem(entt::registry &registry,
-							   nlohmann::json systemJson) override;
+namespace harmony {
+    class GraphScriptProgramComponent;
 
-	protected:
-		void Refresh() override;
+    class GraphScriptSystem : public System {
+    public:
+        GraphScriptSystem(Ref<GraphScriptProgramComponent> gspc);
 
-	protected:
-		Ref<GraphScriptProgramComponent> p_ProgramComponent;
-	};
+        void Init(entt::registry &registry) override;
+
+        void Update(entt::registry &registry) override;
+
+        void Render(entt::registry &registry) override;
+
+        void Cleanup(entt::registry &registry) override;
+
+        nlohmann::json SerializeSystem(entt::registry &registry) override;
+
+        void DeserializeSystem(entt::registry &registry,
+                               nlohmann::json systemJson) override;
+
+    protected:
+        void Refresh() override;
+
+    protected:
+        Ref<GraphScriptProgramComponent> p_ProgramComponent;
+    };
 } // namespace harmony
 
 #endif // HARMONY_DOJO_GRAPHSCRIPTSYSTEM_H

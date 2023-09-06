@@ -6,6 +6,7 @@
 #include "ECS/TransformComponent.h"
 
 #if HARMONY_DEBUG
+
 #include "Rendering/GPUResourceManager.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_bgfx.h"
@@ -152,8 +153,8 @@ void harmony::EditorView::OnImGui() {
             return;
         }
 
-        ImVec2 texUvs {(float)m_Width / (float)GPUResourceManager::GetMaxFramebufferWidth(),
-                       (float)m_Height / (float)GPUResourceManager::GetMaxFramebufferHeight()};
+        ImVec2 texUvs{(float) m_Width / (float) GPUResourceManager::GetMaxFramebufferWidth(),
+                      (float) m_Height / (float) GPUResourceManager::GetMaxFramebufferHeight()};
 
         ImGui::Image(
                 finalImageHandle,
@@ -194,8 +195,7 @@ void harmony::EditorView::OnImGui() {
                 ImGuizmo::MODE::WORLD,
                 &tc.Model[0][0],
                 &diffMatrix[0][0]
-        ))
-        {
+        )) {
             float matrixTranslation[3], matrixRotation[3], matrixScale[3];
             ImGuizmo::DecomposeMatrixToComponents(&diffMatrix[0][0], matrixTranslation, matrixRotation, matrixScale);
 

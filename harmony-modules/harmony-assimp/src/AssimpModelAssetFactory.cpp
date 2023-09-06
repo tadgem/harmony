@@ -152,7 +152,7 @@ void harmony::AssimpModelAssetFactory::UnloadAssetData(const String &path, entt:
 
 void harmony::AssimpModelAssetFactory::LoadAssetData(const String &path, entt::registry &registry) {
 
-	p_Meshes.clear();
+    p_Meshes.clear();
     std::string cleanPath = Utils::GetCleanPlatformPath(path);
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(cleanPath,
@@ -160,8 +160,8 @@ void harmony::AssimpModelAssetFactory::LoadAssetData(const String &path, entt::r
                                              aiProcess_CalcTangentSpace |
                                              aiProcess_OptimizeMeshes |
                                              aiProcess_OptimizeGraph |
-											 aiProcess_FindInvalidData |
-											 aiProcess_GenBoundingBoxes
+                                             aiProcess_FindInvalidData |
+                                             aiProcess_GenBoundingBoxes
     );
     //
     if (scene == nullptr) {

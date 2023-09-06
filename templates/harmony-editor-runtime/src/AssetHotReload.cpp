@@ -5,24 +5,23 @@
 harmony::AssetHotReloadProvider::AssetHotReloadProvider(const std::string &name) : m_Name(name) {
 }
 
-harmony::String harmony::AssetHotReloadProvider::GetActionName(efsw::Action action)
-{
-	switch(action)
-	{
-		case efsw::Action::Add:
-			return "Add";
-		case efsw::Action::Delete:
-			return "Delete";
-		case efsw::Action ::Modified:
-			return "Modified";
-		case efsw::Action::Moved:
-			return "Moved";
-		default:
-			return "?";
-	}
+harmony::String harmony::AssetHotReloadProvider::GetActionName(efsw::Action action) {
+    switch (action) {
+        case efsw::Action::Add:
+            return "Add";
+        case efsw::Action::Delete:
+            return "Delete";
+        case efsw::Action::Modified:
+            return "Modified";
+        case efsw::Action::Moved:
+            return "Moved";
+        default:
+            return "?";
+    }
 }
 
-harmony::AssetHotReload::AssetHotReload(Program &prog) : ProgramComponent(GET_TYPE_HASH(AssetHotReload)), p_Program(prog) {
+harmony::AssetHotReload::AssetHotReload(Program &prog) : ProgramComponent(GET_TYPE_HASH(AssetHotReload)),
+                                                         p_Program(prog) {
     p_FileWatcher = new efsw::FileWatcher();
 }
 

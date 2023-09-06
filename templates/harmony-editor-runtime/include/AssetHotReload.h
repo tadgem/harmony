@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Core/Alias.h"
 #include "Core/Memory.h"
 #include "Core/ProgramComponent.h"
@@ -16,7 +17,7 @@ namespace harmony {
 
         const std::string &m_Name;
 
-		String GetActionName(efsw::Action action);
+        String GetActionName(efsw::Action action);
     };
 
     class Program;

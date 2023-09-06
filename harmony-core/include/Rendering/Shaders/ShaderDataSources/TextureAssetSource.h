@@ -3,32 +3,34 @@
 //
 
 #pragma once
+
 #include "Rendering/Shaders/ShaderDataSource.h"
 #include "Core/Memory.h"
 #include "Core/Alias.h"
 #include "Rendering/Shaders/Shader.h"
-namespace harmony
-{
-	class TextureAsset;
 
-	class TextureAssetSource : public ShaderDataSource
-	{
-	public:
+namespace harmony {
+    class TextureAsset;
 
-		TextureAssetSource(const uint16_t samplerIndex, const String& uniformName, WeakRef<TextureAsset> texture);
+    class TextureAssetSource : public ShaderDataSource {
+    public:
 
-		void OnPreUpdate(entt::registry &registry, Ref<ShaderProgram> shader) override;
-		void OnPostUpdate(entt::registry &registry, Ref<ShaderProgram> shader) override;
+        TextureAssetSource(const uint16_t samplerIndex, const String &uniformName, WeakRef<TextureAsset> texture);
 
-	protected:
-		const uint16_t  p_SamplerIndex;
-		const String 	p_UniformName;
-		ShaderUniform 	p_Uniform;
+        void OnPreUpdate(entt::registry &registry, Ref<ShaderProgram> shader) override;
 
-		WeakRef<TextureAsset> p_Texture;
+        void OnPostUpdate(entt::registry &registry, Ref<ShaderProgram> shader) override;
 
-		bool p_UniformsCollected;
-		void CollectUniforms(Ref<ShaderProgram> prog);
+    protected:
+        const uint16_t p_SamplerIndex;
+        const String p_UniformName;
+        ShaderUniform p_Uniform;
 
-	};
+        WeakRef<TextureAsset> p_Texture;
+
+        bool p_UniformsCollected;
+
+        void CollectUniforms(Ref<ShaderProgram> prog);
+
+    };
 }
