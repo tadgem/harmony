@@ -52,6 +52,9 @@ void harmony::Editor::AddProgramComponents() {
 
 void harmony::Editor::AddSystems() {
     OPTICK_EVENT();
+
+    // All of these calls are failing as template type is not
+    // substituted in GET_TYPE_HASH call...
     p_TransformSystem = GetSystem<TransformSystem>().lock();
     p_CameraSystem = GetSystem<CameraSystem>().lock();
     p_MeshSystem = GetSystem<MeshSystem>().lock();
@@ -129,7 +132,7 @@ void harmony::Editor::InitializePipelines() {
     p_EditorPipeline->AddPipelineStage(skyFB, m_Renderer.GetPipelineStage("SkyStage").lock());
     p_EditorPipeline->AddPipelineStage(mainFB, debugDrawStage);
     p_EditorPipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("NormalStage").lock());
-    p_EditorPipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("TexturedMesh").lock());
+    p_EditorPipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("TexturedMeshStage").lock());
     p_EditorPipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("BlinnPhongTextured").lock());
 
     p_EditorPipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());

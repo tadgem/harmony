@@ -195,7 +195,7 @@ void harmony::RuntimeProgram::InitializePipelines() {
     p_RuntimePipeline->AddPipelineStage(skyFB, m_Renderer.GetPipelineStage("SkyStage").lock());
     p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("DebugDrawStage").lock());
     p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("NormalStage").lock());
-    p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("TexturedMesh").lock());
+    p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("TexturedMeshStage").lock());
     p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("BlinnPhongTextured").lock());
 
     p_RuntimePipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());

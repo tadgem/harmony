@@ -195,7 +195,9 @@ namespace harmony {
             static_assert(std::is_base_of<System, T>(), "Not a system");
             int index = -1;
             for (int i = 0; i < p_ECSSystems.size(); i++) {
-                if (GET_TYPE_HASH(T) == p_ECSSystems[i]->m_TypeHash) {
+                HashString t_type_hash = GET_TYPE_HASH(T);
+                HashString s_type_hash = p_ECSSystems[i]->m_TypeHash;
+                if (t_type_hash == s_type_hash) {
                     index = i;
                     break;
                 }
