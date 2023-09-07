@@ -147,6 +147,7 @@ void harmony::EditorView::OnImGui() {
     auto pipeline = p_Renderer.GetViewPipeline("Editor").lock();
     if (ImGui::Begin(editorViewTitle.c_str(), (bool *) 0, ImGuiWindowFlags_NoScrollbar)) {
         View::OnImGui();
+        // Crashing here because pipelines have not been initialized...
         bgfx::TextureHandle finalImageHandle = pipeline->GetOutputFramebuffer().lock()->m_Attachments[0].m_Handle;
         if (!bgfx::isValid(finalImageHandle)) {
             ImGui::End();
