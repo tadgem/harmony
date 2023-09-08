@@ -1,0 +1,1 @@
+A texture is an image that exists on the GPU. this can be a texture for a wall, or the texture to which we draw the final game image. TODO: MOER

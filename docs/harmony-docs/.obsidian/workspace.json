@@ -25,7 +25,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Rendering/Shader.md",
+                "file": "Rendering/Texture.md",
                 "mode": "source",
                 "source": false
               }
@@ -98,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Rendering/Shader.md",
+                "file": "Rendering/Texture.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Rendering/Shader.md",
+                "file": "Rendering/Texture.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Rendering/Shader.md"
+                "file": "Rendering/Texture.md"
               }
             }
           }
@@ -162,12 +162,16 @@
   },
   "active": "130a3d41026852af",
   "lastOpenFiles": [
+    "Rendering/View.md",
     "Rendering/Vertex.md",
+    "Rendering/Texture.md",
+    "Rendering/Shader.md",
+    "Rendering/ShaderDataOverride.md",
+    "Rendering/ShaderDataSource.md",
     "Rendering/Faces and Index Buffers.md",
     "Rendering/Mesh.md",
     "Index Buffer.md",
     "Pasted image 20230908224030.png",
-    "Rendering/Shader.md",
     "Pasted image 20230908223134.png",
     "Pasted image 20230908222511.png",
     "Pasted image 20230908222353.png",
@@ -184,7 +188,6 @@
     "images/Pasted image 20230903180935.png",
     "Core/Component.md",
     "Core/System.md",
-    "Rendering/Texture.md",
     "Rendering/PipelineStageRenderer.md",
     "Core/Scene.md",
     "Core/Project.md",
@@ -192,9 +195,6 @@
     "Misc/Setup",
     "Misc",
     "Script/Lua Script API.md",
-    "Rendering/View.md",
-    "Rendering/ShaderDataSource.md",
-    "Rendering/ShaderDataOverride.md",
     "Core",
     "Rendering/High Level Architecture.md",
     "Rendering",
