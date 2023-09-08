@@ -1,0 +1,13 @@
+- Type hash fix
+- Lua program component test
+- default imgui layout & better project generation
+- rendering binding + move moebius to lua
+- physics binding + tests
+- Audio component on separate thread. 
+- Audio Lua binding
+- Make a game :3 
+- Scene Assets + Project assets split
+- Async asset loading. 
+- LoadingScene infrastructure + default LoadingScene (plain loading screen)
+- Rendering on separate thread.
+- packaging of assets /  virtual file system

@@ -1,5 +1,6 @@
 {
   "readableLineLength": false,
   "strictLineBreaks": false,
-  "showFrontmatter": false
+  "showFrontmatter": false,
+  "attachmentFolderPath": "images"
 }
