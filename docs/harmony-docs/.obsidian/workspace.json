@@ -25,8 +25,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Misc/Setup/Windows Setup.md",
-                "mode": "preview",
+                "file": "Rendering/Shader.md",
+                "mode": "source",
                 "source": false
               }
             }
@@ -98,7 +98,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Misc/Setup/Windows Setup.md",
+                "file": "Rendering/Shader.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +115,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Misc/Setup/Windows Setup.md",
+                "file": "Rendering/Shader.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +138,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Misc/Setup/Windows Setup.md"
+                "file": "Rendering/Shader.md"
               }
             }
           }
@@ -162,37 +162,39 @@
   },
   "active": "130a3d41026852af",
   "lastOpenFiles": [
-    "Pasted image 20230903181535.png",
-    "Pasted image 20230903181509.png",
-    "Pasted image 20230903181448.png",
-    "Pasted image 20230903181214.png",
-    "Pasted image 20230903180935.png",
-    "Pasted image 20230903180854.png",
-    "Pasted image 20230903180824.png",
-    "Pasted image 20230903180517.png",
-    "Pasted image 20230903180327.png",
-    "Pasted image 20230903180315.png",
-    "Pasted image 20230903180312.png",
+    "Rendering/Vertex.md",
+    "Rendering/Faces and Index Buffers.md",
+    "Rendering/Mesh.md",
+    "Index Buffer.md",
+    "Pasted image 20230908224030.png",
+    "Rendering/Shader.md",
+    "Pasted image 20230908223134.png",
+    "Pasted image 20230908222511.png",
+    "Pasted image 20230908222353.png",
+    "Pasted image 20230908221738.png",
+    "Rendering/Framebuffer.md",
+    "Rendering/Pipeline.md",
+    "Rendering/Attachment.md",
+    "Misc/Setup/Windows Setup.md",
+    "Misc/Setup/Mac OS Setup.md",
+    "images/Pasted image 20230903181535.png",
+    "images/Pasted image 20230903181509.png",
+    "images/Pasted image 20230903181448.png",
+    "images/Pasted image 20230903181214.png",
+    "images/Pasted image 20230903180935.png",
     "Core/Component.md",
     "Core/System.md",
     "Rendering/Texture.md",
-    "Rendering/Shader.md",
     "Rendering/PipelineStageRenderer.md",
-    "Rendering/Pipeline.md",
-    "Rendering/Framebuffer.md",
-    "Rendering/Attachment.md",
     "Core/Scene.md",
     "Core/Project.md",
     "Core/ProgramComponent.md",
-    "Misc/Setup/Windows Setup.md",
-    "Misc/Setup/Mac OS Setup.md",
     "Misc/Setup",
     "Misc",
     "Script/Lua Script API.md",
     "Rendering/View.md",
     "Rendering/ShaderDataSource.md",
     "Rendering/ShaderDataOverride.md",
-    "Rendering/Mesh.md",
     "Core",
     "Rendering/High Level Architecture.md",
     "Rendering",

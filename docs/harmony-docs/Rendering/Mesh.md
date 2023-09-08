@@ -1,0 +1,1 @@
+A mesh is a container for a [[Vertex]] buffer and an Index Buffer (see [[Faces and Index Buffers]])
