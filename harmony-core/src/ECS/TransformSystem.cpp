@@ -30,7 +30,7 @@ void ValidateAngles(glm::vec3 &input) {
     }
 }
 
-harmony::TransformSystem::TransformSystem() : System(GET_TYPE_HASH(TransformSystem)) {
+harmony::TransformSystem::TransformSystem() : System(GetTypeHash<TransformSystem>()) {
     OPTICK_EVENT();
 }
 

@@ -3,7 +3,7 @@
 #include "ECS/MeshComponent.h"
 #include "Core/Memory.h"
 
-harmony::MeshSystem::MeshSystem(AssetManager &am) : System(GET_TYPE_HASH(MeshSystem)), p_AssetManager(am) {
+harmony::MeshSystem::MeshSystem(AssetManager &am) : System(GetTypeHash<MeshSystem>()), p_AssetManager(am) {
     OPTICK_EVENT();
 }
 

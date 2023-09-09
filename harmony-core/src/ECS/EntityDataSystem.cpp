@@ -53,7 +53,7 @@ void harmony::EntityDataSystem::Refresh() {
 
 }
 
-harmony::EntityDataSystem::EntityDataSystem() : System(GET_TYPE_HASH(EntityDataSystem)) {
+harmony::EntityDataSystem::EntityDataSystem() : System(GetTypeHash<EntityDataSystem>()) {
 
 }
 

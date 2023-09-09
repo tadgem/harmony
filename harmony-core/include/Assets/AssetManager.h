@@ -26,7 +26,7 @@ namespace harmony {
 
         template<typename T>
         bool AddAssetTypeName() {
-            HashString typeHash = GET_TYPE_HASH(T);
+            HashString typeHash = GetTypeHash<T>();
 
             if (p_AssetTypeNames.find(typeHash) == p_AssetTypeNames.end()) {
                 std::string typeName = typeid(T).name();
@@ -40,7 +40,7 @@ namespace harmony {
 
         template<typename T>
         std::vector<AssetHandle> LoadAsset(const std::string &path) {
-            HashString typeHash = GET_TYPE_HASH(T);
+            HashString typeHash = GetTypeHash<T>();
 
             return LoadAsset(path, typeHash);
         }
@@ -49,7 +49,7 @@ namespace harmony {
 
         template<typename T>
         void UnloadAsset(AssetHandle &handle) {
-            std::string typeHash = GET_TYPE_HASH(T);
+            HashString typeHash = GetTypeHash<T>();
             UnloadAsset(handle, typeHash);
         }
 
@@ -88,7 +88,7 @@ namespace harmony {
 
         template<typename T>
         WeakRef<T> GetAsset(const std::string &assetHandle) {
-            AssetHandle h = {assetHandle, 0, GET_TYPE_HASH(T)};
+            AssetHandle h = {assetHandle, 0, GetTypeHash<T>()};
             return GetAsset<T>(h);
         }
 
@@ -104,7 +104,7 @@ namespace harmony {
             AssetHandle handle;
             handle.Path = path;
             handle.Index = 0;
-            handle.TypeHash = GET_TYPE_HASH(T);
+            handle.TypeHash = GetTypeHash<T>();
 
             AssetComponent<T> ac;
             ac.Asset = asset;

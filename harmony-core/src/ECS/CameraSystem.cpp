@@ -12,7 +12,7 @@
 
 #endif
 
-harmony::CameraSystem::CameraSystem() : System(GET_TYPE_HASH(CameraSystem)) {
+harmony::CameraSystem::CameraSystem() : System(GetTypeHash<CameraSystem>()) {
     OPTICK_EVENT();
 }
 

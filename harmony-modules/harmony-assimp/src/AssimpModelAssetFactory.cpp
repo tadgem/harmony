@@ -22,8 +22,8 @@ static harmony::String AssimpToSTD(aiString str) {
 
 harmony::AssimpModelAssetFactory::AssimpModelAssetFactory(Renderer &renderer)
         : harmony::AssetFactory(), p_Renderer(renderer) {
-    HashString modelTypeHash = GET_TYPE_HASH(Model);
-    HashString meshTypeHash = GET_TYPE_HASH(Mesh);
+    HashString modelTypeHash = GetTypeHash<Model>();
+    HashString meshTypeHash = GetTypeHash<Mesh>();
 
     m_Capabilities.AssetTypeHashes.push_back(modelTypeHash);
     m_Capabilities.AssetTypeHashes.push_back(meshTypeHash);
@@ -172,14 +172,14 @@ void harmony::AssimpModelAssetFactory::LoadAssetData(const String &path, entt::r
     ProcessNode(cleanPath, scene->mRootNode, scene);
     String modelName = String(scene->mName.C_Str());
     Ref<Model> model = CreateRef<Model>(modelName);
-    AssetHandle handle(cleanPath, 0, GET_TYPE_HASH(Model));
+    AssetHandle handle(cleanPath, 0, GetTypeHash<Model>());
 
     for (int i = 0; i < p_Meshes.size(); i++) {
         Ref<Mesh> meshAsset = std::static_pointer_cast<Mesh, Asset>(p_Meshes[i]);
 
         p_Renderer.SubmitMeshToGPU(meshAsset);
 
-        AssetHandle meshHandle(cleanPath, i, GET_TYPE_HASH(Mesh));
+        AssetHandle meshHandle(cleanPath, i, GetTypeHash<Mesh>());
         AssetComponent<Mesh> meshComponent{meshAsset, meshHandle};
         entt::entity e = registry.create();
         registry.emplace<AssetComponent<Mesh>>(e, meshComponent);

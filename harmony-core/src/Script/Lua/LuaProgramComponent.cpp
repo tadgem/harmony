@@ -5,7 +5,7 @@
 #include "Core/Log.hpp"
 
 harmony::LuaProgramComponent::LuaProgramComponent(AssetManager &am) : ProgramComponent(
-        GET_TYPE_HASH(LuaProgramComponent)), p_AssetManager(am) {
+        GetTypeHash<LuaProgramComponent>()), p_AssetManager(am) {
 
 }
 

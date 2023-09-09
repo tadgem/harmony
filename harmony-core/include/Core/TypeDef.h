@@ -4,7 +4,21 @@
 #include "Core/Alias.h"
 #include "ThirdParty/json.hpp"
 
-#define GET_TYPE_HASH(x) harmony::HashString(#x)
+namespace typehash_internal
+{
+    static const unsigned int FRONT_SIZE = sizeof("typehash_internal::GetTypeNameHelper<") - 1u;
+    static const unsigned int BACK_SIZE = sizeof(">::GetTypeName") - 1u;
+
+    template <typename T>
+    struct GetTypeNameHelper {
+        static std::string GetTypeName(void) {
+            static const size_t size = sizeof(__FUNCTION__) - FRONT_SIZE - BACK_SIZE;
+            static std::string typeString = std::string(__FUNCTION__ + FRONT_SIZE, size - 1u);
+            return typeString;
+        }
+    };
+}
+
 
 namespace harmony {
     struct HashString {
@@ -23,5 +37,16 @@ namespace harmony {
     protected:
         static uint64_t Hash(const String &input);
     };
+
+    template <typename T>
+    const std::string GetTypeName(void) {
+        return typehash_internal::GetTypeNameHelper<T>::GetTypeName();
+    }
+
+    template<typename T>
+    HashString GetTypeHash() {
+        return HashString(GetTypeName<T>());
+    }
+
 }
 #endif

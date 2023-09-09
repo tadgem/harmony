@@ -56,7 +56,7 @@ void FatalError [[noreturn]](const char *inFMT, ...) {
 }
 
 
-harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GET_TYPE_HASH(JoltPhysicsSystem)),
+harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GetTypeHash<JoltPhysicsSystem>()),
                                                   m_NumJobs(JPH::thread::hardware_concurrency() - 1) {
     JPH::Trace = TraceImpl;
 

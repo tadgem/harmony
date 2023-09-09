@@ -11,7 +11,7 @@
 
 #endif
 
-harmony::LightSystem::LightSystem() : System(GET_TYPE_HASH(LightSystem)) {
+harmony::LightSystem::LightSystem() : System(GetTypeHash<LightSystem>()) {
     OPTICK_EVENT();
 }
 

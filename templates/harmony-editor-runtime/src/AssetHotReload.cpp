@@ -20,7 +20,7 @@ harmony::String harmony::AssetHotReloadProvider::GetActionName(efsw::Action acti
     }
 }
 
-harmony::AssetHotReload::AssetHotReload(Program &prog) : ProgramComponent(GET_TYPE_HASH(AssetHotReload)),
+harmony::AssetHotReload::AssetHotReload(Program &prog) : ProgramComponent(GetTypeHash<AssetHotReload>()),
                                                          p_Program(prog) {
     p_FileWatcher = new efsw::FileWatcher();
 }

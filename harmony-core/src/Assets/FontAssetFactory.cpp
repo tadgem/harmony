@@ -8,14 +8,14 @@
 
 harmony::FontAssetFactory::FontAssetFactory() {
     OPTICK_EVENT();
-    HashString fontTypeHash = GET_TYPE_HASH(FontAsset);
+    HashString fontTypeHash = GetTypeHash<FontAsset>();
     m_Capabilities.AssetTypeHashes.push_back(fontTypeHash);
 }
 
 void harmony::FontAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry) {
     OPTICK_EVENT();
     std::string cleanPath = Utils::GetCleanPlatformPath(path);
-    AssetHandle assetHandle(cleanPath, 0, GET_TYPE_HASH(FontAsset));
+    AssetHandle assetHandle(cleanPath, 0, GetTypeHash<FontAsset>());
     Ref<FontAsset> font = CreateRef<FontAsset>(assetHandle);
     std::vector<uint8_t> fontData = Utils::LoadBinaryFromPath(cleanPath);
     std::string cleanFontName = GetFontNameFromPath(cleanPath);

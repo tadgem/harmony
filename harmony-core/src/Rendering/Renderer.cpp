@@ -1023,27 +1023,39 @@ void harmony::Renderer::DeserializeShaders(nlohmann::json &json, AssetManager &a
                 }
             } else {
                 auto handles = am.LoadAsset<ShaderStage>(assetHandle.Path);
-                auto stage = am.GetAsset<ShaderStage>(handles[0]);
 
-                if (stage.expired()) {
-                    harmony::log::warn("Renderer : Shader Stage {} could not be loaded.", assetHandle.Path);
-                } else {
-                    stages.emplace(stageType, stage);
+                if(handles.size() == 0)
+                {
+                    harmony::log::error("Renderer : Failed to load shader stage, asset not found at path : {}",
+                                       assetHandle.Path);
                 }
+                else
+                {
+                    auto stage = am.GetAsset<ShaderStage>(handles[0]);
+                    if (stage.expired()) {
+                        harmony::log::warn("Renderer : Shader Stage {} could not be loaded.", assetHandle.Path);
+                    } else {
+                        stages.emplace(stageType, stage);
+                    }
+                }
+
             }
         }
 
         if (stages.find(ShaderStage::Type::Compute) != stages.end()) {
             harmony::log::info("Renderer : Loading compute shader {}", shaderName);
             BuildShader(shaderName, stages[ShaderStage::Type::Compute]);
+            return;
         }
 
         if (stages.find(ShaderStage::Type::Vertex) != stages.end() &&
             stages.find(ShaderStage::Type::Fragment) != stages.end()) {
             harmony::log::info("Renderer : Loading surface shader {}", shaderName);
             BuildShader(shaderName, stages[ShaderStage::Type::Vertex], stages[ShaderStage::Type::Fragment]);
+            return;
         }
 
+        harmony::log::error("Renderer : failed to deserialize shader : {}", shaderName);
     }
 }
 

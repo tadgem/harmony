@@ -174,7 +174,7 @@ namespace harmony {
             static_assert(std::is_base_of<ProgramComponent, T>(), "Not a program component");
             int index = -1;
             for (int i = 0; i < p_ProgramComponents.size(); i++) {
-                auto typeHash = GET_TYPE_HASH(T);
+                HashString typeHash = GetTypeHash<T>();
                 if (typeHash == p_ProgramComponents[i]->m_TypeHash);
                 {
                     index = i;
@@ -195,7 +195,7 @@ namespace harmony {
             static_assert(std::is_base_of<System, T>(), "Not a system");
             int index = -1;
             for (int i = 0; i < p_ECSSystems.size(); i++) {
-                HashString t_type_hash = GET_TYPE_HASH(T);
+                HashString t_type_hash = GetTypeHash<T>();
                 HashString s_type_hash = p_ECSSystems[i]->m_TypeHash;
                 if (t_type_hash == s_type_hash) {
                     index = i;

@@ -6,7 +6,7 @@
 
 harmony::LuaScriptAssetFactory::LuaScriptAssetFactory() {
     OPTICK_EVENT();
-    auto luaScriptTypeHash = GET_TYPE_HASH(LuaScriptAsset);
+    auto luaScriptTypeHash = GetTypeHash<LuaScriptAsset>();
 
     m_Capabilities.AssetTypeHashes.push_back(luaScriptTypeHash);
 }
@@ -20,7 +20,7 @@ void harmony::LuaScriptAssetFactory::LoadAssetData(const std::string &path, entt
         return;
     }
     Ref<LuaScriptAsset> script = CreateRef<LuaScriptAsset>(path, source);
-    AssetHandle scriptHandle{path, 0, GET_TYPE_HASH(LuaScriptAsset)};
+    AssetHandle scriptHandle{path, 0, GetTypeHash<LuaScriptAsset>()};
     AssetComponent<LuaScriptAsset> scriptComponent{script, scriptHandle};
     entt::entity e = registry.create();
     registry.emplace<AssetComponent<LuaScriptAsset>>(e, scriptComponent);

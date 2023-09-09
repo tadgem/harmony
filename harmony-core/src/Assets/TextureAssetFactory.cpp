@@ -8,7 +8,7 @@
 
 harmony::TextureAssetFactory::TextureAssetFactory(Renderer &renderer) : p_Renderer(renderer) {
     OPTICK_EVENT();
-    HashString textureTypeHash = GET_TYPE_HASH(TextureAsset);
+    HashString textureTypeHash = GetTypeHash<TextureAsset>();
 
     m_Capabilities.AssetTypeHashes.push_back(textureTypeHash);
 }
@@ -34,7 +34,7 @@ void harmony::TextureAssetFactory::LoadAssetData(const std::string &path, entt::
     }
 
     Ref<TextureAsset> textureAsset = CreateRef<TextureAsset>(cleanPath, imageContainer);
-    AssetHandle handle{path, 0, GET_TYPE_HASH(TextureAsset)};
+    AssetHandle handle{path, 0, GetTypeHash<TextureAsset>()};
     AssetComponent<TextureAsset> textureComponent{textureAsset, handle};
     entt::entity e = registry.create();
     registry.emplace<AssetComponent<TextureAsset>>(e, textureComponent);

@@ -8,7 +8,7 @@ harmony::AssetHandle::AssetHandle() {
     OPTICK_EVENT();
     Path = "";
     Index = UINT32_MAX;
-    TypeHash = GET_TYPE_HASH(AssetHandle);
+    TypeHash = GetTypeHash<AssetHandle>();
 }
 
 harmony::AssetHandle::AssetHandle(std::string path, uint32_t index, HashString typeHash) {
