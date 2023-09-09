@@ -1,7 +1,6 @@
-- Lua program component test
-- default imgui layout & better project generation
 - rendering binding + move moebius to lua
 - physics binding + tests
+- default imgui layout & better project generation
 - Audio component on separate thread. 
 - Audio Lua binding
 - Make a game :3 
