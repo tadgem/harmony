@@ -19,7 +19,7 @@
 harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this),
                             m_GraphScriptEditor(p_GraphScriptComponent->GetNodeRegistry()) {
     OPTICK_EVENT();
-    // m_Logger.Init();
+    m_Logger.Init();
     AddAssetTypeNames();
     AddAssetFactories();
     AddProgramComponents();
@@ -52,9 +52,6 @@ void harmony::Editor::AddProgramComponents() {
 
 void harmony::Editor::AddSystems() {
     OPTICK_EVENT();
-
-    // All of these calls are failing as template type is not
-    // substituted in GET_TYPE_HASH call...
     p_TransformSystem = GetSystem<TransformSystem>().lock();
     p_CameraSystem = GetSystem<CameraSystem>().lock();
     p_MeshSystem = GetSystem<MeshSystem>().lock();

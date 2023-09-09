@@ -33,8 +33,7 @@ void harmony::ImGuiLogger::Render() {
         ImVec2 currentWindowSize = ImGui::GetWindowContentRegionMax();
         float textHeight = ImGui::GetTextLineHeightWithSpacing();
         ImGuiTableFlags flags =
-                ImGuiTableFlags_ScrollY | ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable |
-                ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_NoKeepColumnsVisible;
+                ImGuiTableFlags_ScrollY | ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable;
         ImVec2 outer_size = ImVec2(0.0f, 0.0f);
         int rounded = ((int) currentWindowSize.y / textHeight) - 2;
         for (int i = 0; i < rounded; i++) {

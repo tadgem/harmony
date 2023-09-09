@@ -13,7 +13,7 @@ namespace typehash_internal
     struct GetTypeNameHelper {
         static std::string GetTypeName(void) {
             static const size_t size = sizeof(__FUNCTION__) - FRONT_SIZE - BACK_SIZE;
-            static std::string typeString = std::string(__FUNCTION__ + FRONT_SIZE, size - 1u);
+            std::string typeString = std::string(__FUNCTION__ + FRONT_SIZE, size - 1u);
             return typeString;
         }
     };
