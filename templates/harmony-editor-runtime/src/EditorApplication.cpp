@@ -41,7 +41,6 @@ void harmony::Editor::AddAssetFactories() {
 
 void harmony::Editor::AddProgramComponents() {
     OPTICK_EVENT();
-    RuntimeProgram::AddProgramComponents();
     auto assetHotReload = AddProgramComponent<AssetHotReload>(*this).lock();
     auto shaderProvider = CreateRef<ShaderHotReload>(*this);
     auto luaProvider = CreateRef<LuaScriptHotReload>(*this, p_LuaSystem);

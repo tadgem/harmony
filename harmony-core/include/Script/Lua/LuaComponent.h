@@ -19,9 +19,9 @@ namespace harmony {
         sol::function m_Update;
         sol::function m_Cleanup;
 
+        static LuaComponent Create(sol::state &state, LuaScriptAsset scriptAsset);
+
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(LuaComponent, m_LuaScriptAsset, m_HasStart,
                                        m_HasUpdate, m_HasCleanup)
     };
-
-    static LuaComponent CreateLuaComponent();
 } // namespace harmony

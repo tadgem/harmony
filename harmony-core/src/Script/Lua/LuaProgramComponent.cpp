@@ -1,5 +1,6 @@
 #include <optick.h>
 #include "Script/Lua/LuaProgramComponent.h"
+#include "Script/Lua/LuaComponent.h"
 #include "Script/Lua/LuaScriptAsset.h"
 #include "Script/Lua/LuaNanoVG.hpp"
 #include "Script/Lua/LuaHarmony.hpp"
@@ -17,15 +18,54 @@ void harmony::LuaProgramComponent::Init() {
     harmony::InitHarmony(p_State);
     RedirectPrintOutput();
 
-    p_LuaScriptAssets.clear();
+    p_LuaProgramScripts.clear();
 
     for (AssetHandle ah: m_LuaProgramScripts) {
-        p_LuaScriptAssets.emplace_back(p_AssetManager.GetAsset<LuaScriptAsset>(ah));
+        auto script = p_AssetManager.GetAsset<LuaScriptAsset>(ah).lock();
+        if(!script) {
+            harmony::log::error("LuaProgramComponent : Failed to get script from asset path : {}", ah.Path);
+            continue;
+        }
+        auto lc = LuaComponent::Create(p_State, *script);
+        if(!lc.m_HasStart) {
+            continue;
+        }
+
+        try {
+            auto result = lc.m_Start();
+            if (!result.valid()) {
+                sol::error err = result;
+                std::string what = err.what();
+                harmony::log::error("LuaSystem : Error : {} : in executing start() for : Script : {}",
+                                    what, ah.Path);
+            }
+        }
+        catch (...) {
+            harmony::log::error("LuaSystem : Failed running start, resetting.");
+        }
+        p_LuaProgramScripts.emplace_back(lc);
     }
 }
 
 void harmony::LuaProgramComponent::Update() {
     OPTICK_EVENT();
+    for(LuaComponent& lc : p_LuaProgramScripts) {
+        if(!lc.m_HasUpdate) {
+            continue;
+        }
+        try {
+            auto result = lc.m_Update();
+            if (!result.valid()) {
+                sol::error err = result;
+                std::string what = err.what();
+                harmony::log::error("LuaSystem : Error : {} : in executing update() for : Script : {}",
+                                    what, lc.m_LuaScriptAsset.m_Name);
+            }
+        }
+        catch (...) {
+            harmony::log::error("LuaSystem : Failed running update, resetting.");
+        }
+    }
 }
 
 void harmony::LuaProgramComponent::Render() {
@@ -33,16 +73,51 @@ void harmony::LuaProgramComponent::Render() {
 }
 
 void harmony::LuaProgramComponent::Cleanup() {
+    for(LuaComponent& lc : p_LuaProgramScripts) {
+        if(!lc.m_HasCleanup) {
+            continue;
+        }
+        try {
+            auto result = lc.m_Cleanup();
+            if (!result.valid()) {
+                sol::error err = result;
+                std::string what = err.what();
+                harmony::log::error("LuaSystem : Error : {} : in executing cleanup() for : Script : {}",
+                                    what, lc.m_LuaScriptAsset.m_Name);
+            }
+        }
+        catch (...) {
+            harmony::log::error("LuaSystem : Failed running cleanup, resetting.");
+        }
+    }
     OPTICK_EVENT();
 }
 
 nlohmann::json harmony::LuaProgramComponent::ToJson() {
     OPTICK_EVENT();
-    return nlohmann::json();
+    auto j = nlohmann::json();
+
+    auto& scripts = j["program-scripts"];
+
+    for(AssetHandle& ah : m_LuaProgramScripts)
+    {
+        scripts.emplace_back(ah);
+    }
+
+    return j;
 }
 
 void harmony::LuaProgramComponent::FromJson(const nlohmann::json &json) {
-    harmony::log::info("LuaProgramComponent : FromJson");
+    OPTICK_EVENT();
+    if(!json.contains("program-scripts"))
+    {
+        return;
+    }
+    for(auto assetHandleJson : json["program-scripts"])
+    {
+        AssetHandle ah = assetHandleJson;
+        m_LuaProgramScripts.emplace_back(ah);
+    }
 }
 
 static int l_my_print(lua_State *L) {

@@ -9,6 +9,7 @@ namespace harmony {
     class AssetManager;
 
     class LuaScriptAsset;
+    class LuaComponent;
 
     class LuaProgramComponent : public ProgramComponent {
     public:
@@ -30,7 +31,7 @@ namespace harmony {
     protected:
         AssetManager &p_AssetManager;
         sol::state p_State;
-        Vector<WeakRef<LuaScriptAsset>> p_LuaScriptAssets;
+        Vector<LuaComponent> p_LuaProgramScripts;
 
         void RedirectPrintOutput();
 
