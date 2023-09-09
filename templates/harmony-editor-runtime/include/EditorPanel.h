@@ -43,7 +43,7 @@ namespace harmony {
         virtual void OnImGui() override;
 
     protected:
-        std::string p_SelectedTypeHash;
+        HashString p_SelectedTypeHash;
         AssetManager &p_AssetManager;
         Program &p_Prog;
     };

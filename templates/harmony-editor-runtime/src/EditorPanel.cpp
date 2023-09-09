@@ -555,6 +555,7 @@ void harmony::LuaScriptPanel::OnImGui() {
             }
         }
 
+
         ImGui::Text("Running Program Scripts");
         ImGui::Indent();
         for (int i = 0; i < lua->m_LuaProgramScripts.size(); i++) {
