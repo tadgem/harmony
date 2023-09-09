@@ -81,13 +81,12 @@ std::string harmony::LuaScriptHotReload::GetCleanFileName(const std::string &fil
         fullFileDirectory += "/" + filename;
     }
 
-    auto str =  fullFileDirectory.substr(fullFileDirectory.find(projDirectory) + projDirectory.size() + 1,
-                                    fullFileDirectory.size());
+    auto str = fullFileDirectory.substr(fullFileDirectory.find(projDirectory) + projDirectory.size() + 1,
+                                        fullFileDirectory.size());
 
     auto found = str.find("\\\\");
 
-    if(found)
-    {
+    if (found) {
         str.replace(found, 2, "\\");
     }
 

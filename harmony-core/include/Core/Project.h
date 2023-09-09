@@ -8,46 +8,46 @@
 #include "Core/ProgramComponent.h"
 #include "ECS/System.h"
 
-namespace harmony
-{
-	class Renderer;
-	class Project
-	{
-		using json = nlohmann::json;
-	public:
-		Project()
-		{
-		}
+namespace harmony {
+    class Renderer;
 
-		Project(std::string name);
+    class Project {
+        using json = nlohmann::json;
+    public:
+        Project() {
+        }
 
-		~Project()
-		{
-		}
+        Project(std::string name);
 
-		std::string m_ProjectName;
-		std::string m_ProjectDirectory;
-		std::string m_ImGuiIniPath;
-		// TODO the key to this really should be a hashstring...
-		std::map<uint64_t, nlohmann::json> p_ProgramComponentSerializationAttributes;
-		nlohmann::json m_AssetManagerSerializationAttributes;
-		nlohmann::json m_RendererSerializationAttributes;
-		std::vector<std::string> m_SerializedScenes;
+        ~Project() {
+        }
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(
-				Project,
-				m_ProjectName,
-				m_ImGuiIniPath,
-				p_ProgramComponentSerializationAttributes,
-				m_AssetManagerSerializationAttributes,
-				m_RendererSerializationAttributes,
-				m_SerializedScenes)
+        std::string m_ProjectName;
+        std::string m_ProjectDirectory;
+        std::string m_ImGuiIniPath;
+        // TODO the key to this really should be a hashstring...
+        std::map<uint64_t, nlohmann::json> p_ProgramComponentSerializationAttributes;
+        nlohmann::json m_AssetManagerSerializationAttributes;
+        nlohmann::json m_RendererSerializationAttributes;
+        std::vector<std::string> m_SerializedScenes;
 
-	private:
-		void UpdateProjectComponentSerializationAttributes(std::vector<Ref<ProgramComponent>> &programComponents);
-		void UpdateProjectAssetsSerializationAttributes(AssetManager &assetManager);
-		void UpdateRendererSerializationAttributes(Renderer &renderer);
-		friend class Program;
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(
+                Project,
+                m_ProjectName,
+                m_ImGuiIniPath,
+                p_ProgramComponentSerializationAttributes,
+                m_AssetManagerSerializationAttributes,
+                m_RendererSerializationAttributes,
+                m_SerializedScenes)
 
-	};
+    private:
+        void UpdateProjectComponentSerializationAttributes(std::vector<Ref<ProgramComponent>> &programComponents);
+
+        void UpdateProjectAssetsSerializationAttributes(AssetManager &assetManager);
+
+        void UpdateRendererSerializationAttributes(Renderer &renderer);
+
+        friend class Program;
+
+    };
 };

@@ -31,14 +31,13 @@ void harmony::ScenePanel::OnImGui() {
             return;
         }
         Ref<Scene> activeScene = activeSceneWr.lock();
-        if(ImGui::BeginDragDropTarget())
-        {
+        if (ImGui::BeginDragDropTarget()) {
             if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY")) {
                 IM_ASSERT(payload->DataSize == sizeof(entt::entity));
-                entt::entity payloadEntity = *(entt::entity*) payload->Data;
+                entt::entity payloadEntity = *(entt::entity *) payload->Data;
 
-                EntityData& payloadData = activeScene->m_Registry.get<EntityData>(payloadEntity);
-                payloadData.m_Parent = (entt::entity)UINT32_MAX;
+                EntityData &payloadData = activeScene->m_Registry.get<EntityData>(payloadEntity);
+                payloadData.m_Parent = (entt::entity) UINT32_MAX;
             }
             ImGui::EndDragDropTarget();
         }
@@ -49,110 +48,89 @@ void harmony::ScenePanel::OnImGui() {
             activeScene->AddEntity();
         }
         ImGui::Separator();
-        activeScene->m_Registry.each([&](entt::entity e) {EntityImGui(e, activeScene->m_Registry,true);});
+        activeScene->m_Registry.each([&](entt::entity e) { EntityImGui(e, activeScene->m_Registry, true); });
         ImGui::EndChild();
 
     }
     ImGui::End();
 }
 
-void harmony::ScenePanel::EntityImGui(entt::entity e, entt::registry& reg, bool topLevel)
-{
-    if(std::find(p_FrameHandledEntities.begin(), p_FrameHandledEntities.end(), e) != p_FrameHandledEntities.end())
-    {
+void harmony::ScenePanel::EntityImGui(entt::entity e, entt::registry &reg, bool topLevel) {
+    if (std::find(p_FrameHandledEntities.begin(), p_FrameHandledEntities.end(), e) != p_FrameHandledEntities.end()) {
         return;
     }
 
-    if(!reg.any_of<EntityData>(e))
-    {
+    if (!reg.any_of<EntityData>(e)) {
         reg.emplace<EntityData>(e);
     }
-    auto& data = reg.get<EntityData>(e);
+    auto &data = reg.get<EntityData>(e);
 
-    if((uint32_t)data.m_Parent != UINT32_MAX && topLevel)
-    {
+    if ((uint32_t) data.m_Parent != UINT32_MAX && topLevel) {
         return;
     }
     p_FrameHandledEntities.emplace_back(e);
 
-    ImGui::PushID((uint32_t)e);
-    if(p_RenamingSelectedEntity && e == m_SelectedEntity)
-    {
+    ImGui::PushID((uint32_t) e);
+    if (p_RenamingSelectedEntity && e == m_SelectedEntity) {
         ImGui::InputText("##rename", data.m_Name.data(), data.m_Name.capacity());
         p_RenamingSelectedEntity = !ImGui::IsKeyDown(ImGuiKey_Enter);
-    }
-    else
-    {
+    } else {
         if (ImGui::TreeNodeEx("##id", ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_AllowItemOverlap)) {
             ImGui::SameLine();
             EntityNameRename(e, data);
             EntityDragDrop(e, reg);
-            reg.each([&](entt::entity compare)
-             {
-                auto data = reg.get<EntityData>(compare);
-                if(data.m_Parent == e)
-                {
-                    EntityImGui(compare, reg, false);
-                }
-             }
+            reg.each([&](entt::entity compare) {
+                         auto data = reg.get<EntityData>(compare);
+                         if (data.m_Parent == e) {
+                             EntityImGui(compare, reg, false);
+                         }
+                     }
             );
             ImGui::TreePop();
-        }
-        else
-        {
-            reg.each([&](entt::entity compare)
-             {
-                 auto data = reg.get<EntityData>(compare);
-                 if(data.m_Parent == e)
-                 {
-                     p_FrameHandledEntities.emplace_back(compare);
-                 }
-             });
+        } else {
+            reg.each([&](entt::entity compare) {
+                auto data = reg.get<EntityData>(compare);
+                if (data.m_Parent == e) {
+                    p_FrameHandledEntities.emplace_back(compare);
+                }
+            });
             ImGui::SameLine();
             EntityNameRename(e, data);
             EntityDragDrop(e, reg);
         }
-
 
 
     }
     ImGui::PopID();
 }
 
-void harmony::ScenePanel::EntityNameRename(entt::entity e, harmony::EntityData& data)
-{
-    if(ImGui::Selectable(data.m_Name.c_str(), false, ImGuiSelectableFlags_AllowItemOverlap))
-    {
+void harmony::ScenePanel::EntityNameRename(entt::entity e, harmony::EntityData &data) {
+    if (ImGui::Selectable(data.m_Name.c_str(), false, ImGuiSelectableFlags_AllowItemOverlap)) {
         m_SelectedEntity = e;
     }
-    if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
-    {
+    if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0)) {
         p_RenamingSelectedEntity = true;
     }
 
 }
 
-void harmony::ScenePanel::EntityDragDrop(entt::entity e, entt::registry &reg)
-{
-    EntityData& data = reg.get<EntityData>(e);
-    if(ImGui::BeginDragDropSource())
-    {
+void harmony::ScenePanel::EntityDragDrop(entt::entity e, entt::registry &reg) {
+    EntityData &data = reg.get<EntityData>(e);
+    if (ImGui::BeginDragDropSource()) {
         ImGui::SetDragDropPayload("ENTITY", &e, sizeof(entt::entity));
         ImGui::Text(data.m_Name.c_str());
         ImGui::EndDragDropSource();
     }
-    if(ImGui::BeginDragDropTarget())
-    {
+    if (ImGui::BeginDragDropTarget()) {
         if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY")) {
             IM_ASSERT(payload->DataSize == sizeof(entt::entity));
-            entt::entity* payloadEntity = (entt::entity*) payload->Data;
+            entt::entity *payloadEntity = (entt::entity *) payload->Data;
 
-            if((uint32_t)*payloadEntity != UINT32_MAX)
-            {
-                auto& payloadData = reg.get<EntityData>(*payloadEntity);
+            if ((uint32_t) *payloadEntity != UINT32_MAX) {
+                auto &payloadData = reg.get<EntityData>(*payloadEntity);
                 payloadData.m_Parent = e;
 
-                *payloadEntity = (entt::entity)UINT32_MAX;
+                *payloadEntity = (entt::entity) UINT32_MAX;
 
             }
 
@@ -166,6 +144,7 @@ harmony::EntityInspectorPanel::EntityInspectorPanel(Program &prog, Ref<ScenePane
                                                                                                  p_ScenePanel(
                                                                                                          scenePanel) {
 }
+
 void harmony::EntityInspectorPanel::OnImGui() {
     const std::string entityInspectorTitle = std::string(ICON_FA_INFO_CIRCLE) + " Inspector";
     if (ImGui::Begin(entityInspectorTitle.c_str())) {
@@ -193,8 +172,7 @@ void harmony::EntityInspectorPanel::OnImGui() {
                 continue;
             }
 
-            if (p_ComponentUIProviders[i]->m_UiType == ComponentUI::ImGuiParentType::Custom)
-            {
+            if (p_ComponentUIProviders[i]->m_UiType == ComponentUI::ImGuiParentType::Custom) {
                 p_ComponentUIProviders[i]->OnComponentImGui(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity);
                 continue;
             }
@@ -282,7 +260,8 @@ void harmony::TransformComponentUI::Duplicate(entt::registry &registry, entt::en
     }
 }
 
-harmony::ComponentUI::ComponentUI(const std::string name, const ImGuiParentType uiType) : p_ComponentName(name), m_UiType(uiType) {
+harmony::ComponentUI::ComponentUI(const std::string name, const ImGuiParentType uiType) : p_ComponentName(name),
+                                                                                          m_UiType(uiType) {
 }
 
 const std::string &harmony::ComponentUI::GetComponentName() {
@@ -553,37 +532,33 @@ void harmony::AssetManagerPanel::OnImGui() {
     }
 }
 
-harmony::LuaScriptPanel::LuaScriptPanel(Program& prog) : p_Program(prog), p_AssetManager(prog.m_AssetManager), p_Lua(prog.GetProgramComponent<LuaProgramComponent>())
-{
+harmony::LuaScriptPanel::LuaScriptPanel(Program &prog) : p_Program(prog), p_AssetManager(prog.m_AssetManager),
+                                                         p_Lua(prog.GetProgramComponent<LuaProgramComponent>()) {
 }
 
-void harmony::LuaScriptPanel::OnImGui()
-{
+void harmony::LuaScriptPanel::OnImGui() {
     auto lua = p_Lua.lock();
     if (ImGui::Begin("LuaScript")) {
 
-        if (!lua)
-        {
+        if (!lua) {
             p_Lua = p_Program.GetProgramComponent<LuaProgramComponent>();
             ImGui::End();
             return;
         }
         AssetHandle ah;
         if (p_AssetManager.AssetTypeSelector<LuaScriptAsset>("Add Progam Script", ah)) {
-            if (std::find(lua->m_LuaProgramScripts.begin(), lua->m_LuaProgramScripts.end(), ah) != lua->m_LuaProgramScripts.end())
-            {
-                harmony::log::warn("LuaScript : Script : {} is already a program script", ah.Path); 
-            }
-            else
-            {
+            if (std::find(lua->m_LuaProgramScripts.begin(), lua->m_LuaProgramScripts.end(), ah) !=
+                lua->m_LuaProgramScripts.end()) {
+                harmony::log::warn("LuaScript : Script : {} is already a program script", ah.Path);
+            } else {
                 lua->m_LuaProgramScripts.emplace_back(ah);
             }
         }
 
+
         ImGui::Text("Running Program Scripts");
         ImGui::Indent();
-        for (int i = 0; i < lua->m_LuaProgramScripts.size(); i++)
-        {
+        for (int i = 0; i < lua->m_LuaProgramScripts.size(); i++) {
             ImGui::Text(lua->m_LuaProgramScripts[i].Path.c_str());
         }
         ImGui::Unindent();
@@ -689,8 +664,8 @@ void harmony::PointLightComponentUI::OnComponentImGui(entt::registry &registry, 
 
     ImGui::ColorEdit4("Diffuse", &pl.Diffuse[0]);
     ImGui::ColorEdit4("Ambient", &pl.Ambient[0]);
-    ImGui::DragFloat("Range", &pl.Radius, 1.0f,  0.0f, 1000.0f);
-    ImGui::DragFloat("Intensity", &pl.Intensity, 1.0f,  0.0f, 1000.0f);
+    ImGui::DragFloat("Range", &pl.Radius, 1.0f, 0.0f, 1000.0f);
+    ImGui::DragFloat("Intensity", &pl.Intensity, 1.0f, 0.0f, 1000.0f);
 }
 
 void harmony::PointLightComponentUI::AddComponent(entt::registry &registry, entt::entity entity) {
@@ -846,7 +821,8 @@ void harmony::JoltBodyComponentUI::Duplicate(entt::registry &registry, entt::ent
     }
 }
 
-harmony::EntityDataComponentUI::EntityDataComponentUI() : ComponentUI("Entity Data", ComponentUI::ImGuiParentType::Custom) {
+harmony::EntityDataComponentUI::EntityDataComponentUI() : ComponentUI("Entity Data",
+                                                                      ComponentUI::ImGuiParentType::Custom) {
 
 }
 
@@ -857,8 +833,8 @@ void harmony::EntityDataComponentUI::OnComponentImGui(entt::registry &registry, 
     if (!HasComponent(registry, entity)) {
         return;
     }
-    EntityData& data = registry.get<EntityData>(entity);
-    ImGui::PushID((uint32_t)entity);
+    EntityData &data = registry.get<EntityData>(entity);
+    ImGui::PushID((uint32_t) entity);
     ImGui::Text(data.m_Name.c_str());
     ImGui::SameLine();
     ImGui::Checkbox("Enabled", &data.m_Enabled);
@@ -866,7 +842,7 @@ void harmony::EntityDataComponentUI::OnComponentImGui(entt::registry &registry, 
     ImGui::Checkbox("Static", &data.m_Static);
     ImGui::Text("ID : %u", entity);
     ImGui::SameLine();
-    ImGui::Text("Parent : %u", (uint32_t)data.m_Parent);
+    ImGui::Text("Parent : %u", (uint32_t) data.m_Parent);
 
     ImGui::PopID();
 
@@ -898,8 +874,8 @@ void harmony::SkyComponentUI::OnComponentImGui(entt::registry &registry, entt::e
     if (!HasComponent(registry, entity)) {
         return;
     }
-    ImGui::PushID((uint32_t)entity);
-    SkyComponent& sky = registry.get<SkyComponent>(entity);
+    ImGui::PushID((uint32_t) entity);
+    SkyComponent &sky = registry.get<SkyComponent>(entity);
     ImGui::SliderFloat("Sun Bloom", &sky.SunBloom, 0.0f, 100.0f);
     ImGui::SliderFloat("Sun Size", &sky.SunSize, 0.0f, 0.2f);
     ImGui::SliderFloat("Exposition", &sky.Exposition, 0.0f, 1.0f);
@@ -908,8 +884,7 @@ void harmony::SkyComponentUI::OnComponentImGui(entt::registry &registry, entt::e
 
 }
 
-void harmony::SkyComponentUI::AddComponent(entt::registry &registry, entt::entity entity)
-{
+void harmony::SkyComponentUI::AddComponent(entt::registry &registry, entt::entity entity) {
     registry.emplace<SkyComponent>(entity);
 }
 
@@ -930,7 +905,6 @@ void harmony::SkyComponentUI::Duplicate(entt::registry &registry, entt::entity o
     }
 }
 
-harmony::SkyComponentUI::SkyComponentUI()  : ComponentUI("Sky")
-{
+harmony::SkyComponentUI::SkyComponentUI() : ComponentUI("Sky") {
 
 }

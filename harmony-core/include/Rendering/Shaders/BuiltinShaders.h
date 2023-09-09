@@ -18,18 +18,18 @@
 #include "bgfx/embedded_shader.h"
 
 static const bgfx::EmbeddedShader s_BuiltInShader[] = {
-		BGFX_EMBEDDED_SHADER(vs_simple_textured),
-		BGFX_EMBEDDED_SHADER(fs_simple_textured),
-		BGFX_EMBEDDED_SHADER(vs_normal),
-		BGFX_EMBEDDED_SHADER(fs_normal),
-		BGFX_EMBEDDED_SHADER(vs_nanovg_fill),
-		BGFX_EMBEDDED_SHADER(fs_nanovg_fill),
-		BGFX_EMBEDDED_SHADER(vs_blinn_phong_textured),
-		BGFX_EMBEDDED_SHADER(fs_blinn_phong_textured),
-		BGFX_EMBEDDED_SHADER(fs_fxaa),
-		BGFX_EMBEDDED_SHADER(vs_sky),
-		BGFX_EMBEDDED_SHADER(fs_sky),
-		BGFX_EMBEDDED_SHADER(vs_deferred_geom),
-		BGFX_EMBEDDED_SHADER(fs_deferred_geom),
-		BGFX_EMBEDDED_SHADER(fs_moebius),
-		BGFX_EMBEDDED_SHADER_END()};
+        BGFX_EMBEDDED_SHADER(vs_simple_textured),
+        BGFX_EMBEDDED_SHADER(fs_simple_textured),
+        BGFX_EMBEDDED_SHADER(vs_normal),
+        BGFX_EMBEDDED_SHADER(fs_normal),
+        BGFX_EMBEDDED_SHADER(vs_nanovg_fill),
+        BGFX_EMBEDDED_SHADER(fs_nanovg_fill),
+        BGFX_EMBEDDED_SHADER(vs_blinn_phong_textured),
+        BGFX_EMBEDDED_SHADER(fs_blinn_phong_textured),
+        BGFX_EMBEDDED_SHADER(fs_fxaa),
+        BGFX_EMBEDDED_SHADER(vs_sky),
+        BGFX_EMBEDDED_SHADER(fs_sky),
+        BGFX_EMBEDDED_SHADER(vs_deferred_geom),
+        BGFX_EMBEDDED_SHADER(fs_deferred_geom),
+        BGFX_EMBEDDED_SHADER(fs_moebius),
+        BGFX_EMBEDDED_SHADER_END()};

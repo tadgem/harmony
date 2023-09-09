@@ -16,9 +16,10 @@
 #include "EditorView.h"
 #include "Script/GraphScript/GraphScriptProgramComponent.h"
 
-harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this), m_GraphScriptEditor(p_GraphScriptComponent->GetNodeRegistry()) {
+harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this),
+                            m_GraphScriptEditor(p_GraphScriptComponent->GetNodeRegistry()) {
     OPTICK_EVENT();
-    // m_Logger.Init();
+    m_Logger.Init();
     AddAssetTypeNames();
     AddAssetFactories();
     AddProgramComponents();
@@ -93,37 +94,48 @@ void harmony::Editor::InitializePipelines() {
     OPTICK_EVENT();
     RuntimeProgram::InitializePipelines();
 
-    auto skyFB = p_EditorPipeline->AddFramebuffer("Sky FB",{AttachmentType::RGBA16F}, Resolution::Type::FullScale);
-    auto mainFB = p_EditorPipeline->AddFramebuffer("Forward FB",{AttachmentType::RGBA16F, AttachmentType::Depth32F}, Resolution::Type::FullScale);
+    auto skyFB = p_EditorPipeline->AddFramebuffer("Sky FB", {AttachmentType::RGBA16F}, Resolution::Type::FullScale);
+    auto mainFB = p_EditorPipeline->AddFramebuffer("Forward FB", {AttachmentType::RGBA16F, AttachmentType::Depth32F},
+                                                   Resolution::Type::FullScale);
     auto vectorFB = p_EditorPipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
     auto finalFB = p_EditorPipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
 
-	auto crosshatchTexture = m_AssetManager.GetAsset<TextureAsset>("assets\\crosshatch.png");
-	auto moebiusFB = Moebius::AddMoebiusToPipeline(m_Renderer, p_EditorPipeline, crosshatchTexture.lock());
+    auto crosshatchTexture = m_AssetManager.GetAsset<TextureAsset>("assets\\crosshatch.png");
+    auto moebiusFB = Moebius::AddMoebiusToPipeline(m_Renderer, p_EditorPipeline, crosshatchTexture.lock());
     auto screenShaderWR = m_Renderer.p_PresentProgram;
 
-    if(screenShaderWR.expired())
-    {
-        harmony::log::error("RuntimeProgram : Initialize Pipelines : Present Program is expired. This should never happen.");
+    if (screenShaderWR.expired()) {
+        harmony::log::error(
+                "RuntimeProgram : Initialize Pipelines : Present Program is expired. This should never happen.");
         return;
     }
 
-    Ref<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {skyFB});
-    Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {mainFB});
-    Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {vectorFB});
+    Ref<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8,
+                                                                                 Vector<WeakRef<Framebuffer>>{skyFB});
+    Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+                                                                                     AttachmentType::RGBA8,
+                                                                                     Vector<WeakRef<Framebuffer>>{
+                                                                                             mainFB});
+    Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+                                                                                    AttachmentType::RGBA8,
+                                                                                    Vector<WeakRef<Framebuffer>>{
+                                                                                            vectorFB});
     Ref<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Editor);
-	Ref<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8, Vector<WeakRef<Framebuffer>> {moebiusFB});
+    Ref<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+                                                                                     AttachmentType::RGBA8,
+                                                                                     Vector<WeakRef<Framebuffer>>{
+                                                                                             moebiusFB});
 
     p_EditorPipeline->AddPipelineStage(skyFB, m_Renderer.GetPipelineStage("SkyStage").lock());
     p_EditorPipeline->AddPipelineStage(mainFB, debugDrawStage);
     p_EditorPipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("NormalStage").lock());
-    p_EditorPipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("TexturedMesh").lock());
+    p_EditorPipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("TexturedMeshStage").lock());
     p_EditorPipeline->AddPipelineStage(mainFB, m_Renderer.GetPipelineStage("BlinnPhongTextured").lock());
 
     p_EditorPipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());
 
     p_EditorPipeline->AddPipelineStage(finalFB, drawSkyStage);
-	p_EditorPipeline->AddPipelineStage(finalFB, drawMoebiusStage);
+    p_EditorPipeline->AddPipelineStage(finalFB, drawMoebiusStage);
     p_EditorPipeline->AddPipelineStage(finalFB, drawForwardStage);
     p_EditorPipeline->AddPipelineStage(finalFB, drawVectorStage);
 
@@ -138,8 +150,7 @@ void harmony::Editor::InitializeViews() {
     m_Renderer.SetViewActive(editorViewWr, true);
     p_EditorView = editorViewWr.lock();
     auto pipelineWR = m_Renderer.GetViewPipeline(editorViewWr);
-    if(pipelineWR.expired())
-    {
+    if (pipelineWR.expired()) {
         harmony::log::error("RuntimeProgram : Failed to create a runtime view pipeline.");
         return;
     }
@@ -157,12 +168,9 @@ void harmony::Editor::LoadProject(const std::string &path) {
     Program::LoadProject(path);
     LoadImGuiSettings();
 
-    if (m_Project)
-    {
+    if (m_Project) {
         InitializePipelines();
-    }
-    else
-    {
+    } else {
         harmony::log::error("Editor : Failed to load project at path : {}", path);
     }
 }
@@ -193,7 +201,7 @@ int harmony::Editor::OnEditUpdate() {
     }
 
     RunProgramComponentRender();
-	RunSystemRender();
+    RunSystemRender();
     RunRendererPostUpdate();
     Input::PostFrame();
 
@@ -298,18 +306,16 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
 
     SetRunningStyle();
 
-	if(m_Project)
-	{
-		if(m_Project->m_SerializedScenes.size() > 0)
-		{
-			LoadScene(m_Project->m_SerializedScenes[0]);
-		}
-	}
+    if (m_Project) {
+        if (m_Project->m_SerializedScenes.size() > 0) {
+            LoadScene(m_Project->m_SerializedScenes[0]);
+        }
+    }
 
-	while (p_Run) {
+    while (p_Run) {
         ProfilerBeginFrame();
         m_EditorFSM.Process();
-		if(proc == NULL) continue;
+        if (proc == NULL) continue;
         proc();
     }
 }

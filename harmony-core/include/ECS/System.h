@@ -1,12 +1,12 @@
 #pragma once
 
 #include "ThirdParty/entt.hpp"
-#include "ThirdParty/json.hpp"
+#include "Core/TypeDef.h"
 
 namespace harmony {
     class System {
     public:
-        System(std::string typeHash) : m_TypeHash(typeHash) {}
+        System(const HashString &typeHash) : m_TypeHash(typeHash) {}
 
         virtual ~System() {};
 
@@ -22,7 +22,7 @@ namespace harmony {
 
         virtual void DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) = 0;
 
-        const std::string m_TypeHash;
+        const HashString m_TypeHash;
 
         static std::string GetEntityKey(entt::entity &entity);
 

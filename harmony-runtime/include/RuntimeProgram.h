@@ -59,14 +59,14 @@ namespace harmony {
 
         void PresentRuntimeImage();
 
-        Ref<PipelineV2>     p_RuntimePipeline;
-        Ref<RuntimeView>    p_RuntimeView;
+        Ref<PipelineV2> p_RuntimePipeline;
+        Ref<RuntimeView> p_RuntimeView;
 
-        Ref<EntityDataSystem>               p_EntityDataSystem;
-        Ref<LuaProgramComponent>            p_LuaProgramComponent;
-        Ref<LuaSystem>                      p_LuaSystem;
-        Ref<GraphScriptProgramComponent>    p_GraphScriptComponent;
-        Ref<GraphScriptSystem>              p_GraphScriptSystem;
+        Ref<EntityDataSystem> p_EntityDataSystem;
+        Ref<LuaProgramComponent> p_LuaProgramComponent;
+        Ref<LuaSystem> p_LuaSystem;
+        Ref<GraphScriptProgramComponent> p_GraphScriptComponent;
+        Ref<GraphScriptSystem> p_GraphScriptSystem;
         Ref<SimpleCollisionSystem> p_SimpleCollisionSystem;
         Ref<JoltPhysicsSystem> p_JoltPhysicsSystem;
 

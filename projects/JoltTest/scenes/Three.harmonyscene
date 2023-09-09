@@ -1,1 +1,133 @@
-{"m_Name":"Three","m_NumEntities":2,"p_Entities":[{"m_Handle":0},{"m_Handle":1}],"p_SystemSerializationAttributes":{"harmony::CameraSystem":{"0":{"Cam":{"Aspect":1.3329999446868896,"FOV":75.0,"FarClipPlane":30.0,"NearClipPlane":0.009999999776482582,"Type":1}}},"harmony::EntityDataSystem":{"0":{"m_Enabled":true,"m_LayerMask":0,"m_Name":"Entity 0","m_Parent":4294967295,"m_Static":false},"1":{"m_Enabled":true,"m_LayerMask":0,"m_Name":"Entity 1","m_Parent":4294967295,"m_Static":false}},"harmony::GraphScriptSystem":null,"harmony::JoltPhysicsSystem":null,"harmony::LightSystem":{"DirectionalLight":null,"PointLight":null,"Sky":null,"SpotLight":null},"harmony::LuaSystem":null,"harmony::MaterialSystem":{"1":{"Data":{"m_Mat3Overrides":[],"m_Mat4Overrides":[],"m_ShaderName":"DeferredGBuffer","m_TextureOverrides":[[{"Name":"s_texColor","Type":0},{"Handle":{"Index":0,"Path":"assets\\default_Base_Color.png","TypeHash":"harmony::TextureAsset"}}]],"m_Vec4Overrides":[]}}},"harmony::MeshSystem":{"1":{"CastShadow":false,"MeshAsset":{"Index":0,"Path":"assets\\scene.gltf","TypeHash":"harmony::Mesh"}}},"harmony::TransformSystem":{"0":{"Euler":{"x":0.0,"y":0.0,"z":0.0},"Position":{"x":0.0,"y":0.0,"z":0.0},"Rotation":{"w":1.0,"x":0.0,"y":0.0,"z":0.0},"Scale":{"x":1.0,"y":1.0,"z":1.0}},"1":{"Euler":{"x":-90.0,"y":0.0,"z":0.0},"Position":{"x":0.0,"y":0.0,"z":-4.255111217498779},"Rotation":{"w":0.7071067690849304,"x":-0.7071067690849304,"y":0.0,"z":0.0},"Scale":{"x":1.0,"y":1.0,"z":1.0}}}}}
+{
+    "m_Name": "Three",
+    "m_NumEntities": 2,
+    "p_Entities": [
+        {
+            "m_Handle": 0
+        },
+        {
+            "m_Handle": 1
+        }
+    ],
+    "p_SystemSerializationAttributes": {
+        134259612508: {
+            "0": {
+                "Cam": {
+                    "Aspect": 1.3329999446868896,
+                    "FOV": 75.0,
+                    "FarClipPlane": 30.0,
+                    "NearClipPlane": 0.009999999776482582,
+                    "Type": 1
+                }
+            }
+        },
+        1364905632974: {
+            "0": {
+                "m_Enabled": true,
+                "m_LayerMask": 0,
+                "m_Name": "Entity 0",
+                "m_Parent": 4294967295,
+                "m_Static": false
+            },
+            "1": {
+                "m_Enabled": true,
+                "m_LayerMask": 0,
+                "m_Name": "Entity 1",
+                "m_Parent": 4294967295,
+                "m_Static": false
+            }
+        },
+        1364905652582: null,
+        1983462683439: null,
+        54413729815: {
+            "DirectionalLight": null,
+            "PointLight": null,
+            "Sky": null,
+            "SpotLight": null
+        },
+        54413733001: null,
+        54413694918: {
+            "1": {
+                "Data": {
+                    "m_Mat3Overrides": [],
+                    "m_Mat4Overrides": [],
+                    "m_ShaderName": "DeferredGBuffer",
+                    "m_TextureOverrides": [
+                        [
+                            {
+                                "Name": "s_texColor",
+                                "Type": 0
+                            },
+                            {
+                                "Handle": {
+                                    "Index": 0,
+                                    "Path": "assets\\default_Base_Color.png",
+                                    "TypeHash": {"m_Value":134259617819}
+                                }
+                            }
+                        ]
+                    ],
+                    "m_Vec4Overrides": []
+                }
+            }
+        },
+        54413689374: {
+            "1": {
+                "CastShadow": false,
+                "MeshAsset": {
+                    "Index": 0,
+                    "Path": "assets\\scene.gltf",
+                    "TypeHash": {"m_Value":134259609223}
+                }
+            }
+        },
+        54413717221: {
+            "0": {
+                "Euler": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Rotation": {
+                    "w": 1.0,
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "1": {
+                "Euler": {
+                    "x": -90.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": -4.255111217498779
+                },
+                "Rotation": {
+                    "w": 0.7071067690849304,
+                    "x": -0.7071067690849304,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "Scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            }
+        }
+    }
+}

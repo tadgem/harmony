@@ -2,6 +2,7 @@
 
 #include "ThirdParty/json.hpp"
 #include "Core/TypeDef.h"
+
 namespace harmony {
     class ProgramComponent {
     public:
@@ -25,7 +26,8 @@ namespace harmony {
     protected:
         friend class Program;
 
-        ProgramComponent(const HashString& typeHash);
+        ProgramComponent(const HashString &typeHash);
+
         virtual void Refresh() {};
     };
 };

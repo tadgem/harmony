@@ -49,7 +49,7 @@ void harmony::ShaderHotReload::Init() {
 
 void
 harmony::ShaderHotReload::OnChange(const std::string &filename, const std::string &directory, efsw::Action action) {
-	harmony::log::info("ShaderHotReload : {} : {} : {}", GetActionName(action), directory, filename);
+    harmony::log::info("ShaderHotReload : {} : {} : {}", GetActionName(action), directory, filename);
     // ignore changes to include shader files
     if (filename.find("include") < filename.size()) {
         return;
@@ -89,20 +89,17 @@ harmony::ShaderHotReload::OnChange(const std::string &filename, const std::strin
         if (filename.find(".sc") < filename.size()) {
             // Update shader text...
             std::string newText = Utils::LoadStringFromPath("assets/shaders" + filename);
-			std::string finalPath = filename;
-			bool found = false;
-			for(auto& [path, data] : p_LoadedShaderSources)
-			{
-				if(path.find(filename) < path.size())
-				{
-					found = true;
-					finalPath = path;
-				}
-				if(path == filename)
-				{
-					found = true;
-				}
-			}
+            std::string finalPath = filename;
+            bool found = false;
+            for (auto &[path, data]: p_LoadedShaderSources) {
+                if (path.find(filename) < path.size()) {
+                    found = true;
+                    finalPath = path;
+                }
+                if (path == filename) {
+                    found = true;
+                }
+            }
             if (!found) {
                 harmony::log::warn("ShaderHotRelaod : {} not being tracked by hot reload.", filename);
                 return;
@@ -114,7 +111,7 @@ harmony::ShaderHotReload::OnChange(const std::string &filename, const std::strin
                 harmony::log::error("ShaderHotRelaod : Failed to compile shader : {}", filename);
             }
 
-			return;
+            return;
         }
         if (filename.find(".bin") < filename.size()) {
             std::string rendererName = ShaderStage::GetShaderRendererName();
@@ -122,20 +119,18 @@ harmony::ShaderHotReload::OnChange(const std::string &filename, const std::strin
                 size_t lastIndex = filename.find(".bin");
                 std::string shaderName = filename.substr(0, lastIndex);
 
-				std::chrono::milliseconds timespan(500);
-				std::this_thread::sleep_for(timespan);
+                std::chrono::milliseconds timespan(500);
+                std::this_thread::sleep_for(timespan);
 
                 if (p_LoadedShaderBinaries.find(shaderName) != p_LoadedShaderBinaries.end()) {
                     p_LoadedShaderBinaries[shaderName]->LoadShaderBinary();
                     p_Program.m_Renderer.ReloadAllShaders();
+                } else {
+                    auto handle = p_Program.m_AssetManager.LoadAsset<ShaderStage>(shaderName);
+                    Ref<ShaderStage> stage = p_Program.m_AssetManager.GetAsset<ShaderStage>(handle[0]).lock();
+                    p_LoadedShaderBinaries.emplace(shaderName, stage);
+                    ReloadTrackedShaders();
                 }
-				else
-				{
-					auto handle = p_Program.m_AssetManager.LoadAsset<ShaderStage>(shaderName);
-					Ref<ShaderStage> stage = p_Program.m_AssetManager.GetAsset<ShaderStage>(handle[0]).lock();
-					p_LoadedShaderBinaries.emplace(shaderName, stage);
-					ReloadTrackedShaders();
-				}
             }
 
         }
@@ -239,29 +234,28 @@ int harmony::ShaderHotReload::CompileShader(const std::string &shaderName) {
     compileCommand += profileName;
 
     harmony::log::info("ShaderHotReload : final compile command for input file {} : {}", shaderName, compileCommand);
-    auto ret =  Exec(compileCommand.c_str());
+    auto ret = Exec(compileCommand.c_str());
 
-	harmony::log::info("ShaderHotReload : Compile Result : {}", ret);
+    harmony::log::info("ShaderHotReload : Compile Result : {}", ret);
 
-	return 0;
+    return 0;
 }
 
-harmony::String harmony::ShaderHotReload::Exec(const char *command)
-{
-	std::array<char, 128> buffer;
-	std::string result;
-	#if BX_PLATFORM_WINDOWS
-	std::unique_ptr<FILE, decltype(&_pclose)> pipe(_popen(command, "r"), _pclose);
-	#else
-	std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command, "r"), pclose);
-	#endif
-	if (!pipe) {
-		throw std::runtime_error("popen() failed!");
-	}
-	while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
-		result += buffer.data();
-	}
+harmony::String harmony::ShaderHotReload::Exec(const char *command) {
+    std::array<char, 128> buffer;
+    std::string result;
+#if BX_PLATFORM_WINDOWS
+    std::unique_ptr<FILE, decltype(&_pclose)> pipe(_popen(command, "r"), _pclose);
+#else
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command, "r"), pclose);
+#endif
+    if (!pipe) {
+        throw std::runtime_error("popen() failed!");
+    }
+    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+        result += buffer.data();
+    }
 
-	return result;
+    return result;
 }
 

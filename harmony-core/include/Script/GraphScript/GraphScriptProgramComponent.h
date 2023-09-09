@@ -8,29 +8,34 @@
 #include "Core/Memory.h"
 #include "Core/ProgramComponent.h"
 
-namespace harmony
-{
+namespace harmony {
 
-	namespace GraphScript
-	{
-		class NodeRegistry;
-	}
-	class GraphScriptProgramComponent : public ProgramComponent
-	{
-	public:
-		GraphScriptProgramComponent();
-		~GraphScriptProgramComponent();
-		void Init() override;
-		void Update() override;
-		void Render() override;
-		void Cleanup() override;
-		GraphScript::NodeRegistry *GetNodeRegistry();
-		nlohmann::json ToJson() override;
-		void FromJson(const nlohmann::json &json) override;
+    namespace GraphScript {
+        class NodeRegistry;
+    }
+    class GraphScriptProgramComponent : public ProgramComponent {
+    public:
+        GraphScriptProgramComponent();
 
-	protected:
-		Unique<GraphScript::NodeRegistry> p_NodeRegistry;
-	};
+        ~GraphScriptProgramComponent();
+
+        void Init() override;
+
+        void Update() override;
+
+        void Render() override;
+
+        void Cleanup() override;
+
+        GraphScript::NodeRegistry *GetNodeRegistry();
+
+        nlohmann::json ToJson() override;
+
+        void FromJson(const nlohmann::json &json) override;
+
+    protected:
+        Unique<GraphScript::NodeRegistry> p_NodeRegistry;
+    };
 } // namespace harmony
 
 #endif // HARMONY_DOJO_GRAPHSCRIPTPROGRAMCOMPONENT_H

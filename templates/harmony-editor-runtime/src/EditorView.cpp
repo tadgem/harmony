@@ -6,6 +6,7 @@
 #include "ECS/TransformComponent.h"
 
 #if HARMONY_DEBUG
+
 #include "Rendering/GPUResourceManager.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_bgfx.h"
@@ -146,14 +147,15 @@ void harmony::EditorView::OnImGui() {
     auto pipeline = p_Renderer.GetViewPipeline("Editor").lock();
     if (ImGui::Begin(editorViewTitle.c_str(), (bool *) 0, ImGuiWindowFlags_NoScrollbar)) {
         View::OnImGui();
+        // Crashing here because pipelines have not been initialized...
         bgfx::TextureHandle finalImageHandle = pipeline->GetOutputFramebuffer().lock()->m_Attachments[0].m_Handle;
         if (!bgfx::isValid(finalImageHandle)) {
             ImGui::End();
             return;
         }
 
-        ImVec2 texUvs {(float)m_Width / (float)GPUResourceManager::GetMaxFramebufferWidth(),
-                       (float)m_Height / (float)GPUResourceManager::GetMaxFramebufferHeight()};
+        ImVec2 texUvs{(float) m_Width / (float) GPUResourceManager::GetMaxFramebufferWidth(),
+                      (float) m_Height / (float) GPUResourceManager::GetMaxFramebufferHeight()};
 
         ImGui::Image(
                 finalImageHandle,
@@ -194,8 +196,7 @@ void harmony::EditorView::OnImGui() {
                 ImGuizmo::MODE::WORLD,
                 &tc.Model[0][0],
                 &diffMatrix[0][0]
-        ))
-        {
+        )) {
             float matrixTranslation[3], matrixRotation[3], matrixScale[3];
             ImGuizmo::DecomposeMatrixToComponents(&diffMatrix[0][0], matrixTranslation, matrixRotation, matrixScale);
 

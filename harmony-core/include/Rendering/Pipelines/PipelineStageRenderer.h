@@ -7,23 +7,21 @@
 #include "bgfx/bgfx.h"
 #include <string>
 
-namespace harmony
-{
-	class View;
-	class PipelineStageRenderer
-	{
-	public:
-		PipelineStageRenderer(const std::string &name);
+namespace harmony {
+    class View;
 
-		// need to think of a way to type constrain this to
-		// the correct derivative of drawable.
-		virtual void Draw(entt::registry &scene, Ref<ShaderProgram> shader, Ref<View> view,
-						  bgfx::ViewId viewId)
-		{
-		}
+    class PipelineStageRenderer {
+    public:
+        PipelineStageRenderer(const std::string &name);
 
-		std::string m_Name;
+        // need to think of a way to type constrain this to
+        // the correct derivative of drawable.
+        virtual void Draw(entt::registry &scene, Ref<ShaderProgram> shader, Ref<View> view,
+                          bgfx::ViewId viewId) {
+        }
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStageRenderer, m_Name);
-	};
+        std::string m_Name;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStageRenderer, m_Name);
+    };
 }; // namespace harmony

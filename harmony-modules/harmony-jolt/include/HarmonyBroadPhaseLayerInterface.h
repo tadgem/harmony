@@ -47,8 +47,7 @@ namespace harmony {
         JPH::BroadPhaseLayer m_ObjectToBroadPhase[Layers::NUM_LAYERS];
     };
 
-    class HarmonyObjectVsBroadPhaseLayerFilter : public JPH::ObjectVsBroadPhaseLayerFilter
-    {
+    class HarmonyObjectVsBroadPhaseLayerFilter : public JPH::ObjectVsBroadPhaseLayerFilter {
     public:
         HarmonyObjectVsBroadPhaseLayerFilter();
 
@@ -57,11 +56,10 @@ namespace harmony {
 
     };
 
-class HarmonyObjectLayerPairFilter : public JPH::ObjectLayerPairFilter
-{
-public:
-    bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::ObjectLayer inLayer2) const override;
-};
+    class HarmonyObjectLayerPairFilter : public JPH::ObjectLayerPairFilter {
+    public:
+        bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::ObjectLayer inLayer2) const override;
+    };
 
 
 }

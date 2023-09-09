@@ -6,6 +6,7 @@
 #include "assimp/mesh.h"
 #include "assimp/scene.h"
 #include "Core/Utils.h"
+#include "Core/TypeDef.h"
 
 static glm::vec3 AssimpToGLM(aiVector3D aiVec) {
     return glm::vec3(aiVec.x, aiVec.y, aiVec.z);
@@ -21,8 +22,8 @@ static harmony::String AssimpToSTD(aiString str) {
 
 harmony::AssimpModelAssetFactory::AssimpModelAssetFactory(Renderer &renderer)
         : harmony::AssetFactory(), p_Renderer(renderer) {
-    String modelTypeHash = GetTypeHash<Model>();
-    String meshTypeHash = GetTypeHash<Mesh>();
+    HashString modelTypeHash = GetTypeHash<Model>();
+    HashString meshTypeHash = GetTypeHash<Mesh>();
 
     m_Capabilities.AssetTypeHashes.push_back(modelTypeHash);
     m_Capabilities.AssetTypeHashes.push_back(meshTypeHash);
@@ -151,7 +152,7 @@ void harmony::AssimpModelAssetFactory::UnloadAssetData(const String &path, entt:
 
 void harmony::AssimpModelAssetFactory::LoadAssetData(const String &path, entt::registry &registry) {
 
-	p_Meshes.clear();
+    p_Meshes.clear();
     std::string cleanPath = Utils::GetCleanPlatformPath(path);
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(cleanPath,
@@ -159,8 +160,8 @@ void harmony::AssimpModelAssetFactory::LoadAssetData(const String &path, entt::r
                                              aiProcess_CalcTangentSpace |
                                              aiProcess_OptimizeMeshes |
                                              aiProcess_OptimizeGraph |
-											 aiProcess_FindInvalidData |
-											 aiProcess_GenBoundingBoxes
+                                             aiProcess_FindInvalidData |
+                                             aiProcess_GenBoundingBoxes
     );
     //
     if (scene == nullptr) {

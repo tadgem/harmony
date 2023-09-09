@@ -58,9 +58,8 @@ bool harmony::HarmonyObjectVsBroadPhaseLayerFilter::ShouldCollide(JPH::ObjectLay
     }
 }
 
-harmony::HarmonyObjectVsBroadPhaseLayerFilter::HarmonyObjectVsBroadPhaseLayerFilter():
-JPH::ObjectVsBroadPhaseLayerFilter()
-{
+harmony::HarmonyObjectVsBroadPhaseLayerFilter::HarmonyObjectVsBroadPhaseLayerFilter() :
+        JPH::ObjectVsBroadPhaseLayerFilter() {
 
 }
 

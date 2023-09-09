@@ -11,9 +11,9 @@ namespace harmony {
         static bool FileExists(const std::string &filepath);
 
         static std::string LoadStringFromPath(const std::string &path);
-        
+
         static std::string GetCleanPlatformPath(const std::string &path);
-        
+
         static nlohmann::json LoadJsonFromPath(const std::string &path);
 
         static void SaveStringToPath(const std::string &str, const std::string &path);

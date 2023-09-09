@@ -58,10 +58,11 @@ namespace harmony {
     protected:
 
         const bool m_DrawDebug = true;
-		bool p_Running = false;
+        bool p_Running = false;
 
         void InitBody(entt::entity e, TransformComponent &t, JoltBodyComponent &b);
-		void UpdateBody(entt::entity e, TransformComponent &t, JoltBodyComponent &b);
+
+        void UpdateBody(entt::entity e, TransformComponent &t, JoltBodyComponent &b);
 
         static constexpr bool s_UseContactListener = true;
         static constexpr uint32_t s_NumBodyMutexes = 0; // Autodetect
