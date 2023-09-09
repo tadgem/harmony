@@ -1,4 +1,3 @@
-- Type hash fix
 - Lua program component test
 - default imgui layout & better project generation
 - rendering binding + move moebius to lua

@@ -8,3 +8,8 @@ harmony::LuaComponent::LuaComponent() : m_LuaScriptAsset("", "") {
     m_HasUpdate = false;
     m_HasCleanup = false;
 }
+
+harmony::LuaComponent harmony::CreateLuaComponent() {
+
+    return harmony::LuaComponent();
+}

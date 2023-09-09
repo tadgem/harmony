@@ -1,9 +1,10 @@
 #include <optick.h>
 #include "Script/Lua/LuaProgramComponent.h"
+#include "Script/Lua/LuaScriptAsset.h"
 #include "Script/Lua/LuaNanoVG.hpp"
 #include "Script/Lua/LuaHarmony.hpp"
 #include "Core/Log.hpp"
-
+#include "Assets/AssetManager.h"
 harmony::LuaProgramComponent::LuaProgramComponent(AssetManager &am) : ProgramComponent(
         GetTypeHash<LuaProgramComponent>()), p_AssetManager(am) {
 
@@ -15,11 +16,16 @@ void harmony::LuaProgramComponent::Init() {
     harmony::InitNanoVG(p_State);
     harmony::InitHarmony(p_State);
     RedirectPrintOutput();
+
+    p_LuaScriptAssets.clear();
+
+    for (AssetHandle ah: m_LuaProgramScripts) {
+        p_LuaScriptAssets.emplace_back(p_AssetManager.GetAsset<LuaScriptAsset>(ah));
+    }
 }
 
 void harmony::LuaProgramComponent::Update() {
     OPTICK_EVENT();
-    return;
 }
 
 void harmony::LuaProgramComponent::Render() {

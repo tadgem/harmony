@@ -22,4 +22,6 @@ namespace harmony {
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(LuaComponent, m_LuaScriptAsset, m_HasStart,
                                        m_HasUpdate, m_HasCleanup)
     };
+
+    static LuaComponent CreateLuaComponent();
 } // namespace harmony
