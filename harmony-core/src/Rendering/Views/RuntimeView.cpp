@@ -73,7 +73,7 @@ void harmony::RuntimeView::OnImGui() {
     Ref<Scene> scene = p_Program.GetActiveScene().lock();
     const std::string runtimeViewTitle = std::string(ICON_FA_PLAY_CIRCLE) + " Runtime";
     glm::mat4 mat = glm::mat4(1.0);
-    auto pipeline = p_Renderer.GetViewPipeline("RuntimeView").lock();
+    auto pipeline = p_Renderer.GetViewPipelineFromName("RuntimeView").lock();
     if (ImGui::Begin(runtimeViewTitle.c_str(), (bool *) 0, ImGuiWindowFlags_NoScrollbar)) {
         View::OnImGui();
 

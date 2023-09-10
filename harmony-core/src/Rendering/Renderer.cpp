@@ -242,7 +242,7 @@ void harmony::Renderer::OnPostUpdate(entt::registry &registry) {
     }
 }
 
-harmony::WeakRef<harmony::PipelineV2> harmony::Renderer::GetViewPipeline(const std::string &viewName) {
+harmony::WeakRef<harmony::PipelineV2> harmony::Renderer::GetViewPipelineFromName(const std::string &viewName) {
     OPTICK_EVENT();
     for (auto &[view, p]: p_Views) {
         if (view->m_Name == viewName) {

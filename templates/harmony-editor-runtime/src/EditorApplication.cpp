@@ -92,7 +92,7 @@ void harmony::Editor::AddEditorPanels() {
 void harmony::Editor::InitializePipelines() {
     OPTICK_EVENT();
     RuntimeProgram::InitializePipelines();
-
+    // return;
     auto skyFB = p_EditorPipeline->AddFramebuffer("Sky FB", {AttachmentType::RGBA16F}, Resolution::Type::FullScale);
     auto mainFB = p_EditorPipeline->AddFramebuffer("Forward FB", {AttachmentType::RGBA16F, AttachmentType::Depth32F},
                                                    Resolution::Type::FullScale);

@@ -21,7 +21,7 @@ harmony::LuaComponent harmony::LuaComponent::Create(sol::state &state, LuaScript
         sol::error err = compilationResult;
         std::string what = err.what();
         harmony::log::error(
-                "LuaComponent : CreateLuaComponent : {} : in compiling script {}", scriptAsset.m_Name);
+                "LuaComponent : CreateLuaComponent : {} : in compiling script {}", what, scriptAsset.m_Name);
     }
 
     sol::function startFx = env["start"];

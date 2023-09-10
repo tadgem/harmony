@@ -110,7 +110,7 @@ namespace harmony {
 
         void OnPostUpdate(entt::registry &registry);
 
-        WeakRef<PipelineV2> GetViewPipeline(const std::string &viewName);
+        WeakRef<PipelineV2> GetViewPipelineFromName(const std::string &viewName);
 
         static bgfx::ViewId GetViewID();
 

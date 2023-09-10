@@ -268,13 +268,8 @@ void harmony::InitHarmonyRendering(sol::state &state, sol::table &h) {
                                             "Custom", Resolution::Type::Custom
     );
 
-    // resolution type def
-
-
     // attachment type def
     auto attachmentDef = h.new_usertype<harmony::Attachment>("Attachment");
-
-
 
     // framebuffer def
     auto framebufferDef = h.new_usertype<harmony::PipelineV2>("Framebuffer");
@@ -283,7 +278,6 @@ void harmony::InitHarmonyRendering(sol::state &state, sol::table &h) {
     // resolution type
     // name
 
-
     // Pipeline def
     auto pipelineDef = h.new_usertype<harmony::PipelineV2>("Pipeline");
     pipelineDef["AddPipelineStage"] = &harmony::PipelineV2::AddPipelineStage;
@@ -291,11 +285,6 @@ void harmony::InitHarmonyRendering(sol::state &state, sol::table &h) {
     pipelineDef["GetOutputFramebuffer"] = &harmony::PipelineV2::GetOutputFramebuffer;
     pipelineDef["HasOutputFramebuffer"] = &harmony::PipelineV2::HasOutputFramebuffer;
     pipelineDef["SetOutputFramebuffer"] = &harmony::PipelineV2::SetOutputFramebuffer;
-
-
-
-
-
 
     // pipeline draw stage def
     auto pipelineDrawStageDef = h.new_usertype<harmony::PipelineDrawStage>("Pipeline");
@@ -308,6 +297,7 @@ void harmony::InitHarmonyRendering(sol::state &state, sol::table &h) {
     // texture asset def
 
     // renderer
+    rendererDef["GetViewPipeline"] = &harmony::Renderer::GetViewPipelineFromName;
     // get / add shader data source
     // get / add shader
     // get / add pipeline stage renderer

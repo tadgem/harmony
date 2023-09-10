@@ -81,7 +81,7 @@ void harmony::RuntimeProgram::AddProgramComponents() {
     OPTICK_EVENT();
     p_LuaProgramComponent = AddProgramComponent<LuaProgramComponent>(m_AssetManager).lock();
     p_GraphScriptComponent = AddProgramComponent<GraphScriptProgramComponent>().lock();
-}
+} 
 
 void harmony::RuntimeProgram::AddSystems() {
     OPTICK_EVENT();
@@ -287,7 +287,7 @@ void harmony::RuntimeProgram::ResizeApplicationWindow(int w, int h) {
 void harmony::RuntimeProgram::PresentRuntimeImage() {
     OPTICK_EVENT();
     bgfx::setViewClear(p_PresentViewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.0f);
-    auto pipeline = m_Renderer.GetViewPipeline(p_RuntimeView->m_Name);
+    auto pipeline = m_Renderer.GetViewPipeline(p_RuntimeView);
     auto fb = pipeline.lock()->GetOutputFramebuffer().lock();
     bgfx::setTexture(0, m_Renderer.p_PresentProgramTextureHandle, fb->m_Attachments[0].m_Handle, BGFX_SAMPLER_POINT);
     ScreenSpaceQuad(static_cast<float>(fb->m_FramebufferResolution.Width),

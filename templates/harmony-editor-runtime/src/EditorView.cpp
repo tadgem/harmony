@@ -144,10 +144,16 @@ void harmony::EditorView::OnImGui() {
 
     const std::string editorViewTitle = std::string(ICON_FA_VIDEO_CAMERA) + " Editor";
     glm::mat4 mat = glm::mat4(1.0);
-    auto pipeline = p_Renderer.GetViewPipeline("Editor").lock();
+    auto pipeline = p_Renderer.GetViewPipelineFromName("Editor").lock();
     if (ImGui::Begin(editorViewTitle.c_str(), (bool *) 0, ImGuiWindowFlags_NoScrollbar)) {
         View::OnImGui();
         // Crashing here because pipelines have not been initialized...
+        auto outputFramebuffer = pipeline->GetOutputFramebuffer().lock();
+        if(!outputFramebuffer)
+        {
+            ImGui::End();
+            return;
+        }
         bgfx::TextureHandle finalImageHandle = pipeline->GetOutputFramebuffer().lock()->m_Attachments[0].m_Handle;
         if (!bgfx::isValid(finalImageHandle)) {
             ImGui::End();
