@@ -573,7 +573,6 @@ void harmony::LuaScriptPanel::OnImGui() {
             }
         }
 
-
         ImGui::Text("Running Program Scripts");
         ImGui::Indent();
         for (int i = 0; i < lua->m_LuaProgramScripts.size(); i++) {
@@ -599,6 +598,64 @@ void harmony::MonoPanel::OnImGui() {
             p_Mono = p_Program.GetProgramComponent<MonoProgramComponent>();
             ImGui::End();
             return;
+        }
+
+        auto assemblyHandles = p_Program.m_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
+        for(AssetHandle h : assemblyHandles)
+        {
+            Ref<MonoAssemblyAsset> a = p_Program.m_AssetManager.GetAsset<MonoAssemblyAsset>(h).lock();
+            if(!a) continue;
+
+            if(ImGui::TreeNode(h.Path.c_str()))
+            {
+                if(ImGui::TreeNode("Type Infos"))
+                {
+                    for(auto typeInfo : a->m_TypeInfos)
+                    {
+                        ImGui::Text("%s.%s", typeInfo.m_TypeNamespace.c_str(), typeInfo.m_TypeName.c_str());
+                    }
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("Interface Impl Infos"))
+                {
+                    for(auto info : a->m_InterfaceImplInfos)
+                    {
+                        ImGui::Text("%d : %d", info.m_ClassName, info.m_InterfaceName);
+                    }
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("Method Impl Infos"))
+                {
+                    for(auto info : a->m_MethodImplInfos)
+                    {
+                        ImGui::Text("%s : %s : %s", info.m_ClassName.c_str(), info.m_Declaration.c_str(), info.m_Body.c_str());
+                    }
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("Type Ref Infos"))
+                {
+                    for(auto info : a->m_TypeRefInfos)
+                    {
+                        ImGui::Text("%s : %s : Scope = %s", info.m_Namespace.c_str(), info.m_Name.c_str(), info.m_Scope.c_str());
+                    }
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("Assembly Ref Infos"))
+                {
+                    for(auto info : a->m_AssemblyRefInfos)
+                    {
+                        ImGui::Text("%s : %d.%d", info.m_Name.c_str(), info.m_Major, info.m_Minor);
+                    }
+                    ImGui::TreePop();
+                }
+
+                ImGui::TreePop();
+            }
+
         }
 
 

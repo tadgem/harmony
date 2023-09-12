@@ -29,7 +29,7 @@ namespace harmony {
 
     class HarmonyDebugRenderer;
 
-    class TransformComponent;
+    struct TransformComponent;
 
     class JoltPhysicsSystem : public System {
     public:

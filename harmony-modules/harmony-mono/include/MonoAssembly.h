@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Assets/Asset.h"
-#include "mono/metadata/assembly.h"
+#include "MonoUtils.h"
 
 namespace harmony
 {
@@ -16,10 +16,17 @@ namespace harmony
     public:
         MonoAssemblyAsset(std::vector<uint8_t> assemblyBinary, const std::string& assemblyPath);
         ~MonoAssemblyAsset();
-        const std::string m_AssemblyPath;
+        const String m_AssemblyPath;
+
+        Vector<MonoUtils::CsTypeInfo> m_TypeInfos;
+        Vector<MonoUtils::CsInterfaceImplInfo> m_InterfaceImplInfos;
+        Vector<MonoUtils::CsMethodImplInfo> m_MethodImplInfos;
+        Vector<MonoUtils::CsTypeRefInfo> m_TypeRefInfos;
+        Vector<MonoUtils::CsAssemblyRefInfo> m_AssemblyRefInfos;
 
     protected:
-        const std::vector<uint8_t>  p_AssemblyBinary;
+        void CollectAssemblyData();
+        const Vector<uint8_t>  p_AssemblyBinary;
         const MonoAssembly*         p_MonoAssembly;
     };
 }
