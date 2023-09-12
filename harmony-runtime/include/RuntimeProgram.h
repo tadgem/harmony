@@ -17,9 +17,9 @@ namespace harmony {
 
     class GraphScriptSystem;
 
-    class SimpleCollisionSystem;
-
     class JoltPhysicsSystem;
+
+    class MonoProgramComponent;
 
     class RuntimeProgram : public Program {
     public:
@@ -67,8 +67,8 @@ namespace harmony {
         Ref<LuaSystem> p_LuaSystem;
         Ref<GraphScriptProgramComponent> p_GraphScriptComponent;
         Ref<GraphScriptSystem> p_GraphScriptSystem;
-        Ref<SimpleCollisionSystem> p_SimpleCollisionSystem;
         Ref<JoltPhysicsSystem> p_JoltPhysicsSystem;
+        Ref<MonoProgramComponent> p_MonoProgramComponent;
 
         Ref<MeshSystem> p_MeshSystem;
         Ref<LightSystem> p_LightSystem;

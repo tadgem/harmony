@@ -155,7 +155,7 @@ void harmony::JoltPhysicsSystem::Render(entt::registry &registry) {
     }
 #ifdef HARMONY_DEBUG
     JPH::BodyManager::DrawSettings settings;
-    if (m_DrawDebug) {
+    if (m_DrawDebug && p_Running) {
         JPH::DebugRenderer *dr = m_DebugRenderer.get();
         m_PhysicsSystem->DrawBodies(settings, dr);
         m_PhysicsSystem->DrawConstraints(dr);

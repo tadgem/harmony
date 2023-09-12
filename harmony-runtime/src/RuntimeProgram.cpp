@@ -17,6 +17,8 @@
 #include "Script/GraphScript/GraphScriptSystem.h"
 #include "Rendering/Pipelines/PipelineStages/SkyStage.h"
 #include "Rendering/Modules/Moebius/MoebiusModule.h"
+#include "MonoProgramComponent.h"
+#include "MonoAssemblyAssetFactory.h"
 
 harmony::RuntimeProgram::RuntimeProgram(const std::string &name) : Program(name) {
     OPTICK_EVENT();
@@ -74,6 +76,7 @@ void harmony::RuntimeProgram::AddAssetFactories() {
     m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>(m_Renderer));
     m_AssetManager.AddAssetFactory(CreateRef<FontAssetFactory>());
     m_AssetManager.AddAssetFactory(CreateRef<LuaScriptAssetFactory>());
+    m_AssetManager.AddAssetFactory(CreateRef<MonoAssemblyAssetFactory>(p_MonoProgramComponent));
 
 }
 
@@ -81,6 +84,7 @@ void harmony::RuntimeProgram::AddProgramComponents() {
     OPTICK_EVENT();
     p_LuaProgramComponent = AddProgramComponent<LuaProgramComponent>(m_AssetManager).lock();
     p_GraphScriptComponent = AddProgramComponent<GraphScriptProgramComponent>().lock();
+    p_MonoProgramComponent = AddProgramComponent<MonoProgramComponent>().lock();
 } 
 
 void harmony::RuntimeProgram::AddSystems() {
@@ -90,6 +94,7 @@ void harmony::RuntimeProgram::AddSystems() {
     AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
     AddSystem<MeshSystem>(m_AssetManager);
     AddSystem<LightSystem>();
+    AddSystem<MonoSystem>(p_MonoProgramComponent);
     p_LuaSystem = AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent).lock();
     p_GraphScriptSystem = AddSystem<GraphScriptSystem>(p_GraphScriptComponent).lock();
     p_JoltPhysicsSystem = AddSystem<JoltPhysicsSystem>().lock();

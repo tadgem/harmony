@@ -17,7 +17,7 @@ int main() {
     harmony::Editor app;
 
     std::cout << std::filesystem::current_path() << std::endl;
-    app.Run("../../../../projects/TestTypeHash/TestTypeHash.harmonyproj", NULL);
+    app.Run("../../../../projects/MonoTest/MonoTest.harmonyproj", NULL);
 
     return 0;
 }
