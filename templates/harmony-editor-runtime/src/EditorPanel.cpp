@@ -16,6 +16,7 @@
 #include "Core/Input.h"
 #include "ECS/SkyComponent.h"
 #include "Script/Lua/LuaProgramComponent.h"
+#include "MonoAssembly.h"
 
 harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program) {
 }
@@ -518,6 +519,21 @@ void harmony::AssetManagerPanel::OnImGui() {
                 p_SelectedTypeHash = GetTypeHash<LuaScriptAsset>();
             }
         }
+
+        const std::string monoAssemblyAssetTitle = std::string(ICON_FA_FILE_ARCHIVE_O) + " Mono Assemblies";
+        ImGui::Text(luaScriptAssetTitle.c_str());
+        std::vector<AssetHandle> assemblyHandles = p_AssetManager.GetLoadedAssets<LuaScriptAsset>();
+        if (ImGui::TreeNode("Mono Assemblies")) {
+            for (int i = 0; i < assemblyHandles.size(); i++) {
+                ImGui::Text(assemblyHandles[i].Path.c_str());
+            }
+            ImGui::TreePop();
+            if (ImGui::Button("Load Assembly")) {
+                ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Script", ".dll", ".");
+                p_SelectedTypeHash = GetTypeHash<MonoAssemblyAsset>();
+            }
+        }
+
         ImGui::Unindent();
     }
     ImGui::End();

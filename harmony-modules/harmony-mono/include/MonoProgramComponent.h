@@ -11,7 +11,6 @@ namespace harmony
     {
     public:
         MonoProgramComponent();
-        // Inherited via ProgramComponent
         virtual void Init() override;
         virtual void Update() override;
         virtual void Render() override;
@@ -33,7 +32,6 @@ namespace harmony
     {
     public:
         MonoSystem(WeakRef<MonoProgramComponent> mono);
-        // Inherited via System
         virtual void Init(entt::registry& registry) override;
         virtual void Update(entt::registry& registry) override;
         virtual void Render(entt::registry& registry) override;
