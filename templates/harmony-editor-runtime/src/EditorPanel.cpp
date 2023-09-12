@@ -17,6 +17,7 @@
 #include "ECS/SkyComponent.h"
 #include "Script/Lua/LuaProgramComponent.h"
 #include "MonoAssembly.h"
+#include "MonoProgramComponent.h"
 
 harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program) {
 }
@@ -521,8 +522,8 @@ void harmony::AssetManagerPanel::OnImGui() {
         }
 
         const std::string monoAssemblyAssetTitle = std::string(ICON_FA_FILE_ARCHIVE_O) + " Mono Assemblies";
-        ImGui::Text(luaScriptAssetTitle.c_str());
-        std::vector<AssetHandle> assemblyHandles = p_AssetManager.GetLoadedAssets<LuaScriptAsset>();
+        ImGui::Text(monoAssemblyAssetTitle.c_str());
+        std::vector<AssetHandle> assemblyHandles = p_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
         if (ImGui::TreeNode("Mono Assemblies")) {
             for (int i = 0; i < assemblyHandles.size(); i++) {
                 ImGui::Text(assemblyHandles[i].Path.c_str());
@@ -551,6 +552,7 @@ void harmony::AssetManagerPanel::OnImGui() {
 harmony::LuaScriptPanel::LuaScriptPanel(Program &prog) : p_Program(prog), p_AssetManager(prog.m_AssetManager),
                                                          p_Lua(prog.GetProgramComponent<LuaProgramComponent>()) {
 }
+
 
 void harmony::LuaScriptPanel::OnImGui() {
     auto lua = p_Lua.lock();
@@ -583,6 +585,26 @@ void harmony::LuaScriptPanel::OnImGui() {
     ImGui::End();
 }
 
+
+harmony::MonoPanel::MonoPanel(harmony::Program &prog) : p_Program(prog), p_AssetManager(prog.m_AssetManager),
+                                                        p_Mono(prog.GetProgramComponent<MonoProgramComponent>()){
+
+}
+
+void harmony::MonoPanel::OnImGui() {
+    auto mono = p_Mono.lock();
+    if (ImGui::Begin("Mono")) {
+
+        if (!mono) {
+            p_Mono = p_Program.GetProgramComponent<MonoProgramComponent>();
+            ImGui::End();
+            return;
+        }
+
+
+    }
+    ImGui::End();
+}
 harmony::CameraComponentUI::CameraComponentUI(Renderer &r) : ComponentUI("Camera"), p_Renderer(r) {
 }
 

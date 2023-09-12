@@ -3,6 +3,7 @@
 #include "Core/Memory.h"
 #include "ECS/System.h"
 #include <mono/metadata/appdomain.h>
+#include "MonoAssembly.h"
 
 namespace harmony
 {
@@ -20,12 +21,15 @@ namespace harmony
 
         virtual void BindScriptingAPI();
 
+        MonoAssembly* LoadAssembly();
+
     protected:
         MonoDomain* p_RootDomain;
         MonoDomain* p_AppDomain;
         // TODO: Make this customizable per-application
         const std::string p_RootDomainName = "Harmony";
         const std::string p_AppDomainName = "HarmonyApp";
+        const MonoAssemblyConfiguration p_AssemblyConfig;
     };
 
     class MonoSystem : public System

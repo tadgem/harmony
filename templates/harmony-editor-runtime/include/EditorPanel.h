@@ -62,6 +62,20 @@ namespace harmony {
         AssetManager &p_AssetManager;
     };
 
+    class MonoProgramComponent;
+
+    class MonoPanel : public Panel {
+    public:
+        MonoPanel(Program &prog);
+
+        virtual void OnImGui() override;
+
+    protected:
+        WeakRef<MonoProgramComponent> p_Mono;
+        Program &p_Program;
+        AssetManager &p_AssetManager;
+    };
+
     class ComponentUI {
     public:
 

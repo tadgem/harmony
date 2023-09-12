@@ -30,8 +30,29 @@ namespace harmony
 
         struct CsInterfaceImplInfo
         {
-            std::string m_InterfaceName;
+            uint32_t m_InterfaceName;
+            uint32_t m_ClassName;
+        };
+
+        struct CsMethodImplInfo
+        {
+            std::string m_Declaration;
+            std::string m_Body;
             std::string m_ClassName;
+        };
+
+        struct CsTypeRefInfo
+        {
+            std::string m_Name;
+            std::string m_Namespace;
+            std::string m_Scope;
+        };
+
+        struct CsAssemblyRefInfo
+        {
+            std::string m_Name;
+            uint32_t    m_Major;
+            uint32_t    m_Minor;
         };
 
         Accessibility GetFieldAccessibility(MonoClassField* field);

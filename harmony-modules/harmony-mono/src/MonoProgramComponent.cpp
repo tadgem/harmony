@@ -6,6 +6,8 @@
 #include "Core/Log.hpp"
 
 harmony::MonoProgramComponent::MonoProgramComponent() : ProgramComponent(GetTypeHash<MonoProgramComponent>())
+, p_AssemblyConfig(MonoAssemblyConfiguration::Debug)
+
 {
 
 }
