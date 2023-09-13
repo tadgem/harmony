@@ -732,6 +732,8 @@ void harmony::Program::LoadProject(const std::string &path) {
 
     UpdateProjectDirectory(path);
 
+    RunProgramComponentInit();
+
     m_AssetManager.Deserialize(m_Project->m_AssetManagerSerializationAttributes);
     m_Renderer.Deserialize(m_AssetManager, m_Project->m_RendererSerializationAttributes);
 
@@ -744,8 +746,6 @@ void harmony::Program::LoadProject(const std::string &path) {
     }
 
     p_LoadedProjectPath = m_Project->m_ProjectDirectory + "/" + m_Project->m_ProjectName + ".harmonyproj";
-
-    RunProgramComponentInit();
 }
 
 void harmony::Program::CloseActiveProject() {

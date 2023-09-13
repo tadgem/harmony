@@ -1,12 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameTest
 {
-    public class Class1
+    public interface IOnInit
     {
+        void Init();
+    }
+    public interface IOnUpdate
+    {
+        void Update();
+    }
+    public interface IOnCleanup
+    {
+        void Cleanup();
+    }
+
+    public class TestClass : IOnInit, IOnUpdate, IOnCleanup
+    {
+        public void Cleanup()
+        {
+            Console.WriteLine("Cleanup");
+        }
+
+        public void Update()
+        {
+            Console.WriteLine("Update");
+        }
+
+        public void Init()
+        {
+            Console.WriteLine("Init");
+        }
     }
 }
