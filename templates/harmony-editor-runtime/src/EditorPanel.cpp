@@ -120,7 +120,7 @@ void harmony::ScenePanel::EntityDragDrop(entt::entity e, entt::registry &reg) {
     EntityData &data = reg.get<EntityData>(e);
     if (ImGui::BeginDragDropSource()) {
         ImGui::SetDragDropPayload("ENTITY", &e, sizeof(entt::entity));
-        ImGui::Text(data.m_Name.c_str());
+        ImGui::TextWrapped(data.m_Name.c_str());
         ImGui::EndDragDropSource();
     }
     if (ImGui::BeginDragDropTarget()) {
@@ -283,7 +283,7 @@ void harmony::MeshComponentUI::OnComponentImGui(entt::registry &registry, entt::
     AssetHandle ah;
     MeshComponent &mc = registry.get<MeshComponent>(entity);
     std::string meshPath = "Mesh Asset: " + mc.MeshAsset.Path;
-    ImGui::Text(meshPath.c_str());
+    ImGui::TextWrapped(meshPath.c_str());
     if (p_AssetManager.AssetTypeSelector<Mesh>("Mesh", ah)) {
         mc.MeshAsset = ah;
         harmony::log::info("Entity {} updated mesh to handle at path : {}", static_cast<uint32_t>(entity),
@@ -336,16 +336,16 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry &registry, en
         sn += shader->m_Name;
     }
 
-    ImGui::Text(sn.c_str());
+    ImGui::TextWrapped(sn.c_str());
     ImGui::Separator();
     if (p_Renderer.ShaderSelector("Select Shader", shaderWr)) {
         mc.Data.UpdateOverrides(shaderWr, p_AssetManager);
     }
-    ImGui::Text("Shader Variables");
+    ImGui::TextWrapped("Shader Variables");
     if (ImGui::TreeNode("Data")) {
         if (ImGui::TreeNode("Available Overrides")) {
             for (ShaderUniform &uniform: mc.Data.m_AvailableOverrides) {
-                ImGui::Text(uniform.Name.c_str());
+                ImGui::TextWrapped(uniform.Name.c_str());
                 ImGui::SameLine();
                 std::string overrideText = "Override" + std::string("##") + std::to_string(uniform.BgfxHandle.idx);
                 if (ImGui::Button(overrideText.c_str())) {
@@ -370,15 +370,15 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry &registry, en
 
         }
 
-        ImGui::Text("Vec4");
+        ImGui::TextWrapped("Vec4");
         for (auto &[key, v]: mc.Data.m_Vec4Overrides) {
             ImGui::DragFloat4(key.Name.c_str(), &v[0]);
         }
         ImGui::Separator();
-        ImGui::Text("Textures");
+        ImGui::TextWrapped("Textures");
         for (auto &[key, handle]: mc.Data.m_TextureOverrides) {
             std::string textureName = "Tex : " + handle.Handle.Path;
-            ImGui::Text(textureName.c_str());
+            ImGui::TextWrapped(textureName.c_str());
             if (p_AssetManager.AssetTypeSelector<TextureAsset>(key.Name, handle.Handle)) {
                 auto texWr = p_AssetManager.GetAsset<TextureAsset>(handle.Handle);
                 auto tex = texWr.lock();
@@ -389,14 +389,14 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry &registry, en
             }
         }
         ImGui::Separator();
-        ImGui::Text("Mat3");
+        ImGui::TextWrapped("Mat3");
         for (auto &[key, v]: mc.Data.m_Mat3Overrides) {
-            ImGui::Text(key.Name.c_str());
+            ImGui::TextWrapped(key.Name.c_str());
         }
         ImGui::Separator();
-        ImGui::Text("Mat4");
+        ImGui::TextWrapped("Mat4");
         for (auto &[key, v]: mc.Data.m_Mat4Overrides) {
-            ImGui::Text(key.Name.c_str());
+            ImGui::TextWrapped(key.Name.c_str());
         }
         ImGui::Separator();
 
@@ -435,11 +435,11 @@ void harmony::AssetManagerPanel::OnImGui() {
     if (ImGui::Begin(assetPanelTitle.c_str())) {
         ImGui::Indent();
         const std::string textureAssetTitle = std::string(ICON_FA_FILE_IMAGE_O) + " Textures";
-        ImGui::Text(textureAssetTitle.c_str());
+        ImGui::TextWrapped(textureAssetTitle.c_str());
         std::vector<AssetHandle> texHandles = p_AssetManager.GetLoadedAssets<TextureAsset>();
         if (ImGui::TreeNode("Textures")) {
             for (int i = 0; i < texHandles.size(); i++) {
-                ImGui::Text(texHandles[i].Path.c_str());
+                ImGui::TextWrapped(texHandles[i].Path.c_str());
             }
             ImGui::TreePop();
 
@@ -451,11 +451,11 @@ void harmony::AssetManagerPanel::OnImGui() {
 
         ImGui::Separator();
         const std::string meshAssetTitle = std::string(ICON_FA_CUBE) + " Meshes";
-        ImGui::Text(meshAssetTitle.c_str());
+        ImGui::TextWrapped(meshAssetTitle.c_str());
         std::vector<AssetHandle> meshHandles = p_AssetManager.GetLoadedAssets<Mesh>();
         if (ImGui::TreeNode("Meshes")) {
             for (int i = 0; i < meshHandles.size(); i++) {
-                ImGui::Text(meshHandles[i].Path.c_str());
+                ImGui::TextWrapped(meshHandles[i].Path.c_str());
             }
             ImGui::TreePop();
             if (ImGui::Button("Load Mesh/Model")) {
@@ -467,11 +467,11 @@ void harmony::AssetManagerPanel::OnImGui() {
 
         ImGui::Separator();
         const std::string shaderSouceAssetTitle = std::string(ICON_FA_FILE_TEXT_O) + " Shader Source";
-        ImGui::Text(shaderSouceAssetTitle.c_str());
+        ImGui::TextWrapped(shaderSouceAssetTitle.c_str());
         std::vector<AssetHandle> sourceHandles = p_AssetManager.GetLoadedAssets<ShaderSourceAsset>();
         if (ImGui::TreeNode("Shader Sources")) {
             for (int i = 0; i < sourceHandles.size(); i++) {
-                ImGui::Text(sourceHandles[i].Path.c_str());
+                ImGui::TextWrapped(sourceHandles[i].Path.c_str());
             }
             ImGui::TreePop();
             if (ImGui::Button("Load Shader Source")) {
@@ -482,22 +482,22 @@ void harmony::AssetManagerPanel::OnImGui() {
 
         ImGui::Separator();
         const std::string shaderBinariesAssetTitle = std::string(ICON_FA_FILE_ARCHIVE_O) + " Shader Binaries";
-        ImGui::Text(shaderBinariesAssetTitle.c_str());
+        ImGui::TextWrapped(shaderBinariesAssetTitle.c_str());
         std::vector<AssetHandle> stageHandles = p_AssetManager.GetLoadedAssets<ShaderStage>();
         if (ImGui::TreeNode("Shader Binaries")) {
             for (int i = 0; i < stageHandles.size(); i++) {
-                ImGui::Text(stageHandles[i].Path.c_str());
+                ImGui::TextWrapped(stageHandles[i].Path.c_str());
             }
             ImGui::TreePop();
         }
 
         ImGui::Separator();
         const std::string fontAssetTitle = std::string(ICON_FA_FONT) + " Fonts";
-        ImGui::Text(fontAssetTitle.c_str());
+        ImGui::TextWrapped(fontAssetTitle.c_str());
         std::vector<AssetHandle> fontHandles = p_AssetManager.GetLoadedAssets<FontAsset>();
         if (ImGui::TreeNode("Fonts")) {
             for (int i = 0; i < fontHandles.size(); i++) {
-                ImGui::Text(fontHandles[i].Path.c_str());
+                ImGui::TextWrapped(fontHandles[i].Path.c_str());
             }
             ImGui::TreePop();
             if (ImGui::Button("Load Font")) {
@@ -508,11 +508,11 @@ void harmony::AssetManagerPanel::OnImGui() {
 
         ImGui::Separator();
         const std::string luaScriptAssetTitle = std::string(ICON_FA_FILE_TEXT_O) + " Lua Scripts";
-        ImGui::Text(luaScriptAssetTitle.c_str());
+        ImGui::TextWrapped(luaScriptAssetTitle.c_str());
         std::vector<AssetHandle> luaHandles = p_AssetManager.GetLoadedAssets<LuaScriptAsset>();
         if (ImGui::TreeNode("Lua Scripts")) {
             for (int i = 0; i < luaHandles.size(); i++) {
-                ImGui::Text(luaHandles[i].Path.c_str());
+                ImGui::TextWrapped(luaHandles[i].Path.c_str());
             }
             ImGui::TreePop();
             if (ImGui::Button("Load Script")) {
@@ -522,11 +522,11 @@ void harmony::AssetManagerPanel::OnImGui() {
         }
 
         const std::string monoAssemblyAssetTitle = std::string(ICON_FA_FILE_ARCHIVE_O) + " Mono Assemblies";
-        ImGui::Text(monoAssemblyAssetTitle.c_str());
+        ImGui::TextWrapped(monoAssemblyAssetTitle.c_str());
         std::vector<AssetHandle> assemblyHandles = p_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
         if (ImGui::TreeNode("Mono Assemblies")) {
             for (int i = 0; i < assemblyHandles.size(); i++) {
-                ImGui::Text(assemblyHandles[i].Path.c_str());
+                ImGui::TextWrapped(assemblyHandles[i].Path.c_str());
             }
             ImGui::TreePop();
             if (ImGui::Button("Load Assembly")) {
@@ -573,10 +573,10 @@ void harmony::LuaScriptPanel::OnImGui() {
             }
         }
 
-        ImGui::Text("Running Program Scripts");
+        ImGui::TextWrapped("Running Program Scripts");
         ImGui::Indent();
         for (int i = 0; i < lua->m_LuaProgramScripts.size(); i++) {
-            ImGui::Text(lua->m_LuaProgramScripts[i].Path.c_str());
+            ImGui::TextWrapped(lua->m_LuaProgramScripts[i].Path.c_str());
         }
         ImGui::Unindent();
 
@@ -612,7 +612,18 @@ void harmony::MonoPanel::OnImGui() {
                 {
                     for(auto typeInfo : a->m_TypeInfos)
                     {
-                        ImGui::Text("%s.%s", typeInfo.m_TypeNamespace.c_str(), typeInfo.m_TypeName.c_str());
+                        ImGui::TextWrapped("%s.%s", typeInfo.m_TypeNamespace.c_str(), typeInfo.m_TypeName.c_str());
+                        ImGui::Separator();
+                    }
+                    ImGui::TreePop();
+                }
+
+                if(ImGui::TreeNode("Type Spec Infos"))
+                {
+                    for(auto typeSpecInfo : a->m_TypeSpecInfos)
+                    {
+                        ImGui::TextWrapped("%s", typeSpecInfo.m_Signature.c_str());
+                        ImGui::Separator();
                     }
                     ImGui::TreePop();
                 }
@@ -621,7 +632,8 @@ void harmony::MonoPanel::OnImGui() {
                 {
                     for(auto info : a->m_InterfaceImplInfos)
                     {
-                        ImGui::Text("%d : %d", info.m_ClassName, info.m_InterfaceName);
+                        ImGui::TextWrapped("%d : %d", info.m_ClassName, info.m_InterfaceName);
+                        ImGui::Separator();
                     }
                     ImGui::TreePop();
                 }
@@ -630,7 +642,8 @@ void harmony::MonoPanel::OnImGui() {
                 {
                     for(auto info : a->m_MethodImplInfos)
                     {
-                        ImGui::Text("%s : %s : %s", info.m_ClassName.c_str(), info.m_Declaration.c_str(), info.m_Body.c_str());
+                        ImGui::TextWrapped("%s : %s : %s", info.m_ClassName.c_str(), info.m_Declaration.c_str(), info.m_Body.c_str());
+                        ImGui::Separator();
                     }
                     ImGui::TreePop();
                 }
@@ -639,7 +652,8 @@ void harmony::MonoPanel::OnImGui() {
                 {
                     for(auto info : a->m_TypeRefInfos)
                     {
-                        ImGui::Text("%s : %s : Scope = %s", info.m_Namespace.c_str(), info.m_Name.c_str(), info.m_Scope.c_str());
+                        ImGui::TextWrapped("%s : %s : Scope = %s", info.m_Namespace.c_str(), info.m_Name.c_str(), info.m_Scope.c_str());
+                        ImGui::Separator();
                     }
                     ImGui::TreePop();
                 }
@@ -648,7 +662,8 @@ void harmony::MonoPanel::OnImGui() {
                 {
                     for(auto info : a->m_AssemblyRefInfos)
                     {
-                        ImGui::Text("%s : %d.%d", info.m_Name.c_str(), info.m_Major, info.m_Minor);
+                        ImGui::TextWrapped("%s : %d.%d", info.m_Name.c_str(), info.m_Major, info.m_Minor);
+                        ImGui::Separator();
                     }
                     ImGui::TreePop();
                 }
@@ -839,7 +854,7 @@ void harmony::LuaScriptComponentUI::OnComponentImGui(entt::registry &registry, e
     LuaComponent &lc = registry.get<LuaComponent>(entity);
 
     std::string luaPath = "Lua Script Asset: " + lc.m_LuaScriptAsset.m_Handle.Path;
-    ImGui::Text(luaPath.c_str());
+    ImGui::TextWrapped(luaPath.c_str());
     if (p_AssetManager.AssetTypeSelector<LuaScriptAsset>("Lua Script", ah)) {
         // oh lord please help me no
         lc.m_LuaScriptAsset = *p_AssetManager.GetAsset<LuaScriptAsset>(ah).lock();
@@ -930,14 +945,14 @@ void harmony::EntityDataComponentUI::OnComponentImGui(entt::registry &registry, 
     }
     EntityData &data = registry.get<EntityData>(entity);
     ImGui::PushID((uint32_t) entity);
-    ImGui::Text(data.m_Name.c_str());
+    ImGui::TextWrapped(data.m_Name.c_str());
     ImGui::SameLine();
     ImGui::Checkbox("Enabled", &data.m_Enabled);
     ImGui::SameLine();
     ImGui::Checkbox("Static", &data.m_Static);
-    ImGui::Text("ID : %u", entity);
+    ImGui::TextWrapped("ID : %u", entity);
     ImGui::SameLine();
-    ImGui::Text("Parent : %u", (uint32_t) data.m_Parent);
+    ImGui::TextWrapped("Parent : %u", (uint32_t) data.m_Parent);
 
     ImGui::PopID();
 

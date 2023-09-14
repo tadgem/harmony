@@ -1,5 +1,5 @@
 #include "MonoUtils.h"
-
+#include "Core/Log.hpp"
 harmony::MonoUtils::Accessibility harmony::MonoUtils::GetFieldAccessibility(MonoClassField *field)
 {
     uint8_t accessibility = Accessibility::None;
@@ -119,7 +119,7 @@ MonoAssembly* harmony::MonoUtils::LoadCSharpAssembly(const std::string& assembly
     if (status != MONO_IMAGE_OK)
     {
         const char* errorMessage = mono_image_strerror(status);
-        std::cerr << "Failed to create MonoAssembly for assembly : " << errorMessage << std::endl;
+        log::error("Failed to create MonoAssembly for assembly : {}", errorMessage);
         return nullptr;
     }
 

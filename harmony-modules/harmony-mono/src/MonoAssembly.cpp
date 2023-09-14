@@ -50,6 +50,20 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData()
         m_TypeInfos.emplace_back(typeInfo);
     }
 
+    for (int32_t i = 0; i < numTypeSpecs; i++)
+    {
+        uint32_t cols[MONO_TYPESPEC_SIZE];
+        mono_metadata_decode_row(typeSpecTable, i, cols, MONO_TYPESPEC_SIZE);
+
+        String signature = String(mono_metadata_string_heap(image, cols[MONO_TYPESPEC_SIGNATURE]));
+
+        MonoUtils::CsTypeSpecInfo typeSpecInfo{
+                signature
+        };
+
+        m_TypeSpecInfos.emplace_back(typeSpecInfo);
+    }
+
     for (int32_t i = 0; i < numInterfaces; i++)
     {
         uint32_t cols[MONO_INTERFACEIMPL_SIZE];
@@ -61,7 +75,8 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData()
                 interface,
                 klass
         };
-
+        int32_t type = interface & 0xF000;
+        int32_t index = interface >> 2;
         m_InterfaceImplInfos.emplace_back(interfaceImplInfo);
     }
 

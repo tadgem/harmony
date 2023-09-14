@@ -1,10 +1,6 @@
 #pragma once
 
-#include <iostream>
-#include <fstream>
-#include <filesystem>
-#include <string>
-#include <vector>
+#include "Core/Alias.h"
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/attrdefs.h"
@@ -24,8 +20,13 @@ namespace harmony
 
         struct CsTypeInfo
         {
-            std::string m_TypeName;
-            std::string m_TypeNamespace;
+            String m_TypeName;
+            String m_TypeNamespace;
+        };
+
+        struct CsTypeSpecInfo
+        {
+            String m_Signature;
         };
 
         struct CsInterfaceImplInfo
@@ -36,21 +37,21 @@ namespace harmony
 
         struct CsMethodImplInfo
         {
-            std::string m_Declaration;
-            std::string m_Body;
-            std::string m_ClassName;
+            String m_Declaration;
+            String m_Body;
+            String m_ClassName;
         };
 
         struct CsTypeRefInfo
         {
-            std::string m_Name;
-            std::string m_Namespace;
-            std::string m_Scope;
+            String m_Name;
+            String m_Namespace;
+            String m_Scope;
         };
 
         struct CsAssemblyRefInfo
         {
-            std::string m_Name;
+            String m_Name;
             uint32_t    m_Major;
             uint32_t    m_Minor;
         };
@@ -59,7 +60,7 @@ namespace harmony
 
         Accessibility GetPropertyAccessbility(MonoProperty* property);
 
-        MonoAssembly* LoadCSharpAssembly(const std::string& assemblyPath, char* fileData, uint32_t fileSize);
+        MonoAssembly* LoadCSharpAssembly(const String& assemblyPath, char* fileData, uint32_t fileSize);
 
         void FreeCSharpAssembly(const MonoAssembly* assembly);
 
