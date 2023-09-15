@@ -11,6 +11,7 @@ namespace harmony
     {
     public:
         MonoImplementedProgramComponent(MonoUtils::CsTypeInfo typeInfo, MonoObject* object);
+        ~MonoImplementedProgramComponent();
         bool m_HasInit;
         bool m_HasUpdate;
         bool m_HasCleanup;

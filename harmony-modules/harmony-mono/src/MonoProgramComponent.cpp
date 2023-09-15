@@ -114,3 +114,7 @@ harmony::MonoImplementedProgramComponent::MonoImplementedProgramComponent(harmon
                                                                                                 m_TypeInfo(typeInfo){
 
 }
+
+harmony::MonoImplementedProgramComponent::~MonoImplementedProgramComponent() {
+    mono_free(p_MonoObject);
+}
