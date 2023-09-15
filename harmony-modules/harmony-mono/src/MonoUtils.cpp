@@ -151,3 +151,19 @@ MonoClass* harmony::MonoUtils::GetClassInAssembly(MonoAssembly *assembly, const 
 
     return klass;
 }
+
+MonoObject *harmony::MonoUtils::CreateMonoObject(MonoDomain *appDomain, CsTypeInfo& klass) {
+    // Allocate an instance of our class
+    MonoObject* classInstance = mono_object_new(appDomain, klass.m_MonoClass);
+
+    if (classInstance == nullptr)
+    {
+        // Log error here and abort
+        log::error("Failed to Create instance of class : {}.{}", klass.m_TypeNamespace, klass.m_TypeName);
+    }
+
+    // Call the parameterless (default) constructor
+    mono_runtime_object_init(classInstance);
+
+    return classInstance;
+}

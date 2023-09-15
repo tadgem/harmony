@@ -4,9 +4,21 @@
 #include "ECS/System.h"
 #include <mono/metadata/appdomain.h>
 #include "MonoAssembly.h"
-
+#include "MonoUtils.h"
 namespace harmony
 {
+    class MonoImplementedProgramComponent
+    {
+    public:
+        MonoImplementedProgramComponent(MonoUtils::CsTypeInfo typeInfo, MonoObject* object);
+        bool m_HasInit;
+        bool m_HasUpdate;
+        bool m_HasCleanup;
+        const MonoUtils::CsTypeInfo m_TypeInfo;
+    protected:
+        MonoObject* p_MonoObject;
+    };
+
     class Program;
     class MonoProgramComponent : public ProgramComponent
     {
@@ -30,6 +42,8 @@ namespace harmony
         const std::string p_RootDomainName = "Harmony";
         const std::string p_AppDomainName = "HarmonyApp";
         const MonoAssemblyConfiguration p_AssemblyConfig;
+
+        Vector<MonoImplementedProgramComponent> p_MonoProgramComponents;
     };
 
     class MonoSystem : public System

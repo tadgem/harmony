@@ -108,3 +108,9 @@ void harmony::AddMono(harmony::Program& program)
     // Per scene Mono components
     program.AddSystem<harmony::MonoSystem>(mono);
 }
+
+harmony::MonoImplementedProgramComponent::MonoImplementedProgramComponent(harmony::MonoUtils::CsTypeInfo typeInfo,
+                                                                          MonoObject *object) : p_MonoObject(object),
+                                                                                                m_TypeInfo(typeInfo){
+
+}

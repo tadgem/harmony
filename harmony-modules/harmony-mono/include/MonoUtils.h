@@ -78,5 +78,7 @@ namespace harmony
         void FreeCSharpAssembly(const MonoAssembly* assembly);
 
         MonoClass* GetClassInAssembly(MonoAssembly* assembly, const char* namespaceName, const char* className);
+
+        MonoObject* CreateMonoObject(MonoDomain* appDomain, CsTypeInfo& klass);
     }
 }
