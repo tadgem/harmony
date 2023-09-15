@@ -29,6 +29,7 @@ namespace harmony
         {
             String m_TypeName;
             String m_TypeNamespace;
+            MonoClass* m_MonoClass;
         };
 
         struct CsTypeSpecInfo

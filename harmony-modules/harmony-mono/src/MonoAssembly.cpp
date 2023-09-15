@@ -43,9 +43,12 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData()
         String nameSpace = String(mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]));
         String name = String(mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]));
 
+        MonoClass * monoClass = MonoUtils::GetClassInAssembly(p_MonoAssembly, nameSpace.c_str(), name.c_str());
+
         MonoUtils::CsTypeInfo typeInfo{
                 name,
-                nameSpace
+                nameSpace,
+                monoClass
         };
 
         m_TypeInfos.emplace_back(typeInfo);
@@ -112,14 +115,14 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData()
 
         uint32_t interface = cols[MONO_INTERFACEIMPL_INTERFACE];
         // always a type def?
-        uint32_t klass =  cols[MONO_INTERFACEIMPL_CLASS] - 1;
-        int32_t interfaceIndex = (interface >> 2) - 1;
+        uint32_t classIndex =  cols[MONO_INTERFACEIMPL_CLASS] - 1;
+        uint32_t interfaceIndex = (interface >> 2) - 1;
 
         uint8_t rawType = (uint8_t ) interface & 0x03;
         MonoUtils::InterfaceImplParentType type = (MonoUtils::InterfaceImplParentType)rawType;
 
-        String typeName         = m_TypeInfos[klass].m_TypeName;
-        String typeNamespace    = m_TypeInfos[klass].m_TypeNamespace;
+        String typeName         = m_TypeInfos[classIndex].m_TypeName;
+        String typeNamespace    = m_TypeInfos[classIndex].m_TypeNamespace;
         String interfaceName;
         String interfaceNamespace;
         switch(type)
@@ -138,8 +141,8 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData()
         }
 
         MonoUtils::CsInterfaceImplInfo interfaceImplInfo{
-                interface,
-                klass,
+                interfaceIndex,
+                classIndex,
                 interfaceName,
                 interfaceNamespace,
                 typeName,

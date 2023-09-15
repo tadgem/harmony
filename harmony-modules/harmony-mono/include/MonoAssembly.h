@@ -27,7 +27,7 @@ namespace harmony
 
     protected:
         void CollectAssemblyData();
-        const Vector<uint8_t>  p_AssemblyBinary;
-        const MonoAssembly*         p_MonoAssembly;
+        const Vector<uint8_t>   p_AssemblyBinary;
+        MonoAssembly*           p_MonoAssembly;
     };
 }
