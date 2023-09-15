@@ -1,5 +1,6 @@
 #include "MonoAssembly.h"
 #include "MonoUtils.h"
+#include "Core/Log.hpp"
 
 harmony::MonoAssemblyAsset::MonoAssemblyAsset(std::vector<uint8_t> assemblyBinary, const String& assemblyPath) :
 	Asset(),
@@ -64,22 +65,6 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData()
         m_TypeSpecInfos.emplace_back(typeSpecInfo);
     }
 
-    for (int32_t i = 0; i < numInterfaces; i++)
-    {
-        uint32_t cols[MONO_INTERFACEIMPL_SIZE];
-        mono_metadata_decode_row(interfaceImplTable, i, cols, MONO_INTERFACEIMPL_SIZE);
-
-        uint32_t interface = cols[MONO_INTERFACEIMPL_INTERFACE];
-        uint32_t klass =  cols[MONO_INTERFACEIMPL_CLASS];
-        MonoUtils::CsInterfaceImplInfo interfaceImplInfo{
-                interface,
-                klass
-        };
-        int32_t type = interface & 0xF000;
-        int32_t index = interface >> 2;
-        m_InterfaceImplInfos.emplace_back(interfaceImplInfo);
-    }
-
     for (int32_t i = 0; i < numMethodImpls; i++)
     {
         uint32_t cols[MONO_METHODIMPL_SIZE];
@@ -118,5 +103,49 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData()
 
         MonoUtils::CsAssemblyRefInfo assemblyRefInfo {name, majorVersion, minorVersion};
         m_AssemblyRefInfos.push_back(assemblyRefInfo);
+    }
+
+    for (int32_t i = 0; i < numInterfaces; i++)
+    {
+        uint32_t cols[MONO_INTERFACEIMPL_SIZE];
+        mono_metadata_decode_row(interfaceImplTable, i, cols, MONO_INTERFACEIMPL_SIZE);
+
+        uint32_t interface = cols[MONO_INTERFACEIMPL_INTERFACE];
+        // always a type def?
+        uint32_t klass =  cols[MONO_INTERFACEIMPL_CLASS] - 1;
+        int32_t interfaceIndex = (interface >> 2) - 1;
+
+        uint8_t rawType = (uint8_t ) interface & 0x03;
+        MonoUtils::InterfaceImplParentType type = (MonoUtils::InterfaceImplParentType)rawType;
+
+        String typeName         = m_TypeInfos[klass].m_TypeName;
+        String typeNamespace    = m_TypeInfos[klass].m_TypeNamespace;
+        String interfaceName;
+        String interfaceNamespace;
+        switch(type)
+        {
+            case MonoUtils::InterfaceImplParentType::TypeDef:
+                interfaceName       = m_TypeInfos[interfaceIndex].m_TypeName;
+                interfaceNamespace  = m_TypeInfos[interfaceIndex].m_TypeNamespace;
+                break;
+            case MonoUtils::InterfaceImplParentType::TypeRef:
+                interfaceName = m_TypeRefInfos[interfaceIndex].m_Name;
+                interfaceNamespace = m_TypeRefInfos[interfaceIndex].m_Namespace;
+                break;
+            case MonoUtils::InterfaceImplParentType::TypeSpec:
+                log::error("MonoAssembly : CollectAssemblyData : TypeSpec for InterfaceImpl not implemented");
+                break;
+        }
+
+        MonoUtils::CsInterfaceImplInfo interfaceImplInfo{
+                interface,
+                klass,
+                interfaceName,
+                interfaceNamespace,
+                typeName,
+                typeNamespace,
+                type
+        };
+        m_InterfaceImplInfos.emplace_back(interfaceImplInfo);
     }
 }

@@ -632,7 +632,7 @@ void harmony::MonoPanel::OnImGui() {
                 {
                     for(auto info : a->m_InterfaceImplInfos)
                     {
-                        ImGui::TextWrapped("%d : %d", info.m_ClassName, info.m_InterfaceName);
+                        ImGui::TextWrapped("%s.%s : %s.%s", info.m_ClassNamespace.c_str(),info.m_ClassName.c_str(), info.m_InterfaceNamespace.c_str(), info.m_InterfaceName.c_str());
                         ImGui::Separator();
                     }
                     ImGui::TreePop();

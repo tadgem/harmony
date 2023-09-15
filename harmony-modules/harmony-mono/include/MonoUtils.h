@@ -18,6 +18,13 @@ namespace harmony
             Public = (1 << 3)
         };
 
+        enum InterfaceImplParentType
+        {
+            TypeDef = 0,
+            TypeRef = 1,
+            TypeSpec = 2
+        };
+
         struct CsTypeInfo
         {
             String m_TypeName;
@@ -31,8 +38,13 @@ namespace harmony
 
         struct CsInterfaceImplInfo
         {
-            uint32_t m_InterfaceName;
-            uint32_t m_ClassName;
+            uint32_t m_InterfaceIndex;
+            uint32_t m_ClassIndex;
+            String m_InterfaceName;
+            String m_InterfaceNamespace;
+            String m_ClassName;
+            String m_ClassNamespace;
+            InterfaceImplParentType m_ParentType;
         };
 
         struct CsMethodImplInfo

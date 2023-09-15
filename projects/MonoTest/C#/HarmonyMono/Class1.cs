@@ -6,7 +6,16 @@ using System.Threading.Tasks;
 
 namespace HarmonyMono
 {
-    public class Class1
+    public interface IOnInit
     {
+        void Init();
+    }
+    public interface IOnUpdate
+    {
+        void Update();
+    }
+    public interface IOnCleanup
+    {
+        void Cleanup();
     }
 }
