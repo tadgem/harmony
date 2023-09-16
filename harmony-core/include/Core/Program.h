@@ -175,7 +175,7 @@ namespace harmony {
             int index = -1;
             for (int i = 0; i < p_ProgramComponents.size(); i++) {
                 HashString typeHash = GetTypeHash<T>();
-                if (typeHash == p_ProgramComponents[i]->m_TypeHash);
+                if (typeHash == p_ProgramComponents[i]->m_TypeHash)
                 {
                     index = i;
                     break;

@@ -607,59 +607,81 @@ void harmony::MonoPanel::OnImGui() {
                 if (!a) continue;
 
                 if (ImGui::TreeNode(h.Path.c_str())) {
-                    if (ImGui::TreeNode("Type Infos")) {
-                        for (auto typeInfo: a->m_TypeInfos) {
-                            ImGui::TextWrapped("%s.%s", typeInfo.m_TypeNamespace.c_str(), typeInfo.m_TypeName.c_str());
-                            ImGui::Separator();
+                    if(ImGui::TreeNode("Assembly Info")) {
+                        if (ImGui::TreeNode("Type Infos")) {
+                            for (auto typeInfo: a->m_TypeInfos) {
+                                ImGui::TextWrapped("%s.%s", typeInfo.m_TypeNamespace.c_str(),
+                                                   typeInfo.m_TypeName.c_str());
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+
+                        if (ImGui::TreeNode("Type Spec Infos")) {
+                            for (auto typeSpecInfo: a->m_TypeSpecInfos) {
+                                ImGui::TextWrapped("%s", typeSpecInfo.m_Signature.c_str());
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+
+                        if (ImGui::TreeNode("Interface Impl Infos")) {
+                            for (auto info: a->m_InterfaceImplInfos) {
+                                ImGui::TextWrapped("%s.%s [%d] : %s.%s [%d] : Type : %d", info.m_ClassNamespace.c_str(),
+                                                   info.m_ClassName.c_str(), info.m_ClassIndex,
+                                                   info.m_InterfaceNamespace.c_str(), info.m_InterfaceName.c_str(),
+                                                   info.m_InterfaceIndex, info.m_ParentType);
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+
+                        if (ImGui::TreeNode("Method Impl Infos")) {
+                            for (auto info: a->m_MethodImplInfos) {
+                                ImGui::TextWrapped("%s : %s : %s", info.m_ClassName.c_str(), info.m_Declaration.c_str(),
+                                                   info.m_Body.c_str());
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+
+                        if (ImGui::TreeNode("Type Ref Infos")) {
+                            for (auto info: a->m_TypeRefInfos) {
+                                ImGui::TextWrapped("%s : %s : Scope = %s", info.m_Namespace.c_str(),
+                                                   info.m_Name.c_str(),
+                                                   info.m_Scope.c_str());
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+
+                        if (ImGui::TreeNode("Assembly Ref Infos")) {
+                            for (auto info: a->m_AssemblyRefInfos) {
+                                ImGui::TextWrapped("%s : %d.%d", info.m_Name.c_str(), info.m_Major, info.m_Minor);
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
                         }
                         ImGui::TreePop();
                     }
-
-                    if (ImGui::TreeNode("Type Spec Infos")) {
-                        for (auto typeSpecInfo: a->m_TypeSpecInfos) {
-                            ImGui::TextWrapped("%s", typeSpecInfo.m_Signature.c_str());
-                            ImGui::Separator();
+                    if(ImGui::TreeNode("Program Components"))
+                    {
+                        for(MonoUtils::CsInterfaceImplInfo info : a->m_InterfaceImplInfos)
+                        {
+                            if(info.m_InterfaceNamespace == "HarmonyMono.ProgramComponent")
+                            {
+                                ImGui::PushID(info.m_InterfaceIndex & info.m_ClassIndex);
+                                ImGui::TextWrapped(info.m_ClassName.c_str());
+                                ImGui::SameLine();
+                                if(ImGui::Button("Add Program Component"))
+                                {
+                                    mono->AddMonoImplementedProgramComponent(a, a->m_TypeInfos[info.m_ClassIndex]);
+                                }
+                                ImGui::PopID();
+                            }
                         }
                         ImGui::TreePop();
                     }
-
-                    if (ImGui::TreeNode("Interface Impl Infos")) {
-                        for (auto info: a->m_InterfaceImplInfos) {
-                            ImGui::TextWrapped("%s.%s [%d] : %s.%s [%d] : Type : %d", info.m_ClassNamespace.c_str(),
-                                               info.m_ClassName.c_str(), info.m_ClassIndex,
-                                               info.m_InterfaceNamespace.c_str(), info.m_InterfaceName.c_str(),
-                                               info.m_InterfaceIndex, info.m_ParentType);
-                            ImGui::Separator();
-                        }
-                        ImGui::TreePop();
-                    }
-
-                    if (ImGui::TreeNode("Method Impl Infos")) {
-                        for (auto info: a->m_MethodImplInfos) {
-                            ImGui::TextWrapped("%s : %s : %s", info.m_ClassName.c_str(), info.m_Declaration.c_str(),
-                                               info.m_Body.c_str());
-                            ImGui::Separator();
-                        }
-                        ImGui::TreePop();
-                    }
-
-                    if (ImGui::TreeNode("Type Ref Infos")) {
-                        for (auto info: a->m_TypeRefInfos) {
-                            ImGui::TextWrapped("%s : %s : Scope = %s", info.m_Namespace.c_str(), info.m_Name.c_str(),
-                                               info.m_Scope.c_str());
-                            ImGui::Separator();
-                        }
-                        ImGui::TreePop();
-                    }
-
-                    if (ImGui::TreeNode("Assembly Ref Infos")) {
-                        for (auto info: a->m_AssemblyRefInfos) {
-                            ImGui::TextWrapped("%s : %d.%d", info.m_Name.c_str(), info.m_Major, info.m_Minor);
-                            ImGui::Separator();
-                        }
-                        ImGui::TreePop();
-                    }
-
                     ImGui::TreePop();
                 }
 
@@ -667,10 +689,6 @@ void harmony::MonoPanel::OnImGui() {
             ImGui::TreePop();
         }
         ImGui::Separator();
-        if(ImGui::TreeNode("Mono ProgramComponents"))
-        {
-            ImGui::TreePop();
-        }
     }
     ImGui::End();
 }

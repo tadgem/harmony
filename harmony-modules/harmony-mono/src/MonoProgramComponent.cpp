@@ -229,7 +229,6 @@ void harmony::AddMono(harmony::Program& program)
 
 
 harmony::MonoImplementedProgramComponent::~MonoImplementedProgramComponent() {
-    mono_free(p_MonoObject);
 }
 
 harmony::MonoImplementedProgramComponent::MonoImplementedProgramComponent(MonoUtils::CsTypeInfo typeInfo, MonoObject *object, MonoMethod *init,
