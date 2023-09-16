@@ -14,7 +14,7 @@ harmony::MonoProgramComponent::MonoProgramComponent() : ProgramComponent(GetType
 void harmony::MonoProgramComponent::Init()
 {
     // TODO: Change to the project directory
-    std::string root(std::getenv("MONO_DIR"));
+    std::string root(std::getenv("MONO_PATH"));
     std::string assemblyDir = root + "/lib/mono/4.5";
     mono_set_assemblies_path(assemblyDir.c_str());
 

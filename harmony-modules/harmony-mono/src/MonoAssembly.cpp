@@ -81,7 +81,8 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData()
         m_MethodImplInfos.push_back(methodInfo);
 
     }
-
+    String lastNameSpace;
+    String lastTypeName;
     for (int32_t i = 0; i < numTypeRefs; i++)
     {
         uint32_t cols[MONO_TYPEREF_SIZE];
@@ -90,6 +91,16 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData()
         String name = String(mono_metadata_string_heap(image, cols[MONO_TYPEREF_NAME]));
         String nameSpace = String(mono_metadata_string_heap(image, cols[MONO_TYPEREF_NAMESPACE]));
         String scope = String(mono_metadata_string_heap(image, cols[MONO_TYPEREF_SCOPE]));
+
+        if(scope == "Attribute")
+        {
+            nameSpace = lastNameSpace + "." + lastTypeName;
+        }
+        else
+        {
+            lastNameSpace = nameSpace;
+            lastTypeName = name;
+        }
 
         MonoUtils::CsTypeRefInfo methodInfo {name, nameSpace, scope};
         m_TypeRefInfos.push_back(methodInfo);

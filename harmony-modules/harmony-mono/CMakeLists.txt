@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.11.0)
 project(harmony-mono VERSION 0.1.0)
 
 file(GLOB_RECURSE SRC_FILES src/*.cpp)
@@ -11,8 +11,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake-etc
 add_library(harmony-mono STATIC ${HEADER_FILES} ${HEADERPP_FILES} ${SRC_FILES}  ${C_SRC_FILES})
 set_property(TARGET harmony-mono PROPERTY CXX_STANDARD 17)
 
+# Stop Cmake complaining about MONO_ROOT env variable
+cmake_policy(SET CMP0074 NEW)
 set(MONO_ROOT $ENV{MONO_PATH})
-find_package(mono)
+find_package(mono REQUIRED)
 
 set(HARMONY_MONO_INCLUDES 
 ${CMAKE_CURRENT_SOURCE_DIR}/include 

@@ -3,7 +3,7 @@ using System;
 
 namespace GameTest
 {
-    public class TestClass : IOnInit, IOnUpdate, IOnCleanup
+    public class TestClass : ProgramComponent.IOnInit, ProgramComponent.IOnUpdate, ProgramComponent.IOnCleanup
     {
         public void Cleanup()
         {
