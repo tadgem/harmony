@@ -104,6 +104,15 @@ void
 harmony::MonoProgramComponent::AddMonoImplementedProgramComponent(harmony::WeakRef<harmony::MonoAssemblyAsset> assembly,
                                                                   harmony::MonoUtils::CsTypeInfo typeInfo) {
 
+    for(auto c : p_MonoProgramComponents)
+    {
+        if(c.m_TypeInfo == typeInfo)
+        {
+            log::warn("MonoProgramComponent : AddMonoImplementedProgramComponent : Already created a program component of type {}", typeInfo.m_TypeName);
+            return;
+        }
+    }
+
     auto a = assembly.lock();
     if(!a)
     {
@@ -169,7 +178,7 @@ harmony::MonoProgramComponent::AddMonoImplementedProgramComponent(harmony::WeakR
     }
 
     // Wrap in MonoImplementedProgramComponent
-    MonoImplementedProgramComponent c = MonoImplementedProgramComponent(classObject, initMethod, updateMethod, cleanupMethod);
+    MonoImplementedProgramComponent c = MonoImplementedProgramComponent(typeInfo, classObject, initMethod, updateMethod, cleanupMethod);
 
     // add to collection
     p_MonoProgramComponents.emplace_back(c);
@@ -223,8 +232,9 @@ harmony::MonoImplementedProgramComponent::~MonoImplementedProgramComponent() {
     mono_free(p_MonoObject);
 }
 
-harmony::MonoImplementedProgramComponent::MonoImplementedProgramComponent(MonoObject *object, MonoMethod *init,
-                                                                          MonoMethod *update, MonoMethod *cleanup) : p_MonoObject(object)
+harmony::MonoImplementedProgramComponent::MonoImplementedProgramComponent(MonoUtils::CsTypeInfo typeInfo, MonoObject *object, MonoMethod *init,
+                                                                          MonoMethod *update, MonoMethod *cleanup) : p_MonoObject(object),
+                                                                                                                     m_TypeInfo(typeInfo)
 {
     p_Init = init;
     m_HasInit = p_Init != nullptr;

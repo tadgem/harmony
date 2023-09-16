@@ -10,11 +10,12 @@ namespace harmony
     class MonoImplementedProgramComponent
     {
     public:
-        MonoImplementedProgramComponent(MonoObject* object, MonoMethod* init, MonoMethod* update, MonoMethod* cleanup);
+        MonoImplementedProgramComponent(MonoUtils::CsTypeInfo typeInfo, MonoObject* object, MonoMethod* init, MonoMethod* update, MonoMethod* cleanup);
         ~MonoImplementedProgramComponent();
         bool m_HasInit;
         bool m_HasUpdate;
         bool m_HasCleanup;
+        const MonoUtils::CsTypeInfo m_TypeInfo;
     protected:
         MonoObject* p_MonoObject;
         MonoMethod* p_Init;

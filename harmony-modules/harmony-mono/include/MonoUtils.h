@@ -30,6 +30,8 @@ namespace harmony
             String m_TypeName;
             String m_TypeNamespace;
             MonoClass* m_MonoClass;
+
+            bool operator==(const CsTypeInfo& rhs) const;
         };
 
         struct CsTypeSpecInfo

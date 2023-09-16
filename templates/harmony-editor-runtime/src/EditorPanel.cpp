@@ -666,7 +666,11 @@ void harmony::MonoPanel::OnImGui() {
             }
             ImGui::TreePop();
         }
-
+        ImGui::Separator();
+        if(ImGui::TreeNode("Mono ProgramComponents"))
+        {
+            ImGui::TreePop();
+        }
     }
     ImGui::End();
 }

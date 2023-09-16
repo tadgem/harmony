@@ -167,3 +167,7 @@ MonoObject *harmony::MonoUtils::CreateMonoObject(MonoDomain *appDomain, CsTypeIn
 
     return classInstance;
 }
+
+bool harmony::MonoUtils::CsTypeInfo::operator==(const harmony::MonoUtils::CsTypeInfo &rhs) const {
+    return m_TypeName == rhs.m_TypeName && m_TypeNamespace == rhs.m_TypeNamespace;
+}
