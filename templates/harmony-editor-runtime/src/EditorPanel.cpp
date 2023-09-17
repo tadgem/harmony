@@ -666,8 +666,13 @@ void harmony::MonoPanel::OnImGui() {
                     }
                     if(ImGui::TreeNode("Program Components"))
                     {
+                        Vector<MonoUtils::CsTypeInfo> typeInfos;
                         for(MonoUtils::CsInterfaceImplInfo info : a->m_InterfaceImplInfos)
                         {
+                            if(std::find(typeInfos.begin(), typeInfos.end(), a->m_TypeInfos[info.m_ClassIndex]) != typeInfos.end())
+                            {
+                                continue;
+                            }
                             if(info.m_InterfaceNamespace == "HarmonyMono.ProgramComponent")
                             {
                                 ImGui::PushID(info.m_InterfaceIndex & info.m_ClassIndex);
@@ -677,6 +682,7 @@ void harmony::MonoPanel::OnImGui() {
                                 {
                                     mono->AddMonoImplementedProgramComponent(a, a->m_TypeInfos[info.m_ClassIndex]);
                                 }
+                                typeInfos.emplace_back(a->m_TypeInfos[info.m_ClassIndex]);
                                 ImGui::PopID();
                             }
                         }
