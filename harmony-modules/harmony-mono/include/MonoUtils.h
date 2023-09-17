@@ -4,6 +4,8 @@
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/attrdefs.h"
+#include "ThirdParty/json.hpp"
+
 
 namespace harmony
 {
@@ -29,9 +31,11 @@ namespace harmony
         {
             String m_TypeName;
             String m_TypeNamespace;
-            MonoClass* m_MonoClass;
+            MonoClass* m_MonoClass = nullptr;
 
             bool operator==(const CsTypeInfo& rhs) const;
+
+            NLOHMANN_DEFINE_TYPE_INTRUSIVE(CsTypeInfo, m_TypeName, m_TypeNamespace);
         };
 
         struct CsTypeSpecInfo

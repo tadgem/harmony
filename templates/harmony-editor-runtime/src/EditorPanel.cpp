@@ -666,26 +666,38 @@ void harmony::MonoPanel::OnImGui() {
                     }
                     if(ImGui::TreeNode("Program Components"))
                     {
-                        Vector<MonoUtils::CsTypeInfo> typeInfos;
-                        for(MonoUtils::CsInterfaceImplInfo info : a->m_InterfaceImplInfos)
-                        {
-                            if(std::find(typeInfos.begin(), typeInfos.end(), a->m_TypeInfos[info.m_ClassIndex]) != typeInfos.end())
-                            {
-                                continue;
-                            }
-                            if(info.m_InterfaceNamespace == "HarmonyMono.ProgramComponent")
-                            {
-                                ImGui::PushID(info.m_InterfaceIndex & info.m_ClassIndex);
-                                ImGui::TextWrapped(info.m_ClassName.c_str());
-                                ImGui::SameLine();
-                                if(ImGui::Button("Add Program Component"))
-                                {
-                                    mono->AddMonoImplementedProgramComponent(a, a->m_TypeInfos[info.m_ClassIndex]);
+                        if(ImGui::TreeNode("Add ProgramComponents")) {
+                            Vector<MonoUtils::CsTypeInfo> typeInfos;
+                            for (MonoUtils::CsInterfaceImplInfo info: a->m_InterfaceImplInfos) {
+                                if (std::find(typeInfos.begin(), typeInfos.end(), a->m_TypeInfos[info.m_ClassIndex]) !=
+                                    typeInfos.end()) {
+                                    continue;
                                 }
-                                typeInfos.emplace_back(a->m_TypeInfos[info.m_ClassIndex]);
-                                ImGui::PopID();
+                                if (info.m_InterfaceNamespace == "HarmonyMono.ProgramComponent") {
+                                    ImGui::PushID(info.m_InterfaceIndex & info.m_ClassIndex);
+                                    ImGui::TextWrapped(info.m_ClassName.c_str());
+                                    ImGui::SameLine();
+                                    if (ImGui::Button("Add Program Component")) {
+                                        mono->AddMonoImplementedProgramComponent(a, a->m_TypeInfos[info.m_ClassIndex]);
+                                    }
+                                    typeInfos.emplace_back(a->m_TypeInfos[info.m_ClassIndex]);
+                                    ImGui::PopID();
+                                }
                             }
+                            ImGui::TreePop();
                         }
+
+                        if(ImGui::TreeNode("Running ProgramComponents"))
+                        {
+                            for(auto mpc : mono->p_MonoProgramComponents)
+                            {
+                                ImGui::TextWrapped("%s.%s", mpc.m_TypeInfo.m_TypeNamespace.c_str(),
+                                                                  mpc.m_TypeInfo.m_TypeName.c_str());
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+
                         ImGui::TreePop();
                     }
                     ImGui::TreePop();

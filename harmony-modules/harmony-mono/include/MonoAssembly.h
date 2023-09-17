@@ -26,6 +26,7 @@ namespace harmony
         Vector<MonoUtils::CsAssemblyRefInfo> m_AssemblyRefInfos;
 
     protected:
+        friend class MonoProgramComponent;
         void CollectAssemblyData();
         const Vector<uint8_t>   p_AssemblyBinary;
         MonoAssembly*           p_MonoAssembly;

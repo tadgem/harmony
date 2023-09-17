@@ -22,6 +22,8 @@ void harmony::MonoAssemblyAssetFactory::LoadAssetData(const std::string& path, e
 	Ref<MonoAssemblyAsset> assembly = CreateRef<MonoAssemblyAsset>(assemblyBytes, path);
 
 	AssetHandle assemblyHandle{ path, 0, p_AssemblyTypeHash };
+    assembly->m_Handle = assemblyHandle;
+
 	AssetComponent<MonoAssemblyAsset> assemblyComponent{ assembly, assemblyHandle };
 
 	entt::entity e = registry.create();

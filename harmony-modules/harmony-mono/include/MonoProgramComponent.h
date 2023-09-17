@@ -1,4 +1,5 @@
 #pragma once
+#include "Assets/Asset.h"
 #include "Core/ProgramComponent.h"
 #include "Core/Memory.h"
 #include "ECS/System.h"
@@ -7,15 +8,19 @@
 #include "MonoUtils.h"
 namespace harmony
 {
+    class AssetManager;
     class MonoImplementedProgramComponent
     {
     public:
-        MonoImplementedProgramComponent(MonoUtils::CsTypeInfo typeInfo, MonoObject* object, MonoMethod* init, MonoMethod* update, MonoMethod* cleanup);
+        MonoImplementedProgramComponent(MonoUtils::CsTypeInfo typeInfo, AssetHandle assemblyAssetHandle, MonoObject* object, MonoMethod* init, MonoMethod* update, MonoMethod* cleanup);
         ~MonoImplementedProgramComponent();
         bool m_HasInit;
         bool m_HasUpdate;
         bool m_HasCleanup;
-        const MonoUtils::CsTypeInfo m_TypeInfo;
+        MonoUtils::CsTypeInfo m_TypeInfo;
+        AssetHandle m_AseemblyAsset;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(MonoImplementedProgramComponent, m_TypeInfo, m_AseemblyAsset);
     protected:
         MonoObject* p_MonoObject;
         MonoMethod* p_Init;
@@ -29,7 +34,7 @@ namespace harmony
     class MonoProgramComponent : public ProgramComponent
     {
     public:
-        MonoProgramComponent();
+        MonoProgramComponent(AssetManager& assetManager);
         virtual void Init() override;
         virtual void Update() override;
         virtual void Render() override;
@@ -38,6 +43,8 @@ namespace harmony
         virtual void FromJson(const nlohmann::json& json) override;
 
         virtual void BindScriptingAPI();
+
+        AssetManager& m_AssetManager;
 
         void AddMonoImplementedProgramComponent(WeakRef<MonoAssemblyAsset> assembly, MonoUtils::CsTypeInfo typeInfo);
 
@@ -57,6 +64,8 @@ namespace harmony
         const MonoAssemblyConfiguration p_AssemblyConfig;
 
         Vector<MonoImplementedProgramComponent> p_MonoProgramComponents;
+
+        friend class MonoPanel;
     };
 
     class MonoSystem : public System

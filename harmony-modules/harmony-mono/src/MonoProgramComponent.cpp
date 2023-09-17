@@ -5,8 +5,8 @@
 #include "Core/Program.h"
 #include "Core/Log.hpp"
 
-harmony::MonoProgramComponent::MonoProgramComponent() : ProgramComponent(GetTypeHash<MonoProgramComponent>())
-, p_AssemblyConfig(MonoAssemblyConfiguration::Debug)
+harmony::MonoProgramComponent::MonoProgramComponent(AssetManager& assetManager) : ProgramComponent(GetTypeHash<MonoProgramComponent>())
+, p_AssemblyConfig(MonoAssemblyConfiguration::Debug), m_AssetManager(assetManager)
 
 {
 
@@ -89,11 +89,43 @@ void harmony::MonoProgramComponent::Cleanup()
 
 nlohmann::json harmony::MonoProgramComponent::ToJson()
 {
-    return nlohmann::json();
+    auto j = nlohmann::json();
+
+    auto& scripts = j["program-components"];
+
+    for(auto mpc : p_MonoProgramComponents)
+    {
+        auto pcJson = nlohmann::json();
+        pcJson["asset"] = mpc.m_AseemblyAsset;
+        pcJson["typeInfo"] = mpc.m_TypeInfo;
+        scripts.emplace_back(pcJson);
+    }
+
+    return j;
 }
 
 void harmony::MonoProgramComponent::FromJson(const nlohmann::json& json)
 {
+    if(!json.contains("program-components"))
+    {
+        return;
+    }
+
+    for(auto programComponentJson : json["program-components"])
+    {
+        AssetHandle assemblyAssetHandle = programComponentJson["asset"];
+        MonoUtils::CsTypeInfo csTypeInfo = programComponentJson["typeInfo"];
+
+        auto monoAssembly = m_AssetManager.GetAsset<MonoAssemblyAsset>(assemblyAssetHandle).lock();
+
+        if(!monoAssembly)
+        {
+            log::error("MonoProgramComponent : FromJson : Failed to find mono assembly from {}", assemblyAssetHandle.Path);
+            continue;
+        }
+
+        AddMonoImplementedProgramComponent(monoAssembly, csTypeInfo);
+    }
 }
 
 void harmony::MonoProgramComponent::BindScriptingAPI()
@@ -144,6 +176,18 @@ harmony::MonoProgramComponent::AddMonoImplementedProgramComponent(harmony::WeakR
         log::error("MonoProgramComponent : AddMonoImplementedProgramComponent : Type {} does not implement any ProgramComponent aspects.");
         return;
     }
+
+    if(!typeInfo.m_MonoClass)
+    {
+        typeInfo.m_MonoClass = MonoUtils::GetClassInAssembly(a->p_MonoAssembly, typeInfo.m_TypeNamespace.c_str(), typeInfo.m_TypeName.c_str());
+    }
+
+    if(!typeInfo.m_MonoClass)
+    {
+        log::error("MonoProgramComponent : AddMonoImplementedProgramComponent : Could not find MonoClass for Type {}", typeInfo.m_TypeName);
+        return;
+    }
+
     // Create instance
     MonoObject* classObject   = MonoUtils::CreateMonoObject(p_AppDomain, typeInfo);
 
@@ -178,7 +222,7 @@ harmony::MonoProgramComponent::AddMonoImplementedProgramComponent(harmony::WeakR
     }
 
     // Wrap in MonoImplementedProgramComponent
-    MonoImplementedProgramComponent c = MonoImplementedProgramComponent(typeInfo, classObject, initMethod, updateMethod, cleanupMethod);
+    MonoImplementedProgramComponent c = MonoImplementedProgramComponent(typeInfo, a->m_Handle, classObject, initMethod, updateMethod, cleanupMethod);
 
     // add to collection
     p_MonoProgramComponents.emplace_back(c);
@@ -217,22 +261,11 @@ void harmony::MonoSystem::Refresh()
 {
 }
 
-void harmony::AddMono(harmony::Program& program)
-{
-    // root component required for all mono functionality
-    harmony::WeakRef<harmony::MonoProgramComponent> mono = program.AddProgramComponent<harmony::MonoProgramComponent>();
-    // factory responsible for loading assembly binary + creating a mono object for the assembly.
-    program.m_AssetManager.AddAssetFactory(harmony::CreateRef<harmony::MonoAssemblyAssetFactory>(mono));
-    // Per scene Mono components
-    program.AddSystem<harmony::MonoSystem>(mono);
-}
-
-
 harmony::MonoImplementedProgramComponent::~MonoImplementedProgramComponent() {
 }
 
-harmony::MonoImplementedProgramComponent::MonoImplementedProgramComponent(MonoUtils::CsTypeInfo typeInfo, MonoObject *object, MonoMethod *init,
-                                                                          MonoMethod *update, MonoMethod *cleanup) : p_MonoObject(object),
+harmony::MonoImplementedProgramComponent::MonoImplementedProgramComponent(MonoUtils::CsTypeInfo typeInfo, AssetHandle assemblyAssetHandle, MonoObject *object, MonoMethod *init,
+                                                                          MonoMethod *update, MonoMethod *cleanup) : p_MonoObject(object), m_AseemblyAsset(assemblyAssetHandle),
                                                                                                                      m_TypeInfo(typeInfo)
 {
     p_Init = init;
