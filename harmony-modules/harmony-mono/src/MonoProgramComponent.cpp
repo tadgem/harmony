@@ -29,7 +29,7 @@ void harmony::MonoProgramComponent::Init()
         return;
     }
 
-    static char* APP_DOMAIN_CONFIG = nullptr;
+    char* APP_DOMAIN_CONFIG = nullptr;
     p_AppDomain = mono_domain_create_appdomain((char*) p_AppDomainName.c_str(), APP_DOMAIN_CONFIG);
 
     if(p_AppDomain == nullptr)
@@ -38,7 +38,7 @@ void harmony::MonoProgramComponent::Init()
         return;
     }
 
-    static bool FORCE_SET = true;
+    bool FORCE_SET = true;
     mono_domain_set(p_AppDomain, FORCE_SET);
 
     BindScriptingAPI();
@@ -92,6 +92,7 @@ void harmony::MonoProgramComponent::Cleanup()
     }
     p_MonoProgramComponents.clear();
     mono_domain_free(p_AppDomain, true);
+
 
 }
 

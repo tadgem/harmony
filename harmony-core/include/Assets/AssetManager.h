@@ -59,9 +59,11 @@ namespace harmony {
         void ReloadAllAssetsOfType()
         {
             std::vector<AssetHandle> assets;
-            auto view = p_AssetRegistry.view<AssetComponent<T>>();
-            for (auto [entity, asset]: view.each()) {
-                assets.emplace_back(asset.Handle);
+            {
+                auto view = p_AssetRegistry.view<AssetComponent<T>>();
+                for (auto [entity, asset]: view.each()) {
+                    assets.emplace_back(asset.Handle);
+                }
             }
             for(AssetHandle handle : assets)
             {
