@@ -9,7 +9,7 @@ harmony::MonoProgramComponent::MonoProgramComponent(AssetManager& assetManager) 
 , p_AssemblyConfig(MonoAssemblyConfiguration::Debug), m_AssetManager(assetManager)
 
 {
-
+    p_RootDomain = nullptr;
 }
 void harmony::MonoProgramComponent::Init()
 {
@@ -18,7 +18,10 @@ void harmony::MonoProgramComponent::Init()
     std::string assemblyDir = root + "/lib/mono/4.5";
     mono_set_assemblies_path(assemblyDir.c_str());
 
-    p_RootDomain = mono_jit_init(p_RootDomainName.c_str());
+    if(p_RootDomain == nullptr)
+    {
+        p_RootDomain = mono_jit_init(p_RootDomainName.c_str());
+    }
 
     if(p_RootDomain == nullptr)
     {
@@ -84,7 +87,12 @@ void harmony::MonoProgramComponent::Cleanup()
         {
             log::error("MonoProgramComponent : Cleanup : Exception during cleanup for class. TODO improve");
         }
+
+        // mono_free(c.p_MonoObject);
     }
+    p_MonoProgramComponents.clear();
+    mono_domain_free(p_AppDomain, true);
+
 }
 
 nlohmann::json harmony::MonoProgramComponent::ToJson()

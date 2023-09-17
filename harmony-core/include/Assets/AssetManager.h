@@ -55,6 +55,26 @@ namespace harmony {
 
         bool IsPathLoaded(const std::string path);
 
+        template <typename T>
+        void ReloadAllAssetsOfType()
+        {
+            std::vector<AssetHandle> assets;
+            auto view = p_AssetRegistry.view<AssetComponent<T>>();
+            for (auto [entity, asset]: view.each()) {
+                assets.emplace_back(asset.Handle);
+            }
+            for(AssetHandle handle : assets)
+            {
+                UnloadAsset<T>(handle);
+            }
+
+            for(AssetHandle handle : assets)
+            {
+                LoadAsset<T>(handle.Path);
+            }
+
+        }
+
         template<typename T>
         std::vector<AssetHandle> GetLoadedAssets() {
             std::vector<AssetHandle> assets;

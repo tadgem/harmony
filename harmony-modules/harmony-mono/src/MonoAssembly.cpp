@@ -13,7 +13,6 @@ harmony::MonoAssemblyAsset::MonoAssemblyAsset(std::vector<uint8_t> assemblyBinar
 
 harmony::MonoAssemblyAsset::~MonoAssemblyAsset()
 {
-	MonoUtils::FreeCSharpAssembly(p_MonoAssembly);
 }
 
 void harmony::MonoAssemblyAsset::CollectAssemblyData()

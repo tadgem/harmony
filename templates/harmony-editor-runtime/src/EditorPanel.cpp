@@ -600,6 +600,14 @@ void harmony::MonoPanel::OnImGui() {
             return;
         }
 
+        if(ImGui::Button("Reload Mono Assemblies"))
+        {
+            mono->Cleanup();
+            mono->Init();
+            p_AssetManager.ReloadAllAssetsOfType<MonoAssemblyAsset>();
+            mono->FromJson(p_Program.m_Project->p_ProgramComponentSerializationAttributes[GetTypeHash<MonoProgramComponent>().m_Value]);
+        }
+
         auto assemblyHandles = p_Program.m_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
         if(ImGui::TreeNode("Assemblies")) {
             for (AssetHandle h: assemblyHandles) {
