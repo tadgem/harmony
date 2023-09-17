@@ -651,6 +651,4 @@ JPH_CAPI void JPH_BodyActivationListener_SetProcs(JPH_BodyActivationListener_Pro
 JPH_CAPI JPH_BodyActivationListener* JPH_BodyActivationListener_Create();
 JPH_CAPI void JPH_BodyActivationListener_Destroy(JPH_BodyActivationListener* listener);
 
-#endif /* _JOLT_C_H */
-
 #endif //HARMONY_DOJO_JOLTAPI_H
