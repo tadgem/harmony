@@ -1,0 +1,1 @@
+- Issue when adding generic, some information is being missed in CollectAssemblyData. Interface impls still exist so just need to correct the data.

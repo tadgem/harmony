@@ -37,7 +37,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Script/Mono/Hot Reloading Assemblies.md",
+                "file": "Script/Mono/Mono Issues.md",
                 "mode": "source",
                 "source": false
               }
@@ -110,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Script/Mono/Hot Reloading Assemblies.md",
+                "file": "Script/Mono/Mono Issues.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -127,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Script/Mono/Hot Reloading Assemblies.md",
+                "file": "Script/Mono/Mono Issues.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -150,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Script/Mono/Hot Reloading Assemblies.md"
+                "file": "Script/Mono/Mono Issues.md"
               }
             }
           },
@@ -184,6 +184,8 @@
   },
   "active": "6d5472f8b735dbf8",
   "lastOpenFiles": [
+    "Script/Mono/Hot Reloading Assemblies.md",
+    "Script/Mono/Mono Issues.md",
     "Core/Component.md",
     "Misc/Setup/Mac OS Setup.md",
     "Misc/Setup/Windows Setup.md",
@@ -198,7 +200,6 @@
     "Rendering/Attachment.md",
     "Rendering/Faces and Index Buffers.md",
     "Script/Lua Script API.md",
-    "Script/Mono/Hot Reloading Assemblies.md",
     "images/Pasted image 20230918183442.png",
     "images/Pasted image 20230918183427.png",
     "images/Pasted image 20230918183406.png",
