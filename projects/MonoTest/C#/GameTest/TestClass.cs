@@ -2,9 +2,10 @@
 using System;
 
 namespace GameTest
-{
+{    
     public class TestClass : ProgramComponent.IOnInit, ProgramComponent.IOnUpdate, ProgramComponent.IOnCleanup
     {
+
         public void Cleanup()
         {
             Console.WriteLine("Cleanup");
@@ -12,12 +13,13 @@ namespace GameTest
 
         public void Update()
         {
-            Console.WriteLine("This is an updated message");
+            AnotherClass.DoSomething();
         }
 
         public void Init()
         {
-            Console.WriteLine("Init");
+            Console.WriteLine("Init : {1}");
         }
+
     }
 }

@@ -42,18 +42,6 @@ void harmony::MonoProgramComponent::Init()
     mono_domain_set(p_AppDomain, FORCE_SET);
 
     BindScriptingAPI();
-
-    for(MonoImplementedProgramComponent& c : p_MonoProgramComponents)
-    {
-        if(!c.m_HasInit) continue;
-        MonoObject* exception = nullptr;
-        mono_runtime_invoke(c.p_Init, c.p_MonoObject, nullptr, &exception);
-
-        if(exception != nullptr)
-        {
-            log::error("MonoProgramComponent : Init : Exception during init for class. TODO improve");
-        }
-    }
 }
 
 void harmony::MonoProgramComponent::Update()
@@ -87,8 +75,6 @@ void harmony::MonoProgramComponent::Cleanup()
         {
             log::error("MonoProgramComponent : Cleanup : Exception during cleanup for class. TODO improve");
         }
-
-        // mono_free(c.p_MonoObject);
     }
     p_MonoProgramComponents.clear();
     mono_domain_set(p_RootDomain, 0);
@@ -183,7 +169,7 @@ harmony::MonoProgramComponent::AddMonoImplementedProgramComponent(harmony::WeakR
         }
     }
     if(!implementsInit && !implementsUpdate && !implementsCleanup)    {
-        log::error("MonoProgramComponent : AddMonoImplementedProgramComponent : Type {} does not implement any ProgramComponent aspects.");
+        log::error("MonoProgramComponent : AddMonoImplementedProgramComponent : Type {} does not implement any ProgramComponent aspects.", typeInfo.m_TypeName);
         return;
     }
 
@@ -212,6 +198,12 @@ harmony::MonoProgramComponent::AddMonoImplementedProgramComponent(harmony::WeakR
         if(initMethod == nullptr) {
             log::error("MonoProgramComponent : AddMonoImplementedProgramComponent : Type {} implements IOnInit but does not have an Init method.", typeInfo.m_TypeName);
             return;
+        }
+        MonoObject * exception = nullptr;
+        mono_runtime_invoke(initMethod, classObject, nullptr, &exception);
+        if(exception != nullptr)
+        {
+            log::error("MonoProgramComponent : AddMonoImplementedProgramComponent : exception encountered during init for type {}", typeInfo.m_TypeName);
         }
     }
 
