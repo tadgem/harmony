@@ -1,8 +1,8 @@
-- rendering binding + move moebius to lua
+- rendering binding + move moebius to Mono
 - physics binding + tests
 - default imgui layout & better project generation
 - Audio component on separate thread. 
-- Audio Lua binding
+- Audio Mono binding
 - Make a game :3 
 - Scene Assets + Project assets split
 - Async asset loading. 

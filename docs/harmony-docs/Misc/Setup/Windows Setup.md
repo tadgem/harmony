@@ -3,6 +3,17 @@
     - ensure you have C++ Desktop Tools + CMake options selected as components when installing VS 2022
 - Install Python : https://www.python.org/downloads/
 - Install CMake : https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-windows-x86_64.msi
+- Install Mono https://www.mono-project.com/docs/getting-started/install/windows/
+- Set MONO_PATH environment variable to mono install location.
+	- Open Explorer
+	- Right Click "This PC" -> Properties
+	- On the Left Hand Side click "Advanced System Settings"
+	- In the window that appears, there should be a button called "Environment Variables":
+	- ![[Pasted image 20230918200905.png]]
+	- Add a new system entry for "MONO_PATH" which points to where Mono is installed:
+	  ![[Pasted image 20230918200948.png]]
+	  
+	  
 - from Terminal run `python -m pip install dearpygui`
 - Download and install GitHub Desktop : https://desktop.github.com
 - Sign in to your GitHub account in GitHub Desktop

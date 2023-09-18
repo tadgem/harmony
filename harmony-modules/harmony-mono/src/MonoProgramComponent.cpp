@@ -91,7 +91,8 @@ void harmony::MonoProgramComponent::Cleanup()
         // mono_free(c.p_MonoObject);
     }
     p_MonoProgramComponents.clear();
-    mono_domain_free(p_AppDomain, true);
+    mono_domain_set(p_RootDomain, 0);
+    mono_domain_unload(p_AppDomain);
 
 
 }

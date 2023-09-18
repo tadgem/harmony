@@ -12,7 +12,7 @@ namespace GameTest
 
         public void Update()
         {
-            Console.WriteLine("Update");
+            Console.WriteLine("This is an updated message");
         }
 
         public void Init()
