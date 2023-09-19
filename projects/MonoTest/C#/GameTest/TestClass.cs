@@ -5,6 +5,14 @@ namespace GameTest
 {    
     public class TestClass : ProgramComponent.IOnInit, ProgramComponent.IOnUpdate, ProgramComponent.IOnCleanup
     {
+        private class TestProgramComponent : ProgramComponent
+        {
+
+        }
+        public void AddThing<T>() where T : ProgramComponent
+        {
+            Console.WriteLine($"I am type {typeof(T).Name}");
+        }
 
         public void Cleanup()
         {
@@ -13,12 +21,12 @@ namespace GameTest
 
         public void Update()
         {
-            AnotherClass.DoSomething();
+            AddThing<TestProgramComponent>();
         }
 
         public void Init()
         {
-            Console.WriteLine("Init : {1}");
+            Console.WriteLine($"Init : {1}");
         }
 
     }

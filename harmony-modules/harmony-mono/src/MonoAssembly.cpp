@@ -91,7 +91,7 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData()
         String nameSpace = String(mono_metadata_string_heap(image, cols[MONO_TYPEREF_NAMESPACE]));
         String scope = String(mono_metadata_string_heap(image, cols[MONO_TYPEREF_SCOPE]));
 
-        if(scope == "Attribute")
+        if(nameSpace.empty())
         {
             nameSpace = lastNameSpace + "." + lastTypeName;
         }
