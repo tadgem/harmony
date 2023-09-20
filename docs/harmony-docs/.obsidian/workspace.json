@@ -37,7 +37,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Script/Mono/Mono Issues.md",
+                "file": "Script/Mono/Minimal Render Pipeline Setup.md",
                 "mode": "source",
                 "source": false
               }
@@ -110,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Script/Mono/Mono Issues.md",
+                "file": "Script/Mono/Minimal Render Pipeline Setup.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -127,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Script/Mono/Mono Issues.md",
+                "file": "Script/Mono/Minimal Render Pipeline Setup.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -150,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Script/Mono/Mono Issues.md"
+                "file": "Script/Mono/Minimal Render Pipeline Setup.md"
               }
             }
           },
@@ -184,8 +184,9 @@
   },
   "active": "6d5472f8b735dbf8",
   "lastOpenFiles": [
-    "Script/Mono/Hot Reloading Assemblies.md",
     "Script/Mono/Mono Issues.md",
+    "Script/Mono/Minimal Render Pipeline Setup.md",
+    "Script/Mono/Hot Reloading Assemblies.md",
     "Core/Component.md",
     "Misc/Setup/Mac OS Setup.md",
     "Misc/Setup/Windows Setup.md",
@@ -224,7 +225,6 @@
     "Misc/Setup",
     "Misc",
     "Core",
-    "Rendering/High Level Architecture.md",
     "Rendering",
     "Untitled.canvas",
     "Script"
