@@ -117,7 +117,7 @@ void harmony::JoltPhysicsSystem::Init(entt::registry &registry) {
 void harmony::JoltPhysicsSystem::Update(entt::registry &registry) {
     p_Running = true;
     float deltaTime = static_cast<float>(Time::GetFrameTime());
-    m_PhysicsSystem->Update(deltaTime, s_CollisionSteps, s_IntegrationSubSteps, m_TempAllocator.get(),
+    m_PhysicsSystem->Update(deltaTime, s_CollisionSteps,  m_TempAllocator.get(),
                             m_JobSystem.get());
 
     auto bodyView = registry.view<TransformComponent, JoltBodyComponent>();
