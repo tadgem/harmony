@@ -54,7 +54,7 @@ namespace harmony
         // TODO: Make this customizable per-application
         const String p_RootDomainName = "Harmony";
         const String p_AppDomainName = "HarmonyApp";
-        const String p_MonoProgramComponentNamespace = "HarmonyMono.ProgramComponent";
+        const String p_MonoProgramComponentNamespace = "Harmony.ProgramComponent";
         const String p_InitInterfaceName = "IOnInit";
         const String p_UpdateInterfaceName = "IOnUpdate";
         const String p_CleanupInterfaceName = "IOnCleanup";

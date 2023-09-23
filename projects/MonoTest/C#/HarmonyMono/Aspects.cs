@@ -1,4 +1,4 @@
-﻿namespace HarmonyMono
+﻿namespace Harmony
 {
     public class ProgramComponent
     {

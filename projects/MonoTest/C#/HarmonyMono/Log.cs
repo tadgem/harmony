@@ -1,7 +1,7 @@
 ﻿
-namespace HarmonyMono
+namespace Harmony
 {
-    public class Log
+    public static class Log
     {
     }
 }

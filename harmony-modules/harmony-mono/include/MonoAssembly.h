@@ -18,12 +18,12 @@ namespace harmony
         ~MonoAssemblyAsset();
         const String m_AssemblyPath;
 
-        Vector<MonoUtils::CsTypeInfo> m_TypeInfos;
-        Vector<MonoUtils::CsTypeSpecInfo> m_TypeSpecInfos;
-        Vector<MonoUtils::CsInterfaceImplInfo> m_InterfaceImplInfos;
-        Vector<MonoUtils::CsMethodImplInfo> m_MethodImplInfos;
-        Vector<MonoUtils::CsTypeRefInfo> m_TypeRefInfos;
-        Vector<MonoUtils::CsAssemblyRefInfo> m_AssemblyRefInfos;
+        Vector<MonoUtils::CsTypeInfo>           m_TypeInfos;
+        Vector<MonoUtils::CsTypeSpecInfo>       m_TypeSpecInfos;
+        Vector<MonoUtils::CsInterfaceImplInfo>  m_InterfaceImplInfos;
+        Vector<MonoUtils::CsMethodImplInfo>     m_MethodImplInfos;
+        Vector<MonoUtils::CsTypeRefInfo>        m_TypeRefInfos;
+        Vector<MonoUtils::CsAssemblyRefInfo>    m_AssemblyRefInfos;
 
     protected:
         friend class MonoProgramComponent;
