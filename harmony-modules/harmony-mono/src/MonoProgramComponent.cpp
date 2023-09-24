@@ -127,10 +127,18 @@ void harmony::MonoProgramComponent::FromJson(const nlohmann::json& json)
 
 void harmony::MonoProgramComponent::BindScriptingAPI()
 {
+    // Log
     mono_add_internal_call("Harmony.Log::Trace", harmony_mono_log_trace);
     mono_add_internal_call("Harmony.Log::Info", harmony_mono_log_info);
     mono_add_internal_call("Harmony.Log::Warn", harmony_mono_log_warn);
     mono_add_internal_call("Harmony.Log::Error", harmony_mono_log_error);
+
+    // Time
+    mono_add_internal_call("Harmony.Time::GetFrameTime", harmony_mono_get_frame_time);
+    mono_add_internal_call("Harmony.Time::GetFrameTimeUnscaled", harmony_mono_get_frame_time_unscaled);
+    mono_add_internal_call("Harmony.Time::GetTimeScale", harmony_mono_get_time_scale);
+    mono_add_internal_call("Harmony.Time::SetTimeScale", harmony_mono_set_time_scale);
+
 }
 
 void

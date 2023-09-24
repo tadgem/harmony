@@ -11,7 +11,6 @@ namespace GameTest
         }
         public void AddThing<T>() where T : ProgramComponent
         {
-            // Console.WriteLine($"I am type {typeof(T).Name}");
             Log.Warn($"I am the number {2}");
         }
 
@@ -22,12 +21,13 @@ namespace GameTest
 
         public void Update()
         {
-            //AddThing<TestProgramComponent>();
+            // Log.Info($"Current FrameTime : {Time.GetFrameTime()}");
         }
 
         public void Init()
         {
             Log.Info($"Init : {1}");
+            AddThing<TestProgramComponent>();
         }
 
     }
