@@ -7,6 +7,7 @@
 #include <sstream>
 #include <ostream>
 #include <functional>
+#include <optional>
 
 namespace harmony {
     using String = std::string;
@@ -14,6 +15,9 @@ namespace harmony {
     using StringStream = std::stringstream;
 
     using OStream = std::ostream;
+
+    template<typename T>
+    using Optional  = std::optional<T>;
 
     template<typename T1, typename T2>
     using Map = std::map<T1, T2>;

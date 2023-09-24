@@ -31,12 +31,12 @@ namespace harmony {
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(MonoBehaviourComponent, m_Behaviours)
     };
-
+    class MonoAssemblyAsset;
     class MonoSystem : public System {
     public:
         MonoSystem(WeakRef<MonoProgramComponent> mono);
 
-        void AddMonoBehaviour(MonoUtils::CsTypeInfo typeInfo, AssetHandle assemblyAsset);
+        Optional<MonoBehaviour> AddMonoBehaviour(entt::entity entity, MonoUtils::CsTypeInfo typeInfo, WeakRef<MonoAssemblyAsset> assemblyAsset);
 
         virtual void Init(entt::registry &registry) override;
         virtual void Update(entt::registry &registry) override;

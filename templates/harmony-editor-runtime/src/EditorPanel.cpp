@@ -18,6 +18,7 @@
 #include "Script/Lua/LuaProgramComponent.h"
 #include "MonoAssembly.h"
 #include "MonoProgramComponent.h"
+#include "MonoSystem.h"
 
 harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program) {
 }
@@ -1018,6 +1019,10 @@ void harmony::EntityDataComponentUI::Duplicate(entt::registry &registry, entt::e
     }
 }
 
+harmony::SkyComponentUI::SkyComponentUI() : ComponentUI("Sky") {
+
+}
+
 void harmony::SkyComponentUI::OnComponentImGui(entt::registry &registry, entt::entity entity) {
     if (registry.valid(entity) == false) {
         return;
@@ -1056,6 +1061,42 @@ void harmony::SkyComponentUI::Duplicate(entt::registry &registry, entt::entity o
     }
 }
 
-harmony::SkyComponentUI::SkyComponentUI() : ComponentUI("Sky") {
+
+
+harmony::MonoBehaviourComponentUI::MonoBehaviourComponentUI(harmony::WeakRef<harmony::MonoSystem> monoSystem, harmony::AssetManager &am) : ComponentUI("Mono Behaviour",
+                                                                                                     ComponentUI::ImGuiParentType::TreeNode), p_AssetManager(am) , p_MonoSystem(monoSystem){
+
+}
+
+void harmony::MonoBehaviourComponentUI::OnComponentImGui(entt::registry &registry, entt::entity entity)
+{
+    if (registry.valid(entity) == false) {
+        return;
+    }
+    if (!HasComponent(registry, entity)) {
+        return;
+    }
+    ImGui::PushID((uint32_t) entity);
+    MonoBehaviourComponent &mono = registry.get<MonoBehaviourComponent>(entity);
+
+    ImGui::PopID();
+}
+void harmony::MonoBehaviourComponentUI::AddComponent(entt::registry &registry, entt::entity entity)
+{
+    registry.emplace<MonoBehaviourComponent>(entity);
+}
+void harmony::MonoBehaviourComponentUI::RemoveComponent(entt::registry &registry, entt::entity entity)
+{
+    if (HasComponent(registry, entity)) {
+        // TODO: Likely leaking memory here, GC wont collect objects weve allocated
+        registry.remove<MonoBehaviourComponent>(entity);
+    }
+}
+bool harmony::MonoBehaviourComponentUI::HasComponent(entt::registry &registry, entt::entity entity)
+{
+    return registry.any_of<MonoBehaviourComponent>(entity);
+}
+void harmony::MonoBehaviourComponentUI::Duplicate(entt::registry &registry, entt::entity original, entt::entity newCopy)
+{
 
 }

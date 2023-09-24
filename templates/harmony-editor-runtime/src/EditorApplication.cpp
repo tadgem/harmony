@@ -87,6 +87,7 @@ void harmony::Editor::AddEditorPanels() {
     inspector->AddComponentUI<SkyComponentUI>();
     inspector->AddComponentUI<LuaScriptComponentUI>(m_AssetManager);
     inspector->AddComponentUI<JoltBodyComponentUI>();
+    inspector->AddComponentUI<MonoBehaviourComponentUI>(p_MonoSystem, m_AssetManager);
 
     p_Panels.emplace_back(inspector);
 }

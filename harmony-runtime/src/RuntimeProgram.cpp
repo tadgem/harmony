@@ -100,7 +100,7 @@ void harmony::RuntimeProgram::AddSystems() {
     p_GraphScriptSystem = AddSystem<GraphScriptSystem>(p_GraphScriptComponent).lock();
     p_JoltPhysicsSystem = AddSystem<JoltPhysicsSystem>().lock();
     p_EntityDataSystem = AddSystem<EntityDataSystem>().lock();
-
+    p_MonoSystem = AddSystem<MonoSystem>(p_MonoProgramComponent).lock();
 }
 
 void harmony::RuntimeProgram::AddPipelineStageRenderers() {

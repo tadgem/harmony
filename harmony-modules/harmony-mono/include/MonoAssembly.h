@@ -21,12 +21,13 @@ namespace harmony
         Vector<MonoUtils::CsTypeInfo>           m_TypeInfos;
         Vector<MonoUtils::CsTypeSpecInfo>       m_TypeSpecInfos;
         Vector<MonoUtils::CsInterfaceImplInfo>  m_InterfaceImplInfos;
-        Vector<MonoUtils::CsMethodImplInfo>     m_MethodImplInfos;
         Vector<MonoUtils::CsTypeRefInfo>        m_TypeRefInfos;
         Vector<MonoUtils::CsAssemblyRefInfo>    m_AssemblyRefInfos;
+        Vector<MonoUtils::CsMethodImplInfo>     m_MethodImplInfos;
 
     protected:
         friend class MonoProgramComponent;
+        friend class MonoSystem;
         void CollectAssemblyData();
         const Vector<uint8_t>   p_AssemblyBinary;
         MonoAssembly*           p_MonoAssembly;

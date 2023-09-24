@@ -21,6 +21,8 @@ namespace harmony {
 
     class MonoProgramComponent;
 
+    class MonoSystem;
+
     class RuntimeProgram : public Program {
     public:
         RuntimeProgram(const std::string &name = "Runtime App");
@@ -74,6 +76,7 @@ namespace harmony {
         Ref<LightSystem> p_LightSystem;
         Ref<TransformSystem> p_TransformSystem;
         Ref<CameraSystem> p_CameraSystem;
+        Ref<MonoSystem> p_MonoSystem;
 
         bgfx::ViewId p_PresentViewId;
     };
