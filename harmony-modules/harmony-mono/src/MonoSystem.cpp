@@ -36,3 +36,7 @@ void harmony::MonoSystem::DeserializeSystem(entt::registry& registry, nlohmann::
 void harmony::MonoSystem::Refresh()
 {
 }
+
+void harmony::MonoSystem::AddMonoBehaviour(harmony::MonoUtils::CsTypeInfo typeInfo, harmony::AssetHandle assemblyAsset) {
+
+}
