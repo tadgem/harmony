@@ -170,7 +170,7 @@ void harmony::Program::InitSDL() {
                 SDL_GetError());
     }
     HWND hwnd = wmi.info.win.window;
-    COLORREF titlebar_color = 0x0015171E;
+    COLORREF titlebar_color = 0x000C0B0B;
     DwmSetWindowAttribute(
             hwnd, DWMWINDOWATTRIBUTE::DWMWA_BORDER_COLOR,
             &titlebar_color, sizeof(titlebar_color)

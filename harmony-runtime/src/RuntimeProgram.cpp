@@ -19,6 +19,7 @@
 #include "Rendering/Modules/Moebius/MoebiusModule.h"
 #include "MonoProgramComponent.h"
 #include "MonoAssemblyAssetFactory.h"
+#include "MonoSystem.h"
 
 harmony::RuntimeProgram::RuntimeProgram(const std::string &name) : Program(name) {
     OPTICK_EVENT();
