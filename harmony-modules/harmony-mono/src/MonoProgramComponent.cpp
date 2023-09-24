@@ -4,6 +4,7 @@
 #include "Core/Memory.h"
 #include "Core/Program.h"
 #include "Core/Log.hpp"
+#include "MonoAPI.h"
 
 harmony::MonoProgramComponent::MonoProgramComponent(AssetManager& assetManager) : ProgramComponent(GetTypeHash<MonoProgramComponent>())
 , p_AssemblyConfig(MonoAssemblyConfiguration::Debug), m_AssetManager(assetManager)
@@ -126,6 +127,10 @@ void harmony::MonoProgramComponent::FromJson(const nlohmann::json& json)
 
 void harmony::MonoProgramComponent::BindScriptingAPI()
 {
+    mono_add_internal_call("Harmony.Log::Trace", harmony_mono_log_trace);
+    mono_add_internal_call("Harmony.Log::Info", harmony_mono_log_info);
+    mono_add_internal_call("Harmony.Log::Warn", harmony_mono_log_warn);
+    mono_add_internal_call("Harmony.Log::Error", harmony_mono_log_error);
 }
 
 void

@@ -86,5 +86,7 @@ namespace harmony
         MonoClass* GetClassInAssembly(MonoAssembly* assembly, const char* namespaceName, const char* className);
 
         MonoObject* CreateMonoObject(MonoDomain* appDomain, CsTypeInfo& klass);
+
+        String GetStringFromMonoString(MonoString* str);
     }
 }

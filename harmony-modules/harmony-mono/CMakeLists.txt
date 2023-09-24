@@ -8,7 +8,9 @@ file(GLOB_RECURSE HEADERPP_FILES include/*.hpp)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake-etc)
 
-add_library(harmony-mono STATIC ${HEADER_FILES} ${HEADERPP_FILES} ${SRC_FILES}  ${C_SRC_FILES})
+add_library(harmony-mono STATIC ${HEADER_FILES} ${HEADERPP_FILES} ${SRC_FILES}  ${C_SRC_FILES}
+        include/MonoAPI.h
+        src/MonoAPI.cpp)
 set_property(TARGET harmony-mono PROPERTY CXX_STANDARD 17)
 
 # Stop Cmake complaining about MONO_ROOT env variable

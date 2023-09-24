@@ -11,7 +11,8 @@ namespace GameTest
         }
         public void AddThing<T>() where T : ProgramComponent
         {
-            Console.WriteLine($"I am type {typeof(T).Name}");
+            // Console.WriteLine($"I am type {typeof(T).Name}");
+            Log.Warn($"I am the number {2}");
         }
 
         public void Cleanup()
