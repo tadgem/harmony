@@ -17,17 +17,17 @@ namespace GameTest
 
         public void Cleanup()
         {
-            Console.WriteLine("Cleanup");
+            Log.Info("Cleanup");
         }
 
         public void Update()
         {
-            AddThing<TestProgramComponent>();
+            //AddThing<TestProgramComponent>();
         }
 
         public void Init()
         {
-            Console.WriteLine($"Init : {1}");
+            Log.Info($"Init : {1}");
         }
 
     }

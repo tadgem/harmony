@@ -46,20 +46,29 @@ if (HARMONY_DEBUG)
     target_compile_definitions(harmony-core PUBLIC SDL_SENSOR_DUMMY HARMONY_DEBUG)
 endif ()
 
-if (HARMONY_USE_LUAJIT)
-    add_subdirectory(${ROOT_DIR}/submodules/luajit-cmake ${CMAKE_CURRENT_BINARY_DIR}/luajit)
-    set(HARMONY_CORE_INCLUDES ${HARMONY_CORE_INCLUDES} ${ROOT_DIR}/submodules/luajit-cmake/src CACHE INTERNAL "Harmony Core Includes")
-    target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bimg_decode bimg_encode bgfx glm OptickCore libluajit)
-else ()
-    add_subdirectory(${ROOT_DIR}/submodules/lua-cmake ${CMAKE_CURRENT_BINARY_DIR}/lua)
-    set(HARMONY_CORE_INCLUDES ${HARMONY_CORE_INCLUDES} ${ROOT_DIR}/submodules/lua-cmake/upstream CACHE INTERNAL "Harmony Core Includes")
-    target_link_libraries(harmony-core SDL2-static spdlog::spdlog bx bimg bimg_decode bimg_encode bgfx glm OptickCore lua)
-endif ()
+SET(HARMONY_CORE_LIBRARIES
+        SDL2-static spdlog::spdlog bx bimg bimg_decode bimg_encode bgfx glm OptickCore
+)
 
 if (MSVC)
     target_compile_options(harmony-core PRIVATE /bigobj)
+    SET(HARMONY_CORE_LIBRARIES
+            ${HARMONY_CORE_LIBRARIES} dwmapi
+    )
+
 else ()
     target_compile_options(harmony-core PRIVATE)
+endif ()
+
+
+if (HARMONY_USE_LUAJIT)
+    add_subdirectory(${ROOT_DIR}/submodules/luajit-cmake ${CMAKE_CURRENT_BINARY_DIR}/luajit)
+    set(HARMONY_CORE_INCLUDES ${HARMONY_CORE_INCLUDES} ${ROOT_DIR}/submodules/luajit-cmake/src CACHE INTERNAL "Harmony Core Includes")
+    target_link_libraries(harmony-core ${HARMONY_CORE_LIBRARIES} libluajit)
+else ()
+    add_subdirectory(${ROOT_DIR}/submodules/lua-cmake ${CMAKE_CURRENT_BINARY_DIR}/lua)
+    set(HARMONY_CORE_INCLUDES ${HARMONY_CORE_INCLUDES} ${ROOT_DIR}/submodules/lua-cmake/upstream CACHE INTERNAL "Harmony Core Includes")
+    target_link_libraries(harmony-core ${HARMONY_CORE_LIBRARIES} lua)
 endif ()
 
 # Includes + Link Dirs

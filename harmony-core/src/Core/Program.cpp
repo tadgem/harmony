@@ -23,9 +23,8 @@
 #endif
 
 #if BX_PLATFORM_WINDOWS
-
 #include "windows.h"
-
+#include <dwmapi.h>
 #endif
 
 harmony::Program::Program(const std::string &name) : p_AppName(name), m_Renderer(m_AssetManager) {
@@ -162,7 +161,26 @@ void harmony::Program::InitSDL() {
         harmony::log::error("Window could not be created. SDL_Error: ", SDL_GetError());
         return;
     }
+#if BX_PLATFORM_WINDOWS
+    SDL_SysWMinfo wmi;
+    SDL_VERSION(&wmi.version);
+    if (!SDL_GetWindowWMInfo(p_Window, &wmi)) {
+        printf(
+                "SDL_SysWMinfo could not be retrieved. SDL_Error: %s\n",
+                SDL_GetError());
+    }
+    HWND hwnd = wmi.info.win.window;
+    COLORREF titlebar_color = 0x0015171E;
+    DwmSetWindowAttribute(
+            hwnd, DWMWINDOWATTRIBUTE::DWMWA_BORDER_COLOR,
+            &titlebar_color, sizeof(titlebar_color)
+    );
 
+    DwmSetWindowAttribute(
+            hwnd, DWMWINDOWATTRIBUTE::DWMWA_CAPTION_COLOR,
+            &titlebar_color, sizeof(titlebar_color));
+
+#endif
     harmony::log::info("SDL Initialized successfully");
 }
 
@@ -176,6 +194,7 @@ void harmony::Program::InitBGFX() {
         printf(
                 "SDL_SysWMinfo could not be retrieved. SDL_Error: %s\n",
                 SDL_GetError());
+        return;
     }
 
     bgfx::renderFrame(); // single threaded mode
