@@ -65,6 +65,7 @@ namespace harmony
         Vector<MonoImplementedProgramComponent> p_MonoProgramComponents;
 
         friend class MonoPanel;
+        friend class MonoSystem;
     };
 
     void AddMono(harmony::Program& program);

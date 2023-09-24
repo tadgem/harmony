@@ -2,7 +2,7 @@
 // Created by liam_ on 9/24/2023.
 //
 #include "MonoSystem.h"
-
+#include "MonoProgramComponent.h"
 
 harmony::MonoSystem::MonoSystem(WeakRef<MonoProgramComponent> mono) : System(GetTypeHash<MonoSystem>()), p_Mono(mono)
 {
