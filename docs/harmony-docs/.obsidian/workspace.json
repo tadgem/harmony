@@ -42,9 +42,21 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "5a0922695f32c415",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Script/Mono/Treat native + script components identically..md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -110,7 +122,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Script/Mono/Minimal Render Pipeline Setup.md",
+                "file": "Script/Mono/Treat native + script components identically..md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -127,7 +139,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Script/Mono/Minimal Render Pipeline Setup.md",
+                "file": "Script/Mono/Treat native + script components identically..md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -150,7 +162,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Script/Mono/Minimal Render Pipeline Setup.md"
+                "file": "Script/Mono/Treat native + script components identically..md"
               }
             }
           },
@@ -182,18 +194,20 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "6d5472f8b735dbf8",
+  "active": "5a0922695f32c415",
   "lastOpenFiles": [
-    "Script/Mono/Mono Issues.md",
-    "Script/Mono/Minimal Render Pipeline Setup.md",
+    "images/Pasted image 20230926175223.png",
     "Script/Mono/Hot Reloading Assemblies.md",
+    "Script/Mono/Treat native + script components identically..md",
+    "Script/Mono/Minimal Render Pipeline Setup.md",
+    "Script/Mono/Mono Issues.md",
+    "Script/Mono/InterfaceImpl.md",
+    "Misc/Notes/TODO.md",
     "Core/Component.md",
     "Misc/Setup/Mac OS Setup.md",
     "Misc/Setup/Windows Setup.md",
     "images/Pasted image 20230918200948.png",
     "images/Pasted image 20230918200905.png",
-    "Misc/Notes/TODO.md",
-    "Script/Mono/InterfaceImpl.md",
     "Rendering/Vertex.md",
     "Rendering/Mesh.md",
     "Rendering/Pipeline.md",
@@ -220,8 +234,6 @@
     "images/Pasted image 20230908223134.png",
     "Core/System.md",
     "Core/Scene.md",
-    "Core/Project.md",
-    "Core/ProgramComponent.md",
     "Misc/Setup",
     "Misc",
     "Core",

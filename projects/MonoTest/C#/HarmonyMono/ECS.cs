@@ -21,9 +21,22 @@ namespace Harmony
         }
     }
 
+    public interface IComponent{}
+
+    public interface INativeComponent : IComponent {}
+
+    public interface IScriptComponent : IComponent {}
 
     public static class ECS
     {
+
+        public static T GetComponent<T> (Entity entity) where T : IComponent
+        {
+            // is T a built in component
+            // is T a C# defined component
+            return default;
+        }
+
         public static void SomeExtension (this Entity e)
         {
 
