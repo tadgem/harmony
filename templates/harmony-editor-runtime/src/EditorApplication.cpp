@@ -377,11 +377,11 @@ void harmony::Editor::SetRunningStyle() {
     style.FramePadding = ImVec2(1.0f, 0.4f);
     style.FrameRounding = 3.0f;
     style.FrameBorderSize = 1.0f;
-    style.ItemSpacing = ImVec2(2.0f, 2.0f);
-    style.ItemInnerSpacing = ImVec2(2.0f, 2.0f);
-    style.CellPadding = ImVec2(2.0f, 2.0f);
+    style.ItemSpacing = ImVec2(4.0f, 4.0f);
+    style.ItemInnerSpacing = ImVec2(4.0f, 4.0f);
+    style.CellPadding = ImVec2(4.0f, 4.0f);
     style.IndentSpacing = 7.5f;
-    style.ColumnsMinSpacing = 2.0f;
+    style.ColumnsMinSpacing = 4.0f;
     style.ScrollbarSize = 7.5f;
     style.ScrollbarRounding = 9.0f;
     style.GrabMinSize = 10.0f;

@@ -1,0 +1,32 @@
+﻿using System;
+
+namespace Harmony
+{
+    /// <summary>
+    /// ID must match entt entity index.
+    /// </summary>
+    public struct Entity
+    {
+        public Entity(uint id)
+        {
+            ID = id;
+        }
+
+        public readonly uint ID;
+        public static implicit operator uint (Entity entity) { return entity.ID; }
+
+        public override string ToString()
+        {
+            return $"{ID}";
+        }
+    }
+
+
+    public static class ECS
+    {
+        public static void SomeExtension (this Entity e)
+        {
+
+        }
+    }
+}
