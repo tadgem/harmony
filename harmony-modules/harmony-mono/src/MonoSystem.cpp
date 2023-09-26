@@ -43,7 +43,6 @@ harmony::Optional<harmony::MonoBehaviour> harmony::MonoSystem::AddMonoBehaviour(
     if(!a)
     {
         log::error("MonoProgramComponent : AddMonoImplementedProgramComponent : Assembly is expired");
-        // TODO: Improve this, its horrendous
         return {};
     }
     // Ensure type implements one of the program component behaviours
@@ -67,6 +66,9 @@ harmony::Optional<harmony::MonoBehaviour> harmony::MonoSystem::AddMonoBehaviour(
             }
         }
     }
+    // We need to change this.
+    // Implementing a behaviour aspect should be optional, but the type MUST derive Behaviour.
+    // We will set Behaviour's entity property, likely protecting derived classes from changing entity.
     if(!implementsInit && !implementsUpdate && !implementsCleanup)    {
         log::error("MonoProgramComponent : AddMonoImplementedProgramComponent : Type {} does not implement any ProgramComponent aspects.", typeInfo.m_TypeName);
         return {};
