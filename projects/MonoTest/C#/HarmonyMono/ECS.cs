@@ -29,7 +29,6 @@ namespace Harmony
 
     public static class ECS
     {
-
         public static T GetComponent<T> (Entity entity) where T : IComponent
         {
             // is T a built in component

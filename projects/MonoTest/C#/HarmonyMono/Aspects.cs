@@ -17,8 +17,12 @@
 
     }
 
-    public class Behaviour
+    public interface IBehaviour { };
+
+    public class Behaviour : IBehaviour
     {
+        public Entity Self { get; private set; }
+
         public interface IOnInit
         {
             void Init();

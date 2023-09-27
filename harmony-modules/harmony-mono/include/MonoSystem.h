@@ -46,7 +46,7 @@ namespace harmony {
         virtual void DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) override;
         virtual void Refresh() override;
 
-        const String p_MonoProgramComponentNamespace = "Harmony.Behaviour";
+        const String p_MonoBehaviourNamespace = "Harmony.Behaviour";
         const String p_InitInterfaceName = "IOnInit";
         const String p_UpdateInterfaceName = "IOnUpdate";
         const String p_CleanupInterfaceName = "IOnCleanup";
