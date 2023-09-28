@@ -54,9 +54,21 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "80ed208f7cd46487",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Script/Mono/Mono Debugger.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "vertical"
@@ -122,7 +134,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Script/Mono/Treat native + script components identically..md",
+                "file": "Script/Mono/Mono Debugger.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -139,7 +151,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Script/Mono/Treat native + script components identically..md",
+                "file": "Script/Mono/Mono Debugger.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -162,7 +174,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Script/Mono/Treat native + script components identically..md"
+                "file": "Script/Mono/Mono Debugger.md"
               }
             }
           },
@@ -194,8 +206,11 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "5a0922695f32c415",
+  "active": "80ed208f7cd46487",
   "lastOpenFiles": [
+    "Script/Mono/Getting a class which is a sub-class, not interface impl.md",
+    "Script/Mono/Mono Debugger.md",
+    "images/Pasted image 20230928161013.png",
     "images/Pasted image 20230926175223.png",
     "Script/Mono/Hot Reloading Assemblies.md",
     "Script/Mono/Treat native + script components identically..md",
@@ -230,10 +245,7 @@
     "Rendering/ShaderDataOverride.md",
     "Rendering/ShaderDataSource.md",
     "Index Buffer.md",
-    "images/Pasted image 20230908224030.png",
-    "images/Pasted image 20230908223134.png",
     "Core/System.md",
-    "Core/Scene.md",
     "Misc/Setup",
     "Misc",
     "Core",

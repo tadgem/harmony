@@ -3,11 +3,6 @@ using System;
 
 namespace GameTest
 {    
-    public class TestBehaviour : Behaviour
-    {
-
-    }
-
     public class TestClass : ProgramComponent.IOnInit, ProgramComponent.IOnUpdate, ProgramComponent.IOnCleanup
     {
         private class TestProgramComponent : ProgramComponent
