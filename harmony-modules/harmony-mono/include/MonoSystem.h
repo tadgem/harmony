@@ -34,9 +34,9 @@ namespace harmony {
     class MonoAssemblyAsset;
     class MonoSystem : public System {
     public:
-        MonoSystem(WeakRef<MonoProgramComponent> mono);
+        MonoSystem(WeakPtr<MonoProgramComponent> mono);
 
-        Optional<MonoBehaviour> AddMonoBehaviour(entt::entity entity, MonoUtils::CsTypeInfo typeInfo, WeakRef<MonoAssemblyAsset> assemblyAsset);
+        Optional<MonoBehaviour> AddMonoBehaviour(entt::entity entity, MonoUtils::CsTypeInfo typeInfo, WeakPtr<MonoAssemblyAsset> assemblyAsset);
 
         virtual void Init(entt::registry &registry) override;
         virtual void Update(entt::registry &registry) override;
@@ -55,6 +55,6 @@ namespace harmony {
         const String p_CleanupMethodName = "Cleanup";
 
     protected:
-        WeakRef<MonoProgramComponent> p_Mono;
+        WeakPtr<MonoProgramComponent> p_Mono;
     };
 }

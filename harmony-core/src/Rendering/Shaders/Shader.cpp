@@ -17,7 +17,7 @@ harmony::ShaderProgram::ShaderProgram() : m_Handle(BGFX_INVALID_HANDLE) {
     OPTICK_EVENT();
 }
 
-bool harmony::ShaderProgram::AddStage(ShaderStage::Type stageType, WeakRef<ShaderStage> shader) {
+bool harmony::ShaderProgram::AddStage(ShaderStage::Type stageType, WeakPtr<ShaderStage> shader) {
     OPTICK_EVENT();
     if (m_Stages.find(stageType) != m_Stages.end()) {
         harmony::log::warn("Shader program already contains stage : %s",
@@ -67,7 +67,7 @@ void harmony::ShaderProgram::GetUniforms() {
     OPTICK_EVENT();
     m_Uniforms.clear();
     for (auto [type, s]: m_Stages) {
-        Ref<ShaderStage> stage = s.lock();
+        RefCntPtr<ShaderStage> stage = s.lock();
         bgfx::UniformHandle uniforms[64];
         uint16_t stageUniformCount = bgfx::getShaderUniforms(stage->m_ProgramHandle, &uniforms[0], 64);
         uint16_t samplerCount = 0;
@@ -175,12 +175,12 @@ void harmony::ShaderProgram::UpdateUniforms(AssetManager &am) {
         for (auto &[handle, value]: m_TextureValues) {
             if (textures.find(handle.Name) != textures.end()) {
                 value = textures[handle.Name];
-                WeakRef<TextureAsset> texWr = am.GetAsset<TextureAsset>(value.Handle);
+                WeakPtr<TextureAsset> texWr = am.GetAsset<TextureAsset>(value.Handle);
 
                 if (texWr.expired()) {
                     continue;
                 }
-                Ref<TextureAsset> tex = texWr.lock();
+                RefCntPtr<TextureAsset> tex = texWr.lock();
                 value = tex->m_TextureHandle;
             }
         }

@@ -16,7 +16,7 @@ namespace harmony {
 
         // need to think of a way to type constrain this to
         // the correct derivative of drawable.
-        virtual void Draw(entt::registry &scene, Ref<ShaderProgram> shader, Ref<View> view,
+        virtual void Draw(entt::registry &scene, RefCntPtr<ShaderProgram> shader, RefCntPtr<View> view,
                           bgfx::ViewId viewId) {
         }
 

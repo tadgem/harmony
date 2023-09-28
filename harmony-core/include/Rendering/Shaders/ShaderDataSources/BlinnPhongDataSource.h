@@ -8,10 +8,10 @@ namespace harmony {
         BlinnPhongDataSource();
 
         virtual void OnPreUpdate(entt::registry &registry,
-                                 Ref<ShaderProgram> shader) override;
+                                 RefCntPtr<ShaderProgram> shader) override;
 
         virtual void OnPostUpdate(entt::registry &registry,
-                                  Ref<ShaderProgram> shader) override;
+                                  RefCntPtr<ShaderProgram> shader) override;
 
         unsigned int m_NumActivePointLights;
         unsigned int m_NumActiveSpotLights;
@@ -69,7 +69,7 @@ namespace harmony {
         const std::string g_SpotLightParamsUniformName = "SpotLights_Params";
 
     protected:
-        void GetShaderUniforms(Ref<ShaderProgram> shader);
+        void GetShaderUniforms(RefCntPtr<ShaderProgram> shader);
 
         bool p_UniformsCollected;
     };

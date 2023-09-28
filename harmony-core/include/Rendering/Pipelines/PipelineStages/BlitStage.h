@@ -10,10 +10,10 @@
 namespace harmony {
     class BlitStage : public PipelineStage {
     public:
-        void PreUpdate(entt::registry &registry, WeakRef<View> view,
+        void PreUpdate(entt::registry &registry, WeakPtr<View> view,
                        bgfx::ViewId viewId) override;
 
-        void PostUpdate(entt::registry &registry, WeakRef<View> view,
+        void PostUpdate(entt::registry &registry, WeakPtr<View> view,
                         bgfx::ViewId viewId) override;
 
     public:

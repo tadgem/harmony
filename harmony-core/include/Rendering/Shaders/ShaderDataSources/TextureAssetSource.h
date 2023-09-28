@@ -15,22 +15,22 @@ namespace harmony {
     class TextureAssetSource : public ShaderDataSource {
     public:
 
-        TextureAssetSource(const uint16_t samplerIndex, const String &uniformName, WeakRef<TextureAsset> texture);
+        TextureAssetSource(const uint16_t samplerIndex, const String &uniformName, WeakPtr<TextureAsset> texture);
 
-        void OnPreUpdate(entt::registry &registry, Ref<ShaderProgram> shader) override;
+        void OnPreUpdate(entt::registry &registry, RefCntPtr<ShaderProgram> shader) override;
 
-        void OnPostUpdate(entt::registry &registry, Ref<ShaderProgram> shader) override;
+        void OnPostUpdate(entt::registry &registry, RefCntPtr<ShaderProgram> shader) override;
 
     protected:
         const uint16_t p_SamplerIndex;
         const String p_UniformName;
         ShaderUniform p_Uniform;
 
-        WeakRef<TextureAsset> p_Texture;
+        WeakPtr<TextureAsset> p_Texture;
 
         bool p_UniformsCollected;
 
-        void CollectUniforms(Ref<ShaderProgram> prog);
+        void CollectUniforms(RefCntPtr<ShaderProgram> prog);
 
     };
 }

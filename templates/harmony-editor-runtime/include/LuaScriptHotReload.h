@@ -13,7 +13,7 @@ namespace harmony {
 
     class LuaScriptHotReload : public AssetHotReloadProvider {
     public:
-        LuaScriptHotReload(Program &prog, Ref<LuaSystem> luaSystem);
+        LuaScriptHotReload(Program &prog, RefCntPtr<LuaSystem> luaSystem);
 
         ~LuaScriptHotReload();
 
@@ -27,9 +27,9 @@ namespace harmony {
         std::string GetCleanFileName(const std::string &filename, const std::string &directory);
 
         Program &p_Program;
-        Ref<LuaSystem> p_LuaSystem;
+        RefCntPtr<LuaSystem> p_LuaSystem;
 
-        std::map<std::string, Ref<LuaScriptAsset>> p_LoadedScriptSources;
+        std::map<std::string, RefCntPtr<LuaScriptAsset>> p_LoadedScriptSources;
 
     };
 }

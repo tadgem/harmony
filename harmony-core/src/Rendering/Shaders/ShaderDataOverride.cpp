@@ -44,13 +44,13 @@ void harmony::ShaderDataOverride::AddTextureOverride(ShaderUniform uniform, BGFX
     m_TextureOverrides.emplace(uniform, value);
 }
 
-void harmony::ShaderDataOverride::UpdateOverrides(WeakRef<ShaderProgram> shaderWr, AssetManager &am) {
+void harmony::ShaderDataOverride::UpdateOverrides(WeakPtr<ShaderProgram> shaderWr, AssetManager &am) {
     OPTICK_EVENT();
     std::map<std::string, glm::vec4> vec4s;
     std::map<std::string, glm::mat3> mat3s;
     std::map<std::string, glm::mat4> mat4s;
     std::map<std::string, BGFXTextureHandle> textures;
-    Ref<ShaderProgram> shader = shaderWr.lock();
+    RefCntPtr<ShaderProgram> shader = shaderWr.lock();
 
     m_ShaderName = shader->m_Name;
 
@@ -118,12 +118,12 @@ void harmony::ShaderDataOverride::UpdateOverrides(WeakRef<ShaderProgram> shaderW
     for (auto &[uniformName, val]: textures) {
         for (int i = 0; i < m_AvailableOverrides.size(); i++) {
             if (m_AvailableOverrides[i].Name == uniformName) {
-                WeakRef<TextureAsset> texWr = am.GetAsset<TextureAsset>(val.Handle);
+                WeakPtr<TextureAsset> texWr = am.GetAsset<TextureAsset>(val.Handle);
 
                 if (texWr.expired()) {
                     continue;
                 }
-                Ref<TextureAsset> tex = texWr.lock();
+                RefCntPtr<TextureAsset> tex = texWr.lock();
                 val.BgfxHandle = tex->m_TextureHandle.BgfxHandle;
                 val.Handle = tex->m_TextureHandle.Handle;
                 val.Info = tex->m_TextureHandle.Info;

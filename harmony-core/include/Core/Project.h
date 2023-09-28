@@ -41,7 +41,7 @@ namespace harmony {
                 m_SerializedScenes)
 
     private:
-        void UpdateProjectComponentSerializationAttributes(std::vector<Ref<ProgramComponent>> &programComponents);
+        void UpdateProjectComponentSerializationAttributes(std::vector<RefCntPtr<ProgramComponent>> &programComponents);
 
         void UpdateProjectAssetsSerializationAttributes(AssetManager &assetManager);
 

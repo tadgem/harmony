@@ -67,15 +67,15 @@ void harmony::Editor::AddEditorPanels() {
     p_ScenePanel = CreateRef<ScenePanel>(*this);
     p_Panels.emplace_back(p_ScenePanel);
 
-    Ref<AssetManagerPanel> assetManagerPanel = CreateRef<AssetManagerPanel>(*this);
-    Ref<LuaScriptPanel> luaScriptPanel = CreateRef<LuaScriptPanel>(*this);
-    Ref<MonoPanel> monoPanel = CreateRef<MonoPanel>(*this);
+    RefCntPtr<AssetManagerPanel> assetManagerPanel = CreateRef<AssetManagerPanel>(*this);
+    RefCntPtr<LuaScriptPanel> luaScriptPanel = CreateRef<LuaScriptPanel>(*this);
+    RefCntPtr<MonoPanel> monoPanel = CreateRef<MonoPanel>(*this);
 
     p_Panels.emplace_back(assetManagerPanel);
     p_Panels.emplace_back(luaScriptPanel);
     p_Panels.emplace_back(monoPanel);
 
-    Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, p_ScenePanel);
+    RefCntPtr<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, p_ScenePanel);
     inspector->AddComponentUI<EntityDataComponentUI>();
     inspector->AddComponentUI<TransformComponentUI>();
     inspector->AddComponentUI<MeshComponentUI>(m_AssetManager);
@@ -112,20 +112,20 @@ void harmony::Editor::InitializePipelines() {
         return;
     }
 
-    Ref<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8,
-                                                                                 Vector<WeakRef<Framebuffer>>{skyFB});
-    Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+    RefCntPtr<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8,
+                                                                                 Vector<WeakPtr<Framebuffer>>{skyFB});
+    RefCntPtr<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
                                                                                      AttachmentType::RGBA8,
-                                                                                     Vector<WeakRef<Framebuffer>>{
+                                                                                     Vector<WeakPtr<Framebuffer>>{
                                                                                              mainFB});
-    Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+    RefCntPtr<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
                                                                                     AttachmentType::RGBA8,
-                                                                                    Vector<WeakRef<Framebuffer>>{
+                                                                                    Vector<WeakPtr<Framebuffer>>{
                                                                                             vectorFB});
-    Ref<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Editor);
-    Ref<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+    RefCntPtr<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Editor);
+    RefCntPtr<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
                                                                                      AttachmentType::RGBA8,
-                                                                                     Vector<WeakRef<Framebuffer>>{
+                                                                                     Vector<WeakPtr<Framebuffer>>{
                                                                                              moebiusFB});
 
     p_EditorPipeline->AddPipelineStage(skyFB, m_Renderer.GetPipelineStage("SkyStage").lock());
@@ -485,9 +485,9 @@ void harmony::Editor::GlobalDockspace() {
 void harmony::Editor::LoadBuiltInAssets() {
     OPTICK_EVENT();
     AssetHandle cubeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Cube", CreateRef<Cube>(1.0f));
-    Ref<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
+    RefCntPtr<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
     m_Renderer.SubmitMeshToGPU(cube);
     AssetHandle planeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Plane", CreateRef<Plane>(1.0f));
-    Ref<Mesh> plane = m_AssetManager.GetAsset<Mesh>(planeHandle).lock();
+    RefCntPtr<Mesh> plane = m_AssetManager.GetAsset<Mesh>(planeHandle).lock();
     m_Renderer.SubmitMeshToGPU(plane);
 }

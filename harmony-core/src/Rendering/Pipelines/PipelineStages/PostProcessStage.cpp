@@ -6,23 +6,23 @@
 
 harmony::AttachmentType harmony::PostProcessStage::s_AttachmentType = harmony::AttachmentType::RGBA8;
 
-harmony::PostProcessStage::PostProcessStage(const std::string &name, Type stageType, WeakRef<ShaderProgram> shader,
-                                            WeakRef<PipelineStageRenderer> stageRenderer,
+harmony::PostProcessStage::PostProcessStage(const std::string &name, Type stageType, WeakPtr<ShaderProgram> shader,
+                                            WeakPtr<PipelineStageRenderer> stageRenderer,
                                             Vector<AttachmentType> attachments)
         : PipelineStage(name, stageType, attachments, shader, stageRenderer) {
     OPTICK_EVENT();
 }
 
-void harmony::PostProcessStage::PreUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId,
-                                          Ref<Framebuffer>) {
+void harmony::PostProcessStage::PreUpdate(entt::registry &registry, WeakPtr<View> view, bgfx::ViewId viewId,
+                                          RefCntPtr<Framebuffer>) {
     OPTICK_EVENT();
 }
 
-void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakRef<View> view, bgfx::ViewId viewId,
-                                           Ref<Framebuffer> data) {
+void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakPtr<View> view, bgfx::ViewId viewId,
+                                           RefCntPtr<Framebuffer> data) {
     OPTICK_EVENT();
-    Ref<ShaderProgram> s = p_Shader.lock();
-    for (WeakRef<ShaderDataSource> &source: p_DataSources) {
+    RefCntPtr<ShaderProgram> s = p_Shader.lock();
+    for (WeakPtr<ShaderDataSource> &source: p_DataSources) {
         if (source.expired()) {
             continue;
         }
@@ -56,7 +56,7 @@ void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakRef<Vie
         }
     }
 
-    for (WeakRef<ShaderDataSource> &source: p_DataSources) {
+    for (WeakPtr<ShaderDataSource> &source: p_DataSources) {
         if (source.expired()) {
             continue;
         }
@@ -64,7 +64,7 @@ void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakRef<Vie
         src->OnPreUpdate(registry, s);
     }
 
-    Ref<View> v = view.lock();
+    RefCntPtr<View> v = view.lock();
 
     bgfx::setViewClear(viewId, BGFX_CLEAR_COLOR, 0x00000000, 1.0f);
     bgfx::setViewRect(viewId, 0, 0, v->m_Width, v->m_Height);
@@ -81,12 +81,12 @@ void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakRef<Vie
     bgfx::submit(viewId, s->m_Handle);
 }
 
-void harmony::PostProcessStage::PreUpdate(entt::registry &registry, harmony::WeakRef<harmony::View> view,
+void harmony::PostProcessStage::PreUpdate(entt::registry &registry, harmony::WeakPtr<harmony::View> view,
                                           bgfx::ViewId viewId) {
 
 }
 
-void harmony::PostProcessStage::PostUpdate(entt::registry &registry, harmony::WeakRef<harmony::View> view,
+void harmony::PostProcessStage::PostUpdate(entt::registry &registry, harmony::WeakPtr<harmony::View> view,
                                            bgfx::ViewId viewId) {
 
 }

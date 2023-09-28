@@ -14,24 +14,24 @@ namespace harmony {
 
     class SkyStage : public PipelineStage {
     public:
-        SkyStage(WeakRef<ShaderProgram> shaderProgram);
+        SkyStage(WeakPtr<ShaderProgram> shaderProgram);
 
-        void PreUpdate(entt::registry &registry, WeakRef<View> view,
+        void PreUpdate(entt::registry &registry, WeakPtr<View> view,
                        bgfx::ViewId viewId) override;
 
-        void PostUpdate(entt::registry &registry, WeakRef<View> view,
+        void PostUpdate(entt::registry &registry, WeakPtr<View> view,
                         bgfx::ViewId viewId) override;
 
-        void Cleanup(WeakRef<View> view, bgfx::ViewId viewId) override;
+        void Cleanup(WeakPtr<View> view, bgfx::ViewId viewId) override;
 
-        void AddShaderDataSource(WeakRef<ShaderDataSource> source) override;
+        void AddShaderDataSource(WeakPtr<ShaderDataSource> source) override;
 
         nlohmann::json Serialize() override;
 
         void Deserialize(nlohmann::json json) override;
 
     protected:
-        Ref<SkyDataSource> p_Src;
+        RefCntPtr<SkyDataSource> p_Src;
     };
 } // namespace harmony
 

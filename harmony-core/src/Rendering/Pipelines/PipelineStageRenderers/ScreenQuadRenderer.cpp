@@ -7,7 +7,7 @@
 #include "Rendering/GPUResourceManager.h"
 
 void
-harmony::ScreenQuadRenderer::Draw(entt::registry &scene, harmony::Ref<harmony::ShaderProgram> shader, Ref<View> view,
+harmony::ScreenQuadRenderer::Draw(entt::registry &scene, harmony::RefCntPtr<harmony::ShaderProgram> shader, RefCntPtr<View> view,
                                   bgfx::ViewId viewId) {
     if (!shader) {
         return;

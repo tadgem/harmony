@@ -62,12 +62,12 @@ void harmony::MeshSystem::UpdateMeshComponent(MeshComponent &mc) {
 
     bool meshValid = mc.MeshHandle.m_Layout.m_stride > 0;
     if (!meshValid) {
-        WeakRef<Mesh> meshAssetWr = p_AssetManager.GetAsset<Mesh>(mc.MeshAsset);
+        WeakPtr<Mesh> meshAssetWr = p_AssetManager.GetAsset<Mesh>(mc.MeshAsset);
         if (meshAssetWr.expired()) {
             harmony::log::warn("Asset not loaded at path : {}", mc.MeshAsset.Path);
             return;
         }
-        Ref<Mesh> meshAsset = meshAssetWr.lock();
+        RefCntPtr<Mesh> meshAsset = meshAssetWr.lock();
         mc.MeshHandle = meshAsset->m_Handle;
     }
 }

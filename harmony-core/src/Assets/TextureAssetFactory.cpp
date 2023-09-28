@@ -33,7 +33,7 @@ void harmony::TextureAssetFactory::LoadAssetData(const std::string &path, entt::
                             cleanPath);
     }
 
-    Ref<TextureAsset> textureAsset = CreateRef<TextureAsset>(cleanPath, imageContainer);
+    RefCntPtr<TextureAsset> textureAsset = CreateRef<TextureAsset>(cleanPath, imageContainer);
     AssetHandle handle{path, 0, GetTypeHash<TextureAsset>()};
     AssetComponent<TextureAsset> textureComponent{textureAsset, handle};
     entt::entity e = registry.create();

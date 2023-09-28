@@ -81,12 +81,12 @@ namespace harmony {
         harmony::ImGuiLogger m_Logger;
 
     protected:
-        std::vector<Ref<Panel>> p_Panels;
-        Ref<ScenePanel> p_ScenePanel;
-        Ref<EditorView> p_EditorView;
+        std::vector<RefCntPtr<Panel>> p_Panels;
+        RefCntPtr<ScenePanel> p_ScenePanel;
+        RefCntPtr<EditorView> p_EditorView;
         EditorMainMenuBar p_MainMenuBar;
 
-        Ref<PipelineV2> p_EditorPipeline;
+        RefCntPtr<PipelineV2> p_EditorPipeline;
 
     private:
         std::string p_LoadedScenePath;

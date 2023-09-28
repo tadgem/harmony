@@ -9,7 +9,7 @@ harmony::Scene::Scene(const std::string &name) : m_Name(name) {
     OPTICK_EVENT();
 }
 
-void harmony::Scene::Deserialize(std::vector<Ref<System>> &systems) {
+void harmony::Scene::Deserialize(std::vector<RefCntPtr<System>> &systems) {
     OPTICK_EVENT();
     m_Registry.clear();
     for (int i = 0; i < p_Entities.size(); i++) {
@@ -26,12 +26,12 @@ void harmony::Scene::Deserialize(std::vector<Ref<System>> &systems) {
     }
 }
 
-void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<Ref<System>> &systems) {
+void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<RefCntPtr<System>> &systems) {
     OPTICK_EVENT();
     p_SystemSerializationAttributes.clear();
 
     for (int i = 0; i < systems.size(); i++) {
-        Ref<System> system = systems[i];
+        RefCntPtr<System> system = systems[i];
         nlohmann::json sceneSystemJson = system->SerializeSystem(m_Registry);
         p_SystemSerializationAttributes.emplace(system->m_TypeHash, sceneSystemJson);
     }

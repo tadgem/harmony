@@ -142,7 +142,7 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
 }
 
 void
-harmony::MonoProgramComponent::AddMonoImplementedProgramComponent(harmony::WeakRef<harmony::MonoAssemblyAsset> assembly,
+harmony::MonoProgramComponent::AddMonoImplementedProgramComponent(harmony::WeakPtr<harmony::MonoAssemblyAsset> assembly,
                                                                   harmony::MonoUtils::CsTypeInfo typeInfo) {
 
     for(auto c : p_MonoProgramComponents)

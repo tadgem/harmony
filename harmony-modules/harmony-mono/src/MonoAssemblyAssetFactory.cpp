@@ -5,7 +5,7 @@
 #include "Core/Log.hpp"
 #include "Core/Memory.h"
 
-harmony::MonoAssemblyAssetFactory::MonoAssemblyAssetFactory(WeakRef<MonoProgramComponent> mono) : p_Mono(mono), p_AssemblyTypeHash(GetTypeHash<MonoAssemblyAsset>())
+harmony::MonoAssemblyAssetFactory::MonoAssemblyAssetFactory(WeakPtr<MonoProgramComponent> mono) : p_Mono(mono), p_AssemblyTypeHash(GetTypeHash<MonoAssemblyAsset>())
 {
 	m_Capabilities.AssetTypeHashes.push_back(p_AssemblyTypeHash);
 }
@@ -19,7 +19,7 @@ void harmony::MonoAssemblyAssetFactory::LoadAssetData(const std::string& path, e
 		return;
 	}
 	
-	Ref<MonoAssemblyAsset> assembly = CreateRef<MonoAssemblyAsset>(assemblyBytes, path);
+	RefCntPtr<MonoAssemblyAsset> assembly = CreateRef<MonoAssemblyAsset>(assemblyBytes, path);
 
 	AssetHandle assemblyHandle{ path, 0, p_AssemblyTypeHash };
     assembly->m_Handle = assemblyHandle;

@@ -15,7 +15,7 @@ namespace harmony {
 
     class LuaSystem : public System {
     public:
-        LuaSystem(AssetManager &am, Ref<LuaProgramComponent> luaPc);
+        LuaSystem(AssetManager &am, RefCntPtr<LuaProgramComponent> luaPc);
 
         virtual void Init(entt::registry &registry) override;
 
@@ -34,13 +34,13 @@ namespace harmony {
 
         entt::entity GetCurrentEntity();
 
-        void UpdateScripts(WeakRef<Scene> scene);
+        void UpdateScripts(WeakPtr<Scene> scene);
 
         void InitEntityScript(entt::entity e, entt::registry &r, sol::state &state,
                               LuaComponent &lua);
 
     protected:
-        Ref<LuaProgramComponent> p_LuaProgramComponent;
+        RefCntPtr<LuaProgramComponent> p_LuaProgramComponent;
         AssetManager &p_AssetManager;
         entt::entity p_CurrentEntity;
     };

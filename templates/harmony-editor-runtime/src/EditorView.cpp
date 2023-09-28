@@ -108,9 +108,9 @@ void harmony::DebugCamera::Update() {
     View = rotate * translate;
 }
 
-harmony::EditorView::EditorView(Program &program, Ref<ScenePanel> scenePanel) : View("Editor"), p_Program(program),
-                                                                                p_Renderer(program.m_Renderer),
-                                                                                p_ScenePanel(scenePanel) {
+harmony::EditorView::EditorView(Program &program, RefCntPtr<ScenePanel> scenePanel) : View("Editor"), p_Program(program),
+                                                                                      p_Renderer(program.m_Renderer),
+                                                                                      p_ScenePanel(scenePanel) {
     OPTICK_EVENT();
     p_Op = ImGuizmo::OPERATION::TRANSLATE;
 }
@@ -140,7 +140,7 @@ void harmony::EditorView::OnImGui() {
         return;
     }
 
-    Ref<Scene> scene = p_Program.GetActiveScene().lock();
+    RefCntPtr<Scene> scene = p_Program.GetActiveScene().lock();
 
     const std::string editorViewTitle = std::string(ICON_FA_VIDEO_CAMERA) + " Editor";
     glm::mat4 mat = glm::mat4(1.0);

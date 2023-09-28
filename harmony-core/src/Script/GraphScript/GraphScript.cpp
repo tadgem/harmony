@@ -114,7 +114,7 @@ harmony::GraphScript::IGraphNode::IGraphNode(const harmony::String &name) : m_Na
 
 }
 
-harmony::Unique<harmony::GraphScript::CompiledGraph> harmony::GraphScript::GraphBuilder::Build() {
+harmony::UniquePtr<harmony::GraphScript::CompiledGraph> harmony::GraphScript::GraphBuilder::Build() {
     return {};
 }
 

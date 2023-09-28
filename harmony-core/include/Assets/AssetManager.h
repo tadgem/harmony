@@ -20,7 +20,7 @@ namespace harmony {
     public:
         AssetManager();
 
-        bool AddAssetFactory(Ref<AssetFactory> assetFactory);
+        bool AddAssetFactory(RefCntPtr<AssetFactory> assetFactory);
 
         void UnloadAllAssets();
 
@@ -90,7 +90,7 @@ namespace harmony {
         std::vector<AssetHandle> GetAssetsAtPath(const std::string &path);
 
         template<typename T>
-        WeakRef<T> GetAsset(const AssetHandle &assetHandle) {
+        WeakPtr<T> GetAsset(const AssetHandle &assetHandle) {
             std::string cleanAssetPath = Utils::GetCleanPlatformPath(assetHandle.Path);
             AssetHandle temp{cleanAssetPath, assetHandle.Index, assetHandle.TypeHash};
             if (!assetHandle.Path.find("builtin")) {
@@ -104,12 +104,12 @@ namespace harmony {
                     return asset.Asset;
                 }
             }
-            return WeakRef<T>();
+            return WeakPtr<T>();
 
         }
 
         template<typename T>
-        WeakRef<T> GetAsset(const std::string &assetHandle) {
+        WeakPtr<T> GetAsset(const std::string &assetHandle) {
             AssetHandle h = {assetHandle, 0, GetTypeHash<T>()};
             return GetAsset<T>(h);
         }
@@ -121,7 +121,7 @@ namespace harmony {
         void Deserialize(nlohmann::json &json);
 
         template<typename T>
-        AssetHandle AddBuiltInAsset(const std::string &path, Ref<T> asset) {
+        AssetHandle AddBuiltInAsset(const std::string &path, RefCntPtr<T> asset) {
             static_assert(std::is_base_of<Asset, T>());
             AssetHandle handle;
             handle.Path = path;
@@ -164,9 +164,9 @@ namespace harmony {
 
 #endif
     protected:
-        Ref<AssetFactory> GetAssetFactory(HashString typeHash);
+        RefCntPtr<AssetFactory> GetAssetFactory(HashString typeHash);
 
-        std::vector<Ref<AssetFactory>> p_AssetFactories;
+        std::vector<RefCntPtr<AssetFactory>> p_AssetFactories;
         std::unordered_map<uint64_t, std::string> p_AssetTypeNames;
         std::vector<std::string> p_LoadedPaths;
         entt::registry p_AssetRegistry;

@@ -21,7 +21,7 @@ namespace harmony {
         virtual void DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) override;
 
     protected:
-        Ref<Camera> p_MainCamera;
+        RefCntPtr<Camera> p_MainCamera;
 
         // Inherited via System
         virtual void Refresh() override;

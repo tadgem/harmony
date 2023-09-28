@@ -5,7 +5,7 @@
 #include "MonoProgramComponent.h"
 #include "MonoAssembly.h"
 #include "Core/Log.hpp"
-harmony::MonoSystem::MonoSystem(WeakRef<MonoProgramComponent> mono) : System(GetTypeHash<MonoSystem>()), p_Mono(mono)
+harmony::MonoSystem::MonoSystem(WeakPtr<MonoProgramComponent> mono) : System(GetTypeHash<MonoSystem>()), p_Mono(mono)
 {
 }
 
@@ -38,7 +38,7 @@ void harmony::MonoSystem::Refresh()
 {
 }
 
-harmony::Optional<harmony::MonoBehaviour> harmony::MonoSystem::AddMonoBehaviour(entt::entity entity, harmony::MonoUtils::CsTypeInfo typeInfo, WeakRef<MonoAssemblyAsset> assemblyAsset) {
+harmony::Optional<harmony::MonoBehaviour> harmony::MonoSystem::AddMonoBehaviour(entt::entity entity, harmony::MonoUtils::CsTypeInfo typeInfo, WeakPtr<MonoAssemblyAsset> assemblyAsset) {
     auto a = assemblyAsset.lock();
     if(!a)
     {

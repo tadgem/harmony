@@ -10,9 +10,9 @@
 #include <string>
 #include <optick.h>
 
-harmony::LuaSystem::LuaSystem(AssetManager &am, Ref<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaSystem>()),
-                                                                                  p_LuaProgramComponent(luaPc),
-                                                                                  p_AssetManager(am) {
+harmony::LuaSystem::LuaSystem(AssetManager &am, RefCntPtr<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaSystem>()),
+                                                                                        p_LuaProgramComponent(luaPc),
+                                                                                        p_AssetManager(am) {
 }
 
 void harmony::LuaSystem::Init(entt::registry &registry) {
@@ -133,7 +133,7 @@ entt::entity harmony::LuaSystem::GetCurrentEntity() {
     return p_CurrentEntity;
 }
 
-void harmony::LuaSystem::UpdateScripts(WeakRef<Scene> scene) {
+void harmony::LuaSystem::UpdateScripts(WeakPtr<Scene> scene) {
     OPTICK_EVENT();
     if (scene.expired()) {
         harmony::log::error("LuaSystem : Cannot update scripts, scene is expired!");

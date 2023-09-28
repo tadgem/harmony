@@ -880,10 +880,10 @@ void harmony::Program::CloseActiveScene() {
     // m_Renderer.RefreshViews();
 }
 
-harmony::WeakRef<harmony::Scene> harmony::Program::GetActiveScene() {
+harmony::WeakPtr<harmony::Scene> harmony::Program::GetActiveScene() {
     OPTICK_EVENT();
     if (p_ActiveScene == nullptr) {
-        return WeakRef<Scene>();
+        return WeakPtr<Scene>();
     }
     return GetWeakRef<Scene>(p_ActiveScene);
 }

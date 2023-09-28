@@ -24,7 +24,7 @@ namespace harmony {
 
         void ProcessMesh(const String &path, aiMesh *mesh, aiNode *node, const aiScene *scene);
 
-        Vector<Ref<Asset>> p_Meshes;
+        Vector<RefCntPtr<Asset>> p_Meshes;
 
         Vector<String> p_MeshNames;
 

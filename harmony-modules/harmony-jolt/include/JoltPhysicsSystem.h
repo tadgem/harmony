@@ -85,16 +85,16 @@ namespace harmony {
         float m_UpdateFrequency = 60.0f;    // Physics update frequency
 
         JPH::PhysicsSettings m_PhysicsSettings;
-        Unique<JPH::TempAllocator> m_TempAllocator;            // Allocator for temporary allocations
-        Unique<JPH::JobSystem> m_JobSystem;                // The job system that runs physics jobs
-        Unique<JPH::JobSystem> m_JobSystemValidating;        // The job system to use when validating determinism
-        Unique<JPH::PhysicsSystem> m_PhysicsSystem;            // The physics system that simulates the world
-        Unique<JPH::BroadPhaseLayerInterface> m_BroadPhaseLayerInterface;
-        Unique<JPH::ObjectVsBroadPhaseLayerFilter> m_ObjectVsBroadphaseFilter;
-        Unique<JPH::ObjectLayerPairFilter> m_ObjectLayerPairFilter;
-        Unique<HarmonyBodyActivationListener> m_BodyActivationListener;
-        Unique<HarmonyContactListener> m_ContactListener;          // Contact listener implementation
-        Unique<HarmonyDebugRenderer> m_DebugRenderer;
+        UniquePtr<JPH::TempAllocator> m_TempAllocator;            // Allocator for temporary allocations
+        UniquePtr<JPH::JobSystem> m_JobSystem;                // The job system that runs physics jobs
+        UniquePtr<JPH::JobSystem> m_JobSystemValidating;        // The job system to use when validating determinism
+        UniquePtr<JPH::PhysicsSystem> m_PhysicsSystem;            // The physics system that simulates the world
+        UniquePtr<JPH::BroadPhaseLayerInterface> m_BroadPhaseLayerInterface;
+        UniquePtr<JPH::ObjectVsBroadPhaseLayerFilter> m_ObjectVsBroadphaseFilter;
+        UniquePtr<JPH::ObjectLayerPairFilter> m_ObjectLayerPairFilter;
+        UniquePtr<HarmonyBodyActivationListener> m_BodyActivationListener;
+        UniquePtr<HarmonyContactListener> m_ContactListener;          // Contact listener implementation
+        UniquePtr<HarmonyDebugRenderer> m_DebugRenderer;
         JPH::BodyInterface *m_BodyInterface;
 
         friend class JoltDebugRendererComponent;

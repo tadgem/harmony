@@ -62,7 +62,7 @@ namespace harmony {
 
         virtual void CloseActiveScene();
 
-        WeakRef<Scene> GetActiveScene();
+        WeakPtr<Scene> GetActiveScene();
 
         void RunProgramComponentInit();
 
@@ -136,9 +136,9 @@ namespace harmony {
 
         std::string p_AppName;
         std::string p_LoadedProjectPath;
-        std::vector<Ref<ProgramComponent>> p_ProgramComponents;
-        std::vector<Ref<System>> p_ECSSystems;
-        Ref<Scene> p_ActiveScene;
+        std::vector<RefCntPtr<ProgramComponent>> p_ProgramComponents;
+        std::vector<RefCntPtr<System>> p_ECSSystems;
+        RefCntPtr<Scene> p_ActiveScene;
         bool p_Run;
         bool p_ResizedThisFrame;
         float p_DPIScale;
@@ -151,25 +151,25 @@ namespace harmony {
         inline static uint16_t p_WindowHeight;
 
         template<typename T, typename ... Args>
-        WeakRef<T> AddProgramComponent(Args &&... args) {
+        WeakPtr<T> AddProgramComponent(Args &&... args) {
 
             static_assert(std::is_base_of<ProgramComponent, T>());
-            Ref<T> pc = CreateRef<T>(std::forward<Args>(args)...);
+            RefCntPtr<T> pc = CreateRef<T>(std::forward<Args>(args)...);
             p_ProgramComponents.emplace_back(pc);
             return GetWeakRef<T>(pc);
         }
 
         template<typename T, typename ... Args>
-        WeakRef<T> AddSystem(Args &&... args) {
+        WeakPtr<T> AddSystem(Args &&... args) {
 
             static_assert(std::is_base_of<System, T>());
-            Ref<T> sys = CreateRef<T>(std::forward<Args>(args)...);
+            RefCntPtr<T> sys = CreateRef<T>(std::forward<Args>(args)...);
             p_ECSSystems.emplace_back(sys);
             return GetWeakRef<T>(sys);
         }
 
         template<typename T>
-        WeakRef<T> GetProgramComponent() {
+        WeakPtr<T> GetProgramComponent() {
 
             static_assert(std::is_base_of<ProgramComponent, T>(), "Not a program component");
             int index = -1;
@@ -185,12 +185,12 @@ namespace harmony {
             if (index >= 0) {
                 return std::static_pointer_cast<T, ProgramComponent>(p_ProgramComponents[index]);
             } else {
-                return WeakRef<T>();
+                return WeakPtr<T>();
             }
         }
 
         template<typename T>
-        WeakRef<T> GetSystem() {
+        WeakPtr<T> GetSystem() {
 
             static_assert(std::is_base_of<System, T>(), "Not a system");
             int index = -1;
@@ -206,7 +206,7 @@ namespace harmony {
             if (index >= 0) {
                 return std::static_pointer_cast<T, System>(p_ECSSystems[index]);
             } else {
-                return WeakRef<T>();
+                return WeakPtr<T>();
             }
         }
 
@@ -220,6 +220,6 @@ namespace harmony {
         AssetManager m_AssetManager;
         Renderer m_Renderer;
         bgfx::Caps *m_Capabilities;
-        Ref<Project> m_Project;
+        RefCntPtr<Project> m_Project;
     };
 };

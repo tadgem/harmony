@@ -57,7 +57,7 @@ namespace harmony {
         virtual void OnImGui() override;
 
     protected:
-        WeakRef<LuaProgramComponent> p_Lua;
+        WeakPtr<LuaProgramComponent> p_Lua;
         Program &p_Program;
         AssetManager &p_AssetManager;
     };
@@ -71,7 +71,7 @@ namespace harmony {
         virtual void OnImGui() override;
 
     protected:
-        WeakRef<MonoProgramComponent> p_Mono;
+        WeakPtr<MonoProgramComponent> p_Mono;
         Program &p_Program;
         AssetManager &p_AssetManager;
     };
@@ -260,7 +260,7 @@ namespace harmony {
     class MonoSystem;
     class MonoBehaviourComponentUI : public ComponentUI {
     public:
-        MonoBehaviourComponentUI(WeakRef<MonoSystem> monoSystem, AssetManager &am);
+        MonoBehaviourComponentUI(WeakPtr<MonoSystem> monoSystem, AssetManager &am);
 
         virtual void OnComponentImGui(entt::registry &registry, entt::entity entity) override;
 
@@ -274,7 +274,7 @@ namespace harmony {
 
     protected:
         AssetManager &p_AssetManager;
-        WeakRef<MonoSystem> p_MonoSystem;
+        WeakPtr<MonoSystem> p_MonoSystem;
     };
 
     class AABBComponentUI : public ComponentUI {
@@ -347,12 +347,12 @@ namespace harmony {
 
     class EntityInspectorPanel : public Panel {
     public:
-        EntityInspectorPanel(Program &prog, Ref<ScenePanel> scenePanel);
+        EntityInspectorPanel(Program &prog, RefCntPtr<ScenePanel> scenePanel);
 
         template<typename T, typename ... Args>
-        WeakRef<T> AddComponentUI(Args &&... args) {
+        WeakPtr<T> AddComponentUI(Args &&... args) {
             static_assert(std::is_base_of<ComponentUI, T>());
-            Ref<T> ui = CreateRef<T>(std::forward<Args>(args)...);
+            RefCntPtr<T> ui = CreateRef<T>(std::forward<Args>(args)...);
             p_ComponentUIProviders.emplace_back(ui);
             return GetWeakRef<T>(ui);
         }
@@ -361,7 +361,7 @@ namespace harmony {
 
     protected:
         Program &p_Prog;
-        Ref<ScenePanel> p_ScenePanel;
-        std::vector<Ref<ComponentUI>> p_ComponentUIProviders;
+        RefCntPtr<ScenePanel> p_ScenePanel;
+        std::vector<RefCntPtr<ComponentUI>> p_ComponentUIProviders;
     };
 }

@@ -40,7 +40,7 @@ void harmony::MaterialSystem::DeserializeSystem(entt::registry &registry, nlohma
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
         MaterialComponent mc = entry.value();
-        WeakRef<ShaderProgram> shader = p_Renderer.GetShader(mc.Data.m_ShaderName);
+        WeakPtr<ShaderProgram> shader = p_Renderer.GetShader(mc.Data.m_ShaderName);
         mc.Data.UpdateOverrides(shader, p_AssetManager);
         registry.emplace<MaterialComponent>(e, mc);
     }

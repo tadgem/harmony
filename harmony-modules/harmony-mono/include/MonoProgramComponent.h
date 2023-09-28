@@ -45,7 +45,7 @@ namespace harmony
 
         AssetManager& m_AssetManager;
 
-        void AddMonoImplementedProgramComponent(WeakRef<MonoAssemblyAsset> assembly, MonoUtils::CsTypeInfo typeInfo);
+        void AddMonoImplementedProgramComponent(WeakPtr<MonoAssemblyAsset> assembly, MonoUtils::CsTypeInfo typeInfo);
 
     protected:
         MonoDomain* p_RootDomain;

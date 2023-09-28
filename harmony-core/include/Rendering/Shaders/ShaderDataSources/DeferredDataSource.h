@@ -11,19 +11,19 @@
 namespace harmony {
     class DeferredDataSource : public ShaderDataSource {
     public:
-        DeferredDataSource(Ref<Framebuffer> gBuffer);
+        DeferredDataSource(RefCntPtr<Framebuffer> gBuffer);
 
-        void OnPreUpdate(entt::registry &registry, Ref<ShaderProgram> shader) override;
+        void OnPreUpdate(entt::registry &registry, RefCntPtr<ShaderProgram> shader) override;
 
-        void OnPostUpdate(entt::registry &registry, Ref<ShaderProgram> shader) override;
+        void OnPostUpdate(entt::registry &registry, RefCntPtr<ShaderProgram> shader) override;
 
     protected:
 
-        WeakRef<Framebuffer> m_GBuffer;
+        WeakPtr<Framebuffer> m_GBuffer;
 
         bool p_UniformsCollected;
 
-        void CollectUniforms(Ref<ShaderProgram> prog);
+        void CollectUniforms(RefCntPtr<ShaderProgram> prog);
 
         const std::string g_Position = "u_pos";
         const std::string g_Normal = "u_normal";

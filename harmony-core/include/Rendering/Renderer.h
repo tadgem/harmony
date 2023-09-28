@@ -26,81 +26,81 @@ namespace harmony {
         Renderer(AssetManager &assetManager);
 
         template<typename T, typename... Args>
-        WeakRef<T> CreateView(Args &&...args) {
+        WeakPtr<T> CreateView(Args &&...args) {
             static_assert(std::is_base_of<View, T>(),
                           "Renderer : Provided type is not a view!");
-            Ref<T> view = CreateRef<T>(std::forward<Args>(args)...);
+            RefCntPtr<T> view = CreateRef<T>(std::forward<Args>(args)...);
             p_Views.emplace(view, CreateRef<PipelineV2>(view->m_Name));
             return GetWeakRef<T>(view);
         }
 
-        WeakRef<ShaderProgram> AddBuiltInShader(const std::string &progName,
+        WeakPtr<ShaderProgram> AddBuiltInShader(const std::string &progName,
                                                 const std::string &vsName,
                                                 const std::string &fsName,
                                                 uint32_t vsIndex, uint32_t fsIndex);
 
-        WeakRef<ShaderProgram> AddBuiltInShader(const std::string &progName,
+        WeakPtr<ShaderProgram> AddBuiltInShader(const std::string &progName,
                                                 const std::string &vsName,
                                                 uint32_t csIndex);
 
         void AddBuiltInShaders();
 
-        WeakRef<ShaderProgram> BuildShader(const std::string name,
-                                           WeakRef<ShaderStage> vertStage,
-                                           WeakRef<ShaderStage> fragStage);
+        WeakPtr<ShaderProgram> BuildShader(const std::string name,
+                                           WeakPtr<ShaderStage> vertStage,
+                                           WeakPtr<ShaderStage> fragStage);
 
-        WeakRef<ShaderProgram> BuildShader(const std::string name,
-                                           WeakRef<ShaderStage> computeStage);
+        WeakPtr<ShaderProgram> BuildShader(const std::string name,
+                                           WeakPtr<ShaderStage> computeStage);
 
-        void ReloadShader(WeakRef<ShaderProgram> shader);
+        void ReloadShader(WeakPtr<ShaderProgram> shader);
 
         void ReloadAllShaders();
 
         bool IsShaderLoaded(const std::string &name);
 
-        WeakRef<ShaderProgram> GetShader(const std::string &name);
+        WeakPtr<ShaderProgram> GetShader(const std::string &name);
 
         std::vector<std::string> GetShaderNames();
 
-        void AddPipelineStage(Ref<PipelineStage> pipelineStage);
+        void AddPipelineStage(RefCntPtr<PipelineStage> pipelineStage);
 
-        WeakRef<PipelineStage> GetPipelineStage(const std::string &name);
+        WeakPtr<PipelineStage> GetPipelineStage(const std::string &name);
 
         template<typename T>
-        WeakRef<T> GetPiplineStage(const std::string &name) {
+        WeakPtr<T> GetPiplineStage(const std::string &name) {
             static_assert(std::is_base_of<View, T>(),
                           "Renderer : Provided type is not a view!");
-            WeakRef<PipelineStage> stage = GetPipelineStage(name);
+            WeakPtr<PipelineStage> stage = GetPipelineStage(name);
             if (stage.expired()) {
-                return WeakRef<T>();
+                return WeakPtr<T>();
             }
-            Ref<T> derivedStage = std::static_pointer_cast<T>(stage);
+            RefCntPtr<T> derivedStage = std::static_pointer_cast<T>(stage);
             if (derivedStage) {
                 return derivedStage;
             }
-            return WeakRef<T>();
+            return WeakPtr<T>();
         }
 
-        void AddPipelineStageRenderer(Ref<PipelineStageRenderer> renderer);
+        void AddPipelineStageRenderer(RefCntPtr<PipelineStageRenderer> renderer);
 
-        WeakRef<PipelineStageRenderer>
+        WeakPtr<PipelineStageRenderer>
         GetPipelineStageRenderer(const std::string &name);
 
-        void AddShaderDataSource(Ref<ShaderDataSource> dataSource);
+        void AddShaderDataSource(RefCntPtr<ShaderDataSource> dataSource);
 
-        WeakRef<ShaderDataSource> GetShaderDataSource(const std::string &name);
+        WeakPtr<ShaderDataSource> GetShaderDataSource(const std::string &name);
 
-        BGFXMeshHandle SubmitMeshToGPU(WeakRef<Mesh> mesh);
+        BGFXMeshHandle SubmitMeshToGPU(WeakPtr<Mesh> mesh);
 
-        BGFXTextureHandle SubmitTextureToGPU(WeakRef<TextureAsset> textureWeakRef);
+        BGFXTextureHandle SubmitTextureToGPU(WeakPtr<TextureAsset> textureWeakRef);
 
-        void RemoveView(WeakRef<View> view);
+        void RemoveView(WeakPtr<View> view);
 
-        WeakRef<View> GetView(const std::string &name);
+        WeakPtr<View> GetView(const std::string &name);
 
-        WeakRef<PipelineV2> GetViewPipeline(WeakRef<View> view);
+        WeakPtr<PipelineV2> GetViewPipeline(WeakPtr<View> view);
 
-        void SetViewActive(WeakRef<View> viewWeakRef, bool active);
+        void SetViewActive(WeakPtr<View> viewWeakRef, bool active);
 
         void RefreshViews();
 
@@ -110,7 +110,7 @@ namespace harmony {
 
         void OnPostUpdate(entt::registry &registry);
 
-        WeakRef<PipelineV2> GetViewPipelineFromName(const std::string &viewName);
+        WeakPtr<PipelineV2> GetViewPipelineFromName(const std::string &viewName);
 
         static bgfx::ViewId GetViewID();
 
@@ -120,20 +120,20 @@ namespace harmony {
 
         void Deserialize(AssetManager &am, nlohmann::json &json);
 
-        std::vector<WeakRef<View>> m_ActiveViews;
+        std::vector<WeakPtr<View>> m_ActiveViews;
 
-        WeakRef<ShaderProgram> p_PresentProgram;
+        WeakPtr<ShaderProgram> p_PresentProgram;
         bgfx::UniformHandle p_PresentProgramTextureHandle;
 #if HARMONY_DEBUG
 
         void OnImGui();
 
         bool ShaderSelector(const std::string &selectorName,
-                            harmony::WeakRef<harmony::ShaderProgram> &prog);
+                            harmony::WeakPtr<harmony::ShaderProgram> &prog);
 
         bool PipelineStageRendererSelector(
                 const std::string &selectorName,
-                harmony::WeakRef<harmony::PipelineStageRenderer> renderer);
+                harmony::WeakPtr<harmony::PipelineStageRenderer> renderer);
 
         bool IsBuiltInShaderName(const std::string &name);
         // Misc & Helpers
@@ -141,8 +141,8 @@ namespace harmony {
     protected:
         AssetHandle p_SelectedVertexAsset;
         AssetHandle p_SelectedFragmentAsset;
-        WeakRef<ShaderProgram> p_SelectedShaderProgram;
-        WeakRef<PipelineStageRenderer> p_SelectedRenderer;
+        WeakPtr<ShaderProgram> p_SelectedShaderProgram;
+        WeakPtr<PipelineStageRenderer> p_SelectedRenderer;
         PipelineHandle p_SelectedPipelineHandle;
         bool p_CreateShaderProgramWindow;
         bool p_CreatePipelineWindow;
@@ -156,7 +156,7 @@ namespace harmony {
         int p_SelectedPipelineDrawStageType;
 #endif
     protected:
-        bgfx::VertexLayout BuildVertexLayout(WeakRef<Mesh> meshWeakRef);
+        bgfx::VertexLayout BuildVertexLayout(WeakPtr<Mesh> meshWeakRef);
 
         nlohmann::json SerializeShaders();
 
@@ -192,12 +192,12 @@ namespace harmony {
         static const uint32_t p_MaxViews = 255;
         AssetManager &p_AssetManager;
         int s_PresentShaderIndex;
-        std::map<Ref<View>, Ref<PipelineV2>> p_Views;
-        std::vector<Ref<ShaderProgram>> p_Shaders;
-        std::vector<Ref<PipelineStage>> p_PipelineStages;
-        std::vector<Ref<PipelineStageRenderer>> p_PipelineStageRenderers;
-        std::vector<Ref<ShaderDataSource>> p_ShaderDataSources;
-        std::vector<WeakRef<ShaderProgram>> p_BuiltInShaders;
+        std::map<RefCntPtr<View>, RefCntPtr<PipelineV2>> p_Views;
+        std::vector<RefCntPtr<ShaderProgram>> p_Shaders;
+        std::vector<RefCntPtr<PipelineStage>> p_PipelineStages;
+        std::vector<RefCntPtr<PipelineStageRenderer>> p_PipelineStageRenderers;
+        std::vector<RefCntPtr<ShaderDataSource>> p_ShaderDataSources;
+        std::vector<WeakPtr<ShaderProgram>> p_BuiltInShaders;
 
         friend class Program;
 

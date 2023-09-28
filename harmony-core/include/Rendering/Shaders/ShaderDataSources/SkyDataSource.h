@@ -13,15 +13,15 @@ namespace harmony {
         SkyDataSource();
 
         void OnPreUpdate(entt::registry &registry,
-                         Ref<ShaderProgram> shader) override;
+                         RefCntPtr<ShaderProgram> shader) override;
 
         void OnPostUpdate(entt::registry &registry,
-                          Ref<ShaderProgram> shader) override;
+                          RefCntPtr<ShaderProgram> shader) override;
 
     protected:
         bool p_UniformsCollected;
 
-        void CollectUniforms(Ref<ShaderProgram> prog);
+        void CollectUniforms(RefCntPtr<ShaderProgram> prog);
 
         void ComputePerezCoeff(float _turbidity);
 

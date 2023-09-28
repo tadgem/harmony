@@ -10,9 +10,9 @@
 #include "Rendering/Shaders/ShaderDataSources/BlinnPhongDataSource.h"
 #include "Rendering/Shaders/ShaderDataSources/TextureAssetSource.h"
 
-harmony::WeakRef<harmony::Framebuffer>
-harmony::Moebius::AddMoebiusToPipeline(Renderer &renderer, harmony::Ref<harmony::PipelineV2> pipeline,
-                                       Ref<TextureAsset> crossHatchTexture) {
+harmony::WeakPtr<harmony::Framebuffer>
+harmony::Moebius::AddMoebiusToPipeline(Renderer &renderer, harmony::RefCntPtr<harmony::PipelineV2> pipeline,
+                                       RefCntPtr<TextureAsset> crossHatchTexture) {
 
     // Create GBuffer FB
     auto gbufferFB = pipeline->AddFramebuffer("GBuffer",
@@ -32,30 +32,30 @@ harmony::Moebius::AddMoebiusToPipeline(Renderer &renderer, harmony::Ref<harmony:
                                               Resolution::Type::FullScale);
 
     // Create pipeline draw stage to render g-buffer data
-    Ref<PipelineDrawStage> gBufferStage = CreateRef<PipelineDrawStage>(
+    RefCntPtr<PipelineDrawStage> gBufferStage = CreateRef<PipelineDrawStage>(
             "GBufferStage",
             PipelineDrawStage::Type::PrimaryDraw,
             renderer.GetShader("DeferredGBuffer"),
             renderer.GetPipelineStageRenderer("MeshRenderer")
     );
     // Get Moebius Shader
-    Ref<ShaderProgram> moebiusShader = renderer.GetShader("Moebius2").lock();
+    RefCntPtr<ShaderProgram> moebiusShader = renderer.GetShader("Moebius2").lock();
 
     // Create a quad renderer
-    Ref<ScreenQuadRenderer> quadRenderer = CreateRef<ScreenQuadRenderer>();
+    RefCntPtr<ScreenQuadRenderer> quadRenderer = CreateRef<ScreenQuadRenderer>();
     renderer.AddPipelineStageRenderer(quadRenderer);
 
-    Ref<PipelineDrawStage> moebiusStage = CreateRef<PipelineDrawStage>(
+    RefCntPtr<PipelineDrawStage> moebiusStage = CreateRef<PipelineDrawStage>(
             "Moebius",
             PipelineDrawStage::Type::PrimaryDraw,
             moebiusShader,
             quadRenderer
     );
-    Ref<DeferredDataSource> deferredDataSource = CreateRef<DeferredDataSource>(gbufferFB.lock());
+    RefCntPtr<DeferredDataSource> deferredDataSource = CreateRef<DeferredDataSource>(gbufferFB.lock());
     renderer.AddShaderDataSource(deferredDataSource);
 
-    Ref<TextureAssetSource> crosshatchTextureSource = CreateRef<TextureAssetSource>(5, "u_crossHatch",
-                                                                                    crossHatchTexture);
+    RefCntPtr<TextureAssetSource> crosshatchTextureSource = CreateRef<TextureAssetSource>(5, "u_crossHatch",
+                                                                                          crossHatchTexture);
     renderer.AddShaderDataSource(crosshatchTextureSource);
 
     moebiusStage->AddShaderDataSource(deferredDataSource);

@@ -61,22 +61,22 @@ namespace harmony {
 
         void PresentRuntimeImage();
 
-        Ref<PipelineV2> p_RuntimePipeline;
-        Ref<RuntimeView> p_RuntimeView;
+        RefCntPtr<PipelineV2> p_RuntimePipeline;
+        RefCntPtr<RuntimeView> p_RuntimeView;
 
-        Ref<EntityDataSystem> p_EntityDataSystem;
-        Ref<LuaProgramComponent> p_LuaProgramComponent;
-        Ref<LuaSystem> p_LuaSystem;
-        Ref<GraphScriptProgramComponent> p_GraphScriptComponent;
-        Ref<GraphScriptSystem> p_GraphScriptSystem;
-        Ref<JoltPhysicsSystem> p_JoltPhysicsSystem;
-        Ref<MonoProgramComponent> p_MonoProgramComponent;
+        RefCntPtr<EntityDataSystem> p_EntityDataSystem;
+        RefCntPtr<LuaProgramComponent> p_LuaProgramComponent;
+        RefCntPtr<LuaSystem> p_LuaSystem;
+        RefCntPtr<GraphScriptProgramComponent> p_GraphScriptComponent;
+        RefCntPtr<GraphScriptSystem> p_GraphScriptSystem;
+        RefCntPtr<JoltPhysicsSystem> p_JoltPhysicsSystem;
+        RefCntPtr<MonoProgramComponent> p_MonoProgramComponent;
 
-        Ref<MeshSystem> p_MeshSystem;
-        Ref<LightSystem> p_LightSystem;
-        Ref<TransformSystem> p_TransformSystem;
-        Ref<CameraSystem> p_CameraSystem;
-        Ref<MonoSystem> p_MonoSystem;
+        RefCntPtr<MeshSystem> p_MeshSystem;
+        RefCntPtr<LightSystem> p_LightSystem;
+        RefCntPtr<TransformSystem> p_TransformSystem;
+        RefCntPtr<CameraSystem> p_CameraSystem;
+        RefCntPtr<MonoSystem> p_MonoSystem;
 
         bgfx::ViewId p_PresentViewId;
     };

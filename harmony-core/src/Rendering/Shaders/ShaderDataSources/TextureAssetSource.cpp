@@ -4,7 +4,7 @@
 #include "Rendering/Shaders/ShaderDataSources/TextureAssetSource.h"
 #include "Assets/TextureAsset.h"
 
-void harmony::TextureAssetSource::OnPreUpdate(entt::registry &registry, harmony::Ref<harmony::ShaderProgram> shader) {
+void harmony::TextureAssetSource::OnPreUpdate(entt::registry &registry, harmony::RefCntPtr<harmony::ShaderProgram> shader) {
     if (!shader) {
         return;
     }
@@ -25,17 +25,17 @@ void harmony::TextureAssetSource::OnPreUpdate(entt::registry &registry, harmony:
     }
 }
 
-void harmony::TextureAssetSource::OnPostUpdate(entt::registry &registry, harmony::Ref<harmony::ShaderProgram> shader) {
+void harmony::TextureAssetSource::OnPostUpdate(entt::registry &registry, harmony::RefCntPtr<harmony::ShaderProgram> shader) {
     ShaderDataSource::OnPostUpdate(registry, shader);
 }
 
 harmony::TextureAssetSource::TextureAssetSource(const uint16_t samplerIndex, const String &uniformName,
-                                                harmony::WeakRef<harmony::TextureAsset> texture) : ShaderDataSource(
+                                                harmony::WeakPtr<harmony::TextureAsset> texture) : ShaderDataSource(
         "TextureAssetSource"), p_Texture(texture), p_UniformName(uniformName), p_SamplerIndex(samplerIndex) {
     p_UniformsCollected = false;
 }
 
-void harmony::TextureAssetSource::CollectUniforms(harmony::Ref<harmony::ShaderProgram> prog) {
+void harmony::TextureAssetSource::CollectUniforms(harmony::RefCntPtr<harmony::ShaderProgram> prog) {
     for (ShaderUniform &uniform: prog->m_Uniforms) {
         if (uniform.Name == p_UniformName) {
             p_Uniform = uniform;

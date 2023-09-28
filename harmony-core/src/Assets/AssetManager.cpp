@@ -54,7 +54,7 @@ std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::st
     if (builtin >= 0 && builtin < cleanPath.size()) {
         return GetAssetsAtPath(cleanPath);
     }
-    Ref<AssetFactory> factory = GetAssetFactory(typeHash);
+    RefCntPtr<AssetFactory> factory = GetAssetFactory(typeHash);
     if (!factory) {
         harmony::log::error("AssetManager : No factory for asset with type hash {}, skipping.", typeHash);
         return std::vector<AssetHandle>();
@@ -72,7 +72,7 @@ void harmony::AssetManager::UnloadAsset(AssetHandle &handle, HashString typeHash
         return;
     }
 
-    Ref<AssetFactory> factory = GetAssetFactory(typeHash);
+    RefCntPtr<AssetFactory> factory = GetAssetFactory(typeHash);
     factory->UnloadAssetData(handle.Path, p_AssetRegistry);
 }
 
@@ -123,9 +123,9 @@ void harmony::AssetManager::Deserialize(nlohmann::json &json) {
     }
 }
 
-harmony::Ref<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory(HashString typeHash) {
+harmony::RefCntPtr<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory(HashString typeHash) {
     OPTICK_EVENT();
-    Ref<AssetFactory> factory = nullptr;
+    RefCntPtr<AssetFactory> factory = nullptr;
     for (int i = 0; i < p_AssetFactories.size(); i++) {
         if (!p_AssetFactories[i]->m_Capabilities.Contains(typeHash)) {
             continue;
@@ -146,7 +146,7 @@ harmony::Ref<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory(HashS
     return factory;
 }
 
-bool harmony::AssetManager::AddAssetFactory(Ref<AssetFactory> assetFactory) {
+bool harmony::AssetManager::AddAssetFactory(RefCntPtr<AssetFactory> assetFactory) {
     OPTICK_EVENT();
     if (std::find(p_AssetFactories.begin(), p_AssetFactories.end(), assetFactory) == p_AssetFactories.end()) {
         p_AssetFactories.emplace_back(assetFactory);

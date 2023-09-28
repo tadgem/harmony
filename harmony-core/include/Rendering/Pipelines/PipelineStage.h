@@ -28,8 +28,8 @@ namespace harmony {
 
         PipelineStage(const std::string &name, Type pipelineStageType,
                       Vector<AttachmentType> requiredAttachments,
-                      WeakRef<ShaderProgram> shader,
-                      WeakRef<PipelineStageRenderer> stageRenderer);
+                      WeakPtr<ShaderProgram> shader,
+                      WeakPtr<PipelineStageRenderer> stageRenderer);
 
         NLOHMANN_JSON_SERIALIZE_ENUM(Type, {
             { Unknown, "unknown" },
@@ -39,15 +39,15 @@ namespace harmony {
             { Compute, "compute" }
         })
 
-        virtual void PreUpdate(entt::registry &registry, WeakRef<View> view,
+        virtual void PreUpdate(entt::registry &registry, WeakPtr<View> view,
                                bgfx::ViewId viewId) = 0;
 
-        virtual void PostUpdate(entt::registry &registry, WeakRef<View> view,
+        virtual void PostUpdate(entt::registry &registry, WeakPtr<View> view,
                                 bgfx::ViewId viewId) = 0;
 
-        virtual void Cleanup(WeakRef<View> view, bgfx::ViewId viewId);
+        virtual void Cleanup(WeakPtr<View> view, bgfx::ViewId viewId);
 
-        virtual void AddShaderDataSource(WeakRef<ShaderDataSource> source);
+        virtual void AddShaderDataSource(WeakPtr<ShaderDataSource> source);
 
         virtual nlohmann::json Serialize();
 
@@ -58,10 +58,10 @@ namespace harmony {
         Type m_StageType;
         Vector<AttachmentType> m_Attachments;
         String m_Name;
-        WeakRef<ShaderProgram> p_Shader;
-        Ref<PipelineStageRenderer> p_Renderer;
+        WeakPtr<ShaderProgram> p_Shader;
+        RefCntPtr<PipelineStageRenderer> p_Renderer;
 
     protected:
-        std::vector<WeakRef<ShaderDataSource>> p_DataSources;
+        std::vector<WeakPtr<ShaderDataSource>> p_DataSources;
     };
 } // namespace harmony

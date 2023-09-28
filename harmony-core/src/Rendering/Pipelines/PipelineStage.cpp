@@ -8,17 +8,17 @@
 
 harmony::PipelineStage::PipelineStage(const std::string &name, Type pipelineStageType,
                                       Vector<AttachmentType> requiredAttachments,
-                                      WeakRef<ShaderProgram> shader, WeakRef<PipelineStageRenderer> stageRenderer)
+                                      WeakPtr<ShaderProgram> shader, WeakPtr<PipelineStageRenderer> stageRenderer)
         : m_Name(name), m_StageType(pipelineStageType), m_Attachments(requiredAttachments), p_Shader(shader),
           p_Renderer(stageRenderer.lock()) {
     OPTICK_EVENT();
 }
 
-void harmony::PipelineStage::Cleanup(WeakRef<View> view, bgfx::ViewId viewId) {
+void harmony::PipelineStage::Cleanup(WeakPtr<View> view, bgfx::ViewId viewId) {
     OPTICK_EVENT();
 }
 
-void harmony::PipelineStage::AddShaderDataSource(WeakRef<ShaderDataSource> source) {
+void harmony::PipelineStage::AddShaderDataSource(WeakPtr<ShaderDataSource> source) {
     OPTICK_EVENT();
     if (source.expired()) {
         return;

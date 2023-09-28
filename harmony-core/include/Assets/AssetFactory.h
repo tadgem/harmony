@@ -34,6 +34,6 @@ namespace harmony {
 
         AssetFactoryCapabilities m_Capabilities;
     protected:
-        std::vector<Ref<Asset>> p_Assets;
+        std::vector<RefCntPtr<Asset>> p_Assets;
     };
 }

@@ -61,7 +61,7 @@ harmony::ShaderHotReload::OnChange(const std::string &filename, const std::strin
     if (action == efsw::Actions::Add) {
         if (filename.find(".sc") < filename.size()) {
             auto handle = p_Program.m_AssetManager.LoadAsset<ShaderSourceAsset>(filename);
-            Ref<ShaderSourceAsset> source = p_Program.m_AssetManager.GetAsset<ShaderSourceAsset>(handle[0]).lock();
+            RefCntPtr<ShaderSourceAsset> source = p_Program.m_AssetManager.GetAsset<ShaderSourceAsset>(handle[0]).lock();
             size_t lastIndex = filename.find(".sc");
             std::string shaderName = filename.substr(0, lastIndex);
             if (CompileShader(shaderName) == 0) {
@@ -79,7 +79,7 @@ harmony::ShaderHotReload::OnChange(const std::string &filename, const std::strin
             std::string rendererName = ShaderStage::GetShaderRendererName();
             if (directory.find(rendererName) < directory.size()) {
                 auto handle = p_Program.m_AssetManager.LoadAsset<ShaderStage>(shaderName);
-                Ref<ShaderStage> stage = p_Program.m_AssetManager.GetAsset<ShaderStage>(handle[0]).lock();
+                RefCntPtr<ShaderStage> stage = p_Program.m_AssetManager.GetAsset<ShaderStage>(handle[0]).lock();
                 p_LoadedShaderBinaries.emplace(shaderName, stage);
                 ReloadTrackedShaders();
             }
@@ -127,7 +127,7 @@ harmony::ShaderHotReload::OnChange(const std::string &filename, const std::strin
                     p_Program.m_Renderer.ReloadAllShaders();
                 } else {
                     auto handle = p_Program.m_AssetManager.LoadAsset<ShaderStage>(shaderName);
-                    Ref<ShaderStage> stage = p_Program.m_AssetManager.GetAsset<ShaderStage>(handle[0]).lock();
+                    RefCntPtr<ShaderStage> stage = p_Program.m_AssetManager.GetAsset<ShaderStage>(handle[0]).lock();
                     p_LoadedShaderBinaries.emplace(shaderName, stage);
                     ReloadTrackedShaders();
                 }

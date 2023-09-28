@@ -40,10 +40,10 @@ namespace harmony {
 
         virtual void FromJson(const nlohmann::json &json) override;
 
-        void AddHotReloadProvider(Ref<AssetHotReloadProvider> provider);
+        void AddHotReloadProvider(RefCntPtr<AssetHotReloadProvider> provider);
 
     protected:
-        std::vector<Ref<AssetHotReloadProvider>> p_HotReloadProviders;
+        std::vector<RefCntPtr<AssetHotReloadProvider>> p_HotReloadProviders;
 
         Program &p_Program;
 

@@ -7,15 +7,15 @@ namespace harmony {
     class PipelineDrawStage : public PipelineStage {
     public:
         PipelineDrawStage(const std::string &name, Type stageType,
-                          WeakRef<ShaderProgram> shader,
-                          WeakRef<PipelineStageRenderer> stageRenderer,
+                          WeakPtr<ShaderProgram> shader,
+                          WeakPtr<PipelineStageRenderer> stageRenderer,
                           Vector<AttachmentType> attachments = {
                                   AttachmentType::RGBA8, AttachmentType::Depth32F});
 
-        void PreUpdate(entt::registry &registry, WeakRef<View> view,
+        void PreUpdate(entt::registry &registry, WeakPtr<View> view,
                        bgfx::ViewId viewId) override;
 
-        void PostUpdate(entt::registry &registry, WeakRef<View> view,
+        void PostUpdate(entt::registry &registry, WeakPtr<View> view,
                         bgfx::ViewId viewId) override;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineDrawStage, m_Name, m_StageType,

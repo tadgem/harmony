@@ -5,13 +5,13 @@
 #include "Rendering/Shaders/ShaderDataSources/DeferredDataSource.h"
 #include "Rendering/Shaders/Shader.h"
 
-harmony::DeferredDataSource::DeferredDataSource(Ref<Framebuffer> gBuffer) : ShaderDataSource("DeferredDataSource"),
-                                                                            m_GBuffer(gBuffer) {
+harmony::DeferredDataSource::DeferredDataSource(RefCntPtr<Framebuffer> gBuffer) : ShaderDataSource("DeferredDataSource"),
+                                                                                  m_GBuffer(gBuffer) {
     p_UniformsCollected = false;
 }
 
 
-void harmony::DeferredDataSource::OnPreUpdate(entt::registry &registry, harmony::Ref<harmony::ShaderProgram> shader) {
+void harmony::DeferredDataSource::OnPreUpdate(entt::registry &registry, harmony::RefCntPtr<harmony::ShaderProgram> shader) {
     if (!shader) {
         return;
     }
@@ -20,7 +20,7 @@ void harmony::DeferredDataSource::OnPreUpdate(entt::registry &registry, harmony:
         CollectUniforms(shader);
     }
 
-    Ref<Framebuffer> fb = m_GBuffer.lock();
+    RefCntPtr<Framebuffer> fb = m_GBuffer.lock();
 
     if (!fb) {
         harmony::log::warn("DeferredDataSource : framebuffer is invalid, ignoring.");
@@ -50,11 +50,11 @@ void harmony::DeferredDataSource::OnPreUpdate(entt::registry &registry, harmony:
     }
 }
 
-void harmony::DeferredDataSource::OnPostUpdate(entt::registry &registry, harmony::Ref<harmony::ShaderProgram> shader) {
+void harmony::DeferredDataSource::OnPostUpdate(entt::registry &registry, harmony::RefCntPtr<harmony::ShaderProgram> shader) {
     ShaderDataSource::OnPostUpdate(registry, shader);
 }
 
-void harmony::DeferredDataSource::CollectUniforms(harmony::Ref<harmony::ShaderProgram> prog) {
+void harmony::DeferredDataSource::CollectUniforms(harmony::RefCntPtr<harmony::ShaderProgram> prog) {
     for (ShaderUniform &uniform: prog->m_Uniforms) {
         if (uniform.Name == g_Position) {
             m_PositionTextureUniform = uniform;

@@ -10,19 +10,19 @@
 namespace harmony {
     class DrawScreenTextureStage : public PipelineStage {
     public:
-        DrawScreenTextureStage(WeakRef<ShaderProgram> shader, AttachmentType type,
-                               Vector<WeakRef<Framebuffer>> fbs);
+        DrawScreenTextureStage(WeakPtr<ShaderProgram> shader, AttachmentType type,
+                               Vector<WeakPtr<Framebuffer>> fbs);
 
-        void PreUpdate(entt::registry &registry, WeakRef<View> view,
+        void PreUpdate(entt::registry &registry, WeakPtr<View> view,
                        bgfx::ViewId viewId) override;
 
-        void PostUpdate(entt::registry &registry, WeakRef<View> view,
+        void PostUpdate(entt::registry &registry, WeakPtr<View> view,
                         bgfx::ViewId viewId) override;
 
-        Vector<WeakRef<Framebuffer>> m_FramebuffersToDraw;
+        Vector<WeakPtr<Framebuffer>> m_FramebuffersToDraw;
 
     private:
-        static String GetName(WeakRef<Framebuffer> fb);
+        static String GetName(WeakPtr<Framebuffer> fb);
     };
 } // namespace harmony
 #endif // HARMONY_DOJO_DRAWSCREENTEXTURESTAGE_H

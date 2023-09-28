@@ -35,7 +35,7 @@ void harmony::ShaderSourceAssetFactory::LoadAssetData(const std::string &path, e
     } else {
         cleanPath = path;
     }
-    Ref<ShaderSourceAsset> sourceAsset = CreateRef<ShaderSourceAsset>(cleanPath, type);
+    RefCntPtr<ShaderSourceAsset> sourceAsset = CreateRef<ShaderSourceAsset>(cleanPath, type);
     AssetHandle handle{cleanPath, 0, GetTypeHash<ShaderSourceAsset>()};
     AssetComponent<ShaderSourceAsset> sourceComponent{sourceAsset, handle};
     entt::entity e = registry.create();

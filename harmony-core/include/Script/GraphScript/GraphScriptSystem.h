@@ -13,7 +13,7 @@ namespace harmony {
 
     class GraphScriptSystem : public System {
     public:
-        GraphScriptSystem(Ref<GraphScriptProgramComponent> gspc);
+        GraphScriptSystem(RefCntPtr<GraphScriptProgramComponent> gspc);
 
         void Init(entt::registry &registry) override;
 
@@ -32,7 +32,7 @@ namespace harmony {
         void Refresh() override;
 
     protected:
-        Ref<GraphScriptProgramComponent> p_ProgramComponent;
+        RefCntPtr<GraphScriptProgramComponent> p_ProgramComponent;
     };
 } // namespace harmony
 

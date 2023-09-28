@@ -21,7 +21,7 @@ namespace harmony {
 
     template<typename T>
     struct AssetComponent {
-        Ref<T> Asset;
+        RefCntPtr<T> Asset;
         AssetHandle Handle;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetComponent<T>, Handle)

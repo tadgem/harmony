@@ -22,9 +22,9 @@ namespace harmony {
     protected:
         friend class Program;
 
-        void UpdateSceneSystemSerializationAttributes(std::vector<Ref<System>> &systems);
+        void UpdateSceneSystemSerializationAttributes(std::vector<RefCntPtr<System>> &systems);
 
-        void Deserialize(std::vector<Ref<System>> &systems);
+        void Deserialize(std::vector<RefCntPtr<System>> &systems);
 
         std::map<uint64_t, nlohmann::json> p_SystemSerializationAttributes;
         std::vector<Entity> p_Entities;

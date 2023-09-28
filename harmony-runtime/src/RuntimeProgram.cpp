@@ -110,33 +110,33 @@ void harmony::RuntimeProgram::AddPipelineStageRenderers() {
 
 void harmony::RuntimeProgram::AddPipelineDrawStages() {
     OPTICK_EVENT();
-    Ref<PipelineDrawStage> normalStage = CreateRef<PipelineDrawStage>(
+    RefCntPtr<PipelineDrawStage> normalStage = CreateRef<PipelineDrawStage>(
             "NormalStage",
             PipelineDrawStage::Type::PrimaryDraw,
             m_Renderer.GetShader("Normal"),
             m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
 
-    Ref<PipelineDrawStage> texturedMeshStage = CreateRef<PipelineDrawStage>(
+    RefCntPtr<PipelineDrawStage> texturedMeshStage = CreateRef<PipelineDrawStage>(
             "TexturedMeshStage",
             PipelineDrawStage::Type::PrimaryDraw,
             m_Renderer.GetShader("TexturedMesh"),
             m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
 
-    Ref<PipelineDrawStage> blinnPhongStage = CreateRef<PipelineDrawStage>(
+    RefCntPtr<PipelineDrawStage> blinnPhongStage = CreateRef<PipelineDrawStage>(
             "BlinnPhongTextured",
             PipelineDrawStage::Type::PrimaryDraw,
             m_Renderer.GetShader("BlinnPhongTextured"),
             m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
 
-    Ref<SkyStage> skyStage = CreateRef<SkyStage>(
+    RefCntPtr<SkyStage> skyStage = CreateRef<SkyStage>(
             m_Renderer.GetShader("Sky")
     );
 
-    Ref<VectorGraphicsStage> vectorGraphicsStage = CreateRef<VectorGraphicsStage>(VectorGraphics::Layer::One);
-    Ref<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Game);
+    RefCntPtr<VectorGraphicsStage> vectorGraphicsStage = CreateRef<VectorGraphicsStage>(VectorGraphics::Layer::One);
+    RefCntPtr<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Game);
 
     blinnPhongStage->AddShaderDataSource(m_Renderer.GetShaderDataSource("BlinnPhong"));
 
@@ -154,7 +154,7 @@ void harmony::RuntimeProgram::AddPostProcessStages() {
 
 void harmony::RuntimeProgram::AddShaderDataSources() {
     OPTICK_EVENT();
-    Ref<BlinnPhongDataSource> blinnPhong = CreateRef<BlinnPhongDataSource>();
+    RefCntPtr<BlinnPhongDataSource> blinnPhong = CreateRef<BlinnPhongDataSource>();
     m_Renderer.AddShaderDataSource(blinnPhong);
 }
 
@@ -183,19 +183,19 @@ void harmony::RuntimeProgram::InitializePipelines() {
         return;
     }
 
-    Ref<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8,
-                                                                                 Vector<WeakRef<Framebuffer>>{skyFB});
-    Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+    RefCntPtr<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8,
+                                                                                 Vector<WeakPtr<Framebuffer>>{skyFB});
+    RefCntPtr<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
                                                                                      AttachmentType::RGBA8,
-                                                                                     Vector<WeakRef<Framebuffer>>{
+                                                                                     Vector<WeakPtr<Framebuffer>>{
                                                                                              forwardFB});
-    Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+    RefCntPtr<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
                                                                                     AttachmentType::RGBA8,
-                                                                                    Vector<WeakRef<Framebuffer>>{
+                                                                                    Vector<WeakPtr<Framebuffer>>{
                                                                                             vectorFB});
-    Ref<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+    RefCntPtr<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
                                                                                      AttachmentType::RGBA8,
-                                                                                     Vector<WeakRef<Framebuffer>>{
+                                                                                     Vector<WeakPtr<Framebuffer>>{
                                                                                              moebiusFB});
 
     p_RuntimePipeline->AddPipelineStage(skyFB, m_Renderer.GetPipelineStage("SkyStage").lock());
@@ -274,10 +274,10 @@ int harmony::RuntimeProgram::OnRuntimeUpdate() {
 void harmony::RuntimeProgram::LoadBuiltInAssets() {
     OPTICK_EVENT();
     AssetHandle cubeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Cube", CreateRef<Cube>(1.0f));
-    Ref<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
+    RefCntPtr<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
     m_Renderer.SubmitMeshToGPU(cube);
     AssetHandle planeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Plane", CreateRef<Plane>(1.0f));
-    Ref<Mesh> plane = m_AssetManager.GetAsset<Mesh>(planeHandle).lock();
+    RefCntPtr<Mesh> plane = m_AssetManager.GetAsset<Mesh>(planeHandle).lock();
     m_Renderer.SubmitMeshToGPU(plane);
 }
 

@@ -33,7 +33,7 @@ void harmony::ScenePanel::OnImGui() {
             ImGui::End();
             return;
         }
-        Ref<Scene> activeScene = activeSceneWr.lock();
+        RefCntPtr<Scene> activeScene = activeSceneWr.lock();
         if (ImGui::BeginDragDropTarget()) {
             if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY")) {
                 IM_ASSERT(payload->DataSize == sizeof(entt::entity));
@@ -143,7 +143,7 @@ void harmony::ScenePanel::EntityDragDrop(entt::entity e, entt::registry &reg) {
 
 }
 
-harmony::EntityInspectorPanel::EntityInspectorPanel(Program &prog, Ref<ScenePanel> scenePanel) : p_Prog(prog),
+harmony::EntityInspectorPanel::EntityInspectorPanel(Program &prog, RefCntPtr<ScenePanel> scenePanel) : p_Prog(prog),
                                                                                                  p_ScenePanel(
                                                                                                          scenePanel) {
 }
@@ -158,7 +158,7 @@ void harmony::EntityInspectorPanel::OnImGui() {
             return;
         }
 
-        Ref<Scene> activeScene = activeSceneWr.lock();
+        RefCntPtr<Scene> activeScene = activeSceneWr.lock();
 
         if (activeScene->m_Registry.valid(p_ScenePanel->m_SelectedEntity) == false) {
             ImGui::End();
@@ -329,11 +329,11 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry &registry, en
         return;
     }
     MaterialComponent &mc = registry.get<MaterialComponent>(entity);
-    WeakRef<ShaderProgram> shaderWr = p_Renderer.GetShader(mc.Data.m_ShaderName);
+    WeakPtr<ShaderProgram> shaderWr = p_Renderer.GetShader(mc.Data.m_ShaderName);
     std::string sn = "Shader Name : ";
 
     if (shaderWr.expired() == false) {
-        Ref<ShaderProgram> shader = shaderWr.lock();
+        RefCntPtr<ShaderProgram> shader = shaderWr.lock();
         sn += shader->m_Name;
     }
 
@@ -612,7 +612,7 @@ void harmony::MonoPanel::OnImGui() {
         auto assemblyHandles = p_Program.m_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
         if(ImGui::TreeNode("Assemblies")) {
             for (AssetHandle h: assemblyHandles) {
-                Ref<MonoAssemblyAsset> a = p_Program.m_AssetManager.GetAsset<MonoAssemblyAsset>(h).lock();
+                RefCntPtr<MonoAssemblyAsset> a = p_Program.m_AssetManager.GetAsset<MonoAssemblyAsset>(h).lock();
                 if (!a) continue;
 
                 if (ImGui::TreeNode(h.Path.c_str())) {
@@ -654,7 +654,7 @@ void harmony::MonoPanel::OnImGui() {
                             ImGui::TreePop();
                         }
 
-                        if (ImGui::TreeNode("Type Ref Infos")) {
+                        if (ImGui::TreeNode("Type RefCntPtr Infos")) {
                             for (auto info: a->m_TypeRefInfos) {
                                 ImGui::TextWrapped("%s : %s : Scope = %s", info.m_Namespace.c_str(),
                                                    info.m_Name.c_str(),
@@ -664,7 +664,7 @@ void harmony::MonoPanel::OnImGui() {
                             ImGui::TreePop();
                         }
 
-                        if (ImGui::TreeNode("Assembly Ref Infos")) {
+                        if (ImGui::TreeNode("Assembly RefCntPtr Infos")) {
                             for (auto info: a->m_AssemblyRefInfos) {
                                 ImGui::TextWrapped("%s : %d.%d", info.m_Name.c_str(), info.m_Major, info.m_Minor);
                                 ImGui::Separator();
@@ -1063,8 +1063,8 @@ void harmony::SkyComponentUI::Duplicate(entt::registry &registry, entt::entity o
 
 
 
-harmony::MonoBehaviourComponentUI::MonoBehaviourComponentUI(harmony::WeakRef<harmony::MonoSystem> monoSystem, harmony::AssetManager &am) : ComponentUI("Mono Behaviour",
-                                                                                                     ComponentUI::ImGuiParentType::TreeNode), p_AssetManager(am) , p_MonoSystem(monoSystem){
+harmony::MonoBehaviourComponentUI::MonoBehaviourComponentUI(harmony::WeakPtr<harmony::MonoSystem> monoSystem, harmony::AssetManager &am) : ComponentUI("Mono Behaviour",
+                                                                                                                                                       ComponentUI::ImGuiParentType::TreeNode), p_AssetManager(am) , p_MonoSystem(monoSystem){
 
 }
 

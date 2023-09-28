@@ -13,15 +13,15 @@ uint16_t harmony::GPUResourceManager::GetMaxFramebufferHeight() {
     return MAX_FRAMEBUFFER_RESOLUTION_Y;
 }
 
-harmony::Ref<harmony::Framebuffer>
+harmony::RefCntPtr<harmony::Framebuffer>
 harmony::GPUResourceManager::CreateFramebuffer(const std::string &name, harmony::Resolution resolution,
                                                harmony::Resolution::Type resolutionType) {
     return CreateRef<harmony::Framebuffer>(name, resolution, resolutionType);
 }
 
-harmony::Ref<harmony::Attachment>
+harmony::RefCntPtr<harmony::Attachment>
 harmony::GPUResourceManager::CreateAttachment(harmony::Resolution resolution, harmony::AttachmentType type) {
-    return harmony::Ref<harmony::Attachment>();
+    return harmony::RefCntPtr<harmony::Attachment>();
 }
 
 uint16_t harmony::GPUResourceManager::GetNumActiveFramebuffers() {

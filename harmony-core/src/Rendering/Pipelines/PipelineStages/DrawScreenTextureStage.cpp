@@ -3,14 +3,14 @@
 #include "Rendering/View.h"
 #include "Rendering/Shapes.h"
 
-void harmony::DrawScreenTextureStage::PreUpdate(entt::registry &registry, harmony::WeakRef<harmony::View> view,
+void harmony::DrawScreenTextureStage::PreUpdate(entt::registry &registry, harmony::WeakPtr<harmony::View> view,
                                                 bgfx::ViewId viewId) {
     auto v = view.lock();
     bgfx::setViewTransform(viewId, NULL, NULL);
     bgfx::setViewRect(viewId, 0, 0, v->m_Width, v->m_Height);
 
-    Ref<ShaderProgram> pipelineShader = p_Shader.lock();
-    for (WeakRef<ShaderDataSource> &source: p_DataSources) {
+    RefCntPtr<ShaderProgram> pipelineShader = p_Shader.lock();
+    for (WeakPtr<ShaderDataSource> &source: p_DataSources) {
         if (source.expired()) {
             continue;
         }
@@ -46,10 +46,10 @@ void harmony::DrawScreenTextureStage::PreUpdate(entt::registry &registry, harmon
     bgfx::submit(viewId, pipelineShader->m_Handle);
 }
 
-void harmony::DrawScreenTextureStage::PostUpdate(entt::registry &registry, harmony::WeakRef<harmony::View> view,
+void harmony::DrawScreenTextureStage::PostUpdate(entt::registry &registry, harmony::WeakPtr<harmony::View> view,
                                                  bgfx::ViewId viewId) {
-    Ref<ShaderProgram> pipelineShader = p_Shader.lock();
-    for (WeakRef<ShaderDataSource> &source: p_DataSources) {
+    RefCntPtr<ShaderProgram> pipelineShader = p_Shader.lock();
+    for (WeakPtr<ShaderDataSource> &source: p_DataSources) {
         if (source.expired()) {
             continue;
         }
@@ -59,13 +59,13 @@ void harmony::DrawScreenTextureStage::PostUpdate(entt::registry &registry, harmo
 
 }
 
-harmony::DrawScreenTextureStage::DrawScreenTextureStage(WeakRef<ShaderProgram> shader, AttachmentType type,
-                                                        Vector<WeakRef<Framebuffer>> fbs) : PipelineStage(
-        GetName(fbs[0]), PipelineStage::Type::PrimaryDraw, {type}, shader, WeakRef<PipelineStageRenderer>()) {
+harmony::DrawScreenTextureStage::DrawScreenTextureStage(WeakPtr<ShaderProgram> shader, AttachmentType type,
+                                                        Vector<WeakPtr<Framebuffer>> fbs) : PipelineStage(
+        GetName(fbs[0]), PipelineStage::Type::PrimaryDraw, {type}, shader, WeakPtr<PipelineStageRenderer>()) {
     m_FramebuffersToDraw = fbs;
 }
 
-harmony::String harmony::DrawScreenTextureStage::GetName(WeakRef<Framebuffer> fb) {
+harmony::String harmony::DrawScreenTextureStage::GetName(WeakPtr<Framebuffer> fb) {
     String name = "DrawScreenTextureStage_";
     if (fb.expired()) {
         return name;
