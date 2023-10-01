@@ -17,23 +17,12 @@
 
     }
 
-    public interface IBehaviour { };
-
-    public class Behaviour : IBehaviour
+    public class Behaviour
     {
-        public Entity Self { get; private set; }
+        public Entity Self { get; set; }
 
-        public interface IOnInit
-        {
-            void Init();
-        }
-        public interface IOnUpdate
-        {
-            void Update();
-        }
-        public interface IOnCleanup
-        {
-            void Cleanup();
-        }
+        public virtual void Init() { }
+        public virtual void Update() { }
+        public virtual void Cleanup() { }
     }
 }

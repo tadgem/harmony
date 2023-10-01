@@ -12,7 +12,7 @@ namespace Harmony
             ID = id;
         }
 
-        public readonly uint ID;
+        public uint ID;
         public static implicit operator uint (Entity entity) { return entity.ID; }
 
         public override string ToString()

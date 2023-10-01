@@ -71,27 +71,6 @@ void harmony::MonoSystem::AddMonoBehaviour(entt::registry& registry, entt::entit
         log::error("MonoProgramComponent : AddMonoImplementedProgramComponent : Assembly is expired");
         return;
     }
-    // Ensure type implements one of the program component behaviours
-    bool implementsInit         = false;
-    bool implementsUpdate       = false;
-    bool implementsCleanup      = false;
-
-    for(MonoUtils::CsInterfaceImplInfo interfaceInfo : a->m_InterfaceImplInfos)    {
-        if( interfaceInfo.m_ClassName == typeInfo.m_TypeName &&
-            interfaceInfo.m_ClassNamespace == typeInfo.m_TypeNamespace)        {
-            if(interfaceInfo.m_InterfaceNamespace == p_MonoBehaviourNamespace) {
-                if(interfaceInfo.m_InterfaceName == p_InitInterfaceName) {
-                    implementsInit = true;
-                }
-                if(interfaceInfo.m_InterfaceName == p_UpdateInterfaceName) {
-                    implementsUpdate = true;
-                }
-                if(interfaceInfo.m_InterfaceName == p_CleanupInterfaceName) {
-                    implementsCleanup = true;
-                }
-            }
-        }
-    }
 
     bool isBehaviour = false;
 
@@ -114,7 +93,6 @@ void harmony::MonoSystem::AddMonoBehaviour(entt::registry& registry, entt::entit
         return;
     }
     // We need to change this.
-    // Implementing a behaviour aspect should be optional, but the type MUST derive Behaviour.
     // We will set Behaviour's entity property, likely protecting derived classes from changing entity.
     if(!typeInfo.m_MonoClass)
     {
@@ -130,18 +108,30 @@ void harmony::MonoSystem::AddMonoBehaviour(entt::registry& registry, entt::entit
     // Create instance
     MonoObject* classObject   = MonoUtils::CreateMonoObject(p_Mono.lock()->p_AppDomain, typeInfo);
 
+    // set entity.
+
+
     // Grab interface methods to call
     MonoClass * instanceClass = mono_object_get_class(classObject);
+    MonoClass * behaviourClass = mono_class_get_parent(instanceClass);
     MonoMethod* initMethod      = nullptr;
     MonoMethod* updateMethod    = nullptr;
     MonoMethod* cleanupMethod   = nullptr;
 
-    if(implementsInit)    {
-        initMethod = mono_class_get_method_from_name(instanceClass, p_InitMethodName.c_str(), 0);
-        if(initMethod == nullptr) {
-            log::error("MonoSystem : AddMonoBehaviour : Type {} implements IOnInit but does not have an Init method.", typeInfo.m_TypeName);
-            return;
-        }
+    MonoObject * exception = nullptr;
+    MonoProperty * entityProp = mono_class_get_property_from_name(behaviourClass, "Self");
+    MonoObject * currentValue = mono_property_get_value(entityProp, classObject, NULL, &exception);
+
+    MonoClass * entityClass = mono_object_get_class(currentValue);
+    MonoClassField* idField = mono_class_get_field_from_name(entityClass, "ID");
+    uint32_t data = (uint32_t)entity;
+    mono_field_set_value(currentValue, idField, &data);
+
+    mono_property_set_value(entityProp, classObject, (void**) &currentValue, &exception);
+
+    initMethod = mono_class_get_method_from_name(instanceClass, p_InitMethodName.c_str(), 0);
+    if(initMethod != nullptr)
+    {
         MonoObject * exception = nullptr;
         mono_runtime_invoke(initMethod, classObject, nullptr, &exception);
         if(exception != nullptr)
@@ -150,21 +140,8 @@ void harmony::MonoSystem::AddMonoBehaviour(entt::registry& registry, entt::entit
         }
     }
 
-    if(implementsUpdate)    {
-        updateMethod = mono_class_get_method_from_name(instanceClass, p_UpdateMethodName.c_str(), 0);
-        if(updateMethod == nullptr) {
-            log::error("MonoSystem : AddMonoBehaviour : Type {} implements IOnUpdate but does not have an Update method.", typeInfo.m_TypeName);
-            return;
-        }
-    }
-
-    if(implementsCleanup) {
-        cleanupMethod = mono_class_get_method_from_name(instanceClass, p_CleanupMethodName.c_str(), 0);
-        if(cleanupMethod == nullptr) {
-            log::error("MonoSystem : AddMonoBehaviour : Type {} implements IOnCleanup but does not have a Cleanup method.", typeInfo.m_TypeName);
-            return;
-        }
-    }
+    updateMethod = mono_class_get_method_from_name(instanceClass, p_UpdateMethodName.c_str(), 0);
+    cleanupMethod = mono_class_get_method_from_name(instanceClass, p_CleanupMethodName.c_str(), 0);
 
     MonoBehaviour monoBehaviour
     {
