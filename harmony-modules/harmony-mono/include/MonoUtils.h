@@ -38,6 +38,22 @@ namespace harmony
             NLOHMANN_DEFINE_TYPE_INTRUSIVE(CsTypeInfo, m_TypeName, m_TypeNamespace);
         };
 
+        struct CsDerivedTypeInfo
+        {
+            String m_ChildTypeName;
+            String m_ChildTypeNamespace;
+            MonoClass* m_ChildClass = nullptr;
+
+            String m_ParentTypeName;
+            String m_ParentTypeNamespace;
+            MonoClass* m_ParentClass = nullptr;
+
+
+            bool operator==(const CsDerivedTypeInfo& rhs) const;
+
+            NLOHMANN_DEFINE_TYPE_INTRUSIVE(CsDerivedTypeInfo, m_ChildTypeName, m_ChildTypeNamespace, m_ParentTypeName, m_ParentTypeNamespace);
+        };
+
         struct CsTypeSpecInfo
         {
             String m_Signature;

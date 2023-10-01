@@ -626,6 +626,18 @@ void harmony::MonoPanel::OnImGui() {
                             ImGui::TreePop();
                         }
 
+                        if (ImGui::TreeNode("Derived Type Infos")) {
+                            for (auto typeInfo: a->m_DerivedTypeInfos) {
+                                ImGui::TextWrapped("%s.%s : %s.%s",
+                                                   typeInfo.m_ChildTypeNamespace.c_str(),
+                                                   typeInfo.m_ChildTypeName.c_str(),
+                                                   typeInfo.m_ParentTypeNamespace.c_str(),
+                                                   typeInfo.m_ParentTypeName.c_str());
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+
                         if (ImGui::TreeNode("Type Spec Infos")) {
                             for (auto typeSpecInfo: a->m_TypeSpecInfos) {
                                 ImGui::TextWrapped("%s", typeSpecInfo.m_Signature.c_str());

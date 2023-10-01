@@ -50,6 +50,26 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData()
                 monoClass
         };
 
+        if(monoClass) {
+            MonoClass *parent = mono_class_get_parent(monoClass);
+
+            if (parent) {
+                String parentName = mono_class_get_name(parent);
+                String parentNamespace = mono_class_get_namespace(parent);
+
+                MonoUtils::CsDerivedTypeInfo derivedTypeInfo
+                        {
+                                name,
+                                nameSpace,
+                                monoClass,
+                                parentName,
+                                parentNamespace,
+                                parent
+                        };
+                m_DerivedTypeInfos.push_back(derivedTypeInfo);
+            }
+        }
+
         m_TypeInfos.emplace_back(typeInfo);
     }
 

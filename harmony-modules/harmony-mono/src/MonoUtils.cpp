@@ -180,3 +180,8 @@ harmony::String harmony::MonoUtils::GetStringFromMonoString(MonoString * str) {
 bool harmony::MonoUtils::CsTypeInfo::operator==(const harmony::MonoUtils::CsTypeInfo &rhs) const {
     return m_TypeName == rhs.m_TypeName && m_TypeNamespace == rhs.m_TypeNamespace;
 }
+
+bool harmony::MonoUtils::CsDerivedTypeInfo::operator==(const harmony::MonoUtils::CsDerivedTypeInfo &rhs) const {
+    return m_ParentTypeName == rhs.m_ParentTypeName && m_ParentTypeNamespace == rhs.m_ParentTypeNamespace &&
+    m_ChildTypeName == rhs.m_ChildTypeName && m_ChildTypeNamespace == rhs.m_ChildTypeNamespace;
+}

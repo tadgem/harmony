@@ -19,6 +19,7 @@ namespace harmony
         const String m_AssemblyPath;
 
         Vector<MonoUtils::CsTypeInfo>           m_TypeInfos;
+        Vector<MonoUtils::CsDerivedTypeInfo>    m_DerivedTypeInfos;
         Vector<MonoUtils::CsTypeSpecInfo>       m_TypeSpecInfos;
         Vector<MonoUtils::CsInterfaceImplInfo>  m_InterfaceImplInfos;
         Vector<MonoUtils::CsTypeRefInfo>        m_TypeRefInfos;
