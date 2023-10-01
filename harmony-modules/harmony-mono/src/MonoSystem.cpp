@@ -55,14 +55,7 @@ void harmony::MonoSystem::DeserializeSystem(entt::registry& registry, nlohmann::
                 log::error("MonoSystem : Deserialize System : Failed to get assembly {} when deserializing behaviour {} for entity {}", m.m_AssemblyAsset.Path, m.m_TypeInfo.m_TypeName, ((uint32_t )e));
                 continue;
             }
-            auto behaviourOption = AddMonoBehaviour(e, m.m_TypeInfo, assemblyAsset);
-            if(!behaviourOption.has_value())
-            {
-                log::error("MonoSystem : Deserialize System : Failed to add beahviour {} for entity {}", m.m_TypeInfo.m_TypeName, ((uint32_t )e));
-                continue;
-            }
-
-            newMC.m_Behaviours.push_back(behaviourOption.value());
+            AddMonoBehaviour(registry, e, m.m_TypeInfo, assemblyAsset);
         }
     }
 }
@@ -71,18 +64,17 @@ void harmony::MonoSystem::Refresh()
 {
 }
 
-harmony::Optional<harmony::MonoBehaviour> harmony::MonoSystem::AddMonoBehaviour(entt::entity entity, harmony::MonoUtils::CsTypeInfo typeInfo, WeakPtr<MonoAssemblyAsset> assemblyAsset) {
+void harmony::MonoSystem::AddMonoBehaviour(entt::registry& registry, entt::entity entity, harmony::MonoUtils::CsTypeInfo typeInfo, WeakPtr<MonoAssemblyAsset> assemblyAsset) {
     auto a = assemblyAsset.lock();
     if(!a)
     {
         log::error("MonoProgramComponent : AddMonoImplementedProgramComponent : Assembly is expired");
-        return {};
+        return;
     }
     // Ensure type implements one of the program component behaviours
     bool implementsInit         = false;
     bool implementsUpdate       = false;
     bool implementsCleanup      = false;
-    bool implementsBehaviour    = false;
 
     for(MonoUtils::CsInterfaceImplInfo interfaceInfo : a->m_InterfaceImplInfos)    {
         if( interfaceInfo.m_ClassName == typeInfo.m_TypeName &&
@@ -97,18 +89,29 @@ harmony::Optional<harmony::MonoBehaviour> harmony::MonoSystem::AddMonoBehaviour(
                 if(interfaceInfo.m_InterfaceName == p_CleanupInterfaceName) {
                     implementsCleanup = true;
                 }
-                if(interfaceInfo.m_InterfaceName == p_MonoBehaviourNamespace)
-                {
-                    implementsBehaviour = true;
-                }
             }
         }
     }
 
-    if(!implementsBehaviour)
+    bool isBehaviour = false;
+
+    for(auto derivedType : a->m_DerivedTypeInfos)
+    {
+        if( derivedType.m_ChildTypeName == typeInfo.m_TypeName &&
+            derivedType.m_ChildTypeNamespace == typeInfo.m_TypeNamespace)
+        {
+            if( derivedType.m_ParentTypeNamespace == p_MonoBehaviourNamespace &&
+                derivedType.m_ParentTypeName == p_MonoBehaviourTypename)
+            {
+                isBehaviour = true;
+            }
+        }
+    }
+
+    if(!isBehaviour)
     {
         log::error("MonoSystem : AddMonoBehaviour : Type {} is not a Harmony.Behaviour! ignoring.", typeInfo.m_TypeName);
-        return {};
+        return;
     }
     // We need to change this.
     // Implementing a behaviour aspect should be optional, but the type MUST derive Behaviour.
@@ -121,7 +124,7 @@ harmony::Optional<harmony::MonoBehaviour> harmony::MonoSystem::AddMonoBehaviour(
     if(!typeInfo.m_MonoClass)
     {
         log::error("MonoSystem : AddMonoBehaviour : Could not find MonoClass for Type {}", typeInfo.m_TypeName);
-        return {};
+        return;
     }
 
     // Create instance
@@ -137,7 +140,7 @@ harmony::Optional<harmony::MonoBehaviour> harmony::MonoSystem::AddMonoBehaviour(
         initMethod = mono_class_get_method_from_name(instanceClass, p_InitMethodName.c_str(), 0);
         if(initMethod == nullptr) {
             log::error("MonoSystem : AddMonoBehaviour : Type {} implements IOnInit but does not have an Init method.", typeInfo.m_TypeName);
-            return {};
+            return;
         }
         MonoObject * exception = nullptr;
         mono_runtime_invoke(initMethod, classObject, nullptr, &exception);
@@ -151,7 +154,7 @@ harmony::Optional<harmony::MonoBehaviour> harmony::MonoSystem::AddMonoBehaviour(
         updateMethod = mono_class_get_method_from_name(instanceClass, p_UpdateMethodName.c_str(), 0);
         if(updateMethod == nullptr) {
             log::error("MonoSystem : AddMonoBehaviour : Type {} implements IOnUpdate but does not have an Update method.", typeInfo.m_TypeName);
-            return {};
+            return;
         }
     }
 
@@ -159,7 +162,7 @@ harmony::Optional<harmony::MonoBehaviour> harmony::MonoSystem::AddMonoBehaviour(
         cleanupMethod = mono_class_get_method_from_name(instanceClass, p_CleanupMethodName.c_str(), 0);
         if(cleanupMethod == nullptr) {
             log::error("MonoSystem : AddMonoBehaviour : Type {} implements IOnCleanup but does not have a Cleanup method.", typeInfo.m_TypeName);
-            return {};
+            return;
         }
     }
 
@@ -173,5 +176,12 @@ harmony::Optional<harmony::MonoBehaviour> harmony::MonoSystem::AddMonoBehaviour(
         a->m_Handle
     };
 
-    return monoBehaviour;
+    if(!registry.any_of<MonoBehaviourComponent>(entity))
+    {
+        registry.emplace<MonoBehaviourComponent>(entity);
+    }
+
+    auto& behaviourComponent = registry.get<MonoBehaviourComponent>(entity);
+
+    behaviourComponent.m_Behaviours.push_back(monoBehaviour);
 }

@@ -1102,20 +1102,34 @@ void harmony::MonoBehaviourComponentUI::OnComponentImGui(entt::registry &registr
         ImGui::TextWrapped(b.m_TypeInfo.m_TypeName.c_str());
         ImGui::Separator();
     }
+
     auto assemblyHandles= p_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
-    ImGui::BeginCombo("Add Mono Behaviour", "Choose Mono Behaviour");
-    for(AssetHandle ah : assemblyHandles)
-    {
-        auto assembly = p_AssetManager.GetAsset<MonoAssemblyAsset>(ah).lock();
-        if(!assembly)
-        {
-            continue;
+    if(ImGui::BeginCombo("Add Mono Behaviour", "Choose Mono Behaviour")) {
+        for (AssetHandle ah: assemblyHandles) {
+            auto assembly = p_AssetManager.GetAsset<MonoAssemblyAsset>(ah).lock();
+            if (!assembly) {
+                continue;
+            }
+            // for each derived type in assembly
+            for (auto derived: assembly->m_DerivedTypeInfos) {
+                // if type is derived from Behaviour,
+                if (derived.m_ParentTypeName == "Behaviour" && derived.m_ParentTypeNamespace == "Harmony") {
+                    String qualified = derived.m_ChildTypeNamespace + "." + derived.m_ChildTypeName;
+                    if (ImGui::Selectable(qualified.c_str())) {
+                        // add mono behaviour
+                        MonoUtils::CsTypeInfo typeInfo
+                                {
+                                        derived.m_ChildTypeName,
+                                        derived.m_ChildTypeNamespace,
+                                        derived.m_ChildClass
+                                };
+                        p_MonoSystem.lock()->AddMonoBehaviour(registry, entity, typeInfo, assembly);
+                    }
+                }
+            }
         }
-        // for each type in assembly
-        // if type is derived from Behaviour,
-        // ImGui selectable ...
+        ImGui::EndCombo();
     }
-    ImGui::EndCombo();
     ImGui::Unindent();
     ImGui::PopID();
 }

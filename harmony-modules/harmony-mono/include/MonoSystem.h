@@ -36,7 +36,7 @@ namespace harmony {
     public:
         MonoSystem(WeakPtr<MonoProgramComponent> mono);
 
-        Optional<MonoBehaviour> AddMonoBehaviour(entt::entity entity, MonoUtils::CsTypeInfo typeInfo, WeakPtr<MonoAssemblyAsset> assemblyAsset);
+        void AddMonoBehaviour(entt::registry& registry, entt::entity entity, MonoUtils::CsTypeInfo typeInfo, WeakPtr<MonoAssemblyAsset> assemblyAsset);
 
         virtual void Init(entt::registry &registry) override;
         virtual void Update(entt::registry &registry) override;
@@ -46,7 +46,8 @@ namespace harmony {
         virtual void DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) override;
         virtual void Refresh() override;
 
-        const String p_MonoBehaviourNamespace = "Harmony.Behaviour";
+        const String p_MonoBehaviourNamespace = "Harmony";
+        const String p_MonoBehaviourTypename = "Behaviour";
         const String p_InitInterfaceName = "IOnInit";
         const String p_UpdateInterfaceName = "IOnUpdate";
         const String p_CleanupInterfaceName = "IOnCleanup";
