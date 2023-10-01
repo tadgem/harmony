@@ -2,6 +2,7 @@
 // Created by liam_ on 9/24/2023.
 //
 #include "MonoSystem.h"
+#include "Assets/AssetManager.h"
 #include "MonoProgramComponent.h"
 #include "MonoAssembly.h"
 #include "Core/Log.hpp"
@@ -27,11 +28,43 @@ void harmony::MonoSystem::Cleanup(entt::registry& registry)
 
 nlohmann::json harmony::MonoSystem::SerializeSystem(entt::registry& registry)
 {
-    return nlohmann::json();
+    auto j = nlohmann::json();
+    auto view = registry.view<MonoBehaviourComponent>();
+    for (auto [e, mono]: view.each()) {
+        j[GetEntityKey(e)] = mono;
+    }
+    return j;
 }
 
 void harmony::MonoSystem::DeserializeSystem(entt::registry& registry, nlohmann::json systemJson)
 {
+    for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
+        entt::entity e = GetEntityFromKey(entry.key());
+        nlohmann::json monoJson = entry.value();
+        MonoBehaviourComponent mc;
+        monoJson.get_to<MonoBehaviourComponent>(mc);
+        // TODO: Add behaviours again.
+
+        auto newMC = registry.emplace<MonoBehaviourComponent>(e);
+
+        for(MonoBehaviour m : mc.m_Behaviours)
+        {
+            WeakPtr<MonoAssemblyAsset> assemblyAsset = p_Mono.lock()->m_AssetManager.GetAsset<MonoAssemblyAsset>(m.m_AssemblyAsset);
+            if(assemblyAsset.expired())
+            {
+                log::error("MonoSystem : Deserialize System : Failed to get assembly {} when deserializing behaviour {} for entity {}", m.m_AssemblyAsset.Path, m.m_TypeInfo.m_TypeName, ((uint32_t )e));
+                continue;
+            }
+            auto behaviourOption = AddMonoBehaviour(e, m.m_TypeInfo, assemblyAsset);
+            if(!behaviourOption.has_value())
+            {
+                log::error("MonoSystem : Deserialize System : Failed to add beahviour {} for entity {}", m.m_TypeInfo.m_TypeName, ((uint32_t )e));
+                continue;
+            }
+
+            newMC.m_Behaviours.push_back(behaviourOption.value());
+        }
+    }
 }
 
 void harmony::MonoSystem::Refresh()

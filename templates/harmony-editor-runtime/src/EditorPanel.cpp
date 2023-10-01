@@ -682,7 +682,7 @@ void harmony::MonoPanel::OnImGui() {
                                     typeInfos.end()) {
                                     continue;
                                 }
-                                if (info.m_InterfaceNamespace == "HarmonyMono.ProgramComponent") {
+                                if (info.m_InterfaceNamespace == "Harmony.ProgramComponent") {
                                     ImGui::PushID(info.m_InterfaceIndex & info.m_ClassIndex);
                                     ImGui::TextWrapped(info.m_ClassName.c_str());
                                     ImGui::SameLine();
@@ -1076,9 +1076,35 @@ void harmony::MonoBehaviourComponentUI::OnComponentImGui(entt::registry &registr
     if (!HasComponent(registry, entity)) {
         return;
     }
-    ImGui::PushID((uint32_t) entity);
-    MonoBehaviourComponent &mono = registry.get<MonoBehaviourComponent>(entity);
 
+    auto mono = p_MonoSystem.lock();
+    if(!mono)
+    {
+        return;
+    }
+    ImGui::PushID((uint32_t) entity);
+    MonoBehaviourComponent &serializedBehaviourComponent = registry.get<MonoBehaviourComponent>(entity);
+    ImGui::Indent();
+    for(auto& b : serializedBehaviourComponent.m_Behaviours)
+    {
+        ImGui::TextWrapped(b.m_TypeInfo.m_TypeName.c_str());
+        ImGui::Separator();
+    }
+    auto assemblyHandles= p_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
+    ImGui::BeginCombo("Add Mono Behaviour", "Choose Mono Behaviour");
+    for(AssetHandle ah : assemblyHandles)
+    {
+        auto assembly = p_AssetManager.GetAsset<MonoAssemblyAsset>(ah).lock();
+        if(!assembly)
+        {
+            continue;
+        }
+        // for each type in assembly
+        // if type is derived from Behaviour,
+        // ImGui selectable ...
+    }
+    ImGui::EndCombo();
+    ImGui::Unindent();
     ImGui::PopID();
 }
 void harmony::MonoBehaviourComponentUI::AddComponent(entt::registry &registry, entt::entity entity)
