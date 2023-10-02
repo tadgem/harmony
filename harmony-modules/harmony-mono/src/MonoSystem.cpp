@@ -115,7 +115,6 @@ void harmony::MonoSystem::AddMonoBehaviour(entt::registry& registry, entt::entit
 
     // Set Self (entity)
     MonoClassField* entityField = mono_class_get_field_from_name(instanceClass, "Self");
-    MonoObject * behaviourSelfObject = mono_field_get_value_object(p_Mono.lock()->p_AppDomain, entityField, classObject);
     mono_field_set_value(classObject, entityField, &entity);
 
     // optional methods
