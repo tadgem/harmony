@@ -21,7 +21,6 @@ namespace GameTest
 
         public void Update()
         {
-            // Log.Info($"Current FrameTime : {Time.GetFrameTime()}");
         }
 
         public void Init()

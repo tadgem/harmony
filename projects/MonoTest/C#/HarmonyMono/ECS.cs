@@ -5,14 +5,14 @@ namespace Harmony
     /// <summary>
     /// ID must match entt entity index.
     /// </summary>
-    public struct Entity
+    public readonly struct Entity
     {
         public Entity(uint id)
         {
             ID = id;
         }
 
-        public uint ID;
+        public readonly uint ID;
         public static implicit operator uint (Entity entity) { return entity.ID; }
 
         public override string ToString()

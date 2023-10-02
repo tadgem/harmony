@@ -76,8 +76,7 @@ void harmony::MonoSystem::AddMonoBehaviour(entt::registry& registry, entt::entit
 
     for(auto derivedType : a->m_DerivedTypeInfos)
     {
-        if( derivedType.m_ChildTypeName == typeInfo.m_TypeName &&
-            derivedType.m_ChildTypeNamespace == typeInfo.m_TypeNamespace)
+        if( derivedType == typeInfo)
         {
             if( derivedType.m_ParentTypeNamespace == p_MonoBehaviourNamespace &&
                 derivedType.m_ParentTypeName == p_MonoBehaviourTypename)
@@ -113,22 +112,16 @@ void harmony::MonoSystem::AddMonoBehaviour(entt::registry& registry, entt::entit
 
     // Grab interface methods to call
     MonoClass * instanceClass = mono_object_get_class(classObject);
-    MonoClass * behaviourClass = mono_class_get_parent(instanceClass);
     MonoMethod* initMethod      = nullptr;
     MonoMethod* updateMethod    = nullptr;
     MonoMethod* cleanupMethod   = nullptr;
 
-    MonoObject * exception = nullptr;
-    MonoProperty * entityProp = mono_class_get_property_from_name(behaviourClass, "Self");
-    MonoObject * currentValue = mono_property_get_value(entityProp, classObject, NULL, &exception);
+    // Behaviour.Self
+    MonoClassField* entityField = mono_class_get_field_from_name(instanceClass, "Self");
+    MonoObject * behaviourSelfObject = mono_field_get_value_object(p_Mono.lock()->p_AppDomain, entityField, classObject);
+    mono_field_set_value(classObject, entityField, &entity);
 
-    MonoClass * entityClass = mono_object_get_class(currentValue);
-    MonoClassField* idField = mono_class_get_field_from_name(entityClass, "ID");
-    uint32_t data = (uint32_t)entity;
-    mono_field_set_value(currentValue, idField, &data);
-
-    mono_property_set_value(entityProp, classObject, (void**) &currentValue, &exception);
-
+    // optional methods
     initMethod = mono_class_get_method_from_name(instanceClass, p_InitMethodName.c_str(), 0);
     if(initMethod != nullptr)
     {

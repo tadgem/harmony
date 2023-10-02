@@ -50,6 +50,7 @@ namespace harmony
 
 
             bool operator==(const CsDerivedTypeInfo& rhs) const;
+            bool operator==(const CsTypeInfo& rhs) const;
 
             NLOHMANN_DEFINE_TYPE_INTRUSIVE(CsDerivedTypeInfo, m_ChildTypeName, m_ChildTypeNamespace, m_ParentTypeName, m_ParentTypeNamespace);
         };

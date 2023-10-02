@@ -19,7 +19,7 @@
 
     public class Behaviour
     {
-        public Entity Self { get; set; }
+        public readonly Entity Self;
 
         public virtual void Init() { }
         public virtual void Update() { }
