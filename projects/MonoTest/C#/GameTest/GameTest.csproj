@@ -48,6 +48,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HarmonyJoltSharp\HarmonyJoltSharp.csproj">
+      <Project>{c9dc6fe3-8940-441a-a81c-b77c0ffd9f60}</Project>
+      <Name>HarmonyJoltSharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HarmonyMono\HarmonyMono.csproj">
       <Project>{e87d0cd6-2bad-4886-accd-a4b68fd2a624}</Project>
       <Name>HarmonyMono</Name>

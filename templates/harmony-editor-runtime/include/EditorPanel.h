@@ -63,7 +63,7 @@ namespace harmony {
     };
 
     class MonoProgramComponent;
-    class MonoSystem; 
+    class MonoSystem;
     class MonoPanel : public Panel {
     public:
         MonoPanel(Program &prog);

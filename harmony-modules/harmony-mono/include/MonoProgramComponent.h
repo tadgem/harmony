@@ -29,11 +29,17 @@ namespace harmony
         friend class MonoProgramComponent;
     };
 
+    class MonoInternalMethodProvider
+    {
+    public:
+        virtual void BindInternalMethods() = 0;
+    };
+
     class Program;
     class MonoProgramComponent : public ProgramComponent
     {
     public:
-        MonoProgramComponent(AssetManager& assetManager);
+        MonoProgramComponent(AssetManager& assetManager, Vector<MonoInternalMethodProvider*> methodProviders);
         virtual void Init() override;
         virtual void Update() override;
         virtual void Render() override;
@@ -41,7 +47,7 @@ namespace harmony
         virtual nlohmann::json ToJson() override;
         virtual void FromJson(const nlohmann::json& json) override;
 
-        virtual void BindScriptingAPI();
+        void BindScriptingAPI();
 
         AssetManager& m_AssetManager;
 
@@ -63,6 +69,7 @@ namespace harmony
         const MonoAssemblyConfiguration p_AssemblyConfig;
 
         Vector<MonoImplementedProgramComponent> p_MonoProgramComponents;
+        Vector<MonoInternalMethodProvider*> p_MethodProviders;
 
         friend class MonoPanel;
         friend class MonoSystem;

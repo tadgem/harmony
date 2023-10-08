@@ -30,24 +30,24 @@ namespace Harmony
     public static class ECSMethods
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static NativeTransformComponent GetEntityTransform(Scene scene, Entity entity);
+        public extern static NativeTransformComponent GetEntityTransform(this Scene scene, Entity entity);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static Vector3 GetTransformPosition(NativeTransformComponent t);
+        public extern static Vector3 GetTransformPosition(this NativeTransformComponent t);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static Vector3 GetTransformEuler(NativeTransformComponent t);
+        public extern static Vector3 GetTransformEuler(this NativeTransformComponent t);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static Vector3 GetTransformScale(NativeTransformComponent t);
+        public extern static Vector3 GetTransformScale(this NativeTransformComponent t);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static void SetTransformPosition(NativeTransformComponent t, Vector3 pos);
+        public extern static void SetTransformPosition(this NativeTransformComponent t, Vector3 pos);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static void SetTransformEuler(NativeTransformComponent t, Vector3 euler);
+        public extern static void SetTransformEuler(this NativeTransformComponent t, Vector3 euler);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static void SetTransformScale(NativeTransformComponent t, Vector3 scale);
+        public extern static void SetTransformScale(this NativeTransformComponent t, Vector3 scale);
     }
 }

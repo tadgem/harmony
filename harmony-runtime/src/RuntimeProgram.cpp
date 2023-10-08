@@ -85,7 +85,7 @@ void harmony::RuntimeProgram::AddProgramComponents() {
     OPTICK_EVENT();
     p_LuaProgramComponent = AddProgramComponent<LuaProgramComponent>(m_AssetManager).lock();
     p_GraphScriptComponent = AddProgramComponent<GraphScriptProgramComponent>().lock();
-    p_MonoProgramComponent = AddProgramComponent<MonoProgramComponent>(m_AssetManager).lock();
+    p_MonoProgramComponent = AddProgramComponent<MonoProgramComponent>(m_AssetManager, Vector<MonoInternalMethodProvider*>()).lock();
 } 
 
 void harmony::RuntimeProgram::AddSystems() {
