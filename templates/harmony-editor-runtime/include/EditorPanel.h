@@ -63,7 +63,7 @@ namespace harmony {
     };
 
     class MonoProgramComponent;
-
+    class MonoSystem; 
     class MonoPanel : public Panel {
     public:
         MonoPanel(Program &prog);
@@ -72,6 +72,7 @@ namespace harmony {
 
     protected:
         WeakPtr<MonoProgramComponent> p_Mono;
+        WeakPtr<MonoSystem> p_System;
         Program &p_Program;
         AssetManager &p_AssetManager;
     };

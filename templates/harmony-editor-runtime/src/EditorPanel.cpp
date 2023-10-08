@@ -587,15 +587,17 @@ void harmony::LuaScriptPanel::OnImGui() {
 
 
 harmony::MonoPanel::MonoPanel(harmony::Program &prog) : p_Program(prog), p_AssetManager(prog.m_AssetManager),
-                                                        p_Mono(prog.GetProgramComponent<MonoProgramComponent>()){
+                                                        p_Mono(prog.GetProgramComponent<MonoProgramComponent>()),
+                                                        p_System(prog.GetSystem<MonoSystem>()){
 
 }
 
 void harmony::MonoPanel::OnImGui() {
     auto mono = p_Mono.lock();
+    RefCntPtr<MonoSystem> sys = p_System.lock();
     if (ImGui::Begin("Mono")) {
 
-        if (!mono) {
+        if (!mono || !sys) {
             p_Mono = p_Program.GetProgramComponent<MonoProgramComponent>();
             ImGui::End();
             return;
@@ -607,6 +609,8 @@ void harmony::MonoPanel::OnImGui() {
             mono->Init();
             p_AssetManager.ReloadAllAssetsOfType<MonoAssemblyAsset>();
             mono->FromJson(p_Program.m_Project->p_ProgramComponentSerializationAttributes[GetTypeHash<MonoProgramComponent>().m_Value]);
+            // TODO: how do we get the active scene..
+            // sys->DeserializeSystem(p_Program.GetActiveScene().lock()->m_Registry,p_Program.m_Project->_)
         }
 
         auto assemblyHandles = p_Program.m_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
