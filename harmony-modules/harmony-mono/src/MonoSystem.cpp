@@ -16,6 +16,22 @@ void harmony::MonoSystem::Init(entt::registry& registry)
 
 void harmony::MonoSystem::Update(entt::registry& registry)
 {
+    auto view = registry.view<MonoBehaviourComponent>();
+
+    for (auto [e, mono]: view.each()) {
+        for(auto behaviour : mono.m_Behaviours)
+        {
+            if(behaviour.p_Update != nullptr)
+            {
+                MonoObject * exception = nullptr;
+                mono_runtime_invoke(behaviour.p_Update, behaviour.m_Object, nullptr, &exception);
+                if(exception != nullptr)
+                {
+                    log::error("MonoSystem : AddMonoBehaviour : exception encountered during update for type {} on entity {}", behaviour.m_TypeInfo.m_TypeName, (uint32_t)e);
+                }
+            }
+        }
+    }
 }
 
 void harmony::MonoSystem::Render(entt::registry& registry)

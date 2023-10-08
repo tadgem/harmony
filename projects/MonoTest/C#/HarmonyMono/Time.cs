@@ -6,15 +6,15 @@ namespace Harmony
     public static class Time
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static float GetFrameTime();
+        public extern static double GetFrameTime();
         
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static float GetFrameTimeUnscaled();
+        public extern static double GetFrameTimeUnscaled();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static float GetTimeScale();
+        public extern static double GetTimeScale();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static void SetTimeScale(float newTimeScale);
+        public extern static double SetTimeScale(float newTimeScale);
     }
 }

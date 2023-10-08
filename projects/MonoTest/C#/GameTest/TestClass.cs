@@ -27,11 +27,6 @@ namespace GameTest
         {
             Log.Info($"Init : {1}");
 
-            Entity e = new Entity(1);
-            e.SomeExtension();
-
-            Log.Info($"Entity ID : {e.ID}");
-
             AddThing<TestProgramComponent>();
         }
 

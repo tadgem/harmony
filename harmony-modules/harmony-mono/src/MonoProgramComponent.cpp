@@ -139,6 +139,24 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.Time::GetTimeScale", harmony_mono_get_time_scale);
     mono_add_internal_call("Harmony.Time::SetTimeScale", harmony_mono_set_time_scale);
 
+    // Program
+    mono_add_internal_call("Harmony.ProgramMethods::GetProgram", harmony_mono_get_program);
+
+    // Scene / ECS
+    mono_add_internal_call("Harmony.SceneMethods::GetActiveScene", harmony_mono_get_active_scene);
+    mono_add_internal_call("Harmony.SceneMethods::CloseActiveScene", harmony_mono_close_active_scene);
+    mono_add_internal_call("Harmony.SceneMethods::LoadScene", harmony_mono_load_scene);
+    mono_add_internal_call("Harmony.SceneMethods::SaveScene", harmony_mono_save_scene);
+
+    mono_add_internal_call("Harmony.ECSMethods::GetEntityTransform", harmony_mono_get_transform);
+    mono_add_internal_call("Harmony.ECSMethods::GetTransformPosition", harmony_mono_get_transform_position);
+    mono_add_internal_call("Harmony.ECSMethods::GetTransformEuler", harmony_mono_get_transform_euler);
+    mono_add_internal_call("Harmony.ECSMethods::GetTransformScale", harmony_mono_get_transform_scale);
+    mono_add_internal_call("Harmony.ECSMethods::SetTransformPosition", harmony_mono_set_transform_position);
+    mono_add_internal_call("Harmony.ECSMethods::SetTransformEuler", harmony_mono_set_transform_euler);
+    mono_add_internal_call("Harmony.ECSMethods::SetTransformScale", harmony_mono_set_transform_scale);
+
+
 }
 
 void

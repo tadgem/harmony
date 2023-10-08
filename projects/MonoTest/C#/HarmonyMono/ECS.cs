@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Runtime.CompilerServices;
+using Harmony.Math;
 namespace Harmony
 {
     /// <summary>
@@ -21,24 +22,32 @@ namespace Harmony
         }
     }
 
-    public interface IComponent{}
-
-    public interface INativeComponent : IComponent {}
-
-    public interface IScriptComponent : IComponent {}
-
-    public static class ECS
+    public readonly struct NativeTransformComponent
     {
-        public static T GetComponent<T> (Entity entity) where T : IComponent
-        {
-            // is T a built in component
-            // is T a C# defined component
-            return default;
-        }
+        public readonly IntPtr Handle;
+    }
 
-        public static void SomeExtension (this Entity e)
-        {
+    public static class ECSMethods
+    {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static NativeTransformComponent GetEntityTransform(Scene scene, Entity entity);
 
-        }
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static Vector3 GetTransformPosition(NativeTransformComponent t);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static Vector3 GetTransformEuler(NativeTransformComponent t);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static Vector3 GetTransformScale(NativeTransformComponent t);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void SetTransformPosition(NativeTransformComponent t, Vector3 pos);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void SetTransformEuler(NativeTransformComponent t, Vector3 euler);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void SetTransformScale(NativeTransformComponent t, Vector3 scale);
     }
 }
