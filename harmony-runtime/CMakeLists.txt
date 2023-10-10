@@ -9,7 +9,9 @@ file(GLOB_RECURSE HEADERPP_FILES include/*.hpp)
 #     add_definitions(-D_CRT_SECURE_NO_WARNINGS /W2)
 # endif()
 
-add_library(harmony-runtime STATIC ${HEADER_FILES} ${HEADERPP_FILES} ${SRC_FILES})
+add_library(harmony-runtime STATIC ${HEADER_FILES} ${HEADERPP_FILES} ${SRC_FILES}
+        include/JoltMonoBind.h
+        src/JoltMonoBind.cpp)
 set_property(TARGET harmony-runtime PROPERTY CXX_STANDARD 17)
 
 

@@ -20,6 +20,7 @@
 #include "MonoProgramComponent.h"
 #include "MonoAssemblyAssetFactory.h"
 #include "MonoSystem.h"
+#include "JoltMonoBind.h"
 
 harmony::RuntimeProgram::RuntimeProgram(const std::string &name) : Program(name) {
     OPTICK_EVENT();
@@ -85,7 +86,10 @@ void harmony::RuntimeProgram::AddProgramComponents() {
     OPTICK_EVENT();
     p_LuaProgramComponent = AddProgramComponent<LuaProgramComponent>(m_AssetManager).lock();
     p_GraphScriptComponent = AddProgramComponent<GraphScriptProgramComponent>().lock();
-    p_MonoProgramComponent = AddProgramComponent<MonoProgramComponent>(m_AssetManager, Vector<MonoInternalMethodProvider*>()).lock();
+
+    auto monoMethodProviders = Vector<RefCntPtr<MonoInternalMethodProvider>>();
+    monoMethodProviders.emplace_back(CreateRef<JoltMonoInternalMethodProvider>());
+    p_MonoProgramComponent = AddProgramComponent<MonoProgramComponent>(m_AssetManager, monoMethodProviders).lock();
 } 
 
 void harmony::RuntimeProgram::AddSystems() {

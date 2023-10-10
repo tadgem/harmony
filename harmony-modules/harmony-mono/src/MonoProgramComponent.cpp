@@ -6,7 +6,7 @@
 #include "Core/Log.hpp"
 #include "MonoAPI.h"
 
-harmony::MonoProgramComponent::MonoProgramComponent(AssetManager& assetManager, Vector<MonoInternalMethodProvider*> methodProviders) : ProgramComponent(GetTypeHash<MonoProgramComponent>())
+harmony::MonoProgramComponent::MonoProgramComponent(AssetManager& assetManager, Vector<RefCntPtr<MonoInternalMethodProvider>> methodProviders) : ProgramComponent(GetTypeHash<MonoProgramComponent>())
 , p_AssemblyConfig(MonoAssemblyConfiguration::Debug), m_AssetManager(assetManager), p_MethodProviders(methodProviders)
 
 {
@@ -156,13 +156,16 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.ECSMethods::SetTransformEuler", harmony_mono_set_transform_euler);
     mono_add_internal_call("Harmony.ECSMethods::SetTransformScale", harmony_mono_set_transform_scale);
 
-    for(MonoInternalMethodProvider* mp : p_MethodProviders)
+    for(RefCntPtr<MonoInternalMethodProvider> mp : p_MethodProviders)
     {
         if(mp)
         {
             mp->BindInternalMethods();
+            mp.reset();
         }
     }
+
+    p_MethodProviders.clear();
 
 }
 

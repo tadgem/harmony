@@ -39,7 +39,7 @@ namespace harmony
     class MonoProgramComponent : public ProgramComponent
     {
     public:
-        MonoProgramComponent(AssetManager& assetManager, Vector<MonoInternalMethodProvider*> methodProviders);
+        MonoProgramComponent(AssetManager& assetManager, Vector<RefCntPtr<MonoInternalMethodProvider>> methodProviders);
         virtual void Init() override;
         virtual void Update() override;
         virtual void Render() override;
@@ -69,7 +69,7 @@ namespace harmony
         const MonoAssemblyConfiguration p_AssemblyConfig;
 
         Vector<MonoImplementedProgramComponent> p_MonoProgramComponents;
-        Vector<MonoInternalMethodProvider*> p_MethodProviders;
+        Vector<RefCntPtr<MonoInternalMethodProvider>> p_MethodProviders;
 
         friend class MonoPanel;
         friend class MonoSystem;
