@@ -53,6 +53,9 @@ extern "C"
     glm_vec3 harmony_mono_get_transform_position    (harmony::TransformComponent* t);
     glm_vec3 harmony_mono_get_transform_euler       (harmony::TransformComponent* t);
     glm_vec3 harmony_mono_get_transform_scale       (harmony::TransformComponent* t);
+    glm_vec3 harmony_mono_get_transform_forward     (harmony::TransformComponent* t);
+    glm_vec3 harmony_mono_get_transform_right       (harmony::TransformComponent* t);
+    glm_vec3 harmony_mono_get_transform_up          (harmony::TransformComponent* t);
 
 
 }

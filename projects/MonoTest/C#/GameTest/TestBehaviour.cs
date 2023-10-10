@@ -1,5 +1,5 @@
 ﻿using Harmony;
-using Harmony.Math;
+using System.Numerics;
 
 namespace GameTest
 {
@@ -19,9 +19,14 @@ namespace GameTest
         public override void Update()
         {
             float delta = (float) Time.GetFrameTime();
-            Vector3 v = _transform.GetTransformEuler();
-            v.x += delta * Speed;
-            _transform.SetTransformEuler(v);
+            Vector3 euler = _transform.GetTransformEuler();
+            Vector3 position = _transform.GetTransformPosition();
+            Vector3 forward = _transform.GetTransformForward();
+
+            euler.X += delta * Speed * Speed;
+            position += forward * delta * (Speed / Speed);
+            _transform.SetTransformEuler(euler);
+            _transform.SetTransformPosition(position);
         }
 
     }

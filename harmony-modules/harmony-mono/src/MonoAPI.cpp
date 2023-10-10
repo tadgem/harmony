@@ -130,4 +130,19 @@ glm_vec3 harmony_glm_vec3_default() {
     return glm_vec3{0.0f, 0.0f, 0.0f};
 }
 
+glm_vec3 harmony_mono_get_transform_forward(harmony::TransformComponent *t) {
+    if(!t) return harmony_glm_vec3_default();
+    return glm_vec3 {t->Forward.x, t->Forward.y, t->Forward.z};
+}
+
+glm_vec3 harmony_mono_get_transform_right(harmony::TransformComponent *t) {
+    if(!t) return harmony_glm_vec3_default();
+    return glm_vec3 {t->Right.x, t->Right.y, t->Right.z};
+}
+
+glm_vec3 harmony_mono_get_transform_up(harmony::TransformComponent *t) {
+    if(!t) return harmony_glm_vec3_default();
+    return glm_vec3 {t->Up.x, t->Up.y, t->Up.z};
+}
+
 

@@ -152,6 +152,9 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.ECSMethods::GetTransformPosition", harmony_mono_get_transform_position);
     mono_add_internal_call("Harmony.ECSMethods::GetTransformEuler", harmony_mono_get_transform_euler);
     mono_add_internal_call("Harmony.ECSMethods::GetTransformScale", harmony_mono_get_transform_scale);
+    mono_add_internal_call("Harmony.ECSMethods::GetTransformForward", harmony_mono_get_transform_forward);
+    mono_add_internal_call("Harmony.ECSMethods::GetTransformRight", harmony_mono_get_transform_right);
+    mono_add_internal_call("Harmony.ECSMethods::GetTransformUp", harmony_mono_get_transform_up);
     mono_add_internal_call("Harmony.ECSMethods::SetTransformPosition", harmony_mono_set_transform_position);
     mono_add_internal_call("Harmony.ECSMethods::SetTransformEuler", harmony_mono_set_transform_euler);
     mono_add_internal_call("Harmony.ECSMethods::SetTransformScale", harmony_mono_set_transform_scale);

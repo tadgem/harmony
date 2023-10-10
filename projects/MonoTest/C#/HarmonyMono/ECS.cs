@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
-using Harmony.Math;
 namespace Harmony
 {
     /// <summary>
@@ -40,6 +40,15 @@ namespace Harmony
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static Vector3 GetTransformScale(this NativeTransformComponent t);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static Vector3 GetTransformForward(this NativeTransformComponent t);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static Vector3 GetTransformRight(this NativeTransformComponent t);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static Vector3 GetTransformUp(this NativeTransformComponent t);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static void SetTransformPosition(this NativeTransformComponent t, Vector3 pos);

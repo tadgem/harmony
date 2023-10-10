@@ -1,16 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Harmony;
+using HarmonyJoltSharp;
+using System;
+using System.Numerics;
 
 namespace GameTest
 {
-    internal class AnotherClass
+    public class JoltTestBehaviour : Behaviour
     {
-        internal static void DoSomething()
+        private Scene _scene;
+        private NativeTransformComponent _transform;
+        private HarmonyJoltSharp.Body _body;
+        public float Force = 10000.0f;
+
+        public override void Init()
         {
-            Console.WriteLine("Daen a thing");
+            _scene = SceneMethods.GetActiveScene();
+            _transform = _scene.GetEntityTransform(Self);
+
+            NativeJoltBodyComponent joltBody = _scene.GetEntityJoltBodyComponent(Self);
+            IntPtr bodyPtr = joltBody.GetJoltBodyFromComponent();
+            _body = new HarmonyJoltSharp.Body(bodyPtr);
+
+            Vector3 v = _transform.GetTransformPosition();
+            Log.Info($"I am entity : {Self} : Pos : {v}");
+        }
+        public override void Update()
+        {
+            NativeJoltBodyComponent joltBody = _scene.GetEntityJoltBodyComponent(Self);
+            IntPtr bodyPtr = joltBody.GetJoltBodyFromComponent();
+            _body = new HarmonyJoltSharp.Body(bodyPtr);
+            _body.AddForce(Vector3.UnitY * Force);
         }
 
     }
