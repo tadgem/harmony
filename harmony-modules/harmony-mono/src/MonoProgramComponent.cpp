@@ -19,6 +19,14 @@ void harmony::MonoProgramComponent::Init()
     std::string assemblyDir = root + "/lib/mono/4.5";
     mono_set_assemblies_path(assemblyDir.c_str());
 
+//    const char* options[] =
+//    {
+//            "--soft-breakpoints",
+//            "--debugger-agent=transport=dt_socket,address=127.0.0.1:55555"
+//    };
+//
+//    mono_jit_parse_options(sizeof(options) / sizeof(char*), (char**) options);
+
     if(p_RootDomain == nullptr)
     {
         p_RootDomain = mono_jit_init(p_RootDomainName.c_str());

@@ -32,7 +32,6 @@ extern "C"
 
 void harmony::JoltMonoInternalMethodProvider::BindInternalMethods()
 {
-
     mono_add_internal_call("HarmonyJoltSharp.ECS::GetEntityJoltBodyComponent", harmony_mono_get_jolt_body_component);
     mono_add_internal_call("HarmonyJoltSharp.ECS::GetJoltBodyFromComponent", harmony_mono_get_jolt_body_from_component);
 

@@ -40,6 +40,11 @@ void harmony::MonoSystem::Render(entt::registry& registry)
 
 void harmony::MonoSystem::Cleanup(entt::registry& registry)
 {
+    auto view = registry.view<MonoBehaviourComponent>();
+
+    for (auto [e, mono]: view.each()) {
+        registry.destroy(e);
+    }
 }
 
 nlohmann::json harmony::MonoSystem::SerializeSystem(entt::registry& registry)
@@ -59,8 +64,6 @@ void harmony::MonoSystem::DeserializeSystem(entt::registry& registry, nlohmann::
         nlohmann::json monoJson = entry.value();
         MonoBehaviourComponent mc;
         monoJson.get_to<MonoBehaviourComponent>(mc);
-        // TODO: Add behaviours again.
-
         auto newMC = registry.emplace<MonoBehaviourComponent>(e);
 
         for(MonoBehaviour m : mc.m_Behaviours)

@@ -10,7 +10,7 @@ namespace GameTest
         private Scene _scene;
         private NativeTransformComponent _transform;
         private HarmonyJoltSharp.Body _body;
-        public float Force = 10000.0f;
+        public float Force = 5000.0f;
 
         public override void Init()
         {

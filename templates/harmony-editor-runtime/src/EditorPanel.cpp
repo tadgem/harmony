@@ -610,6 +610,7 @@ void harmony::MonoPanel::OnImGui() {
             p_AssetManager.ReloadAllAssetsOfType<MonoAssemblyAsset>();
             mono->FromJson(p_Program.m_Project->p_ProgramComponentSerializationAttributes[GetTypeHash<MonoProgramComponent>().m_Value]);
             // TODO: how do we get the active scene..
+            sys->Cleanup(p_Program.GetActiveScene().lock()->m_Registry);
             // sys->DeserializeSystem(p_Program.GetActiveScene().lock()->m_Registry,p_Program.m_Project->_)
         }
 
