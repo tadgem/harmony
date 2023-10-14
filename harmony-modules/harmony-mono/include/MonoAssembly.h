@@ -29,7 +29,7 @@ namespace harmony
     protected:
         friend class MonoProgramComponent;
         friend class MonoSystem;
-        void CollectAssemblyData();
+        void CollectAssemblyData(String path);
         const Vector<uint8_t>   p_AssemblyBinary;
         MonoAssembly*           p_MonoAssembly;
     };

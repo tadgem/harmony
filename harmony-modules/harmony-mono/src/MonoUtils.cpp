@@ -124,11 +124,10 @@ MonoAssembly* harmony::MonoUtils::LoadCSharpAssembly(const std::string& assembly
     }
 
     MonoAssembly* assembly = mono_assembly_load_from_full(image, assemblyPath.c_str(), &status, 0);
-    mono_image_close(image);
 
     // TODO : Don't forget to free the file data
     // delete[] fileData;
-
+    mono_image_close(image);
     return assembly;
 }
 

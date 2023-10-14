@@ -1,21 +1,28 @@
 #include "MonoAssembly.h"
 #include "MonoUtils.h"
 #include "Core/Log.hpp"
+#include <filesystem>
+#include "Core/Utils.h"
 
+#include "mono/jit/jit.h"
+#include "mono/metadata/assembly.h"
+#include "mono/metadata/object.h"
+#include "mono/metadata/mono-debug.h"
+#include "mono/metadata/threads.h"
 harmony::MonoAssemblyAsset::MonoAssemblyAsset(std::vector<uint8_t> assemblyBinary, const String& assemblyPath) :
 	Asset(),
 	p_AssemblyBinary(assemblyBinary), 
 	m_AssemblyPath(assemblyPath),
 	p_MonoAssembly(MonoUtils::LoadCSharpAssembly(m_AssemblyPath, (char*)p_AssemblyBinary.data(), p_AssemblyBinary.size()))
 {
-    CollectAssemblyData();
+    CollectAssemblyData(assemblyPath);
 }
 
 harmony::MonoAssemblyAsset::~MonoAssemblyAsset()
 {
 }
 
-void harmony::MonoAssemblyAsset::CollectAssemblyData()
+void harmony::MonoAssemblyAsset::CollectAssemblyData(String path)
 {
     MonoImage* image = mono_assembly_get_image((MonoAssembly*) p_MonoAssembly);
 
@@ -87,18 +94,22 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData()
         m_TypeSpecInfos.emplace_back(typeSpecInfo);
     }
 
-    for (int32_t i = 0; i < numMethodImpls; i++)
+    if(numMethodImpls > 0)
     {
-        uint32_t cols[MONO_METHODIMPL_SIZE];
-        mono_metadata_decode_row(typeSpecTable, i, cols, MONO_METHODIMPL_SIZE);
+        for (int32_t i = 0; i < numMethodImpls; i++)
+        {
+            continue;
+            uint32_t cols[MONO_METHODIMPL_SIZE];
+            mono_metadata_decode_row(typeSpecTable, i, cols, MONO_METHODIMPL_SIZE);
 
-        String declaration = String(mono_metadata_string_heap(image, cols[MONO_METHODIMPL_DECLARATION]));
-        String body = String(mono_metadata_string_heap(image, cols[MONO_METHODIMPL_BODY]));
-        String klass = String(mono_metadata_string_heap(image, cols[MONO_METHODIMPL_CLASS]));
+            String declaration = String(mono_metadata_string_heap(image, cols[MONO_METHODIMPL_DECLARATION]));
+            String body = String(mono_metadata_string_heap(image, cols[MONO_METHODIMPL_BODY]));
+            String klass = String(mono_metadata_string_heap(image, cols[MONO_METHODIMPL_CLASS]));
 
-        MonoUtils::CsMethodImplInfo methodInfo {declaration, body, klass};
-        m_MethodImplInfos.push_back(methodInfo);
+            MonoUtils::CsMethodImplInfo methodInfo {declaration, body, klass};
+            m_MethodImplInfos.push_back(methodInfo);
 
+        }
     }
     String lastNameSpace;
     String lastTypeName;
@@ -180,5 +191,18 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData()
                 type
         };
         m_InterfaceImplInfos.emplace_back(interfaceImplInfo);
+
     }
+
+    std::filesystem::path pdbPath = path;
+    pdbPath.replace_extension(".pdb");
+
+    if (std::filesystem::exists(pdbPath))
+    {
+        Vector<unsigned char> pdbFileData = Utils::LoadBinaryFromPath(pdbPath.string());
+        mono_debug_open_image_from_memory(image, (mono_byte*)pdbFileData.data(), pdbFileData.size());
+        log::info("MonoAssembly : Loaded PDB for assembly : {}", pdbPath.string());
+    }
+
+    mono_image_close(image);
 }

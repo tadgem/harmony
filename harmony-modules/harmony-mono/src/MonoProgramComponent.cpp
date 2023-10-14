@@ -5,7 +5,11 @@
 #include "Core/Program.h"
 #include "Core/Log.hpp"
 #include "MonoAPI.h"
-
+#include <fstream>
+#include <iostream>
+#include <filesystem>
+#include "mono/metadata/mono-debug.h"
+#include "mono/metadata/threads.h"
 harmony::MonoProgramComponent::MonoProgramComponent(AssetManager& assetManager, Vector<RefCntPtr<MonoInternalMethodProvider>> methodProviders) : ProgramComponent(GetTypeHash<MonoProgramComponent>())
 , p_AssemblyConfig(MonoAssemblyConfiguration::Debug), m_AssetManager(assetManager), p_MethodProviders(methodProviders)
 
@@ -16,16 +20,16 @@ void harmony::MonoProgramComponent::Init()
 {
     // TODO: Change to the project directory
     std::string root(std::getenv("MONO_PATH"));
-    std::string assemblyDir = root + "/lib/mono/4.5";
+    std::string assemblyDir = root + "/lib";
     mono_set_assemblies_path(assemblyDir.c_str());
 
-//    const char* options[] =
-//    {
-//            "--soft-breakpoints",
-//            "--debugger-agent=transport=dt_socket,address=127.0.0.1:55555"
-//    };
-//
-//    mono_jit_parse_options(sizeof(options) / sizeof(char*), (char**) options);
+    const char* argv[2] = {
+            "--soft-breakpoints",
+            "--debugger-agent=transport=dt_socket,address=127.0.0.1:2550,server=y,suspend=n,loglevel=3,keepalive=10,setpgid=y,logfile=MonoDebugger.log"
+    };
+
+    mono_jit_parse_options(2, (char**)argv);
+    mono_debug_init(MONO_DEBUG_FORMAT_MONO);
 
     if(p_RootDomain == nullptr)
     {
@@ -38,6 +42,10 @@ void harmony::MonoProgramComponent::Init()
         return;
     }
 
+    mono_debug_domain_create(p_RootDomain);
+
+    mono_thread_set_main(mono_thread_current());
+
     char* APP_DOMAIN_CONFIG = nullptr;
     p_AppDomain = mono_domain_create_appdomain((char*) p_AppDomainName.c_str(), APP_DOMAIN_CONFIG);
 
@@ -49,6 +57,8 @@ void harmony::MonoProgramComponent::Init()
 
     bool FORCE_SET = true;
     mono_domain_set(p_AppDomain, FORCE_SET);
+
+    harmony::log::info("MonoProgramComponent : Debug Enabled : {}", (bool) mono_debug_enabled());
 
     BindScriptingAPI();
 }
@@ -132,6 +142,7 @@ void harmony::MonoProgramComponent::FromJson(const nlohmann::json& json)
         AddMonoImplementedProgramComponent(monoAssembly, csTypeInfo);
     }
 }
+
 
 void harmony::MonoProgramComponent::BindScriptingAPI()
 {
