@@ -1,8 +1,8 @@
 VM start event not sent yet: dropping APPDOMAIN_CREATE
-[0000000000007B9C] Thread started, obj=00000234A99F0130, tls=00000234B47D2550.
+[0000000000008B38] Thread started, obj=00000207E49C0130, tls=00000207DDA43E40.
 VM start event not sent yet: dropping THREAD_START
-[0000000000007B9C] Suspended.
-[0000000000007B9C] Resumed.
+[0000000000008B38] Suspended.
+[0000000000008B38] Resumed.
 VM start event not sent yet: dropping ASSEMBLY_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
@@ -12,12 +12,12 @@ VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
-[0000000000002890] Thread started, obj=00000234A99F0278, tls=00000234B4811D30.
+[0000000000008EE8] Thread started, obj=00000207E49C0278, tls=00000207DDA90B10.
 VM start event not sent yet: dropping THREAD_START
+[0000000000008EE8] Suspended.
+[0000000000008EE8] Resumed.
 Debugger client is not connected: dropping VM_START
-[0000000000002890] Suspended.
-[0000000000002890] Resumed.
-[dbg] Agent thread started, pid=00000000000082D8
+[dbg] Agent thread started, pid=0000000000006224
 VM start event not sent yet: dropping APPDOMAIN_CREATE
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
@@ -84,181 +84,82 @@ VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
-Accepted connection from client, connection fd=4936.
-Accepted connection on 4936
-[00000000000082D8] Sent 1 events VM_START(1), suspend=0.
-[dbg] Command VM(VERSION) [1][at=396b].
-[dbg] Command VM(SET_PROTOCOL_VERSION) [2][at=3975].
+Accepted connection from client, connection fd=4552.
+Accepted connection on 4552
+[0000000000006224] Sent 1 events VM_START(1), suspend=0.
+[dbg] Command VM(VERSION) [1][at=afc0].
+[dbg] Command VM(SET_PROTOCOL_VERSION) [2][at=afc4].
 [dbg] Protocol version 2.57, client protocol version 2.56.
-[dbg] Command APPDOMAIN(GET_ROOT_DOMAIN) [3][at=3975].
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [4][at=397f].
+[dbg] Command APPDOMAIN(GET_ROOT_DOMAIN) [3][at=afc4].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [4][at=afcb].
 [dbg]   send assembly [mscorlib][Harmony][1]
-[00000000000082D8] Sent 1 events ASSEMBLY_LOAD(2), suspend=0.
+[0000000000006224] Sent 1 events ASSEMBLY_LOAD(2), suspend=0.
 [dbg]   send assembly [mscorlib][GameTest][2]
-[00000000000082D8] Sent 1 events ASSEMBLY_LOAD(3), suspend=0.
+[0000000000006224] Sent 1 events ASSEMBLY_LOAD(3), suspend=0.
 [dbg]   send assembly [System.Runtime.CompilerServices.Unsafe][GameTest][3]
-[00000000000082D8] Sent 1 events ASSEMBLY_LOAD(4), suspend=0.
+[0000000000006224] Sent 1 events ASSEMBLY_LOAD(4), suspend=0.
 [dbg]   send assembly [System.Numerics.Vectors][GameTest][4]
-[00000000000082D8] Sent 1 events ASSEMBLY_LOAD(5), suspend=0.
+[0000000000006224] Sent 1 events ASSEMBLY_LOAD(5), suspend=0.
 [dbg]   send assembly [System.Memory][GameTest][5]
-[00000000000082D8] Sent 1 events ASSEMBLY_LOAD(6), suspend=0.
+[0000000000006224] Sent 1 events ASSEMBLY_LOAD(6), suspend=0.
 [dbg]   send assembly [System.Buffers][GameTest][6]
-[00000000000082D8] Sent 1 events ASSEMBLY_LOAD(7), suspend=0.
+[0000000000006224] Sent 1 events ASSEMBLY_LOAD(7), suspend=0.
 [dbg]   send assembly [HarmonyJoltSharp][GameTest][7]
-[00000000000082D8] Sent 1 events ASSEMBLY_LOAD(8), suspend=0.
+[0000000000006224] Sent 1 events ASSEMBLY_LOAD(8), suspend=0.
 [dbg]   send assembly [GameTest][GameTest][8]
-[00000000000082D8] Sent 1 events ASSEMBLY_LOAD(9), suspend=0.
+[0000000000006224] Sent 1 events ASSEMBLY_LOAD(9), suspend=0.
 [dbg]   send assembly [HarmonyMono][GameTest][9]
-[00000000000082D8] Sent 1 events ASSEMBLY_LOAD(10), suspend=0.
+[0000000000006224] Sent 1 events ASSEMBLY_LOAD(10), suspend=0.
 [dbg]   send assembly [System.Numerics][GameTest][10]
-[00000000000082D8] Sent 1 events ASSEMBLY_LOAD(11), suspend=0.
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [5][at=3980].
-[00000000000082D8] Sent 1 events THREAD_START(12), suspend=0.
-[00000000000082D8] Sent 1 events THREAD_START(13), suspend=0.
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [6][at=3980].
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [7][at=3980].
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [8][at=3980].
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [9][at=3980].
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [10][at=3981].
+[0000000000006224] Sent 1 events ASSEMBLY_LOAD(11), suspend=0.
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [5][at=afcc].
+[0000000000006224] Sent 1 events THREAD_START(12), suspend=0.
+[0000000000006224] Sent 1 events THREAD_START(13), suspend=0.
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [6][at=afcc].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [7][at=afcc].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [8][at=afcc].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [9][at=afcc].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [10][at=afcd].
 [dbg] 	EXCEPTION_ONLY 2 filter (all, uncaught, include-subclasses).
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [11][at=3981].
-[dbg] Command OBJECT_REF(GET_INFO) [12][at=3986].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [11][at=afce].
+[dbg] Command OBJECT_REF(GET_INFO) [12][at=afd3].
 [dbg]   send class [System.Threading.Thread]
-[dbg] Command TYPE(GET_INFO) [13][at=3987].
+[dbg] Command TYPE(GET_INFO) [13][at=afd4].
 [dbg]   recv class [System.Threading.Thread]
 [dbg]   send assembly [mscorlib][Harmony][1]
 [dbg]   send class [System.Runtime.ConstrainedExecution.CriticalFinalizerObject]
-[dbg] Command APPDOMAIN(GET_CORLIB) [14][at=3989].
+[dbg] Command APPDOMAIN(GET_CORLIB) [14][at=afd6].
 [dbg]   send assembly [mscorlib][Harmony][1]
-[dbg] Command THREAD(GET_ID) [15][at=398a].
-[dbg] Command THREAD(GET_NAME) [16][at=398b].
-[dbg] Command THREAD(GET_INFO) [17][at=398b].
-[dbg] Command ASSEMBLY(GET_TYPE) [18][at=3a5a].
+[dbg] Command THREAD(GET_ID) [15][at=afd7].
+[dbg] Command THREAD(GET_NAME) [16][at=afd8].
+[dbg] Command THREAD(GET_INFO) [17][at=afd8].
+[dbg] Command ASSEMBLY(GET_TYPE) [18][at=b0af].
 [dbg]   send class [System.Exception]
-[dbg] Command TYPE(GET_INFO) [19][at=3a5e].
+[dbg] Command TYPE(GET_INFO) [19][at=b0b3].
 [dbg]   recv class [System.Exception]
 [dbg]   send assembly [mscorlib][Harmony][1]
 [dbg]   send class [object]
 [dbg]   send class [System.Exception/__RestrictedErrorObject]
 [dbg]   send class [System.Exception/ExceptionMessageKind]
-[dbg] Command ASSEMBLY(GET_DOMAIN) [20][at=3a86].
-[dbg] Command TYPE(GET_SOURCE_FILES) [21][at=3aa6].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [20][at=b0b4].
+[dbg] Command TYPE(GET_SOURCE_FILES) [21][at=b0b5].
 [dbg]   recv class [System.Exception]
-[dbg] Command ASSEMBLY(GET_NAME) [22][at=3e08].
-[dbg] Command ASSEMBLY(GET_OBJECT) [23][at=3e21].
-[dbg] Command OBJECT_REF(GET_INFO) [24][at=3e21].
+[dbg] Command ASSEMBLY(GET_NAME) [22][at=b0e2].
+[dbg] Command ASSEMBLY(GET_OBJECT) [23][at=b0f5].
+[dbg] Command OBJECT_REF(GET_INFO) [24][at=b0f5].
 [dbg]   send class [System.Reflection.RuntimeAssembly]
-[dbg] Command TYPE(GET_INFO) [25][at=3e21].
+[dbg] Command TYPE(GET_INFO) [25][at=b0f5].
 [dbg]   recv class [System.Reflection.RuntimeAssembly]
 [dbg]   send assembly [mscorlib][Harmony][1]
 [dbg]   send class [System.Reflection.Assembly]
 [dbg]   send class [System.Reflection.RuntimeAssembly/UnmanagedMemoryStreamForModule]
-[dbg] Command ASSEMBLY(9) [26][at=3e41].
-[dbg] Command ASSEMBLY(13) [27][at=3e5f].
-[dbg] Command ASSEMBLY(GET_LOCATION) [28][at=3e60].
-[dbg] Command OBJECT_REF(GET_ADDRESS) [29][at=3e60].
-[dbg] Command APPDOMAIN(GET_FRIENDLY_NAME) [30][at=3e60].
-[dbg] Command VM(GET_TYPES) [31][at=3eee].
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [32][at=3f90].
-[dbg] Command VM(GET_TYPES) [33][at=4779].
-[dbg] Command EVENT_REQUEST(REQUEST_CLEAR) [34][at=4781].
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [35][at=4781].
-[dbg] Command ASSEMBLY(GET_NAME) [36][at=4784].
-[dbg] Command ASSEMBLY(GET_OBJECT) [37][at=4784].
-[dbg] Command OBJECT_REF(GET_INFO) [38][at=4ad3].
-[dbg]   send class [System.Reflection.RuntimeAssembly]
-[dbg] Command TYPE(GET_INFO) [39][at=4ad3].
-[dbg]   recv class [System.Reflection.RuntimeAssembly]
-[dbg]   send assembly [mscorlib][GameTest][2]
-[dbg]   send class [System.Reflection.Assembly]
-[dbg]   send class [System.Reflection.RuntimeAssembly/UnmanagedMemoryStreamForModule]
-[dbg] Command APPDOMAIN(GET_CORLIB) [40][at=4ad4].
-[dbg]   send assembly [mscorlib][GameTest][2]
-[dbg] Command ASSEMBLY(9) [41][at=4ad4].
-[dbg] Command ASSEMBLY(13) [42][at=4ad4].
-[dbg] Command ASSEMBLY(GET_LOCATION) [43][at=4ad4].
-[dbg] Command OBJECT_REF(GET_ADDRESS) [44][at=4ad4].
-[dbg] Command ASSEMBLY(GET_DOMAIN) [45][at=4ad4].
-[dbg] Command APPDOMAIN(GET_FRIENDLY_NAME) [46][at=4ad4].
-[dbg] Command ASSEMBLY(GET_NAME) [47][at=4ad4].
-[dbg] Command VM(GET_TYPES) [48][at=4c0e].
-[dbg] Command ASSEMBLY(GET_OBJECT) [49][at=4c0e].
-[dbg] Command OBJECT_REF(GET_INFO) [50][at=4c0e].
-[dbg]   send class [System.Reflection.RuntimeAssembly]
-[dbg] Command ASSEMBLY(9) [51][at=4c0e].
-[dbg] Command ASSEMBLY(13) [52][at=4c0e].
-[dbg] Command ASSEMBLY(GET_LOCATION) [53][at=4c0e].
-[dbg] Command EVENT_REQUEST(REQUEST_CLEAR) [54][at=4c0e].
-[dbg] Command OBJECT_REF(GET_ADDRESS) [55][at=4c0e].
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [56][at=4c0e].
-[dbg] Command ASSEMBLY(GET_DOMAIN) [57][at=4c10].
-[dbg] Command ASSEMBLY(GET_NAME) [58][at=4c10].
-[dbg] Command ASSEMBLY(GET_OBJECT) [59][at=4c11].
-[dbg] Command OBJECT_REF(GET_INFO) [60][at=4c11].
-[dbg]   send class [System.Reflection.RuntimeAssembly]
-[dbg] Command ASSEMBLY(9) [61][at=4c11].
-[dbg] Command ASSEMBLY(13) [62][at=4c11].
-[dbg] Command ASSEMBLY(GET_LOCATION) [63][at=4c11].
-[dbg] Command OBJECT_REF(GET_ADDRESS) [64][at=4c11].
-[dbg] Command ASSEMBLY(GET_DOMAIN) [65][at=4c11].
-[dbg] Command ASSEMBLY(GET_NAME) [66][at=4c11].
-[dbg] Command ASSEMBLY(GET_OBJECT) [67][at=4c11].
-[dbg] Command OBJECT_REF(GET_INFO) [68][at=4d03].
-[dbg]   send class [System.Reflection.RuntimeAssembly]
-[dbg] Command ASSEMBLY(9) [69][at=4d03].
-[dbg] Command ASSEMBLY(13) [70][at=4d03].
-[dbg] Command ASSEMBLY(GET_LOCATION) [71][at=4d03].
-[dbg] Command OBJECT_REF(GET_ADDRESS) [72][at=4d03].
-[dbg] Command ASSEMBLY(GET_DOMAIN) [73][at=4d03].
-[dbg] Command ASSEMBLY(GET_NAME) [74][at=4d03].
-[dbg] Command ASSEMBLY(GET_OBJECT) [75][at=4d03].
-[dbg] Command OBJECT_REF(GET_INFO) [76][at=4d04].
-[dbg]   send class [System.Reflection.RuntimeAssembly]
-[dbg] Command ASSEMBLY(9) [77][at=4d04].
-[dbg] Command ASSEMBLY(13) [78][at=4d04].
-[dbg] Command ASSEMBLY(GET_LOCATION) [79][at=4d04].
-[dbg] Command OBJECT_REF(GET_ADDRESS) [80][at=4d04].
-[dbg] Command ASSEMBLY(GET_DOMAIN) [81][at=4d04].
-[dbg] Command ASSEMBLY(GET_NAME) [82][at=4d04].
-[dbg] Command VM(GET_TYPES) [83][at=4de1].
-[dbg] Command ASSEMBLY(GET_OBJECT) [84][at=4de1].
-[dbg] Command EVENT_REQUEST(REQUEST_CLEAR) [85][at=4de1].
-[dbg] Command OBJECT_REF(GET_INFO) [86][at=4de1].
-[dbg]   send class [System.Reflection.RuntimeAssembly]
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [87][at=4de1].
-[dbg] Command ASSEMBLY(9) [88][at=4dec].
-[dbg] Command ASSEMBLY(13) [89][at=4ea9].
-[dbg] Command ASSEMBLY(GET_LOCATION) [90][at=4ea9].
-[dbg] Command OBJECT_REF(GET_ADDRESS) [91][at=4ea9].
-[dbg] Command ASSEMBLY(GET_DOMAIN) [92][at=4ea9].
-[dbg] Command ASSEMBLY(GET_NAME) [93][at=4ea9].
-[dbg] Command ASSEMBLY(GET_OBJECT) [94][at=4eaa].
-[dbg] Command OBJECT_REF(GET_INFO) [95][at=4eaa].
-[dbg]   send class [System.Reflection.RuntimeAssembly]
-[dbg] Command ASSEMBLY(9) [96][at=4eaa].
-[dbg] Command ASSEMBLY(13) [97][at=4eaa].
-[dbg] Command ASSEMBLY(GET_LOCATION) [98][at=4eaa].
-[dbg] Command OBJECT_REF(GET_ADDRESS) [99][at=4eaa].
-[dbg] Command ASSEMBLY(GET_DOMAIN) [100][at=4eaa].
-[dbg] Command ASSEMBLY(GET_NAME) [101][at=4eaa].
-[dbg] Command ASSEMBLY(GET_OBJECT) [102][at=4eaa].
-[dbg] Command OBJECT_REF(GET_INFO) [103][at=4eaa].
-[dbg]   send class [System.Reflection.RuntimeAssembly]
-[dbg] Command ASSEMBLY(9) [104][at=4eaa].
-[dbg] Command ASSEMBLY(13) [105][at=4eaa].
-[dbg] Command ASSEMBLY(GET_LOCATION) [106][at=4eab].
-[dbg] Command OBJECT_REF(GET_ADDRESS) [107][at=4eab].
-[dbg] Command ASSEMBLY(GET_DOMAIN) [108][at=4eab].
-[dbg] Command ASSEMBLY(GET_NAME) [109][at=4eac].
-[dbg] Command ASSEMBLY(GET_OBJECT) [110][at=4eac].
-[dbg] Command OBJECT_REF(GET_INFO) [111][at=4eac].
-[dbg]   send class [System.Reflection.RuntimeAssembly]
-[dbg] Command ASSEMBLY(9) [112][at=4eac].
-[dbg] Command ASSEMBLY(13) [113][at=4eac].
-[dbg] Command ASSEMBLY(GET_LOCATION) [114][at=4eac].
-[dbg] Command OBJECT_REF(GET_ADDRESS) [115][at=4eac].
-[dbg] Command ASSEMBLY(GET_DOMAIN) [116][at=4eac].
-[dbg] Command VM(DISPOSE) [117][at=7b74].
+[dbg] Command ASSEMBLY(9) [26][at=b0f6].
+[dbg] Command ASSEMBLY(13) [27][at=b0f7].
+[dbg] Command ASSEMBLY(GET_LOCATION) [28][at=b0f7].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [29][at=b0f7].
+[dbg] Command APPDOMAIN(GET_FRIENDLY_NAME) [30][at=b53b].
+[dbg] Command VM(GET_TYPES) [31][at=b5a3].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [32][at=b5dd].
+Sending command KEEPALIVE failed.
+[dbg] transport_recv () returned 0, expected 11.
 [dbg] Debugger thread exited.
-[dbg] Detached - restarting clean debugger thread.
-[dbg] Agent thread started, pid=0000000000002798

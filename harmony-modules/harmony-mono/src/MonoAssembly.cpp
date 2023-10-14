@@ -193,16 +193,4 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData(String path)
         m_InterfaceImplInfos.emplace_back(interfaceImplInfo);
 
     }
-
-    std::filesystem::path pdbPath = path;
-    pdbPath.replace_extension(".pdb");
-
-    if (std::filesystem::exists(pdbPath))
-    {
-        Vector<unsigned char> pdbFileData = Utils::LoadBinaryFromPath(pdbPath.string());
-        mono_debug_open_image_from_memory(image, (mono_byte*)pdbFileData.data(), pdbFileData.size());
-        log::info("MonoAssembly : Loaded PDB for assembly : {}", pdbPath.string());
-    }
-
-    mono_image_close(image);
 }

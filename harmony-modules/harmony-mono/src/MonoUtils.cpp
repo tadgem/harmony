@@ -1,5 +1,9 @@
+#include <Core/Utils.h>
 #include "MonoUtils.h"
 #include "Core/Log.hpp"
+#include "mono/metadata/mono-debug.h"
+
+
 harmony::MonoUtils::Accessibility harmony::MonoUtils::GetFieldAccessibility(MonoClassField *field)
 {
     uint8_t accessibility = Accessibility::None;
@@ -121,6 +125,16 @@ MonoAssembly* harmony::MonoUtils::LoadCSharpAssembly(const std::string& assembly
         const char* errorMessage = mono_image_strerror(status);
         log::error("Failed to create MonoAssembly for assembly : {}", errorMessage);
         return nullptr;
+    }
+
+    std::filesystem::path pdbPath = assemblyPath;
+    pdbPath.replace_extension(".pdb");
+
+    if (std::filesystem::exists(pdbPath))
+    {
+        Vector<unsigned char> pdbFileData = Utils::LoadBinaryFromPath(pdbPath.string());
+        mono_debug_open_image_from_memory(image, (mono_byte*)pdbFileData.data(), pdbFileData.size());
+        log::info("MonoAssembly : Loaded PDB for assembly : {}", pdbPath.string());
     }
 
     MonoAssembly* assembly = mono_assembly_load_from_full(image, assemblyPath.c_str(), &status, 0);
