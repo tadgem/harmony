@@ -43,7 +43,7 @@ void harmony::MonoSystem::Cleanup(entt::registry& registry)
     auto view = registry.view<MonoBehaviourComponent>();
 
     for (auto [e, mono]: view.each()) {
-        registry.destroy(e);
+        registry.remove<MonoBehaviourComponent>(e);
     }
 }
 
@@ -59,6 +59,7 @@ nlohmann::json harmony::MonoSystem::SerializeSystem(entt::registry& registry)
 
 void harmony::MonoSystem::DeserializeSystem(entt::registry& registry, nlohmann::json systemJson)
 {
+    String jsonStr = systemJson.dump();
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
         nlohmann::json monoJson = entry.value();

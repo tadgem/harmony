@@ -5,6 +5,7 @@
 #include "ECS/Entity.h"
 #include "ECS/System.h"
 #include "Core/Memory.h"
+#include "Core/TypeDef.h"
 
 namespace harmony {
     class Scene {
@@ -18,6 +19,18 @@ namespace harmony {
         std::string m_Name;
         uint32_t m_NumEntities;
         entt::registry m_Registry;
+
+        template<typename T>
+        nlohmann::json GetSystemJSON()
+        {
+            HashString typeHash = GetTypeHash<T>();
+            if(p_SystemSerializationAttributes.find(typeHash.m_Value) != p_SystemSerializationAttributes.end())
+            {
+                return p_SystemSerializationAttributes[typeHash.m_Value];
+            }
+
+            return nlohmann::json();
+        }
 
     protected:
         friend class Program;

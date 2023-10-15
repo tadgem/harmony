@@ -23,27 +23,26 @@ void harmony::MonoProgramComponent::Init()
     std::string assemblyDir = root + "/lib";
     mono_set_assemblies_path(assemblyDir.c_str());
 
-    const char* argv[2] = {
-            "--debugger-agent=transport=dt_socket,address=127.0.0.1:2550,server=y,suspend=n,loglevel=3,keepalive=10,setpgid=y,logfile=MonoDebugger.log",
-            "--soft-breakpoints"
-    };
-
-    mono_jit_parse_options(2, (char**)argv);
-    mono_debug_init(MONO_DEBUG_FORMAT_MONO);
-
     if(p_RootDomain == nullptr)
     {
+        const char* argv[2] = {
+                "--debugger-agent=transport=dt_socket,address=127.0.0.1:2550,server=y,suspend=n,loglevel=3,keepalive=10,setpgid=y,logfile=MonoDebugger.log",
+                "--soft-breakpoints"
+        };
+
+        mono_jit_parse_options(2, (char**)argv);
+        mono_debug_init(MONO_DEBUG_FORMAT_MONO);
         p_RootDomain = mono_jit_init(p_RootDomainName.c_str());
-    }
 
-    if(p_RootDomain == nullptr)
-    {
-        harmony::log::error("MonoProgramComponent : Failed to create root domain.");
-        return;
-    }
+        if(p_RootDomain == nullptr)
+        {
+            harmony::log::error("MonoProgramComponent : Failed to create root domain.");
+            return;
+        }
 
-    mono_debug_domain_create(p_RootDomain);
-    mono_thread_set_main(mono_thread_current());
+        mono_debug_domain_create(p_RootDomain);
+        mono_thread_set_main(mono_thread_current());
+    }
 
     BindScriptingAPI();
 
@@ -56,8 +55,7 @@ void harmony::MonoProgramComponent::Init()
         return;
     }
 
-    const bool FORCE_SET = true;
-    mono_domain_set(p_AppDomain, FORCE_SET);
+    mono_domain_set(p_AppDomain, false);
 
     harmony::log::info("MonoProgramComponent : Debug Enabled : {}", (bool) mono_debug_enabled());
 }
@@ -95,10 +93,8 @@ void harmony::MonoProgramComponent::Cleanup()
         }
     }
     p_MonoProgramComponents.clear();
-    mono_domain_set(p_RootDomain, 0);
+    mono_domain_set(mono_get_root_domain(), true);
     mono_domain_unload(p_AppDomain);
-
-
 }
 
 nlohmann::json harmony::MonoProgramComponent::ToJson()

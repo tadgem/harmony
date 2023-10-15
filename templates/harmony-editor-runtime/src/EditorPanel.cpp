@@ -607,13 +607,13 @@ void harmony::MonoPanel::OnImGui() {
         ImGui::Text("Debugger Connected? : %s", mono_is_debugger_attached() ? "true" : "false");
         if(ImGui::Button("Reload Mono Assemblies"))
         {
+            auto scene = p_Program.GetActiveScene().lock();
+            sys->Cleanup(scene->m_Registry);
             mono->Cleanup();
             mono->Init();
             p_AssetManager.ReloadAllAssetsOfType<MonoAssemblyAsset>();
             mono->FromJson(p_Program.m_Project->p_ProgramComponentSerializationAttributes[GetTypeHash<MonoProgramComponent>().m_Value]);
-            // TODO: how do we get the active scene..
-            sys->Cleanup(p_Program.GetActiveScene().lock()->m_Registry);
-            // sys->DeserializeSystem(p_Program.GetActiveScene().lock()->m_Registry,p_Program.m_Project->_)
+            sys->DeserializeSystem(scene->m_Registry, scene->GetSystemJSON<MonoSystem>());
         }
 
         auto assemblyHandles = p_Program.m_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
