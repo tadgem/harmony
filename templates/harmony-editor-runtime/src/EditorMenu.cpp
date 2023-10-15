@@ -79,14 +79,6 @@ void harmony::EditorMainMenuBar::MenuBar() {
             ImGui::EndMenu();
         }
         m_MenuBarSize = ImGui::GetWindowSize();
-
-        ImVec2 cursorPos = ImGui::GetCursorPos();
-        ImVec2 iconSize = ImGui::CalcTextSize(ICON_KI_BUTTON_X);
-        float padding = 4.0f;
-        ImGui::SetCursorPos(ImVec2(m_MenuBarSize.x - iconSize.x - padding, cursorPos.y));
-        if (ImGui::Button(ICON_KI_BUTTON_X)) {
-            p_Prog.Exit();
-        }
     }
     ImGui::EndMainMenuBar();
 }
