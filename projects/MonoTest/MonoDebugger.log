@@ -1,8 +1,8 @@
 VM start event not sent yet: dropping APPDOMAIN_CREATE
-[0000000000008B38] Thread started, obj=00000207E49C0130, tls=00000207DDA43E40.
+[0000000000001BE4] Thread started, obj=0000021DCDC60130, tls=0000021DC6D61C60.
 VM start event not sent yet: dropping THREAD_START
-[0000000000008B38] Suspended.
-[0000000000008B38] Resumed.
+[0000000000001BE4] Suspended.
+[0000000000001BE4] Resumed.
 VM start event not sent yet: dropping ASSEMBLY_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
@@ -12,12 +12,12 @@ VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
-[0000000000008EE8] Thread started, obj=00000207E49C0278, tls=00000207DDA90B10.
+[00000000000082B8] Thread started, obj=0000021DCDC60278, tls=0000021DC6DA1CC0.
 VM start event not sent yet: dropping THREAD_START
-[0000000000008EE8] Suspended.
-[0000000000008EE8] Resumed.
+[00000000000082B8] Suspended.
 Debugger client is not connected: dropping VM_START
-[dbg] Agent thread started, pid=0000000000006224
+[00000000000082B8] Resumed.
+[dbg] Agent thread started, pid=0000000000001C94
 VM start event not sent yet: dropping APPDOMAIN_CREATE
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
@@ -28,11 +28,6 @@ VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping ASSEMBLY_LOAD
-VM start event not sent yet: dropping ASSEMBLY_LOAD
-VM start event not sent yet: dropping ASSEMBLY_LOAD
-VM start event not sent yet: dropping ASSEMBLY_LOAD
-VM start event not sent yet: dropping ASSEMBLY_LOAD
-VM start event not sent yet: dropping ASSEMBLY_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping ASSEMBLY_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
@@ -47,6 +42,7 @@ VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
+VM start event not sent yet: dropping ASSEMBLY_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping ASSEMBLY_LOAD
@@ -84,82 +80,3334 @@ VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
 VM start event not sent yet: dropping TYPE_LOAD
-Accepted connection from client, connection fd=4552.
-Accepted connection on 4552
-[0000000000006224] Sent 1 events VM_START(1), suspend=0.
-[dbg] Command VM(VERSION) [1][at=afc0].
-[dbg] Command VM(SET_PROTOCOL_VERSION) [2][at=afc4].
+Accepted connection from client, connection fd=5064.
+Accepted connection on 5064
+[0000000000001C94] Sent 1 events VM_START(1), suspend=0.
+[dbg] Command VM(VERSION) [1][at=5144].
+[dbg] Command VM(SET_PROTOCOL_VERSION) [2][at=5162].
 [dbg] Protocol version 2.57, client protocol version 2.56.
-[dbg] Command APPDOMAIN(GET_ROOT_DOMAIN) [3][at=afc4].
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [4][at=afcb].
+[dbg] Command APPDOMAIN(GET_ROOT_DOMAIN) [3][at=5162].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [4][at=5162].
 [dbg]   send assembly [mscorlib][Harmony][1]
-[0000000000006224] Sent 1 events ASSEMBLY_LOAD(2), suspend=0.
+[0000000000001C94] Sent 1 events ASSEMBLY_LOAD(2), suspend=0.
 [dbg]   send assembly [mscorlib][GameTest][2]
-[0000000000006224] Sent 1 events ASSEMBLY_LOAD(3), suspend=0.
-[dbg]   send assembly [System.Runtime.CompilerServices.Unsafe][GameTest][3]
-[0000000000006224] Sent 1 events ASSEMBLY_LOAD(4), suspend=0.
-[dbg]   send assembly [System.Numerics.Vectors][GameTest][4]
-[0000000000006224] Sent 1 events ASSEMBLY_LOAD(5), suspend=0.
-[dbg]   send assembly [System.Memory][GameTest][5]
-[0000000000006224] Sent 1 events ASSEMBLY_LOAD(6), suspend=0.
-[dbg]   send assembly [System.Buffers][GameTest][6]
-[0000000000006224] Sent 1 events ASSEMBLY_LOAD(7), suspend=0.
-[dbg]   send assembly [HarmonyJoltSharp][GameTest][7]
-[0000000000006224] Sent 1 events ASSEMBLY_LOAD(8), suspend=0.
-[dbg]   send assembly [GameTest][GameTest][8]
-[0000000000006224] Sent 1 events ASSEMBLY_LOAD(9), suspend=0.
-[dbg]   send assembly [HarmonyMono][GameTest][9]
-[0000000000006224] Sent 1 events ASSEMBLY_LOAD(10), suspend=0.
-[dbg]   send assembly [System.Numerics][GameTest][10]
-[0000000000006224] Sent 1 events ASSEMBLY_LOAD(11), suspend=0.
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [5][at=afcc].
-[0000000000006224] Sent 1 events THREAD_START(12), suspend=0.
-[0000000000006224] Sent 1 events THREAD_START(13), suspend=0.
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [6][at=afcc].
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [7][at=afcc].
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [8][at=afcc].
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [9][at=afcc].
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [10][at=afcd].
+[0000000000001C94] Sent 1 events ASSEMBLY_LOAD(3), suspend=0.
+[dbg]   send assembly [GameTest][GameTest][3]
+[0000000000001C94] Sent 1 events ASSEMBLY_LOAD(4), suspend=0.
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[0000000000001C94] Sent 1 events ASSEMBLY_LOAD(5), suspend=0.
+[dbg]   send assembly [HarmonyJoltSharp][GameTest][5]
+[0000000000001C94] Sent 1 events ASSEMBLY_LOAD(6), suspend=0.
+[dbg]   send assembly [System.Numerics][GameTest][6]
+[0000000000001C94] Sent 1 events ASSEMBLY_LOAD(7), suspend=0.
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [5][at=5162].
+[0000000000001C94] Sent 1 events THREAD_START(8), suspend=0.
+[0000000000001C94] Sent 1 events THREAD_START(9), suspend=0.
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [6][at=5163].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [7][at=5163].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [8][at=5163].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [9][at=5163].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [10][at=5163].
 [dbg] 	EXCEPTION_ONLY 2 filter (all, uncaught, include-subclasses).
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [11][at=afce].
-[dbg] Command OBJECT_REF(GET_INFO) [12][at=afd3].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [11][at=5163].
+[dbg] Command OBJECT_REF(GET_INFO) [12][at=5163].
 [dbg]   send class [System.Threading.Thread]
-[dbg] Command TYPE(GET_INFO) [13][at=afd4].
+[dbg] Command TYPE(GET_INFO) [13][at=5163].
 [dbg]   recv class [System.Threading.Thread]
 [dbg]   send assembly [mscorlib][Harmony][1]
 [dbg]   send class [System.Runtime.ConstrainedExecution.CriticalFinalizerObject]
-[dbg] Command APPDOMAIN(GET_CORLIB) [14][at=afd6].
+[dbg] Command APPDOMAIN(GET_CORLIB) [14][at=5163].
 [dbg]   send assembly [mscorlib][Harmony][1]
-[dbg] Command THREAD(GET_ID) [15][at=afd7].
-[dbg] Command THREAD(GET_NAME) [16][at=afd8].
-[dbg] Command THREAD(GET_INFO) [17][at=afd8].
-[dbg] Command ASSEMBLY(GET_TYPE) [18][at=b0af].
+[dbg] Command THREAD(GET_ID) [15][at=5163].
+[dbg] Command THREAD(GET_NAME) [16][at=5163].
+[dbg] Command THREAD(GET_INFO) [17][at=5163].
+[dbg] Command ASSEMBLY(GET_TYPE) [18][at=51d6].
 [dbg]   send class [System.Exception]
-[dbg] Command TYPE(GET_INFO) [19][at=b0b3].
+[dbg] Command TYPE(GET_INFO) [19][at=51d6].
 [dbg]   recv class [System.Exception]
 [dbg]   send assembly [mscorlib][Harmony][1]
 [dbg]   send class [object]
 [dbg]   send class [System.Exception/__RestrictedErrorObject]
 [dbg]   send class [System.Exception/ExceptionMessageKind]
-[dbg] Command ASSEMBLY(GET_DOMAIN) [20][at=b0b4].
-[dbg] Command TYPE(GET_SOURCE_FILES) [21][at=b0b5].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [20][at=51d7].
+[dbg] Command TYPE(GET_SOURCE_FILES) [21][at=51d7].
 [dbg]   recv class [System.Exception]
-[dbg] Command ASSEMBLY(GET_NAME) [22][at=b0e2].
-[dbg] Command ASSEMBLY(GET_OBJECT) [23][at=b0f5].
-[dbg] Command OBJECT_REF(GET_INFO) [24][at=b0f5].
+[dbg] Command ASSEMBLY(GET_NAME) [22][at=51dc].
+[dbg] Command ASSEMBLY(GET_OBJECT) [23][at=5200].
+[dbg] Command OBJECT_REF(GET_INFO) [24][at=5200].
 [dbg]   send class [System.Reflection.RuntimeAssembly]
-[dbg] Command TYPE(GET_INFO) [25][at=b0f5].
+[dbg] Command TYPE(GET_INFO) [25][at=5200].
 [dbg]   recv class [System.Reflection.RuntimeAssembly]
 [dbg]   send assembly [mscorlib][Harmony][1]
 [dbg]   send class [System.Reflection.Assembly]
 [dbg]   send class [System.Reflection.RuntimeAssembly/UnmanagedMemoryStreamForModule]
-[dbg] Command ASSEMBLY(9) [26][at=b0f6].
-[dbg] Command ASSEMBLY(13) [27][at=b0f7].
-[dbg] Command ASSEMBLY(GET_LOCATION) [28][at=b0f7].
-[dbg] Command OBJECT_REF(GET_ADDRESS) [29][at=b0f7].
-[dbg] Command APPDOMAIN(GET_FRIENDLY_NAME) [30][at=b53b].
-[dbg] Command VM(GET_TYPES) [31][at=b5a3].
-[dbg] Command EVENT_REQUEST(REQUEST_SET) [32][at=b5dd].
-Sending command KEEPALIVE failed.
-[dbg] transport_recv () returned 0, expected 11.
+[dbg] Command ASSEMBLY(9) [26][at=5200].
+[dbg] Command ASSEMBLY(13) [27][at=5201].
+[dbg] Command ASSEMBLY(GET_LOCATION) [28][at=5201].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [29][at=5201].
+[dbg] Command APPDOMAIN(GET_FRIENDLY_NAME) [30][at=5201].
+[dbg] Command ASSEMBLY(GET_NAME) [31][at=5201].
+[dbg] Command ASSEMBLY(GET_OBJECT) [32][at=5201].
+[dbg] Command OBJECT_REF(GET_INFO) [33][at=5220].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command TYPE(GET_INFO) [34][at=5220].
+[dbg]   recv class [System.Reflection.RuntimeAssembly]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Reflection.Assembly]
+[dbg]   send class [System.Reflection.RuntimeAssembly/UnmanagedMemoryStreamForModule]
+[dbg] Command APPDOMAIN(GET_CORLIB) [35][at=5220].
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg] Command VM(GET_TYPES) [36][at=5220].
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[dbg] Command ASSEMBLY(9) [37][at=5222].
+[dbg] Command TYPE(GET_INFO) [38][at=523f].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg]   send assembly [GameTest][GameTest][3]
+[dbg]   send class [Harmony.Behaviour]
+[dbg] Command ASSEMBLY(13) [39][at=523f].
+[dbg] Command ASSEMBLY(GET_LOCATION) [40][at=523f].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [41][at=523f].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [42][at=5240].
+[dbg] Command TYPE(GET_SOURCE_FILES) [43][at=5240].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command ASSEMBLY(GET_DOMAIN) [44][at=5240].
+[dbg] Command APPDOMAIN(GET_FRIENDLY_NAME) [45][at=5240].
+[dbg] Command ASSEMBLY(GET_NAME) [46][at=5241].
+[dbg] Command ASSEMBLY(GET_OBJECT) [47][at=5241].
+[dbg] Command OBJECT_REF(GET_INFO) [48][at=5241].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [49][at=5241].
+[dbg] Command ASSEMBLY(13) [50][at=5241].
+[dbg] Command ASSEMBLY(GET_LOCATION) [51][at=5241].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [52][at=525e].
+[dbg] Command ASSEMBLY(GET_NAME) [53][at=525f].
+[dbg] Command ASSEMBLY(GET_OBJECT) [54][at=525f].
+[dbg] Command OBJECT_REF(GET_INFO) [55][at=525f].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [56][at=525f].
+[dbg] Command ASSEMBLY(13) [57][at=525f].
+[dbg] Command ASSEMBLY(GET_LOCATION) [58][at=525f].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [59][at=525f].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [60][at=525f].
+[dbg] Command ASSEMBLY(GET_NAME) [61][at=5260].
+[dbg] Command ASSEMBLY(GET_OBJECT) [62][at=5260].
+[dbg] Command TYPE(GET_METHODS) [63][at=5260].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg]   send method [GameTest.JoltTestBehaviour:Init ()]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send method [GameTest.JoltTestBehaviour:.ctor ()]
+[dbg] Command OBJECT_REF(GET_INFO) [64][at=5260].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [65][at=5260].
+[dbg] Command ASSEMBLY(13) [66][at=5260].
+[dbg] Command ASSEMBLY(GET_LOCATION) [67][at=5260].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [68][at=5260].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [69][at=5260].
+[dbg] Command ASSEMBLY(GET_NAME) [70][at=527e].
+[dbg] Command ASSEMBLY(GET_OBJECT) [71][at=527e].
+[dbg] Command OBJECT_REF(GET_INFO) [72][at=527e].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [73][at=527e].
+[dbg] Command ASSEMBLY(13) [74][at=527e].
+[dbg] Command ASSEMBLY(GET_LOCATION) [75][at=527e].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [76][at=527e].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [77][at=527e].
+[dbg] Command METHOD(GET_DEBUG_INFO) [78][at=52dc].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Init ()]
+[dbg] Command METHOD(GET_DEBUG_INFO) [79][at=52fc].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command METHOD(GET_INFO) [80][at=52fd].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command METHOD(GET_DEBUG_INFO) [81][at=52fd].
+[dbg]   recv method [GameTest.JoltTestBehaviour:.ctor ()]
+[dbg] Command METHOD(GET_PARAM_INFO) [82][at=52ff].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send class [void]
+[dbg] Command TYPE(GET_INFO) [83][at=52ff].
+[dbg]   recv class [void]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.ValueType]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [84][at=5302].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[dbg] Command METHOD(GET_NAME) [85][at=5303].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [86][at=5304].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Setting breakpoint at GameTest.JoltTestBehaviour:Update ():0x1f.
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [87][at=5304].
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[0000000000001C94] Sent 1 events TYPE_LOAD(10), suspend=0.
+[dbg] Command VM(GET_TYPES) [88][at=5307].
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command TYPE(GET_INFO) [89][at=5307].
+[dbg]   recv class [HarmonyJoltSharp.ECS]
+[dbg]   send assembly [HarmonyJoltSharp][GameTest][5]
+[dbg]   send class [object]
+[dbg] Command TYPE(GET_SOURCE_FILES) [90][at=5308].
+[dbg]   recv class [HarmonyJoltSharp.ECS]
+[dbg] Command TYPE(GET_INFO) [91][at=5308].
+[dbg]   recv class [Harmony.Entity]
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[dbg]   send class [System.ValueType]
+[dbg] Command TYPE(GET_SOURCE_FILES) [92][at=5308].
+[dbg]   recv class [Harmony.Entity]
+[dbg] Command TYPE(GET_METHODS) [93][at=5308].
+[dbg]   recv class [HarmonyJoltSharp.ECS]
+[dbg]   send method [HarmonyJoltSharp.ECS:GetEntityJoltBodyComponent (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromComponent (HarmonyJoltSharp.NativeJoltBodyComponent)]
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [94][at=5308].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetEntityJoltBodyComponent (Harmony.Scene,Harmony.Entity)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [95][at=5308].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromComponent (HarmonyJoltSharp.NativeJoltBodyComponent)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [96][at=5308].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Command METHOD(GET_INFO) [97][at=5308].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Command TYPE(GET_METHODS) [98][at=5309].
+[dbg]   recv class [Harmony.Entity]
+[dbg]   send method [Harmony.Entity:.ctor (uint)]
+[dbg]   send method [Harmony.Entity:op_Implicit (Harmony.Entity)]
+[dbg]   send method [Harmony.Entity:ToString ()]
+[dbg] Command METHOD(GET_DEBUG_INFO) [99][at=5309].
+[dbg]   recv method [Harmony.Entity:.ctor (uint)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [100][at=530d].
+[dbg]   recv method [Harmony.Entity:op_Implicit (Harmony.Entity)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [101][at=530e].
+[dbg]   recv method [Harmony.Entity:ToString ()]
+[dbg] Command METHOD(GET_PARAM_INFO) [102][at=530e].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send class [intptr]
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command TYPE(GET_INFO) [103][at=530e].
+[dbg]   recv class [intptr]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.ValueType]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [104][at=530e].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[dbg] Command METHOD(GET_NAME) [105][at=530e].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Command TYPE(GET_INFO) [106][at=530e].
+[dbg]   recv class [Harmony.Scene]
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[dbg]   send class [System.ValueType]
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [107][at=530e].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Setting breakpoint at HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):0x9.
+[dbg] Command EVENT_REQUEST(REQUEST_CLEAR) [108][at=530e].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [109][at=530e].
+[dbg]   send class [Harmony.Entity]
+[0000000000001C94] Sent 1 events TYPE_LOAD(11), suspend=0.
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[0000000000001C94] Sent 1 events TYPE_LOAD(12), suspend=0.
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[0000000000001C94] Sent 1 events TYPE_LOAD(13), suspend=0.
+[dbg] Command VM(GET_TYPES) [110][at=5310].
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [111][at=5312].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Setting breakpoint at HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):0x1.
+[dbg] Command EVENT_REQUEST(REQUEST_CLEAR) [112][at=5312].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [113][at=5312].
+[dbg]   send class [Harmony.Entity]
+[0000000000001C94] Sent 1 events TYPE_LOAD(14), suspend=0.
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[0000000000001C94] Sent 1 events TYPE_LOAD(15), suspend=0.
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[0000000000001C94] Sent 1 events TYPE_LOAD(16), suspend=0.
+[dbg] Command VM(DISPOSE) [114][at=585b].
 [dbg] Debugger thread exited.
+[dbg] Detached - restarting clean debugger thread.
+[dbg] Agent thread started, pid=0000000000004D98
+Accepted connection from client, connection fd=4764.
+Accepted connection on 4764
+[0000000000004D98] Sent 1 events VM_START(17), suspend=0.
+[dbg] Command VM(VERSION) [1][at=7060].
+[dbg] Command VM(SET_PROTOCOL_VERSION) [2][at=707e].
+[dbg] Protocol version 2.57, client protocol version 2.56.
+[dbg] Command APPDOMAIN(GET_ROOT_DOMAIN) [3][at=707e].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [4][at=707e].
+[dbg]   send assembly [mscorlib][Harmony][1]
+[0000000000004D98] Sent 1 events ASSEMBLY_LOAD(18), suspend=0.
+[dbg]   send assembly [mscorlib][GameTest][2]
+[0000000000004D98] Sent 1 events ASSEMBLY_LOAD(19), suspend=0.
+[dbg]   send assembly [GameTest][GameTest][3]
+[0000000000004D98] Sent 1 events ASSEMBLY_LOAD(20), suspend=0.
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[0000000000004D98] Sent 1 events ASSEMBLY_LOAD(21), suspend=0.
+[dbg]   send assembly [HarmonyJoltSharp][GameTest][5]
+[0000000000004D98] Sent 1 events ASSEMBLY_LOAD(22), suspend=0.
+[dbg]   send assembly [System.Numerics][GameTest][6]
+[0000000000004D98] Sent 1 events ASSEMBLY_LOAD(23), suspend=0.
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [5][at=707f].
+[0000000000004D98] Sent 1 events THREAD_START(24), suspend=0.
+[0000000000004D98] Sent 1 events THREAD_START(25), suspend=0.
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [6][at=707f].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [7][at=707f].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [8][at=707f].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [9][at=707f].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [10][at=707f].
+[dbg] 	EXCEPTION_ONLY 2 filter (all, uncaught, include-subclasses).
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [11][at=707f].
+[dbg] Command OBJECT_REF(GET_INFO) [12][at=707f].
+[dbg]   send class [System.Threading.Thread]
+[dbg] Command TYPE(GET_INFO) [13][at=707f].
+[dbg]   recv class [System.Threading.Thread]
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg]   send class [System.Runtime.ConstrainedExecution.CriticalFinalizerObject]
+[dbg] Command APPDOMAIN(GET_CORLIB) [14][at=707f].
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg] Command THREAD(GET_ID) [15][at=707f].
+[dbg] Command THREAD(GET_NAME) [16][at=707f].
+[dbg] Command THREAD(GET_INFO) [17][at=707f].
+[dbg] Command ASSEMBLY(GET_TYPE) [18][at=7111].
+[dbg]   send class [System.Exception]
+[dbg] Command TYPE(GET_INFO) [19][at=7111].
+[dbg]   recv class [System.Exception]
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg]   send class [object]
+[dbg]   send class [System.Exception/__RestrictedErrorObject]
+[dbg]   send class [System.Exception/ExceptionMessageKind]
+[dbg] Command ASSEMBLY(GET_DOMAIN) [20][at=7111].
+[dbg] Command TYPE(GET_SOURCE_FILES) [21][at=7111].
+[dbg]   recv class [System.Exception]
+[dbg] Command ASSEMBLY(GET_NAME) [22][at=7117].
+[dbg] Command ASSEMBLY(GET_OBJECT) [23][at=713b].
+[dbg] Command OBJECT_REF(GET_INFO) [24][at=713b].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command TYPE(GET_INFO) [25][at=713c].
+[dbg]   recv class [System.Reflection.RuntimeAssembly]
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg]   send class [System.Reflection.Assembly]
+[dbg]   send class [System.Reflection.RuntimeAssembly/UnmanagedMemoryStreamForModule]
+[dbg] Command ASSEMBLY(9) [26][at=713c].
+[dbg] Command ASSEMBLY(13) [27][at=713c].
+[dbg] Command ASSEMBLY(GET_LOCATION) [28][at=713c].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [29][at=713c].
+[dbg] Command APPDOMAIN(GET_FRIENDLY_NAME) [30][at=713c].
+[dbg] Command ASSEMBLY(GET_NAME) [31][at=713c].
+[dbg] Command ASSEMBLY(GET_OBJECT) [32][at=715a].
+[dbg] Command OBJECT_REF(GET_INFO) [33][at=715a].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command TYPE(GET_INFO) [34][at=715a].
+[dbg]   recv class [System.Reflection.RuntimeAssembly]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Reflection.Assembly]
+[dbg]   send class [System.Reflection.RuntimeAssembly/UnmanagedMemoryStreamForModule]
+[dbg] Command VM(GET_TYPES) [35][at=715a].
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[dbg] Command APPDOMAIN(GET_CORLIB) [36][at=715b].
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg] Command TYPE(GET_INFO) [37][at=715b].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg]   send assembly [GameTest][GameTest][3]
+[dbg]   send class [Harmony.Behaviour]
+[dbg] Command ASSEMBLY(9) [38][at=715b].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [39][at=715b].
+[dbg] Command ASSEMBLY(13) [40][at=715b].
+[dbg] Command ASSEMBLY(GET_LOCATION) [41][at=715b].
+[dbg] Command TYPE(GET_SOURCE_FILES) [42][at=715b].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command OBJECT_REF(GET_ADDRESS) [43][at=715b].
+[dbg] Command TYPE(GET_METHODS) [44][at=715b].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg]   send method [GameTest.JoltTestBehaviour:Init ()]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send method [GameTest.JoltTestBehaviour:.ctor ()]
+[dbg] Command ASSEMBLY(GET_DOMAIN) [45][at=715b].
+[dbg] Command METHOD(GET_DEBUG_INFO) [46][at=715b].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Init ()]
+[dbg] Command APPDOMAIN(GET_FRIENDLY_NAME) [47][at=715b].
+[dbg] Command METHOD(GET_DEBUG_INFO) [48][at=715b].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command METHOD(GET_INFO) [49][at=715b].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command METHOD(GET_DEBUG_INFO) [50][at=715b].
+[dbg]   recv method [GameTest.JoltTestBehaviour:.ctor ()]
+[dbg] Command METHOD(GET_PARAM_INFO) [51][at=715b].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send class [void]
+[dbg] Command ASSEMBLY(GET_NAME) [52][at=715b].
+[dbg] Command TYPE(GET_INFO) [53][at=715b].
+[dbg]   recv class [void]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.ValueType]
+[dbg] Command ASSEMBLY(GET_OBJECT) [54][at=715b].
+[dbg] Command METHOD(GET_DECLARING_TYPE) [55][at=715b].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[dbg] Command OBJECT_REF(GET_INFO) [56][at=715b].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [57][at=715c].
+[dbg] Command ASSEMBLY(13) [58][at=715c].
+[dbg] Command ASSEMBLY(GET_LOCATION) [59][at=715c].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [60][at=715c].
+[dbg] Command METHOD(GET_NAME) [61][at=7179].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [62][at=7179].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Setting breakpoint at GameTest.JoltTestBehaviour:Update ():0x1f.
+[dbg] Command ASSEMBLY(GET_NAME) [63][at=7189].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [64][at=7189].
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[0000000000004D98] Sent 1 events TYPE_LOAD(26), suspend=0.
+[dbg] Command ASSEMBLY(GET_OBJECT) [65][at=7199].
+[dbg] Command OBJECT_REF(GET_INFO) [66][at=719a].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [67][at=719a].
+[dbg] Command ASSEMBLY(13) [68][at=719a].
+[dbg] Command ASSEMBLY(GET_LOCATION) [69][at=719a].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [70][at=719a].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [71][at=719a].
+[dbg] Command ASSEMBLY(GET_NAME) [72][at=719a].
+[dbg] Command ASSEMBLY(GET_OBJECT) [73][at=719a].
+[dbg] Command OBJECT_REF(GET_INFO) [74][at=719a].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [75][at=719a].
+[dbg] Command ASSEMBLY(13) [76][at=719a].
+[dbg] Command ASSEMBLY(GET_LOCATION) [77][at=719a].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [78][at=719b].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [79][at=719b].
+[dbg] Command ASSEMBLY(GET_NAME) [80][at=719b].
+[dbg] Command ASSEMBLY(GET_OBJECT) [81][at=719b].
+[dbg] Command OBJECT_REF(GET_INFO) [82][at=719b].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [83][at=719b].
+[dbg] Command ASSEMBLY(13) [84][at=719b].
+[dbg] Command ASSEMBLY(GET_LOCATION) [85][at=71ba].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [86][at=71ba].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [87][at=71ba].
+[dbg] Command VM(GET_TYPES) [88][at=71ba].
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command TYPE(GET_INFO) [89][at=71ba].
+[dbg]   recv class [HarmonyJoltSharp.ECS]
+[dbg]   send assembly [HarmonyJoltSharp][GameTest][5]
+[dbg]   send class [object]
+[dbg] Command TYPE(GET_SOURCE_FILES) [90][at=71ba].
+[dbg]   recv class [HarmonyJoltSharp.ECS]
+[dbg] Command TYPE(GET_INFO) [91][at=71ba].
+[dbg]   recv class [Harmony.Entity]
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[dbg]   send class [System.ValueType]
+[dbg] Command TYPE(GET_SOURCE_FILES) [92][at=71ba].
+[dbg]   recv class [Harmony.Entity]
+[dbg] Command TYPE(GET_METHODS) [93][at=71ba].
+[dbg]   recv class [HarmonyJoltSharp.ECS]
+[dbg]   send method [HarmonyJoltSharp.ECS:GetEntityJoltBodyComponent (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromComponent (HarmonyJoltSharp.NativeJoltBodyComponent)]
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [94][at=71ba].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetEntityJoltBodyComponent (Harmony.Scene,Harmony.Entity)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [95][at=71ba].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromComponent (HarmonyJoltSharp.NativeJoltBodyComponent)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [96][at=71ba].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Command METHOD(GET_INFO) [97][at=71ba].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Command TYPE(GET_METHODS) [98][at=71bb].
+[dbg]   recv class [Harmony.Entity]
+[dbg]   send method [Harmony.Entity:.ctor (uint)]
+[dbg]   send method [Harmony.Entity:op_Implicit (Harmony.Entity)]
+[dbg]   send method [Harmony.Entity:ToString ()]
+[dbg] Command METHOD(GET_DEBUG_INFO) [99][at=71bb].
+[dbg]   recv method [Harmony.Entity:.ctor (uint)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [100][at=71da].
+[dbg]   recv method [Harmony.Entity:op_Implicit (Harmony.Entity)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [101][at=71da].
+[dbg]   recv method [Harmony.Entity:ToString ()]
+[dbg] Command METHOD(GET_PARAM_INFO) [102][at=71db].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send class [intptr]
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command TYPE(GET_INFO) [103][at=71f8].
+[dbg]   recv class [intptr]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.ValueType]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [104][at=71f8].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[dbg] Command METHOD(GET_NAME) [105][at=71f8].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Command TYPE(GET_INFO) [106][at=71f8].
+[dbg]   recv class [Harmony.Scene]
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[dbg]   send class [System.ValueType]
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [107][at=71f9].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Setting breakpoint at HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):0x9.
+[dbg] Command EVENT_REQUEST(REQUEST_CLEAR) [108][at=71f9].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [109][at=71f9].
+[dbg]   send class [Harmony.Entity]
+[0000000000004D98] Sent 1 events TYPE_LOAD(27), suspend=0.
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[0000000000004D98] Sent 1 events TYPE_LOAD(28), suspend=0.
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[0000000000004D98] Sent 1 events TYPE_LOAD(29), suspend=0.
+[dbg] Command VM(GET_TYPES) [110][at=7237].
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [111][at=7239].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Setting breakpoint at HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):0x1.
+[dbg] Command EVENT_REQUEST(REQUEST_CLEAR) [112][at=7239].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [113][at=7239].
+[dbg]   send class [Harmony.Entity]
+[0000000000004D98] Sent 1 events TYPE_LOAD(30), suspend=0.
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[0000000000004D98] Sent 1 events TYPE_LOAD(31), suspend=0.
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[0000000000004D98] Sent 1 events TYPE_LOAD(32), suspend=0.
+[dbg] Inserted breakpoint at GameTest.JoltTestBehaviour:Update ():[il=0x1f,native=0x1a7] [0000021DCDCEDAF7](0).
+[dbg] Inserted breakpoint at HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9,native=0x10f] [0000021DCDCEDDBF](0).
+[dbg] Inserted breakpoint at HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1,native=0x79] [0000021DCDCEDD29](0).
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDD3A, [il=0x1,native=0x8a].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(33), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command OBJECT_REF(GET_INFO) [114][at=7fbc].
+[dbg]   send class [System.Threading.Thread]
+[dbg] Command TYPE(GET_INFO) [115][at=7fbc].
+[dbg]   recv class [System.Threading.Thread]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Runtime.ConstrainedExecution.CriticalFinalizerObject]
+[dbg] Command THREAD(GET_FRAME_INFO) [116][at=7fbf].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command MODULE(GET_INFO) [117][at=7fc7].
+[dbg]   send assembly [HarmonyJoltSharp][GameTest][5]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [118][at=7fc8].
+[dbg] Command APPDOMAIN(GET_ASSEMBLIES) [119][at=7fcc].
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send assembly [GameTest][GameTest][3]
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[dbg]   send assembly [HarmonyJoltSharp][GameTest][5]
+[dbg]   send assembly [System.Numerics][GameTest][6]
+[dbg] Command ASSEMBLY(GET_TYPE) [120][at=7fcc].
+[dbg]   send class [System.Diagnostics.DebuggerHiddenAttribute]
+[dbg] Command METHOD(GET_CATTRS ) [121][at=800f].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [System.Runtime.CompilerServices.ExtensionAttribute:.ctor ()]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [122][at=8013].
+[dbg]   recv method [System.Runtime.CompilerServices.ExtensionAttribute:.ctor ()]
+[dbg]   send class [System.Runtime.CompilerServices.ExtensionAttribute]
+[dbg] Command ASSEMBLY(GET_TYPE) [123][at=8014].
+[dbg]   send class [System.Diagnostics.DebuggerNonUserCodeAttribute]
+[dbg] Command MODULE(GET_INFO) [124][at=8015].
+[dbg]   send assembly [GameTest][GameTest][3]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [125][at=8015].
+[dbg] Command METHOD(GET_CATTRS ) [126][at=8015].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command TYPE(GET_INFO) [127][at=8015].
+[dbg]   recv class [System.Runtime.CompilerServices.ExtensionAttribute]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Attribute]
+[dbg] Command TYPE(GET_CATTRS) [128][at=8018].
+[dbg]   recv class [HarmonyJoltSharp.ECS]
+[dbg]   send method [System.Runtime.CompilerServices.ExtensionAttribute:.ctor ()]
+[dbg] Command THREAD(GET_ID) [129][at=8018].
+[dbg] Command VM(ALL_THREADS) [130][at=8019].
+[dbg] Command THREAD(GET_FRAME_INFO) [131][at=8027].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [132][at=8027].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [133][at=8028].
+[dbg] Command APPDOMAIN(GET_ASSEMBLIES) [134][at=8029].
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg] Command VM(RESUME) [135][at=958a].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(34), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [136][at=958a].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [137][at=958b].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [138][at=958b].
+[dbg] Command VM(ALL_THREADS) [139][at=958b].
+[dbg] Command THREAD(GET_FRAME_INFO) [140][at=958d].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [141][at=958d].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [142][at=958d].
+[dbg] Command VM(RESUME) [143][at=98da].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(35), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [144][at=98da].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [145][at=98da].
+[dbg] Command TYPE(GET_CATTRS) [146][at=98db].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command VM(ALL_THREADS) [147][at=98db].
+[dbg] Command THREAD(GET_FRAME_INFO) [148][at=98e1].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [149][at=98e1].
+[dbg] Command VM(RESUME) [150][at=9e21].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDD3A, [il=0x1,native=0x8a].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(36), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [151][at=9e22].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [152][at=9e22].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [153][at=9e22].
+[dbg] Command VM(ALL_THREADS) [154][at=9e22].
+[dbg] Command THREAD(GET_FRAME_INFO) [155][at=9e27].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [156][at=9e27].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [157][at=9e28].
+[dbg] Command VM(RESUME) [158][at=a10a].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(37), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [159][at=a10b].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [160][at=a10b].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [161][at=a10b].
+[dbg] Command VM(ALL_THREADS) [162][at=a10b].
+[dbg] Command THREAD(GET_FRAME_INFO) [163][at=a10f].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [164][at=a10f].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [165][at=a10f].
+[dbg] Command VM(RESUME) [166][at=a1ed].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(38), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [167][at=a1ed].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [168][at=a1ed].
+[dbg] Command VM(ALL_THREADS) [169][at=a1ed].
+[dbg] Command THREAD(GET_FRAME_INFO) [170][at=a1f5].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [171][at=a1f5].
+[dbg] Command VM(RESUME) [172][at=a2bd].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDD3A, [il=0x1,native=0x8a].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(39), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [173][at=a2c4].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [174][at=a2c5].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [175][at=a2c5].
+[dbg] Command VM(ALL_THREADS) [176][at=a2c5].
+[dbg] Command THREAD(GET_FRAME_INFO) [177][at=a2c8].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [178][at=a2c8].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [179][at=a2c8].
+[dbg] Command VM(RESUME) [180][at=b16c].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(40), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [181][at=b16c].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [182][at=b16c].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [183][at=b16d].
+[dbg] Command VM(ALL_THREADS) [184][at=b16d].
+[dbg] Command THREAD(GET_FRAME_INFO) [185][at=b16f].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [186][at=b170].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [187][at=b170].
+[dbg] Command VM(RESUME) [188][at=b228].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(41), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [189][at=b229].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [190][at=b229].
+[dbg] Command VM(ALL_THREADS) [191][at=b229].
+[dbg] Command THREAD(GET_FRAME_INFO) [192][at=b231].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [193][at=b231].
+[dbg] Command VM(RESUME) [194][at=b2d2].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDD3A, [il=0x1,native=0x8a].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(42), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [195][at=b2d2].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [196][at=b2d2].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [197][at=b2d2].
+[dbg] Command VM(ALL_THREADS) [198][at=b2d3].
+[dbg] Command THREAD(GET_FRAME_INFO) [199][at=b2d7].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [200][at=b2d8].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [201][at=b2d8].
+[dbg] Command VM(RESUME) [202][at=b36c].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(43), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [203][at=b36c].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [204][at=b36c].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [205][at=b36c].
+[dbg] Command VM(ALL_THREADS) [206][at=b36c].
+[dbg] Command THREAD(GET_FRAME_INFO) [207][at=b370].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [208][at=b370].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [209][at=b370].
+[dbg] Command VM(RESUME) [210][at=b407].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(44), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [211][at=b407].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [212][at=b408].
+[dbg] Command VM(ALL_THREADS) [213][at=b408].
+[dbg] Command THREAD(GET_FRAME_INFO) [214][at=b40f].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [215][at=b410].
+[dbg] Command VM(RESUME) [216][at=b4b7].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDD3A, [il=0x1,native=0x8a].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(45), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [217][at=b4bf].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [218][at=b4bf].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [219][at=b4bf].
+[dbg] Command VM(ALL_THREADS) [220][at=b4bf].
+[dbg] Command THREAD(GET_FRAME_INFO) [221][at=b4c2].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [222][at=b4c2].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [223][at=b4c3].
+[dbg] Command VM(RESUME) [224][at=b553].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(46), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [225][at=b553].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [226][at=b553].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [227][at=b553].
+[dbg] Command VM(ALL_THREADS) [228][at=b553].
+[dbg] Command THREAD(GET_FRAME_INFO) [229][at=b557].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [230][at=b557].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [231][at=b557].
+[dbg] Command VM(RESUME) [232][at=b601].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(47), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [233][at=b601].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [234][at=b601].
+[dbg] Command VM(ALL_THREADS) [235][at=b601].
+[dbg] Command THREAD(GET_FRAME_INFO) [236][at=b609].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [237][at=b609].
+[dbg] Command VM(RESUME) [238][at=b6a9].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDD3A, [il=0x1,native=0x8a].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(48), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [239][at=b6a9].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [240][at=b6a9].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [241][at=b6a9].
+[dbg] Command VM(ALL_THREADS) [242][at=b6aa].
+[dbg] Command THREAD(GET_FRAME_INFO) [243][at=b6ae].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [244][at=b6ae].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [245][at=b6ae].
+[dbg] Command VM(RESUME) [246][at=b75e].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(49), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [247][at=b75f].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [248][at=b75f].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [249][at=b75f].
+[dbg] Command VM(ALL_THREADS) [250][at=b75f].
+[dbg] Command THREAD(GET_FRAME_INFO) [251][at=b763].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [252][at=b763].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [253][at=b763].
+[dbg] Command VM(RESUME) [254][at=b7fb].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(50), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [255][at=b7fb].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [256][at=b7fb].
+[dbg] Command VM(ALL_THREADS) [257][at=b7fc].
+[dbg] Command THREAD(GET_FRAME_INFO) [258][at=b802].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [259][at=b803].
+[dbg] Command VM(RESUME) [260][at=b899].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDD3A, [il=0x1,native=0x8a].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(51), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [261][at=b89c].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [262][at=b89c].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [263][at=b89c].
+[dbg] Command VM(ALL_THREADS) [264][at=b89c].
+[dbg] Command THREAD(GET_FRAME_INFO) [265][at=b89f].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [266][at=b89f].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [267][at=b89f].
+[dbg] Command VM(RESUME) [268][at=b955].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(52), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [269][at=b955].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [270][at=b955].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [271][at=b955].
+[dbg] Command VM(ALL_THREADS) [272][at=b956].
+[dbg] Command THREAD(GET_FRAME_INFO) [273][at=b958].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [274][at=b958].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [275][at=b958].
+[dbg] Command VM(RESUME) [276][at=ba06].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(53), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [277][at=ba06].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [278][at=ba07].
+[dbg] Command VM(ALL_THREADS) [279][at=ba07].
+[dbg] Command THREAD(GET_FRAME_INFO) [280][at=ba0f].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [281][at=ba0f].
+[dbg] Command VM(RESUME) [282][at=baaa].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDD3A, [il=0x1,native=0x8a].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(54), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [283][at=baab].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [284][at=baab].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [285][at=baab].
+[dbg] Command VM(ALL_THREADS) [286][at=baab].
+[dbg] Command THREAD(GET_FRAME_INFO) [287][at=baaf].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [288][at=baaf].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [289][at=baaf].
+[dbg] Command VM(RESUME) [290][at=bb4b].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(55), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [291][at=bb4b].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [292][at=bb4b].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [293][at=bb4b].
+[dbg] Command VM(ALL_THREADS) [294][at=bb4b].
+[dbg] Command THREAD(GET_FRAME_INFO) [295][at=bb4f].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [296][at=bb4f].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [297][at=bb4f].
+[dbg] Command VM(RESUME) [298][at=bbfa].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(56), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [299][at=bbfb].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [300][at=bbfb].
+[dbg] Command VM(ALL_THREADS) [301][at=bbfb].
+[dbg] Command THREAD(GET_FRAME_INFO) [302][at=bc02].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [303][at=bc02].
+[dbg] Command VM(RESUME) [304][at=bca3].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDD3A, [il=0x1,native=0x8a].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(57), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [305][at=bca6].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [306][at=bca6].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [307][at=bca6].
+[dbg] Command VM(ALL_THREADS) [308][at=bca6].
+[dbg] Command THREAD(GET_FRAME_INFO) [309][at=bca9].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [310][at=bca9].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [311][at=bca9].
+[dbg] Command METHOD(GET_LOCALS_INFO) [312][at=2f7d8].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg] Command STACK_FRAME(GET_VALUES) [313][at=2f7e7].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command TYPE(GET_CATTRS) [314][at=2f808].
+[dbg]   recv class [Harmony.Scene]
+[dbg] Command TYPE(GET_INFO) [315][at=2f808].
+[dbg]   recv class [System.ValueType]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [object]
+[dbg]   send class [System.ValueType/Internal]
+[dbg] Command TYPE(GET_CATTRS) [316][at=2f808].
+[dbg]   recv class [System.ValueType]
+[dbg]   send method [System.Runtime.InteropServices.ComVisibleAttribute:.ctor (bool)]
+[dbg] Command TYPE(GET_INFO) [317][at=2f809].
+[dbg]   recv class [object]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg] Command TYPE(GET_CATTRS) [318][at=2f809].
+[dbg]   recv class [object]
+[dbg]   send method [System.Runtime.InteropServices.ClassInterfaceAttribute:.ctor (System.Runtime.InteropServices.ClassInterfaceType)]
+[dbg]   send class [System.Runtime.InteropServices.ClassInterfaceType]
+[dbg]   send method [System.Runtime.InteropServices.ComVisibleAttribute:.ctor (bool)]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [319][at=2f809].
+[dbg]   recv method [System.Runtime.InteropServices.ComVisibleAttribute:.ctor (bool)]
+[dbg]   send class [System.Runtime.InteropServices.ComVisibleAttribute]
+[dbg] Command TYPE(GET_INFO) [320][at=2f809].
+[dbg]   recv class [System.Runtime.InteropServices.ComVisibleAttribute]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Attribute]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [321][at=2f809].
+[dbg]   recv method [System.Runtime.InteropServices.ClassInterfaceAttribute:.ctor (System.Runtime.InteropServices.ClassInterfaceType)]
+[dbg]   send class [System.Runtime.InteropServices.ClassInterfaceAttribute]
+[dbg] Command TYPE(GET_INFO) [322][at=2f809].
+[dbg]   recv class [System.Runtime.InteropServices.ClassInterfaceAttribute]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Attribute]
+[dbg] Command TYPE(GET_FIELDS) [323][at=2f80a].
+[dbg]   recv class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [324][at=2f80d].
+[dbg]   recv class [Harmony.Scene]
+[dbg] Command TYPE(GET_PROPERTIES ) [325][at=2f80e].
+[dbg]   recv class [Harmony.Scene]
+[dbg] Command TYPE(GET_CATTRS) [326][at=2f815].
+[dbg]   recv class [Harmony.Entity]
+[dbg]   send method [System.Runtime.CompilerServices.IsReadOnlyAttribute:.ctor ()]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [327][at=2f815].
+[dbg]   recv method [System.Runtime.CompilerServices.IsReadOnlyAttribute:.ctor ()]
+[dbg]   send class [System.Runtime.CompilerServices.IsReadOnlyAttribute]
+[dbg] Command TYPE(GET_INFO) [328][at=2f815].
+[dbg]   recv class [System.Runtime.CompilerServices.IsReadOnlyAttribute]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Attribute]
+[dbg] Command TYPE(GET_FIELDS) [329][at=2f815].
+[dbg]   recv class [Harmony.Entity]
+[dbg]   send class [uint]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [330][at=2f815].
+[dbg]   recv class [Harmony.Entity]
+[dbg] Command TYPE(GET_PROPERTIES ) [331][at=2f815].
+[dbg]   recv class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [332][at=2f818].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command TYPE(GET_INFO) [333][at=2f818].
+[dbg]   recv class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send assembly [HarmonyJoltSharp][GameTest][5]
+[dbg]   send class [System.ValueType]
+[dbg] Command TYPE(GET_CATTRS) [334][at=2f818].
+[dbg]   recv class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send method [System.Runtime.CompilerServices.IsReadOnlyAttribute:.ctor ()]
+[dbg] Command TYPE(GET_FIELDS) [335][at=2f818].
+[dbg]   recv class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [336][at=2f818].
+[dbg]   recv class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg] Command TYPE(GET_PROPERTIES ) [337][at=2f818].
+[dbg]   recv class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg] Command TYPE(GET_INTERFACES) [338][at=2fef4].
+[dbg]   recv class [Harmony.Entity]
+[dbg] Command TYPE(GET_INTERFACES) [339][at=30568].
+[dbg]   recv class [Harmony.Scene]
+[dbg] Command TYPE(GET_INTERFACES) [340][at=30a7a].
+[dbg]   recv class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg] Command VM(RESUME) [341][at=31936].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(58), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [342][at=31936].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [343][at=31936].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [344][at=31937].
+[dbg] Command VM(ALL_THREADS) [345][at=31937].
+[dbg] Command THREAD(GET_FRAME_INFO) [346][at=31939].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [347][at=31939].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [348][at=31939].
+[dbg] Command STACK_FRAME(GET_VALUES) [349][at=319b7].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [350][at=319b7].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [351][at=326fb].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(59), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [352][at=326fb].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [353][at=326fb].
+[dbg] Command VM(ALL_THREADS) [354][at=326fb].
+[dbg] Command THREAD(GET_FRAME_INFO) [355][at=326ff].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [356][at=326ff].
+[dbg] Command METHOD(GET_LOCALS_INFO) [357][at=3277a].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send class [intptr]
+[dbg] Command STACK_FRAME(GET_THIS) [358][at=3277b].
+[dbg] Command OBJECT_REF(GET_INFO) [359][at=3277b].
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_INFO) [360][at=3277b].
+[dbg]   recv class [Harmony.Behaviour]
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[dbg]   send class [object]
+[dbg] Command TYPE(GET_CATTRS) [361][at=3277b].
+[dbg]   recv class [Harmony.Behaviour]
+[dbg] Command TYPE(GET_FIELDS) [362][at=3277b].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [Harmony.NativeTransformComponent]
+[dbg]   send class [HarmonyJoltSharp.Body]
+[dbg]   send class [single]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [363][at=3277b].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [364][at=3277b].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [365][at=3277b].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [366][at=3277b].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_PROPERTIES ) [367][at=3277b].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command STACK_FRAME(GET_VALUES) [368][at=3277c].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command STACK_FRAME(GET_THIS) [369][at=3308d].
+[dbg] Command OBJECT_REF(GET_VALUES) [370][at=33090].
+[dbg]   send class [Harmony.NativeTransformComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command TYPE(GET_INFO) [371][at=33091].
+[dbg]   recv class [Harmony.NativeTransformComponent]
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[dbg]   send class [System.ValueType]
+[dbg] Command TYPE(GET_CATTRS) [372][at=33091].
+[dbg]   recv class [Harmony.NativeTransformComponent]
+[dbg]   send method [System.Runtime.CompilerServices.IsReadOnlyAttribute:.ctor ()]
+[dbg] Command TYPE(GET_FIELDS) [373][at=33091].
+[dbg]   recv class [Harmony.NativeTransformComponent]
+[dbg]   send class [intptr]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [374][at=33091].
+[dbg]   recv class [Harmony.NativeTransformComponent]
+[dbg] Command TYPE(GET_PROPERTIES ) [375][at=33091].
+[dbg]   recv class [Harmony.NativeTransformComponent]
+[dbg] Command TYPE(GET_METHODS_BY_NAME_FLAGS) [376][at=33095].
+[dbg]   recv class [Harmony.NativeTransformComponent]
+[dbg] Command TYPE(GET_METHODS_BY_NAME_FLAGS) [377][at=33095].
+[dbg]   recv class [System.ValueType]
+[dbg]   send method [System.ValueType:ToString ()]
+[dbg] Command METHOD(GET_NAME) [378][at=33095].
+[dbg]   recv method [System.ValueType:ToString ()]
+[dbg] Command METHOD(GET_INFO) [379][at=33095].
+[dbg]   recv method [System.ValueType:ToString ()]
+[dbg] Command METHOD(GET_PARAM_INFO) [380][at=33095].
+[dbg]   recv method [System.ValueType:ToString ()]
+[dbg]   send class [string]
+[dbg] Command TYPE(GET_METHODS_BY_NAME_FLAGS) [381][at=33095].
+[dbg]   recv class [object]
+[dbg]   send method [object:ToString ()]
+[dbg] Command METHOD(GET_NAME) [382][at=33095].
+[dbg]   recv method [object:ToString ()]
+[dbg] Command METHOD(GET_INFO) [383][at=33096].
+[dbg]   recv method [object:ToString ()]
+[dbg] Command METHOD(GET_PARAM_INFO) [384][at=33096].
+[dbg]   recv method [object:ToString ()]
+[dbg]   send class [string]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [385][at=33098].
+[dbg]   recv method [System.ValueType:ToString ()]
+[dbg]   send class [System.ValueType]
+[dbg] Command OBJECT_REF(GET_VALUES) [386][at=339a9].
+[dbg] Command TYPE(GET_INTERFACES) [387][at=339ab].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command EVENT_REQUEST(REQUEST_CLEAR) [388][at=fffd4022].
+[dbg] Clear breakpoint at GameTest.JoltTestBehaviour:Update () [0000021DCDCEDAF7].
+[dbg] Command VM(RESUME) [389][at=fffd4339].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDD3A, [il=0x1,native=0x8a].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(60), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [390][at=fffd433a].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [391][at=fffd433a].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [392][at=fffd433a].
+[dbg] Command VM(ALL_THREADS) [393][at=fffd433b].
+[dbg] Command THREAD(GET_FRAME_INFO) [394][at=fffd433e].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1, native=0x8a] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [395][at=fffd433e].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [396][at=fffd433e].
+[dbg] Command STACK_FRAME(GET_VALUES) [397][at=fffd43fa].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [398][at=fffd43fa].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command EVENT_REQUEST(REQUEST_CLEAR) [399][at=fffd4797].
+[dbg] Clear breakpoint at HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity) [0000021DCDCEDD29].
+[dbg] Command EVENT_REQUEST(REQUEST_CLEAR) [400][at=fffd4918].
+[dbg] Clear breakpoint at HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity) [0000021DCDCEDDBF].
+[dbg] Command VM(RESUME) [401][at=fffd4c99].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[dbg] Command VM(GET_TYPES) [402][at=fffd7153].
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [403][at=fffd7154].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Setting breakpoint at HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):0x9.
+[dbg] Inserted breakpoint at HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9,native=0x10f] [0000021DCDCEDDBF](0).
+[dbg] Command EVENT_REQUEST(REQUEST_CLEAR) [404][at=fffd7154].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [405][at=fffd7154].
+[dbg]   send class [Harmony.Entity]
+[0000000000004D98] Sent 1 events TYPE_LOAD(61), suspend=0.
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[0000000000004D98] Sent 1 events TYPE_LOAD(62), suspend=0.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(63), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [406][at=fffd85b6].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [407][at=fffd85b6].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [408][at=fffd85b6].
+[dbg] Command VM(ALL_THREADS) [409][at=fffd85b6].
+[dbg] Command THREAD(GET_FRAME_INFO) [410][at=fffd85bf].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [411][at=fffd85bf].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [412][at=fffd85bf].
+[dbg] Command STACK_FRAME(GET_VALUES) [413][at=fffd862c].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [414][at=fffd862c].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [415][at=fffd90e6].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(64), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [416][at=fffd90e7].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [417][at=fffd90e7].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [418][at=fffd90e7].
+[dbg] Command VM(ALL_THREADS) [419][at=fffd90e8].
+[dbg] Command THREAD(GET_FRAME_INFO) [420][at=fffd90ea].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [421][at=fffd90ea].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [422][at=fffd90ea].
+[dbg] Command STACK_FRAME(GET_VALUES) [423][at=fffd9166].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [424][at=fffd9166].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [425][at=fffd943e].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(65), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [426][at=fffd9442].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [427][at=fffd9442].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [428][at=fffd9442].
+[dbg] Command VM(ALL_THREADS) [429][at=fffd9442].
+[dbg] Command THREAD(GET_FRAME_INFO) [430][at=fffd9445].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [431][at=fffd9445].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [432][at=fffd9445].
+[dbg] Command STACK_FRAME(GET_VALUES) [433][at=fffd94c5].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [434][at=fffd94c5].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [435][at=fffd9649].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(66), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [436][at=fffd9649].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [437][at=fffd9649].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [438][at=fffd964a].
+[dbg] Command VM(ALL_THREADS) [439][at=fffd964a].
+[dbg] Command THREAD(GET_FRAME_INFO) [440][at=fffd964d].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [441][at=fffd964d].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [442][at=fffd964d].
+[dbg] Command STACK_FRAME(GET_VALUES) [443][at=fffd96c4].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [444][at=fffd96c4].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [445][at=fffd96e9].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(67), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [446][at=fffd96ed].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [447][at=fffd96ed].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [448][at=fffd96ed].
+[dbg] Command VM(ALL_THREADS) [449][at=fffd96ed].
+[dbg] Command THREAD(GET_FRAME_INFO) [450][at=fffd96ef].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [451][at=fffd96ef].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [452][at=fffd96ef].
+[dbg] Command STACK_FRAME(GET_VALUES) [453][at=fffd9767].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [454][at=fffd9767].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [455][at=fffd979b].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(68), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [456][at=fffd979c].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [457][at=fffd979c].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [458][at=fffd979c].
+[dbg] Command VM(ALL_THREADS) [459][at=fffd979c].
+[dbg] Command THREAD(GET_FRAME_INFO) [460][at=fffd97a0].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [461][at=fffd97a0].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [462][at=fffd97a0].
+[dbg] Command STACK_FRAME(GET_VALUES) [463][at=fffd981c].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [464][at=fffd981d].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [465][at=fffd98cc].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(69), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [466][at=fffd98cf].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [467][at=fffd98cf].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [468][at=fffd98cf].
+[dbg] Command VM(ALL_THREADS) [469][at=fffd98cf].
+[dbg] Command THREAD(GET_FRAME_INFO) [470][at=fffd98d1].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [471][at=fffd98d1].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [472][at=fffd98d1].
+[dbg] Command STACK_FRAME(GET_VALUES) [473][at=fffd9947].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [474][at=fffd9947].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [475][at=fffd9a0e].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(70), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [476][at=fffd9a0f].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [477][at=fffd9a0f].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [478][at=fffd9a0f].
+[dbg] Command VM(ALL_THREADS) [479][at=fffd9a0f].
+[dbg] Command THREAD(GET_FRAME_INFO) [480][at=fffd9a11].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [481][at=fffd9a11].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [482][at=fffd9a11].
+[dbg] Command STACK_FRAME(GET_VALUES) [483][at=fffd9a8e].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [484][at=fffd9a8e].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [485][at=fffd9b28].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(71), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [486][at=fffd9b2b].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [487][at=fffd9b2b].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [488][at=fffd9b2b].
+[dbg] Command VM(ALL_THREADS) [489][at=fffd9b2b].
+[dbg] Command THREAD(GET_FRAME_INFO) [490][at=fffd9b2d].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [491][at=fffd9b2d].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [492][at=fffd9b2d].
+[dbg] Command STACK_FRAME(GET_VALUES) [493][at=fffd9ba9].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [494][at=fffd9ba9].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [495][at=fffd9bfa].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(72), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [496][at=fffd9bfa].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [497][at=fffd9bfa].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [498][at=fffd9bfb].
+[dbg] Command VM(ALL_THREADS) [499][at=fffd9bfb].
+[dbg] Command THREAD(GET_FRAME_INFO) [500][at=fffd9bfe].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [501][at=fffd9bfe].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [502][at=fffd9bfe].
+[dbg] Command STACK_FRAME(GET_VALUES) [503][at=fffd9c76].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [504][at=fffd9c76].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [505][at=fffd9cb4].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(73), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [506][at=fffd9cb7].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [507][at=fffd9cb7].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [508][at=fffd9cb7].
+[dbg] Command VM(ALL_THREADS) [509][at=fffd9cb7].
+[dbg] Command THREAD(GET_FRAME_INFO) [510][at=fffd9cb9].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [511][at=fffd9cb9].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [512][at=fffd9cb9].
+[dbg] Command STACK_FRAME(GET_VALUES) [513][at=fffd9d2e].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [514][at=fffd9d2e].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [515][at=fffd9d74].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(74), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [516][at=fffd9d75].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [517][at=fffd9d75].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [518][at=fffd9d75].
+[dbg] Command VM(ALL_THREADS) [519][at=fffd9d76].
+[dbg] Command THREAD(GET_FRAME_INFO) [520][at=fffd9d78].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [521][at=fffd9d78].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [522][at=fffd9d78].
+[dbg] Command STACK_FRAME(GET_VALUES) [523][at=fffd9deb].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [524][at=fffd9dec].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [525][at=fffd9e16].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(75), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [526][at=fffd9e19].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [527][at=fffd9e19].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [528][at=fffd9e19].
+[dbg] Command VM(ALL_THREADS) [529][at=fffd9e19].
+[dbg] Command THREAD(GET_FRAME_INFO) [530][at=fffd9e1b].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [531][at=fffd9e1b].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [532][at=fffd9e1b].
+[dbg] Command STACK_FRAME(GET_VALUES) [533][at=fffd9e96].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [534][at=fffd9e96].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [535][at=fffd9ec8].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(76), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [536][at=fffd9ec9].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [537][at=fffd9ec9].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [538][at=fffd9ec9].
+[dbg] Command VM(ALL_THREADS) [539][at=fffd9ec9].
+[dbg] Command THREAD(GET_FRAME_INFO) [540][at=fffd9ecb].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [541][at=fffd9ecb].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [542][at=fffd9ecc].
+[dbg] Command STACK_FRAME(GET_VALUES) [543][at=fffd9f41].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [544][at=fffd9f42].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [545][at=fffd9f78].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(77), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [546][at=fffd9f7b].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [547][at=fffd9f7b].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [548][at=fffd9f7b].
+[dbg] Command VM(ALL_THREADS) [549][at=fffd9f7b].
+[dbg] Command THREAD(GET_FRAME_INFO) [550][at=fffd9f7d].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [551][at=fffd9f7d].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [552][at=fffd9f7d].
+[dbg] Command STACK_FRAME(GET_VALUES) [553][at=fffd9ff0].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [554][at=fffd9ff1].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [555][at=fffda022].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(78), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [556][at=fffda023].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [557][at=fffda023].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [558][at=fffda023].
+[dbg] Command VM(ALL_THREADS) [559][at=fffda023].
+[dbg] Command THREAD(GET_FRAME_INFO) [560][at=fffda026].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [561][at=fffda026].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [562][at=fffda026].
+[dbg] Command STACK_FRAME(GET_VALUES) [563][at=fffda09a].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [564][at=fffda09b].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [565][at=fffda0dc].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(79), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [566][at=fffda0df].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [567][at=fffda0df].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [568][at=fffda0df].
+[dbg] Command VM(ALL_THREADS) [569][at=fffda0e0].
+[dbg] Command THREAD(GET_FRAME_INFO) [570][at=fffda0e1].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [571][at=fffda0e1].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [572][at=fffda0e1].
+[dbg] Command STACK_FRAME(GET_VALUES) [573][at=fffda154].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [574][at=fffda155].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [575][at=fffda174].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=GetJoltBodyFromEntity, ip=0000021DCDCEDDD0, [il=0x9,native=0x120].
+[0000000000001BE4]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(80), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [576][at=fffda175].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [577][at=fffda175].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [578][at=fffda175].
+[dbg] Command VM(ALL_THREADS) [579][at=fffda175].
+[dbg] Command THREAD(GET_FRAME_INFO) [580][at=fffda177].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x9, native=0x120] 1
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0xd, native=0xf2] 1
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [581][at=fffda177].
+[dbg] Command STACK_FRAME(GET_DOMAIN) [582][at=fffda177].
+[dbg] Command STACK_FRAME(GET_VALUES) [583][at=fffda1f3].
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command STACK_FRAME(GET_VALUES) [584][at=fffda1f3].
+[dbg]   send class [HarmonyJoltSharp.NativeJoltBodyComponent]
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(DISPOSE) [585][at=fffda806].
+[dbg] Clear breakpoint at HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity) [0000021DCDCEDDBF].
+[0000000000004D98] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[dbg] Debugger thread exited.
+[dbg] Detached - restarting clean debugger thread.
+[dbg] Agent thread started, pid=0000000000008BF8
+Accepted connection from client, connection fd=4664.
+Accepted connection on 4664
+[0000000000008BF8] Sent 1 events VM_START(81), suspend=0.
+[dbg] Command VM(VERSION) [1][at=fffe76ac].
+[dbg] Command VM(SET_PROTOCOL_VERSION) [2][at=fffe76c0].
+[dbg] Protocol version 2.57, client protocol version 2.56.
+[dbg] Command APPDOMAIN(GET_ROOT_DOMAIN) [3][at=fffe76c0].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [4][at=fffe76cc].
+[dbg]   send assembly [mscorlib][Harmony][1]
+[0000000000008BF8] Sent 1 events ASSEMBLY_LOAD(82), suspend=0.
+[dbg]   send assembly [mscorlib][GameTest][2]
+[0000000000008BF8] Sent 1 events ASSEMBLY_LOAD(83), suspend=0.
+[dbg]   send assembly [GameTest][GameTest][3]
+[0000000000008BF8] Sent 1 events ASSEMBLY_LOAD(84), suspend=0.
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[0000000000008BF8] Sent 1 events ASSEMBLY_LOAD(85), suspend=0.
+[dbg]   send assembly [HarmonyJoltSharp][GameTest][5]
+[0000000000008BF8] Sent 1 events ASSEMBLY_LOAD(86), suspend=0.
+[dbg]   send assembly [System.Numerics][GameTest][6]
+[0000000000008BF8] Sent 1 events ASSEMBLY_LOAD(87), suspend=0.
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [5][at=fffe76cd].
+[0000000000008BF8] Sent 1 events THREAD_START(88), suspend=0.
+[0000000000008BF8] Sent 1 events THREAD_START(89), suspend=0.
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [6][at=fffe76cd].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [7][at=fffe76cd].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [8][at=fffe76ce].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [9][at=fffe76ce].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [10][at=fffe76cf].
+[dbg] 	EXCEPTION_ONLY 2 filter (all, uncaught, include-subclasses).
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [11][at=fffe76cf].
+[dbg] Command OBJECT_REF(GET_INFO) [12][at=fffe76d4].
+[dbg]   send class [System.Threading.Thread]
+[dbg] Command TYPE(GET_INFO) [13][at=fffe76d6].
+[dbg]   recv class [System.Threading.Thread]
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg]   send class [System.Runtime.ConstrainedExecution.CriticalFinalizerObject]
+[dbg] Command APPDOMAIN(GET_CORLIB) [14][at=fffe76d8].
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg] Command THREAD(GET_ID) [15][at=fffe76d8].
+[dbg] Command THREAD(GET_NAME) [16][at=fffe76d9].
+[dbg] Command THREAD(GET_INFO) [17][at=fffe76d9].
+[dbg] Command ASSEMBLY(GET_TYPE) [18][at=fffe77a5].
+[dbg]   send class [System.Exception]
+[dbg] Command TYPE(GET_INFO) [19][at=fffe77ab].
+[dbg]   recv class [System.Exception]
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg]   send class [object]
+[dbg]   send class [System.Exception/__RestrictedErrorObject]
+[dbg]   send class [System.Exception/ExceptionMessageKind]
+[dbg] Command ASSEMBLY(GET_DOMAIN) [20][at=fffe77f4].
+[dbg] Command TYPE(GET_SOURCE_FILES) [21][at=fffe77f6].
+[dbg]   recv class [System.Exception]
+[dbg] Command ASSEMBLY(GET_NAME) [22][at=fffe7801].
+[dbg] Command ASSEMBLY(GET_OBJECT) [23][at=fffe7813].
+[dbg] Command OBJECT_REF(GET_INFO) [24][at=fffe7813].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command TYPE(GET_INFO) [25][at=fffe7813].
+[dbg]   recv class [System.Reflection.RuntimeAssembly]
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg]   send class [System.Reflection.Assembly]
+[dbg]   send class [System.Reflection.RuntimeAssembly/UnmanagedMemoryStreamForModule]
+[dbg] Command ASSEMBLY(9) [26][at=fffe7814].
+[dbg] Command ASSEMBLY(13) [27][at=fffe7814].
+[dbg] Command ASSEMBLY(GET_LOCATION) [28][at=fffe7815].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [29][at=fffe7815].
+[dbg] Command APPDOMAIN(GET_FRIENDLY_NAME) [30][at=fffe7816].
+[dbg] Command ASSEMBLY(GET_NAME) [31][at=fffe7904].
+[dbg] Command ASSEMBLY(GET_OBJECT) [32][at=fffe7904].
+[dbg] Command OBJECT_REF(GET_INFO) [33][at=fffe7905].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command TYPE(GET_INFO) [34][at=fffe7905].
+[dbg]   recv class [System.Reflection.RuntimeAssembly]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Reflection.Assembly]
+[dbg]   send class [System.Reflection.RuntimeAssembly/UnmanagedMemoryStreamForModule]
+[dbg] Command APPDOMAIN(GET_CORLIB) [35][at=fffe7905].
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg] Command ASSEMBLY(9) [36][at=fffe7905].
+[dbg] Command ASSEMBLY(13) [37][at=fffe7905].
+[dbg] Command ASSEMBLY(GET_LOCATION) [38][at=fffe7905].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [39][at=fffe7905].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [40][at=fffe7905].
+[dbg] Command APPDOMAIN(GET_FRIENDLY_NAME) [41][at=fffe7905].
+[dbg] Command ASSEMBLY(GET_NAME) [42][at=fffe7905].
+[dbg] Command ASSEMBLY(GET_OBJECT) [43][at=fffe7905].
+[dbg] Command OBJECT_REF(GET_INFO) [44][at=fffe7905].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [45][at=fffe7905].
+[dbg] Command ASSEMBLY(13) [46][at=fffe7905].
+[dbg] Command ASSEMBLY(GET_LOCATION) [47][at=fffe7905].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [48][at=fffe7905].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [49][at=fffe7905].
+[dbg] Command ASSEMBLY(GET_NAME) [50][at=fffe7906].
+[dbg] Command ASSEMBLY(GET_OBJECT) [51][at=fffe7906].
+[dbg] Command OBJECT_REF(GET_INFO) [52][at=fffe7906].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [53][at=fffe7906].
+[dbg] Command ASSEMBLY(13) [54][at=fffe7906].
+[dbg] Command ASSEMBLY(GET_LOCATION) [55][at=fffe7906].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [56][at=fffe7906].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [57][at=fffe7906].
+[dbg] Command ASSEMBLY(GET_NAME) [58][at=fffe7906].
+[dbg] Command ASSEMBLY(GET_OBJECT) [59][at=fffe7906].
+[dbg] Command OBJECT_REF(GET_INFO) [60][at=fffe7906].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [61][at=fffe7906].
+[dbg] Command ASSEMBLY(13) [62][at=fffe7906].
+[dbg] Command ASSEMBLY(GET_LOCATION) [63][at=fffe7907].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [64][at=fffe7907].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [65][at=fffe7907].
+[dbg] Command ASSEMBLY(GET_NAME) [66][at=fffe7907].
+[dbg] Command ASSEMBLY(GET_OBJECT) [67][at=fffe7907].
+[dbg] Command OBJECT_REF(GET_INFO) [68][at=fffe7907].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [69][at=fffe7907].
+[dbg] Command ASSEMBLY(13) [70][at=fffe7907].
+[dbg] Command ASSEMBLY(GET_LOCATION) [71][at=fffe7907].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [72][at=fffe7907].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [73][at=fffe7907].
+[dbg] Command VM(GET_TYPES) [74][at=fffe89fe].
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command TYPE(GET_INFO) [75][at=fffe89fe].
+[dbg]   recv class [HarmonyJoltSharp.ECS]
+[dbg]   send assembly [HarmonyJoltSharp][GameTest][5]
+[dbg]   send class [object]
+[dbg] Command TYPE(GET_SOURCE_FILES) [76][at=fffe89fe].
+[dbg]   recv class [HarmonyJoltSharp.ECS]
+[dbg] Command TYPE(GET_INFO) [77][at=fffe89fe].
+[dbg]   recv class [Harmony.Entity]
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[dbg]   send class [System.ValueType]
+[dbg] Command TYPE(GET_SOURCE_FILES) [78][at=fffe89ff].
+[dbg]   recv class [Harmony.Entity]
+[dbg] Command TYPE(GET_METHODS) [79][at=fffe8a01].
+[dbg]   recv class [HarmonyJoltSharp.ECS]
+[dbg]   send method [HarmonyJoltSharp.ECS:GetEntityJoltBodyComponent (Harmony.Scene,Harmony.Entity)]
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromComponent (HarmonyJoltSharp.NativeJoltBodyComponent)]
+[dbg]   send method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [80][at=fffe8a09].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetEntityJoltBodyComponent (Harmony.Scene,Harmony.Entity)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [81][at=fffe8a0b].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromComponent (HarmonyJoltSharp.NativeJoltBodyComponent)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [82][at=fffe8a0b].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Command METHOD(GET_INFO) [83][at=fffe8a0c].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Command TYPE(GET_METHODS) [84][at=fffe8a0d].
+[dbg]   recv class [Harmony.Entity]
+[dbg]   send method [Harmony.Entity:.ctor (uint)]
+[dbg]   send method [Harmony.Entity:op_Implicit (Harmony.Entity)]
+[dbg]   send method [Harmony.Entity:ToString ()]
+[dbg] Command METHOD(GET_DEBUG_INFO) [85][at=fffe8a0d].
+[dbg]   recv method [Harmony.Entity:.ctor (uint)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [86][at=fffe8a11].
+[dbg]   recv method [Harmony.Entity:op_Implicit (Harmony.Entity)]
+[dbg] Command METHOD(GET_DEBUG_INFO) [87][at=fffe8a11].
+[dbg]   recv method [Harmony.Entity:ToString ()]
+[dbg] Command METHOD(GET_PARAM_INFO) [88][at=fffe8a16].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send class [intptr]
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [Harmony.Entity]
+[dbg] Command TYPE(GET_INFO) [89][at=fffe8a16].
+[dbg]   recv class [intptr]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.ValueType]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [90][at=fffe8a18].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[dbg] Command METHOD(GET_NAME) [91][at=fffe8a18].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Command TYPE(GET_INFO) [92][at=fffe8a18].
+[dbg]   recv class [Harmony.Scene]
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[dbg]   send class [System.ValueType]
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [93][at=fffe8a19].
+[dbg]   recv method [HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity)]
+[dbg] Setting breakpoint at HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):0x1.
+[dbg] Inserted breakpoint at HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity):[il=0x1,native=0x79] [0000021DCDCEDD29](0).
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [94][at=fffe8a1d].
+[dbg]   send class [Harmony.Entity]
+[0000000000008BF8] Sent 1 events TYPE_LOAD(90), suspend=0.
+[dbg]   send class [HarmonyJoltSharp.ECS]
+[0000000000008BF8] Sent 1 events TYPE_LOAD(91), suspend=0.
+[dbg] Command EVENT_REQUEST(REQUEST_CLEAR) [95][at=fffec0cd].
+[dbg] Clear breakpoint at HarmonyJoltSharp.ECS:GetJoltBodyFromEntity (Harmony.Scene,Harmony.Entity) [0000021DCDCEDD29].
+[dbg] Command VM(GET_TYPES) [96][at=fffef5bf].
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_INFO) [97][at=fffef5bf].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg]   send assembly [GameTest][GameTest][3]
+[dbg]   send class [Harmony.Behaviour]
+[dbg] Command TYPE(GET_SOURCE_FILES) [98][at=fffef5bf].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_METHODS) [99][at=fffef5c0].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg]   send method [GameTest.JoltTestBehaviour:Init ()]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send method [GameTest.JoltTestBehaviour:.ctor ()]
+[dbg] Command METHOD(GET_DEBUG_INFO) [100][at=fffef5c0].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Init ()]
+[dbg] Command METHOD(GET_DEBUG_INFO) [101][at=fffef5c0].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command METHOD(GET_INFO) [102][at=fffef5c0].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command METHOD(GET_DEBUG_INFO) [103][at=fffef5c0].
+[dbg]   recv method [GameTest.JoltTestBehaviour:.ctor ()]
+[dbg] Command METHOD(GET_PARAM_INFO) [104][at=fffef5c0].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send class [void]
+[dbg] Command TYPE(GET_INFO) [105][at=fffef5c0].
+[dbg]   recv class [void]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.ValueType]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [106][at=fffef5c0].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[dbg] Command METHOD(GET_NAME) [107][at=fffef5c0].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [108][at=fffef5c0].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Setting breakpoint at GameTest.JoltTestBehaviour:Update ():0x1f.
+[dbg] Inserted breakpoint at GameTest.JoltTestBehaviour:Update ():[il=0x1f,native=0x1a7] [0000021DCDCEDAF7](0).
+[dbg] Command EVENT_REQUEST(REQUEST_CLEAR) [109][at=fffef5c0].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [110][at=fffef5c0].
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[0000000000008BF8] Sent 1 events TYPE_LOAD(92), suspend=0.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(93), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command OBJECT_REF(GET_INFO) [111][at=ffff0651].
+[dbg]   send class [System.Threading.Thread]
+[dbg] Command TYPE(GET_INFO) [112][at=ffff0651].
+[dbg]   recv class [System.Threading.Thread]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Runtime.ConstrainedExecution.CriticalFinalizerObject]
+[dbg] Command THREAD(GET_FRAME_INFO) [113][at=ffff0654].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command MODULE(GET_INFO) [114][at=ffff065c].
+[dbg]   send assembly [GameTest][GameTest][3]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [115][at=ffff065e].
+[dbg] Command APPDOMAIN(GET_ASSEMBLIES) [116][at=ffff0662].
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send assembly [GameTest][GameTest][3]
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[dbg]   send assembly [HarmonyJoltSharp][GameTest][5]
+[dbg]   send assembly [System.Numerics][GameTest][6]
+[dbg] Command ASSEMBLY(GET_TYPE) [117][at=ffff0662].
+[dbg]   send class [System.Diagnostics.DebuggerHiddenAttribute]
+[dbg] Command METHOD(GET_CATTRS ) [118][at=ffff06a7].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command ASSEMBLY(GET_TYPE) [119][at=ffff06a9].
+[dbg]   send class [System.Diagnostics.DebuggerNonUserCodeAttribute]
+[dbg] Command TYPE(GET_CATTRS) [120][at=ffff06ac].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command THREAD(GET_ID) [121][at=ffff06ad].
+[dbg] Command VM(ALL_THREADS) [122][at=ffff06ad].
+[dbg] Command THREAD(GET_FRAME_INFO) [123][at=ffff06bc].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [124][at=ffff06bd].
+[dbg] Command APPDOMAIN(GET_ASSEMBLIES) [125][at=ffff06be].
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg] Command METHOD(GET_LOCALS_INFO) [126][at=ffff073e].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send class [intptr]
+[dbg] Command STACK_FRAME(GET_THIS) [127][at=ffff074c].
+[dbg] Command OBJECT_REF(GET_INFO) [128][at=ffff0767].
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_INFO) [129][at=ffff076e].
+[dbg]   recv class [Harmony.Behaviour]
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[dbg]   send class [object]
+[dbg] Command TYPE(GET_CATTRS) [130][at=ffff076e].
+[dbg]   recv class [Harmony.Behaviour]
+[dbg] Command TYPE(GET_INFO) [131][at=ffff076e].
+[dbg]   recv class [object]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg] Command TYPE(GET_CATTRS) [132][at=ffff076e].
+[dbg]   recv class [object]
+[dbg]   send method [System.Runtime.InteropServices.ClassInterfaceAttribute:.ctor (System.Runtime.InteropServices.ClassInterfaceType)]
+[dbg]   send class [System.Runtime.InteropServices.ClassInterfaceType]
+[dbg]   send method [System.Runtime.InteropServices.ComVisibleAttribute:.ctor (bool)]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [133][at=ffff0771].
+[dbg]   recv method [System.Runtime.InteropServices.ClassInterfaceAttribute:.ctor (System.Runtime.InteropServices.ClassInterfaceType)]
+[dbg]   send class [System.Runtime.InteropServices.ClassInterfaceAttribute]
+[dbg] Command TYPE(GET_INFO) [134][at=ffff0771].
+[dbg]   recv class [System.Runtime.InteropServices.ClassInterfaceAttribute]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Attribute]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [135][at=ffff0771].
+[dbg]   recv method [System.Runtime.InteropServices.ComVisibleAttribute:.ctor (bool)]
+[dbg]   send class [System.Runtime.InteropServices.ComVisibleAttribute]
+[dbg] Command TYPE(GET_INFO) [136][at=ffff0771].
+[dbg]   recv class [System.Runtime.InteropServices.ComVisibleAttribute]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Attribute]
+[dbg] Command TYPE(GET_FIELDS) [137][at=ffff0772].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [Harmony.NativeTransformComponent]
+[dbg]   send class [HarmonyJoltSharp.Body]
+[dbg]   send class [single]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [138][at=ffff0775].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [139][at=ffff0776].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [140][at=ffff0776].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [141][at=ffff0776].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_PROPERTIES ) [142][at=ffff0776].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command STACK_FRAME(GET_VALUES) [143][at=ffff0782].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [144][at=ffff120c].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(94), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [145][at=ffff120d].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [146][at=ffff120d].
+[dbg] Command VM(ALL_THREADS) [147][at=ffff120d].
+[dbg] Command THREAD(GET_FRAME_INFO) [148][at=ffff120e].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [149][at=ffff120e].
+[dbg] Command STACK_FRAME(GET_THIS) [150][at=ffff128d].
+[dbg] Command STACK_FRAME(GET_VALUES) [151][at=ffff128d].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [152][at=ffff1524].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(95), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [153][at=ffff1528].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [154][at=ffff1528].
+[dbg] Command VM(ALL_THREADS) [155][at=ffff1528].
+[dbg] Command THREAD(GET_FRAME_INFO) [156][at=ffff1529].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [157][at=ffff1529].
+[dbg] Command STACK_FRAME(GET_THIS) [158][at=ffff1597].
+[dbg] Command STACK_FRAME(GET_VALUES) [159][at=ffff1597].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [160][at=ffff1757].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(96), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [161][at=ffff1757].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [162][at=ffff1757].
+[dbg] Command VM(ALL_THREADS) [163][at=ffff1758].
+[dbg] Command THREAD(GET_FRAME_INFO) [164][at=ffff175a].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [165][at=ffff175a].
+[dbg] Command STACK_FRAME(GET_THIS) [166][at=ffff17cf].
+[dbg] Command STACK_FRAME(GET_VALUES) [167][at=ffff17cf].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [168][at=ffff1825].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(97), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [169][at=ffff1828].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [170][at=ffff1828].
+[dbg] Command VM(ALL_THREADS) [171][at=ffff1828].
+[dbg] Command THREAD(GET_FRAME_INFO) [172][at=ffff1829].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [173][at=ffff1829].
+[dbg] Command STACK_FRAME(GET_THIS) [174][at=ffff18a9].
+[dbg] Command STACK_FRAME(GET_VALUES) [175][at=ffff18aa].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [176][at=ffff1901].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(98), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [177][at=ffff1902].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [178][at=ffff1902].
+[dbg] Command VM(ALL_THREADS) [179][at=ffff1902].
+[dbg] Command THREAD(GET_FRAME_INFO) [180][at=ffff1904].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [181][at=ffff1904].
+[dbg] Command STACK_FRAME(GET_THIS) [182][at=ffff1980].
+[dbg] Command STACK_FRAME(GET_VALUES) [183][at=ffff1980].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [184][at=ffff19b5].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(99), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [185][at=ffff19b8].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [186][at=ffff19b8].
+[dbg] Command VM(ALL_THREADS) [187][at=ffff19b8].
+[dbg] Command THREAD(GET_FRAME_INFO) [188][at=ffff19b8].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [189][at=ffff19b8].
+[dbg] Command STACK_FRAME(GET_THIS) [190][at=ffff1a2e].
+[dbg] Command STACK_FRAME(GET_VALUES) [191][at=ffff1a2f].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [192][at=ffff1a78].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(100), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [193][at=ffff1a79].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [194][at=ffff1a79].
+[dbg] Command VM(ALL_THREADS) [195][at=ffff1a79].
+[dbg] Command THREAD(GET_FRAME_INFO) [196][at=ffff1a7b].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [197][at=ffff1a7b].
+[dbg] Command STACK_FRAME(GET_THIS) [198][at=ffff1afb].
+[dbg] Command STACK_FRAME(GET_VALUES) [199][at=ffff1afb].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [200][at=ffff1b5e].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(101), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [201][at=ffff1b61].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [202][at=ffff1b61].
+[dbg] Command VM(ALL_THREADS) [203][at=ffff1b61].
+[dbg] Command THREAD(GET_FRAME_INFO) [204][at=ffff1b62].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [205][at=ffff1b62].
+[dbg] Command STACK_FRAME(GET_THIS) [206][at=ffff1bd3].
+[dbg] Command STACK_FRAME(GET_VALUES) [207][at=ffff1bd3].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [208][at=ffff1c67].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(102), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [209][at=ffff1c67].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [210][at=ffff1c67].
+[dbg] Command VM(ALL_THREADS) [211][at=ffff1c67].
+[dbg] Command THREAD(GET_FRAME_INFO) [212][at=ffff1c6a].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [213][at=ffff1c6a].
+[dbg] Command STACK_FRAME(GET_THIS) [214][at=ffff1ce2].
+[dbg] Command STACK_FRAME(GET_VALUES) [215][at=ffff1ce2].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [216][at=ffff1d5b].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(103), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [217][at=ffff1d5e].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [218][at=ffff1d5e].
+[dbg] Command VM(ALL_THREADS) [219][at=ffff1d5e].
+[dbg] Command THREAD(GET_FRAME_INFO) [220][at=ffff1d5f].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [221][at=ffff1d5f].
+[dbg] Command STACK_FRAME(GET_THIS) [222][at=ffff1dd5].
+[dbg] Command STACK_FRAME(GET_VALUES) [223][at=ffff1dd5].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [224][at=ffff1e2b].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(104), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [225][at=ffff1e2c].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [226][at=ffff1e2c].
+[dbg] Command VM(ALL_THREADS) [227][at=ffff1e2c].
+[dbg] Command THREAD(GET_FRAME_INFO) [228][at=ffff1e2e].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [229][at=ffff1e2e].
+[dbg] Command STACK_FRAME(GET_THIS) [230][at=ffff1ea3].
+[dbg] Command STACK_FRAME(GET_VALUES) [231][at=ffff1ea3].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [232][at=ffff1f22].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(105), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [233][at=ffff1f25].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [234][at=ffff1f25].
+[dbg] Command VM(ALL_THREADS) [235][at=ffff1f26].
+[dbg] Command THREAD(GET_FRAME_INFO) [236][at=ffff1f26].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [237][at=ffff1f26].
+[dbg] Command STACK_FRAME(GET_THIS) [238][at=ffff1f9e].
+[dbg] Command STACK_FRAME(GET_VALUES) [239][at=ffff1f9e].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [240][at=ffff1fd8].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(106), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [241][at=ffff1fd9].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [242][at=ffff1fd9].
+[dbg] Command VM(ALL_THREADS) [243][at=ffff1fd9].
+[dbg] Command THREAD(GET_FRAME_INFO) [244][at=ffff1fdb].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [245][at=ffff1fdb].
+[dbg] Command STACK_FRAME(GET_THIS) [246][at=ffff205a].
+[dbg] Command STACK_FRAME(GET_VALUES) [247][at=ffff205a].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [248][at=ffff20a7].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(107), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [249][at=ffff20a9].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [250][at=ffff20aa].
+[dbg] Command VM(ALL_THREADS) [251][at=ffff20aa].
+[dbg] Command THREAD(GET_FRAME_INFO) [252][at=ffff20aa].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [253][at=ffff20aa].
+[dbg] Command STACK_FRAME(GET_THIS) [254][at=ffff2121].
+[dbg] Command STACK_FRAME(GET_VALUES) [255][at=ffff2121].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [256][at=ffff2174].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(108), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [257][at=ffff2175].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [258][at=ffff2175].
+[dbg] Command VM(ALL_THREADS) [259][at=ffff2175].
+[dbg] Command THREAD(GET_FRAME_INFO) [260][at=ffff2178].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [261][at=ffff2178].
+[dbg] Command STACK_FRAME(GET_THIS) [262][at=ffff21eb].
+[dbg] Command STACK_FRAME(GET_VALUES) [263][at=ffff21ec].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [264][at=ffff222f].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(109), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [265][at=ffff2232].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [266][at=ffff2232].
+[dbg] Command VM(ALL_THREADS) [267][at=ffff2232].
+[dbg] Command THREAD(GET_FRAME_INFO) [268][at=ffff2233].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [269][at=ffff2233].
+[dbg] Command STACK_FRAME(GET_THIS) [270][at=ffff22a8].
+[dbg] Command STACK_FRAME(GET_VALUES) [271][at=ffff22a8].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [272][at=ffff22f5].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(110), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [273][at=ffff22f5].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [274][at=ffff22f5].
+[dbg] Command VM(ALL_THREADS) [275][at=ffff22f5].
+[dbg] Command THREAD(GET_FRAME_INFO) [276][at=ffff22f7].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [277][at=ffff22f7].
+[dbg] Command STACK_FRAME(GET_THIS) [278][at=ffff2377].
+[dbg] Command STACK_FRAME(GET_VALUES) [279][at=ffff2377].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [280][at=ffff247a].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(111), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [281][at=ffff247d].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [282][at=ffff247d].
+[dbg] Command VM(ALL_THREADS) [283][at=ffff247e].
+[dbg] Command THREAD(GET_FRAME_INFO) [284][at=ffff247f].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [285][at=ffff247f].
+[dbg] Command STACK_FRAME(GET_THIS) [286][at=ffff24fa].
+[dbg] Command STACK_FRAME(GET_VALUES) [287][at=ffff24fa].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [288][at=ffff2558].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(112), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [289][at=ffff2558].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [290][at=ffff2559].
+[dbg] Command VM(ALL_THREADS) [291][at=ffff2559].
+[dbg] Command THREAD(GET_FRAME_INFO) [292][at=ffff255b].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [293][at=ffff255b].
+[dbg] Command STACK_FRAME(GET_THIS) [294][at=ffff25d4].
+[dbg] Command STACK_FRAME(GET_VALUES) [295][at=ffff25d4].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [296][at=ffff27e8].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(113), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [297][at=ffff27eb].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [298][at=ffff27eb].
+[dbg] Command VM(ALL_THREADS) [299][at=ffff27eb].
+[dbg] Command THREAD(GET_FRAME_INFO) [300][at=ffff27ec].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [301][at=ffff27ec].
+[dbg] Command STACK_FRAME(GET_THIS) [302][at=ffff287c].
+[dbg] Command STACK_FRAME(GET_VALUES) [303][at=ffff287c].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [304][at=ffff299b].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(114), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [305][at=ffff299b].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [306][at=ffff299b].
+[dbg] Command VM(ALL_THREADS) [307][at=ffff299b].
+[dbg] Command THREAD(GET_FRAME_INFO) [308][at=ffff299e].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [309][at=ffff299e].
+[dbg] Command STACK_FRAME(GET_THIS) [310][at=ffff2a1b].
+[dbg] Command STACK_FRAME(GET_VALUES) [311][at=ffff2a1b].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [312][at=ffff2a6c].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(115), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [313][at=ffff2a6f].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [314][at=ffff2a6f].
+[dbg] Command VM(ALL_THREADS) [315][at=ffff2a6f].
+[dbg] Command THREAD(GET_FRAME_INFO) [316][at=ffff2a70].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [317][at=ffff2a70].
+[dbg] Command STACK_FRAME(GET_THIS) [318][at=ffff2ae9].
+[dbg] Command STACK_FRAME(GET_VALUES) [319][at=ffff2ae9].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [320][at=ffff2b50].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(116), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [321][at=ffff2b51].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [322][at=ffff2b51].
+[dbg] Command VM(ALL_THREADS) [323][at=ffff2b52].
+[dbg] Command THREAD(GET_FRAME_INFO) [324][at=ffff2b53].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [325][at=ffff2b53].
+[dbg] Command STACK_FRAME(GET_THIS) [326][at=ffff2bd1].
+[dbg] Command STACK_FRAME(GET_VALUES) [327][at=ffff2bd1].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [328][at=ffff3140].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(117), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [329][at=ffff3143].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [330][at=ffff3143].
+[dbg] Command VM(ALL_THREADS) [331][at=ffff3143].
+[dbg] Command THREAD(GET_FRAME_INFO) [332][at=ffff3144].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [333][at=ffff3144].
+[dbg] Command STACK_FRAME(GET_THIS) [334][at=ffff31ba].
+[dbg] Command STACK_FRAME(GET_VALUES) [335][at=ffff31ba].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [336][at=ffff32e4].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(118), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [337][at=ffff32e5].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [338][at=ffff32e5].
+[dbg] Command VM(ALL_THREADS) [339][at=ffff32e5].
+[dbg] Command THREAD(GET_FRAME_INFO) [340][at=ffff32e8].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [341][at=ffff32e8].
+[dbg] Command STACK_FRAME(GET_THIS) [342][at=ffff3361].
+[dbg] Command STACK_FRAME(GET_VALUES) [343][at=ffff3361].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(RESUME) [344][at=ffff33dc].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(119), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command THREAD(GET_FRAME_INFO) [345][at=ffff33df].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [346][at=ffff33df].
+[dbg] Command VM(ALL_THREADS) [347][at=ffff33e0].
+[dbg] Command THREAD(GET_FRAME_INFO) [348][at=ffff33e1].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [349][at=ffff33e2].
+[dbg] Command STACK_FRAME(GET_THIS) [350][at=ffff345e].
+[dbg] Command STACK_FRAME(GET_VALUES) [351][at=ffff345e].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command VM(DISPOSE) [352][at=ffff4405].
+[dbg] Clear breakpoint at GameTest.JoltTestBehaviour:Update () [0000021DCDCEDAF7].
+[0000000000008BF8] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[dbg] Debugger thread exited.
+[dbg] Detached - restarting clean debugger thread.
+[dbg] Agent thread started, pid=0000000000005D84
+Accepted connection from client, connection fd=4472.
+Accepted connection on 4472
+[0000000000005D84] Sent 1 events VM_START(120), suspend=0.
+[dbg] Command VM(VERSION) [1][at=ffff8270].
+[dbg] Command VM(SET_PROTOCOL_VERSION) [2][at=ffff828d].
+[dbg] Protocol version 2.57, client protocol version 2.56.
+[dbg] Command APPDOMAIN(GET_ROOT_DOMAIN) [3][at=ffff828d].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [4][at=ffff828d].
+[dbg]   send assembly [mscorlib][Harmony][1]
+[0000000000005D84] Sent 1 events ASSEMBLY_LOAD(121), suspend=0.
+[dbg]   send assembly [mscorlib][GameTest][2]
+[0000000000005D84] Sent 1 events ASSEMBLY_LOAD(122), suspend=0.
+[dbg]   send assembly [GameTest][GameTest][3]
+[0000000000005D84] Sent 1 events ASSEMBLY_LOAD(123), suspend=0.
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[0000000000005D84] Sent 1 events ASSEMBLY_LOAD(124), suspend=0.
+[dbg]   send assembly [HarmonyJoltSharp][GameTest][5]
+[0000000000005D84] Sent 1 events ASSEMBLY_LOAD(125), suspend=0.
+[dbg]   send assembly [System.Numerics][GameTest][6]
+[0000000000005D84] Sent 1 events ASSEMBLY_LOAD(126), suspend=0.
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [5][at=ffff828d].
+[0000000000005D84] Sent 1 events THREAD_START(127), suspend=0.
+[0000000000005D84] Sent 1 events THREAD_START(128), suspend=0.
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [6][at=ffff828d].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [7][at=ffff828d].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [8][at=ffff828d].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [9][at=ffff828d].
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [10][at=ffff828d].
+[dbg] 	EXCEPTION_ONLY 2 filter (all, uncaught, include-subclasses).
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [11][at=ffff828d].
+[dbg] Command OBJECT_REF(GET_INFO) [12][at=ffff828d].
+[dbg]   send class [System.Threading.Thread]
+[dbg] Command TYPE(GET_INFO) [13][at=ffff828e].
+[dbg]   recv class [System.Threading.Thread]
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg]   send class [System.Runtime.ConstrainedExecution.CriticalFinalizerObject]
+[dbg] Command APPDOMAIN(GET_CORLIB) [14][at=ffff828e].
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg] Command THREAD(GET_ID) [15][at=ffff828e].
+[dbg] Command THREAD(GET_NAME) [16][at=ffff828e].
+[dbg] Command THREAD(GET_INFO) [17][at=ffff828e].
+[dbg] Command ASSEMBLY(GET_TYPE) [18][at=ffff8319].
+[dbg]   send class [System.Exception]
+[dbg] Command TYPE(GET_INFO) [19][at=ffff8319].
+[dbg]   recv class [System.Exception]
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg]   send class [object]
+[dbg]   send class [System.Exception/__RestrictedErrorObject]
+[dbg]   send class [System.Exception/ExceptionMessageKind]
+[dbg] Command ASSEMBLY(GET_DOMAIN) [20][at=ffff8319].
+[dbg] Command TYPE(GET_SOURCE_FILES) [21][at=ffff8319].
+[dbg]   recv class [System.Exception]
+[dbg] Command ASSEMBLY(GET_NAME) [22][at=ffff8320].
+[dbg] Command ASSEMBLY(GET_OBJECT) [23][at=ffff833d].
+[dbg] Command OBJECT_REF(GET_INFO) [24][at=ffff833d].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command TYPE(GET_INFO) [25][at=ffff833d].
+[dbg]   recv class [System.Reflection.RuntimeAssembly]
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg]   send class [System.Reflection.Assembly]
+[dbg]   send class [System.Reflection.RuntimeAssembly/UnmanagedMemoryStreamForModule]
+[dbg] Command ASSEMBLY(9) [26][at=ffff833d].
+[dbg] Command ASSEMBLY(13) [27][at=ffff833d].
+[dbg] Command ASSEMBLY(GET_LOCATION) [28][at=ffff833d].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [29][at=ffff833d].
+[dbg] Command APPDOMAIN(GET_FRIENDLY_NAME) [30][at=ffff833d].
+[dbg] Command ASSEMBLY(GET_NAME) [31][at=ffff833d].
+[dbg] Command ASSEMBLY(GET_OBJECT) [32][at=ffff835c].
+[dbg] Command OBJECT_REF(GET_INFO) [33][at=ffff835c].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command TYPE(GET_INFO) [34][at=ffff835c].
+[dbg]   recv class [System.Reflection.RuntimeAssembly]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Reflection.Assembly]
+[dbg]   send class [System.Reflection.RuntimeAssembly/UnmanagedMemoryStreamForModule]
+[dbg] Command VM(GET_TYPES) [35][at=ffff835c].
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[dbg] Command APPDOMAIN(GET_CORLIB) [36][at=ffff835c].
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg] Command TYPE(GET_INFO) [37][at=ffff835d].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg]   send assembly [GameTest][GameTest][3]
+[dbg]   send class [Harmony.Behaviour]
+[dbg] Command ASSEMBLY(GET_DOMAIN) [38][at=ffff835d].
+[dbg] Command ASSEMBLY(9) [39][at=ffff835d].
+[dbg] Command TYPE(GET_SOURCE_FILES) [40][at=ffff835d].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command ASSEMBLY(13) [41][at=ffff835d].
+[dbg] Command TYPE(GET_METHODS) [42][at=ffff835d].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg]   send method [GameTest.JoltTestBehaviour:Init ()]
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send method [GameTest.JoltTestBehaviour:.ctor ()]
+[dbg] Command ASSEMBLY(GET_LOCATION) [43][at=ffff835d].
+[dbg] Command METHOD(GET_DEBUG_INFO) [44][at=ffff835d].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Init ()]
+[dbg] Command OBJECT_REF(GET_ADDRESS) [45][at=ffff835d].
+[dbg] Command METHOD(GET_DEBUG_INFO) [46][at=ffff835d].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command METHOD(GET_INFO) [47][at=ffff835d].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command ASSEMBLY(GET_DOMAIN) [48][at=ffff835d].
+[dbg] Command METHOD(GET_DEBUG_INFO) [49][at=ffff835d].
+[dbg]   recv method [GameTest.JoltTestBehaviour:.ctor ()]
+[dbg] Command APPDOMAIN(GET_FRIENDLY_NAME) [50][at=ffff835d].
+[dbg] Command METHOD(GET_PARAM_INFO) [51][at=ffff835d].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send class [void]
+[dbg] Command TYPE(GET_INFO) [52][at=ffff835d].
+[dbg]   recv class [void]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.ValueType]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [53][at=ffff835d].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[dbg] Command METHOD(GET_NAME) [54][at=ffff835d].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [55][at=ffff835d].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Setting breakpoint at GameTest.JoltTestBehaviour:Update ():0x1f.
+[dbg] Inserted breakpoint at GameTest.JoltTestBehaviour:Update ():[il=0x1f,native=0x1a7] [0000021DCDCEDAF7](0).
+[dbg] Command EVENT_REQUEST(REQUEST_SET) [56][at=ffff835d].
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[0000000000005D84] Sent 1 events TYPE_LOAD(129), suspend=0.
+[dbg] Command ASSEMBLY(GET_NAME) [57][at=ffff835f].
+[dbg] Command ASSEMBLY(GET_OBJECT) [58][at=ffff835f].
+[dbg] Command OBJECT_REF(GET_INFO) [59][at=ffff835f].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [60][at=ffff835f].
+[dbg] Command ASSEMBLY(13) [61][at=ffff835f].
+[dbg] Command ASSEMBLY(GET_LOCATION) [62][at=ffff835f].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [63][at=ffff835f].
+[dbg] Command ASSEMBLY(GET_NAME) [64][at=ffff835f].
+[dbg] Command ASSEMBLY(GET_OBJECT) [65][at=ffff8360].
+[dbg] Command OBJECT_REF(GET_INFO) [66][at=ffff8360].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [67][at=ffff8360].
+[dbg] Command ASSEMBLY(13) [68][at=ffff8360].
+[dbg] Command ASSEMBLY(GET_LOCATION) [69][at=ffff8360].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [70][at=ffff8360].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [71][at=ffff8360].
+[dbg] Command ASSEMBLY(GET_NAME) [72][at=ffff8361].
+[dbg] Command ASSEMBLY(GET_OBJECT) [73][at=ffff8361].
+[dbg] Command OBJECT_REF(GET_INFO) [74][at=ffff8361].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [75][at=ffff8361].
+[dbg] Command ASSEMBLY(13) [76][at=ffff8361].
+[dbg] Command ASSEMBLY(GET_LOCATION) [77][at=ffff8361].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [78][at=ffff8361].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [79][at=ffff8361].
+[dbg] Command ASSEMBLY(GET_NAME) [80][at=ffff8362].
+[dbg] Command ASSEMBLY(GET_OBJECT) [81][at=ffff8362].
+[dbg] Command OBJECT_REF(GET_INFO) [82][at=ffff8362].
+[dbg]   send class [System.Reflection.RuntimeAssembly]
+[dbg] Command ASSEMBLY(9) [83][at=ffff8362].
+[dbg] Command ASSEMBLY(13) [84][at=ffff8363].
+[dbg] Command ASSEMBLY(GET_LOCATION) [85][at=ffff8363].
+[dbg] Command OBJECT_REF(GET_ADDRESS) [86][at=ffff8363].
+[dbg] Command ASSEMBLY(GET_DOMAIN) [87][at=ffff8363].
+[0000000000001BE4] Breakpoint hit, method=Update, ip=0000021DCDCEDB08, [il=0x1f,native=0x1b8].
+[0000000000001BE4]   send method [GameTest.JoltTestBehaviour:Update ()]
+[0000000000001BE4] Suspending vm...
+[0000000000001BE4] Interrupting 00000000000082B8...
+[00000000000082B8] Received interrupt while at 00007FFA897EF474, treating as suspended.
+[0000000000001BE4] Sent 1 events BREAKPOINT(130), suspend=2.
+[0000000000001BE4] Suspended.
+[dbg] Command OBJECT_REF(GET_INFO) [88][at=ffff8b6f].
+[dbg]   send class [System.Threading.Thread]
+[dbg] Command TYPE(GET_INFO) [89][at=ffff8b6f].
+[dbg]   recv class [System.Threading.Thread]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Runtime.ConstrainedExecution.CriticalFinalizerObject]
+[dbg] Command THREAD(GET_FRAME_INFO) [90][at=ffff8b6f].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command MODULE(GET_INFO) [91][at=ffff8b70].
+[dbg]   send assembly [GameTest][GameTest][3]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [92][at=ffff8b70].
+[dbg] Command APPDOMAIN(GET_ASSEMBLIES) [93][at=ffff8b70].
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send assembly [GameTest][GameTest][3]
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[dbg]   send assembly [HarmonyJoltSharp][GameTest][5]
+[dbg]   send assembly [System.Numerics][GameTest][6]
+[dbg] Command ASSEMBLY(GET_TYPE) [94][at=ffff8b70].
+[dbg]   send class [System.Diagnostics.DebuggerHiddenAttribute]
+[dbg] Command METHOD(GET_CATTRS ) [95][at=ffff8b70].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command ASSEMBLY(GET_TYPE) [96][at=ffff8b70].
+[dbg]   send class [System.Diagnostics.DebuggerNonUserCodeAttribute]
+[dbg] Command TYPE(GET_CATTRS) [97][at=ffff8b70].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command THREAD(GET_ID) [98][at=ffff8b70].
+[dbg] Command VM(ALL_THREADS) [99][at=ffff8b70].
+[dbg] Command THREAD(GET_FRAME_INFO) [100][at=ffff8b76].
+Frames for 0000021DCDC60130(tid=1be4):
+	Frame: GameTest.JoltTestBehaviour:Update ():[il=0x1f, native=0x1b8] 1
+[dbg]   send method [GameTest.JoltTestBehaviour:Update ()]
+[dbg] Command STACK_FRAME(GET_DOMAIN) [101][at=ffff8b77].
+[dbg] Command APPDOMAIN(GET_ASSEMBLIES) [102][at=ffff8b77].
+[dbg]   send assembly [mscorlib][Harmony][1]
+[dbg] Command METHOD(GET_LOCALS_INFO) [103][at=ffff8bf0].
+[dbg]   recv method [GameTest.JoltTestBehaviour:Update ()]
+[dbg]   send class [intptr]
+[dbg] Command STACK_FRAME(GET_THIS) [104][at=ffff8bf3].
+[dbg] Command OBJECT_REF(GET_INFO) [105][at=ffff8c17].
+[dbg]   send class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_INFO) [106][at=ffff8c17].
+[dbg]   recv class [Harmony.Behaviour]
+[dbg]   send assembly [HarmonyMono][GameTest][4]
+[dbg]   send class [object]
+[dbg] Command TYPE(GET_CATTRS) [107][at=ffff8c17].
+[dbg]   recv class [Harmony.Behaviour]
+[dbg] Command TYPE(GET_INFO) [108][at=ffff8c17].
+[dbg]   recv class [object]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg] Command TYPE(GET_CATTRS) [109][at=ffff8c17].
+[dbg]   recv class [object]
+[dbg]   send method [System.Runtime.InteropServices.ClassInterfaceAttribute:.ctor (System.Runtime.InteropServices.ClassInterfaceType)]
+[dbg]   send class [System.Runtime.InteropServices.ClassInterfaceType]
+[dbg]   send method [System.Runtime.InteropServices.ComVisibleAttribute:.ctor (bool)]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [110][at=ffff8c17].
+[dbg]   recv method [System.Runtime.InteropServices.ClassInterfaceAttribute:.ctor (System.Runtime.InteropServices.ClassInterfaceType)]
+[dbg]   send class [System.Runtime.InteropServices.ClassInterfaceAttribute]
+[dbg] Command TYPE(GET_INFO) [111][at=ffff8c17].
+[dbg]   recv class [System.Runtime.InteropServices.ClassInterfaceAttribute]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Attribute]
+[dbg] Command METHOD(GET_DECLARING_TYPE) [112][at=ffff8c17].
+[dbg]   recv method [System.Runtime.InteropServices.ComVisibleAttribute:.ctor (bool)]
+[dbg]   send class [System.Runtime.InteropServices.ComVisibleAttribute]
+[dbg] Command TYPE(GET_INFO) [113][at=ffff8c17].
+[dbg]   recv class [System.Runtime.InteropServices.ComVisibleAttribute]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.Attribute]
+[dbg] Command TYPE(GET_FIELDS) [114][at=ffff8c17].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg]   send class [Harmony.Scene]
+[dbg]   send class [Harmony.NativeTransformComponent]
+[dbg]   send class [HarmonyJoltSharp.Body]
+[dbg]   send class [single]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [115][at=ffff8c17].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [116][at=ffff8c17].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [117][at=ffff8c17].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_FIELD_CATTRS) [118][at=ffff8c17].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command TYPE(GET_PROPERTIES ) [119][at=ffff8c17].
+[dbg]   recv class [GameTest.JoltTestBehaviour]
+[dbg] Command STACK_FRAME(GET_VALUES) [120][at=ffff8c17].
+[dbg]   send class [intptr]
+[dbg]   send class [void*]
+[dbg] Command TYPE(GET_INFO) [121][at=ffff8c17].
+[dbg]   recv class [intptr]
+[dbg]   send assembly [mscorlib][GameTest][2]
+[dbg]   send class [System.ValueType]
+[dbg] Command VM(DISPOSE) [122][at=ffff9e4e].
+[dbg] Clear breakpoint at GameTest.JoltTestBehaviour:Update () [0000021DCDCEDAF7].
+[0000000000005D84] Resuming vm, suspend count=0...
+[0000000000001BE4] Resumed.
+[dbg] Debugger thread exited.
+[dbg] Detached - restarting clean debugger thread.
+[dbg] Agent thread started, pid=0000000000007928

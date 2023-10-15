@@ -193,4 +193,6 @@ void harmony::MonoAssemblyAsset::CollectAssemblyData(String path)
         m_InterfaceImplInfos.emplace_back(interfaceImplInfo);
 
     }
+
+    mono_image_close(image);
 }

@@ -26,8 +26,7 @@ namespace GameTest
         }
         public override void Update()
         {
-            NativeJoltBodyComponent joltBody = _scene.GetEntityJoltBodyComponent(Self);
-            IntPtr bodyPtr = joltBody.GetJoltBodyFromComponent();
+            IntPtr bodyPtr = _scene.GetJoltBodyFromEntity(Self);
             _body = new HarmonyJoltSharp.Body(bodyPtr);
             _body.AddForce(Vector3.UnitY * Force);
         }

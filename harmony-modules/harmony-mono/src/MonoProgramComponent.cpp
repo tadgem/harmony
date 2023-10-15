@@ -24,8 +24,8 @@ void harmony::MonoProgramComponent::Init()
     mono_set_assemblies_path(assemblyDir.c_str());
 
     const char* argv[2] = {
-            "--soft-breakpoints",
-            "--debugger-agent=transport=dt_socket,address=127.0.0.1:2550,server=y,suspend=n,loglevel=3,keepalive=10,setpgid=y,logfile=MonoDebugger.log"
+            "--debugger-agent=transport=dt_socket,address=127.0.0.1:2550,server=y,suspend=n,loglevel=3,keepalive=10,setpgid=y,logfile=MonoDebugger.log",
+            "--soft-breakpoints"
     };
 
     mono_jit_parse_options(2, (char**)argv);
@@ -43,8 +43,9 @@ void harmony::MonoProgramComponent::Init()
     }
 
     mono_debug_domain_create(p_RootDomain);
-
     mono_thread_set_main(mono_thread_current());
+
+    BindScriptingAPI();
 
     char* APP_DOMAIN_CONFIG = nullptr;
     p_AppDomain = mono_domain_create_appdomain((char*) p_AppDomainName.c_str(), APP_DOMAIN_CONFIG);
@@ -55,12 +56,10 @@ void harmony::MonoProgramComponent::Init()
         return;
     }
 
-    bool FORCE_SET = true;
+    const bool FORCE_SET = true;
     mono_domain_set(p_AppDomain, FORCE_SET);
 
     harmony::log::info("MonoProgramComponent : Debug Enabled : {}", (bool) mono_debug_enabled());
-
-    BindScriptingAPI();
 }
 
 void harmony::MonoProgramComponent::Update()

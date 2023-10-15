@@ -19,6 +19,7 @@
 #include "MonoAssembly.h"
 #include "MonoProgramComponent.h"
 #include "MonoSystem.h"
+#include "mono/metadata/mono-debug.h"
 
 harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program) {
 }
@@ -603,6 +604,7 @@ void harmony::MonoPanel::OnImGui() {
             return;
         }
 
+        ImGui::Text("Debugger Connected? : %s", mono_is_debugger_attached() ? "true" : "false");
         if(ImGui::Button("Reload Mono Assemblies"))
         {
             mono->Cleanup();

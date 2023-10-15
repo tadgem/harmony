@@ -16,5 +16,11 @@ namespace HarmonyJoltSharp
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static IntPtr GetJoltBodyFromComponent(this NativeJoltBodyComponent joltBody);
+
+        public static IntPtr GetJoltBodyFromEntity(this Scene scene, Entity entity)
+        {
+            NativeJoltBodyComponent component = scene.GetEntityJoltBodyComponent(entity);
+            return GetJoltBodyFromComponent(component);
+        }
     }
 }
