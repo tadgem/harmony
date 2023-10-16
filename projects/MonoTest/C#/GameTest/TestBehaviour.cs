@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using System;
 using System.Numerics;
 
 namespace GameTest
@@ -27,6 +28,11 @@ namespace GameTest
             position += forward * delta * (Speed / Speed);
             _transform.SetTransformEuler(euler);
             _transform.SetTransformPosition(position);
+
+            if (Input.GetKeyButton(Input.Key.Space))
+            {
+                Log.Info("Space pressed");
+            }
         }
 
     }

@@ -6,6 +6,7 @@
 #include "Core/Time.h"
 #include "Core/Program.h"
 #include "Core/Alias.h"
+#include "Core/Input.h"
 #include "ECS/TransformComponent.h"
 #include "ThirdParty/entt.hpp"
 
@@ -79,6 +80,84 @@ void harmony_mono_save_scene(const char *path) {
     harmony::Program::Get()->SaveScene(path);
 }
 
+glm_vec2    harmony_mono_get_mouse_position(){
+    auto pos = harmony::Input::GetMousePosition();
+    return glm_vec2 {pos.x, pos.y};
+}
+
+glm_vec2    harmony_mono_get_mouse_position_last_frame(){
+    auto pos = harmony::Input::GetMousePositionLastFrame();
+    return glm_vec2 {pos.x, pos.y};
+}
+
+glm_vec2    harmony_mono_get_mouse_velocity(){
+    auto vel = harmony::Input::GetMouseVelocity();
+    return glm_vec2 {vel.x, vel.y};
+}
+
+glm_vec2    harmony_mono_get_mouse_velocity_last_frame(){
+    auto vel = harmony::Input::GetMouseVelocityLastFrame();
+    return glm_vec2 {vel.x, vel.y};
+}
+
+bool        harmony_mono_get_mouse_button(harmony_mouse_button button){
+    harmony::Mouse::Button b = static_cast<harmony::Mouse::Button>(button);
+    return harmony::Input::GetMouseButton(b);
+
+}
+
+bool        harmony_mono_get_mouse_button_just_pressed(harmony_mouse_button button){
+    harmony::Mouse::Button b = static_cast<harmony::Mouse::Button>(button);
+    return harmony::Input::GetMouseButtonJustPressed(b);
+}
+
+bool        harmony_mono_get_mouse_button_just_released(harmony_mouse_button button){
+    harmony::Mouse::Button b = static_cast<harmony::Mouse::Button>(button);
+    return harmony::Input::GetMouseButtonJustReleased(b);
+}
+
+bool        harmony_mono_get_key(harmony_keyboard_key key){
+    harmony::Key k = static_cast<harmony::Key>(key);
+    return harmony::Input::GetKey(k);
+
+}
+
+bool        harmony_mono_get_key_just_pressed(harmony_keyboard_key key){
+    harmony::Key k = static_cast<harmony::Key>(key);
+    return harmony::Input::GetKeyJustPressed(k);
+}
+
+bool        harmony_mono_get_key_just_released(harmony_keyboard_key key){
+    harmony::Key k = static_cast<harmony::Key>(key);
+    return harmony::Input::GetKeyJustReleased(k);
+}
+
+bool        harmony_mono_get_gamepad_button(int gamepad_index, harmony_gamepad_button button){
+    harmony::Gamepad::Button b = static_cast<harmony::Gamepad::Button>(button);
+    return harmony::Input::GetGamepadButton(gamepad_index,b);
+}
+
+bool        harmony_mono_get_gamepad_button_just_pressed(int gamepad_index, harmony_gamepad_button button){
+    harmony::Gamepad::Button b = static_cast<harmony::Gamepad::Button>(button);
+    return harmony::Input::GetGamepadButtonJustPressed(gamepad_index,b);
+}
+
+bool        harmony_mono_get_gamepad_button_just_released(int gamepad_index, harmony_gamepad_button button){
+    harmony::Gamepad::Button b = static_cast<harmony::Gamepad::Button>(button);
+    return harmony::Input::GetGamepadButtonJustReleased(gamepad_index,b);
+}
+
+float       harmony_mono_get_gamepad_trigger(int gamepad_index, harmony_gamepad_trigger trigger){
+    harmony::Gamepad::Trigger t = static_cast<harmony::Gamepad::Trigger>(trigger);
+    return harmony::Input::GetGamepadTrigger(gamepad_index,t);
+}
+
+glm_vec2    harmony_mono_get_gamepad_stick(int gamepad_index, harmony_gamepad_stick stick){
+    harmony::Gamepad::Stick s = static_cast<harmony::Gamepad::Stick>(stick);
+    glm::vec2 v = harmony::Input::GetGamepadStick(gamepad_index,s);
+    return glm_vec2{v.x, v.y};
+}
+
 harmony::TransformComponent *harmony_mono_get_transform(harmony::Scene *scene, entt_entity entity) {
     if(!scene) return nullptr;
 
@@ -126,6 +205,10 @@ glm_vec3 harmony_mono_get_transform_scale       (harmony::TransformComponent* t)
     return glm_vec3 {t->Scale.x, t->Scale.y, t->Scale.z};
 }
 
+glm_vec2 harmony_glm_vec2_default() {
+    return glm_vec2{0.0f, 0.0f};
+}
+
 glm_vec3 harmony_glm_vec3_default() {
     return glm_vec3{0.0f, 0.0f, 0.0f};
 }
@@ -144,5 +227,6 @@ glm_vec3 harmony_mono_get_transform_up(harmony::TransformComponent *t) {
     if(!t) return harmony_glm_vec3_default();
     return glm_vec3 {t->Up.x, t->Up.y, t->Up.z};
 }
+
 
 

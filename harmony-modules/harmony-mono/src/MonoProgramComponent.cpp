@@ -153,6 +153,23 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.Time::GetTimeScale", harmony_mono_get_time_scale);
     mono_add_internal_call("Harmony.Time::SetTimeScale", harmony_mono_set_time_scale);
 
+    // Input
+    mono_add_internal_call("Harmony.Input::GetMousePosition", harmony_mono_get_mouse_position);
+    mono_add_internal_call("Harmony.Input::GetMousePositionLastFrame", harmony_mono_get_mouse_position_last_frame);
+    mono_add_internal_call("Harmony.Input::GetMouseVelocity", harmony_mono_get_mouse_velocity);
+    mono_add_internal_call("Harmony.Input::GetMouseVelocityLastFrame", harmony_mono_get_mouse_velocity_last_frame);
+    mono_add_internal_call("Harmony.Input::GetMouseButton", harmony_mono_get_mouse_button);
+    mono_add_internal_call("Harmony.Input::GetMouseButtonJustPressed", harmony_mono_get_mouse_button_just_pressed);
+    mono_add_internal_call("Harmony.Input::GetMouseButtonJustReleased", harmony_mono_get_mouse_button_just_released);
+    mono_add_internal_call("Harmony.Input::GetKeyButton", harmony_mono_get_key);
+    mono_add_internal_call("Harmony.Input::GetKeyButtonJustPressed", harmony_mono_get_key_just_pressed);
+    mono_add_internal_call("Harmony.Input::GetKeyButtonJustReleased", harmony_mono_get_key_just_released);
+    mono_add_internal_call("Harmony.Input::GetGamepadButton", harmony_mono_get_gamepad_button);
+    mono_add_internal_call("Harmony.Input::GetGamepadButtonJustPressed", harmony_mono_get_gamepad_button_just_pressed);
+    mono_add_internal_call("Harmony.Input::GetGamepadButtonJustReleased", harmony_mono_get_gamepad_button_just_released);
+    mono_add_internal_call("Harmony.Input::GetGamepadTrigger", harmony_mono_get_gamepad_trigger);
+    mono_add_internal_call("Harmony.Input::GetGamepadStick", harmony_mono_get_gamepad_stick);
+
     // Program
     mono_add_internal_call("Harmony.ProgramMethods::GetProgram", harmony_mono_get_program);
 
