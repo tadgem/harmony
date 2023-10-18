@@ -181,8 +181,8 @@ extern "C"
     // Scene
     harmony::Scene*     harmony_mono_get_active_scene();
     void                harmony_mono_close_active_scene();
-    void                harmony_mono_load_scene(const char* path);
-    void                harmony_mono_save_scene(const char* path);
+    void                harmony_mono_load_scene(MonoString* path);
+    void                harmony_mono_save_scene(MonoString* path);
 
     // Input
     glm_vec2    harmony_mono_get_mouse_position();
@@ -202,15 +202,15 @@ extern "C"
     bool        harmony_mono_get_gamepad_button_just_released(int gamepad_index, harmony_gamepad_button button);
 
     // Vector Graphics
-    void        harmony_mono_vg_font_face(harmony_vg_layer layer, const char *font);
+    void        harmony_mono_vg_font_face(harmony_vg_layer layer, MonoString *font);
     void        harmony_mono_vg_font_size(harmony_vg_layer layer, float size);
     void        harmony_mono_vg_font_blur(harmony_vg_layer layer, int blur);
-    void        harmony_mono_vg_text(harmony_vg_layer layer, float x, float y, const char *str);
+    void        harmony_mono_vg_text(harmony_vg_layer layer, float x, float y, MonoString *str);
     void        harmony_mono_vg_text_letter_spacing(harmony_vg_layer layer, float spacing);
     void        harmony_mono_vg_text_line_height(harmony_vg_layer layer, float line_height);
     void        harmony_mono_vg_text_align(harmony_vg_layer layer, int align);
     void        harmony_mono_vg_font_face_id(harmony_vg_layer layer, int font);
-    void        harmony_mono_vg_text_box(harmony_vg_layer layer, float x, float y, float break_row_width, const char *string, const char *end);
+    void        harmony_mono_vg_text_box(harmony_vg_layer layer, float x, float y, float break_row_width, MonoString *string, MonoString *end);
     void        harmony_mono_vg_shape_anti_alias(harmony_vg_layer layer, int enabled);
     void        harmony_mono_vg_stroke_color(harmony_vg_layer layer, NVGcolor color);
     void        harmony_mono_vg_stroke_paint(harmony_vg_layer layer, NVGpaint paint);
@@ -229,7 +229,6 @@ extern "C"
     void        harmony_mono_vg_skew_y(harmony_vg_layer layer, float angle);
     void        harmony_mono_vg_scale(harmony_vg_layer layer, float x, float y);
     void        harmony_mono_vg_current_transform(harmony_vg_layer layer, float *xform);
-    void        harmony_mono_vg_update_image(harmony_vg_layer layer, int image, const unsigned char *data);
     void        harmony_mono_vg_image_size(harmony_vg_layer layer, int image, int *w, int *h);
     void        harmony_mono_vg_delete_image(harmony_vg_layer layer, int image);
     void        harmony_mono_vg_scissor(harmony_vg_layer layer, float x, float y, float w, float h);

@@ -1,11 +1,13 @@
 ﻿
 
+using System.Runtime.CompilerServices;
+
 namespace Harmony
 {
     public static class VectorGraphics
     {
 
-        public enum harmony_vg_layer : byte
+        public enum Layer : byte
         {
             One,
             Two,
@@ -19,7 +21,7 @@ namespace Harmony
 
         public struct NVGcolor
         {
-            float r, g, b, a;
+            public float r, g, b, a;
         };
 
         public struct NVGpaint
@@ -39,57 +41,161 @@ namespace Harmony
             int image;
         };
 
-        public extern static void       font_face(harmony_vg_layer layer, string font);
-        public extern static void       font_size(harmony_vg_layer layer, float size);
-        public extern static void       font_blur(harmony_vg_layer layer, int blur);
-        public extern static void       text(harmony_vg_layer layer, float x, float y, string str);
-        public extern static void       text_letter_spacing(harmony_vg_layer layer, float spacing);
-        public extern static void       text_line_height(harmony_vg_layer layer, float line_height);
-        public extern static void       text_align(harmony_vg_layer layer, int align);
-        public extern static void       font_face_id(harmony_vg_layer layer, int font);
-        public extern static void       text_box(harmony_vg_layer layer, float x, float y, float break_row_width, string str, string end);
-        public extern static void       shape_anti_alias(harmony_vg_layer layer, int enabled);
-        public extern static void       stroke_color(harmony_vg_layer layer, NVGcolor color);
-        public extern static void       stroke_paint(harmony_vg_layer layer, NVGpaint paint);
-        public extern static void       fill_color(harmony_vg_layer layer, NVGcolor color);
-        public extern static void       fill_paint(harmony_vg_layer layer, NVGpaint paint);
-        public extern static void       miter_limit(harmony_vg_layer layer, float limit);
-        public extern static void       stroke_width(harmony_vg_layer layer, float size);
-        public extern static void       line_cap(harmony_vg_layer layer, int cap);
-        public extern static void       line_join(harmony_vg_layer layer, int join);
-        public extern static void       global_alpha(harmony_vg_layer layer, float alpha);
-        public extern static void       reset_transform(harmony_vg_layer layer);
-        public extern static void       transform(harmony_vg_layer layer, float a, float b, float c, float d, float e, float f);
-        public extern static void       translate(harmony_vg_layer layer, float x, float y);
-        public extern static void       rotate(harmony_vg_layer layer, float angle);
-        public extern static void       skew_x(harmony_vg_layer layer, float angle);
-        public extern static void       skew_y(harmony_vg_layer layer, float angle);
-        public extern static void       scale(harmony_vg_layer layer, float x, float y);
-        public extern static void       current_transform(harmony_vg_layer layer, out float xform);
-        public extern static void       image_size(harmony_vg_layer layer, int image, out int w, out int h);
-        public extern static void       delete_image(harmony_vg_layer layer, int image);
-        public extern static void       scissor(harmony_vg_layer layer, float x, float y, float w, float h);
-        public extern static void       intersect_scissor(harmony_vg_layer layer, float x, float y, float w, float h);
-        public extern static void       reset_scissor(harmony_vg_layer layer);
-        public extern static void       begin_path(harmony_vg_layer layer);
-        public extern static void       move_to(harmony_vg_layer layer, float x, float y);
-        public extern static void       line_to(harmony_vg_layer layer, float x, float y);
-        public extern static void       bezier_to(harmony_vg_layer layer, float c1x, float c1y, float c2x, float c2y, float x, float y);
-        public extern static void       quad_to(harmony_vg_layer layer, float cx, float cy, float x, float y);
-        public extern static void       arc_to(harmony_vg_layer layer, float x1, float y1, float x2, float y2, float radius);
-        public extern static void       close_path(harmony_vg_layer layer);
-        public extern static void       path_winding(harmony_vg_layer layer, int dir);
-        public extern static void       arc(harmony_vg_layer layer, float cx, float cy, float r, float a0, float a1, int dir);
-        public extern static void       rect(harmony_vg_layer layer, float x, float y, float w, float h);
-        public extern static void       rounded_rect(harmony_vg_layer layer, float x, float y, float w, float h, float r);
-        public extern static void       rounded_rect_varying(harmony_vg_layer layer, float x, float y, float w, float h, float rad_top_left, float rad_top_right, float rad_bottom_right, float rad_bottom_left);
-        public extern static void       ellipse(harmony_vg_layer layer, float cx, float cy, float rx, float ry);
-        public extern static void       circle(harmony_vg_layer layer, float cx, float cy, float r);
-        public extern static void       fill(harmony_vg_layer layer);
-        public extern static void       stroke(harmony_vg_layer layer);
-        public extern static NVGpaint   linear_gradient(harmony_vg_layer layer, float sx, float sy, float ex, float ey, NVGcolor icol, NVGcolor ocol);
-        public extern static NVGpaint   box_gradient(harmony_vg_layer layer, float x, float y, float w, float h, float r, float f, NVGcolor icol, NVGcolor ocol);
-        public extern static NVGpaint   radial_gradient(harmony_vg_layer layer, float cx, float cy, float inr, float outr, NVGcolor icol, NVGcolor ocol);
-        public extern static NVGpaint   image_pattern(harmony_vg_layer layer, float ox, float oy, float ex, float ey, float angle, int image, float alpha);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       FontFace(Layer layer, string font);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       FontSize(Layer layer, float size);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       FontBlur(Layer layer, int blur);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       Text(Layer layer, float x, float y, string str);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       TextLetterSpacing(Layer layer, float spacing);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       TextLineHeight(Layer layer, float line_height);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       TextAlign(Layer layer, int align);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       FontFaceId(Layer layer, int font);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       TextBox(Layer layer, float x, float y, float break_row_width, string str, string end);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       ShapeAntiAlias(Layer layer, int enabled);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       StrokeColor(Layer layer, NVGcolor color);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       StrokePaint(Layer layer, NVGpaint paint);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       FillColor(Layer layer, NVGcolor color);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       FillPaint(Layer layer, NVGpaint paint);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       MiterLimit(Layer layer, float limit);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       StrokeWidth(Layer layer, float size);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       LineCap(Layer layer, int cap);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       LineJoin(Layer layer, int join);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       GlobalAlpha(Layer layer, float alpha);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       ResetTransform(Layer layer);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       Transform(Layer layer, float a, float b, float c, float d, float e, float f);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       Translate(Layer layer, float x, float y);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       Rotate(Layer layer, float angle);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       SkewX(Layer layer, float angle);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       SkewY(Layer layer, float angle);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       Scale(Layer layer, float x, float y);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       CurrentTransform(Layer layer, out float xform);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       ImageSize(Layer layer, int image, out int w, out int h);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       DeleteImage(Layer layer, int image);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       Scissor(Layer layer, float x, float y, float w, float h);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       IntersectScissor(Layer layer, float x, float y, float w, float h);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       ResetScissor(Layer layer);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       BeginPath(Layer layer);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       MoveTo(Layer layer, float x, float y);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       LineTo(Layer layer, float x, float y);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       BezierTo(Layer layer, float c1x, float c1y, float c2x, float c2y, float x, float y);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       QuadTo(Layer layer, float cx, float cy, float x, float y);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       ArcTo(Layer layer, float x1, float y1, float x2, float y2, float radius);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       ClosePath(Layer layer);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       PathWinding(Layer layer, int dir);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       Arc(Layer layer, float cx, float cy, float r, float a0, float a1, int dir);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       Rect(Layer layer, float x, float y, float w, float h);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       RoundedRect(Layer layer, float x, float y, float w, float h, float r);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       RoundedRectVarying(Layer layer, float x, float y, float w, float h, float rad_top_left, float rad_top_right, float rad_bottom_right, float rad_bottom_left);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       Ellipse(Layer layer, float cx, float cy, float rx, float ry);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       Circle(Layer layer, float cx, float cy, float r);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       Fill(Layer layer);        
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void       Stroke(Layer layer);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static NVGpaint   LinearGradient(Layer layer, float sx, float sy, float ex, float ey, NVGcolor icol, NVGcolor ocol);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static NVGpaint   BoxGradient(Layer layer, float x, float y, float w, float h, float r, float f, NVGcolor icol, NVGcolor ocol);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static NVGpaint   RadialGradient(Layer layer, float cx, float cy, float inr, float outr, NVGcolor icol, NVGcolor ocol);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static NVGpaint   ImagePattern(Layer layer, float ox, float oy, float ex, float ey, float angle, int image, float alpha);
     }
 }

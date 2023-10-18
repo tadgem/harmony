@@ -10,6 +10,7 @@
 #include "ECS/TransformComponent.h"
 #include "ThirdParty/entt.hpp"
 #include "Rendering/VectorGraphics/VectorGraphics.h"
+#include "MonoUtils.h"
 
 void harmony_mono_log_trace(MonoString *str) {
     harmony::log::trace("C# : {}", harmony::MonoUtils::GetStringFromMonoString(str));
@@ -73,12 +74,12 @@ void harmony_mono_close_active_scene() {
     harmony::Program::Get()->CloseActiveScene();
 }
 
-void harmony_mono_load_scene(const char *path) {
-    harmony::Program::Get()->LoadScene(path);
+void harmony_mono_load_scene(MonoString *path) {
+    harmony::Program::Get()->LoadScene(harmony::MonoUtils::GetStringFromMonoString(path));
 }
 
-void harmony_mono_save_scene(const char *path) {
-    harmony::Program::Get()->SaveScene(path);
+void harmony_mono_save_scene(MonoString *path) {
+    harmony::Program::Get()->SaveScene(harmony::MonoUtils::GetStringFromMonoString(path));
 }
 
 glm_vec2    harmony_mono_get_mouse_position(){
@@ -229,10 +230,10 @@ glm_vec3 harmony_mono_get_transform_up(harmony::TransformComponent *t) {
     return glm_vec3 {t->Up.x, t->Up.y, t->Up.z};
 }
 
-void        harmony_mono_vg_font_face(harmony_vg_layer layer, const char *font)
+void        harmony_mono_vg_font_face(harmony_vg_layer layer, MonoString *font)
 {
     auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
-    harmony::VectorGraphics::FontFace(l, font);
+    harmony::VectorGraphics::FontFace(l, harmony::MonoUtils::GetStringFromMonoString(font).c_str());
 }
 
 void        harmony_mono_vg_font_size(harmony_vg_layer layer, float size)
@@ -247,10 +248,10 @@ void        harmony_mono_vg_font_blur(harmony_vg_layer layer, int blur)
     harmony::VectorGraphics::FontBlur(l, blur);
 }
 
-void        harmony_mono_vg_text(harmony_vg_layer layer, float x, float y, const char *str)
+void        harmony_mono_vg_text(harmony_vg_layer layer, float x, float y, MonoString *str)
 {
     auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
-    harmony::VectorGraphics::Text(l, x, y, str);
+    harmony::VectorGraphics::Text(l, x, y, harmony::MonoUtils::GetStringFromMonoString(str).c_str());
 }
 
 void        harmony_mono_vg_text_letter_spacing(harmony_vg_layer layer, float spacing)
@@ -277,10 +278,12 @@ void        harmony_mono_vg_font_face_id(harmony_vg_layer layer, int font)
     harmony::VectorGraphics::FontFaceId(l, font);
 }
 
-void        harmony_mono_vg_text_box(harmony_vg_layer layer, float x, float y, float breakRowWidth, const char *string, const char *end)
+void        harmony_mono_vg_text_box(harmony_vg_layer layer, float x, float y, float breakRowWidth, MonoString *string, MonoString *end)
 {
     auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
-    harmony::VectorGraphics::TextBox(l, x, y, breakRowWidth, string, end);
+    harmony::VectorGraphics::TextBox(l, x, y, breakRowWidth,
+        harmony::MonoUtils::GetStringFromMonoString(string).c_str(),
+            harmony::MonoUtils::GetStringFromMonoString(end).c_str());
 }
 
 void        harmony_mono_vg_shape_anti_alias(harmony_vg_layer layer, int enabled)
