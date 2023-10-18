@@ -10,7 +10,6 @@ namespace GameTest
         private NativeTransformComponent _transform;
         public float Speed = 3.0f;
         VectorGraphics.NVGcolor _circleColor = new VectorGraphics.NVGcolor();
-        Vector2 _circlePos = new Vector2();
 
         public override void Init()
         {
@@ -18,8 +17,10 @@ namespace GameTest
             _transform = _scene.GetEntityTransform(Self);
             Vector3 v = _transform.GetTransformPosition();
             Log.Info($"I am entity : {Self} : Pos : {v}");
-            _circleColor.r = 255.0f;
-            _circleColor.a = 255.0f;
+            _circleColor.r = 192.0f / 255.0f;
+            _circleColor.g = 128.0f / 255.0f;
+            _circleColor.b = 192.0f / 255.0f;
+            _circleColor.a = 255.0f / 255.0f;
         }
         public override void Update()
         {
@@ -32,19 +33,16 @@ namespace GameTest
             position += forward * delta * (Speed / Speed);
             _transform.SetTransformEuler(euler);
             _transform.SetTransformPosition(position);
-            _circlePos.X += delta * Speed;
-            _circlePos.Y += delta * Speed;
-            
 
             if (Input.GetKeyButton(Input.Key.Space))
             {
                 Log.Info("Space pressed");
             }
 
-            VectorGraphics.BeginPath(VectorGraphics.Layer.One);
-            VectorGraphics.Circle(VectorGraphics.Layer.One, _circlePos.X, 30.0f, 20.0f);
+            VectorGraphics.FontFace(VectorGraphics.Layer.One, "carbontype");
+            VectorGraphics.FontSize(VectorGraphics.Layer.One, 60.0f);
             VectorGraphics.FillColor(VectorGraphics.Layer.One, _circleColor);
-            VectorGraphics.Fill(VectorGraphics.Layer.One);
+            VectorGraphics.Text(VectorGraphics.Layer.One, 15.0f, 60.0f, $"Delta Time : {delta}");
         }
 
     }

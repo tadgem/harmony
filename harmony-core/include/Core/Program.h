@@ -163,6 +163,15 @@ namespace harmony {
         WeakPtr<T> AddSystem(Args &&... args) {
 
             static_assert(std::is_base_of<System, T>());
+            HashString typeHash = GetTypeHash<T>();
+            for(int i = 0; i < p_ECSSystems.size(); i++)
+            {
+                if(p_ECSSystems[i]->m_TypeHash == typeHash)
+                {
+                    log::warn("Program : Already have a system with type hash : {}", typeHash.m_Value);
+                    return WeakPtr<T>();
+                }
+            }
             RefCntPtr<T> sys = CreateRef<T>(std::forward<Args>(args)...);
             p_ECSSystems.emplace_back(sys);
             return GetWeakRef<T>(sys);

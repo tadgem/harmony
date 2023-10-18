@@ -99,7 +99,6 @@ void harmony::RuntimeProgram::AddSystems() {
     AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
     AddSystem<MeshSystem>(m_AssetManager);
     AddSystem<LightSystem>();
-    AddSystem<MonoSystem>(p_MonoProgramComponent);
     p_LuaSystem = AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent).lock();
     p_GraphScriptSystem = AddSystem<GraphScriptSystem>(p_GraphScriptComponent).lock();
     p_JoltPhysicsSystem = AddSystem<JoltPhysicsSystem>().lock();
