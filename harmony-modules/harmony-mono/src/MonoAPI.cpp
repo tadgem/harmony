@@ -9,6 +9,7 @@
 #include "Core/Input.h"
 #include "ECS/TransformComponent.h"
 #include "ThirdParty/entt.hpp"
+#include "Rendering/VectorGraphics/VectorGraphics.h"
 
 void harmony_mono_log_trace(MonoString *str) {
     harmony::log::trace("C# : {}", harmony::MonoUtils::GetStringFromMonoString(str));
@@ -228,5 +229,318 @@ glm_vec3 harmony_mono_get_transform_up(harmony::TransformComponent *t) {
     return glm_vec3 {t->Up.x, t->Up.y, t->Up.z};
 }
 
+void        harmony_mono_vg_font_face(harmony_vg_layer layer, const char *font)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::FontFace(l, font);
+}
 
+void        harmony_mono_vg_font_size(harmony_vg_layer layer, float size)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::FontSize(l, size);
+}
+
+void        harmony_mono_vg_font_blur(harmony_vg_layer layer, int blur)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::FontBlur(l, blur);
+}
+
+void        harmony_mono_vg_text(harmony_vg_layer layer, float x, float y, const char *str)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::Text(l, x, y, str);
+}
+
+void        harmony_mono_vg_text_letter_spacing(harmony_vg_layer layer, float spacing)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::TextLetterSpacing(l, spacing);
+}
+
+void        harmony_mono_vg_text_line_height(harmony_vg_layer layer, float lineHeight)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::TextLineHeight(l, lineHeight);
+}
+
+void        harmony_mono_vg_text_align(harmony_vg_layer layer, int align)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::TextAlign(l, align);
+}
+
+void        harmony_mono_vg_font_face_id(harmony_vg_layer layer, int font)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::FontFaceId(l, font);
+}
+
+void        harmony_mono_vg_text_box(harmony_vg_layer layer, float x, float y, float breakRowWidth, const char *string, const char *end)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::TextBox(l, x, y, breakRowWidth, string, end);
+}
+
+void        harmony_mono_vg_shape_anti_alias(harmony_vg_layer layer, int enabled)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::ShapeAntiAlias(l, enabled);
+}
+
+void        harmony_mono_vg_stroke_color(harmony_vg_layer layer, NVGcolor color)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::StrokeColor(l, color);
+}
+
+void        harmony_mono_vg_stroke_paint(harmony_vg_layer layer, NVGpaint paint)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::StrokePaint(l, paint);
+}
+
+void        harmony_mono_vg_fill_color(harmony_vg_layer layer, NVGcolor color)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::FillColor(l, color);
+}
+void        harmony_mono_vg_fill_paint(harmony_vg_layer layer, NVGpaint paint)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::FillPaint(l, paint);
+}
+void        harmony_mono_vg_miter_limit(harmony_vg_layer layer, float limit)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::MiterLimit(l, limit);
+}
+void        harmony_mono_vg_stroke_width(harmony_vg_layer layer, float size)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::StrokeWidth(l, size);
+}
+
+void        harmony_mono_vg_line_cap(harmony_vg_layer layer, int cap)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::LineCap(l, cap);
+}
+
+void        harmony_mono_vg_line_join(harmony_vg_layer layer, int join)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::LineJoin(l, join);
+}
+
+void        harmony_mono_vg_global_alpha(harmony_vg_layer layer, float alpha)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::GlobalAlpha(l, alpha);
+}
+
+void        harmony_mono_vg_reset_transform(harmony_vg_layer layer)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::ResetTransform(l);
+}
+
+void        harmony_mono_vg_transform(harmony_vg_layer layer, float a, float b, float c, float d, float e, float f)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::Transform(l, a, b, c, d, e, f);
+}
+
+void        harmony_mono_vg_translate(harmony_vg_layer layer, float x, float y)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::Translate(l, x, y);
+}
+
+void        harmony_mono_vg_rotate(harmony_vg_layer layer, float angle)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::Rotate(l, angle);
+}
+
+void        harmony_mono_vg_skew_x(harmony_vg_layer layer, float angle)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::SkewX(l, angle);
+}
+
+void        harmony_mono_vg_skew_y(harmony_vg_layer layer, float angle)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::SkewY(l, angle);
+}
+
+void        harmony_mono_vg_scale(harmony_vg_layer layer, float x, float y)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::Scale(l, x, y);
+}
+
+void        harmony_mono_vg_current_transform(harmony_vg_layer layer, float *xform)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::CurrentTransform(l, xform);
+}
+
+void        harmony_mono_vg_update_image(harmony_vg_layer layer, int image, const unsigned char *data)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::UpdateImage(l, image, data);
+}
+
+void        harmony_mono_vg_image_size(harmony_vg_layer layer, int image, int *w, int *h)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::ImageSize(l, image, w, h);
+}
+
+void        harmony_mono_vg_delete_image(harmony_vg_layer layer, int image)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::DeleteImage(l, image);
+}
+
+void        harmony_mono_vg_scissor(harmony_vg_layer layer, float x, float y, float w, float h)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::Scissor(l, x, y, w, h);
+}
+
+void        harmony_mono_vg_intersect_scissor(harmony_vg_layer layer, float x, float y, float w, float h)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::IntersectScissor(l, x, y, w, h);
+}
+
+void        harmony_mono_vg_reset_scissor(harmony_vg_layer layer)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::ResetScissor(l);
+}
+
+void        harmony_mono_vg_begin_path(harmony_vg_layer layer)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::BeginPath(l);
+}
+
+void        harmony_mono_vg_move_to(harmony_vg_layer layer, float x, float y)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::MoveTo(l, x, y);
+}
+
+void        harmony_mono_vg_line_to(harmony_vg_layer layer, float x, float y)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::LineTo(l, x, y);
+}
+
+void        harmony_mono_vg_bezier_to(harmony_vg_layer layer, float c1x, float c1y, float c2x, float c2y, float x, float y)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::BezierTo(l, c1x, c1y, c2x, c2y, x, y);
+}
+
+void        harmony_mono_vg_quad_to(harmony_vg_layer layer, float cx, float cy, float x, float y)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::QuadTo(l, cx, cy, x, y);
+}
+
+void        harmony_mono_vg_arc_to(harmony_vg_layer layer, float x1, float y1, float x2, float y2, float radius)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::ArcTo(l, x1, y1, x2, y2, radius);
+}
+
+void        harmony_mono_vg_close_path(harmony_vg_layer layer)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::ClosePath(l);
+}
+
+void        harmony_mono_vg_path_winding(harmony_vg_layer layer, int dir)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::PathWinding(l, dir);
+}
+
+void        harmony_mono_vg_arc(harmony_vg_layer layer, float cx, float cy, float r, float a0, float a1, int dir)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::Arc(l, cx, cy, r, a0, a1, dir);
+}
+
+void        harmony_mono_vg_rect(harmony_vg_layer layer, float x, float y, float w, float h)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::Rect(l, x, y, w, h);
+}
+
+void        harmony_mono_vg_rounded_rect(harmony_vg_layer layer, float x, float y, float w, float h, float r)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::RoundedRect(l, x, y, w, h, r);
+}
+
+void        harmony_mono_vg_rounded_rect_varying(harmony_vg_layer layer, float x, float y, float w, float h, float radTopLeft, float radTopRight, float radBottomRight, float radBottomLeft)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::RoundedRectVarying(l, x, y, w,  h, radTopLeft, radTopRight, radBottomRight, radBottomLeft);
+}
+
+void        harmony_mono_vg_ellipse(harmony_vg_layer layer, float cx, float cy, float rx, float ry)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::Ellipse(l, cx, cy, rx, ry);
+}
+
+void        harmony_mono_vg_circle(harmony_vg_layer layer, float cx, float cy, float r)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::Circle(l, cx, cy, r);
+}
+
+void        harmony_mono_vg_fill(harmony_vg_layer layer)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::Fill(l);
+}
+
+void        harmony_mono_vg_stroke(harmony_vg_layer layer)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    harmony::VectorGraphics::Stroke(l);
+}
+
+NVGpaint    harmony_mono_vg_linear_gradient(harmony_vg_layer layer, float sx, float sy, float ex, float ey, NVGcolor icol, NVGcolor ocol)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    return harmony::VectorGraphics::LinearGradient(l, sx, sy, ex, ey, icol, ocol);
+}
+
+NVGpaint    harmony_mono_vg_box_gradient(harmony_vg_layer layer, float x, float y, float w, float h, float r, float f, NVGcolor icol, NVGcolor ocol)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    return harmony::VectorGraphics::BoxGradient(l, x, y,  w,  h,  r,  f,  icol,  ocol);
+}
+
+NVGpaint    harmony_mono_vg_radial_gradient(harmony_vg_layer layer, float cx, float cy, float inr, float outr, NVGcolor icol, NVGcolor ocol)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    return harmony::VectorGraphics::RadialGradient(l,  cx,  cy,  inr,  outr,  icol,  ocol);
+}
+
+NVGpaint    harmony_mono_vg_image_pattern(harmony_vg_layer layer, float ox, float oy, float ex, float ey, float angle, int image, float alpha)
+{
+    auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
+    return harmony::VectorGraphics::ImagePattern(l,  ox,  oy,  ex,  ey,  angle,  image,  alpha);
+}
 
