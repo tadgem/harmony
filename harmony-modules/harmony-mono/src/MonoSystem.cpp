@@ -146,6 +146,7 @@ void harmony::MonoSystem::AddMonoBehaviour(entt::registry& registry, entt::entit
         if(exception != nullptr)
         {
             log::error("MonoSystem : AddMonoBehaviour : exception encountered during init for type {}", typeInfo.m_TypeName);
+            mono_print_unhandled_exception(exception);
         }
     }
 
