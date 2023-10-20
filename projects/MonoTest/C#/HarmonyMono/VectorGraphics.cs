@@ -22,6 +22,14 @@ namespace Harmony
         public struct NVGcolor
         {
             public float r, g, b, a;
+
+            public NVGcolor(float _r, float _g, float _b, float _a)
+            {
+                r = _r;
+                g = _g;
+                b = _b; 
+                a = _a;
+            }
         };
 
         public struct NVGpaint
