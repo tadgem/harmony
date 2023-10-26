@@ -1,14 +1,22 @@
 //
 // Created by liam_ on 10/10/2023.
 //
+#include "MonoAPI.h"
 #include "JoltMonoBind.h"
 #include "Core/Log.hpp"
 #include "JoltAPI.h"
 #include "JoltComponents.h"
 #include "Core/Scene.h"
+
 extern "C"
 {
-    typedef uint32_t entt_entity;
+    typedef struct jolt_contact_manifold
+    {
+        glm_vec3 base_offset;
+        glm_vec3 world_space_normal;
+        float penetration_depth;
+        
+    };
     harmony::JoltBodyComponent* harmony_mono_get_jolt_body_component(harmony::Scene* scene, entt_entity entity)
     {
         if(!scene) return nullptr;
@@ -288,5 +296,24 @@ void harmony::JoltMonoInternalMethodProvider::BindInternalMethods()
 }
 
 harmony::JoltMonoInternalMethodProvider::JoltMonoInternalMethodProvider() {
+
+}
+
+void harmony::JoltMonoContactListenerCallback::OnContactAdded(const JPH::Body &inBody1, const JPH::Body &inBody2,
+                                                              const JPH::ContactManifold &inManifold,
+                                                              JPH::ContactSettings &ioSettings) {
+    const JPH::Body* b1ptr = &inBody1;
+    const JPH::Body* b2ptr = &inBody2;
+}
+
+void harmony::JoltMonoContactListenerCallback::OnContactPersisted(const JPH::Body &inBody1, const JPH::Body &inBody2,
+                                                                  const JPH::ContactManifold &inManifold,
+                                                                  JPH::ContactSettings &ioSettings) {
+
+}
+
+void harmony::JoltMonoContactListenerCallback::OnContactRemoved(const JPH::Body &inBody1, const JPH::Body &inBody2,
+                                                                const JPH::ContactManifold &inManifold,
+                                                                JPH::ContactSettings &ioSettings) {
 
 }

@@ -26,4 +26,18 @@ namespace harmony {
     public:
 
     };
+
+    class HarmonyContactListenerCallback
+    {
+    public:
+
+        virtual void OnContactAdded(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold,
+                JPH::ContactSettings &ioSettings) = 0;
+
+        virtual void OnContactPersisted(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold,
+                            JPH::ContactSettings &ioSettings) = 0;
+
+        virtual void OnContactRemoved(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold,
+                            JPH::ContactSettings &ioSettings) = 0;
+    };
 }

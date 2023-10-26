@@ -3,9 +3,6 @@
 #include "Rendering/Pipelines/PipelineStageRenderer.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/View.h"
-#include "ECS/MaterialComponent.h"
-#include "ECS/MeshComponent.h"
-#include "ECS/TransformComponent.h"
 #include "Core/Log.hpp"
 
 harmony::PipelineDrawStage::PipelineDrawStage(const std::string &name, Type stageType, WeakPtr<ShaderProgram> shader,
