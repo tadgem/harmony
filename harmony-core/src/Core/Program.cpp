@@ -289,7 +289,7 @@ void harmony::Program::InitImGui() {
     SDL_GetWindowDisplayMode(p_Window, &displayMode);
     SDL_SysWMinfo info;
     SDL_GetWindowWMInfo(p_Window, &info);
-    imguiCreate(20.0f * p_DPIScale, p_ImGuiAllocator);
+    imguiCreate(18.0f * p_DPIScale, p_ImGuiAllocator);
 
 #if BX_PLATFORM_WINDOWS
     ImGui_ImplSDL2_InitForD3D(p_Window);

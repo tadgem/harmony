@@ -309,11 +309,14 @@ void harmony::JoltMonoContactListenerCallback::OnContactAdded(const JPH::Body &i
 void harmony::JoltMonoContactListenerCallback::OnContactPersisted(const JPH::Body &inBody1, const JPH::Body &inBody2,
                                                                   const JPH::ContactManifold &inManifold,
                                                                   JPH::ContactSettings &ioSettings) {
+    const JPH::Body* b1ptr = &inBody1;
+    const JPH::Body* b2ptr = &inBody2;
 
 }
 
 void harmony::JoltMonoContactListenerCallback::OnContactRemoved(const JPH::Body &inBody1, const JPH::Body &inBody2,
                                                                 const JPH::ContactManifold &inManifold,
                                                                 JPH::ContactSettings &ioSettings) {
-
+    const JPH::Body* b1ptr = &inBody1;
+    const JPH::Body* b2ptr = &inBody2;
 }

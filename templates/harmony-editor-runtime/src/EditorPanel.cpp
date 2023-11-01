@@ -604,7 +604,7 @@ void harmony::MonoPanel::OnImGui() {
             return;
         }
 
-        ImGui::Text("Debugger Connected? : %s", mono_is_debugger_attached() ? "true" : "false");
+        ImGui::TextWrapped("Debugger Connected? : %s", mono_is_debugger_attached() ? "true" : "false");
         if(ImGui::Button("Reload Mono Assemblies"))
         {
             auto scene = p_Program.GetActiveScene().lock();
