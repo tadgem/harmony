@@ -39,6 +39,7 @@ namespace GameTest
             if (Input.GetKeyButton(Input.Key.Space))
             {
                 Log.Info("Space pressed");
+                // SceneMethods.LoadScene("TestDupe.harmonyscene");
             }
 
             var mouse = Input.GetMousePosition();
@@ -50,13 +51,11 @@ namespace GameTest
 
             VectorGraphics.BeginPath(VectorGraphics.Layer.One);
             VectorGraphics.Rect(VectorGraphics.Layer.One, Math.Abs(mouse.X), Math.Abs(mouse.Y), 300.0f, 400.0f);
-            //VectorGraphics.Translate(VectorGraphics.Layer.One, _boxMove, 0.0f);
             VectorGraphics.FillColor(VectorGraphics.Layer.One, _circleColor);
             VectorGraphics.Fill(VectorGraphics.Layer.One);
 
             VectorGraphics.BeginPath(VectorGraphics.Layer.One);
             VectorGraphics.Rect(VectorGraphics.Layer.One, Math.Abs(mouse.X), Math.Abs(mouse.Y), 200.0f + position.Y, 200.0f);
-            //VectorGraphics.Translate(VectorGraphics.Layer.One, _boxMove, 0.0f);
             VectorGraphics.FillColor(VectorGraphics.Layer.One, new VectorGraphics.NVGcolor(1.0f, 1.0f, 1.0f, 1.0f));
             VectorGraphics.Fill(VectorGraphics.Layer.One);
 
