@@ -77,6 +77,7 @@ harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GetTypeHash<JoltPhysics
     m_BodyActivationListener = CreateUnique<HarmonyBodyActivationListener>();
     m_ObjectLayerPairFilter = CreateUnique<HarmonyObjectLayerPairFilter>();
     m_DebugRenderer = CreateUnique<HarmonyDebugRenderer>();
+    m_ContactListener = CreateUnique<HarmonyContactListener>();
 
 }
 
@@ -93,7 +94,6 @@ void harmony::JoltPhysicsSystem::Init(entt::registry &registry) {
     m_PhysicsSystem->SetGravity(s_DefaultGravity);
 
     if (s_UseContactListener) {
-        m_ContactListener = CreateUnique<HarmonyContactListener>();
         m_PhysicsSystem->SetContactListener(m_ContactListener.get());
     }
 
@@ -281,4 +281,8 @@ void harmony::JoltPhysicsSystem::UpdateBody(entt::entity e, TransformComponent &
         }
         return;
     }
+}
+
+harmony::HarmonyContactListener *harmony::JoltPhysicsSystem::GetContactListener() {
+    return m_ContactListener.get();
 }

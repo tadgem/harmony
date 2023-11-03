@@ -55,6 +55,8 @@ namespace harmony {
 
         void DestroyBody(JoltBodyComponent &body);
 
+        HarmonyContactListener* GetContactListener();
+
     protected:
 
         const bool m_DrawDebug = true;

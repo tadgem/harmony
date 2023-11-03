@@ -312,8 +312,6 @@ void harmony::JoltMonoContactListenerCallback::OnContactPersisted(const JPH::Bod
 
 }
 
-void harmony::JoltMonoContactListenerCallback::OnContactRemoved(const JPH::Body &inBody1, const JPH::Body &inBody2,
-                                                                const JPH::ContactManifold &inManifold,
-                                                                JPH::ContactSettings &ioSettings) {
+void harmony::JoltMonoContactListenerCallback::OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair) {
 
 }
