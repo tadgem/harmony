@@ -71,3 +71,4 @@ imgui.ini
 *cmake-build-debug
 *xcode
 CppProperties.json
+*.log
