@@ -8,6 +8,7 @@
 #include <ostream>
 #include <functional>
 #include <optional>
+#include <stack>
 
 namespace harmony {
     using String = std::string;
@@ -27,6 +28,9 @@ namespace harmony {
 
     template<typename T>
     using Vector = std::vector<T>;
+
+    template<typename T>
+    using Stack = std::stack<T>;
 
     template<typename T>
     using Lambda = std::function<T>;

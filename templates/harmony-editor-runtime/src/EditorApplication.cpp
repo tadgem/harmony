@@ -220,6 +220,43 @@ void harmony::Editor::OnEditExit() {
     SaveScene(p_LoadedScenePath);
 }
 
+int harmony::Editor::OnMiniGuisUpdate() {
+    OPTICK_EVENT();
+    UpdateTimeVariables();
+
+    HandleSDLEvent();
+
+    ImGuiPreUpdate();
+
+    // RunRendererPreUpdate();
+    if(!p_MiniGuiApps.empty())
+    {
+        bool finished = p_MiniGuiApps.top()->OnImGui();
+        if(finished)
+        {
+            p_MiniGuiApps.top().reset();
+            p_MiniGuiApps.pop();
+        }
+    }
+
+    Input::PostFrame();
+
+    ImGuiPostUpdate();
+    Frame();
+
+    if(p_MiniGuiApps.empty())
+    {
+        m_EditorFSM.Trigger(Trigger::MiniGuisFinished);
+    }
+
+    return FSM::NO_TRIGGER;
+}
+
+void harmony::Editor::OnMiniGuisExit() {
+    OPTICK_EVENT();
+    log::info("Program : All MiniGuis processed.");
+}
+
 int harmony::Editor::OnRuntimeUpdate() {
     OPTICK_EVENT();
     UpdateTimeVariables();
@@ -284,10 +321,15 @@ void harmony::Editor::Init() {
     m_EditorFSM.AddStateExit(Mode::Debug, [this]() { OnRuntimeExit(); });
     m_EditorFSM.AddStateEntry(Mode::Debug, [this]() { OnRuntimeEntry(); });
 
+    m_EditorFSM.AddState(Mode::MiniGuis, [this]() { return OnMiniGuisUpdate();});
+    m_EditorFSM.AddStateExit(Mode::MiniGuis, [this]() { OnMiniGuisExit();});
+
+
     m_EditorFSM.AddTrigger(Trigger::Play, Mode::Edit, Mode::Debug);
     m_EditorFSM.AddTrigger(Trigger::Stop, Mode::Debug, Mode::Edit);
+    m_EditorFSM.AddTrigger(Trigger::MiniGuisFinished, Mode::MiniGuis, Mode::Edit);
 
-    m_EditorFSM.SetStartingState(Mode::Edit);
+    m_EditorFSM.SetStartingState(Mode::MiniGuis);
 }
 
 void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure proc) {
@@ -301,17 +343,9 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
 
     InitializeViews();
 
-    LoadProject(projectPath);
-
     PreRunInit();
 
     SetRunningStyle();
-
-    if (m_Project) {
-        if (m_Project->m_SerializedScenes.size() > 0) {
-            LoadScene(m_Project->m_SerializedScenes[0]);
-        }
-    }
 
     while (p_Run) {
         ProfilerBeginFrame();
@@ -351,10 +385,6 @@ void harmony::Editor::UpdateEditor() {
     if (!p_ActiveScene) {
         return;
     }
-
-    //GfxDebug::Get()->setColor(GfxDebug::Channel::Editor, 0xfffffff);
-    //GfxDebug::Get()->drawGrid(GfxDebug::Channel::Editor, Axis::Enum::Y, bx::Vec3(0.0f, 0.0f, 0.0f), 1000);
-
 }
 
 void harmony::Editor::SetRunningStyle() {
@@ -490,4 +520,9 @@ void harmony::Editor::LoadBuiltInAssets() {
     AssetHandle planeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Plane", CreateRef<Plane>(1.0f));
     RefCntPtr<Mesh> plane = m_AssetManager.GetAsset<Mesh>(planeHandle).lock();
     m_Renderer.SubmitMeshToGPU(plane);
+}
+
+void harmony::Editor::AddMiniGuiApp(harmony::RefCntPtr<harmony::MiniGuiApp> app)
+{
+    p_MiniGuiApps.push(app);
 }

@@ -7,6 +7,7 @@
 #include "Core/Alias.h"
 #include "ImGui/GraphScript/GraphScriptImGui.h"
 #include "ImGui/Logger.h"
+#include "MiniGuiApp.h"
 
 namespace harmony {
     class CameraSystem;
@@ -18,12 +19,14 @@ namespace harmony {
 
         enum Mode {
             Edit,
-            Debug
+            Debug,
+            MiniGuis
         };
 
         enum Trigger {
             Play,
-            Stop
+            Stop,
+            MiniGuisFinished,
         };
 
         Editor();
@@ -48,6 +51,11 @@ namespace harmony {
 
         void AddEditorPanels();
 
+        void AddMiniGuiApp(RefCntPtr<MiniGuiApp> app);
+
+        int OnMiniGuisUpdate();
+
+        void OnMiniGuisExit();
 
         int OnEditUpdate();
 
@@ -81,13 +89,13 @@ namespace harmony {
         harmony::ImGuiLogger m_Logger;
 
     protected:
-        std::vector<RefCntPtr<Panel>> p_Panels;
+        Vector<RefCntPtr<Panel>> p_Panels;
         RefCntPtr<ScenePanel> p_ScenePanel;
         RefCntPtr<EditorView> p_EditorView;
         EditorMainMenuBar p_MainMenuBar;
 
         RefCntPtr<PipelineV2> p_EditorPipeline;
-
+        Stack<RefCntPtr<MiniGuiApp>> p_MiniGuiApps;
     private:
         std::string p_LoadedScenePath;
     };

@@ -281,7 +281,7 @@ void harmony::Program::InitImGui() {
     p_ImGuiAllocator = new bx::DefaultAllocator();
 
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     int ww, wh;
     SDL_GetWindowSize(p_Window, &ww, &wh);
     int displayIndex = SDL_GetWindowDisplayIndex(p_Window);

@@ -38,6 +38,8 @@ namespace harmony {
 
         virtual void Init();
 
+        void PreRunInit();
+
         virtual void Run();
 
         virtual void Run(const std::string &projectPath);
@@ -104,7 +106,6 @@ namespace harmony {
 
         void InitImGui();
 
-        void PreRunInit();
 
         void UpdateTimeVariables();
 
