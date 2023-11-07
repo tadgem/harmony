@@ -36,7 +36,16 @@ void harmony::AssimpModelAssetFactory::ProcessNode(const String &path, aiNode *n
             unsigned int sceneIndex = node->mMeshes[i];
             aiMesh *mesh = scene->mMeshes[sceneIndex];
             ProcessMesh(path, mesh, node, scene);
+            if(mesh->mMaterialIndex < 0 || mesh->mMaterialIndex > scene->mNumMaterials - 1) return;
+            auto m = scene->mMaterials[mesh->mMaterialIndex];
+            for(int j = 0 ; j < m->mNumProperties; j++)
+            {
+                auto prop = m->mProperties[j];
+                int k = 1;
+            }
         }
+
+
     }
 
     if (node->mNumChildren == 0) {

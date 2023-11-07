@@ -31,7 +31,9 @@ namespace harmony {
         void EntityDragDrop(entt::entity e, entt::registry &reg);
 
         Program &p_Prog;
+        AssetManager& p_AssetManager;
         bool p_RenamingSelectedEntity = false;
+        bool p_ImportModelDialog = false;
         Vector<entt::entity> p_FrameHandledEntities;
     };
 

@@ -1,3 +1,4 @@
+#include <ImGui/imgui_internal.h>
 #include "EditorPanel.h"
 #include "EditorUtils.h"
 #include "ECS/TransformComponent.h"
@@ -20,8 +21,10 @@
 #include "MonoProgramComponent.h"
 #include "MonoSystem.h"
 #include "mono/metadata/mono-debug.h"
+#include "Assets/ModelAsset.h"
 
-harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program) {
+harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program), p_AssetManager(program.m_AssetManager)
+{
 }
 
 void harmony::ScenePanel::OnImGui() {
@@ -51,10 +54,35 @@ void harmony::ScenePanel::OnImGui() {
         if (ImGui::Button("Add Entity")) {
             activeScene->AddEntity();
         }
+        ImGui::SameLine();
+        if(ImGui::ButtonEx("Add Model Entity", ImVec2(0,0), ImGuiButtonFlags_FlattenChildren))
+        {
+            // do the thing.
+            p_ImportModelDialog = true;
+        }
         ImGui::Separator();
         activeScene->m_Registry.each([&](entt::entity e) { EntityImGui(e, activeScene->m_Registry, true); });
         ImGui::EndChild();
 
+    }
+    ImGui::End();
+
+    if(!p_ImportModelDialog)
+    {
+        return;
+    }
+
+    ImGui::SetNextWindowSize(ImVec2(600, 400), ImGuiCond_FirstUseEver);
+    if(ImGui::Begin("Choose Model to Import"))
+    {
+        // Combo box for available model assets
+        // if(p_AssetManager.AssetTypeSelector<>())
+        // Combo box for shader to use for materia
+
+        if(ImGui::Button("Close"))
+        {
+            p_ImportModelDialog = false;
+        }
     }
     ImGui::End();
 }

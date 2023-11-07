@@ -10,13 +10,38 @@
 
 extern "C"
 {
-    typedef struct jolt_contact_manifold
+    struct jolt_contact_manifold_simple
     {
-        glm_vec3 base_offset;
-        glm_vec3 world_space_normal;
-        float penetration_depth;
-        
+        glm_vec3    base_offset;
+        glm_vec3    world_space_normal;
+        float       penetration_depth;
+        glm_vec3    center_point;
     };
+
+   // N.B. This will be expensive to pass between script + code
+   // where possible, use jolt_contact_manifold_simple
+    struct jolt_contact_manifold_extended
+    {
+        glm_vec3    base_offset;
+        glm_vec3    world_space_normal;
+        float       penetration_depth;
+        glm_vec3    contact_points_b1[64];
+        glm_vec3    contact_points_b2[64];
+    };
+
+    struct jolt_contact_settings
+    {
+        float                   combined_friction;
+        float					combined_restitution;
+        float					inv_mass_scale_1 = 1.0f;
+        float					inv_inertia_scale_1 = 1.0f;
+        float					inv_mass_scale_2 = 1.0f;
+        float					inv_inertia_scale_2 = 1.0f;
+        bool					is_sensor;
+        glm_vec3				relative_linear_surface_velocity;
+        glm_vec3				relative_angular_surface_velocity;
+    };
+
     harmony::JoltBodyComponent* harmony_mono_get_jolt_body_component(harmony::Scene* scene, entt_entity entity)
     {
         if(!scene) return nullptr;
@@ -299,11 +324,65 @@ harmony::JoltMonoInternalMethodProvider::JoltMonoInternalMethodProvider() {
 
 }
 
+glm_vec3 jolt_to_glm_rvec3(const JPH::RVec3& v)
+{
+    return glm_vec3 { v.GetX(), v.GetY(), v.GetZ()};
+}
+
+glm_vec3 jolt_to_glm_vec3(const JPH::Vec3& v)
+{
+    return glm_vec3 { v.GetX(), v.GetY(), v.GetZ()};
+}
+
+jolt_contact_manifold_simple get_simple_manifold(const JPH::ContactManifold& inManifold)
+{
+    jolt_contact_manifold_simple mf {};
+
+    mf.base_offset = jolt_to_glm_rvec3(inManifold.mBaseOffset);
+    mf.penetration_depth = inManifold.mPenetrationDepth;
+    mf.world_space_normal = jolt_to_glm_vec3(inManifold.mWorldSpaceNormal);
+    // TODO: Might be sus -_-
+    mf.center_point = jolt_to_glm_vec3(inManifold.mBaseOffset);
+
+
+    return mf;
+}
+
+jolt_contact_manifold_extended get_extended_manifold(const JPH::ContactManifold& inManifold)
+{
+    jolt_contact_manifold_extended mf {};
+
+    mf.base_offset = jolt_to_glm_rvec3(inManifold.mBaseOffset);
+    mf.penetration_depth = inManifold.mPenetrationDepth;
+    mf.world_space_normal = jolt_to_glm_vec3(inManifold.mWorldSpaceNormal);
+
+    for(int i = 0; i< inManifold.mRelativeContactPointsOn1.size(); i++)
+    {
+        mf.contact_points_b1[i] = jolt_to_glm_vec3(inManifold.mRelativeContactPointsOn1[i]);
+    }
+
+    for(int i = 0; i< inManifold.mRelativeContactPointsOn2.size(); i++)
+    {
+        mf.contact_points_b2[i] = jolt_to_glm_vec3(inManifold.mRelativeContactPointsOn2[i]);
+    }
+    return mf;
+}
+
+jolt_contact_settings get_contact_settings(const JPH::ContactSettings& settings)
+{
+    jolt_contact_settings s {};
+
+    return s;
+}
+
 void harmony::JoltMonoContactListenerCallback::OnContactAdded(const JPH::Body &inBody1, const JPH::Body &inBody2,
                                                               const JPH::ContactManifold &inManifold,
                                                               JPH::ContactSettings &ioSettings) {
     const JPH::Body* b1ptr = &inBody1;
     const JPH::Body* b2ptr = &inBody2;
+    const jolt_contact_manifold_extended manifold = get_extended_manifold(inManifold);
+    const jolt_contact_settings contact_settings = get_contact_settings(ioSettings);
+
 }
 
 void harmony::JoltMonoContactListenerCallback::OnContactPersisted(const JPH::Body &inBody1, const JPH::Body &inBody2,
@@ -311,9 +390,12 @@ void harmony::JoltMonoContactListenerCallback::OnContactPersisted(const JPH::Bod
                                                                   JPH::ContactSettings &ioSettings) {
     const JPH::Body* b1ptr = &inBody1;
     const JPH::Body* b2ptr = &inBody2;
+    const jolt_contact_manifold_extended manifold = get_extended_manifold(inManifold);
+    const jolt_contact_settings contact_settings = get_contact_settings(ioSettings);
 
 }
 
-void harmony::JoltMonoContactListenerCallback::OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair) {
-
+void harmony::JoltMonoContactListenerCallback::OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair)
+{
+    inSubShapePair.GetBody1ID();
 }
