@@ -20,7 +20,7 @@ harmony::ShaderProgram::ShaderProgram() : m_Handle(BGFX_INVALID_HANDLE) {
 bool harmony::ShaderProgram::AddStage(ShaderStage::Type stageType, WeakPtr<ShaderStage> shader) {
     OPTICK_EVENT();
     if (m_Stages.find(stageType) != m_Stages.end()) {
-        harmony::log::warn("Shader program already contains stage : %s",
+        log::warn("Shader : {} : program already contains stage : %s", m_Name,
                            ShaderStage::GetShaderStageNameFromEnum(stageType));
         return false;
     }
@@ -52,7 +52,7 @@ void harmony::ShaderProgram::Build() {
         m_Handle = bgfx::createProgram(vertStage->m_ProgramHandle, fragStage->m_ProgramHandle, false);
     }
     if (m_Handle.idx == bgfx::kInvalidHandle) {
-        harmony::log::error("Shader : {} : Failed to build!.", m_Name);
+        log::error("Shader : {} : Failed to build!.", m_Name);
     }
 }
 
@@ -194,14 +194,14 @@ void harmony::ShaderProgram::AddUniformOverride(ShaderUniform &uniform) {
         m_ActiveUniformOverrides.emplace_back(uniform);
         return;
     }
-    harmony::log::warn("ShaderProgram : Uniform {} already marked as overriden for this shader.", uniform.Name);
+    log::warn("ShaderProgram : {} : Uniform {} already marked as overriden for this shader.", m_Name, uniform.Name);
 }
 
 void harmony::ShaderProgram::RemoveUniformOverride(ShaderUniform &uniform) {
     OPTICK_EVENT();
     auto it = std::find(m_ActiveUniformOverrides.begin(), m_ActiveUniformOverrides.end(), uniform);
     if (it == m_ActiveUniformOverrides.end()) {
-        harmony::log::warn("ShaderProgram : Uniform {} not marked as overriden for this shader.", uniform.Name);
+        log::warn("ShaderProgram : {} : Uniform {} not marked as overriden for this shader.", m_Name, uniform.Name);
         return;
     }
     m_ActiveUniformOverrides.erase(it);
