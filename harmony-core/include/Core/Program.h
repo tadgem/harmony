@@ -199,6 +199,24 @@ namespace harmony {
             }
         }
 
+        WeakPtr<ProgramComponent> GetProgramComponent(HashString typeHash)
+        {
+            int index = -1;
+            for (int i = 0; i < p_ProgramComponents.size(); i++) {
+                if (typeHash == p_ProgramComponents[i]->m_TypeHash)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index >= 0) {
+                return p_ProgramComponents[index];
+            } else {
+                return WeakPtr<ProgramComponent>();
+            }
+        }
+
         template<typename T>
         WeakPtr<T> GetSystem() {
 

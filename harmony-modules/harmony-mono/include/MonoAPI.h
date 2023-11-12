@@ -9,6 +9,8 @@
 
 namespace harmony {
     struct TransformComponent;
+
+    class ProgramComponent;
 }
 extern "C"
 {
@@ -176,7 +178,8 @@ extern "C"
     void    harmony_mono_set_time_scale(double newTimeScale);
 
     // Program
-    harmony::Program*   harmony_mono_get_program();
+    harmony::Program*           harmony_mono_get_program();
+    harmony::ProgramComponent*  harmony_mono_get_program_component(uint64_t type_hash);
 
     // Scene
     harmony::Scene*     harmony_mono_get_active_scene();

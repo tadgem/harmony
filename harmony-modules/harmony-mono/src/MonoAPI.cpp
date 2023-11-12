@@ -59,6 +59,17 @@ harmony::Program *harmony_mono_get_program() {
     return harmony::Program::Get();
 }
 
+harmony::ProgramComponent* harmony_mono_get_program_component(const uint64_t type_hash)
+{
+    const harmony::WeakPtr<harmony::ProgramComponent> wr = harmony::Program::Get()->GetProgramComponent(harmony::HashString(type_hash));
+    if (wr.expired()) {
+        // also need to check mono implemented program components
+        return nullptr;
+    }
+    return wr.lock().get();
+}
+
+
 harmony::Scene *harmony_mono_get_active_scene() {
     // TODO error checking
     auto sr =  harmony::Program::Get()->GetActiveScene().lock();
@@ -546,4 +557,3 @@ NVGpaint    harmony_mono_vg_image_pattern(harmony_vg_layer layer, float ox, floa
     auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
     return harmony::VectorGraphics::ImagePattern(l,  ox,  oy,  ex,  ey,  angle,  image,  alpha);
 }
-

@@ -18,7 +18,7 @@ void harmony::Scene::Deserialize(std::vector<RefCntPtr<System>> &systems) {
 
     for (auto &[systemTypeHash, json]: p_SystemSerializationAttributes) {
         for (int i = 0; i < systems.size(); i++) {
-            if (systems[i]->m_TypeHash == systemTypeHash) {
+            if (systems[i]->m_TypeHash == HashString(systemTypeHash)) {
                 systems[i]->DeserializeSystem(m_Registry, json);
                 break;
             }
