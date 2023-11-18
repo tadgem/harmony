@@ -399,3 +399,49 @@ void harmony::JoltMonoContactListenerCallback::OnContactRemoved(const JPH::SubSh
 {
     inSubShapePair.GetBody1ID();
 }
+
+bool harmony::JoltMonoContactListenerCallback::AddCallback(JPH::Body* body, MonoObject* obj, MonoMethod* callback)
+{
+    if(p_MonoCallbacks.find(body) != p_MonoCallbacks.end()) {
+        JoltMonoContactListenerData data {callback, obj };
+        auto& callbacks  = p_MonoCallbacks[body];
+        if(std::find(callbacks.begin(), callbacks.end(), data) != callbacks.end())
+        {
+            log::warn("JoltMonoContactListenerCallback : Body {} : Already has a callback for object {} with method {}", body->GetID().GetIndex(), obj, callback);
+            return false;
+        }
+        callbacks.emplace_back(data);
+        return true;
+    }
+    p_MonoCallbacks.emplace(body, Vector<JoltMonoContactListenerData>());
+    p_MonoCallbacks[body].emplace_back(JoltMonoContactListenerData{callback, obj});
+    return true;
+}
+
+bool harmony::JoltMonoContactListenerCallback::RemoveCallback(JPH::Body* body, MonoObject* obj, MonoMethod* callback)
+{
+    if(p_MonoCallbacks.find(body) != p_MonoCallbacks.end()) {
+        JoltMonoContactListenerData data {callback, obj };
+        auto& callbacks  = p_MonoCallbacks[body];
+        auto it = std::find(callbacks.begin(), callbacks.end(), data);
+        if(it != callbacks.end())
+        {
+            callbacks.erase(it);
+            return true;
+        }
+    }
+
+    log::warn("JoltMonoContactListenerCallback : Body {} : Does not have a callback for object {} with method {}", body->GetID().GetIndex(), obj, callback);
+    return false;
+}
+
+
+bool operator== (const harmony::JoltMonoContactListenerData& c1, const harmony::JoltMonoContactListenerData& c2)
+{
+    return c1.m_Object == c2.m_Object && c1.m_CallbackMethod == c2.m_CallbackMethod;
+}
+
+bool operator!= (const harmony::JoltMonoContactListenerData& c1, const harmony::JoltMonoContactListenerData& c2)
+{
+    return c1.m_Object != c2.m_Object || c1.m_CallbackMethod != c2.m_CallbackMethod;
+}

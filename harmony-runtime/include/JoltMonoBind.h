@@ -14,6 +14,16 @@ namespace harmony {
         virtual void BindInternalMethods() override;
     };
 
+    struct JoltMonoContactListenerData
+    {
+        MonoMethod* m_CallbackMethod;
+        MonoObject* m_Object;
+
+        friend bool operator== (const JoltMonoContactListenerData& c1, const JoltMonoContactListenerData& c2);
+        friend bool operator!= (const JoltMonoContactListenerData& c1, const JoltMonoContactListenerData& c2);
+
+    };
+
     class JoltMonoContactListenerCallback : public HarmonyContactListenerCallback
     {
     public:
@@ -26,6 +36,12 @@ namespace harmony {
 
         void
         OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair) override;
+
+        bool AddCallback(JPH::Body* body, MonoObject* obj, MonoMethod* callback);
+        bool RemoveCallback(JPH::Body* body, MonoObject* obj, MonoMethod* callback);
+
+    protected:
+        HashMap<JPH::Body*, Vector<JoltMonoContactListenerData>> p_MonoCallbacks;
 
     };
 }
