@@ -1,5 +1,9 @@
 #include "HarmonyContactListener.h"
 
+harmony::HarmonyContactListenerCallback::HarmonyContactListenerCallback(HashString typeHash) : m_TypeHash(typeHash)
+{
+}
+
 harmony::HarmonyContactListener::HarmonyContactListener() {
     p_Callbacks = Vector<RefCntPtr<HarmonyContactListenerCallback>>();
 }

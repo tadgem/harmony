@@ -1,46 +1,18 @@
 //
 // Created by liam_ on 10/10/2023.
 //
-#include "MonoAPI.h"
 #include "JoltMonoBind.h"
 #include "Core/Log.hpp"
 #include "JoltAPI.h"
 #include "JoltComponents.h"
+#include "JoltPhysicsSystem.h"
+#include "Core/Program.h"
 #include "Core/Scene.h"
+
+static harmony::JoltMonoContactListenerCallback* s_CallbackManager = nullptr;
 
 extern "C"
 {
-    struct jolt_contact_manifold_simple
-    {
-        glm_vec3    base_offset;
-        glm_vec3    world_space_normal;
-        float       penetration_depth;
-        glm_vec3    center_point;
-    };
-
-   // N.B. This will be expensive to pass between script + code
-   // where possible, use jolt_contact_manifold_simple
-    struct jolt_contact_manifold_extended
-    {
-        glm_vec3    base_offset;
-        glm_vec3    world_space_normal;
-        float       penetration_depth;
-        glm_vec3    contact_points_b1[64];
-        glm_vec3    contact_points_b2[64];
-    };
-
-    struct jolt_contact_settings
-    {
-        float                   combined_friction;
-        float					combined_restitution;
-        float					inv_mass_scale_1 = 1.0f;
-        float					inv_inertia_scale_1 = 1.0f;
-        float					inv_mass_scale_2 = 1.0f;
-        float					inv_inertia_scale_2 = 1.0f;
-        bool					is_sensor;
-        glm_vec3				relative_linear_surface_velocity;
-        glm_vec3				relative_angular_surface_velocity;
-    };
 
     harmony::JoltBodyComponent* harmony_mono_get_jolt_body_component(harmony::Scene* scene, entt_entity entity)
     {
@@ -61,12 +33,42 @@ extern "C"
         if(!body) return nullptr;
         return body->Body;
     }
+
+    void GetContactCallbackStaticInstance() {
+        auto* base = harmony::Program::Get()->
+            GetSystem<harmony::JoltPhysicsSystem>().lock()->
+            GetContactListener()->
+            GetContactCallback<harmony::JoltMonoContactListenerCallback>().get();
+
+        s_CallbackManager = static_cast<harmony::JoltMonoContactListenerCallback*>(base);
+    }
+
+    bool harmony_mono_add_contact_callback(JPH::Body* body, contact_callback_t callback)
+    {
+        if(s_CallbackManager == nullptr) {
+            GetContactCallbackStaticInstance();
+        }
+
+        return s_CallbackManager->AddCallback(body, callback);
+    }
+
+    bool harmony_mono_remove_contact_callback(JPH::Body* body, contact_callback_t callback)
+    {
+        if(s_CallbackManager == nullptr) {
+            GetContactCallbackStaticInstance();
+        }
+
+        return s_CallbackManager->RemoveCallback(body, callback);
+    }
+
 }
 
 void harmony::JoltMonoInternalMethodProvider::BindInternalMethods()
 {
     mono_add_internal_call("HarmonyJoltSharp.ECS::GetEntityJoltBodyComponent", harmony_mono_get_jolt_body_component);
     mono_add_internal_call("HarmonyJoltSharp.ECS::GetJoltBodyFromComponent", harmony_mono_get_jolt_body_from_component);
+    mono_add_internal_call("HarmonyJoltSharp.ECS::AddContactCallback", harmony_mono_add_contact_callback);
+    mono_add_internal_call("HarmonyJoltSharp.ECS::RemoveContactCallback", harmony_mono_remove_contact_callback);
 
     mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_Init", JPH_Init);
     mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_Shutdown", JPH_Shutdown);
@@ -390,8 +392,14 @@ void harmony::JoltMonoContactListenerCallback::OnContactPersisted(const JPH::Bod
                                                                   JPH::ContactSettings &ioSettings) {
     const JPH::Body* b1ptr = &inBody1;
     const JPH::Body* b2ptr = &inBody2;
-    const jolt_contact_manifold_extended manifold = get_extended_manifold(inManifold);
-    const jolt_contact_settings contact_settings = get_contact_settings(ioSettings);
+    jolt_contact_manifold_simple manifold = get_simple_manifold(inManifold);
+    jolt_contact_settings contact_settings = get_contact_settings(ioSettings);
+
+    if(p_MonoCallbacks.find(b1ptr) != p_MonoCallbacks.end()) {
+        for(auto cb : p_MonoCallbacks[b1ptr]) {
+            cb.m_ContactCallback((JPH::Body*)b1ptr, (JPH::Body*)b2ptr, manifold, contact_settings);
+        }
+    }
 
 }
 
@@ -400,28 +408,30 @@ void harmony::JoltMonoContactListenerCallback::OnContactRemoved(const JPH::SubSh
     inSubShapePair.GetBody1ID();
 }
 
-bool harmony::JoltMonoContactListenerCallback::AddCallback(JPH::Body* body, MonoObject* obj, MonoMethod* callback)
+bool harmony::JoltMonoContactListenerCallback::AddCallback(JPH::Body* body, contact_callback_t callback)
 {
+    JoltMonoContactListenerData data {callback };
     if(p_MonoCallbacks.find(body) != p_MonoCallbacks.end()) {
-        JoltMonoContactListenerData data {callback, obj };
         auto& callbacks  = p_MonoCallbacks[body];
-        if(std::find(callbacks.begin(), callbacks.end(), data) != callbacks.end())
+        auto it = std::find(callbacks.begin(), callbacks.end(), data);
+        if(it != callbacks.end())
         {
-            log::warn("JoltMonoContactListenerCallback : Body {} : Already has a callback for object {} with method {}", body->GetID().GetIndex(), obj, callback);
+            log::warn("JoltMonoContactListenerCallback : already added this callback");
             return false;
         }
         callbacks.emplace_back(data);
         return true;
     }
+
     p_MonoCallbacks.emplace(body, Vector<JoltMonoContactListenerData>());
-    p_MonoCallbacks[body].emplace_back(JoltMonoContactListenerData{callback, obj});
+    p_MonoCallbacks[body].emplace_back(data);
     return true;
 }
 
-bool harmony::JoltMonoContactListenerCallback::RemoveCallback(JPH::Body* body, MonoObject* obj, MonoMethod* callback)
+bool harmony::JoltMonoContactListenerCallback::RemoveCallback(JPH::Body* body, contact_callback_t callback)
 {
     if(p_MonoCallbacks.find(body) != p_MonoCallbacks.end()) {
-        JoltMonoContactListenerData data {callback, obj };
+        JoltMonoContactListenerData data {callback };
         auto& callbacks  = p_MonoCallbacks[body];
         auto it = std::find(callbacks.begin(), callbacks.end(), data);
         if(it != callbacks.end())
@@ -431,17 +441,23 @@ bool harmony::JoltMonoContactListenerCallback::RemoveCallback(JPH::Body* body, M
         }
     }
 
-    log::warn("JoltMonoContactListenerCallback : Body {} : Does not have a callback for object {} with method {}", body->GetID().GetIndex(), obj, callback);
+    log::warn("JoltMonoContactListenerCallback : Body {} : Does not have a callback supplied for object & method", body->GetID().GetIndex());
     return false;
 }
 
 
-bool operator== (const harmony::JoltMonoContactListenerData& c1, const harmony::JoltMonoContactListenerData& c2)
+bool harmony::JoltMonoContactListenerData::operator== (const harmony::JoltMonoContactListenerData& c2)
+const
 {
-    return c1.m_Object == c2.m_Object && c1.m_CallbackMethod == c2.m_CallbackMethod;
+    return &m_ContactCallback == &c2.m_ContactCallback;
 }
 
-bool operator!= (const harmony::JoltMonoContactListenerData& c1, const harmony::JoltMonoContactListenerData& c2)
+bool harmony::JoltMonoContactListenerData::operator!= (const harmony::JoltMonoContactListenerData& c2)
+const
 {
-    return c1.m_Object != c2.m_Object || c1.m_CallbackMethod != c2.m_CallbackMethod;
+    return  &m_ContactCallback != &c2.m_ContactCallback;
+}
+
+harmony::JoltMonoContactListenerCallback::JoltMonoContactListenerCallback() : HarmonyContactListenerCallback(GetTypeHash<JoltMonoContactListenerCallback>())
+{
 }

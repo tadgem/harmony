@@ -4,11 +4,14 @@
 #include <Jolt/Physics/Collision/ContactListener.h>
 #include "Core/Alias.h"
 #include "Core/Memory.h"
+#include "Core/TypeDef.h"
 
 namespace harmony {
     class HarmonyContactListenerCallback
     {
     public:
+
+        HarmonyContactListenerCallback(HashString typeHash);
 
         virtual void OnContactAdded(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold,
                                     JPH::ContactSettings &ioSettings) = 0;
@@ -17,6 +20,8 @@ namespace harmony {
                                         JPH::ContactSettings &ioSettings) = 0;
 
         virtual void OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair) = 0;
+
+        const HashString m_TypeHash;
     };
 
     class HarmonyContactListener final : public JPH::ContactListener {
@@ -26,6 +31,17 @@ namespace harmony {
         ~HarmonyContactListener() override = default;
 
         void AddContactCallback(RefCntPtr<HarmonyContactListenerCallback> callback);
+
+        template<typename T>
+        RefCntPtr<HarmonyContactListenerCallback> GetContactCallback() {
+            HashString typeHash = GetTypeHash<T>();
+            for (auto c: p_Callbacks) {
+                if(typeHash == c->m_TypeHash) {
+                    return c;
+                }
+            }
+            return nullptr;
+        }
 
         JPH::ValidateResult
         OnContactValidate(const JPH::Body &inBody1, const JPH::Body &inBody2, JPH::RVec3Arg inBaseOffset,
