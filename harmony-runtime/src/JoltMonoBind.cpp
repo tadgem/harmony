@@ -422,8 +422,24 @@ void harmony::JoltMonoContactListenerCallback::OnContactAdded(const JPH::Body &i
                                                               JPH::ContactSettings &ioSettings) {
     const JPH::Body* b1ptr = &inBody1;
     const JPH::Body* b2ptr = &inBody2;
-    const jolt_contact_manifold_extended manifold = get_extended_manifold(inManifold);
+    const jolt_contact_manifold_simple manifold = get_simple_manifold(inManifold);
     const jolt_contact_settings contact_settings = get_contact_settings(ioSettings);
+
+    if(p_MonoContactAddedCallbacks.find(b1ptr) != p_MonoContactAddedCallbacks.end())
+    {
+        for(auto& cb : p_MonoContactAddedCallbacks[b1ptr])
+        {
+            cb.m_ContactCallback((JPH::Body*)b1ptr, (JPH::Body*)b2ptr, manifold, contact_settings );
+        }
+    }
+
+    if(p_MonoContactAddedCallbacks.find(b2ptr) != p_MonoContactAddedCallbacks.end())
+    {
+        for(auto& cb : p_MonoContactAddedCallbacks[b2ptr])
+        {
+            cb.m_ContactCallback((JPH::Body*)b2ptr, (JPH::Body*)b1ptr, manifold, contact_settings );
+        }
+    }
 
 }
 
@@ -435,10 +451,42 @@ void harmony::JoltMonoContactListenerCallback::OnContactPersisted(const JPH::Bod
     jolt_contact_manifold_simple manifold = get_simple_manifold(inManifold);
     jolt_contact_settings contact_settings = get_contact_settings(ioSettings);
 
+    if(p_MonoContactPersistedCallbacks.find(b1ptr) != p_MonoContactPersistedCallbacks.end())
+    {
+        for(auto& cb : p_MonoContactPersistedCallbacks[b1ptr])
+        {
+            cb.m_ContactCallback((JPH::Body*)b1ptr, (JPH::Body*)b2ptr, manifold, contact_settings );
+        }
+    }
+
+    if(p_MonoContactPersistedCallbacks.find(b2ptr) != p_MonoContactPersistedCallbacks.end())
+    {
+        for(auto& cb : p_MonoContactPersistedCallbacks[b2ptr])
+        {
+            cb.m_ContactCallback((JPH::Body*)b2ptr, (JPH::Body*)b1ptr, manifold, contact_settings );
+        }
+    }
+
 }
 
 void harmony::JoltMonoContactListenerCallback::OnContactRemoved(JPH::Body* inBody1, JPH::Body* inBody2)
 {
+    if(p_MonoContactRemovedCallbacks.find(inBody1) != p_MonoContactRemovedCallbacks.end())
+    {
+        for(auto& cb : p_MonoContactRemovedCallbacks[inBody1])
+        {
+            cb.m_ContactCallback((JPH::Body*)inBody1, (JPH::Body*)inBody2);
+        }
+    }
+
+    if(p_MonoContactRemovedCallbacks.find(inBody2) != p_MonoContactRemovedCallbacks.end())
+    {
+        for(auto& cb : p_MonoContactRemovedCallbacks[inBody2])
+        {
+            cb.m_ContactCallback((JPH::Body*)inBody2, (JPH::Body*)inBody1);
+        }
+    }
+
 }
 
 bool harmony::JoltMonoContactListenerCallback::AddContactAddedCallback(JPH::Body* body, contact_callback_t callback)
