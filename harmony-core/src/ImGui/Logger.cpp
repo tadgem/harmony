@@ -48,7 +48,7 @@ void harmony::ImGuiLogger::Render() {
             ImGui::TableSetupColumn("ThreadID", ImGuiTableColumnFlags_NoHide);
             ImGui::TableSetupColumn("Time", ImGuiTableColumnFlags_NoHide);
             ImGui::TableSetupColumn("Level", ImGuiTableColumnFlags_NoHide);
-            ImGui::TableSetupColumn("Message", ImGuiTableColumnFlags_NoHide);
+            ImGui::TableSetupColumn("Message", ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_WidthStretch);
 
             ImGui::TableSetupScrollFreeze(0, 1);
 
@@ -73,24 +73,7 @@ void harmony::ImGuiLogger::Render() {
                 ImGui::TableSetColumnIndex(2);
                 ImGui::TextColored(col, p_LevelInfos[msg.m_MsgLevel].m_LevelName.c_str());
                 ImGui::TableSetColumnIndex(3);
-                int l = 80;
-                if (msg.m_Msg.size() > l) {
-                    // UGh
-                    if (msg.m_Msg.size() > 80000) {
-                        continue;
-                    }
-                    for (size_t i = 0; i < msg.m_Msg.size(); i += l) {
-                        int finalStopIndex = l;
-
-                        if (i + l > msg.m_Msg.size() - 1) {
-                            finalStopIndex = (msg.m_Msg.size() - 1) - i;
-                        }
-
-                        ImGui::TextColored(col, msg.m_Msg.substr(i, finalStopIndex).c_str());
-                    }
-                } else {
-                    ImGui::TextColored(col, msg.m_Msg.c_str());
-                }
+                ImGui::TextUnformatted(msg.m_Msg.c_str());
             }
 
             auto scroll_y = ImGui::GetScrollY();

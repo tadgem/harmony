@@ -5,6 +5,7 @@
 #include "Core/Alias.h"
 #include "Core/Memory.h"
 #include "Core/TypeDef.h"
+#include "Jolt/Physics/PhysicsSystem.h"
 
 namespace harmony {
     class HarmonyContactListenerCallback
@@ -19,14 +20,14 @@ namespace harmony {
         virtual void OnContactPersisted(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold,
                                         JPH::ContactSettings &ioSettings) = 0;
 
-        virtual void OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair) = 0;
+        virtual void OnContactRemoved(JPH::Body* inBody1, JPH::Body* inBody2) = 0;
 
         const HashString m_TypeHash;
     };
 
     class HarmonyContactListener final : public JPH::ContactListener {
     public:
-        HarmonyContactListener();
+        HarmonyContactListener(RefCntPtr<JPH::PhysicsSystem> physicsSystem);
 
         ~HarmonyContactListener() override = default;
 
@@ -57,6 +58,7 @@ namespace harmony {
         void OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair) override;
 
     protected:
+        RefCntPtr<JPH::PhysicsSystem> p_PhysicsSystem;
         Vector<RefCntPtr<HarmonyContactListenerCallback>> p_Callbacks;
 
     };

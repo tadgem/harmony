@@ -75,7 +75,7 @@ namespace harmony {
                            JPH::ContactSettings &ioSettings) override;
 
         void
-        OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair) override;
+        OnContactRemoved(JPH::Body* inBody1, JPH::Body* inBody2) override;
 
         bool AddCallback(JPH::Body* body, contact_callback_t callback);
         bool RemoveCallback(JPH::Body* body, contact_callback_t callback);

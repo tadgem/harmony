@@ -77,16 +77,10 @@ harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GetTypeHash<JoltPhysics
     m_BodyActivationListener = CreateUnique<HarmonyBodyActivationListener>();
     m_ObjectLayerPairFilter = CreateUnique<HarmonyObjectLayerPairFilter>();
     m_DebugRenderer = CreateUnique<HarmonyDebugRenderer>();
-    m_ContactListener = CreateUnique<HarmonyContactListener>();
 
-}
+    m_PhysicsSystem = CreateRef<JPH::PhysicsSystem>();
 
-harmony::JoltPhysicsSystem::~JoltPhysicsSystem() {
-
-}
-
-void harmony::JoltPhysicsSystem::Init(entt::registry &registry) {
-    m_PhysicsSystem = CreateUnique<JPH::PhysicsSystem>();
+    m_ContactListener = CreateUnique<HarmonyContactListener>(m_PhysicsSystem);
 
     m_PhysicsSystem->Init(s_NumBodies, s_NumBodyMutexes, s_MaxBodyPairs, s_MaxContactConstraints,
                           *m_BroadPhaseLayerInterface, *m_ObjectVsBroadphaseFilter, *m_ObjectLayerPairFilter);
@@ -100,7 +94,13 @@ void harmony::JoltPhysicsSystem::Init(entt::registry &registry) {
     m_PhysicsSystem->SetBodyActivationListener(m_BodyActivationListener.get());
 
     m_BodyInterface = &m_PhysicsSystem->GetBodyInterface();
+}
 
+harmony::JoltPhysicsSystem::~JoltPhysicsSystem() {
+
+}
+
+void harmony::JoltPhysicsSystem::Init(entt::registry &registry) {
     auto bodyView = registry.view<TransformComponent, JoltBodyComponent>();
 
     for (auto [e, t, b]: bodyView.each()) {

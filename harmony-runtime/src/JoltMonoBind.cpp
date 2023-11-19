@@ -403,9 +403,8 @@ void harmony::JoltMonoContactListenerCallback::OnContactPersisted(const JPH::Bod
 
 }
 
-void harmony::JoltMonoContactListenerCallback::OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair)
+void harmony::JoltMonoContactListenerCallback::OnContactRemoved(JPH::Body* inBody1, JPH::Body* inBody2)
 {
-    inSubShapePair.GetBody1ID();
 }
 
 bool harmony::JoltMonoContactListenerCallback::AddCallback(JPH::Body* body, contact_callback_t callback)

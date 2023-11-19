@@ -90,7 +90,7 @@ namespace harmony {
         UniquePtr<JPH::TempAllocator> m_TempAllocator;            // Allocator for temporary allocations
         UniquePtr<JPH::JobSystem> m_JobSystem;                // The job system that runs physics jobs
         UniquePtr<JPH::JobSystem> m_JobSystemValidating;        // The job system to use when validating determinism
-        UniquePtr<JPH::PhysicsSystem> m_PhysicsSystem;            // The physics system that simulates the world
+        RefCntPtr<JPH::PhysicsSystem> m_PhysicsSystem;            // The physics system that simulates the world
         UniquePtr<JPH::BroadPhaseLayerInterface> m_BroadPhaseLayerInterface;
         UniquePtr<JPH::ObjectVsBroadPhaseLayerFilter> m_ObjectVsBroadphaseFilter;
         UniquePtr<JPH::ObjectLayerPairFilter> m_ObjectLayerPairFilter;
