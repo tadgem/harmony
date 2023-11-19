@@ -12,6 +12,22 @@ harmony::MonoSystem::MonoSystem(WeakPtr<MonoProgramComponent> mono) : System(Get
 
 void harmony::MonoSystem::Init(entt::registry& registry)
 {
+    auto view = registry.view<MonoBehaviourComponent>();
+
+    for (auto [e, mono]: view.each()) {
+        for(auto behaviour : mono.m_Behaviours)
+        {
+            if(behaviour.p_Init != nullptr)
+            {
+                MonoObject * exception = nullptr;
+                mono_runtime_invoke(behaviour.p_Init, behaviour.m_Object, nullptr, &exception);
+                if(exception != nullptr)
+                {
+                    log::error("MonoSystem : AddMonoBehaviour : exception encountered during init for type {} on entity {}", behaviour.m_TypeInfo.m_TypeName, (uint32_t)e);
+                }
+            }
+        }
+    }
 }
 
 void harmony::MonoSystem::Update(entt::registry& registry)
@@ -137,19 +153,7 @@ void harmony::MonoSystem::AddMonoBehaviour(entt::registry& registry, entt::entit
     MonoClassField* entityField = mono_class_get_field_from_name(instanceClass, "Self");
     mono_field_set_value(classObject, entityField, &entity);
 
-    // optional methods
     initMethod = mono_class_get_method_from_name(instanceClass, p_InitMethodName.c_str(), 0);
-    if(initMethod != nullptr)
-    {
-        MonoObject * exception = nullptr;
-        mono_runtime_invoke(initMethod, classObject, nullptr, &exception);
-        if(exception != nullptr)
-        {
-            log::error("MonoSystem : AddMonoBehaviour : exception encountered during init for type {}", typeInfo.m_TypeName);
-            mono_print_unhandled_exception(exception);
-        }
-    }
-
     updateMethod = mono_class_get_method_from_name(instanceClass, p_UpdateMethodName.c_str(), 0);
     cleanupMethod = mono_class_get_method_from_name(instanceClass, p_CleanupMethodName.c_str(), 0);
 

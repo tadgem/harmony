@@ -21,9 +21,17 @@ namespace GameTest
             IntPtr bodyPtr = joltBody.GetJoltBodyFromComponent();
             _body = new HarmonyJoltSharp.Body(bodyPtr);
 
+            _body.AddContactAddedCallback(OnCollisionEnter);
+
             Vector3 v = _transform.GetTransformPosition();
             Log.Info($"I am entity : {Self} : Pos : {v}");
         }
+
+        public void OnCollisionEnter(IntPtr a, IntPtr b, IntPtr manifold, IntPtr settings)
+        {
+            Log.Info("JoltTestBehaviour : I am being called from a collision callback");
+        }
+
         public override void Update()
         {
             IntPtr bodyPtr = _scene.GetJoltBodyFromEntity(Self);

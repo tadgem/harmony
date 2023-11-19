@@ -61,7 +61,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Script/Mono/Mono Debugger.md",
+                "file": "Script/Mono/Data Marshalling.md",
                 "mode": "source",
                 "source": false
               }
@@ -134,7 +134,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Script/Mono/Mono Debugger.md",
+                "file": "Script/Mono/Data Marshalling.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -151,7 +151,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Script/Mono/Mono Debugger.md",
+                "file": "Script/Mono/Data Marshalling.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -174,7 +174,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Script/Mono/Mono Debugger.md"
+                "file": "Script/Mono/Data Marshalling.md"
               }
             }
           },
@@ -208,17 +208,20 @@
   },
   "active": "80ed208f7cd46487",
   "lastOpenFiles": [
+    "images/Pasted image 20231119203256.png",
+    "Script/Mono/Treat native + script components identically..md",
+    "Script/Mono/Data Marshalling.md",
+    "Script/Mono/setup.md",
+    "Script/Mono/Mono Issues.md",
+    "Script/Mono/Mono Debugger.md",
     "Script/Mono/Hazel Comparison.md",
     "images/Pasted image 20231015213850.png",
     "images/Pasted image 20231015213721.png",
-    "Script/Mono/Mono Debugger.md",
     "Script/Mono/Getting a class which is a sub-class, not interface impl.md",
     "images/Pasted image 20230928161013.png",
     "images/Pasted image 20230926175223.png",
     "Script/Mono/Hot Reloading Assemblies.md",
-    "Script/Mono/Treat native + script components identically..md",
     "Script/Mono/Minimal Render Pipeline Setup.md",
-    "Script/Mono/Mono Issues.md",
     "Script/Mono/InterfaceImpl.md",
     "Misc/Notes/TODO.md",
     "Core/Component.md",
@@ -243,8 +246,6 @@
     "Rendering/Texture.md",
     "Rendering/View.md",
     "Rendering/Shader.md",
-    "Rendering/ShaderDataOverride.md",
-    "Rendering/ShaderDataSource.md",
     "Misc/Setup",
     "Misc",
     "Core",

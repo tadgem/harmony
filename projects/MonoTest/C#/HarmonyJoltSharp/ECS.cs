@@ -2,6 +2,7 @@
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace HarmonyJoltSharp
 {
@@ -12,6 +13,7 @@ namespace HarmonyJoltSharp
         public readonly IntPtr Handle;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct ContactManifoldData
     {
         Vector3 BaseOffset;
@@ -21,6 +23,7 @@ namespace HarmonyJoltSharp
     };
 
     // NB: Not yet implemented
+    [StructLayout(LayoutKind.Sequential)]
     public struct ContactManifoldExtendedData
     {
         Vector3 BaseOffset;
@@ -30,6 +33,7 @@ namespace HarmonyJoltSharp
         Vector3[] ContactPointsB;
     };
 
+    [StructLayout(LayoutKind.Sequential)]
     public struct ContactSettings
     {
         float CombinedFriction;
@@ -43,8 +47,10 @@ namespace HarmonyJoltSharp
         Vector3 RelativeAngularSurfaceVelocity;
     };
 
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void ContactCallback(IntPtr a, IntPtr b,IntPtr manifold, IntPtr settings);
 
-    public delegate void ContactCallback(Body a, Body b, ContactManifoldData manifold, ContactSettings settings);
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void ContactRemovedCallback(Body a, Body b);
 
     public static class ECS

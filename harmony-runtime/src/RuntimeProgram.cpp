@@ -239,13 +239,13 @@ void harmony::RuntimeProgram::InitializeViews() {
 void harmony::RuntimeProgram::LoadScene(const std::string &path) {
     OPTICK_EVENT();
     Program::LoadScene(path);
-    RunSystemInit();
+    //RunSystemInit();
 }
 
 void harmony::RuntimeProgram::OpenScene(uint32_t index) {
     OPTICK_EVENT();
     Program::OpenScene(index);
-    RunSystemInit();
+    //RunSystemInit();
 }
 
 int harmony::RuntimeProgram::OnRuntimeUpdate() {

@@ -41,7 +41,7 @@ extern "C"
     };
 
     typedef void (*contact_callback_t) (JPH::Body* a, JPH::Body* b ,
-        jolt_contact_manifold_simple manifold, jolt_contact_settings settings);
+        jolt_contact_manifold_simple* manifold, jolt_contact_settings* settings);
 
     typedef void (*contact_removed_callback_t) (JPH::Body* a, JPH::Body* b);
 
