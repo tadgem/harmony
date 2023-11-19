@@ -25,6 +25,8 @@ namespace harmony {
 
     class HarmonyContactListener;
 
+    class HarmonyContactListenerCallback;
+
     class HarmonyBodyActivationListener;
 
     class HarmonyDebugRenderer;
@@ -56,6 +58,8 @@ namespace harmony {
         void DestroyBody(JoltBodyComponent &body);
 
         HarmonyContactListener* GetContactListener();
+
+        void AddContactCallback(RefCntPtr<HarmonyContactListenerCallback> callback);
 
     protected:
 
@@ -98,6 +102,9 @@ namespace harmony {
         UniquePtr<HarmonyContactListener> m_ContactListener;          // Contact listener implementation
         UniquePtr<HarmonyDebugRenderer> m_DebugRenderer;
         JPH::BodyInterface *m_BodyInterface;
+
+
+        Vector<RefCntPtr<HarmonyContactListenerCallback>> p_PendingCallbacks;
 
         friend class JoltDebugRendererComponent;
     };

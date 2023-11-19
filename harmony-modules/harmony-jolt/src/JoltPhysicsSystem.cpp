@@ -78,6 +78,14 @@ harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GetTypeHash<JoltPhysics
     m_ObjectLayerPairFilter = CreateUnique<HarmonyObjectLayerPairFilter>();
     m_DebugRenderer = CreateUnique<HarmonyDebugRenderer>();
 
+
+}
+
+harmony::JoltPhysicsSystem::~JoltPhysicsSystem() {
+
+}
+
+void harmony::JoltPhysicsSystem::Init(entt::registry &registry) {
     m_PhysicsSystem = CreateUnique<JPH::PhysicsSystem>();
 
     m_ContactListener = CreateUnique<HarmonyContactListener>(m_PhysicsSystem.get());
@@ -91,16 +99,14 @@ harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GetTypeHash<JoltPhysics
         m_PhysicsSystem->SetContactListener(m_ContactListener.get());
     }
 
+    for(auto callbackProvider : p_PendingCallbacks) {
+        m_ContactListener->AddContactCallback(callbackProvider);
+    }
+
     m_PhysicsSystem->SetBodyActivationListener(m_BodyActivationListener.get());
 
     m_BodyInterface = &m_PhysicsSystem->GetBodyInterface();
-}
 
-harmony::JoltPhysicsSystem::~JoltPhysicsSystem() {
-
-}
-
-void harmony::JoltPhysicsSystem::Init(entt::registry &registry) {
     auto bodyView = registry.view<TransformComponent, JoltBodyComponent>();
 
     for (auto [e, t, b]: bodyView.each()) {
@@ -285,4 +291,9 @@ void harmony::JoltPhysicsSystem::UpdateBody(entt::entity e, TransformComponent &
 
 harmony::HarmonyContactListener *harmony::JoltPhysicsSystem::GetContactListener() {
     return m_ContactListener.get();
+}
+
+void harmony::JoltPhysicsSystem::AddContactCallback(RefCntPtr<HarmonyContactListenerCallback> callback)
+{
+    p_PendingCallbacks.emplace_back(callback);
 }
