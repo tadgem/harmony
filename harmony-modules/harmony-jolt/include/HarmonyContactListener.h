@@ -27,7 +27,7 @@ namespace harmony {
 
     class HarmonyContactListener final : public JPH::ContactListener {
     public:
-        HarmonyContactListener(RefCntPtr<JPH::PhysicsSystem> physicsSystem);
+        HarmonyContactListener(JPH::PhysicsSystem* physicsSystem);
 
         ~HarmonyContactListener() override = default;
 
@@ -58,7 +58,7 @@ namespace harmony {
         void OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair) override;
 
     protected:
-        RefCntPtr<JPH::PhysicsSystem> p_PhysicsSystem;
+        JPH::PhysicsSystem* p_PhysicsSystem;
         Vector<RefCntPtr<HarmonyContactListenerCallback>> p_Callbacks;
 
     };

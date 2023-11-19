@@ -5,7 +5,7 @@ harmony::HarmonyContactListenerCallback::HarmonyContactListenerCallback(HashStri
 {
 }
 
-harmony::HarmonyContactListener::HarmonyContactListener(RefCntPtr<JPH::PhysicsSystem> physicsSystem) :
+harmony::HarmonyContactListener::HarmonyContactListener(JPH::PhysicsSystem* physicsSystem) :
 p_PhysicsSystem(physicsSystem)
 {
     p_Callbacks = Vector<RefCntPtr<HarmonyContactListenerCallback>>();
@@ -42,23 +42,25 @@ void harmony::HarmonyContactListener::OnContactPersisted(const JPH::Body &inBody
 void harmony::HarmonyContactListener::OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair) {
     ContactListener::OnContactRemoved(inSubShapePair);
 
-    JPH::Body* a = p_PhysicsSystem->GetBodyLockInterface().TryGetBody(inSubShapePair.GetBody1ID());
-    JPH::Body* b = p_PhysicsSystem->GetBodyLockInterface().TryGetBody(inSubShapePair.GetBody2ID());
-
-    if(!a) {
-        log::error("HarmonyContactListener::OnContactRemoved : Could not get Body A from sub shape pair.");
-        return;
-    }
-
-    if(!b) {
-        log::error("HarmonyContactListener::OnContactRemoved : Could not get Body B from sub shape pair.");
-        return;
-    }
-
-    for(auto& c : p_Callbacks)
-    {
-        c->OnContactRemoved(a, b);
-    }
+    // JPH::Body* a = p_PhysicsSystem->GetBodyLockInterface().TryGetBody(inSubShapePair.GetBody1ID());
+    // JPH::Body* b = p_PhysicsSystem->GetBodyLockInterface().TryGetBody(inSubShapePair.GetBody2ID());
+    //
+    // if(!a) {
+    //     log::error("HarmonyContactListener::OnContactRemoved : Could not get Body A from sub shape pair.");
+    //     return;
+    // }
+    //
+    // if(!b) {
+    //     log::error("HarmonyContactListener::OnContactRemoved : Could not get Body B from sub shape pair.");
+    //     return;
+    // }
+    //
+    // for(auto& c : p_Callbacks)
+    // {
+    //     c->OnContactRemoved(a, b);
+    // }
+    //
+    // p_PhysicsSystem->GetBodyInterface().
 }
 
 void harmony::HarmonyContactListener::AddContactCallback(

@@ -35,7 +35,7 @@ void harmony::ImGuiLogger::Render() {
         ImGuiTableFlags flags =
                 ImGuiTableFlags_ScrollY | ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable;
         ImVec2 outer_size = ImVec2(0.0f, 0.0f);
-        int rounded = ((int) currentWindowSize.y / textHeight) - 2;
+        const int rounded = static_cast<int>( currentWindowSize.y / textHeight - 2);
         for (int i = 0; i < rounded; i++) {
             outer_size.y += textHeight;
         }

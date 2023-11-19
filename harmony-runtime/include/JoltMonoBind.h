@@ -43,6 +43,8 @@ extern "C"
     typedef void (*contact_callback_t) (JPH::Body* a, JPH::Body* b ,
         jolt_contact_manifold_simple manifold, jolt_contact_settings settings);
 
+    typedef void (*contact_removed_callback_t) (JPH::Body* a, JPH::Body* b);
+
 }
 namespace harmony {
     class JoltMonoInternalMethodProvider : public MonoInternalMethodProvider
@@ -62,6 +64,15 @@ namespace harmony {
 
     };
 
+    struct JoltMonoContactRemovedListenerData
+    {
+        contact_removed_callback_t m_ContactCallback;
+
+        bool operator== (const JoltMonoContactRemovedListenerData& c2) const;
+        bool operator!= (const JoltMonoContactRemovedListenerData& c2) const;
+
+    };
+
     class JoltMonoContactListenerCallback : public HarmonyContactListenerCallback
     {
     public:
@@ -77,11 +88,18 @@ namespace harmony {
         void
         OnContactRemoved(JPH::Body* inBody1, JPH::Body* inBody2) override;
 
-        bool AddCallback(JPH::Body* body, contact_callback_t callback);
-        bool RemoveCallback(JPH::Body* body, contact_callback_t callback);
+        bool AddContactAddedCallback(JPH::Body* body, contact_callback_t callback);
+        bool RemoveContactAddedCallback(JPH::Body* body, contact_callback_t callback);
 
+        bool AddContactPersistedCallback(JPH::Body* body, contact_callback_t callback);
+        bool RemoveContactPersistedCallback(JPH::Body* body, contact_callback_t callback);
+
+        bool AddContactRemovedCallback(JPH::Body* body, contact_removed_callback_t callback);
+        bool RemoveContactRemovedCallback(JPH::Body* body, contact_removed_callback_t callback);
     protected:
-        HashMap<const JPH::Body*, Vector<JoltMonoContactListenerData>> p_MonoCallbacks;
+        HashMap<const JPH::Body*, Vector<JoltMonoContactListenerData>> p_MonoContactAddedCallbacks;
+        HashMap<const JPH::Body*, Vector<JoltMonoContactListenerData>> p_MonoContactPersistedCallbacks;
+        HashMap<const JPH::Body*, Vector<JoltMonoContactRemovedListenerData>> p_MonoContactRemovedCallbacks;
 
     };
 }

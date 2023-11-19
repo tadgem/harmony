@@ -78,9 +78,9 @@ harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GetTypeHash<JoltPhysics
     m_ObjectLayerPairFilter = CreateUnique<HarmonyObjectLayerPairFilter>();
     m_DebugRenderer = CreateUnique<HarmonyDebugRenderer>();
 
-    m_PhysicsSystem = CreateRef<JPH::PhysicsSystem>();
+    m_PhysicsSystem = CreateUnique<JPH::PhysicsSystem>();
 
-    m_ContactListener = CreateUnique<HarmonyContactListener>(m_PhysicsSystem);
+    m_ContactListener = CreateUnique<HarmonyContactListener>(m_PhysicsSystem.get());
 
     m_PhysicsSystem->Init(s_NumBodies, s_NumBodyMutexes, s_MaxBodyPairs, s_MaxContactConstraints,
                           *m_BroadPhaseLayerInterface, *m_ObjectVsBroadphaseFilter, *m_ObjectLayerPairFilter);

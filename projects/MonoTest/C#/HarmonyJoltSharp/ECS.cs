@@ -45,6 +45,7 @@ namespace HarmonyJoltSharp
 
 
     public delegate void ContactCallback(Body a, Body b, ContactManifoldData manifold, ContactSettings settings);
+    public delegate void ContactRemovedCallback(Body a, Body b);
 
     public static class ECS
     {
@@ -55,10 +56,22 @@ namespace HarmonyJoltSharp
         public extern static IntPtr GetJoltBodyFromComponent(this NativeJoltBodyComponent joltBody);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static bool AddContactCallback(this Body b, ContactCallback callback);
+        public extern static bool AddContactAddedCallback(this Body b, ContactCallback callback);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static bool RemoveContactCallback(this Body b, ContactCallback callback);
+        public extern static bool RemoveContactAddedCallback(this Body b, ContactCallback callback);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static bool AddContactPersistedCallback(this Body b, ContactCallback callback);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static bool RemoveContactPersistedCallback(this Body b, ContactCallback callback);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static bool AddContactRemovedCallback(this Body b, ContactRemovedCallback callback);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static bool RemoveContactRemovedCallback(this Body b, ContactRemovedCallback callback);
 
 
         // Managed impls
