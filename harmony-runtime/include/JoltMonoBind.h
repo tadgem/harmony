@@ -57,7 +57,7 @@ namespace harmony {
 
     struct JoltMonoContactListenerData
     {
-        contact_callback_t m_ContactCallback;
+        MonoObject* m_ContactCallback;
 
         bool operator== (const JoltMonoContactListenerData& c2) const;
         bool operator!= (const JoltMonoContactListenerData& c2) const;
@@ -88,18 +88,9 @@ namespace harmony {
         void
         OnContactRemoved(JPH::Body* inBody1, JPH::Body* inBody2) override;
 
-        bool AddContactAddedCallback(JPH::Body* body, contact_callback_t callback);
-        bool RemoveContactAddedCallback(JPH::Body* body, contact_callback_t callback);
+        bool AddContactAddedCallback(JPH::Body* body, MonoObject* callback);
 
-        bool AddContactPersistedCallback(JPH::Body* body, contact_callback_t callback);
-        bool RemoveContactPersistedCallback(JPH::Body* body, contact_callback_t callback);
-
-        bool AddContactRemovedCallback(JPH::Body* body, contact_removed_callback_t callback);
-        bool RemoveContactRemovedCallback(JPH::Body* body, contact_removed_callback_t callback);
     protected:
         HashMap<const JPH::Body*, Vector<JoltMonoContactListenerData>> p_MonoContactAddedCallbacks;
-        HashMap<const JPH::Body*, Vector<JoltMonoContactListenerData>> p_MonoContactPersistedCallbacks;
-        HashMap<const JPH::Body*, Vector<JoltMonoContactRemovedListenerData>> p_MonoContactRemovedCallbacks;
-
     };
 }

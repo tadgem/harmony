@@ -11,7 +11,7 @@ namespace GameTest
         private NativeTransformComponent _transform;
         private HarmonyJoltSharp.Body _body;
         public float Force = 10000.0f;
-
+        private ContactCallback _callback;
         public override void Init()
         {
             _scene = SceneMethods.GetActiveScene();
@@ -21,7 +21,9 @@ namespace GameTest
             IntPtr bodyPtr = joltBody.GetJoltBodyFromComponent();
             _body = new HarmonyJoltSharp.Body(bodyPtr);
 
-            _body.AddContactAddedCallback(OnCollisionEnter);
+            _callback = OnCollisionEnter;
+
+            _body.AddContactAddedCallback(_callback);
 
             Vector3 v = _transform.GetTransformPosition();
             Log.Info($"I am entity : {Self} : Pos : {v}");
