@@ -425,7 +425,7 @@ void harmony::JoltMonoContactListenerCallback::OnContactAdded(const JPH::Body &i
     JPH::Body* b2ptr = (JPH::Body*)&inBody2;
     jolt_contact_manifold_simple manifold = get_simple_manifold(inManifold);
     jolt_contact_settings contact_settings = get_contact_settings(ioSettings);
-
+    int i = 1;
     if(p_MonoContactAddedCallbacks.find(b1ptr) != p_MonoContactAddedCallbacks.end())
     {
         for(auto& cb : p_MonoContactAddedCallbacks[b1ptr])
@@ -434,13 +434,13 @@ void harmony::JoltMonoContactListenerCallback::OnContactAdded(const JPH::Body &i
                 continue;
             }
             void* args[4];
-            args[0] = nullptr;
-            args[1] = nullptr;
-            args[2] = nullptr;
-            args[3] = nullptr;
-            MonoObject* exc;
-            mono_runtime_delegate_invoke(cb.m_ContactCallback, args, nullptr);
-            // (*cb.m_ContactCallback)(b1ptr, b2ptr, &manifold, &contact_settings );
+            args[0] = &i;
+            args[1] = &i;
+            args[2] = &i;
+            args[3] = &i;
+
+            // mono_runtime_delegate_invoke(cb.m_ContactCallback, NULL, NULL);
+            p_Callbacks.emplace_back(cb.m_ContactCallback);
         }
     }
 
@@ -504,6 +504,7 @@ void harmony::JoltMonoContactListenerCallback::OnContactRemoved(JPH::Body* inBod
 
 }
 
+
 bool harmony::JoltMonoContactListenerCallback::AddContactAddedCallback(JPH::Body* body, MonoObject* callback)
 {
     JoltMonoContactListenerData data {callback };
@@ -522,6 +523,14 @@ bool harmony::JoltMonoContactListenerCallback::AddContactAddedCallback(JPH::Body
     p_MonoContactAddedCallbacks.emplace(body, Vector<JoltMonoContactListenerData>());
     p_MonoContactAddedCallbacks[body].emplace_back(data);
     return true;
+}
+
+void harmony::JoltMonoContactListenerCallback::ProcessDelegates() {
+    for(MonoObject* del : p_Callbacks) {
+        mono_runtime_delegate_invoke(del, NULL, NULL);
+    }
+
+    p_Callbacks.clear();
 }
 
 bool harmony::JoltMonoContactListenerData::operator== (const harmony::JoltMonoContactListenerData& c2)

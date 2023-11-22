@@ -14,6 +14,7 @@
 #include "Assets/ShaderSourceAssetFactory.h"
 #include "AssimpModelAssetFactory.h"
 #include "EditorView.h"
+#include "JoltMonoBind.h"
 #include "Script/GraphScript/GraphScriptProgramComponent.h"
 
 harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this),
@@ -259,13 +260,15 @@ void harmony::Editor::OnMiniGuisExit() {
 
 int harmony::Editor::OnRuntimeUpdate() {
     OPTICK_EVENT();
-    UpdateTimeVariables();
-
-    HandleSDLEvent();
 
     if (Input::GetKey(Key::Escape)) {
         m_EditorFSM.Trigger(Trigger::Stop);
+        return FSM::NO_TRIGGER;
     }
+
+    UpdateTimeVariables();
+
+    HandleSDLEvent();
 
     RunRendererPreUpdate();
 
@@ -274,6 +277,8 @@ int harmony::Editor::OnRuntimeUpdate() {
     RunProgramComponentUpdate();
 
     RunSystemUpdate();
+
+    p_JoltMonoCallback->ProcessDelegates();
 
     RunProgramComponentRender();
 

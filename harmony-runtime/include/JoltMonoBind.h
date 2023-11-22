@@ -90,7 +90,9 @@ namespace harmony {
 
         bool AddContactAddedCallback(JPH::Body* body, MonoObject* callback);
 
+        void ProcessDelegates();
     protected:
         HashMap<const JPH::Body*, Vector<JoltMonoContactListenerData>> p_MonoContactAddedCallbacks;
+        Vector<MonoObject*> p_Callbacks;
     };
 }

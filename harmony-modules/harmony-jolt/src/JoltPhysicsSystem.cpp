@@ -122,7 +122,7 @@ void harmony::JoltPhysicsSystem::Init(entt::registry &registry) {
 
 void harmony::JoltPhysicsSystem::Update(entt::registry &registry) {
     p_Running = true;
-    float deltaTime = static_cast<float>(Time::GetFrameTime());
+    float deltaTime = std::min(static_cast<float>(Time::GetFrameTime()), 0.0333f);
     m_PhysicsSystem->Update(deltaTime, s_CollisionSteps,  m_TempAllocator.get(),
                             m_JobSystem.get());
 

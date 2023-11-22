@@ -4,7 +4,9 @@
 #include "Core/Program.h"
 #include "Core/Memory.h"
 
+
 namespace harmony {
+    class JoltMonoContactListenerCallback;
     class RuntimeView;
 
     class EntityDataSystem;
@@ -77,6 +79,7 @@ namespace harmony {
         RefCntPtr<TransformSystem> p_TransformSystem;
         RefCntPtr<CameraSystem> p_CameraSystem;
         RefCntPtr<MonoSystem> p_MonoSystem;
+        RefCntPtr<JoltMonoContactListenerCallback> p_JoltMonoCallback;
 
         bgfx::ViewId p_PresentViewId;
     };
