@@ -6,7 +6,11 @@
 #include "MonoProgramComponent.h"
 #include "MonoAssembly.h"
 #include "Core/Log.hpp"
-harmony::MonoSystem::MonoSystem(WeakPtr<MonoProgramComponent> mono) : System(GetTypeHash<MonoSystem>()), p_Mono(mono)
+harmony::MonoSystem::MonoSystem(
+    WeakPtr<MonoProgramComponent> mono,
+    Vector<RefCntPtr<MonoDelegateInvokeProvider>> delegateInvokers)
+    : System(GetTypeHash<MonoSystem>()), p_Mono(mono), p_DelegateInvokers(delegateInvokers)
+
 {
 }
 
@@ -34,7 +38,8 @@ void harmony::MonoSystem::Update(entt::registry& registry)
 {
     auto view = registry.view<MonoBehaviourComponent>();
 
-    for (auto [e, mono]: view.each()) {
+    for (auto [e, mono]: view.each())
+    {
         for(auto behaviour : mono.m_Behaviours)
         {
             if(behaviour.p_Update != nullptr)
@@ -47,6 +52,11 @@ void harmony::MonoSystem::Update(entt::registry& registry)
                 }
             }
         }
+    }
+
+    for(auto& d : p_DelegateInvokers)
+    {
+        d->ProcessDelegates();
     }
 }
 
@@ -67,7 +77,8 @@ nlohmann::json harmony::MonoSystem::SerializeSystem(entt::registry& registry)
 {
     auto j = nlohmann::json();
     auto view = registry.view<MonoBehaviourComponent>();
-    for (auto [e, mono]: view.each()) {
+    for (auto [e, mono]: view.each())
+    {
         j[GetEntityKey(e)] = mono;
     }
     return j;

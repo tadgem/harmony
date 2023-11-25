@@ -7,8 +7,10 @@
 #include <sstream>
 #include <ostream>
 #include <functional>
+#include <mutex>
 #include <optional>
 #include <stack>
+#include <thread>
 
 namespace harmony {
     using String = std::string;
@@ -36,4 +38,8 @@ namespace harmony {
     using Lambda = std::function<T>;
 
     using Procedure = std::function<void()>;
+
+    using Mutex = std::mutex;
+
+    using MutexLock = std::lock_guard<Mutex>;
 }

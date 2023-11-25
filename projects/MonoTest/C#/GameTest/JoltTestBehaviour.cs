@@ -36,7 +36,7 @@ namespace GameTest
 
         public void OnCollisionEnter2()
         {
-            Log.Info($"JoltTestBehaviour : I am being called from a collision callback");
+            Log.Info($"JoltTestBehaviour : Entity {Self} : I am being called from a collision callback");
         }
 
         public override void Update()

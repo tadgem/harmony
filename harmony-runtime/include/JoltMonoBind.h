@@ -73,7 +73,9 @@ namespace harmony {
 
     };
 
-    class JoltMonoContactListenerCallback : public HarmonyContactListenerCallback
+    class JoltMonoContactListenerCallback final :
+    public HarmonyContactListenerCallback,
+    public MonoDelegateInvokeProvider
     {
     public:
 
@@ -90,7 +92,7 @@ namespace harmony {
 
         bool AddContactAddedCallback(JPH::Body* body, MonoObject* callback);
 
-        void ProcessDelegates();
+        virtual void ProcessDelegates() override;
     protected:
         HashMap<const JPH::Body*, Vector<JoltMonoContactListenerData>> p_MonoContactAddedCallbacks;
         Vector<MonoObject*> p_Callbacks;

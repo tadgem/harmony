@@ -10,8 +10,15 @@
 #include <filesystem>
 #include "mono/metadata/mono-debug.h"
 #include "mono/metadata/threads.h"
-harmony::MonoProgramComponent::MonoProgramComponent(AssetManager& assetManager, Vector<RefCntPtr<MonoInternalMethodProvider>> methodProviders) : ProgramComponent(GetTypeHash<MonoProgramComponent>())
-, p_AssemblyConfig(MonoAssemblyConfiguration::Debug), m_AssetManager(assetManager), p_MethodProviders(methodProviders)
+harmony::MonoProgramComponent::MonoProgramComponent(
+    AssetManager& assetManager,
+    Vector<RefCntPtr<MonoInternalMethodProvider>> methodProviders,
+    Vector<RefCntPtr<MonoDelegateInvokeProvider>> delegateInvokers
+    ) : ProgramComponent(GetTypeHash<MonoProgramComponent>()),
+    p_AssemblyConfig(MonoAssemblyConfiguration::Debug),
+    m_AssetManager(assetManager),
+    p_MethodProviders(methodProviders),
+    p_DelegateInvokers(delegateInvokers)
 
 {
     p_RootDomain = nullptr;

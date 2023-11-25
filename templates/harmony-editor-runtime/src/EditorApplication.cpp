@@ -278,8 +278,6 @@ int harmony::Editor::OnRuntimeUpdate() {
 
     RunSystemUpdate();
 
-    p_JoltMonoCallback->ProcessDelegates();
-
     RunProgramComponentRender();
 
     RunSystemRender();

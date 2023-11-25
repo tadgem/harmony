@@ -89,7 +89,10 @@ void harmony::RuntimeProgram::AddProgramComponents() {
 
     auto monoMethodProviders = Vector<RefCntPtr<MonoInternalMethodProvider>>();
     monoMethodProviders.emplace_back(CreateRef<JoltMonoInternalMethodProvider>());
-    p_MonoProgramComponent = AddProgramComponent<MonoProgramComponent>(m_AssetManager, monoMethodProviders).lock();
+
+    auto monoProgramDelegateProviders = Vector<RefCntPtr<MonoDelegateInvokeProvider>>();
+    p_MonoProgramComponent = AddProgramComponent<MonoProgramComponent>(
+        m_AssetManager, monoMethodProviders, monoProgramDelegateProviders).lock();
 } 
 
 void harmony::RuntimeProgram::AddSystems() {
@@ -99,13 +102,19 @@ void harmony::RuntimeProgram::AddSystems() {
     AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
     AddSystem<MeshSystem>(m_AssetManager);
     AddSystem<LightSystem>();
-    p_LuaSystem = AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent).lock();
     p_GraphScriptSystem = AddSystem<GraphScriptSystem>(p_GraphScriptComponent).lock();
     p_JoltPhysicsSystem = AddSystem<JoltPhysicsSystem>().lock();
-    p_JoltMonoCallback = CreateRef<JoltMonoContactListenerCallback>();
-    p_JoltPhysicsSystem->AddContactCallback(p_JoltMonoCallback);
+    auto joltMonoCallback = CreateRef<JoltMonoContactListenerCallback>();
+    p_JoltPhysicsSystem->AddContactCallback(joltMonoCallback);
     p_EntityDataSystem = AddSystem<EntityDataSystem>().lock();
-    p_MonoSystem = AddSystem<MonoSystem>(p_MonoProgramComponent).lock();
+    p_LuaSystem = AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent).lock();
+
+    auto monoSystemDelegateProviders = Vector<RefCntPtr<MonoDelegateInvokeProvider>>
+    {
+        joltMonoCallback
+    };
+
+    p_MonoSystem = AddSystem<MonoSystem>(p_MonoProgramComponent, monoSystemDelegateProviders).lock();
 }
 
 void harmony::RuntimeProgram::AddPipelineStageRenderers() {

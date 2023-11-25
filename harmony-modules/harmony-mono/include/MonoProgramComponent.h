@@ -35,11 +35,21 @@ namespace harmony
         virtual void BindInternalMethods() = 0;
     };
 
+    class MonoDelegateInvokeProvider
+    {
+    public:
+        virtual void ProcessDelegates() = 0;
+    };
+
     class Program;
     class MonoProgramComponent : public ProgramComponent
     {
     public:
-        MonoProgramComponent(AssetManager& assetManager, Vector<RefCntPtr<MonoInternalMethodProvider>> methodProviders);
+        MonoProgramComponent(
+            AssetManager& assetManager,
+            Vector<RefCntPtr<MonoInternalMethodProvider>> methodProviders,
+            Vector<RefCntPtr<MonoDelegateInvokeProvider>> delegateInvokers
+            );
         virtual void Init() override;
         virtual void Update() override;
         virtual void Render() override;
@@ -70,6 +80,7 @@ namespace harmony
 
         Vector<MonoImplementedProgramComponent> p_MonoProgramComponents;
         Vector<RefCntPtr<MonoInternalMethodProvider>> p_MethodProviders;
+        Vector<RefCntPtr<MonoDelegateInvokeProvider>> p_DelegateInvokers;
 
         friend class MonoPanel;
         friend class MonoSystem;

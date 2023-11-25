@@ -418,6 +418,8 @@ jolt_contact_settings get_contact_settings(const JPH::ContactSettings& settings)
     return s;
 }
 
+static harmony::Mutex s_ContactAddedMutex;
+
 void harmony::JoltMonoContactListenerCallback::OnContactAdded(const JPH::Body &inBody1, const JPH::Body &inBody2,
                                                               const JPH::ContactManifold &inManifold,
                                                               JPH::ContactSettings &ioSettings) {
@@ -440,6 +442,7 @@ void harmony::JoltMonoContactListenerCallback::OnContactAdded(const JPH::Body &i
             args[3] = &i;
 
             // mono_runtime_delegate_invoke(cb.m_ContactCallback, NULL, NULL);
+            MutexLock lock(s_ContactAddedMutex);
             p_Callbacks.emplace_back(cb.m_ContactCallback);
         }
     }
@@ -526,6 +529,7 @@ bool harmony::JoltMonoContactListenerCallback::AddContactAddedCallback(JPH::Body
 }
 
 void harmony::JoltMonoContactListenerCallback::ProcessDelegates() {
+    MutexLock contact_added_lock(s_ContactAddedMutex);
     for(MonoObject* del : p_Callbacks) {
         mono_runtime_delegate_invoke(del, NULL, NULL);
     }

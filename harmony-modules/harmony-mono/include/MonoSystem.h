@@ -11,6 +11,7 @@
 
 namespace harmony {
     class MonoProgramComponent;
+    class  MonoDelegateInvokeProvider;
 
     struct MonoBehaviour
     {
@@ -34,7 +35,10 @@ namespace harmony {
     class MonoAssemblyAsset;
     class MonoSystem : public System {
     public:
-        MonoSystem(WeakPtr<MonoProgramComponent> mono);
+        MonoSystem(
+            WeakPtr<MonoProgramComponent> mono,
+            Vector<RefCntPtr<MonoDelegateInvokeProvider>> delegateInvokers
+            );
 
         void AddMonoBehaviour(entt::registry& registry, entt::entity entity, MonoUtils::CsTypeInfo typeInfo, WeakPtr<MonoAssemblyAsset> assemblyAsset);
 
@@ -57,5 +61,6 @@ namespace harmony {
 
     protected:
         WeakPtr<MonoProgramComponent> p_Mono;
+        Vector<RefCntPtr<MonoDelegateInvokeProvider>> p_DelegateInvokers;
     };
 }

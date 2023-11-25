@@ -11,6 +11,7 @@ namespace harmony {
     class HarmonyContactListenerCallback
     {
     public:
+        virtual ~HarmonyContactListenerCallback() = default;
 
         HarmonyContactListenerCallback(HashString typeHash);
 
