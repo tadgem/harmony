@@ -1,6 +1,7 @@
 // Copyright © Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
+using Harmony;
 using System;
 using System.Numerics;
 using static HarmonyJoltSharp.JoltApi;
@@ -244,14 +245,15 @@ namespace HarmonyJoltSharp
             JPH_Body_AddAngularImpulse(Handle, angularImpulse);
         }
 
-        public ulong GetUserData()
+        private ulong GetUserData()
         {
             return JPH_Body_GetUserData(Handle);
         }
 
-        public void SetUserData(ulong userData)
+        public Entity GetEntity()
         {
-            JPH_Body_SetUserData(Handle, userData);
+            uint data = (uint) GetUserData();
+            return new Entity(data);
         }
     }
 }
