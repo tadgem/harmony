@@ -1916,6 +1916,11 @@ void JPH_Body_AddAngularImpulse(JPH_Body* body, const JPH_Vec3* angularImpulse)
     reinterpret_cast<JPH::Body*>(body)->AddAngularImpulse(ToVec3(angularImpulse));
 }
 
+uint64_t JPH_Body_GetUserData(JPH_Body* body)
+{
+     return reinterpret_cast<JPH::Body*>(body)->GetUserData();
+}
+
 void JPH_Body_GetPosition(const JPH_Body* body, JPH_RVec3* result)
 {
     auto joltVector = reinterpret_cast<const JPH::Body*>(body)->GetPosition();

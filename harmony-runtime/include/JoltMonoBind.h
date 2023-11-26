@@ -40,11 +40,6 @@ extern "C"
         glm_vec3				relative_angular_surface_velocity;
     };
 
-    typedef void (*contact_callback_t) (JPH::Body* a, JPH::Body* b ,
-        jolt_contact_manifold_simple* manifold, jolt_contact_settings* settings);
-
-    typedef void (*contact_removed_callback_t) (JPH::Body* a, JPH::Body* b);
-
 }
 namespace harmony {
     class JoltMonoInternalMethodProvider : public MonoInternalMethodProvider
@@ -55,25 +50,7 @@ namespace harmony {
         virtual void BindInternalMethods() override;
     };
 
-    struct JoltMonoContactListenerData
-    {
-        MonoObject* m_ContactCallback;
-
-        bool operator== (const JoltMonoContactListenerData& c2) const;
-        bool operator!= (const JoltMonoContactListenerData& c2) const;
-
-    };
-
-    struct JoltMonoContactRemovedListenerData
-    {
-        contact_removed_callback_t m_ContactCallback;
-
-        bool operator== (const JoltMonoContactRemovedListenerData& c2) const;
-        bool operator!= (const JoltMonoContactRemovedListenerData& c2) const;
-
-    };
-
-    class JoltMonoContactListenerCallback final :
+     class JoltMonoContactListenerCallback final :
     public HarmonyContactListenerCallback,
     public MonoDelegateInvokeProvider
     {
@@ -83,18 +60,45 @@ namespace harmony {
         void OnContactAdded(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold,
                             JPH::ContactSettings &ioSettings) override;
 
-        void
-        OnContactPersisted(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold,
+        void OnContactPersisted(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold,
                            JPH::ContactSettings &ioSettings) override;
 
-        void
-        OnContactRemoved(JPH::Body* inBody1, JPH::Body* inBody2) override;
+        void OnContactRemoved(JPH::Body* inBody1, JPH::Body* inBody2) override;
+
 
         bool AddContactAddedCallback(JPH::Body* body, MonoObject* callback);
+        bool RemoveContactAddedCallback(JPH::Body* body, MonoObject* callback);
+
+         bool AddContactPersistedCallback(JPH::Body* body, MonoObject* callback);
+         bool RemoveContactPersistedCallback(JPH::Body* body, MonoObject* callback);
+
+         bool AddContactRemovedCallback(JPH::Body* body, MonoObject* callback);
+         bool RemoveContactRemovedCallback(JPH::Body* body, MonoObject* callback);
 
         virtual void ProcessDelegates() override;
     protected:
-        HashMap<const JPH::Body*, Vector<JoltMonoContactListenerData>> p_MonoContactAddedCallbacks;
-        Vector<MonoObject*> p_Callbacks;
+         HashMap<const JPH::Body*, Vector<MonoObject*>> p_MonoContactAddedCallbacks;
+         HashMap<const JPH::Body*, Vector<MonoObject*>> p_MonoContactPersistedCallbacks;
+         HashMap<const JPH::Body*, Vector<MonoObject*>> p_MonoContactRemovedCallbacks;
+
+         struct DelegateContactData
+         {
+             MonoObject*    m_Callback;
+             JPH::Body*     m_Body1;
+             JPH::Body*     m_Body2;
+             jolt_contact_manifold_simple   m_ManifoldSimple;
+             jolt_contact_settings          m_ContactSettings;
+         };
+
+         struct DelegateContactRemovedData
+         {
+             MonoObject*    m_Callback;
+             JPH::Body*     m_Body1;
+             JPH::Body*     m_Body2;
+         };
+
+         Vector<DelegateContactData>        p_ContactAddedDelegateBuffer;
+         Vector<DelegateContactData>        p_ContactPersistedDelegateBuffer;
+         Vector<DelegateContactRemovedData> p_ContactRemovedDelegateBuffer;
     };
 }

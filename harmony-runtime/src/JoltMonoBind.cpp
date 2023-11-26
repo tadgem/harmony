@@ -51,52 +51,51 @@ extern "C"
 
         return s_CallbackManager->AddContactAddedCallback(body, callback);
     }
-//
-//     bool harmony_mono_remove_contact_added_callback(JPH::Body* body, MonoObject* callback)
-//     {
-//         if(s_CallbackManager == nullptr) {
-//             GetContactCallbackStaticInstance();
-//         }
-//
-// //        return s_CallbackManager->RemoveContactAddedCallback(body, callback);
-//         return true;
-//     }
-//
-//     bool harmony_mono_add_contact_persisted_callback(JPH::Body* body, contact_callback_t callback)
-//     {
-//         if(s_CallbackManager == nullptr) {
-//             GetContactCallbackStaticInstance();
-//         }
-//
-//         return s_CallbackManager->AddContactPersistedCallback(body, callback);
-//     }
-//
-//     bool harmony_mono_remove_contact_persisted_callback(JPH::Body* body, contact_callback_t callback)
-//     {
-//         if(s_CallbackManager == nullptr) {
-//             GetContactCallbackStaticInstance();
-//         }
-//
-//         return s_CallbackManager->RemoveContactPersistedCallback(body, callback);
-//     }
-//
-//     bool harmony_mono_add_contact_removed_callback(JPH::Body* body, contact_removed_callback_t callback)
-//     {
-//         if(s_CallbackManager == nullptr) {
-//             GetContactCallbackStaticInstance();
-//         }
-//
-//         return s_CallbackManager->AddContactRemovedCallback(body, callback);
-//     }
-//
-//     bool harmony_mono_remove_contact_removed_callback(JPH::Body* body, contact_removed_callback_t callback)
-//     {
-//         if(s_CallbackManager == nullptr) {
-//             GetContactCallbackStaticInstance();
-//         }
-//
-//         return s_CallbackManager->RemoveContactRemovedCallback(body, callback);
-//     }
+
+    bool harmony_mono_remove_contact_added_callback(JPH::Body* body, MonoObject* callback)
+    {
+        if(s_CallbackManager == nullptr) {
+            GetContactCallbackStaticInstance();
+        }
+
+        return s_CallbackManager->RemoveContactAddedCallback(body, callback);
+    }
+
+    bool harmony_mono_add_contact_persisted_callback(JPH::Body* body, MonoObject* callback)
+    {
+        if(s_CallbackManager == nullptr) {
+            GetContactCallbackStaticInstance();
+        }
+
+        return s_CallbackManager->AddContactPersistedCallback(body, callback);
+    }
+
+    bool harmony_mono_remove_contact_persisted_callback(JPH::Body* body, MonoObject* callback)
+    {
+        if(s_CallbackManager == nullptr) {
+            GetContactCallbackStaticInstance();
+        }
+
+        return s_CallbackManager->RemoveContactPersistedCallback(body, callback);
+    }
+
+    bool harmony_mono_add_contact_removed_callback(JPH::Body* body, MonoObject* callback)
+    {
+        if(s_CallbackManager == nullptr) {
+            GetContactCallbackStaticInstance();
+        }
+
+        return s_CallbackManager->AddContactRemovedCallback(body, callback);
+    }
+
+    bool harmony_mono_remove_contact_removed_callback(JPH::Body* body, MonoObject* callback)
+    {
+        if(s_CallbackManager == nullptr) {
+            GetContactCallbackStaticInstance();
+        }
+
+        return s_CallbackManager->RemoveContactRemovedCallback(body, callback);
+    }
 
 }
 
@@ -105,11 +104,11 @@ void harmony::JoltMonoInternalMethodProvider::BindInternalMethods()
     mono_add_internal_call("HarmonyJoltSharp.ECS::GetEntityJoltBodyComponent", harmony_mono_get_jolt_body_component);
     mono_add_internal_call("HarmonyJoltSharp.ECS::GetJoltBodyFromComponent", harmony_mono_get_jolt_body_from_component);
     mono_add_internal_call("HarmonyJoltSharp.ECS::AddContactAddedCallback", harmony_mono_add_contact_added_callback);
-    // mono_add_internal_call("HarmonyJoltSharp.ECS::RemoveContactAddedCallback", harmony_mono_remove_contact_added_callback);
-    // mono_add_internal_call("HarmonyJoltSharp.ECS::AddContactPersistedCallback", harmony_mono_add_contact_persisted_callback);
-    // mono_add_internal_call("HarmonyJoltSharp.ECS::RemoveContactPersistedCallback", harmony_mono_remove_contact_persisted_callback);
-    // mono_add_internal_call("HarmonyJoltSharp.ECS::AddContactRemovedCallback", harmony_mono_add_contact_removed_callback);
-    // mono_add_internal_call("HarmonyJoltSharp.ECS::RemoveContactRemovedCallback", harmony_mono_remove_contact_removed_callback);
+    mono_add_internal_call("HarmonyJoltSharp.ECS::RemoveContactAddedCallback", harmony_mono_remove_contact_added_callback);
+    mono_add_internal_call("HarmonyJoltSharp.ECS::AddContactPersistedCallback", harmony_mono_add_contact_persisted_callback);
+    mono_add_internal_call("HarmonyJoltSharp.ECS::RemoveContactPersistedCallback", harmony_mono_remove_contact_persisted_callback);
+    mono_add_internal_call("HarmonyJoltSharp.ECS::AddContactRemovedCallback", harmony_mono_add_contact_removed_callback);
+    mono_add_internal_call("HarmonyJoltSharp.ECS::RemoveContactRemovedCallback", harmony_mono_remove_contact_removed_callback);
 
     mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_Init", JPH_Init);
     mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_Shutdown", JPH_Shutdown);
@@ -355,7 +354,7 @@ void harmony::JoltMonoInternalMethodProvider::BindInternalMethods()
     mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_Body_AddImpulseAtPosition", JPH_Body_AddImpulseAtPosition);
     mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_Body_AddAngularImpulse", JPH_Body_AddAngularImpulse);
 //    mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_Body_SetUserData", JPH_Body_SetUserData);
-//    mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_Body_GetUserData", JPH_Body_GetUserData);
+    mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_Body_GetUserData", JPH_Body_GetUserData);
     mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_ContactListener_Create", JPH_ContactListener_Create);
     mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_ContactListener_Destroy", JPH_ContactListener_Destroy);
     mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_BodyActivationListener_Create", JPH_BodyActivationListener_Create);
@@ -427,134 +426,288 @@ void harmony::JoltMonoContactListenerCallback::OnContactAdded(const JPH::Body &i
     JPH::Body* b2ptr = (JPH::Body*)&inBody2;
     jolt_contact_manifold_simple manifold = get_simple_manifold(inManifold);
     jolt_contact_settings contact_settings = get_contact_settings(ioSettings);
-    int i = 1;
     if(p_MonoContactAddedCallbacks.find(b1ptr) != p_MonoContactAddedCallbacks.end())
     {
-        for(auto& cb : p_MonoContactAddedCallbacks[b1ptr])
+        for(const auto cb : p_MonoContactAddedCallbacks[b1ptr])
         {
-            if(cb.m_ContactCallback == NULL) {
+            if(cb == nullptr) {
                 continue;
             }
-            void* args[4];
-            args[0] = &i;
-            args[1] = &i;
-            args[2] = &i;
-            args[3] = &i;
 
-            // mono_runtime_delegate_invoke(cb.m_ContactCallback, NULL, NULL);
             MutexLock lock(s_ContactAddedMutex);
-            p_Callbacks.emplace_back(cb.m_ContactCallback);
+            DelegateContactData data
+            {
+                cb,
+                b1ptr,
+                b2ptr,
+                manifold,
+                contact_settings
+            };
+
+            p_ContactAddedDelegateBuffer.emplace_back(data);
         }
     }
 
     if(p_MonoContactAddedCallbacks.find(b2ptr) != p_MonoContactAddedCallbacks.end())
     {
-        for(auto& cb : p_MonoContactAddedCallbacks[b2ptr])
+        for(const auto cb : p_MonoContactAddedCallbacks[b2ptr])
         {
-            if(cb.m_ContactCallback == NULL) {
+            if(cb == nullptr) {
                 continue;
             }
 
-            // (*cb.m_ContactCallback)(b2ptr, b1ptr, &manifold, &contact_settings );
+            MutexLock lock(s_ContactAddedMutex);
+            DelegateContactData data
+            {
+                cb,
+                b1ptr,
+                b2ptr,
+                manifold,
+                contact_settings
+            };
+
+            p_ContactAddedDelegateBuffer.emplace_back(data);
         }
     }
 
 }
 
+static harmony::Mutex s_ContactPersistedMutex;
 void harmony::JoltMonoContactListenerCallback::OnContactPersisted(const JPH::Body &inBody1, const JPH::Body &inBody2,
                                                                   const JPH::ContactManifold &inManifold,
                                                                   JPH::ContactSettings &ioSettings) {
-    const JPH::Body* b1ptr = &inBody1;
-    const JPH::Body* b2ptr = &inBody2;
+    JPH::Body* b1ptr = (JPH::Body*)&inBody1;
+    JPH::Body* b2ptr = (JPH::Body*)&inBody2;
     jolt_contact_manifold_simple manifold = get_simple_manifold(inManifold);
     jolt_contact_settings contact_settings = get_contact_settings(ioSettings);
 
-    // if(p_MonoContactPersistedCallbacks.find(b1ptr) != p_MonoContactPersistedCallbacks.end())
-    // {
-    //     for(auto& cb : p_MonoContactPersistedCallbacks[b1ptr])
-    //     {
-    //         // cb.m_ContactCallback((JPH::Body*)b1ptr, (JPH::Body*)b2ptr, &manifold, &contact_settings );
-    //     }
-    // }
-    //
-    // if(p_MonoContactPersistedCallbacks.find(b2ptr) != p_MonoContactPersistedCallbacks.end())
-    // {
-    //     for(auto& cb : p_MonoContactPersistedCallbacks[b2ptr])
-    //     {
-    //         // cb.m_ContactCallback((JPH::Body*)b2ptr, (JPH::Body*)b1ptr, &manifold, &contact_settings );
-    //     }
-    // }
+    if(p_MonoContactPersistedCallbacks.find(b1ptr) != p_MonoContactPersistedCallbacks.end())
+    {
+        for(const auto cb : p_MonoContactPersistedCallbacks[b1ptr])
+        {
+            if(cb == nullptr) {
+                continue;
+            }
+
+            MutexLock lock(s_ContactPersistedMutex);
+            DelegateContactData data
+            {
+                cb,
+                b1ptr,
+                b2ptr,
+                manifold,
+                contact_settings
+            };
+
+            p_ContactPersistedDelegateBuffer.emplace_back(data);
+        }
+    }
+
+    if(p_MonoContactPersistedCallbacks.find(b2ptr) != p_MonoContactPersistedCallbacks.end())
+    {
+        for(const auto cb : p_MonoContactPersistedCallbacks[b2ptr])
+        {
+            if(cb == nullptr) {
+                continue;
+            }
+
+            MutexLock lock(s_ContactPersistedMutex);
+            DelegateContactData data
+            {
+                cb,
+                b1ptr,
+                b2ptr,
+                manifold,
+                contact_settings
+            };
+
+            p_ContactPersistedDelegateBuffer.emplace_back(data);
+        }
+    }
+
 
 }
 
+static harmony::Mutex s_ContactRemovedMutex;
 void harmony::JoltMonoContactListenerCallback::OnContactRemoved(JPH::Body* inBody1, JPH::Body* inBody2)
 {
-    // if(p_MonoContactRemovedCallbacks.find(inBody1) != p_MonoContactRemovedCallbacks.end())
-    // {
-    //     for(auto& cb : p_MonoContactRemovedCallbacks[inBody1])
-    //     {
-    //         // cb.m_ContactCallback((JPH::Body*)inBody1, (JPH::Body*)inBody2);
-    //     }
-    // }
-    //
-    // if(p_MonoContactRemovedCallbacks.find(inBody2) != p_MonoContactRemovedCallbacks.end())
-    // {
-    //     for(auto& cb : p_MonoContactRemovedCallbacks[inBody2])
-    //     {
-    //         // cb.m_ContactCallback((JPH::Body*)inBody2, (JPH::Body*)inBody1);
-    //     }
-    // }
+    if(p_MonoContactPersistedCallbacks.find(inBody1) != p_MonoContactPersistedCallbacks.end())
+    {
+        for(const auto cb : p_MonoContactPersistedCallbacks[inBody1])
+        {
+            if(cb == nullptr) {
+                continue;
+            }
+
+            MutexLock lock(s_ContactRemovedMutex);
+            DelegateContactRemovedData data
+            {
+                cb,
+                inBody1,
+                inBody2,
+            };
+
+            p_ContactRemovedDelegateBuffer.emplace_back(data);
+        }
+    }
+
+    if(p_MonoContactPersistedCallbacks.find(inBody2) != p_MonoContactPersistedCallbacks.end())
+    {
+        for(const auto cb : p_MonoContactPersistedCallbacks[inBody2])
+        {
+            if(cb == nullptr) {
+                continue;
+            }
+
+            MutexLock lock(s_ContactRemovedMutex);
+            DelegateContactRemovedData data
+            {
+                cb,
+                inBody1,
+                inBody2,
+            };
+
+            p_ContactRemovedDelegateBuffer.emplace_back(data);
+        }
+    }
 
 }
 
 
 bool harmony::JoltMonoContactListenerCallback::AddContactAddedCallback(JPH::Body* body, MonoObject* callback)
 {
-    JoltMonoContactListenerData data {callback };
     if(p_MonoContactAddedCallbacks.find(body) != p_MonoContactAddedCallbacks.end()) {
         auto& callbacks  = p_MonoContactAddedCallbacks[body];
-        auto it = std::find(callbacks.begin(), callbacks.end(), data);
+        auto it = std::find(callbacks.begin(), callbacks.end(), callback);
         if(it != callbacks.end())
         {
-            log::warn("JoltMonoContactListenerCallback : already added this callback");
+            log::warn("JoltMonoContactListenerCallback : AddContactAddedCallback : already added this callback");
             return false;
         }
-        callbacks.emplace_back(data);
+        callbacks.emplace_back(callback);
         return true;
     }
 
-    p_MonoContactAddedCallbacks.emplace(body, Vector<JoltMonoContactListenerData>());
-    p_MonoContactAddedCallbacks[body].emplace_back(data);
+    p_MonoContactAddedCallbacks.emplace(body, Vector<MonoObject*>());
+    p_MonoContactAddedCallbacks[body].emplace_back(callback);
     return true;
 }
 
-void harmony::JoltMonoContactListenerCallback::ProcessDelegates() {
-    MutexLock contact_added_lock(s_ContactAddedMutex);
-    for(MonoObject* del : p_Callbacks) {
-        mono_runtime_delegate_invoke(del, NULL, NULL);
+bool harmony::JoltMonoContactListenerCallback::RemoveContactAddedCallback(JPH::Body* body, MonoObject* callback)
+{
+    if(p_MonoContactAddedCallbacks.find(body) != p_MonoContactAddedCallbacks.end())
+    {
+        auto& callbacks = p_MonoContactAddedCallbacks[body];
+        auto it = std::find(callbacks.begin(), callbacks.end(), callback);
+
+        if(it != callbacks.end())
+        {
+            callbacks.erase(it);
+            return true;
+        }
+    }
+    return false;
+
+}
+
+
+bool harmony::JoltMonoContactListenerCallback::AddContactPersistedCallback(JPH::Body* body, MonoObject* callback)
+{
+    if(p_MonoContactPersistedCallbacks.find(body) != p_MonoContactPersistedCallbacks.end()) {
+        auto& callbacks  = p_MonoContactPersistedCallbacks[body];
+        auto it = std::find(callbacks.begin(), callbacks.end(), callback);
+        if(it != callbacks.end())
+        {
+            log::warn("JoltMonoContactListenerCallback : AddContactPersistedCallback : already added this callback");
+            return false;
+        }
+        callbacks.emplace_back(callback);
+        return true;
     }
 
-    p_Callbacks.clear();
+    p_MonoContactPersistedCallbacks.emplace(body, Vector<MonoObject*>());
+    p_MonoContactPersistedCallbacks[body].emplace_back(callback);
+    return true;
 }
 
-bool harmony::JoltMonoContactListenerData::operator== (const harmony::JoltMonoContactListenerData& c2)
-const
+bool harmony::JoltMonoContactListenerCallback::RemoveContactPersistedCallback(JPH::Body* body, MonoObject* callback)
 {
-    return &m_ContactCallback == &c2.m_ContactCallback;
+    if(p_MonoContactPersistedCallbacks.find(body) != p_MonoContactPersistedCallbacks.end())
+    {
+        auto& callbacks = p_MonoContactPersistedCallbacks[body];
+        auto it = std::find(callbacks.begin(), callbacks.end(), callback);
+
+        if(it != callbacks.end())
+        {
+            callbacks.erase(it);
+            return true;
+        }
+    }
+    return false;
+
 }
 
-bool harmony::JoltMonoContactListenerData::operator!= (const harmony::JoltMonoContactListenerData& c2)
-const
+bool harmony::JoltMonoContactListenerCallback::AddContactRemovedCallback(JPH::Body* body, MonoObject* callback)
 {
-    return  &m_ContactCallback != &c2.m_ContactCallback;
+    if(p_MonoContactRemovedCallbacks.find(body) != p_MonoContactRemovedCallbacks.end()) {
+        auto& callbacks  = p_MonoContactRemovedCallbacks[body];
+        auto it = std::find(callbacks.begin(), callbacks.end(), callback);
+        if(it != callbacks.end())
+        {
+            log::warn("JoltMonoContactListenerCallback : AddContactRemovedCallback : already added this callback");
+            return false;
+        }
+        callbacks.emplace_back(callback);
+        return true;
+    }
+
+    p_MonoContactRemovedCallbacks.emplace(body, Vector<MonoObject*>());
+    p_MonoContactRemovedCallbacks[body].emplace_back(callback);
+    return true;
 }
 
-bool harmony::JoltMonoContactRemovedListenerData::operator==(const JoltMonoContactRemovedListenerData& c2) const {
-    return &m_ContactCallback == &c2.m_ContactCallback;
+bool harmony::JoltMonoContactListenerCallback::RemoveContactRemovedCallback(JPH::Body* body, MonoObject* callback)
+{
+    if(p_MonoContactRemovedCallbacks.find(body) != p_MonoContactRemovedCallbacks.end())
+    {
+        auto& callbacks = p_MonoContactRemovedCallbacks[body];
+        auto it = std::find(callbacks.begin(), callbacks.end(), callback);
+
+        if(it != callbacks.end())
+        {
+            callbacks.erase(it);
+            return true;
+        }
+    }
+    return false;
+
 }
 
-bool harmony::JoltMonoContactRemovedListenerData::operator!=(const JoltMonoContactRemovedListenerData& c2) const {
-    return &m_ContactCallback != &c2.m_ContactCallback;
+void harmony::JoltMonoContactListenerCallback::ProcessDelegates() {
+    {
+        MutexLock contact_added_lock(s_ContactAddedMutex);
+        for(DelegateContactData data : p_ContactAddedDelegateBuffer) {
+            mono_runtime_delegate_invoke(data.m_Callback, NULL, NULL);
+        }
+        p_ContactAddedDelegateBuffer.clear();
+    }
+
+    {
+        MutexLock contact_persisted_lock(s_ContactPersistedMutex);
+        for(DelegateContactData data : p_ContactPersistedDelegateBuffer) {
+            mono_runtime_delegate_invoke(data.m_Callback, NULL, NULL);
+        }
+        p_ContactPersistedDelegateBuffer.clear();
+    }
+
+    {
+        MutexLock contact_removed_lock(s_ContactRemovedMutex);
+        for(DelegateContactRemovedData data : p_ContactRemovedDelegateBuffer) {
+            mono_runtime_delegate_invoke(data.m_Callback, NULL, NULL);
+        }
+        p_ContactRemovedDelegateBuffer.clear();
+    }
+
 }
 
 harmony::JoltMonoContactListenerCallback::JoltMonoContactListenerCallback() : HarmonyContactListenerCallback(GetTypeHash<JoltMonoContactListenerCallback>())
