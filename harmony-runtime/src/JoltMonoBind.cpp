@@ -426,9 +426,11 @@ void harmony::JoltMonoContactListenerCallback::OnContactAdded(const JPH::Body &i
     JPH::Body* b2ptr = (JPH::Body*)&inBody2;
     jolt_contact_manifold_simple manifold = get_simple_manifold(inManifold);
     jolt_contact_settings contact_settings = get_contact_settings(ioSettings);
-    if(p_MonoContactAddedCallbacks.find(b1ptr) != p_MonoContactAddedCallbacks.end())
+    auto id1 = inBody1.GetID();
+    auto id2 = inBody2.GetID();
+    if(p_MonoContactAddedCallbacks.find(id1) != p_MonoContactAddedCallbacks.end())
     {
-        for(const auto cb : p_MonoContactAddedCallbacks[b1ptr])
+        for(const auto cb : p_MonoContactAddedCallbacks[id1])
         {
             if(cb == nullptr) {
                 continue;
@@ -448,9 +450,9 @@ void harmony::JoltMonoContactListenerCallback::OnContactAdded(const JPH::Body &i
         }
     }
 
-    if(p_MonoContactAddedCallbacks.find(b2ptr) != p_MonoContactAddedCallbacks.end())
+    if(p_MonoContactAddedCallbacks.find(id2) != p_MonoContactAddedCallbacks.end())
     {
-        for(const auto cb : p_MonoContactAddedCallbacks[b2ptr])
+        for(const auto cb : p_MonoContactAddedCallbacks[id2])
         {
             if(cb == nullptr) {
                 continue;
@@ -480,10 +482,11 @@ void harmony::JoltMonoContactListenerCallback::OnContactPersisted(const JPH::Bod
     JPH::Body* b2ptr = (JPH::Body*)&inBody2;
     jolt_contact_manifold_simple manifold = get_simple_manifold(inManifold);
     jolt_contact_settings contact_settings = get_contact_settings(ioSettings);
-
-    if(p_MonoContactPersistedCallbacks.find(b1ptr) != p_MonoContactPersistedCallbacks.end())
+    auto id1 = inBody1.GetID();
+    auto id2 = inBody2.GetID();
+    if(p_MonoContactPersistedCallbacks.find(id1) != p_MonoContactPersistedCallbacks.end())
     {
-        for(const auto cb : p_MonoContactPersistedCallbacks[b1ptr])
+        for(const auto cb : p_MonoContactPersistedCallbacks[id1])
         {
             if(cb == nullptr) {
                 continue;
@@ -503,9 +506,9 @@ void harmony::JoltMonoContactListenerCallback::OnContactPersisted(const JPH::Bod
         }
     }
 
-    if(p_MonoContactPersistedCallbacks.find(b2ptr) != p_MonoContactPersistedCallbacks.end())
+    if(p_MonoContactPersistedCallbacks.find(id2) != p_MonoContactPersistedCallbacks.end())
     {
-        for(const auto cb : p_MonoContactPersistedCallbacks[b2ptr])
+        for(const auto cb : p_MonoContactPersistedCallbacks[id2])
         {
             if(cb == nullptr) {
                 continue;
@@ -531,9 +534,10 @@ void harmony::JoltMonoContactListenerCallback::OnContactPersisted(const JPH::Bod
 static harmony::Mutex s_ContactRemovedMutex;
 void harmony::JoltMonoContactListenerCallback::OnContactRemoved(JPH::Body* inBody1, JPH::Body* inBody2)
 {
-    if(p_MonoContactPersistedCallbacks.find(inBody1) != p_MonoContactPersistedCallbacks.end())
+    auto id1 = inBody1->GetID();
+    if(p_MonoContactPersistedCallbacks.find(id1) != p_MonoContactPersistedCallbacks.end())
     {
-        for(const auto cb : p_MonoContactPersistedCallbacks[inBody1])
+        for(const auto cb : p_MonoContactPersistedCallbacks[id1])
         {
             if(cb == nullptr) {
                 continue;
@@ -551,9 +555,9 @@ void harmony::JoltMonoContactListenerCallback::OnContactRemoved(JPH::Body* inBod
         }
     }
 
-    if(p_MonoContactPersistedCallbacks.find(inBody2) != p_MonoContactPersistedCallbacks.end())
+    if(p_MonoContactPersistedCallbacks.find(inBody2->GetID()) != p_MonoContactPersistedCallbacks.end())
     {
-        for(const auto cb : p_MonoContactPersistedCallbacks[inBody2])
+        for(const auto cb : p_MonoContactPersistedCallbacks[id1])
         {
             if(cb == nullptr) {
                 continue;
@@ -576,8 +580,9 @@ void harmony::JoltMonoContactListenerCallback::OnContactRemoved(JPH::Body* inBod
 
 bool harmony::JoltMonoContactListenerCallback::AddContactAddedCallback(JPH::Body* body, MonoObject* callback)
 {
-    if(p_MonoContactAddedCallbacks.find(body) != p_MonoContactAddedCallbacks.end()) {
-        auto& callbacks  = p_MonoContactAddedCallbacks[body];
+    auto id = body->GetID();
+    if(p_MonoContactAddedCallbacks.find(id) != p_MonoContactAddedCallbacks.end()) {
+        auto& callbacks  = p_MonoContactAddedCallbacks[id];
         auto it = std::find(callbacks.begin(), callbacks.end(), callback);
         if(it != callbacks.end())
         {
@@ -588,16 +593,17 @@ bool harmony::JoltMonoContactListenerCallback::AddContactAddedCallback(JPH::Body
         return true;
     }
 
-    p_MonoContactAddedCallbacks.emplace(body, Vector<MonoObject*>());
-    p_MonoContactAddedCallbacks[body].emplace_back(callback);
+    p_MonoContactAddedCallbacks.emplace(id, Vector<MonoObject*>());
+    p_MonoContactAddedCallbacks[id].emplace_back(callback);
     return true;
 }
 
 bool harmony::JoltMonoContactListenerCallback::RemoveContactAddedCallback(JPH::Body* body, MonoObject* callback)
 {
-    if(p_MonoContactAddedCallbacks.find(body) != p_MonoContactAddedCallbacks.end())
+    auto id = body->GetID();
+    if(p_MonoContactAddedCallbacks.find(id) != p_MonoContactAddedCallbacks.end())
     {
-        auto& callbacks = p_MonoContactAddedCallbacks[body];
+        auto& callbacks = p_MonoContactAddedCallbacks[id];
         auto it = std::find(callbacks.begin(), callbacks.end(), callback);
 
         if(it != callbacks.end())
@@ -613,8 +619,9 @@ bool harmony::JoltMonoContactListenerCallback::RemoveContactAddedCallback(JPH::B
 
 bool harmony::JoltMonoContactListenerCallback::AddContactPersistedCallback(JPH::Body* body, MonoObject* callback)
 {
-    if(p_MonoContactPersistedCallbacks.find(body) != p_MonoContactPersistedCallbacks.end()) {
-        auto& callbacks  = p_MonoContactPersistedCallbacks[body];
+    auto id = body->GetID();
+    if(p_MonoContactPersistedCallbacks.find(id) != p_MonoContactPersistedCallbacks.end()) {
+        auto& callbacks  = p_MonoContactPersistedCallbacks[id];
         auto it = std::find(callbacks.begin(), callbacks.end(), callback);
         if(it != callbacks.end())
         {
@@ -625,16 +632,17 @@ bool harmony::JoltMonoContactListenerCallback::AddContactPersistedCallback(JPH::
         return true;
     }
 
-    p_MonoContactPersistedCallbacks.emplace(body, Vector<MonoObject*>());
-    p_MonoContactPersistedCallbacks[body].emplace_back(callback);
+    p_MonoContactPersistedCallbacks.emplace(id, Vector<MonoObject*>());
+    p_MonoContactPersistedCallbacks[id].emplace_back(callback);
     return true;
 }
 
 bool harmony::JoltMonoContactListenerCallback::RemoveContactPersistedCallback(JPH::Body* body, MonoObject* callback)
 {
-    if(p_MonoContactPersistedCallbacks.find(body) != p_MonoContactPersistedCallbacks.end())
+    auto id = body->GetID();
+    if(p_MonoContactPersistedCallbacks.find(id) != p_MonoContactPersistedCallbacks.end())
     {
-        auto& callbacks = p_MonoContactPersistedCallbacks[body];
+        auto& callbacks = p_MonoContactPersistedCallbacks[id];
         auto it = std::find(callbacks.begin(), callbacks.end(), callback);
 
         if(it != callbacks.end())
@@ -649,8 +657,9 @@ bool harmony::JoltMonoContactListenerCallback::RemoveContactPersistedCallback(JP
 
 bool harmony::JoltMonoContactListenerCallback::AddContactRemovedCallback(JPH::Body* body, MonoObject* callback)
 {
-    if(p_MonoContactRemovedCallbacks.find(body) != p_MonoContactRemovedCallbacks.end()) {
-        auto& callbacks  = p_MonoContactRemovedCallbacks[body];
+    auto id = body->GetID();
+    if(p_MonoContactRemovedCallbacks.find(id) != p_MonoContactRemovedCallbacks.end()) {
+        auto& callbacks  = p_MonoContactRemovedCallbacks[id];
         auto it = std::find(callbacks.begin(), callbacks.end(), callback);
         if(it != callbacks.end())
         {
@@ -661,16 +670,17 @@ bool harmony::JoltMonoContactListenerCallback::AddContactRemovedCallback(JPH::Bo
         return true;
     }
 
-    p_MonoContactRemovedCallbacks.emplace(body, Vector<MonoObject*>());
-    p_MonoContactRemovedCallbacks[body].emplace_back(callback);
+    p_MonoContactRemovedCallbacks.emplace(id, Vector<MonoObject*>());
+    p_MonoContactRemovedCallbacks[id].emplace_back(callback);
     return true;
 }
 
 bool harmony::JoltMonoContactListenerCallback::RemoveContactRemovedCallback(JPH::Body* body, MonoObject* callback)
 {
-    if(p_MonoContactRemovedCallbacks.find(body) != p_MonoContactRemovedCallbacks.end())
+    auto id = body->GetID();
+    if(p_MonoContactRemovedCallbacks.find(id) != p_MonoContactRemovedCallbacks.end())
     {
-        auto& callbacks = p_MonoContactRemovedCallbacks[body];
+        auto& callbacks = p_MonoContactRemovedCallbacks[id];
         auto it = std::find(callbacks.begin(), callbacks.end(), callback);
 
         if(it != callbacks.end())

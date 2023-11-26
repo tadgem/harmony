@@ -78,9 +78,9 @@ namespace harmony {
         virtual void ProcessDelegates() override;
     protected:
          JPH::PhysicsSystem* p_PhysicsSystem;
-         HashMap<const JPH::Body*, Vector<MonoObject*>> p_MonoContactAddedCallbacks;
-         HashMap<const JPH::Body*, Vector<MonoObject*>> p_MonoContactPersistedCallbacks;
-         HashMap<const JPH::Body*, Vector<MonoObject*>> p_MonoContactRemovedCallbacks;
+         HashMap<JPH::BodyID, Vector<MonoObject*>> p_MonoContactAddedCallbacks;
+         HashMap<JPH::BodyID, Vector<MonoObject*>> p_MonoContactPersistedCallbacks;
+         HashMap<JPH::BodyID, Vector<MonoObject*>> p_MonoContactRemovedCallbacks;
 
          struct DelegateContactData
          {
