@@ -56,7 +56,7 @@ namespace harmony {
     {
     public:
 
-        JoltMonoContactListenerCallback();
+        JoltMonoContactListenerCallback(JPH::PhysicsSystem* bodyLockInterface);
         void OnContactAdded(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold,
                             JPH::ContactSettings &ioSettings) override;
 
@@ -77,6 +77,7 @@ namespace harmony {
 
         virtual void ProcessDelegates() override;
     protected:
+         JPH::PhysicsSystem* p_PhysicsSystem;
          HashMap<const JPH::Body*, Vector<MonoObject*>> p_MonoContactAddedCallbacks;
          HashMap<const JPH::Body*, Vector<MonoObject*>> p_MonoContactPersistedCallbacks;
          HashMap<const JPH::Body*, Vector<MonoObject*>> p_MonoContactRemovedCallbacks;

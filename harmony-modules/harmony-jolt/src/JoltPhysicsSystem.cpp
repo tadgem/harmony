@@ -123,7 +123,7 @@ void harmony::JoltPhysicsSystem::Init(entt::registry &registry) {
 void harmony::JoltPhysicsSystem::Update(entt::registry &registry) {
     p_Running = true;
     float deltaTime = std::min(static_cast<float>(Time::GetFrameTime()), 0.0333f);
-    m_PhysicsSystem->Update(deltaTime, s_CollisionSteps,  m_TempAllocator.get(),
+    auto result = m_PhysicsSystem->Update(deltaTime, s_CollisionSteps,  m_TempAllocator.get(),
                             m_JobSystem.get());
 
     auto bodyView = registry.view<TransformComponent, JoltBodyComponent>();
@@ -144,10 +144,10 @@ void harmony::JoltPhysicsSystem::Update(entt::registry &registry) {
             JPH::Quat rot = JPH::Quat(t.Rotation.w, t.Rotation.x, t.Rotation.y, t.Rotation.z);
 
             m_BodyInterface->SetPositionAndRotation(b.Body->GetID(), pos, rot, JPH::EActivation::Activate);
-            m_PhysicsSystem->GetBodyLockInterface().
         }
-
     }
+
+
 }
 
 void harmony::JoltPhysicsSystem::Render(entt::registry &registry) {

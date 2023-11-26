@@ -89,7 +89,7 @@ namespace harmony {
 
         const uint32_t m_NumJobs;
         float m_UpdateFrequency = 60.0f;    // Physics update frequency
-
+    public:
         JPH::PhysicsSettings m_PhysicsSettings;
         UniquePtr<JPH::TempAllocator> m_TempAllocator;            // Allocator for temporary allocations
         UniquePtr<JPH::JobSystem> m_JobSystem;                // The job system that runs physics jobs
@@ -103,7 +103,7 @@ namespace harmony {
         UniquePtr<HarmonyDebugRenderer> m_DebugRenderer;
         JPH::BodyInterface *m_BodyInterface;
 
-
+    protected:
         Vector<RefCntPtr<HarmonyContactListenerCallback>> p_PendingCallbacks;
 
         friend class JoltDebugRendererComponent;

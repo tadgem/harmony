@@ -691,7 +691,20 @@ void harmony::JoltMonoContactListenerCallback::ProcessDelegates() {
             {
                 data.m_Body1, data.m_Body2, &data.m_ManifoldSimple, &data.m_ContactSettings
             };
+            Vector<JPH::BodyID> body_ids
+            {
+                data.m_Body1->GetID(),
+                data.m_Body2->GetID()
+            };
+
+            auto& bodyLockInterface = p_PhysicsSystem->GetBodyLockInterface();
+            //const auto mutexMask = bodyLockInterface.GetAllBodiesMutexMask();
+            // auto mutexMask = bodyLockInterface.GetMutexMask(body_ids.data(), body_ids.size());
+            // bodyLockInterface.LockRead(mutexMask);
+            // bodyLockInterface.LockWrite(mutexMask);
             mono_runtime_delegate_invoke(data.m_Callback, args, NULL);
+            // bodyLockInterface.UnlockRead(mutexMask);
+            // bodyLockInterface.UnlockWrite(mutexMask);
         }
         p_ContactAddedDelegateBuffer.clear();
     }
@@ -722,6 +735,8 @@ void harmony::JoltMonoContactListenerCallback::ProcessDelegates() {
 
 }
 
-harmony::JoltMonoContactListenerCallback::JoltMonoContactListenerCallback() : HarmonyContactListenerCallback(GetTypeHash<JoltMonoContactListenerCallback>())
+harmony::JoltMonoContactListenerCallback::JoltMonoContactListenerCallback(JPH::PhysicsSystem* physicsSystem) :
+HarmonyContactListenerCallback(GetTypeHash<JoltMonoContactListenerCallback>()),
+p_PhysicsSystem(physicsSystem)
 {
 }
