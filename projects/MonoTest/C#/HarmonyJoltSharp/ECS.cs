@@ -47,7 +47,7 @@ namespace HarmonyJoltSharp
         Vector3 RelativeAngularSurfaceVelocity;
     };
 
-    public delegate void ContactCallback(IntPtr a, IntPtr b,IntPtr manifold, IntPtr settings);
+    public delegate void ContactCallback(IntPtr a, IntPtr b, ContactManifoldData manifold, ContactSettings settings);
 
     public delegate void ContactRemovedCallback(Body a, Body b);
 
@@ -60,7 +60,7 @@ namespace HarmonyJoltSharp
         public extern static IntPtr GetJoltBodyFromComponent(this NativeJoltBodyComponent joltBody);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static bool AddContactAddedCallback(this Body b, Action callback);
+        public extern static bool AddContactAddedCallback(this Body b, ContactCallback callback);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static bool RemoveContactAddedCallback(this Body b, ContactCallback callback);

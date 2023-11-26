@@ -144,6 +144,7 @@ void harmony::JoltPhysicsSystem::Update(entt::registry &registry) {
             JPH::Quat rot = JPH::Quat(t.Rotation.w, t.Rotation.x, t.Rotation.y, t.Rotation.z);
 
             m_BodyInterface->SetPositionAndRotation(b.Body->GetID(), pos, rot, JPH::EActivation::Activate);
+            m_PhysicsSystem->GetBodyLockInterface().
         }
 
     }

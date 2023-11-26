@@ -10,6 +10,7 @@ namespace Harmony
 
     public class SceneMethods
     {
+        // N.B: This will all change when introducing async scene loading + foreground / background scenes.
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static Scene GetActiveScene();
 

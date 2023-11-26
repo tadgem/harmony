@@ -687,7 +687,11 @@ void harmony::JoltMonoContactListenerCallback::ProcessDelegates() {
     {
         MutexLock contact_added_lock(s_ContactAddedMutex);
         for(DelegateContactData data : p_ContactAddedDelegateBuffer) {
-            mono_runtime_delegate_invoke(data.m_Callback, NULL, NULL);
+            void* args[]
+            {
+                data.m_Body1, data.m_Body2, &data.m_ManifoldSimple, &data.m_ContactSettings
+            };
+            mono_runtime_delegate_invoke(data.m_Callback, args, NULL);
         }
         p_ContactAddedDelegateBuffer.clear();
     }
@@ -695,7 +699,11 @@ void harmony::JoltMonoContactListenerCallback::ProcessDelegates() {
     {
         MutexLock contact_persisted_lock(s_ContactPersistedMutex);
         for(DelegateContactData data : p_ContactPersistedDelegateBuffer) {
-            mono_runtime_delegate_invoke(data.m_Callback, NULL, NULL);
+            void* args[]
+            {
+                data.m_Body1, data.m_Body2, &data.m_ManifoldSimple, &data.m_ContactSettings
+            };
+            mono_runtime_delegate_invoke(data.m_Callback, args, NULL);
         }
         p_ContactPersistedDelegateBuffer.clear();
     }
@@ -703,7 +711,11 @@ void harmony::JoltMonoContactListenerCallback::ProcessDelegates() {
     {
         MutexLock contact_removed_lock(s_ContactRemovedMutex);
         for(DelegateContactRemovedData data : p_ContactRemovedDelegateBuffer) {
-            mono_runtime_delegate_invoke(data.m_Callback, NULL, NULL);
+            void* args[]
+            {
+                data.m_Body1, data.m_Body2
+            };
+            mono_runtime_delegate_invoke(data.m_Callback, args, NULL);
         }
         p_ContactRemovedDelegateBuffer.clear();
     }
