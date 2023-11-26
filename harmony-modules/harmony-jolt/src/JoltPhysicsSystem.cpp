@@ -274,7 +274,7 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent &t,
     b.Body = m_BodyInterface->CreateBody(bodyCreationSettings);
 
     m_BodyInterface->AddBody(b.Body->GetID(), JPH::EActivation::Activate);
-
+    b.Body->SetUserData((JPH::uint64) e);
     b.RequiresUpdate = false;
 }
 
