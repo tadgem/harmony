@@ -85,8 +85,8 @@ namespace harmony {
          struct DelegateContactData
          {
              MonoObject*    m_Callback;
-             JPH::Body*     m_Body1;
-             JPH::Body*     m_Body2;
+             JPH::BodyID     m_Body1;
+             JPH::BodyID     m_Body2;
              jolt_contact_manifold_simple   m_ManifoldSimple;
              jolt_contact_settings          m_ContactSettings;
          };
@@ -94,8 +94,8 @@ namespace harmony {
          struct DelegateContactRemovedData
          {
              MonoObject*    m_Callback;
-             JPH::Body*     m_Body1;
-             JPH::Body*     m_Body2;
+             JPH::BodyID     m_Body1;
+             JPH::BodyID     m_Body2;
          };
 
          Vector<DelegateContactData>        p_ContactAddedDelegateBuffer;

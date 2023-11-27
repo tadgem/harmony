@@ -440,8 +440,8 @@ void harmony::JoltMonoContactListenerCallback::OnContactAdded(const JPH::Body &i
             DelegateContactData data
             {
                 cb,
-                b1ptr,
-                b2ptr,
+                inBody1.GetID(),
+                inBody2.GetID(),
                 manifold,
                 contact_settings
             };
@@ -462,8 +462,8 @@ void harmony::JoltMonoContactListenerCallback::OnContactAdded(const JPH::Body &i
             DelegateContactData data
             {
                 cb,
-                b1ptr,
-                b2ptr,
+                inBody1.GetID(),
+                inBody2.GetID(),
                 manifold,
                 contact_settings
             };
@@ -496,8 +496,8 @@ void harmony::JoltMonoContactListenerCallback::OnContactPersisted(const JPH::Bod
             DelegateContactData data
             {
                 cb,
-                b1ptr,
-                b2ptr,
+                inBody1.GetID(),
+                inBody2.GetID(),
                 manifold,
                 contact_settings
             };
@@ -518,8 +518,8 @@ void harmony::JoltMonoContactListenerCallback::OnContactPersisted(const JPH::Bod
             DelegateContactData data
             {
                 cb,
-                b1ptr,
-                b2ptr,
+                inBody1.GetID(),
+                inBody2.GetID(),
                 manifold,
                 contact_settings
             };
@@ -547,8 +547,8 @@ void harmony::JoltMonoContactListenerCallback::OnContactRemoved(JPH::Body* inBod
             DelegateContactRemovedData data
             {
                 cb,
-                inBody1,
-                inBody2,
+                inBody1->GetID(),
+                inBody2->GetID(),
             };
 
             p_ContactRemovedDelegateBuffer.emplace_back(data);
@@ -567,8 +567,8 @@ void harmony::JoltMonoContactListenerCallback::OnContactRemoved(JPH::Body* inBod
             DelegateContactRemovedData data
             {
                 cb,
-                inBody1,
-                inBody2,
+                inBody1->GetID(),
+                inBody2->GetID(),
             };
 
             p_ContactRemovedDelegateBuffer.emplace_back(data);
@@ -694,27 +694,24 @@ bool harmony::JoltMonoContactListenerCallback::RemoveContactRemovedCallback(JPH:
 }
 
 void harmony::JoltMonoContactListenerCallback::ProcessDelegates() {
+    auto& bodyLockInterface = p_PhysicsSystem->GetBodyLockInterface();
     {
         MutexLock contact_added_lock(s_ContactAddedMutex);
         for(DelegateContactData data : p_ContactAddedDelegateBuffer) {
+            JPH::Body* b1 = nullptr, *b2 = nullptr;
+
+            while(!b1 || !b2)
+            {
+                b1 = bodyLockInterface.TryGetBody(data.m_Body1);
+                b2 = bodyLockInterface.TryGetBody(data.m_Body2);
+            }
+
             void* args[]
             {
-                data.m_Body1, data.m_Body2, &data.m_ManifoldSimple, &data.m_ContactSettings
-            };
-            Vector<JPH::BodyID> body_ids
-            {
-                data.m_Body1->GetID(),
-                data.m_Body2->GetID()
+                b1, b2, &data.m_ManifoldSimple, &data.m_ContactSettings
             };
 
-            auto& bodyLockInterface = p_PhysicsSystem->GetBodyLockInterface();
-            //const auto mutexMask = bodyLockInterface.GetAllBodiesMutexMask();
-            // auto mutexMask = bodyLockInterface.GetMutexMask(body_ids.data(), body_ids.size());
-            // bodyLockInterface.LockRead(mutexMask);
-            // bodyLockInterface.LockWrite(mutexMask);
             mono_runtime_delegate_invoke(data.m_Callback, args, NULL);
-            // bodyLockInterface.UnlockRead(mutexMask);
-            // bodyLockInterface.UnlockWrite(mutexMask);
         }
         p_ContactAddedDelegateBuffer.clear();
     }
@@ -722,9 +719,17 @@ void harmony::JoltMonoContactListenerCallback::ProcessDelegates() {
     {
         MutexLock contact_persisted_lock(s_ContactPersistedMutex);
         for(DelegateContactData data : p_ContactPersistedDelegateBuffer) {
+            JPH::Body* b1 = nullptr, *b2 = nullptr;
+
+            while(!b1 || !b2)
+            {
+                b1 = bodyLockInterface.TryGetBody(data.m_Body1);
+                b2 = bodyLockInterface.TryGetBody(data.m_Body2);
+            }
+
             void* args[]
             {
-                data.m_Body1, data.m_Body2, &data.m_ManifoldSimple, &data.m_ContactSettings
+                b1, b2, &data.m_ManifoldSimple, &data.m_ContactSettings
             };
             mono_runtime_delegate_invoke(data.m_Callback, args, NULL);
         }
@@ -734,9 +739,17 @@ void harmony::JoltMonoContactListenerCallback::ProcessDelegates() {
     {
         MutexLock contact_removed_lock(s_ContactRemovedMutex);
         for(DelegateContactRemovedData data : p_ContactRemovedDelegateBuffer) {
+            JPH::Body* b1 = nullptr, *b2 = nullptr;
+
+            while(!b1 || !b2)
+            {
+                b1 = bodyLockInterface.TryGetBody(data.m_Body1);
+                b2 = bodyLockInterface.TryGetBody(data.m_Body2);
+            }
+
             void* args[]
             {
-                data.m_Body1, data.m_Body2
+                b1, b2
             };
             mono_runtime_delegate_invoke(data.m_Callback, args, NULL);
         }
