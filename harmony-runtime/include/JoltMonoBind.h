@@ -77,6 +77,7 @@ namespace harmony {
          bool RemoveContactRemovedCallback(JPH::Body* body, MonoObject* callback);
 
         virtual void ProcessDelegates() override;
+        virtual void ClearDelegates() override;
     protected:
          RefCntPtr<JoltPhysicsSystem>              p_PhysicsSystem;
          HashMap<JPH::BodyID, Vector<MonoObject*>> p_MonoContactAddedCallbacks;

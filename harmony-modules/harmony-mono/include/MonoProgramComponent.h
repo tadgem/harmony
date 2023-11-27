@@ -39,6 +39,7 @@ namespace harmony
     {
     public:
         virtual void ProcessDelegates() = 0;
+        virtual void ClearDelegates() = 0;
     };
 
     class Program;

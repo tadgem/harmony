@@ -535,9 +535,10 @@ static harmony::Mutex s_ContactRemovedMutex;
 void harmony::JoltMonoContactListenerCallback::OnContactRemoved(JPH::Body* inBody1, JPH::Body* inBody2)
 {
     auto id1 = inBody1->GetID();
-    if(p_MonoContactPersistedCallbacks.find(id1) != p_MonoContactPersistedCallbacks.end())
+    auto id2 = inBody2->GetID();
+    if(p_MonoContactRemovedCallbacks.find(id1) != p_MonoContactRemovedCallbacks.end())
     {
-        for(const auto cb : p_MonoContactPersistedCallbacks[id1])
+        for(const auto cb : p_MonoContactRemovedCallbacks[id1])
         {
             if(cb == nullptr) {
                 continue;
@@ -555,9 +556,9 @@ void harmony::JoltMonoContactListenerCallback::OnContactRemoved(JPH::Body* inBod
         }
     }
 
-    if(p_MonoContactPersistedCallbacks.find(inBody2->GetID()) != p_MonoContactPersistedCallbacks.end())
+    if(p_MonoContactRemovedCallbacks.find(id2) != p_MonoContactRemovedCallbacks.end())
     {
-        for(const auto cb : p_MonoContactPersistedCallbacks[id1])
+        for(const auto cb : p_MonoContactRemovedCallbacks[id2])
         {
             if(cb == nullptr) {
                 continue;
@@ -733,7 +734,7 @@ void harmony::JoltMonoContactListenerCallback::ProcessDelegates() {
 
             void* args[]
             {
-                b1, b2, &data.m_ManifoldSimple, &data.m_ContactSettings
+                &b1, &b2, &data.m_ManifoldSimple, &data.m_ContactSettings
             };
             mono_runtime_delegate_invoke(data.m_Callback, args, NULL);
         }
@@ -753,13 +754,24 @@ void harmony::JoltMonoContactListenerCallback::ProcessDelegates() {
 
             void* args[]
             {
-                b1, b2
+                &b1, &b2
             };
             mono_runtime_delegate_invoke(data.m_Callback, args, NULL);
         }
         p_ContactRemovedDelegateBuffer.clear();
     }
 
+}
+
+void harmony::JoltMonoContactListenerCallback::ClearDelegates()
+{
+    p_MonoContactAddedCallbacks.clear();
+    p_MonoContactPersistedCallbacks.clear();
+    p_MonoContactRemovedCallbacks.clear();
+
+    p_ContactAddedDelegateBuffer.clear();
+    p_ContactPersistedDelegateBuffer.clear();
+    p_ContactRemovedDelegateBuffer.clear();
 }
 
 harmony::JoltMonoContactListenerCallback::JoltMonoContactListenerCallback(RefCntPtr<JoltPhysicsSystem> physicsSystem) :

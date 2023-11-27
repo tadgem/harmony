@@ -12,7 +12,7 @@ namespace GameTest
         private Scene _scene;
         private NativeTransformComponent _transform;
         private Body _body;
-        private ContactCallback _callback;
+        
         public override void Init()
         {
             _scene = SceneMethods.GetActiveScene();
@@ -22,15 +22,30 @@ namespace GameTest
             IntPtr bodyPtr = joltBody.GetJoltBodyFromComponent();
             _body = new Body(bodyPtr);
 
-            _callback = OnContactEnter;
-            _body.AddContactAddedCallback(_callback);
+            _body.AddContactAddedCallback(OnContactEnter);
+            // _body.AddContactPersistedCallback(OnContactPersisted);
+            _body.AddContactRemovedCallback(OnContactRemoved);
         }
 
         public void OnContactEnter(Body a, Body b, ContactManifoldData manifold, ContactSettings settings)
         {
             Entity e1 = a.GetEntity();
             Entity e2 = b.GetEntity();
-            Log.Info($"Entity : {e1} collided with {e2}");
+            Log.Info($"Entity : {e1} entered collision with {e2}");
+        }
+
+        public void OnContactPersisted(Body a, Body b, ContactManifoldData manifold, ContactSettings settings)
+        {
+            Entity e1 = a.GetEntity();
+            Entity e2 = b.GetEntity();
+            // Log.Info($"Entity : {e1} persisted collision with {e2}");
+        }
+
+        public void OnContactRemoved(Body a, Body b)
+        {
+            Entity e1 = a.GetEntity();
+            Entity e2 = b.GetEntity();
+            Log.Info($"Entity : {e1} removed collision with {e2}");
         }
 
         public override void Update()

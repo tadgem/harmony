@@ -71,6 +71,11 @@ void harmony::MonoSystem::Cleanup(entt::registry& registry)
     for (auto [e, mono]: view.each()) {
         registry.remove<MonoBehaviourComponent>(e);
     }
+
+    for(auto& provider : p_DelegateInvokers)
+    {
+        provider->ClearDelegates();
+    }
 }
 
 nlohmann::json harmony::MonoSystem::SerializeSystem(entt::registry& registry)
