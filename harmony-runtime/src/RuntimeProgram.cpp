@@ -105,7 +105,7 @@ void harmony::RuntimeProgram::AddSystems() {
     p_GraphScriptSystem = AddSystem<GraphScriptSystem>(p_GraphScriptComponent).lock();
     p_JoltPhysicsSystem = AddSystem<JoltPhysicsSystem>().lock();
     auto joltMonoCallback = CreateRef<JoltMonoContactListenerCallback>(
-        p_JoltPhysicsSystem->m_PhysicsSystem.get());
+        p_JoltPhysicsSystem);
     p_JoltPhysicsSystem->AddContactCallback(joltMonoCallback);
     p_EntityDataSystem = AddSystem<EntityDataSystem>().lock();
     p_LuaSystem = AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent).lock();

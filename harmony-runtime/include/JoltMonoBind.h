@@ -42,6 +42,7 @@ extern "C"
 
 }
 namespace harmony {
+    class JoltPhysicsSystem;
     class JoltMonoInternalMethodProvider : public MonoInternalMethodProvider
     {
     public:
@@ -56,7 +57,7 @@ namespace harmony {
     {
     public:
 
-        JoltMonoContactListenerCallback(JPH::PhysicsSystem* bodyLockInterface);
+        JoltMonoContactListenerCallback(RefCntPtr<JoltPhysicsSystem> physicsSystem);
         void OnContactAdded(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold,
                             JPH::ContactSettings &ioSettings) override;
 
@@ -77,7 +78,7 @@ namespace harmony {
 
         virtual void ProcessDelegates() override;
     protected:
-         JPH::PhysicsSystem* p_PhysicsSystem;
+         RefCntPtr<JoltPhysicsSystem>              p_PhysicsSystem;
          HashMap<JPH::BodyID, Vector<MonoObject*>> p_MonoContactAddedCallbacks;
          HashMap<JPH::BodyID, Vector<MonoObject*>> p_MonoContactPersistedCallbacks;
          HashMap<JPH::BodyID, Vector<MonoObject*>> p_MonoContactRemovedCallbacks;

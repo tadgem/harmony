@@ -45,6 +45,7 @@
 #include "HarmonyBodyActivationListener.h"
 #include "HarmonyDebugRenderer.h"
 #include "JoltComponents.h"
+#include "Jolt/Core/JobSystemSingleThreaded.h"
 
 // Trace to TTY
 void TraceImpl(const char *inFMT, ...) {
@@ -70,7 +71,10 @@ harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GetTypeHash<JoltPhysics
     m_TempAllocator = CreateUnique<JPH::TempAllocatorImpl>(s_TempAllocatorSizeMb * MB_MULTIPLIER);
     m_JobSystem = CreateUnique<JPH::JobSystemThreadPool>(s_MaxPhysicsJobs, s_MaxPhysicsBarriers, m_NumJobs);
     m_JobSystemValidating = CreateUnique<JPH::JobSystemThreadPool>(s_MaxPhysicsJobs, s_MaxPhysicsBarriers,
-                                                                   s_ValidatingJobSystemNumThreads);
+                                                                  s_ValidatingJobSystemNumThreads);
+
+    //m_JobSystem = CreateUnique<JPH::JobSystemSingleThreaded>(s_MaxPhysicsJobs);
+    //m_JobSystemValidating = CreateUnique<JPH::JobSystemSingleThreaded>(s_MaxPhysicsJobs);
 
     m_BroadPhaseLayerInterface = CreateUnique<HarmonyBroadPhaseLayerInterface>();
     m_ObjectVsBroadphaseFilter = CreateUnique<HarmonyObjectVsBroadPhaseLayerFilter>();

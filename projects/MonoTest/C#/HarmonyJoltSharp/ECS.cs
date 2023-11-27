@@ -47,7 +47,7 @@ namespace HarmonyJoltSharp
         Vector3 RelativeAngularSurfaceVelocity;
     };
 
-    public delegate void ContactCallback(IntPtr a, IntPtr b, ContactManifoldData manifold, ContactSettings settings);
+    public delegate void ContactCallback(Body a, Body b, ContactManifoldData manifold, ContactSettings settings);
 
     public delegate void ContactRemovedCallback(Body a, Body b);
 

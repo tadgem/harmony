@@ -7,10 +7,11 @@ namespace GameTest
 {
     public class JoltTestBehaviour : Behaviour
     {
+        public float Force = 10000.0f;
+        
         private Scene _scene;
         private NativeTransformComponent _transform;
-        private HarmonyJoltSharp.Body _body;
-        public float Force = 10000.0f;
+        private Body _body;
         private ContactCallback _callback;
         public override void Init()
         {
@@ -19,22 +20,16 @@ namespace GameTest
 
             NativeJoltBodyComponent joltBody = _scene.GetEntityJoltBodyComponent(Self);
             IntPtr bodyPtr = joltBody.GetJoltBodyFromComponent();
-            _body = new HarmonyJoltSharp.Body(bodyPtr);
+            _body = new Body(bodyPtr);
 
             _callback = OnContactEnter;
             _body.AddContactAddedCallback(_callback);
-
-            Vector3 v = _transform.GetTransformPosition();
-            Log.Info($"I am entity : {Self} : Pos : {v}");
         }
 
-        public void OnContactEnter(IntPtr a, IntPtr b, ContactManifoldData manifold, ContactSettings settings)
+        public void OnContactEnter(Body a, Body b, ContactManifoldData manifold, ContactSettings settings)
         {
-            Body b1 = new Body(a);
-            Body b2 = new Body(b);
-
-            Entity e1 = b1.GetEntity();
-            Entity e2 = b2.GetEntity();
+            Entity e1 = a.GetEntity();
+            Entity e2 = b.GetEntity();
             Log.Info($"Entity : {e1} collided with {e2}");
         }
 
