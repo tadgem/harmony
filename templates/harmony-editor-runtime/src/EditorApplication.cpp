@@ -52,6 +52,7 @@ void harmony::Editor::AddProgramComponents() {
 
 void harmony::Editor::AddSystems() {
     OPTICK_EVENT();
+    // Returning EMPTY in Release...
     p_TransformSystem = GetSystem<TransformSystem>().lock();
     p_CameraSystem = GetSystem<CameraSystem>().lock();
     p_MeshSystem = GetSystem<MeshSystem>().lock();
