@@ -72,3 +72,5 @@ imgui.ini
 *xcode
 CppProperties.json
 *.log
+templates/harmony-dojo/vs22/ALL_BUILD.vcxproj
+templates/harmony-dojo/vs22/

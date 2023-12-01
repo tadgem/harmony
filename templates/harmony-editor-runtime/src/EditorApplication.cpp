@@ -21,12 +21,13 @@ harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*th
                             m_GraphScriptEditor(p_GraphScriptComponent->GetNodeRegistry()) {
     OPTICK_EVENT();
     m_Logger.Init();
-    AddAssetTypeNames();
-    AddAssetFactories();
-    AddProgramComponents();
-    AddSystems();
-    AddPipelineStageRenderers();
-
+    // m_Logger.Init();
+    Editor::AddAssetTypeNames();
+    Editor::AddAssetFactories();
+    Editor::AddProgramComponents();
+    Editor::AddSystems();
+    log::info("Editor : Add PipelineStageRenderers");
+    Editor::AddPipelineStageRenderers();
     AddEditorPanels();
 }
 
@@ -61,6 +62,7 @@ void harmony::Editor::AddSystems() {
 
 void harmony::Editor::AddPipelineStageRenderers() {
     OPTICK_EVENT();
+    RuntimeProgram::AddPipelineStageRenderers();
 }
 
 void harmony::Editor::AddEditorPanels() {
@@ -242,6 +244,8 @@ int harmony::Editor::OnMiniGuisUpdate() {
 
     Input::PostFrame();
 
+    UpdateEditor();
+
     ImGuiPostUpdate();
     Frame();
 
@@ -315,7 +319,7 @@ void harmony::Editor::OnRuntimeExit() {
 
 void harmony::Editor::Init() {
     OPTICK_EVENT();
-    Program::Init();
+    RuntimeProgram::Init();
 
     m_EditorFSM.AddState(Mode::Edit, [this]() { return OnEditUpdate(); });
     m_EditorFSM.AddStateExit(Mode::Edit, [this]() { OnEditExit(); });

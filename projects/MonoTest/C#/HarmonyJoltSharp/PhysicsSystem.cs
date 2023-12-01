@@ -223,51 +223,5 @@ namespace HarmonyJoltSharp
                 JPH_PhysicsSystem_RemoveConstraints(Handle, constraintsPtr, (uint)count);
             }
         }
-
-        #region ContactListener
-        private static unsafe uint OnContactValidateCallback(IntPtr listenerPtr, IntPtr body1, IntPtr body2, Double3* baseOffset, IntPtr collisionResult)
-        {
-            PhysicsSystem listener = s_contactListeners[listenerPtr];
-
-            if (listener.OnContactValidate != null)
-            {
-                return (uint)listener.OnContactValidate(listener, new Body(body1), new Body(body2), *baseOffset, collisionResult);
-            }
-
-            return (uint)ValidateResult.AcceptAllContactsForThisBodyPair;
-        }
-
-        private static void OnContactAddedCallback(IntPtr listenerPtr, IntPtr body1, IntPtr body2)
-        {
-            PhysicsSystem listener = s_contactListeners[listenerPtr];
-            listener.OnContactAdded?.Invoke(listener, new Body(body1), new Body(body2));
-        }
-
-        private static void OnContactPersistedCallback(IntPtr listenerPtr, IntPtr body1, IntPtr body2)
-        {
-            PhysicsSystem listener = s_contactListeners[listenerPtr];
-            listener.OnContactPersisted?.Invoke(listener, new Body(body1), new Body(body2));
-        }
-
-        private unsafe static void OnContactRemovedCallback(IntPtr listenerPtr, SubShapeIDPair* subShapePair)
-        {
-            PhysicsSystem listener = s_contactListeners[listenerPtr];
-            listener.OnContactRemoved?.Invoke(listener, ref Unsafe.AsRef<SubShapeIDPair>(subShapePair));
-        }
-        #endregion ContactListener
-
-        #region BodyActivationListener
-        private static void OnBodyActivatedCallback(IntPtr listenerPtr, uint bodyID, ulong bodyUserData)
-        {
-            PhysicsSystem listener = s_bodyActivationListenerListeners[listenerPtr];
-            listener.OnBodyActivated?.Invoke(listener, bodyID, bodyUserData);
-        }
-
-        private static void OnBodyDeactivatedCallback(IntPtr listenerPtr, uint bodyID, ulong bodyUserData)
-        {
-            PhysicsSystem listener = s_bodyActivationListenerListeners[listenerPtr];
-            listener.OnBodyDeactivated?.Invoke(listener, bodyID, bodyUserData);
-        }
-        #endregion BodyActivationListener
     }
 }

@@ -112,12 +112,11 @@ void harmony::ScenePanel::EntityImGui(entt::entity e, entt::registry &reg, bool 
             EntityNameRename(e, data);
             EntityDragDrop(e, reg);
             reg.each([&](entt::entity compare) {
-                         auto data = reg.get<EntityData>(compare);
-                         if (data.m_Parent == e) {
-                             EntityImGui(compare, reg, false);
-                         }
-                     }
-            );
+                auto data = reg.get<EntityData>(compare);
+                if (data.m_Parent == e) {
+                    EntityImGui(compare, reg, false);
+                }
+            });
             ImGui::TreePop();
         } else {
             reg.each([&](entt::entity compare) {
@@ -137,6 +136,10 @@ void harmony::ScenePanel::EntityImGui(entt::entity e, entt::registry &reg, bool 
 }
 
 void harmony::ScenePanel::EntityNameRename(entt::entity e, harmony::EntityData &data) {
+    if (data.m_Name.empty())
+    {
+        data.m_Name = "Entity_" + std::to_string((uint32_t)e);
+    }
     if (ImGui::Selectable(data.m_Name.c_str(), false, ImGuiSelectableFlags_AllowItemOverlap)) {
         m_SelectedEntity = e;
     }

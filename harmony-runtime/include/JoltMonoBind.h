@@ -51,7 +51,7 @@ namespace harmony {
         virtual void BindInternalMethods() override;
     };
 
-     class JoltMonoContactListenerCallback final :
+    class JoltMonoContactListenerCallback final :
     public HarmonyContactListenerCallback,
     public MonoDelegateInvokeProvider
     {

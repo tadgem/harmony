@@ -175,7 +175,7 @@ void harmony::RuntimeProgram::AddShaderDataSources() {
 
 void harmony::RuntimeProgram::InitializePipelines() {
     OPTICK_EVENT();
-
+    log::info("RuntimeProgram : Initializing View Pipelines");
     auto skyFB = p_RuntimePipeline->AddFramebuffer("Sky FB", {AttachmentType::RGBA16F, AttachmentType::Depth32F},
                                                    Resolution::Type::FullScale);
     auto forwardFB = p_RuntimePipeline->AddFramebuffer("Forward FB",
@@ -232,6 +232,7 @@ void harmony::RuntimeProgram::InitializePipelines() {
 
 void harmony::RuntimeProgram::InitializeViews() {
     OPTICK_EVENT();
+    log::info("RuntimeProgram : Initializing Views");
     auto runtimeViewWr = m_Renderer.CreateView<RuntimeView>(*this);
 
     m_Renderer.SetViewActive(runtimeViewWr, true);
@@ -249,6 +250,7 @@ void harmony::RuntimeProgram::InitializeViews() {
 
 void harmony::RuntimeProgram::LoadScene(const std::string &path) {
     OPTICK_EVENT();
+    log::info("RuntimeProgram : Load Scene at path : {}", path);
     Program::LoadScene(path);
     //RunSystemInit();
 }
@@ -256,6 +258,7 @@ void harmony::RuntimeProgram::LoadScene(const std::string &path) {
 void harmony::RuntimeProgram::OpenScene(uint32_t index) {
     OPTICK_EVENT();
     Program::OpenScene(index);
+    log::info("RuntimeProgram : Open Scene at index : {}", index);
     //RunSystemInit();
 }
 
@@ -288,6 +291,7 @@ int harmony::RuntimeProgram::OnRuntimeUpdate() {
 
 void harmony::RuntimeProgram::LoadBuiltInAssets() {
     OPTICK_EVENT();
+    log::info("RuntimeProgram : Loading built in assets");
     AssetHandle cubeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Cube", CreateRef<Cube>(1.0f));
     RefCntPtr<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
     m_Renderer.SubmitMeshToGPU(cube);
@@ -298,7 +302,7 @@ void harmony::RuntimeProgram::LoadBuiltInAssets() {
 
 void harmony::RuntimeProgram::ResizeApplicationWindow(int w, int h) {
     OPTICK_EVENT();
-
+    log::info("RuntimeProgram : App window resized, new size : w {} h {}", w,h);
     Program::ResizeApplicationWindow(w, h);
     bgfx::setViewRect(p_PresentViewId, 0, 0, p_WindowWidth, p_WindowHeight);
 

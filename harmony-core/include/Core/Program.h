@@ -165,6 +165,7 @@ namespace harmony {
 
             static_assert(std::is_base_of<System, T>());
             HashString typeHash = GetTypeHash<T>();
+            log::info("Program : Adding System : {}", GetTypeName<T>());
             for(int i = 0; i < p_ECSSystems.size(); i++)
             {
                 if(p_ECSSystems[i]->m_TypeHash == typeHash)
@@ -222,8 +223,8 @@ namespace harmony {
 
             static_assert(std::is_base_of<System, T>(), "Not a system");
             int index = -1;
+            HashString t_type_hash = GetTypeHash<T>();
             for (int i = 0; i < p_ECSSystems.size(); i++) {
-                HashString t_type_hash = GetTypeHash<T>();
                 HashString s_type_hash = p_ECSSystems[i]->m_TypeHash;
                 if (t_type_hash == s_type_hash) {
                     index = i;

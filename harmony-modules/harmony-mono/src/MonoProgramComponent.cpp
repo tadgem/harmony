@@ -25,6 +25,7 @@ harmony::MonoProgramComponent::MonoProgramComponent(
 }
 void harmony::MonoProgramComponent::Init()
 {
+    log::info("MonoProgramComponent : Initializing");
     // TODO: Change to the project directory
     std::string root(std::getenv("MONO_PATH"));
     std::string assemblyDir = root + "/lib";
@@ -37,8 +38,12 @@ void harmony::MonoProgramComponent::Init()
                 "--soft-breakpoints"
         };
 
+
         mono_jit_parse_options(2, (char**)argv);
+        log::info("MonoProgramComponent : Initializing Mono Debug");
         mono_debug_init(MONO_DEBUG_FORMAT_MONO);
+
+        log::info("MonoProgramComponent : Creating root domain");
         p_RootDomain = mono_jit_init(p_RootDomainName.c_str());
 
         if(p_RootDomain == nullptr)
@@ -47,12 +52,17 @@ void harmony::MonoProgramComponent::Init()
             return;
         }
 
+        log::info("MonoProgramComponent : Creating Debug domain");
         mono_debug_domain_create(p_RootDomain);
+
+        log::info("MonoProgramComponent : Set Mono Thread to current thread");
         mono_thread_set_main(mono_thread_current());
     }
 
+    log::info("MonoProgramComponent : Binding Native Scripting API");
     BindScriptingAPI();
 
+    log::info("MonoProgramComponent : Creating Application Domain");
     char* APP_DOMAIN_CONFIG = nullptr;
     p_AppDomain = mono_domain_create_appdomain((char*) p_AppDomainName.c_str(), APP_DOMAIN_CONFIG);
 
@@ -61,10 +71,8 @@ void harmony::MonoProgramComponent::Init()
         harmony::log::error("MonoProgramComponent : Failed to create application domain.");
         return;
     }
-
+    log::info("MonoProgramComponent : Set Application Domain");
     mono_domain_set(p_AppDomain, false);
-
-    harmony::log::info("MonoProgramComponent : Debug Enabled : {}", (bool) mono_debug_enabled());
 }
 
 void harmony::MonoProgramComponent::Update()
