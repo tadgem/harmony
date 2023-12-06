@@ -8,6 +8,8 @@
 #include "JoltPhysicsSystem.h"
 #include "Core/Program.h"
 #include "Core/Scene.h"
+#include <Jolt/Physics/Collision/RayCast.h>
+#include <Jolt/Physics/Collision/CastResult.h>
 
 static harmony::JoltMonoContactListenerCallback* s_CallbackManager = nullptr;
 
@@ -32,6 +34,12 @@ extern "C"
     {
         if(!body) return nullptr;
         return body->Body;
+    }
+
+    JPH::PhysicsSystem* harmony_mono_get_physics_system()
+    {
+        return harmony::Program::Get()->
+            GetSystem<harmony::JoltPhysicsSystem>().lock()->m_PhysicsSystem.get();
     }
 
     void GetContactCallbackStaticInstance() {
@@ -97,18 +105,42 @@ extern "C"
         return s_CallbackManager->RemoveContactRemovedCallback(body, callback);
     }
 
+    joly_raycast_single_result harmony_mono_physics_raycast_single(glm_vec3 ray_origin, glm_vec3 ray_direction)
+    {
+        JPH::PhysicsSystem* sys = harmony_mono_get_physics_system();
+
+        JPH::RVec3 origin(ray_origin.x, ray_origin.y, ray_origin.z);
+        JPH::Vec3 direction(ray_direction.x, ray_direction.y, ray_direction.z);
+        JPH::RRayCast ray{ origin, direction };
+        
+        JPH::RayCastResult hit;
+        bool didHit = sys->GetNarrowPhaseQuery().CastRay(ray, hit);
+        
+        JPH::Body* b = nullptr;
+
+        if (didHit)
+        {
+            b = sys->GetBodyLockInterface().TryGetBody(hit.mBodyID);
+        }
+
+        joly_raycast_single_result result{ didHit, b };
+
+        return result;
+    }
 }
 
 void harmony::JoltMonoInternalMethodProvider::BindInternalMethods()
 {
-    mono_add_internal_call("HarmonyJoltSharp.ECS::GetEntityJoltBodyComponent", harmony_mono_get_jolt_body_component);
-    mono_add_internal_call("HarmonyJoltSharp.ECS::GetJoltBodyFromComponent", harmony_mono_get_jolt_body_from_component);
-    mono_add_internal_call("HarmonyJoltSharp.ECS::AddContactAddedCallback", harmony_mono_add_contact_added_callback);
-    mono_add_internal_call("HarmonyJoltSharp.ECS::RemoveContactAddedCallback", harmony_mono_remove_contact_added_callback);
-    mono_add_internal_call("HarmonyJoltSharp.ECS::AddContactPersistedCallback", harmony_mono_add_contact_persisted_callback);
-    mono_add_internal_call("HarmonyJoltSharp.ECS::RemoveContactPersistedCallback", harmony_mono_remove_contact_persisted_callback);
-    mono_add_internal_call("HarmonyJoltSharp.ECS::AddContactRemovedCallback", harmony_mono_add_contact_removed_callback);
-    mono_add_internal_call("HarmonyJoltSharp.ECS::RemoveContactRemovedCallback", harmony_mono_remove_contact_removed_callback);
+    mono_add_internal_call("HarmonyJoltSharp.Physics::GetEntityJoltBodyComponent", harmony_mono_get_jolt_body_component);
+    mono_add_internal_call("HarmonyJoltSharp.Physics::GetJoltBodyFromComponent", harmony_mono_get_jolt_body_from_component);
+    mono_add_internal_call("HarmonyJoltSharp.Physics::AddContactAddedCallback", harmony_mono_add_contact_added_callback);
+    mono_add_internal_call("HarmonyJoltSharp.Physics::RemoveContactAddedCallback", harmony_mono_remove_contact_added_callback);
+    mono_add_internal_call("HarmonyJoltSharp.Physics::AddContactPersistedCallback", harmony_mono_add_contact_persisted_callback);
+    mono_add_internal_call("HarmonyJoltSharp.Physics::RemoveContactPersistedCallback", harmony_mono_remove_contact_persisted_callback);
+    mono_add_internal_call("HarmonyJoltSharp.Physics::AddContactRemovedCallback", harmony_mono_add_contact_removed_callback);
+    mono_add_internal_call("HarmonyJoltSharp.Physics::RemoveContactRemovedCallback", harmony_mono_remove_contact_removed_callback);
+    mono_add_internal_call("HarmonyJoltSharp.Physics::Raycast", harmony_mono_physics_raycast_single);
+
 
     mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_Init", JPH_Init);
     mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_Shutdown", JPH_Shutdown);

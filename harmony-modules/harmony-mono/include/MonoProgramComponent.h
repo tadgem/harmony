@@ -86,6 +86,4 @@ namespace harmony
         friend class MonoPanel;
         friend class MonoSystem;
     };
-
-    void AddMono(harmony::Program& program);
 }

@@ -47,11 +47,18 @@ namespace HarmonyJoltSharp
         Vector3 RelativeAngularSurfaceVelocity;
     };
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct RaycastResult
+    {
+        public bool DidHit;
+        public Body Body;
+    }
+
     public delegate void ContactCallback(Body a, Body b, ContactManifoldData manifold, ContactSettings settings);
 
     public delegate void ContactRemovedCallback(Body a, Body b);
 
-    public static class ECS
+    public static class Physics
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static NativeJoltBodyComponent GetEntityJoltBodyComponent(this Scene scene, Entity entity);
@@ -77,6 +84,8 @@ namespace HarmonyJoltSharp
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static bool RemoveContactRemovedCallback(this Body b, ContactRemovedCallback callback);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern RaycastResult Raycast(Vector3 origin, Vector3 direction);
 
         // Managed impls
         public static IntPtr GetJoltBodyFromEntity(this Scene scene, Entity entity)

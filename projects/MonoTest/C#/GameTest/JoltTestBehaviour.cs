@@ -53,6 +53,11 @@ namespace GameTest
             IntPtr bodyPtr = _scene.GetJoltBodyFromEntity(Self);
             _body = new HarmonyJoltSharp.Body(bodyPtr);
             _body.AddForce(Vector3.UnitY * Force);
+            //RaycastResult result = Physics.Raycast(_transform.GetTransformPosition(), _transform.GetTransformForward());
+            //if(result.DidHit)
+            //{
+            //    Log.Info($"Raycast hit entity : {result.Body.GetEntity()}");
+            //}
         }
 
     }

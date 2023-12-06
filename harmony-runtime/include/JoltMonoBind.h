@@ -40,6 +40,12 @@ extern "C"
         glm_vec3				relative_angular_surface_velocity;
     };
 
+    struct joly_raycast_single_result
+    {
+        bool did_hit;
+        JPH::Body* body;
+    };
+
 }
 namespace harmony {
     class JoltPhysicsSystem;
@@ -56,7 +62,6 @@ namespace harmony {
     public MonoDelegateInvokeProvider
     {
     public:
-
         JoltMonoContactListenerCallback(RefCntPtr<JoltPhysicsSystem> physicsSystem);
         void OnContactAdded(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold,
                             JPH::ContactSettings &ioSettings) override;
@@ -70,11 +75,11 @@ namespace harmony {
         bool AddContactAddedCallback(JPH::Body* body, MonoObject* callback);
         bool RemoveContactAddedCallback(JPH::Body* body, MonoObject* callback);
 
-         bool AddContactPersistedCallback(JPH::Body* body, MonoObject* callback);
-         bool RemoveContactPersistedCallback(JPH::Body* body, MonoObject* callback);
+        bool AddContactPersistedCallback(JPH::Body* body, MonoObject* callback);
+        bool RemoveContactPersistedCallback(JPH::Body* body, MonoObject* callback);
 
-         bool AddContactRemovedCallback(JPH::Body* body, MonoObject* callback);
-         bool RemoveContactRemovedCallback(JPH::Body* body, MonoObject* callback);
+        bool AddContactRemovedCallback(JPH::Body* body, MonoObject* callback);
+        bool RemoveContactRemovedCallback(JPH::Body* body, MonoObject* callback);
 
         virtual void ProcessDelegates() override;
         virtual void ClearDelegates() override;
