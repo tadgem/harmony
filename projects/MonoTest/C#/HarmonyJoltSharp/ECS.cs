@@ -52,6 +52,7 @@ namespace HarmonyJoltSharp
     {
         public bool DidHit;
         public Body Body;
+        public Vector3 HitPoint;
     }
 
     public delegate void ContactCallback(Body a, Body b, ContactManifoldData manifold, ContactSettings settings);

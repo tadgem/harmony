@@ -115,7 +115,6 @@ extern "C"
         
         JPH::RayCastResult hit;
         bool didHit = sys->GetNarrowPhaseQuery().CastRay(ray, hit);
-        
         JPH::Body* b = nullptr;
 
         if (didHit)
@@ -123,7 +122,9 @@ extern "C"
             b = sys->GetBodyLockInterface().TryGetBody(hit.mBodyID);
         }
 
-        joly_raycast_single_result result{ didHit, b };
+        JPH::RVec3 hitPoint = ray.GetPointOnRay(hit.mFraction);
+        glm_vec3 p{ hitPoint.GetX(), hitPoint.GetY(), hitPoint.GetZ() };
+        joly_raycast_single_result result{ didHit, b, p };
 
         return result;
     }

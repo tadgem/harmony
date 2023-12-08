@@ -44,6 +44,7 @@ extern "C"
     {
         bool did_hit;
         JPH::Body* body;
+        glm_vec3 contact_point;
     };
 
 }
