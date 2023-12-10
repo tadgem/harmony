@@ -55,6 +55,12 @@ namespace HarmonyJoltSharp
         public Vector3 HitPoint;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ShapecastResultSimple
+    {
+        public Body Body;
+    }
+
     public delegate void ContactCallback(Body a, Body b, ContactManifoldData manifold, ContactSettings settings);
 
     public delegate void ContactRemovedCallback(Body a, Body b);
@@ -90,6 +96,9 @@ namespace HarmonyJoltSharp
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern RaycastResult[] RaycastMulti(Vector3 origin, Vector3 direction);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern ShapecastResultSimple[] CollideSphere(Vector3 center, float radius);
 
         // Managed impls
         public static IntPtr GetJoltBodyFromEntity(this Scene scene, Entity entity)

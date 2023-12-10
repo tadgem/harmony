@@ -53,11 +53,31 @@ namespace GameTest
             IntPtr bodyPtr = _scene.GetJoltBodyFromEntity(Self);
             _body = new HarmonyJoltSharp.Body(bodyPtr);
             _body.AddForce(Vector3.UnitY * Force);
-            RaycastResult[] results = Physics.RaycastMulti(_transform.GetTransformPosition(), _transform.GetTransformForward());
+            Vector3 start = _transform.GetTransformPosition() + _transform.GetTransformForward();
+
+            RaycastResult[] results = Physics.RaycastMulti(start, _transform.GetTransformForward() * 20);
             if (results.Length > 0)
             {
-                Log.Info($"Raycast hit one or more entity");
+                foreach (RaycastResult r2 in results)
+                {
+                    if (r2.Body.GetEntity() != _body.GetEntity())
+                    {
+                        DebugDraw.Cylinder(DebugDrawChannel.Editor, start, r2.HitPoint, 0.1f);
+                        DebugDraw.Orb(DebugDrawChannel.Editor, r2.HitPoint, 0.3f);
+                    }
+                }
             }
+
+            //ShapecastResultSimple[] sphereResults = Physics.CollideSphere(_transform.GetTransformPosition(), 30.0f);
+
+            //if (sphereResults.Length > 0)
+            //{
+            //    foreach (ShapecastResultSimple r in sphereResults)
+            //    {
+            //        Log.Info($"SphereCast : Found entity {r.Body.GetEntity()}");
+            //    }
+            //}
+
         }
 
     }

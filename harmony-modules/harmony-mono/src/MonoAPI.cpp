@@ -11,6 +11,7 @@
 #include "ThirdParty/entt.hpp"
 #include "Rendering/VectorGraphics/VectorGraphics.h"
 #include "MonoUtils.h"
+#include "Rendering/Debug/GfxDebug.h"
 
 void harmony_mono_log_trace(MonoString *str) {
     harmony::log::trace("C# : {}", harmony::MonoUtils::GetStringFromMonoString(str));
@@ -159,6 +160,111 @@ bool        harmony_mono_get_gamepad_button_just_released(int gamepad_index, har
     harmony::Gamepad::Button b = static_cast<harmony::Gamepad::Button>(button);
     return harmony::Input::GetGamepadButtonJustReleased(gamepad_index,b);
 }
+
+bx::Vec3 glm_to_bx_vec3(glm_vec3& v)
+{
+    return bx::Vec3(v.x, v.y, v.z);
+}
+
+void harmony_mono_debug_draw_set_colour(harmony_debug_draw_channel channel, uint32_t rgba)
+{
+    auto* dd = harmony::GfxDebug::Get();
+    harmony::GfxDebug::Channel c = (harmony::GfxDebug::Channel)channel;
+    dd->setColor(c, rgba);
+}
+
+void harmony_mono_debug_draw_set_stipple(harmony_debug_draw_channel channel, bool stipple, float scale, float offset)
+{
+    auto* dd = harmony::GfxDebug::Get();
+    harmony::GfxDebug::Channel c = (harmony::GfxDebug::Channel)channel;
+    dd->setStipple(c, stipple, scale, offset);
+}
+
+void harmony_mono_debug_draw_set_wireframe(harmony_debug_draw_channel channel, bool wireframe)
+{
+    auto* dd = harmony::GfxDebug::Get();
+    harmony::GfxDebug::Channel c = (harmony::GfxDebug::Channel)channel;
+    dd->setWireframe(c, wireframe);
+}
+
+void harmony_mono_debug_draw_set_translate(harmony_debug_draw_channel channel, glm_vec3 t)
+{
+    auto* dd = harmony::GfxDebug::Get();
+    harmony::GfxDebug::Channel c = (harmony::GfxDebug::Channel)channel;
+    dd->setTranslate(c, t.x, t.y, t.z);
+}
+
+void harmony_mono_debug_draw_move_to(harmony_debug_draw_channel channel, glm_vec3 t)
+{
+    auto* dd = harmony::GfxDebug::Get();
+    harmony::GfxDebug::Channel c = (harmony::GfxDebug::Channel)channel;
+    dd->moveTo(c, t.x, t.y, t.z);
+}
+
+void harmony_mono_debug_draw_line_to(harmony_debug_draw_channel channel, glm_vec3 t)
+{
+    auto* dd = harmony::GfxDebug::Get();
+    harmony::GfxDebug::Channel c = (harmony::GfxDebug::Channel)channel;
+    dd->lineTo(c, t.x, t.y, t.z);
+}
+
+void harmony_mono_debug_draw_circle(harmony_debug_draw_channel channel, glm_vec3 normal, glm_vec3 center, float radius, float weight)
+{
+    auto* dd = harmony::GfxDebug::Get();
+    harmony::GfxDebug::Channel c = (harmony::GfxDebug::Channel)channel;
+    dd->drawCircle(c, glm_to_bx_vec3(normal), glm_to_bx_vec3(center), radius, weight);
+}
+
+void harmony_mono_debug_draw_quad(harmony_debug_draw_channel channel, glm_vec3 normal, glm_vec3 center, float size)
+{
+    auto* dd = harmony::GfxDebug::Get();
+    harmony::GfxDebug::Channel c = (harmony::GfxDebug::Channel)channel;
+    dd->drawQuad(c, glm_to_bx_vec3(normal), glm_to_bx_vec3(center), size);
+}
+
+void harmony_mono_debug_draw_sphere(harmony_debug_draw_channel channel, glm_vec3 center, float radius)
+{
+    auto* dd = harmony::GfxDebug::Get();
+    harmony::GfxDebug::Channel c = (harmony::GfxDebug::Channel)channel;
+    bx::Sphere s{ glm_to_bx_vec3(center), radius };
+    dd->draw(c, s);
+}
+
+void harmony_mono_debug_draw_cylinder(harmony_debug_draw_channel channel, glm_vec3 from, glm_vec3 to, float radius)
+{
+    auto* dd = harmony::GfxDebug::Get();
+    harmony::GfxDebug::Channel c = (harmony::GfxDebug::Channel)channel;
+    dd->drawCylinder(c, glm_to_bx_vec3(from), glm_to_bx_vec3(to), radius);
+}
+
+void harmony_mono_debug_draw_capsule(harmony_debug_draw_channel channel, glm_vec3 from, glm_vec3 to, float radius)
+{
+    auto* dd = harmony::GfxDebug::Get();
+    harmony::GfxDebug::Channel c = (harmony::GfxDebug::Channel)channel;
+    dd->drawCapsule(c, glm_to_bx_vec3(from), glm_to_bx_vec3(to), radius);
+}
+
+void harmony_mono_debug_draw_cone(harmony_debug_draw_channel channel, glm_vec3 from, glm_vec3 to, float radius)
+{
+    auto* dd = harmony::GfxDebug::Get();
+    harmony::GfxDebug::Channel c = (harmony::GfxDebug::Channel)channel;
+    dd->drawCone(c, glm_to_bx_vec3(from), glm_to_bx_vec3(to), radius);
+}
+
+void harmony_mono_debug_draw_grid(harmony_debug_draw_channel channel, glm_vec3 normal, glm_vec3 center, uint32_t size, float step)
+{
+    auto* dd = harmony::GfxDebug::Get();
+    harmony::GfxDebug::Channel c = (harmony::GfxDebug::Channel)channel;
+    dd->drawGrid(c, glm_to_bx_vec3(normal), glm_to_bx_vec3(center), size, step);
+}
+
+void harmony_mono_debug_draw_orb(harmony_debug_draw_channel channel, glm_vec3 center, float radius)
+{
+    auto* dd = harmony::GfxDebug::Get();
+    harmony::GfxDebug::Channel c = (harmony::GfxDebug::Channel)channel;
+    dd->drawOrb(c, center.x, center.y, center.z, radius);
+}
+
 
 float       harmony_mono_get_gamepad_trigger(int gamepad_index, harmony_gamepad_trigger trigger){
     harmony::Gamepad::Trigger t = static_cast<harmony::Gamepad::Trigger>(trigger);

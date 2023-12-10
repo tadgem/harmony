@@ -188,6 +188,22 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.Input::GetGamepadTrigger", harmony_mono_get_gamepad_trigger);
     mono_add_internal_call("Harmony.Input::GetGamepadStick", harmony_mono_get_gamepad_stick);
 
+    // Debug Draw
+    mono_add_internal_call("Harmony.DebugDraw::SetColour", harmony_mono_debug_draw_set_colour);
+    mono_add_internal_call("Harmony.DebugDraw::SetStipple", harmony_mono_debug_draw_set_stipple);
+    mono_add_internal_call("Harmony.DebugDraw::SetWireframe", harmony_mono_debug_draw_set_wireframe);
+    mono_add_internal_call("Harmony.DebugDraw::SetTranslate", harmony_mono_debug_draw_set_translate);
+    mono_add_internal_call("Harmony.DebugDraw::MoveTo", harmony_mono_debug_draw_move_to);
+    mono_add_internal_call("Harmony.DebugDraw::LineTo", harmony_mono_debug_draw_line_to);
+    mono_add_internal_call("Harmony.DebugDraw::Circle", harmony_mono_debug_draw_circle);
+    mono_add_internal_call("Harmony.DebugDraw::Quad", harmony_mono_debug_draw_quad);
+    mono_add_internal_call("Harmony.DebugDraw::Sphere", harmony_mono_debug_draw_sphere);
+    mono_add_internal_call("Harmony.DebugDraw::Cylinder", harmony_mono_debug_draw_cylinder);
+    mono_add_internal_call("Harmony.DebugDraw::Capsule", harmony_mono_debug_draw_capsule);
+    mono_add_internal_call("Harmony.DebugDraw::Cone", harmony_mono_debug_draw_cone);
+    mono_add_internal_call("Harmony.DebugDraw::Grid", harmony_mono_debug_draw_grid);
+    mono_add_internal_call("Harmony.DebugDraw::Orb", harmony_mono_debug_draw_orb);
+
     // Vector Graphics
     mono_add_internal_call("Harmony.VectorGraphics::FontFace", harmony_mono_vg_font_face);
     mono_add_internal_call("Harmony.VectorGraphics::FontSize", harmony_mono_vg_font_size);
@@ -242,6 +258,9 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.VectorGraphics::RadialGradient", harmony_mono_vg_radial_gradient);
     mono_add_internal_call("Harmony.VectorGraphics::ImagePattern", harmony_mono_vg_image_pattern);
 
+    // Debug
+
+
     // Program
     mono_add_internal_call("Harmony.ProgramMethods::GetProgram", harmony_mono_get_program);
 
@@ -270,8 +289,6 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
             mp.reset();
         }
     }
-
-    p_MethodProviders.clear();
 
 }
 

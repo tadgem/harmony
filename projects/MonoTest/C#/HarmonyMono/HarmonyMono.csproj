@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aspects.cs" />
+    <Compile Include="DebugDraw.cs" />
     <Compile Include="ECS.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Log.cs" />

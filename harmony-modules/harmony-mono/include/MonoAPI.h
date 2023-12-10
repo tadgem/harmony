@@ -19,6 +19,13 @@ extern "C"
     struct NVGcolor;
 
     // Type Defs
+
+    enum harmony_debug_draw_channel : char
+    {
+        Editor, 
+        Game
+    };
+
     enum harmony_gamepad_button {
         ButtonInvalid = -1,
         FaceNorth,
@@ -204,6 +211,22 @@ extern "C"
     bool        harmony_mono_get_gamepad_button_just_pressed(int gamepad_index, harmony_gamepad_button button);
     bool        harmony_mono_get_gamepad_button_just_released(int gamepad_index, harmony_gamepad_button button);
 
+    // Debug Draw
+    void        harmony_mono_debug_draw_set_colour(harmony_debug_draw_channel channel, uint32_t rgba);
+    void        harmony_mono_debug_draw_set_stipple(harmony_debug_draw_channel channel, bool stipple, float scale, float offset);
+    void        harmony_mono_debug_draw_set_wireframe(harmony_debug_draw_channel channel, bool wireframe);
+    void        harmony_mono_debug_draw_set_translate(harmony_debug_draw_channel channel, glm_vec3 translate);
+    void        harmony_mono_debug_draw_move_to(harmony_debug_draw_channel channel, glm_vec3 translate);
+    void        harmony_mono_debug_draw_line_to(harmony_debug_draw_channel channel, glm_vec3 translate);
+    void        harmony_mono_debug_draw_circle(harmony_debug_draw_channel channel, glm_vec3 normal, glm_vec3 center, float radius, float weight);
+    void        harmony_mono_debug_draw_quad(harmony_debug_draw_channel channel, glm_vec3 normal, glm_vec3 center, float size);
+    void        harmony_mono_debug_draw_sphere(harmony_debug_draw_channel channel, glm_vec3 center, float radius);
+    void        harmony_mono_debug_draw_cylinder(harmony_debug_draw_channel channel, glm_vec3 from, glm_vec3 to, float radius);
+    void        harmony_mono_debug_draw_capsule(harmony_debug_draw_channel channel, glm_vec3 from, glm_vec3 to, float radius);
+    void        harmony_mono_debug_draw_cone(harmony_debug_draw_channel channel, glm_vec3 from, glm_vec3 to, float radius);
+    void        harmony_mono_debug_draw_grid(harmony_debug_draw_channel channel, glm_vec3 normal, glm_vec3 center, uint32_t size, float step);
+    void        harmony_mono_debug_draw_orb(harmony_debug_draw_channel channel, glm_vec3 center, float radius);
+    
     // Vector Graphics
     void        harmony_mono_vg_font_face(harmony_vg_layer layer, MonoString *font);
     void        harmony_mono_vg_font_size(harmony_vg_layer layer, float size);

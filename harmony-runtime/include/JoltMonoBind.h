@@ -40,7 +40,12 @@ extern "C"
         glm_vec3				relative_angular_surface_velocity;
     };
 
-    struct joly_raycast_single_result
+    struct jolt_shapecast_result_simple
+    {
+        JPH::Body* body;
+    };
+
+    struct jolt_raycast_single_result
     {
         bool did_hit;
         JPH::Body* body;
