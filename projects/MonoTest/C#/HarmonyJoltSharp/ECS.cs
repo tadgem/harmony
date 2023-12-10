@@ -88,6 +88,9 @@ namespace HarmonyJoltSharp
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern RaycastResult Raycast(Vector3 origin, Vector3 direction);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern RaycastResult[] RaycastMulti(Vector3 origin, Vector3 direction);
+
         // Managed impls
         public static IntPtr GetJoltBodyFromEntity(this Scene scene, Entity entity)
         {

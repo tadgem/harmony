@@ -60,6 +60,8 @@ namespace harmony
 
         void BindScriptingAPI();
 
+        MonoType*   GetType(String& name);
+        MonoDomain* GetAppDomain();
         AssetManager& m_AssetManager;
 
         void AddMonoImplementedProgramComponent(WeakPtr<MonoAssemblyAsset> assembly, MonoUtils::CsTypeInfo typeInfo);

@@ -10,6 +10,9 @@
 #include <filesystem>
 #include "mono/metadata/mono-debug.h"
 #include "mono/metadata/threads.h"
+#include "mono/metadata/assembly.h"
+#include "mono/metadata/reflection.h"
+
 harmony::MonoProgramComponent::MonoProgramComponent(
     AssetManager& assetManager,
     Vector<RefCntPtr<MonoInternalMethodProvider>> methodProviders,
@@ -270,6 +273,28 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
 
     p_MethodProviders.clear();
 
+}
+
+MonoType* harmony::MonoProgramComponent::GetType(String& name)
+{
+    auto monoAssemblies = m_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
+
+    for (auto h : monoAssemblies)
+    {
+        RefCntPtr<MonoAssemblyAsset> assembly = m_AssetManager.GetAsset<MonoAssemblyAsset>(h).lock();
+        MonoImage* img =  mono_assembly_get_image(assembly->p_MonoAssembly);
+        MonoType* t = mono_reflection_type_from_name(name.data(), img);
+        if (t != nullptr)
+        {
+            return t;
+        }
+    }
+    return nullptr;
+}
+
+MonoDomain* harmony::MonoProgramComponent::GetAppDomain()
+{
+    return p_AppDomain;
 }
 
 void
