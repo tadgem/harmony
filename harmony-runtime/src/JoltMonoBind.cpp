@@ -11,6 +11,8 @@
 #include <Jolt/Physics/Collision/RayCast.h>
 #include <Jolt/Physics/Collision/CastResult.h>
 #include <Jolt/Physics/Collision/ShapeCast.h>
+#include <Jolt/Physics/Collision/Shape/SphereShape.h>
+#include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
 #include <Jolt/Physics/Collision/CollisionCollectorImpl.h>
 #include "Core/Log.hpp"
 
@@ -243,7 +245,7 @@ extern "C"
         return arr;
     }
 
-    MonoArray* harmony_mono_physics_spherecast(float radius, glm_vec3 offset)
+    MonoArray* harmony_mono_physics_spherecast(glm_vec3 center, glm_vec3 direciton, float radius)
     {
         if (s_ShapecastResultSimpleClass == nullptr)
         {
@@ -256,9 +258,28 @@ extern "C"
         JPH::PhysicsSystem* sys = harmony_mono_get_physics_system();
 
         JPH::AllHitCollisionCollector<JPH::CastShapeCollector> collector;
-        JPH::ShapeCastSettings settings;
+        JPH::RefConst<JPH::Shape> sphereShape = new JPH::SphereShape(radius);
+        JPH::RShapeCast castShape(
+            sphereShape,
+            JPH::RVec3::sReplicate(1.0f),
+            JPH::RMat44::sTranslation({ center.x, center.y, center.z }),
+            { direciton.x, direciton.y, direciton.z });
 
-        return nullptr;
+        sys->GetNarrowPhaseQuery().CastShape(castShape, {}, JPH::RVec3::sZero(), collector);
+
+        int numHits = collector.mHits.size();
+        MonoArray* arr = mono_array_new(mono->GetAppDomain(), s_ShapecastResultSimpleClass, numHits);
+
+        for (int i = 0; i < collector.mHits.size(); i++)
+        {
+            auto& hit = collector.mHits[i];
+            JPH::Body* b = sys->GetBodyLockInterface().TryGetBody(hit.mBodyID2);
+
+            jolt_shapecast_result_simple result{ b };
+            mono_array_set(arr, jolt_shapecast_result_simple, i, result);
+        }
+
+        return arr;
     }
 }
 
@@ -278,6 +299,7 @@ void harmony::JoltMonoInternalMethodProvider::BindInternalMethods()
     mono_add_internal_call("HarmonyJoltSharp.Physics::Raycast", harmony_mono_physics_raycast_single);
     mono_add_internal_call("HarmonyJoltSharp.Physics::RaycastMulti", harmony_mono_physics_raycast_multi);
     mono_add_internal_call("HarmonyJoltSharp.Physics::CollideSphere", harmony_mono_physics_collide_sphere);
+    mono_add_internal_call("HarmonyJoltSharp.Physics::Spherecast", harmony_mono_physics_spherecast);
 
 
     mono_add_internal_call("HarmonyJoltSharp.JoltApi::JPH_Init", JPH_Init);

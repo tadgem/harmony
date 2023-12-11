@@ -78,6 +78,14 @@ namespace GameTest
             //    }
             //}
 
+            ShapecastResultSimple[] sphereCastResults = Physics.Spherecast(_transform.GetTransformPosition() + _transform.GetTransformForward(), _transform.GetTransformForward(), 2.0f);
+            if (sphereCastResults.Length > 0)
+            {
+                foreach (ShapecastResultSimple r in sphereCastResults)
+                {
+                    Log.Info($"SphereCast : Found entity {r.Body.GetEntity()}");
+                }
+            }
         }
 
     }

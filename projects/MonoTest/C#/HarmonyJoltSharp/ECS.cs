@@ -100,6 +100,10 @@ namespace HarmonyJoltSharp
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern ShapecastResultSimple[] CollideSphere(Vector3 center, float radius);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern ShapecastResultSimple[] Spherecast(Vector3 center, Vector3 direction, float radius);
+
+
         // Managed impls
         public static IntPtr GetJoltBodyFromEntity(this Scene scene, Entity entity)
         {
