@@ -33,8 +33,6 @@ namespace harmony
             String m_TypeNamespace;
             MonoClass* m_MonoClass = nullptr;
 
-            CsTypeInfo(const String& typeName,const String& typeNameSpace,const HashString& typeHash, MonoClass* klass)
-
             bool operator==(const CsTypeInfo& rhs) const;
 
             NLOHMANN_DEFINE_TYPE_INTRUSIVE(CsTypeInfo, m_TypeName, m_TypeNamespace);
@@ -107,7 +105,5 @@ namespace harmony
         MonoObject* CreateMonoObject(MonoDomain* appDomain, CsTypeInfo& klass);
 
         String GetStringFromMonoString(MonoString* str);
-
-        HashString GetClassTypeHash(const String& nameSpace, const String& className);
     }
 }
