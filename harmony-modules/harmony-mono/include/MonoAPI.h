@@ -193,6 +193,9 @@ extern "C"
     void                harmony_mono_close_active_scene();
     void                harmony_mono_load_scene(MonoString* path);
     void                harmony_mono_save_scene(MonoString* path);
+    entt_entity         harmony_mono_create_entity(harmony::Scene* scene);
+    void                harmony_mono_delete_entity(harmony::Scene* scene, entt_entity e);
+    MonoArray*          harmony_mono_get_entity_script_behaviours(harmony::Scene* scene, entt_entity e);
 
     // Input
     glm_vec2    harmony_mono_get_mouse_position();

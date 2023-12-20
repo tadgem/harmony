@@ -269,6 +269,9 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.SceneMethods::CloseActiveScene", harmony_mono_close_active_scene);
     mono_add_internal_call("Harmony.SceneMethods::LoadScene", harmony_mono_load_scene);
     mono_add_internal_call("Harmony.SceneMethods::SaveScene", harmony_mono_save_scene);
+    mono_add_internal_call("Harmony.SceneMethods::CreateEntity", harmony_mono_create_entity);
+    mono_add_internal_call("Harmony.SceneMethods::DeleteEntity", harmony_mono_delete_entity);
+    mono_add_internal_call("Harmony.SceneMethods::GetEntityScriptBehaviours", harmony_mono_get_entity_script_behaviours);
 
     mono_add_internal_call("Harmony.ECSMethods::GetEntityTransform", harmony_mono_get_transform);
     mono_add_internal_call("Harmony.ECSMethods::GetTransformPosition", harmony_mono_get_transform_position);

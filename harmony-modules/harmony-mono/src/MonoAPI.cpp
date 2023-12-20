@@ -12,6 +12,8 @@
 #include "Rendering/VectorGraphics/VectorGraphics.h"
 #include "MonoUtils.h"
 #include "Rendering/Debug/GfxDebug.h"
+#include "MonoSystem.h"
+#include "MonoProgramComponent.h"
 
 void harmony_mono_log_trace(MonoString *str) {
     harmony::log::trace("C# : {}", harmony::MonoUtils::GetStringFromMonoString(str));
@@ -92,6 +94,50 @@ void harmony_mono_load_scene(MonoString *path) {
 
 void harmony_mono_save_scene(MonoString *path) {
     harmony::Program::Get()->SaveScene(harmony::MonoUtils::GetStringFromMonoString(path));
+}
+
+entt_entity harmony_mono_create_entity(harmony::Scene* scene)
+{
+    entt_entity ret = { UINT32_MAX };
+    if (scene)
+    {
+        auto e = scene->AddEntity();
+        ret = (entt_entity) e.m_Handle;
+    }
+
+    return ret;
+}
+
+void harmony_mono_delete_entity(harmony::Scene* scene, entt_entity e)
+{
+    if (scene)
+    {
+        scene->m_Registry.destroy((entt::entity)e);
+    }
+}
+
+MonoArray* harmony_mono_get_entity_script_behaviours(harmony::Scene* scene, entt_entity e)
+{    
+    MonoArray* arr = nullptr;
+    if (scene)
+    {
+        auto mono = harmony::Program::Get()->
+            GetProgramComponent<harmony::MonoProgramComponent>().lock();
+
+        if (scene->m_Registry.any_of<harmony::MonoBehaviourComponent>((entt::entity)e))
+        {
+            harmony::MonoBehaviourComponent& monoBehaviour = scene->m_Registry.get<harmony::MonoBehaviourComponent>((entt::entity)e);
+            uint32_t numBehaviours = monoBehaviour.m_Behaviours.size();
+            MonoArray* arr = mono_array_new(mono->GetAppDomain(), mono_get_object_class(), numBehaviours);
+
+            for (int i = 0; i < numBehaviours; i++)
+            {
+                mono_array_set(arr, MonoObject*, i, monoBehaviour.m_Behaviours[i].m_Object);
+            }
+        }
+    }
+
+    return arr;
 }
 
 glm_vec2    harmony_mono_get_mouse_position(){

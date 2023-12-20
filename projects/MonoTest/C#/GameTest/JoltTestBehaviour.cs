@@ -31,6 +31,12 @@ namespace GameTest
         {
             Entity e1 = a.GetEntity();
             Entity e2 = b.GetEntity();
+
+            JoltTestBehaviour joltBehaviour = _scene.GetBehaviour<JoltTestBehaviour>(e2);
+            if(joltBehaviour!= null)
+            {
+                Log.Info($"Entity : {e1} has jolt test behaviour");
+            }
             Log.Info($"Entity : {e1} entered collision with {e2}");
         }
 

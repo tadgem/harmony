@@ -8,7 +8,7 @@ namespace Harmony
         public readonly IntPtr Handle;
     }
 
-    public class SceneMethods
+    public static class SceneMethods
     {
         // N.B: This will all change when introducing async scene loading + foreground / background scenes.
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -22,5 +22,36 @@ namespace Harmony
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static void SaveScene(string path);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static Entity CreateEntity(this Scene scene);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void DestroyEntity(this Scene scene, Entity entity);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static object[] GetEntityScriptBehaviours(this Scene scene, Entity entity);
+
+        public static T GetBehaviour<T>(this Scene scene, Entity entity)
+        {
+            object[] scriptBehaviours = GetEntityScriptBehaviours(scene, entity);
+
+            if(scriptBehaviours == null) 
+            {
+                return default;
+            }
+
+            foreach (object behaviour in scriptBehaviours)
+            {
+                if (behaviour is T derivedType)
+                {
+                    return derivedType;
+                }
+            }
+            return default;
+        }
+
+
+
     }
 }
