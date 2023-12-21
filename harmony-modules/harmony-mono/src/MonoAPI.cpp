@@ -128,7 +128,7 @@ MonoArray* harmony_mono_get_entity_script_behaviours(harmony::Scene* scene, entt
         {
             harmony::MonoBehaviourComponent& monoBehaviour = scene->m_Registry.get<harmony::MonoBehaviourComponent>((entt::entity)e);
             uint32_t numBehaviours = monoBehaviour.m_Behaviours.size();
-            MonoArray* arr = mono_array_new(mono->GetAppDomain(), mono_get_object_class(), numBehaviours);
+            arr = mono_array_new(mono->GetAppDomain(), mono_get_object_class(), numBehaviours);
 
             for (int i = 0; i < numBehaviours; i++)
             {

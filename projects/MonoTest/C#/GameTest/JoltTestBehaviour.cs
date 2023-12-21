@@ -25,6 +25,9 @@ namespace GameTest
             _body.AddContactAddedCallback(OnContactEnter);
             // _body.AddContactPersistedCallback(OnContactPersisted);
             _body.AddContactRemovedCallback(OnContactRemoved);
+
+            JoltTestBehaviour joltTestBehaviour = _scene.GetBehaviour<JoltTestBehaviour>(Self);
+            Log.Info("Fin");
         }
 
         public void OnContactEnter(Body a, Body b, ContactManifoldData manifold, ContactSettings settings)
