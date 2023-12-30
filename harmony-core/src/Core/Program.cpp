@@ -5,6 +5,7 @@
 #include "Core/Input.h"
 #include "Rendering/GPUResourceManager.h"
 #include "Rendering/VectorGraphics/VectorGraphics.h"
+#include "ECS/EntityTemplate.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
 #include "bx/timer.h"
@@ -886,6 +887,23 @@ harmony::WeakPtr<harmony::Scene> harmony::Program::GetActiveScene() {
         return WeakPtr<Scene>();
     }
     return GetWeakRef<Scene>(p_ActiveScene);
+}
+
+harmony::EntityTemplate harmony::Program::CreateEntityTemplate(WeakPtr<Scene> scene, entt::entity e)
+{
+    auto s = scene.lock();
+    if(!s)
+    {
+        return {};
+    }
+
+    EntityTemplate t;
+
+    for(auto& sys : p_ECSSystems)
+    {
+        t.AddComponentData(sys->m_TypeHash, sys->SerializeEntity(s->m_Registry, e));
+    }
+    return t;
 }
 
 void harmony::Program::RunProgramComponentInit() {

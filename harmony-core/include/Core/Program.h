@@ -27,6 +27,10 @@
 namespace harmony {
     typedef std::function<void()> Callback;
 
+
+    // Forward defs
+    class EntityTemplate;
+
     /// <summary>
     /// Top level container for program
     /// </summary>
@@ -65,6 +69,8 @@ namespace harmony {
         virtual void CloseActiveScene();
 
         WeakPtr<Scene> GetActiveScene();
+
+        EntityTemplate CreateEntityTemplate(WeakPtr<Scene> scene, entt::entity e);
 
         void RunProgramComponentInit();
 
