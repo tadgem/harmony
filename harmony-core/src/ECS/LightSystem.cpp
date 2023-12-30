@@ -84,10 +84,10 @@ nlohmann::json harmony::LightSystem::SerializeSystem(entt::registry &registry) {
         skyj[GetEntityKey(e)] = sky;
     }
 
-    j["DirectionalLight"] = dlj;
-    j["PointLight"] = plj;
-    j["SpotLight"] = slj;
-    j["Sky"] = skyj;
+    j[p_DirectionalLightKey] = dlj;
+    j[p_PointLightKey] = plj;
+    j[p_SpotLightKey] = slj;
+    j[p_SkyKey] = skyj;
 
     return j;
 }
@@ -95,10 +95,10 @@ nlohmann::json harmony::LightSystem::SerializeSystem(entt::registry &registry) {
 void harmony::LightSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
     OPTICK_EVENT();
 
-    nlohmann::json dlj = systemJson["DirectionalLight"];
-    nlohmann::json plj = systemJson["PointLight"];
-    nlohmann::json slj = systemJson["SpotLight"];
-    nlohmann::json skyj = systemJson["Sky"];
+    nlohmann::json dlj = systemJson[p_DirectionalLightKey];
+    nlohmann::json plj = systemJson[p_PointLightKey];
+    nlohmann::json slj = systemJson[p_SpotLightKey];
+    nlohmann::json skyj = systemJson[p_SkyKey];
 
     for (auto entry = dlj.begin(); entry != dlj.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
@@ -130,6 +130,70 @@ void harmony::LightSystem::DeserializeSystem(entt::registry &registry, nlohmann:
         SkyComponent sky;
         skyJson.get_to<SkyComponent>(sky);
         registry.emplace<SkyComponent>(e, sky);
+    }
+}
+
+nlohmann::json harmony::LightSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+{
+    OPTICK_EVENT();
+    nlohmann::json j;
+
+    if(registry.any_of<DirectionalLight>(e))
+    {
+        DirectionalLight& dl = registry.get<DirectionalLight>(e);
+        j[p_DirectionalLightKey] = dl;
+    }
+
+    if(registry.any_of<PointLight>(e))
+    {
+        PointLight& pl = registry.get<PointLight>(e);
+        j[p_PointLightKey] = pl;
+    }
+
+    if(registry.any_of<SpotLight>(e))
+    {
+        SpotLight& sl = registry.get<SpotLight>(e);
+        j[p_SpotLightKey] = sl;
+    }
+
+    if(registry.any_of<SkyComponent>(e))
+    {
+        SkyComponent& sc = registry.get<SkyComponent>(e);
+        j[p_SkyKey] = sc;
+    }
+
+    return j;
+}
+
+void harmony::LightSystem::DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+{
+    OPTICK_EVENT();
+    if(entityJson.contains(p_DirectionalLightKey))
+    {
+        DirectionalLight dl;
+        entityJson[p_DirectionalLightKey].get_to<DirectionalLight>(dl);
+        registry.emplace<DirectionalLight>(e, dl);
+    }
+
+    if(entityJson.contains(p_PointLightKey))
+    {
+        PointLight dl;
+        entityJson[p_PointLightKey].get_to<PointLight>(dl);
+        registry.emplace<PointLight>(e, dl);
+    }
+
+    if(entityJson.contains(p_SpotLightKey))
+    {
+        SpotLight sl;
+        entityJson[p_SpotLightKey].get_to<SpotLight>(sl);
+        registry.emplace<SpotLight>(e, sl);
+    }
+
+    if(entityJson.contains(p_SkyKey))
+    {
+        SkyComponent sc;
+        entityJson[p_SkyKey].get_to<SkyComponent>(sc);
+        registry.emplace<SkyComponent>(e, sc);
     }
 }
 

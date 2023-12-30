@@ -1,6 +1,7 @@
 //
 // Created by liam_ on 9/24/2023.
 //
+#include "optick.h"
 #include "MonoSystem.h"
 #include "Assets/AssetManager.h"
 #include "MonoProgramComponent.h"
@@ -16,6 +17,7 @@ harmony::MonoSystem::MonoSystem(
 
 void harmony::MonoSystem::Init(entt::registry& registry)
 {
+    OPTICK_EVENT()
     auto view = registry.view<MonoBehaviourComponent>();
 
     for (auto [e, mono]: view.each()) {
@@ -36,6 +38,7 @@ void harmony::MonoSystem::Init(entt::registry& registry)
 
 void harmony::MonoSystem::Update(entt::registry& registry)
 {
+    OPTICK_EVENT()
     auto view = registry.view<MonoBehaviourComponent>();
 
     for (auto [e, mono]: view.each())
@@ -62,10 +65,12 @@ void harmony::MonoSystem::Update(entt::registry& registry)
 
 void harmony::MonoSystem::Render(entt::registry& registry)
 {
+    OPTICK_EVENT()
 }
 
 void harmony::MonoSystem::Cleanup(entt::registry& registry)
 {
+    OPTICK_EVENT()
     auto view = registry.view<MonoBehaviourComponent>();
 
     for (auto [e, mono]: view.each()) {
@@ -80,6 +85,7 @@ void harmony::MonoSystem::Cleanup(entt::registry& registry)
 
 nlohmann::json harmony::MonoSystem::SerializeSystem(entt::registry& registry)
 {
+    OPTICK_EVENT()
     auto j = nlohmann::json();
     auto view = registry.view<MonoBehaviourComponent>();
     for (auto [e, mono]: view.each())
@@ -91,32 +97,55 @@ nlohmann::json harmony::MonoSystem::SerializeSystem(entt::registry& registry)
 
 void harmony::MonoSystem::DeserializeSystem(entt::registry& registry, nlohmann::json systemJson)
 {
+    OPTICK_EVENT()
     String jsonStr = systemJson.dump();
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
         nlohmann::json monoJson = entry.value();
-        MonoBehaviourComponent mc;
-        monoJson.get_to<MonoBehaviourComponent>(mc);
-        auto newMC = registry.emplace<MonoBehaviourComponent>(e);
-
-        for(MonoBehaviour m : mc.m_Behaviours)
-        {
-            WeakPtr<MonoAssemblyAsset> assemblyAsset = p_Mono.lock()->m_AssetManager.GetAsset<MonoAssemblyAsset>(m.m_AssemblyAsset);
-            if(assemblyAsset.expired())
-            {
-                log::error("MonoSystem : Deserialize System : Failed to get assembly {} when deserializing behaviour {} for entity {}", m.m_AssemblyAsset.Path, m.m_TypeInfo.m_TypeName, ((uint32_t )e));
-                continue;
-            }
-            AddMonoBehaviour(registry, e, m.m_TypeInfo, assemblyAsset);
-        }
+        DeserializeEntity(registry, e, monoJson);
     }
+}
+
+nlohmann::json harmony::MonoSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+{
+    OPTICK_EVENT();
+    nlohmann::json j;
+
+    if(registry.any_of<MonoBehaviourComponent>(e))
+    {
+        MonoBehaviourComponent& t = registry.get<MonoBehaviourComponent>(e);
+        j = t;
+    }
+
+    return j;
+}
+
+void harmony::MonoSystem::DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+{
+    MonoBehaviourComponent mc;
+    entityJson.get_to<MonoBehaviourComponent>(mc);
+    auto newMC = registry.emplace<MonoBehaviourComponent>(e);
+
+    for(MonoBehaviour m : mc.m_Behaviours)
+    {
+        WeakPtr<MonoAssemblyAsset> assemblyAsset = p_Mono.lock()->m_AssetManager.GetAsset<MonoAssemblyAsset>(m.m_AssemblyAsset);
+        if(assemblyAsset.expired())
+        {
+            log::error("MonoSystem : Deserialize System : Failed to get assembly {} when deserializing behaviour {} for entity {}", m.m_AssemblyAsset.Path, m.m_TypeInfo.m_TypeName, ((uint32_t )e));
+            continue;
+        }
+        AddMonoBehaviour(registry, e, m.m_TypeInfo, assemblyAsset);
+    }
+    OPTICK_EVENT()
 }
 
 void harmony::MonoSystem::Refresh()
 {
+    OPTICK_EVENT()
 }
 
 void harmony::MonoSystem::AddMonoBehaviour(entt::registry& registry, entt::entity entity, harmony::MonoUtils::CsTypeInfo typeInfo, WeakPtr<MonoAssemblyAsset> assemblyAsset) {
+    OPTICK_EVENT()
     auto a = assemblyAsset.lock();
     if(!a)
     {

@@ -51,6 +51,10 @@ namespace harmony {
 
         void DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) override;
 
+        nlohmann::json SerializeEntity(entt::registry& registry, entt::entity e) override;
+
+        void DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson) override;
+
         void Refresh() override;
 
         JoltBodyComponent &CreateBodyComponent(entt::registry registry, entt::entity e, JoltBodyShape shape);
@@ -86,6 +90,8 @@ namespace harmony {
         static constexpr float s_DefaultConvexRadius = 0.05f;
         static constexpr float s_CapsuleProjectionSlop = 0.02f;
         const JPH::Vec3 s_DefaultGravity = JPH::Vec3(0.0f, -9.81f, 0.0f);
+
+        const String p_JoltBodyComponentKey = "JoltBodyComponent";
 
         const uint32_t m_NumJobs;
         float m_UpdateFrequency = 60.0f;    // Physics update frequency

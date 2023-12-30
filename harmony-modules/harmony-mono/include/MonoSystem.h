@@ -48,8 +48,10 @@ namespace harmony {
         virtual void Cleanup(entt::registry &registry) override;
         virtual nlohmann::json SerializeSystem(entt::registry &registry) override;
         virtual void DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) override;
-        virtual void Refresh() override;
+        virtual nlohmann::json SerializeEntity(entt::registry& registry, entt::entity e) override;
+        virtual void DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson) override;
 
+        virtual void Refresh() override;
         const String p_MonoBehaviourNamespace = "Harmony";
         const String p_MonoBehaviourTypename = "Behaviour";
         const String p_InitInterfaceName = "IOnInit";
