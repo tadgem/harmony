@@ -893,13 +893,12 @@ harmony::WeakPtr<harmony::EntityTemplate> harmony::Program::SaveEntityTemplate(W
 {
     EntityTemplate et = CreateEntityTemplate(scene, e);
     nlohmann::json templateJson = et;
-    const String path = name + ".entitytemplate";
-    Utils::SaveJsonToPath(templateJson, path);
+    Utils::SaveJsonToPath(templateJson, name);
 
-    Vector<AssetHandle> assetHandles = m_AssetManager.LoadAsset<EntityTemplate>(path);
+    Vector<AssetHandle> assetHandles = m_AssetManager.LoadAsset<EntityTemplate>(name);
     if (assetHandles.empty())
     {
-        log::warn("Program : Failed to open entity template at path {}", path);
+        log::warn("Program : Failed to open entity template at path {}", name);
         return {};
     }
    

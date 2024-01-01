@@ -36,7 +36,7 @@ namespace GameTest
             Entity e2 = b.GetEntity();
 
             JoltTestBehaviour joltBehaviour = _scene.GetBehaviour<JoltTestBehaviour>(e2);
-            if(joltBehaviour!= null)
+            if(joltBehaviour != null)
             {
                 Log.Info($"Entity : {e1} has jolt test behaviour");
             }
@@ -60,6 +60,12 @@ namespace GameTest
         public override void Update()
         {
             IntPtr bodyPtr = _scene.GetJoltBodyFromEntity(Self);
+
+            if(bodyPtr == IntPtr.Zero)
+            {
+                return;
+            }
+
             _body = new HarmonyJoltSharp.Body(bodyPtr);
             _body.AddForce(Vector3.UnitY * Force);
             Vector3 start = _transform.GetTransformPosition() + _transform.GetTransformForward();

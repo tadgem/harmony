@@ -22,7 +22,7 @@
 #include "MonoSystem.h"
 #include "mono/metadata/mono-debug.h"
 #include "Assets/ModelAsset.h"
-
+#include "ECS/EntityTemplate.h"
 harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program), p_AssetManager(program.m_AssetManager)
 {
 }
@@ -45,6 +45,13 @@ void harmony::ScenePanel::OnImGui() {
 
                 EntityData &payloadData = activeScene->m_Registry.get<EntityData>(payloadEntity);
                 payloadData.m_Parent = (entt::entity) UINT32_MAX;
+            }
+
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ENTITY_TEMPLATE")) {
+                IM_ASSERT(payload->DataSize == sizeof(RefCntPtr<EntityTemplate>));
+                RefCntPtr<EntityTemplate> entityTemplate = *(RefCntPtr<EntityTemplate>*)payload->Data;
+
+                p_Prog.LoadEntityTemplate(activeSceneWr, entityTemplate);
             }
             ImGui::EndDragDropTarget();
         }
@@ -588,19 +595,28 @@ void harmony::AssetManagerPanel::OnImGui() {
 
         ImGui::Separator();
         const std::string entityTemplateAssetTitle = std::string(ICON_FA_FILE_CODE_O) + " Entity Templates";
-        ImGui::TextWrapped(entityTemplateAssetTitle.c_str());
         std::vector<AssetHandle> templateHandles = p_AssetManager.GetLoadedAssets<EntityTemplate>();
-        if (ImGui::TreeNode("Entity Templates")) {
+        ImGui::TextWrapped(entityTemplateAssetTitle.c_str());
+        if (ImGui::CollapsingHeader("Entity Templates")) {
             for (int i = 0; i < templateHandles.size(); i++) {
-                ImGui::TextWrapped(templateHandles[i].Path.c_str());
+                AssetHandle ah = templateHandles[i];
+                ImGui::PushID(HashString(ah.Path).m_Value);
+                ImGui::Button(ah.Path.c_str());
+                // Prefab drag drop
+                if (ImGui::BeginDragDropSource()) {
+                    RefCntPtr<EntityTemplate> entityTemplate = p_AssetManager.GetAsset<EntityTemplate>(ah).lock();
+                    ImGui::SetDragDropPayload("ENTITY_TEMPLATE", &entityTemplate, sizeof(RefCntPtr<EntityTemplate>));
+                    ImGui::Text(ah.Path.c_str());
+                    ImGui::EndDragDropSource();
+                }
+                ImGui::PopID();
             }
-            ImGui::TreePop();
+            ImGui::Separator();
             if (ImGui::Button("Load Entity Template")) {
                 ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Script", ".entitytemplate", ".");
                 p_SelectedTypeHash = GetTypeHash<EntityTemplate>();
             }
         }
-
         ImGui::Unindent();
     }
     ImGui::End();

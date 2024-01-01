@@ -51,6 +51,13 @@ void harmony::EntityDataSystem::DeserializeSystem(entt::registry &registry, nloh
         EntityData data;
         dataJson.get_to<EntityData>(data);
 
+        // TODO: Should be somwhere better
+
+        if (!registry.valid(e))
+        {
+            registry.create(e);
+        }
+
         registry.emplace<EntityData>(e, data);
     }
 }
