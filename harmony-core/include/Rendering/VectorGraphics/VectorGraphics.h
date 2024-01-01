@@ -46,7 +46,7 @@ namespace harmony {
 
         static void FontSize(Layer layer, float size);
 
-        static void FontBlur(Layer layer, int blur);
+        static void FontBlur(Layer layer, float blur);
 
         static void Text(Layer layer, float x, float y, const char *str);
 

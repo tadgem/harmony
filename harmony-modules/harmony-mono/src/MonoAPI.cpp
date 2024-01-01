@@ -405,7 +405,7 @@ void        harmony_mono_vg_font_size(harmony_vg_layer layer, float size)
     harmony::VectorGraphics::FontSize(l, size);
 }
 
-void        harmony_mono_vg_font_blur(harmony_vg_layer layer, int blur)
+void        harmony_mono_vg_font_blur(harmony_vg_layer layer, float blur)
 {
     auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
     harmony::VectorGraphics::FontBlur(l, blur);

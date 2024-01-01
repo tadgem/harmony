@@ -233,7 +233,7 @@ extern "C"
     // Vector Graphics
     void        harmony_mono_vg_font_face(harmony_vg_layer layer, MonoString *font);
     void        harmony_mono_vg_font_size(harmony_vg_layer layer, float size);
-    void        harmony_mono_vg_font_blur(harmony_vg_layer layer, int blur);
+    void        harmony_mono_vg_font_blur(harmony_vg_layer layer, float blur);
     void        harmony_mono_vg_text(harmony_vg_layer layer, float x, float y, MonoString *str);
     void        harmony_mono_vg_text_letter_spacing(harmony_vg_layer layer, float spacing);
     void        harmony_mono_vg_text_line_height(harmony_vg_layer layer, float line_height);

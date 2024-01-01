@@ -41,7 +41,7 @@ void harmony::DrawScreenTextureStage::PreUpdate(entt::registry &registry, harmon
         fbHeight = fb->m_FramebufferResolution.Height;
     }
 
-    ScreenSpaceQuad(fbWidth, fbHeight, v->m_Width, v->m_Height);
+    ScreenSpaceQuad(fbWidth, fbHeight, static_cast<float>(v->m_Width), static_cast<float>(v->m_Height));
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
     bgfx::submit(viewId, pipelineShader->m_Handle);
 }

@@ -70,7 +70,9 @@ namespace harmony {
 
         WeakPtr<Scene> GetActiveScene();
 
-        EntityTemplate CreateEntityTemplate(WeakPtr<Scene> scene, entt::entity e);
+        WeakPtr<EntityTemplate> SaveEntityTemplate(WeakPtr<Scene> scene, entt::entity e, String name);
+
+        void                    LoadEntityTemplate(WeakPtr<Scene> scene, WeakPtr<EntityTemplate> entityTemplate);
 
         void RunProgramComponentInit();
 
@@ -140,6 +142,8 @@ namespace harmony {
         void UpdateProjectDirectory(const std::string &path);
 
         void Frame();
+
+        EntityTemplate CreateEntityTemplate(WeakPtr<Scene> scene, entt::entity e);
 
         std::string p_AppName;
         std::string p_LoadedProjectPath;

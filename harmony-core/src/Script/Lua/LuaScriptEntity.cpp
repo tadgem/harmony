@@ -21,6 +21,7 @@ harmony::TransformComponent *harmony::LuaScriptEntity::AddTransform() {
             return &p_Scene->m_Registry.emplace<TransformComponent>(m_Handle);
         }
     }
+    return nullptr;
 }
 
 harmony::TransformComponent *harmony::LuaScriptEntity::GetTransform() {
@@ -49,6 +50,7 @@ harmony::MeshComponent *harmony::LuaScriptEntity::AddMesh() {
             return &p_Scene->m_Registry.emplace<MeshComponent>(m_Handle);
         }
     }
+    return nullptr;
 }
 
 harmony::MeshComponent *harmony::LuaScriptEntity::GetMesh() {
@@ -76,6 +78,7 @@ harmony::CameraComponent *harmony::LuaScriptEntity::AddCamera() {
             return &p_Scene->m_Registry.emplace<CameraComponent>(m_Handle);
         }
     }
+    return nullptr;
 }
 
 harmony::CameraComponent *harmony::LuaScriptEntity::GetCamera() {
@@ -103,6 +106,7 @@ harmony::MaterialComponent *harmony::LuaScriptEntity::AddMaterial() {
             return &p_Scene->m_Registry.emplace<MaterialComponent>(m_Handle);
         }
     }
+    return nullptr;
 }
 
 harmony::MaterialComponent *harmony::LuaScriptEntity::GetMaterial() {
@@ -114,7 +118,6 @@ harmony::MaterialComponent *harmony::LuaScriptEntity::GetMaterial() {
 
     return nullptr;
 }
-
 void harmony::LuaScriptEntity::SetMaterial(MaterialComponent *c) {
     if (Valid()) {
         if (p_Scene->m_Registry.any_of<MaterialComponent>(m_Handle)) {

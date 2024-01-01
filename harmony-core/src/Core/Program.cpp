@@ -889,6 +889,15 @@ harmony::WeakPtr<harmony::Scene> harmony::Program::GetActiveScene() {
     return GetWeakRef<Scene>(p_ActiveScene);
 }
 
+harmony::WeakPtr<harmony::EntityTemplate> harmony::Program::SaveEntityTemplate(WeakPtr<Scene> scene, entt::entity e, String name)
+{
+    return WeakPtr<EntityTemplate>();
+}
+
+void harmony::Program::LoadEntityTemplate(WeakPtr<Scene> scene, WeakPtr<EntityTemplate> entityTemplate)
+{
+}
+
 harmony::EntityTemplate harmony::Program::CreateEntityTemplate(WeakPtr<Scene> scene, entt::entity e)
 {
     auto s = scene.lock();

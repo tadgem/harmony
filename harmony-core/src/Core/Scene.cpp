@@ -13,7 +13,7 @@ void harmony::Scene::Deserialize(std::vector<RefCntPtr<System>> &systems) {
     OPTICK_EVENT();
     m_Registry.clear();
     for (int i = 0; i < p_Entities.size(); i++) {
-        m_Registry.create(p_Entities[i].m_Handle);
+        entt::entity e = m_Registry.create(p_Entities[i].m_Handle);
     }
 
     for (auto &[systemTypeHash, json]: p_SystemSerializationAttributes) {

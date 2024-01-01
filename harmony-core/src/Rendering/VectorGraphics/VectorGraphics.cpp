@@ -95,7 +95,7 @@ HARMONY_VG_IMPL(FontFace, ARG_PACK(font), const char *font)
 
 HARMONY_VG_IMPL(FontSize, ARG_PACK(size), float size);
 
-HARMONY_VG_IMPL(FontBlur, ARG_PACK(size), int size);
+HARMONY_VG_IMPL(FontBlur, ARG_PACK(blur), float blur);
 
 HARMONY_VG_IMPL(Text, ARG_PACK(x, y, str, NULL), float x, float y, const char *str)
 

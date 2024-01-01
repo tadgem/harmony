@@ -7,7 +7,7 @@ add_executable(harmony-dojo main.cpp)
 set_property(TARGET harmony-dojo PROPERTY CXX_STANDARD 17)
 
 if (WIN32)
-    # set stuff for windows
+    add_definitions(-D_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)    
 else ()
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error")
