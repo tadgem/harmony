@@ -15,6 +15,9 @@ namespace harmony
 
 		HashMap<uint64_t, nlohmann::json> m_ComponentData;
 
+		virtual nlohmann::json ToJSON() override;
+		virtual void FromJSON(const nlohmann::json& input) override;
+
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(EntityTemplate, m_ComponentData)
 	};
 }

@@ -903,7 +903,7 @@ harmony::WeakPtr<harmony::EntityTemplate> harmony::Program::SaveEntityTemplate(W
         return {};
     }
    
-    return m_AssetManager.GetAsset(assetHandles[0]);
+    return m_AssetManager.GetAsset<EntityTemplate>(assetHandles[0]);
 }
 
 void harmony::Program::LoadEntityTemplate(WeakPtr<Scene> scene, WeakPtr<EntityTemplate> entityTemplate)

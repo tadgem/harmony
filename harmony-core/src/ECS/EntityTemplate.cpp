@@ -18,3 +18,13 @@ void harmony::EntityTemplate::AddComponentData(HashString systemTypeHash, nlohma
 
 	m_ComponentData.emplace(systemTypeHash, entityJson);
 }
+
+nlohmann::json harmony::EntityTemplate::ToJSON()
+{
+	return *this;
+}
+
+void harmony::EntityTemplate::FromJSON(const nlohmann::json& input)
+{
+	*this = input;
+}

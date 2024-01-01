@@ -2,7 +2,7 @@
 #include "RuntimeProgram.h"
 #include "AssimpModelAssetFactory.h"
 #include "Assets/FontAssetFactory.h"
-#include "Assets/TextAsset.h"
+#include "ECS/EntityTemplate.h"
 #include "Rendering/Views/RuntimeView.h"
 #include "Rendering/Shaders/ShaderDataSources/BlinnPhongDataSource.h"
 #include "Rendering/Pipelines/PipelineStages/DrawScreenTextureStage.h"
@@ -80,7 +80,7 @@ void harmony::RuntimeProgram::AddAssetFactories() {
     m_AssetManager.AddAssetFactory(CreateRef<FontAssetFactory>());
     m_AssetManager.AddAssetFactory(CreateRef<LuaScriptAssetFactory>());
     m_AssetManager.AddAssetFactory(CreateRef<MonoAssemblyAssetFactory>(p_MonoProgramComponent));
-    m_AssetManager.AddAssetFactory(CreateRef<SerializedTextAssetFactory<EntityTemplate>>());
+    m_AssetManager.AddAssetFactory(CreateRef<JSONTextAssetFactory<EntityTemplate>>());
 
 }
 
