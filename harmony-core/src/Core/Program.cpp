@@ -891,7 +891,19 @@ harmony::WeakPtr<harmony::Scene> harmony::Program::GetActiveScene() {
 
 harmony::WeakPtr<harmony::EntityTemplate> harmony::Program::SaveEntityTemplate(WeakPtr<Scene> scene, entt::entity e, String name)
 {
-    return WeakPtr<EntityTemplate>();
+    EntityTemplate et = CreateEntityTemplate(scene, e);
+    nlohmann::json templateJson = et;
+    const String path = name + ".entitytemplate";
+    Utils::SaveJsonToPath(templateJson, path);
+
+    Vector<AssetHandle> assetHandles = m_AssetManager.LoadAsset<EntityTemplate>(path);
+    if (assetHandles.empty())
+    {
+        log::warn("Program : Failed to open entity template at path {}", path);
+        return {};
+    }
+   
+    return m_AssetManager.GetAsset(assetHandles[0]);
 }
 
 void harmony::Program::LoadEntityTemplate(WeakPtr<Scene> scene, WeakPtr<EntityTemplate> entityTemplate)

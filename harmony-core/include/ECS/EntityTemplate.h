@@ -4,11 +4,11 @@
 
 #pragma once
 #include "Core/Alias.h"
-#include "Assets/Asset.h"
+#include "Assets/TextAsset.h"
 
 namespace harmony
 {
-	class EntityTemplate : public Asset
+	class EntityTemplate : public JSONAsset
 	{
 	public:
 		void AddComponentData(HashString systemTypeHash, nlohmann::json entityJson);
