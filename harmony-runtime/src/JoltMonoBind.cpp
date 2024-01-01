@@ -67,6 +67,8 @@ extern "C"
 
         entt::entity& e = (entt::entity&)entity;
 
+        
+
         if(!scene->m_Registry.any_of<harmony::JoltBodyComponent>(e))
         {
             return nullptr;
@@ -788,6 +790,8 @@ bool harmony::JoltMonoContactListenerCallback::AddContactAddedCallback(JPH::Body
 
     p_MonoContactAddedCallbacks.emplace(id, Vector<MonoObject*>());
     p_MonoContactAddedCallbacks[id].emplace_back(callback);
+
+    mono_gchandle_new(callback, true);
     return true;
 }
 

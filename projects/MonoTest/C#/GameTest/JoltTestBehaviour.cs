@@ -15,9 +15,10 @@ namespace GameTest
         
         public override void Init()
         {
-            _scene = SceneMethods.GetActiveScene();
             _transform = _scene.GetEntityTransform(Self);
 
+
+            _scene = SceneMethods.GetActiveScene();
             NativeJoltBodyComponent joltBody = _scene.GetEntityJoltBodyComponent(Self);
             IntPtr bodyPtr = joltBody.GetJoltBodyFromComponent();
             _body = new Body(bodyPtr);
@@ -68,9 +69,12 @@ namespace GameTest
 
             _body = new HarmonyJoltSharp.Body(bodyPtr);
             _body.AddForce(Vector3.UnitY * Force);
-            Vector3 start = _transform.GetTransformPosition() + _transform.GetTransformForward();
+            _transform = _scene.GetEntityTransform(Self);
+            Vector3 forward = _transform.GetTransformForward();
 
+            Vector3 start = _transform.GetTransformPosition() + _transform.GetTransformForward();
             RaycastResult[] results = Physics.RaycastMulti(start, _transform.GetTransformForward() * 20);
+            DebugDraw.Cylinder(DebugDrawChannel.Editor, start, start + _transform.GetTransformForward() * 20, 0.1f);
             if (results.Length > 0)
             {
                 foreach (RaycastResult r2 in results)
@@ -98,7 +102,7 @@ namespace GameTest
             {
                 foreach (ShapecastResultSimple r in sphereCastResults)
                 {
-                    Log.Info($"SphereCast : Found entity {r.Body.GetEntity()}");
+                    //Log.Info($"SphereCast : Found entity {r.Body.GetEntity()}");
                 }
             }
         }

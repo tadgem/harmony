@@ -168,7 +168,7 @@ MonoClass* harmony::MonoUtils::GetClassInAssembly(MonoAssembly *assembly, const 
 MonoObject *harmony::MonoUtils::CreateMonoObject(MonoDomain *appDomain, CsTypeInfo& klass) {
     // Allocate an instance of our class
     MonoObject* classInstance = mono_object_new(appDomain, klass.m_MonoClass);
-
+    mono_gchandle_new(classInstance, true);
     if (classInstance == nullptr)
     {
         // Log error here and abort
