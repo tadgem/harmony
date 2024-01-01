@@ -175,9 +175,8 @@ void harmony::ScenePanel::EntityDragDrop(entt::entity e, entt::registry &reg) {
 
 }
 
-harmony::EntityInspectorPanel::EntityInspectorPanel(Program &prog, RefCntPtr<ScenePanel> scenePanel) : p_Prog(prog),
-                                                                                                 p_ScenePanel(
-                                                                                                         scenePanel) {
+harmony::EntityInspectorPanel::EntityInspectorPanel(Program &prog, RefCntPtr<ScenePanel> scenePanel) : p_Prog(prog), p_ScenePanel(scenePanel) 
+{
 }
 
 void harmony::EntityInspectorPanel::OnImGui() {
@@ -250,6 +249,24 @@ void harmony::EntityInspectorPanel::OnImGui() {
                     p_ComponentUIProviders[i]->Duplicate(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity, dupe);
                 }
             }
+        }
+
+        if (ImGui::Button("Save as Prefab"))
+        {
+            ImGuiFileDialog::Instance()->OpenDialog("HarmonySaveEntityTemplate", "Save Entity Template", ".entitytemplate", ".");
+        }
+
+        auto io = ImGui::GetIO();
+        ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_Always,
+            ImVec2(0.5f, 0.5f));
+        if (ImGuiFileDialog::Instance()->Display("HarmonySaveEntityTemplate")) {
+            // action if OK
+            if (ImGuiFileDialog::Instance()->IsOk()) {
+                std::string filepath = ImGuiFileDialog::Instance()->GetFilePathName();
+                p_Prog.SaveEntityTemplate(activeSceneWr, p_ScenePanel->m_SelectedEntity, filepath);
+            }
+            ImGuiFileDialog::Instance()->Close();
         }
         ImGui::PopID();
 
@@ -554,6 +571,7 @@ void harmony::AssetManagerPanel::OnImGui() {
             }
         }
 
+        ImGui::Separator();
         const std::string monoAssemblyAssetTitle = std::string(ICON_FA_FILE_ARCHIVE_O) + " Mono Assemblies";
         ImGui::TextWrapped(monoAssemblyAssetTitle.c_str());
         std::vector<AssetHandle> assemblyHandles = p_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
@@ -565,6 +583,21 @@ void harmony::AssetManagerPanel::OnImGui() {
             if (ImGui::Button("Load Assembly")) {
                 ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Script", ".dll", ".");
                 p_SelectedTypeHash = GetTypeHash<MonoAssemblyAsset>();
+            }
+        }
+
+        ImGui::Separator();
+        const std::string entityTemplateAssetTitle = std::string(ICON_FA_FILE_CODE_O) + " Entity Templates";
+        ImGui::TextWrapped(entityTemplateAssetTitle.c_str());
+        std::vector<AssetHandle> templateHandles = p_AssetManager.GetLoadedAssets<EntityTemplate>();
+        if (ImGui::TreeNode("Entity Templates")) {
+            for (int i = 0; i < templateHandles.size(); i++) {
+                ImGui::TextWrapped(templateHandles[i].Path.c_str());
+            }
+            ImGui::TreePop();
+            if (ImGui::Button("Load Entity Template")) {
+                ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Script", ".entitytemplate", ".");
+                p_SelectedTypeHash = GetTypeHash<EntityTemplate>();
             }
         }
 

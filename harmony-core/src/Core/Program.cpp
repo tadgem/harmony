@@ -908,6 +908,23 @@ harmony::WeakPtr<harmony::EntityTemplate> harmony::Program::SaveEntityTemplate(W
 
 void harmony::Program::LoadEntityTemplate(WeakPtr<Scene> scene, WeakPtr<EntityTemplate> entityTemplate)
 {
+    RefCntPtr<Scene> s = scene.lock();
+    RefCntPtr<EntityTemplate> et = entityTemplate.lock();
+
+    if (!s || !et)
+    {
+        return;
+    }
+
+    entt::entity e = s->m_Registry.create();
+
+    for (auto& sys : p_ECSSystems)
+    {
+        if (et->m_ComponentData.find(sys->m_TypeHash.m_Value) != et->m_ComponentData.end())
+        {
+            sys->DeserializeEntity(s->m_Registry, e, et->m_ComponentData[sys->m_TypeHash.m_Value]);
+        }
+    }
 }
 
 harmony::EntityTemplate harmony::Program::CreateEntityTemplate(WeakPtr<Scene> scene, entt::entity e)

@@ -22,6 +22,7 @@ bool harmony::LoadProjectGui::OnImGui() {
     auto maxSize = ImGui::GetMainViewport()->Size;
     ImGui::SetNextWindowPos(ImVec2(0,0), ImGuiCond_Always);
     ImGui::SetNextWindowSize(maxSize, ImGuiCond_Always);
+    ImGui::SetNextWindowFocus();
     bool loaded = false;
     if (ImGuiFileDialog::Instance()->Display("HarmonyOpenProject")) {
         // action if OK
