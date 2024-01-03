@@ -90,29 +90,36 @@ namespace harmony {
         virtual void ProcessDelegates() override;
         virtual void ClearDelegates() override;
     protected:
-         RefCntPtr<JoltPhysicsSystem>              p_PhysicsSystem;
-         HashMap<JPH::BodyID, Vector<MonoObject*>> p_MonoContactAddedCallbacks;
-         HashMap<JPH::BodyID, Vector<MonoObject*>> p_MonoContactPersistedCallbacks;
-         HashMap<JPH::BodyID, Vector<MonoObject*>> p_MonoContactRemovedCallbacks;
 
-         struct DelegateContactData
-         {
-             MonoObject*    m_Callback;
-             JPH::BodyID     m_Body1;
-             JPH::BodyID     m_Body2;
-             jolt_contact_manifold_simple   m_ManifoldSimple;
-             jolt_contact_settings          m_ContactSettings;
-         };
+        struct ManagedMonoObjectCallback
+        {
+            MonoObject* m_Obj;
+            uint32_t m_GCHandle;
+        };
 
-         struct DelegateContactRemovedData
-         {
-             MonoObject*    m_Callback;
-             JPH::BodyID     m_Body1;
-             JPH::BodyID     m_Body2;
-         };
+        RefCntPtr<JoltPhysicsSystem>              p_PhysicsSystem;
+        HashMap<JPH::BodyID, Vector<ManagedMonoObjectCallback>> p_MonoContactAddedCallbacks;
+        HashMap<JPH::BodyID, Vector<ManagedMonoObjectCallback>> p_MonoContactPersistedCallbacks;
+        HashMap<JPH::BodyID, Vector<ManagedMonoObjectCallback>> p_MonoContactRemovedCallbacks;
 
-         Vector<DelegateContactData>        p_ContactAddedDelegateBuffer;
-         Vector<DelegateContactData>        p_ContactPersistedDelegateBuffer;
-         Vector<DelegateContactRemovedData> p_ContactRemovedDelegateBuffer;
+        struct DelegateContactData
+        {
+            MonoObject*    m_Callback;
+            JPH::BodyID     m_Body1;
+            JPH::BodyID     m_Body2;
+            jolt_contact_manifold_simple   m_ManifoldSimple;
+            jolt_contact_settings          m_ContactSettings;
+        };
+
+        struct DelegateContactRemovedData
+        {
+            MonoObject*    m_Callback;
+            JPH::BodyID     m_Body1;
+            JPH::BodyID     m_Body2;
+        };
+
+        Vector<DelegateContactData>        p_ContactAddedDelegateBuffer;
+        Vector<DelegateContactData>        p_ContactPersistedDelegateBuffer;
+        Vector<DelegateContactRemovedData> p_ContactRemovedDelegateBuffer;
     };
 }

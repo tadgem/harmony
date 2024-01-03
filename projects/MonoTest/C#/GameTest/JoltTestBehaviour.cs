@@ -74,14 +74,13 @@ namespace GameTest
 
             Vector3 start = _transform.GetTransformPosition() + _transform.GetTransformForward();
             RaycastResult[] results = Physics.RaycastMulti(start, _transform.GetTransformForward() * 20);
-            DebugDraw.Cylinder(DebugDrawChannel.Editor, start, start + _transform.GetTransformForward() * 20, 0.1f);
             if (results.Length > 0)
             {
                 foreach (RaycastResult r2 in results)
                 {
                     if (r2.Body.GetEntity() != _body.GetEntity())
                     {
-                        DebugDraw.Cylinder(DebugDrawChannel.Editor, start, r2.HitPoint, 0.1f);
+                        DebugDraw.Cylinder(DebugDrawChannel.Editor, start, r2.HitPoint, 0.01f);
                         DebugDraw.Orb(DebugDrawChannel.Editor, r2.HitPoint, 0.3f);
                     }
                 }
