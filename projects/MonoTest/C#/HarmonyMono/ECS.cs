@@ -22,41 +22,87 @@ namespace Harmony
         }
     }
 
-    public readonly struct NativeTransformComponent
+    public class TransformComponent : INativeComponent
     {
-        public readonly IntPtr Handle;
+        private NativeTransformComponent _native;
+        
+        IntPtr INativeComponent.Handle { get => _native.Handle; set => _native.Handle = value; }
+
+        public Vector3 Position
+        {
+            get => ECSMethods.GetTransformPosition(_native);
+            set => ECSMethods.SetTransformPosition(_native, value);
+        }
+
+        public Vector3 Euler
+        {
+            get => ECSMethods.GetTransformEuler(_native);
+            set => ECSMethods.SetTransformEuler(_native, value);
+        }
+
+        public Vector3 Scale
+        {
+            get => ECSMethods.GetTransformScale(_native);
+            set => ECSMethods.SetTransformScale(_native, value);
+        }
+
+        public Vector3 Up
+        {
+            get => ECSMethods.GetTransformUp(_native);
+        }
+
+        public Vector3 Forward
+        {
+            get => ECSMethods.GetTransformForward(_native);
+        }
+
+        public Vector3 Right
+        {
+            get => ECSMethods.GetTransformRight(_native);
+        }
+        
+        public IntPtr GetNativeHandle(Scene scene, Entity entity)
+        {
+            return scene.GetEntityTransform(entity).Handle;
+
+        }
     }
 
-    public static class ECSMethods
+    internal struct NativeTransformComponent
+    {
+        public IntPtr Handle;
+    }
+
+    internal static class ECSMethods
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static NativeTransformComponent GetEntityTransform(this Scene scene, Entity entity);
+        internal extern static NativeTransformComponent GetEntityTransform(this Scene scene, Entity entity);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static Vector3 GetTransformPosition(this NativeTransformComponent t);
+        internal extern static Vector3 GetTransformPosition(this NativeTransformComponent t);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static Vector3 GetTransformEuler(this NativeTransformComponent t);
+        internal extern static Vector3 GetTransformEuler(this NativeTransformComponent t);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static Vector3 GetTransformScale(this NativeTransformComponent t);
+        internal extern static Vector3 GetTransformScale(this NativeTransformComponent t);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static Vector3 GetTransformForward(this NativeTransformComponent t);
+        internal extern static Vector3 GetTransformForward(this NativeTransformComponent t);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static Vector3 GetTransformRight(this NativeTransformComponent t);
+        internal extern static Vector3 GetTransformRight(this NativeTransformComponent t);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static Vector3 GetTransformUp(this NativeTransformComponent t);
+        internal extern static Vector3 GetTransformUp(this NativeTransformComponent t);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static void SetTransformPosition(this NativeTransformComponent t, Vector3 pos);
+        internal extern static void SetTransformPosition(this NativeTransformComponent t, Vector3 pos);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static void SetTransformEuler(this NativeTransformComponent t, Vector3 euler);
+        internal extern static void SetTransformEuler(this NativeTransformComponent t, Vector3 euler);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static void SetTransformScale(this NativeTransformComponent t, Vector3 scale);
+        internal extern static void SetTransformScale(this NativeTransformComponent t, Vector3 scale);
     }
 }

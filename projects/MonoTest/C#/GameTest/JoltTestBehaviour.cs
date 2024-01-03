@@ -10,24 +10,23 @@ namespace GameTest
         public float Force = 10000.0f;
         
         private Scene _scene;
-        private NativeTransformComponent _transform;
+        private TransformComponent _transform;
         private Body _body;
         
         public override void Init()
         {
-            _transform = _scene.GetEntityTransform(Self);
-
-
             _scene = SceneMethods.GetActiveScene();
-            NativeJoltBodyComponent joltBody = _scene.GetEntityJoltBodyComponent(Self);
-            IntPtr bodyPtr = joltBody.GetJoltBodyFromComponent();
-            _body = new Body(bodyPtr);
+            
+            _transform = _scene.GetNativeComponent<TransformComponent>(Self);
+            
+            JoltBodyComponent joltBody = _scene.GetNativeComponent<JoltBodyComponent>(Self);
+            JoltTestBehaviour joltTestBehaviour = _scene.GetScriptComponent<JoltTestBehaviour>(Self);
+
+            _body = joltBody.Body;
 
             _body.AddContactAddedCallback(OnContactEnter);
-            // _body.AddContactPersistedCallback(OnContactPersisted);
             _body.AddContactRemovedCallback(OnContactRemoved);
 
-            JoltTestBehaviour joltTestBehaviour = _scene.GetBehaviour<JoltTestBehaviour>(Self);
             Log.Info("Fin");
         }
 
@@ -36,7 +35,7 @@ namespace GameTest
             Entity e1 = a.GetEntity();
             Entity e2 = b.GetEntity();
 
-            JoltTestBehaviour joltBehaviour = _scene.GetBehaviour<JoltTestBehaviour>(e2);
+            JoltTestBehaviour joltBehaviour = _scene.GetScriptComponent<JoltTestBehaviour>(e2);
             if(joltBehaviour != null)
             {
                 Log.Info($"Entity : {e1} has jolt test behaviour");
@@ -69,11 +68,10 @@ namespace GameTest
 
             _body = new HarmonyJoltSharp.Body(bodyPtr);
             _body.AddForce(Vector3.UnitY * Force);
-            _transform = _scene.GetEntityTransform(Self);
-            Vector3 forward = _transform.GetTransformForward();
+            Vector3 forward = _transform.Forward;
 
-            Vector3 start = _transform.GetTransformPosition() + _transform.GetTransformForward();
-            RaycastResult[] results = Physics.RaycastMulti(start, _transform.GetTransformForward() * 20);
+            Vector3 start = _transform.Position + _transform.Forward;
+            RaycastResult[] results = Physics.RaycastMulti(start, _transform.Forward * 20);
             if (results.Length > 0)
             {
                 foreach (RaycastResult r2 in results)
@@ -96,7 +94,7 @@ namespace GameTest
             //    }
             //}
 
-            ShapecastResultSimple[] sphereCastResults = Physics.Spherecast(_transform.GetTransformPosition() + _transform.GetTransformForward(), _transform.GetTransformForward(), 2.0f);
+            ShapecastResultSimple[] sphereCastResults = Physics.Spherecast(_transform.Position + _transform.Forward, _transform.Forward, 2.0f);
             if (sphereCastResults.Length > 0)
             {
                 foreach (ShapecastResultSimple r in sphereCastResults)

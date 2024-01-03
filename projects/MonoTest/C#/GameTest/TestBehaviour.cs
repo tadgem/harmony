@@ -8,15 +8,15 @@ namespace GameTest
     {
         public float Speed = 3.0f;
         private Scene _scene;
-        private NativeTransformComponent _transform;
+        private TransformComponent _transform;
         private float _boxMove = 0.0f;
         VectorGraphics.NVGcolor _circleColor = new VectorGraphics.NVGcolor();
 
         public override void Init()
         {
             _scene = SceneMethods.GetActiveScene();
-            _transform = _scene.GetEntityTransform(Self);
-            Vector3 v = _transform.GetTransformPosition();
+            _transform = _scene.GetNativeComponent<TransformComponent>(Self);
+            Vector3 v = _transform.Position;
             Log.Info($"I am entity : {Self} : Pos : {v}");
             _circleColor.r = 192.0f / 255.0f;
             _circleColor.g = 128.0f / 255.0f;
@@ -27,14 +27,14 @@ namespace GameTest
         {
             float delta = (float) Time.GetFrameTime();
             _boxMove += delta * Speed * Speed ;
-            Vector3 euler = _transform.GetTransformEuler();
-            Vector3 position = _transform.GetTransformPosition();
-            Vector3 forward = _transform.GetTransformForward();
+            Vector3 euler = _transform.Euler;
+            Vector3 position = _transform.Position;
+            Vector3 forward = _transform.Forward;
 
             euler.X += delta * Speed * Speed;
             position += forward * delta * (Speed / Speed);
-            _transform.SetTransformEuler(euler);
-            _transform.SetTransformPosition(position);
+            _transform.Euler = euler;
+            _transform.Position = position;
 
             if (Input.GetKeyButton(Input.Key.Space))
             {

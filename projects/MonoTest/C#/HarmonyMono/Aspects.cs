@@ -1,4 +1,6 @@
-﻿namespace Harmony
+﻿using System;
+
+namespace Harmony
 {
     public class ProgramComponent
     {
@@ -17,7 +19,30 @@
 
     }
 
-    public class Behaviour
+    public interface IScriptComponent
+    {
+
+    }
+
+    public interface INativeComponent  {
+
+        IntPtr Handle { get; set; }
+        // Pretend this is static, its not nice but we need it for now
+        IntPtr GetNativeHandle(Scene scene, Entity entity);
+    }
+
+    public class NativeComponentProvider<T> where T : INativeComponent, new()
+    {
+        public static IntPtr GetNativeHandle(Scene scene, Entity entity)
+        {
+            T temp = new T();
+
+            return temp.GetNativeHandle(scene, entity);
+        }
+    }
+    
+
+    public class Behaviour : IScriptComponent
     {
         public readonly Entity Self;
 

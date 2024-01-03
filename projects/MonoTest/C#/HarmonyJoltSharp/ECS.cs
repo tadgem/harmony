@@ -6,11 +6,29 @@ using System.Runtime.InteropServices;
 
 namespace HarmonyJoltSharp
 {
-
-
-    public readonly struct NativeJoltBodyComponent
+    public class JoltBodyComponent : INativeComponent
     {
-        public readonly IntPtr Handle;
+        private NativeJoltBodyComponent _native;
+        public IntPtr Handle { get => _native.Handle; set => _native.Handle = value; }
+
+        public Body Body
+        {
+            get
+            {
+                IntPtr handle = Physics.GetJoltBodyFromComponent(_native);
+                return new Body(handle);
+            }
+        }
+
+        public IntPtr GetNativeHandle(Scene scene, Entity entity)
+        {
+            return Physics.GetEntityJoltBodyComponent(scene, entity).Handle;
+        }
+    }
+
+    internal struct NativeJoltBodyComponent
+    {
+        public IntPtr Handle;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -68,10 +86,10 @@ namespace HarmonyJoltSharp
     public static class Physics
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static NativeJoltBodyComponent GetEntityJoltBodyComponent(this Scene scene, Entity entity);
+        internal extern static NativeJoltBodyComponent GetEntityJoltBodyComponent(this Scene scene, Entity entity);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static IntPtr GetJoltBodyFromComponent(this NativeJoltBodyComponent joltBody);
+        internal extern static IntPtr GetJoltBodyFromComponent(this NativeJoltBodyComponent joltBody);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static bool AddContactAddedCallback(this Body b, ContactCallback callback);

@@ -32,7 +32,7 @@ namespace Harmony
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static object[] GetEntityScriptBehaviours(this Scene scene, Entity entity);
 
-        public static T GetBehaviour<T>(this Scene scene, Entity entity)
+        public static T GetScriptComponent<T>(this Scene scene, Entity entity) where T : IScriptComponent
         {
             object[] scriptBehaviours = GetEntityScriptBehaviours(scene, entity);
 
@@ -48,10 +48,16 @@ namespace Harmony
                     return derivedType;
                 }
             }
+
             return default;
         }
 
-
+        public static T GetNativeComponent<T>(this Scene scene, Entity entity) where T : INativeComponent, new()
+        {
+            T nativeComponent = new T();
+            nativeComponent.Handle = NativeComponentProvider<T>.GetNativeHandle(scene, entity);
+            return nativeComponent;
+        }
 
     }
 }
