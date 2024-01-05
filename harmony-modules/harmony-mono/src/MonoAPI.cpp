@@ -14,6 +14,27 @@
 #include "Rendering/Debug/GfxDebug.h"
 #include "MonoSystem.h"
 #include "MonoProgramComponent.h"
+#include "Rendering/Mesh.h"
+
+static MonoClass* s_AssetHandleClass = nullptr;
+
+void GetTypesForArrays()
+{
+    auto mono = harmony::Program::Get()->
+        GetProgramComponent<harmony::MonoProgramComponent>().lock();
+
+    MonoType* rrt = mono->GetType(harmony::String("Harmony.AssetHandle"));
+
+    if (rrt == nullptr)
+    {
+        harmony::log::error("MonoAPI::GetTypesForArrays: failed to get asset handle type from image");
+    }
+    else
+    {
+        s_AssetHandleClass = mono_type_get_class(rrt);
+    }
+
+}
 
 void harmony_mono_log_trace(MonoString *str) {
     harmony::log::trace("C# : {}", harmony::MonoUtils::GetStringFromMonoString(str));
@@ -708,4 +729,69 @@ NVGpaint    harmony_mono_vg_image_pattern(harmony_vg_layer layer, float ox, floa
 {
     auto l = static_cast<harmony::VectorGraphics::Layer>(layer);
     return harmony::VectorGraphics::ImagePattern(l,  ox,  oy,  ex,  ey,  angle,  image,  alpha);
+}
+
+MonoArray* harmony_mono_assets_get_assets_at_path(MonoString* path)
+{
+    using namespace harmony;
+    String c_path = String(mono_string_to_utf8(path));
+    AssetManager& am = Program::Get()->m_AssetManager;
+
+    Vector<AssetHandle> handles = am.GetAssetsAtPath(c_path);
+
+    if (s_AssetHandleClass == nullptr)
+    {
+        GetTypesForArrays();
+    }
+
+    auto mono = harmony::Program::Get()->
+        GetProgramComponent<harmony::MonoProgramComponent>().lock();
+
+    MonoArray* arr = mono_array_new(mono->GetAppDomain(), s_AssetHandleClass, handles.size());
+    for (int i = 0; i < handles.size(); i++)
+    {
+        asset_handle handle{ 
+            mono_string_new(mono->GetAppDomain(), 
+            
+            handles[i].Path.c_str()), 
+            handles[i].Index, 
+            handles[i].TypeHash.m_Value 
+        };
+
+        mono_array_set(arr, asset_handle, i, handle);
+    }
+
+    return arr;
+}
+
+harmony::Mesh* harmony_mono_assets_get_mesh_asset(asset_handle handle)
+{
+    using namespace harmony;
+    String c_path = String(mono_string_to_utf8(handle.path));
+    AssetHandle h{ c_path, handle.index, HashString {handle.type_hash} };
+
+    WeakPtr<Mesh> m = Program::Get()->m_AssetManager.GetAsset<Mesh>(h);
+
+    if (m.expired())
+    {
+        return nullptr;
+    }
+
+    return m.lock().get();
+}
+
+harmony::TextureAsset* harmony_mono_assets_get_texture_asset(asset_handle handle)
+{
+    using namespace harmony;
+    String c_path = String(mono_string_to_utf8(handle.path));
+    AssetHandle h{ c_path, handle.index, HashString {handle.type_hash} };
+
+    WeakPtr<TextureAsset> t = Program::Get()->m_AssetManager.GetAsset<TextureAsset>(h);
+
+    if (t.expired())
+    {
+        return nullptr;
+    }
+
+    return t.lock().get();
 }

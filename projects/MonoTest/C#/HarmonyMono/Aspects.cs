@@ -31,17 +31,16 @@ namespace Harmony
         IntPtr GetNativeHandle(Scene scene, Entity entity);
     }
 
-    public class NativeComponentProvider<T> where T : INativeComponent, new()
+    public static class NativeComponentProvider<T> where T : INativeComponent, new()
     {
+        private static T _template = new T();
+
         public static IntPtr GetNativeHandle(Scene scene, Entity entity)
         {
-            T temp = new T();
-
-            return temp.GetNativeHandle(scene, entity);
+            return _template.GetNativeHandle(scene, entity);
         }
     }
     
-
     public class Behaviour : IScriptComponent
     {
         public readonly Entity Self;

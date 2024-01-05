@@ -258,8 +258,10 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.VectorGraphics::RadialGradient", harmony_mono_vg_radial_gradient);
     mono_add_internal_call("Harmony.VectorGraphics::ImagePattern", harmony_mono_vg_image_pattern);
 
-    // Debug
-
+    // Assets
+    mono_add_internal_call("Harmony.AssetMethods::GetAssetsAtPath", harmony_mono_assets_get_assets_at_path);
+    mono_add_internal_call("Harmony.AssetMethods::GetTextureAsset", harmony_mono_assets_get_texture_asset);
+    mono_add_internal_call("Harmony.AssetMethods::GetMeshAsset", harmony_mono_assets_get_mesh_asset);
 
     // Program
     mono_add_internal_call("Harmony.ProgramMethods::GetProgram", harmony_mono_get_program);

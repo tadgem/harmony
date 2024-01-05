@@ -35,6 +35,16 @@ namespace Harmony
 
     };
 
+    public struct Mesh
+    {
+        public IntPtr Handle;
+    }
+
+    public struct Texture
+    {
+        public IntPtr Handle;
+    }
+
     public static class Renderer
     {
     }

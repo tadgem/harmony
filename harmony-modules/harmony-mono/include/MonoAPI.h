@@ -11,12 +11,17 @@ namespace harmony {
     struct TransformComponent;
 
     class ProgramComponent;
+
+    class Mesh;
+
+    class TextureAsset;
 }
 extern "C"
 {
     // Forward defs
     struct NVGpaint;
     struct NVGcolor;
+
 
     // Type Defs
 
@@ -168,6 +173,13 @@ extern "C"
         float z;
     };
 
+    struct asset_handle
+    {
+        MonoString* path;
+        uint32_t index;
+        uint64_t type_hash;
+    };
+
     // Default constructor
     glm_vec2 harmony_glm_vec2_default();
     glm_vec3 harmony_glm_vec3_default();
@@ -283,6 +295,13 @@ extern "C"
     NVGpaint    harmony_mono_vg_box_gradient(harmony_vg_layer layer, float x, float y, float w, float h, float r, float f, NVGcolor icol, NVGcolor ocol);
     NVGpaint    harmony_mono_vg_radial_gradient(harmony_vg_layer layer, float cx, float cy, float inr, float outr, NVGcolor icol, NVGcolor ocol);
     NVGpaint    harmony_mono_vg_image_pattern(harmony_vg_layer layer, float ox, float oy, float ex, float ey, float angle, int image, float alpha);
+
+    // Assets
+    MonoArray* harmony_mono_assets_get_assets_at_path(MonoString* path);
+
+    harmony::Mesh*          harmony_mono_assets_get_mesh_asset(asset_handle handle);
+    harmony::TextureAsset*  harmony_mono_assets_get_texture_asset(asset_handle handle);
+
 
     // ECS
     harmony::TransformComponent* harmony_mono_get_transform(harmony::Scene* scene, entt_entity entity);
