@@ -6,6 +6,16 @@
 
 #include "MonoUtils.h"
 #include "Core/Scene.h"
+#include "Rendering/Shaders/Shader.h"
+
+namespace harmony {
+    class PipelineV2;
+    class View;
+}
+
+namespace harmony {
+    class ShaderProgram;
+}
 
 namespace harmony {
     struct TransformComponent;
@@ -296,10 +306,15 @@ extern "C"
 
     // Assets
     MonoArray*              harmony_mono_assets_get_assets_at_path(MonoString* path);
-
     harmony::Mesh*          harmony_mono_assets_get_mesh_asset(asset_handle handle);
     harmony::TextureAsset*  harmony_mono_assets_get_texture_asset(asset_handle handle);
     harmony::ShaderStage*   harmony_mono_assets_get_shader_stage_asset(asset_handle handle);
+
+    // Rendering
+    harmony::View*          harmony_mono_renderer_get_view(MonoString* name);
+    harmony::PipelineV2*    harmony_mono_renderer_get_view_pipeline(harmony::View* view);
+    harmony::ShaderProgram* harmony_mono_renderer_get_shader(MonoString* name);
+    harmony::ShaderProgram* harmony_mono_renderer_build_shader(MonoString* name, harmony::ShaderStage* vertStage, harmony::ShaderStage* fragStage);
 
 
     // ECS

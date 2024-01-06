@@ -16,6 +16,8 @@
 #include "MonoProgramComponent.h"
 #include "Rendering/Mesh.h"
 #include "Rendering/Shaders/Shader.h"
+#include "Rendering/View.h"
+#include "Rendering/Pipelines/PipelineV2.h"
 
 static MonoClass* s_AssetHandleClass = nullptr;
 
@@ -811,4 +813,70 @@ harmony::ShaderStage* harmony_mono_assets_get_shader_stage_asset(asset_handle ha
     }
 
     return t.lock().get();
+}
+
+harmony::ShaderProgram* harmony_mono_renderer_get_shader(MonoString* name)
+{
+    auto shaderWr = harmony::Program::Get()->m_Renderer.GetShader(harmony::String(mono_string_to_utf8(name)));
+
+    if(shaderWr.expired())
+    {
+        return nullptr;
+    }
+
+    return shaderWr.lock().get();
+}
+
+harmony::ShaderProgram* harmony_mono_renderer_build_shader(MonoString*  name, harmony::ShaderStage* vertStage,
+    harmony::ShaderStage* fragStage)
+{
+    using namespace harmony;
+    if(!vertStage || !fragStage)
+    {
+        return nullptr;
+    }
+
+    String shaderName = String(mono_string_to_utf8(name));
+
+    WeakPtr<ShaderStage> vert = Program::Get()->m_AssetManager.GetAsset<ShaderStage>(vertStage->m_Handle);
+    WeakPtr<ShaderStage> frag = Program::Get()->m_AssetManager.GetAsset<ShaderStage>(fragStage->m_Handle);
+
+    WeakPtr<ShaderProgram> prog = Program::Get()->m_Renderer.BuildShader(shaderName, vert, frag);
+
+    if(prog.expired())
+    {
+        return  nullptr;
+    }
+
+    return prog.lock().get();
+}
+
+harmony::View* harmony_mono_renderer_get_view(MonoString* name)
+{
+    auto viewWr = harmony::Program::Get()->m_Renderer.GetView(harmony::String(mono_string_to_utf8(name)));
+
+    if(viewWr.expired())
+    {
+        return nullptr;
+    }
+
+    return viewWr.lock().get();
+}
+
+harmony::PipelineV2* harmony_mono_renderer_get_view_pipeline(harmony::View* view)
+{
+    auto viewWr = harmony::Program::Get()->m_Renderer.GetView(view->m_Name);
+
+    if(viewWr.expired())
+    {
+        return nullptr;
+    }
+
+    auto pipelineWr = harmony::Program::Get()->m_Renderer.GetViewPipeline(viewWr);
+    if(pipelineWr.expired())
+    {
+        return nullptr;
+    }
+
+    return pipelineWr.lock().get();
 }

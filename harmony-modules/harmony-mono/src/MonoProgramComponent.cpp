@@ -263,6 +263,12 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.AssetMethods::GetTextureAsset", harmony_mono_assets_get_texture_asset);
     mono_add_internal_call("Harmony.AssetMethods::GetMeshAsset", harmony_mono_assets_get_mesh_asset);
 
+    // Renderer
+    mono_add_internal_call("Harmony.Renderer::GetShader", harmony_mono_renderer_get_shader);
+    mono_add_internal_call("Harmony.Renderer::BuildShader", harmony_mono_renderer_build_shader);
+    mono_add_internal_call("Harmony.Renderer::GetView", harmony_mono_renderer_get_view);
+    mono_add_internal_call("Harmony.Renderer::GetViewPipeline", harmony_mono_renderer_get_view_pipeline);
+
     // Program
     mono_add_internal_call("Harmony.ProgramMethods::GetProgram", harmony_mono_get_program);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -55,7 +56,33 @@ namespace Harmony
         public IntPtr Handle;
     }
 
+    public struct PipelineStage
+    {
+        public IntPtr Handle;
+    }
+
+    public struct Pipeline
+    {
+        public IntPtr Handle;
+    }
+
+    public struct View
+    {
+        public IntPtr Handle;
+    }
+
     public static class Renderer
     {
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static ShaderProgram GetShader(string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static ShaderStage BuildShader(string name, ShaderStage vert, ShaderStage frag);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static View GetView(string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static Pipeline GetViewPipeline(View view);
     }
 }
