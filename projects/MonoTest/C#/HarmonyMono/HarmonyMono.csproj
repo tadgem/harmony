@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aspects.cs" />
+    <Compile Include="Assets.cs" />
+    <Compile Include="BGFX.cs" />
     <Compile Include="DebugDraw.cs" />
     <Compile Include="ECS.cs" />
     <Compile Include="Input.cs" />

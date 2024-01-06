@@ -235,7 +235,7 @@ extern "C"
     void        harmony_mono_debug_draw_line_to(harmony_debug_draw_channel channel, glm_vec3 translate);
     void        harmony_mono_debug_draw_circle(harmony_debug_draw_channel channel, glm_vec3 normal, glm_vec3 center, float radius, float weight);
     void        harmony_mono_debug_draw_quad(harmony_debug_draw_channel channel, glm_vec3 normal, glm_vec3 center, float size);
-    void        harmony_mono_debug_draw_sphere(harmony_debug_draw_channel channel, glm_vec3 center, float radius);
+    void             harmony_mono_debug_draw_sphere(harmony_debug_draw_channel channel, glm_vec3 center, float radius);
     void        harmony_mono_debug_draw_cylinder(harmony_debug_draw_channel channel, glm_vec3 from, glm_vec3 to, float radius);
     void        harmony_mono_debug_draw_capsule(harmony_debug_draw_channel channel, glm_vec3 from, glm_vec3 to, float radius);
     void        harmony_mono_debug_draw_cone(harmony_debug_draw_channel channel, glm_vec3 from, glm_vec3 to, float radius);
@@ -297,7 +297,7 @@ extern "C"
     NVGpaint    harmony_mono_vg_image_pattern(harmony_vg_layer layer, float ox, float oy, float ex, float ey, float angle, int image, float alpha);
 
     // Assets
-    MonoArray* harmony_mono_assets_get_assets_at_path(MonoString* path);
+    MonoArray*              harmony_mono_assets_get_assets_at_path(MonoString* path);
 
     harmony::Mesh*          harmony_mono_assets_get_mesh_asset(asset_handle handle);
     harmony::TextureAsset*  harmony_mono_assets_get_texture_asset(asset_handle handle);
