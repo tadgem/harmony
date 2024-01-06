@@ -15,6 +15,7 @@
 #include "MonoSystem.h"
 #include "MonoProgramComponent.h"
 #include "Rendering/Mesh.h"
+#include "Rendering/Shaders/Shader.h"
 
 static MonoClass* s_AssetHandleClass = nullptr;
 
@@ -787,6 +788,22 @@ harmony::TextureAsset* harmony_mono_assets_get_texture_asset(asset_handle handle
     AssetHandle h{ c_path, handle.index, HashString {handle.type_hash} };
 
     WeakPtr<TextureAsset> t = Program::Get()->m_AssetManager.GetAsset<TextureAsset>(h);
+
+    if (t.expired())
+    {
+        return nullptr;
+    }
+
+    return t.lock().get();
+}
+
+harmony::ShaderStage* harmony_mono_assets_get_shader_stage_asset(asset_handle handle)
+{
+    using namespace harmony;
+    String c_path = String(mono_string_to_utf8(handle.path));
+    AssetHandle h{ c_path, handle.index, HashString {handle.type_hash} };
+
+    WeakPtr<ShaderStage> t = Program::Get()->m_AssetManager.GetAsset<ShaderStage>(h);
 
     if (t.expired())
     {

@@ -9,12 +9,10 @@
 
 namespace harmony {
     struct TransformComponent;
-
     class ProgramComponent;
-
     class Mesh;
-
     class TextureAsset;
+    class ShaderStage;
 }
 extern "C"
 {
@@ -301,6 +299,7 @@ extern "C"
 
     harmony::Mesh*          harmony_mono_assets_get_mesh_asset(asset_handle handle);
     harmony::TextureAsset*  harmony_mono_assets_get_texture_asset(asset_handle handle);
+    harmony::ShaderStage*   harmony_mono_assets_get_shader_stage_asset(asset_handle handle);
 
 
     // ECS

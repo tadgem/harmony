@@ -20,5 +20,8 @@ namespace Harmony
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static Mesh GetMeshAsset(AssetHandle handle);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static ShaderStage GetShaderStageAsset(AssetHandle handle);
     }
 }

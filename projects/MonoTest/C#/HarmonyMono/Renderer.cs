@@ -45,6 +45,16 @@ namespace Harmony
         public IntPtr Handle;
     }
 
+    public struct ShaderStage
+    {
+        public IntPtr Handle;
+    }
+
+    public struct ShaderProgram
+    {
+        public IntPtr Handle;
+    }
+
     public static class Renderer
     {
     }
