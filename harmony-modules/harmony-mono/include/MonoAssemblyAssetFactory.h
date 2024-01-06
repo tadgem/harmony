@@ -16,5 +16,9 @@ namespace harmony
     protected:
         WeakPtr<MonoProgramComponent> p_Mono;
         const HashString p_AssemblyTypeHash;
+
+        const String p_MonoModuleNamespace = "Harmony.Module";
+        const String p_InitInterfaceName = "IOnInit";
+        const String p_InitMethodName = "Init";
     };
 }

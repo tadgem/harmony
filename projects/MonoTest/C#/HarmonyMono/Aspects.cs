@@ -19,6 +19,17 @@ namespace Harmony
 
     }
 
+    /// <summary>
+    /// Any module is automatically added to the engine when loading an assembly
+    /// </summary>
+    public class Module
+    {
+        public interface IOnInit
+        {
+            void Init();
+        }
+    }
+
     public interface IScriptComponent
     {
 

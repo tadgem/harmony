@@ -30,6 +30,37 @@ void harmony::MonoAssemblyAssetFactory::LoadAssetData(const std::string& path, e
 	registry.emplace<AssetComponent<MonoAssemblyAsset>>(e, assemblyComponent);
 	registry.emplace<AssetHandle>(e, assemblyHandle);
 
+	// Do modules
+	for(auto& interfaceImplInfo : assembly->m_InterfaceImplInfos)
+	{
+		// if derivative of Module
+		if(interfaceImplInfo.m_InterfaceNamespace == p_MonoModuleNamespace)
+		{
+			if(interfaceImplInfo.m_InterfaceName == p_InitInterfaceName)
+			{
+				MonoUtils::CsTypeInfo& typeInfo = assembly->m_TypeInfos[interfaceImplInfo.m_ClassIndex];
+				MonoObject* classObject   = MonoUtils::CreateMonoObject(p_Mono.lock()->GetAppDomain(), typeInfo);
+
+				// Grab interface methods to call
+				MonoClass * instanceClass = mono_object_get_class(classObject);
+				MonoMethod* initMethod      = nullptr;
+
+				initMethod = mono_class_get_method_from_name(instanceClass, p_InitMethodName.c_str(), 0);
+				if(initMethod == nullptr) {
+					log::error("MonoProgramComponent : Init : Module Type {} implements IOnInit but does not have an Init method.", typeInfo.m_TypeName);
+					continue;;
+				}
+				MonoObject * exception = nullptr;
+				mono_runtime_invoke(initMethod, classObject, nullptr, &exception);
+				if(exception != nullptr)
+				{
+					log::error("MonoProgramComponent : Init : Module : exception encountered during init for type {}", typeInfo.m_TypeName);
+				}
+
+			}
+		}
+	}
+
 }
 
 void harmony::MonoAssemblyAssetFactory::UnloadAssetData(const std::string& path, entt::registry& registry)

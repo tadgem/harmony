@@ -26,8 +26,8 @@
 harmony::RuntimeProgram::RuntimeProgram(const std::string &name) : Program(name) {
     OPTICK_EVENT();
     AddAssetTypeNames();
-    AddAssetFactories();
     AddProgramComponents();
+    AddAssetFactories();
     AddSystems();
     AddPipelineStageRenderers();
     AddShaderDataSources();

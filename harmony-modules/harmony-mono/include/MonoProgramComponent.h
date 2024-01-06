@@ -73,6 +73,7 @@ namespace harmony
         const String p_RootDomainName = "Harmony";
         const String p_AppDomainName = "GameTest";
         const String p_MonoProgramComponentNamespace = "Harmony.ProgramComponent";
+        const String p_MonoModuleNamespace = "Harmony.Module";
         const String p_InitInterfaceName = "IOnInit";
         const String p_UpdateInterfaceName = "IOnUpdate";
         const String p_CleanupInterfaceName = "IOnCleanup";
