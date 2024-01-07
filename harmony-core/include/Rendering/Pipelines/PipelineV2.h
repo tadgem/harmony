@@ -34,6 +34,8 @@ namespace harmony {
                                             Vector<AttachmentType> attachments,
                                             Resolution::Type resolutionType);
 
+        WeakPtr<Framebuffer> GetFramebuffer(const String& name);
+
         virtual void PreUpdate(entt::registry &registry, WeakPtr<View> view);
 
         virtual void PostUpdate(entt::registry &registry, WeakPtr<View> view);

@@ -20,6 +20,7 @@
 #include "Rendering/Pipelines/PipelineV2.h"
 
 static MonoClass* s_AssetHandleClass = nullptr;
+static MonoClass* s_AttachmentTypeClass = nullptr;
 
 void GetTypesForArrays()
 {
@@ -35,6 +36,17 @@ void GetTypesForArrays()
     else
     {
         s_AssetHandleClass = mono_type_get_class(rrt);
+    }
+
+    rrt = mono->GetType(harmony::String("Harmony.AttachmentType"));
+
+    if (rrt == nullptr)
+    {
+        harmony::log::error("MonoAPI::GetTypesForArrays: failed to get attachment type type from image");
+    }
+    else
+    {
+        s_AttachmentTypeClass = mono_type_get_class(rrt);
     }
 
 }
@@ -879,4 +891,89 @@ harmony::PipelineV2* harmony_mono_renderer_get_view_pipeline(harmony::View* view
     }
 
     return pipelineWr.lock().get();
+}
+
+harmony::Framebuffer* harmony_mono_renderer_pipeline_add_framebuffer(harmony::PipelineV2* pipeline, MonoString* name, MonoArray* attachments,
+    harmony_resolution_type resolutionType)
+{
+    using namespace harmony;
+    String fbName = String(mono_string_to_utf8(name));
+    Resolution::Type rt = static_cast<Resolution::Type>(resolutionType);
+    Vector<AttachmentType> attachmentTypes = Vector<AttachmentType>();
+    uint32_t arrLength = mono_array_length(attachments);
+    for(int i = 0; i < arrLength; i++)
+    {
+        AttachmentType& attachmentType = mono_array_get(attachments, AttachmentType, i);
+        attachmentTypes.push_back(attachmentType);
+    }
+    if(pipeline)
+    {
+        auto fb = pipeline->AddFramebuffer(fbName, attachmentTypes, rt).lock();
+
+        if(fb)
+        {
+            return fb.get();
+        }
+    }
+    return nullptr;
+}
+
+void harmony_mono_renderer_pipeline_add_stage(harmony::Framebuffer* fb, harmony::PipelineStage* stage)
+{
+}
+
+harmony::ShaderDataSource* harmony_mono_renderer_get_shader_data_source(MonoString* name)
+{
+    using namespace harmony;
+    RefCntPtr<ShaderDataSource> data_source = Program::Get()->m_Renderer.GetShaderDataSource(String(mono_string_to_utf8(name))).lock();
+    if(data_source)
+    {
+        return data_source.get();
+    }
+    return nullptr;
+}
+
+harmony::PipelineStage* harmony_mono_renderer_get_pipeline_stage(MonoString* name)
+{
+    using namespace harmony;
+    RefCntPtr<PipelineStage> stage = Program::Get()->m_Renderer.GetPipelineStage(String(mono_string_to_utf8(name))).lock();
+    if(stage)
+    {
+        return stage.get();
+    }
+    return nullptr;
+}
+
+harmony::PipelineStageRenderer* harmony_mono_renderer_get_pipeline_stage_renderer(MonoString* name)
+{
+    using namespace harmony;
+    RefCntPtr<PipelineStageRenderer> renderer = Program::Get()->m_Renderer.GetPipelineStageRenderer(String(mono_string_to_utf8(name))).lock();
+    if(renderer)
+    {
+        return renderer.get();
+    }
+    return nullptr;
+}
+
+void harmony_mono_renderer_pipeline_set_output_framebuffer(harmony::PipelineV2* pipeline, harmony::Framebuffer* fb)
+{
+    using namespace harmony;
+    if(!pipeline || !fb)
+    {
+        return;
+    }
+    WeakPtr<Framebuffer> pipelineFB = pipeline->GetFramebuffer(fb->m_Name);
+
+    if(pipelineFB.expired())
+    {
+        return;
+    }
+
+    pipeline->SetOutputFramebuffer(pipelineFB);
+}
+
+void harmony_mono_renderer_pipeline_stage_add_data_source(harmony::PipelineStage* fb,
+    harmony::ShaderDataSource* source)
+{
+
 }

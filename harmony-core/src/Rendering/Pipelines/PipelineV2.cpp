@@ -39,6 +39,19 @@ harmony::PipelineV2::AddFramebuffer(const String &name, harmony::Vector<harmony:
     return fb;
 }
 
+harmony::WeakPtr<harmony::Framebuffer> harmony::PipelineV2::GetFramebuffer(const String& name)
+{
+    for(auto& [fb, stage] : p_Stages)
+    {
+        if(fb->m_Name == name)
+        {
+            return fb;
+        }
+    }
+
+    return WeakPtr<Framebuffer>();
+}
+
 void harmony::PipelineV2::PreUpdate(entt::registry &registry, harmony::WeakPtr<harmony::View> view) {
     if (!IsViewValid(view)) {
         harmony::log::error("Pipeline : {} : Cannot Pre-Update, view is expired!", m_Name);

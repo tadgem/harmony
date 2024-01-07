@@ -6,7 +6,25 @@
 
 #include "MonoUtils.h"
 #include "Core/Scene.h"
+#include "Rendering/Framebuffer.h"
 #include "Rendering/Shaders/Shader.h"
+#include "Rendering/Shaders/ShaderDataSource.h"
+
+namespace harmony {
+    class PipelineStageRenderer;
+}
+
+namespace harmony {
+    class ShaderDataSource;
+}
+
+namespace harmony {
+    class PipelineStage;
+}
+
+namespace harmony {
+    class Framebuffer;
+}
 
 namespace harmony {
     class PipelineV2;
@@ -167,6 +185,28 @@ extern "C"
         LayerEight
     };
 
+    enum harmony_attachment_type : int {
+        UnknownAttachmentType = 1,
+        RGBA8 = 2,
+        RGBA16F = 4,
+        RGBA32F = 8,
+        RGBA = RGBA8 | RGBA16F | RGBA32F,
+        Depth16F = 16,
+        Depth24F = 32,
+        Depth32F = 64,
+        Depth = Depth16F | Depth24F | Depth32F
+
+    };
+
+    enum harmony_resolution_type {
+        FullScale,
+        HalfScale,
+        QuarterScale,
+        EighthScale,
+        SixteenthScale,
+        Custom
+    };
+
     typedef uint32_t entt_entity;
 
     struct glm_vec2
@@ -311,11 +351,20 @@ extern "C"
     harmony::ShaderStage*   harmony_mono_assets_get_shader_stage_asset(asset_handle handle);
 
     // Rendering
-    harmony::View*          harmony_mono_renderer_get_view(MonoString* name);
-    harmony::PipelineV2*    harmony_mono_renderer_get_view_pipeline(harmony::View* view);
-    harmony::ShaderProgram* harmony_mono_renderer_get_shader(MonoString* name);
-    harmony::ShaderProgram* harmony_mono_renderer_build_shader(MonoString* name, harmony::ShaderStage* vertStage, harmony::ShaderStage* fragStage);
+    harmony::View*                  harmony_mono_renderer_get_view(MonoString* name);
+    harmony::PipelineV2*            harmony_mono_renderer_get_view_pipeline(harmony::View* view);
+    harmony::ShaderProgram*         harmony_mono_renderer_build_shader(MonoString* name, harmony::ShaderStage* vertStage, harmony::ShaderStage* fragStage);
+    harmony::ShaderProgram*         harmony_mono_renderer_get_shader(MonoString* name);
+    harmony::ShaderDataSource*      harmony_mono_renderer_get_shader_data_source(MonoString* name);
+    harmony::PipelineStage*         harmony_mono_renderer_get_pipeline_stage(MonoString* name);
+    harmony::PipelineStageRenderer* harmony_mono_renderer_get_pipeline_stage_renderer(MonoString* name);
 
+    harmony::Framebuffer*           harmony_mono_renderer_pipeline_add_framebuffer(harmony::PipelineV2* pipeline, MonoString* name, MonoArray* attachments, harmony_resolution_type resolutionType);
+    void                            harmony_mono_renderer_pipeline_set_output_framebuffer(harmony::PipelineV2* pipeline, harmony::Framebuffer* fb);
+    void                            harmony_mono_renderer_pipeline_add_stage(harmony::Framebuffer* fb, harmony::PipelineStage* stage);
+    void                            harmony_mono_renderer_pipeline_stage_add_data_source(harmony::PipelineStage* fb, harmony::ShaderDataSource* source);
+
+    // Create / destroy built in stages...
 
     // ECS
     harmony::TransformComponent* harmony_mono_get_transform(harmony::Scene* scene, entt_entity entity);
