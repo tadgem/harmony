@@ -7,8 +7,29 @@
 #include "MonoUtils.h"
 #include "Core/Scene.h"
 #include "Rendering/Framebuffer.h"
+#include "Rendering/Pipelines/PipelineStageRenderer.h"
 #include "Rendering/Shaders/Shader.h"
 #include "Rendering/Shaders/ShaderDataSource.h"
+
+namespace harmony {
+    class DrawScreenTextureStage;
+}
+
+namespace harmony {
+    class TextureAssetSource;
+}
+
+namespace harmony {
+    class DeferredDataSource;
+}
+
+namespace harmony {
+    class ScreenQuadRenderer;
+}
+
+namespace harmony {
+    class PipelineDrawStage;
+}
 
 namespace harmony {
     class PipelineStageRenderer;
@@ -364,8 +385,16 @@ extern "C"
     void                            harmony_mono_renderer_pipeline_add_stage(harmony::PipelineV2* pipeline, harmony::Framebuffer* fb, harmony::PipelineStage* stage);
     void                            harmony_mono_renderer_pipeline_stage_add_data_source(harmony::PipelineStage* fb, harmony::ShaderDataSource* source);
 
+    harmony::PipelineDrawStage*         harmony_mono_renderer_create_pipeline_draw_stage(MonoString* name, harmony::ShaderProgram* shader, harmony::PipelineStageRenderer* renderer);
+    harmony::ScreenQuadRenderer*        harmony_mono_renderer_create_screen_quad_renderer();
+    harmony::DeferredDataSource*        harmony_mono_renderer_create_deferred_data_source(harmony::Framebuffer* framebuffer);
+    harmony::TextureAssetSource*        harmony_mono_renderer_create_texture_asset_source(uint16_t samplerIndex, MonoString* uniformName, harmony::TextureAsset* textureAsset);
+    harmony::DrawScreenTextureStage*    harmony_mono_renderer_create_draw_screen_texture_stage(harmony::ShaderProgram* shader, harmony_attachment_type attachmentType, MonoArray* framebufferArray);
     // Create / destroy built in stages...
-
+    // Need to call this after modules are loaded
+    // if we create a ref in a method and return raw ptr object is make delete
+    // have a temporary static vector we push them to as we process modules, then clear
+    void                            harmony_mono_renderer_clear_cached_objects();
     // ECS
     harmony::TransformComponent* harmony_mono_get_transform(harmony::Scene* scene, entt_entity entity);
     void harmony_mono_set_transform_position(harmony::TransformComponent* t, glm_vec3 position);
