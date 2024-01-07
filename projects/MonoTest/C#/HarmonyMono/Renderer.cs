@@ -41,7 +41,12 @@ namespace Harmony
         public IntPtr Handle;
     }
 
-    public struct Texture
+    public struct TextureAsset
+    {
+        public IntPtr Handle;
+    }
+
+    public struct Framebuffer
     {
         public IntPtr Handle;
     }
@@ -56,7 +61,17 @@ namespace Harmony
         public IntPtr Handle;
     }
 
+    public struct ShaderDataSource
+    {
+        public IntPtr Handle;
+    }
+
     public struct PipelineStage
+    {
+        public IntPtr Handle;
+    }
+
+    public struct PipelineStageRenderer
     {
         public IntPtr Handle;
     }
@@ -74,15 +89,37 @@ namespace Harmony
     public static class Renderer
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static ShaderProgram GetShader(string name);
+        public extern static View GetView(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static ShaderStage BuildShader(string name, ShaderStage vert, ShaderStage frag);
+        public extern static ShaderStage BuildShader(string name, ShaderStage vert, ShaderStage frag);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static View GetView(string name);
+        public extern static Pipeline GetViewPipeline(View view);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static Pipeline GetViewPipeline(View view);
+        public extern static ShaderProgram GetShader(string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static ShaderDataSource GetShaderDataSource(string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static PipelineStage GetPipelineStage(string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static PipelineStageRenderer GetPipelineStageRenderer(string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static Framebuffer PipelineAddFramebuffer(this Pipeline pipeline , string name, AttachmentType[] attachments, Resolution.Type resolutionType);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static Framebuffer PipelineSetOutputFramebuffer(this Pipeline pipeline, Framebuffer fb);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void PipelineAddStage(this Pipeline pipeline, Framebuffer fb, PipelineStage stage);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static void PipelineStageAddDataSource(this PipelineStage pipeline, ShaderDataSource source);
+
     }
 }

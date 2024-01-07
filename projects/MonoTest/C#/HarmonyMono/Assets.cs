@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Harmony
 {
-    struct AssetHandle
+    public struct AssetHandle
     {
         string  Path;
         uint    Index;
@@ -13,15 +13,15 @@ namespace Harmony
     public static class AssetMethods
     {
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static AssetHandle[] GetAssetsAtPath(string path);
+        public extern static AssetHandle[] GetAssetsAtPath(string path);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static Texture GetTextureAsset(AssetHandle handle);
+        public extern static TextureAsset GetTextureAsset(AssetHandle handle);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static Mesh GetMeshAsset(AssetHandle handle);
+        public extern static Mesh GetMeshAsset(AssetHandle handle);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static ShaderStage GetShaderStageAsset(AssetHandle handle);
+        public extern static ShaderStage GetShaderStageAsset(AssetHandle handle);
     }
 }

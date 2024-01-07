@@ -918,7 +918,7 @@ harmony::Framebuffer* harmony_mono_renderer_pipeline_add_framebuffer(harmony::Pi
     return nullptr;
 }
 
-void harmony_mono_renderer_pipeline_add_stage(harmony::Framebuffer* fb, harmony::PipelineStage* stage)
+void harmony_mono_renderer_pipeline_add_stage(harmony::PipelineV2* pipeline, harmony::Framebuffer* fb, harmony::PipelineStage* stage)
 {
 }
 

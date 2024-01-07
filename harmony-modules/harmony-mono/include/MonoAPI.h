@@ -361,7 +361,7 @@ extern "C"
 
     harmony::Framebuffer*           harmony_mono_renderer_pipeline_add_framebuffer(harmony::PipelineV2* pipeline, MonoString* name, MonoArray* attachments, harmony_resolution_type resolutionType);
     void                            harmony_mono_renderer_pipeline_set_output_framebuffer(harmony::PipelineV2* pipeline, harmony::Framebuffer* fb);
-    void                            harmony_mono_renderer_pipeline_add_stage(harmony::Framebuffer* fb, harmony::PipelineStage* stage);
+    void                            harmony_mono_renderer_pipeline_add_stage(harmony::PipelineV2* pipeline, harmony::Framebuffer* fb, harmony::PipelineStage* stage);
     void                            harmony_mono_renderer_pipeline_stage_add_data_source(harmony::PipelineStage* fb, harmony::ShaderDataSource* source);
 
     // Create / destroy built in stages...
