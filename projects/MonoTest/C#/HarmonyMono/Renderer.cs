@@ -66,12 +66,37 @@ namespace Harmony
         public IntPtr Handle;
     }
 
+    public struct DeferredDataSource
+    {
+        public IntPtr Handle;
+    }
+
+    public struct TextureAssetSource
+    {
+        public IntPtr Handle;
+    }
+
     public struct PipelineStage
     {
         public IntPtr Handle;
     }
 
+    public struct PipelineDrawStage
+    {
+        public IntPtr handle;
+    }
+
+    public struct DrawScreenTextureStage
+    {
+        public IntPtr handle;
+    }
+
     public struct PipelineStageRenderer
+    {
+        public IntPtr Handle;
+    }
+
+    public struct ScreenQuadRenderer
     {
         public IntPtr Handle;
     }
@@ -121,5 +146,19 @@ namespace Harmony
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static void PipelineStageAddDataSource(this PipelineStage pipeline, ShaderDataSource source);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static PipelineDrawStage CreatePipelineDrawStage(string name, ShaderProgram shader, PipelineStageRenderer renderer);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static ScreenQuadRenderer CreateScreenQuadRenderer(string name, ShaderProgram shader, PipelineStageRenderer renderer);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static DeferredDataSource CreateDeferredDataSource(Framebuffer fb);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static ScreenQuadRenderer CreateTextureAssetSource(ushort samplerIndex, string uniformName, TextureAsset texture);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static ScreenQuadRenderer CreateDrawScreenTextureStage(ShaderProgram shader, AttachmentType attachmentType, Framebuffer[] framebuffers);
     }
 }

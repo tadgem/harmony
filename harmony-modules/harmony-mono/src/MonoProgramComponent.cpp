@@ -277,6 +277,12 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.Renderer::PipelineAddStage", harmony_mono_renderer_pipeline_add_stage);
     mono_add_internal_call("Harmony.Renderer::PipelineStageAddDataSource", harmony_mono_renderer_pipeline_stage_add_data_source);
 
+    mono_add_internal_call("Harmony.Renderer::CreatePipelineDrawStage", harmony_mono_renderer_create_pipeline_draw_stage);
+    mono_add_internal_call("Harmony.Renderer::CreateScreenQuadRenderer", harmony_mono_renderer_create_screen_quad_renderer);
+    mono_add_internal_call("Harmony.Renderer::CreateDeferredDataSource", harmony_mono_renderer_create_deferred_data_source);
+    mono_add_internal_call("Harmony.Renderer::CreateTextureAssetSource", harmony_mono_renderer_create_texture_asset_source);
+    mono_add_internal_call("Harmony.Renderer::CreateDrawScreenTextureStage", harmony_mono_renderer_create_draw_screen_texture_stage);
+
     // Program
     mono_add_internal_call("Harmony.ProgramMethods::GetProgram", harmony_mono_get_program);
 

@@ -4,7 +4,7 @@
 #include "Core/Utils.h"
 #include "Core/Log.hpp"
 #include "Core/Memory.h"
-
+#include "MonoAPI.h"
 harmony::MonoAssemblyAssetFactory::MonoAssemblyAssetFactory(WeakPtr<MonoProgramComponent> mono) : p_Mono(mono), p_AssemblyTypeHash(GetTypeHash<MonoAssemblyAsset>())
 {
 	m_Capabilities.AssetTypeHashes.push_back(p_AssemblyTypeHash);
@@ -60,6 +60,9 @@ void harmony::MonoAssemblyAssetFactory::LoadAssetData(const std::string& path, e
 			}
 		}
 	}
+
+	// have to temporarily cache refcntptrs as they are passed over C# as raw ptrs
+	harmony_mono_renderer_clear_cached_objects();
 
 }
 
