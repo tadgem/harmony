@@ -19,7 +19,7 @@
 #include "Rendering/View.h"
 #include "Rendering/Pipelines/PipelineV2.h"
 #include "Rendering/Pipelines/PipelineStages/PipelineDrawStage.h"
-
+#include "Rendering/Pipelines/PipelineStageRenderers/ScreenQuadRenderer.h"
 static MonoClass* s_AssetHandleClass = nullptr;
 static MonoClass* s_AttachmentTypeClass = nullptr;
 
