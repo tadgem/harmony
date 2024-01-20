@@ -8,7 +8,7 @@ namespace GameTest
     {
         public void Init()
         {
-            Log.Info("Hello from C# Module");
+            Log.Info("Hello from C# TestModule");
 
             // InitRenderer();
         }
