@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11.0)
+cmake_minimum_required(VERSION 3.20.0)
 project(harmony-mono VERSION 0.1.0)
 
 file(GLOB_RECURSE SRC_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" src/*.cpp)
@@ -55,3 +55,7 @@ CACHE INTERNAL "")
 target_include_directories(harmony-mono PUBLIC ${HARMONY_MONO_INCLUDES})
 target_link_directories(harmony-mono PUBLIC ${MONO_LIBRARY_DIRS})
 target_link_libraries(harmony-mono ${MONO_LIBRARIES} harmony-core)
+
+if(MSVC)
+    target_compile_options(harmony-mono PRIVATE "/MP")
+endif()

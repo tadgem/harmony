@@ -78,11 +78,10 @@ SET(HARMONY_CORE_LIBRARIES
 )
 
 if (MSVC)
-    target_compile_options(harmony-core PRIVATE /bigobj)
+    target_compile_options(harmony-core PRIVATE /bigobj /MP)
     SET(HARMONY_CORE_LIBRARIES
             ${HARMONY_CORE_LIBRARIES} dwmapi
     )
-
 else ()
     target_compile_options(harmony-core PRIVATE)
 endif ()

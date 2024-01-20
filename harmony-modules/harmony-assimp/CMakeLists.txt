@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.20.0)
 project(harmony-assimp VERSION 0.1.0)
 
 file(GLOB_RECURSE SRC_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" src/*.cpp)
@@ -49,3 +49,7 @@ set(HARMONY_ASSIMP_INCLUDES
 
 target_include_directories(harmony-assimp PUBLIC ${HARMONY_ASSIMP_INCLUDES})
 target_link_libraries(harmony-assimp harmony-core assimp)
+
+if(MSVC)
+    target_compile_options(harmony-assimp PRIVATE "/MP")
+endif()

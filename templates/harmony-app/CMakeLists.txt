@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.20.0)
 project(harmony-app VERSION 0.1.0)
 
 add_executable(harmony-app main.cpp)
@@ -20,3 +20,7 @@ add_subdirectory(${ROOT_DIR}/harmony-runtime ${CMAKE_CURRENT_BINARY_DIR}/harmony
 target_include_directories(harmony-app PRIVATE ${HARMONY_CORE_RUNTIME_INCLUDES})
 
 target_link_libraries(harmony-app harmony-runtime)
+
+if(MSVC)
+    target_compile_options(harmony-app PRIVATE "/MP")
+endif()

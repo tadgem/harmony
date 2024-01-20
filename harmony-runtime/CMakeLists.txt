@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.20.0)
 project(harmony-runtime VERSION 0.1.0)
 
 file(GLOB_RECURSE SRC_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" src/*.cpp)
@@ -48,3 +48,7 @@ set(HARMONY_CORE_RUNTIME_INCLUDES
 
 target_include_directories(harmony-runtime PUBLIC ${HARMONY_CORE_RUNTIME_INCLUDES})
 target_link_libraries(harmony-runtime harmony-core harmony-assimp harmony-jolt harmony-mono)
+
+if(MSVC)
+    target_compile_options(harmony-runtime PRIVATE "/MP")
+endif()

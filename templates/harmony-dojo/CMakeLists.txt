@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.20.0)
 project(harmony-dojo VERSION 0.1.0)
 
 
@@ -21,3 +21,7 @@ add_subdirectory(${ROOT_DIR}/templates/harmony-editor-runtime ${CMAKE_CURRENT_BI
 target_include_directories(harmony-dojo PRIVATE ${HARMONY_EDITOR_INCLUDES})
 
 target_link_libraries(harmony-dojo harmony-editor-runtime)
+
+if(MSVC)
+    target_compile_options(harmony-dojo PRIVATE "/MP")
+endif()

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.20.0)
 project(game-core-runtime VERSION 0.1.0)
 
 file(GLOB_RECURSE SRC_FILES src/*.cpp)
@@ -42,3 +42,7 @@ set(GAME_CORE_RUNTIME_INCLUDES
 
 target_include_directories(game-core-runtime PUBLIC ${GAME_CORE_RUNTIME_INCLUDES})
 target_link_libraries(game-core-runtime harmony-runtime)
+
+if(MSVC)
+    target_compile_options(game-core-runtime PRIVATE "/MP")
+endif()

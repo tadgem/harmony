@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.20.0)
 project(harmony-editor-runtime VERSION 0.1.0)
 
 file(GLOB_RECURSE SRC_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" src/*.cpp)
@@ -48,3 +48,7 @@ set(HARMONY_EDITOR_INCLUDES
 
 target_include_directories(harmony-editor-runtime PUBLIC ${HARMONY_EDITOR_INCLUDES})
 target_link_libraries(harmony-editor-runtime harmony-runtime efsw)
+
+if(MSVC)
+    target_compile_options(harmony-editor-runtime PRIVATE "/MP")
+endif()
