@@ -8,9 +8,9 @@ if (MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS /W2)
 endif ()
 
-file(GLOB_RECURSE CORE_SRC_FILES src/*.cpp)
-file(GLOB_RECURSE CORE_HEADER_FILES include/*.h)
-file(GLOB_RECURSE CORE_HEADERPP_FILES include/*.hpp)
+file(GLOB_RECURSE CORE_SRC_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" src/*.cpp)
+file(GLOB_RECURSE CORE_HEADER_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" include/*.h)
+file(GLOB_RECURSE CORE_HEADERPP_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" include/*.hpp)
 get_filename_component(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
 set(BGFX_BUILD_EXAMPLES ON CACHE BOOL "Disable BGFX Examples")
@@ -24,11 +24,38 @@ add_subdirectory(${ROOT_DIR}/submodules/sdl ${CMAKE_CURRENT_BINARY_DIR}/sdl)
 add_subdirectory(${ROOT_DIR}/submodules/spdlog ${CMAKE_CURRENT_BINARY_DIR}/spdlog)
 add_subdirectory(${ROOT_DIR}/submodules/optick ${CMAKE_CURRENT_BINARY_DIR}/optick)
 
+# organize for VS
+set_target_properties(SDL2 PROPERTIES FOLDER "ThirdParty/SDL")
+set_target_properties(SDL2_test PROPERTIES FOLDER "ThirdParty/SDL")
+set_target_properties(SDL2-static PROPERTIES FOLDER "ThirdParty/SDL")
+set_target_properties(sdl_headers_copy PROPERTIES FOLDER "ThirdParty/SDL")
+set_target_properties(spdlog PROPERTIES FOLDER "ThirdParty")
+set_target_properties(OptickCore PROPERTIES FOLDER "ThirdParty")
+
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 set(HARMONY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
 
 add_library(harmony-core STATIC ${CORE_HEADER_FILES} ${CORE_HEADERPP_FILES} ${CORE_SRC_FILES})
 set_property(TARGET harmony-core PROPERTY CXX_STANDARD 17)
+
+# VS Filters
+foreach(header IN LISTS CORE_HEADER_FILES)
+    get_filename_component(source_path "${header}" PATH)
+    string(REPLACE "/" "\\" source_path_msvc "${source_path}")
+    source_group("${source_path_msvc}" FILES "${header}")
+endforeach()
+
+foreach(header IN LISTS CORE_HEADERPP_FILES)
+    get_filename_component(source_path "${header}" PATH)
+    string(REPLACE "/" "\\" source_path_msvc "${source_path}")
+    source_group("${source_path_msvc}" FILES "${header}")
+endforeach()
+
+foreach(source IN LISTS CORE_SRC_FILES)
+    get_filename_component(source_path "${source}" PATH)
+    string(REPLACE "/" "\\" source_path_msvc "${source_path}")
+    source_group("${source_path_msvc}" FILES "${source}")
+endforeach()
 
 set(HARMONY_CORE_INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -71,6 +98,15 @@ else ()
     target_link_libraries(harmony-core ${HARMONY_CORE_LIBRARIES} lua)
 endif ()
 
+# Put in a "bgfx" folder in Visual Studio
+set_target_properties(libluajit PROPERTIES FOLDER "ThirdParty/LuaJIT-Libs")
+set_target_properties(buildvm_arch_h PROPERTIES FOLDER "ThirdParty/LuaJIT-Libs")
+set_target_properties(buildvm PROPERTIES FOLDER "ThirdParty/LuaJIT-Libs")
+set_target_properties(lj_gen_headers PROPERTIES FOLDER "ThirdParty/LuaJIT-Libs")
+set_target_properties(lj_gen_folddef PROPERTIES FOLDER "ThirdParty/LuaJIT-Libs")
+set_target_properties(lj_gen_vm_s PROPERTIES FOLDER "ThirdParty/LuaJIT-Libs")
+set_target_properties(minilua PROPERTIES FOLDER "ThirdParty/LuaJIT-Libs")
+set_target_properties(luajit PROPERTIES FOLDER "ThirdParty/LuaJIT-Libs")
 # Includes + Link Dirs
 target_include_directories(harmony-core PRIVATE
         ${HARMONY_CORE_INCLUDES}
