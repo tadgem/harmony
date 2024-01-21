@@ -50,5 +50,6 @@ target_include_directories(harmony-runtime PUBLIC ${HARMONY_CORE_RUNTIME_INCLUDE
 target_link_libraries(harmony-runtime harmony-core harmony-assimp harmony-jolt harmony-mono)
 
 if(MSVC)
-    target_compile_options(harmony-runtime PRIVATE "/MP")
+    target_compile_options(harmony-runtime PRIVATE "/MP" "/Zi")
+    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,Release>:ProgramDatabase>")
 endif()

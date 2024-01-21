@@ -23,5 +23,6 @@ target_include_directories(harmony-dojo PRIVATE ${HARMONY_EDITOR_INCLUDES})
 target_link_libraries(harmony-dojo harmony-editor-runtime)
 
 if(MSVC)
-    target_compile_options(harmony-dojo PRIVATE "/MP")
+    target_compile_options(harmony-dojo PRIVATE "/MP" "/Zi")
+    target_link_options(harmony-dojo PRIVATE "/DEBUG" "/INCREMENTAL:NO")
 endif()

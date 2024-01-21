@@ -78,7 +78,8 @@ SET(HARMONY_CORE_LIBRARIES
 )
 
 if (MSVC)
-    target_compile_options(harmony-core PRIVATE /bigobj /MP)
+    target_compile_options(harmony-core PRIVATE "/bigobj" "/MP" "/Zi")
+    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,Release>:ProgramDatabase>")
     SET(HARMONY_CORE_LIBRARIES
             ${HARMONY_CORE_LIBRARIES} dwmapi
     )

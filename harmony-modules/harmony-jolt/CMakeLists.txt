@@ -58,7 +58,8 @@ target_include_directories(harmony-jolt PUBLIC ${HARMONY_JOLT_INCLUDES})
 target_link_libraries(harmony-jolt Jolt harmony-core)
 
 if(MSVC)
-    target_compile_options(harmony-jolt PRIVATE "/MP")
+    target_compile_options(harmony-jolt PRIVATE "/MP" "/Zi")
+    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,Release>:ProgramDatabase>")
     set_property(TARGET Jolt PROPERTY
     MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 endif()

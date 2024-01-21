@@ -57,5 +57,6 @@ target_link_directories(harmony-mono PUBLIC ${MONO_LIBRARY_DIRS})
 target_link_libraries(harmony-mono ${MONO_LIBRARIES} harmony-core)
 
 if(MSVC)
-    target_compile_options(harmony-mono PRIVATE "/MP")
+    target_compile_options(harmony-mono PRIVATE "/MP" "/Zi")
+    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,Release>:ProgramDatabase>")
 endif()

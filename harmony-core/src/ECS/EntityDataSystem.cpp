@@ -55,7 +55,7 @@ void harmony::EntityDataSystem::DeserializeSystem(entt::registry &registry, nloh
 
         if (!registry.valid(e))
         {
-            registry.create(e);
+            e = registry.create(e);
         }
 
         registry.emplace<EntityData>(e, data);

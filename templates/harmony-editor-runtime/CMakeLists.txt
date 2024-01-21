@@ -50,5 +50,6 @@ target_include_directories(harmony-editor-runtime PUBLIC ${HARMONY_EDITOR_INCLUD
 target_link_libraries(harmony-editor-runtime harmony-runtime efsw)
 
 if(MSVC)
-    target_compile_options(harmony-editor-runtime PRIVATE "/MP")
+    target_compile_options(harmony-editor-runtime PRIVATE "/MP" "/Zi")
+    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,Release>:ProgramDatabase>")
 endif()

@@ -51,5 +51,6 @@ target_include_directories(harmony-assimp PUBLIC ${HARMONY_ASSIMP_INCLUDES})
 target_link_libraries(harmony-assimp harmony-core assimp)
 
 if(MSVC)
-    target_compile_options(harmony-assimp PRIVATE "/MP")
+    target_compile_options(harmony-assimp PRIVATE "/MP" "/Zi")
+    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,Release>:ProgramDatabase>")
 endif()
