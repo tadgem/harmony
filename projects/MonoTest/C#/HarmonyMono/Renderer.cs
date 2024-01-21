@@ -61,44 +61,56 @@ namespace Harmony
         public IntPtr Handle;
     }
 
-    public struct ShaderDataSource
+    public struct NativeShaderDataSource
+    {
+        public IntPtr NativeHandle;
+    }
+
+    public class ShaderDataSource
+    {
+        public NativeShaderDataSource NativeHandle;
+    }
+
+    public class DeferredDataSource : ShaderDataSource
+    {
+       
+    }
+
+    public class TextureAssetSource : ShaderDataSource
+    {
+    }
+
+    public struct NativePipelineStage
     {
         public IntPtr Handle;
     }
 
-    public struct DeferredDataSource
+    public class PipelineStage
+    {
+        public NativePipelineStage NativeHandle;
+    }
+
+    public class PipelineDrawStage : PipelineStage
+    {
+    }
+
+    public class DrawScreenTextureStage : PipelineStage
+    {
+        
+    }
+
+    public struct NativePipelineStageRenderer
     {
         public IntPtr Handle;
     }
 
-    public struct TextureAssetSource
+    public class PipelineStageRenderer
     {
-        public IntPtr Handle;
+        public NativePipelineStageRenderer NativeHandle;
     }
 
-    public struct PipelineStage
+    public class ScreenQuadRenderer : PipelineStageRenderer
     {
-        public IntPtr Handle;
-    }
-
-    public struct PipelineDrawStage
-    {
-        public IntPtr handle;
-    }
-
-    public struct DrawScreenTextureStage
-    {
-        public IntPtr handle;
-    }
-
-    public struct PipelineStageRenderer
-    {
-        public IntPtr Handle;
-    }
-
-    public struct ScreenQuadRenderer
-    {
-        public IntPtr Handle;
     }
 
     public struct Pipeline
@@ -126,13 +138,13 @@ namespace Harmony
         public extern static ShaderProgram GetShader(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static ShaderDataSource GetShaderDataSource(string name);
+        public extern static NativeShaderDataSource GetShaderDataSource(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static PipelineStage GetPipelineStage(string name);
+        public extern static NativePipelineStage GetPipelineStage(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static PipelineStageRenderer GetPipelineStageRenderer(string name);
+        public extern static NativePipelineStageRenderer GetPipelineStageRenderer(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static Framebuffer PipelineAddFramebuffer(this Pipeline pipeline , string name, AttachmentType[] attachments, Resolution.Type resolutionType);
@@ -144,21 +156,21 @@ namespace Harmony
         public extern static void PipelineAddStage(this Pipeline pipeline, Framebuffer fb, PipelineStage stage);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static void PipelineStageAddDataSource(this PipelineStage pipeline, ShaderDataSource source);
+        public extern static void PipelineStageAddDataSource(this NativePipelineStage pipeline, NativeShaderDataSource source);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static PipelineDrawStage CreatePipelineDrawStage(string name, ShaderProgram shader, PipelineStageRenderer renderer);
+        public extern static NativePipelineStage CreatePipelineDrawStage(string name, ShaderProgram shader, NativePipelineStageRenderer renderer);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static PipelineStageRenderer CreateScreenQuadRenderer();
+        public extern static NativePipelineStageRenderer CreateScreenQuadRenderer();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static ShaderDataSource CreateDeferredDataSource(Framebuffer fb);
+        public extern static NativeShaderDataSource CreateDeferredDataSource(Framebuffer fb);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static ShaderDataSource CreateTextureAssetSource(ushort samplerIndex, string uniformName, TextureAsset texture);
+        public extern static NativeShaderDataSource CreateTextureAssetSource(ushort samplerIndex, string uniformName, TextureAsset texture);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static PipelineStage CreateDrawScreenTextureStage(ShaderProgram shader, AttachmentType attachmentType, Framebuffer[] framebuffers);
+        public extern static NativePipelineStage CreateDrawScreenTextureStage(ShaderProgram shader, AttachmentType attachmentType, Framebuffer[] framebuffers);
     }
 }
