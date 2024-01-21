@@ -150,15 +150,15 @@ namespace Harmony
         public extern static PipelineDrawStage CreatePipelineDrawStage(string name, ShaderProgram shader, PipelineStageRenderer renderer);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static ScreenQuadRenderer CreateScreenQuadRenderer(string name, ShaderProgram shader, PipelineStageRenderer renderer);
+        public extern static PipelineStageRenderer CreateScreenQuadRenderer();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static DeferredDataSource CreateDeferredDataSource(Framebuffer fb);
+        public extern static ShaderDataSource CreateDeferredDataSource(Framebuffer fb);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static ScreenQuadRenderer CreateTextureAssetSource(ushort samplerIndex, string uniformName, TextureAsset texture);
+        public extern static ShaderDataSource CreateTextureAssetSource(ushort samplerIndex, string uniformName, TextureAsset texture);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static ScreenQuadRenderer CreateDrawScreenTextureStage(ShaderProgram shader, AttachmentType attachmentType, Framebuffer[] framebuffers);
+        public extern static PipelineStage CreateDrawScreenTextureStage(ShaderProgram shader, AttachmentType attachmentType, Framebuffer[] framebuffers);
     }
 }

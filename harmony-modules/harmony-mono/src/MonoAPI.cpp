@@ -20,6 +20,7 @@
 #include "Rendering/Pipelines/PipelineV2.h"
 #include "Rendering/Pipelines/PipelineStages/PipelineDrawStage.h"
 #include "Rendering/Pipelines/PipelineStageRenderers/ScreenQuadRenderer.h"
+#include "Rendering/Framebuffer.h"
 static MonoClass* s_AssetHandleClass = nullptr;
 static MonoClass* s_AttachmentTypeClass = nullptr;
 
@@ -1042,12 +1043,13 @@ harmony::ScreenQuadRenderer* harmony_mono_renderer_create_screen_quad_renderer()
     using namespace harmony;
     RefCntPtr<ScreenQuadRenderer> quad_renderer = CreateRef<ScreenQuadRenderer>();
     s_PipelineStageRendererCache.emplace_back(std::static_pointer_cast<PipelineStageRenderer, ScreenQuadRenderer>(quad_renderer));
-
     return quad_renderer.get();
 }
 
 harmony::DeferredDataSource* harmony_mono_renderer_create_deferred_data_source(harmony::Framebuffer* framebuffer)
 {
+    using namespace harmony;
+    RefCntPtr<Framebuffer> fb (framebuffer);
     return nullptr;
 }
 
