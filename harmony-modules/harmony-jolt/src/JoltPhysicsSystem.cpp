@@ -75,9 +75,6 @@ harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GetTypeHash<JoltPhysics
     m_JobSystemValidating = CreateUnique<JPH::JobSystemThreadPool>(s_MaxPhysicsJobs, s_MaxPhysicsBarriers,
                                                                   s_ValidatingJobSystemNumThreads);
 
-    //m_JobSystem = CreateUnique<JPH::JobSystemSingleThreaded>(s_MaxPhysicsJobs);
-    //m_JobSystemValidating = CreateUnique<JPH::JobSystemSingleThreaded>(s_MaxPhysicsJobs);
-
     m_BroadPhaseLayerInterface = CreateUnique<HarmonyBroadPhaseLayerInterface>();
     m_ObjectVsBroadphaseFilter = CreateUnique<HarmonyObjectVsBroadPhaseLayerFilter>();
     m_BodyActivationListener = CreateUnique<HarmonyBodyActivationListener>();
