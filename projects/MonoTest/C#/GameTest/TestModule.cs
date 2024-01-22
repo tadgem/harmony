@@ -33,13 +33,13 @@ namespace GameTest
 
             // Create draw stage for each framebuffer...
 
-            pipeline.PipelineAddStage(skyFB, Renderer.GetPipelineStage("SkyStage"));
+            //pipeline.PipelineAddStage(skyFB, Renderer.GetPipelineStage("SkyStage"));
 
-            pipeline.PipelineAddStage(forwardFB, Renderer.GetPipelineStage("DebugDrawStage"));
-            pipeline.PipelineAddStage(forwardFB, Renderer.GetPipelineStage("NormalStage"));
-            pipeline.PipelineAddStage(forwardFB, Renderer.GetPipelineStage("TexturedMeshStage"));
-            pipeline.PipelineAddStage(forwardFB, Renderer.GetPipelineStage("BlinnPhongTextured"));
-            pipeline.PipelineAddStage(vectorFB, Renderer.GetPipelineStage("VectorGraphicsStage"));
+            //pipeline.PipelineAddStage(forwardFB, Renderer.GetPipelineStage("DebugDrawStage"));
+            //pipeline.PipelineAddStage(forwardFB, Renderer.GetPipelineStage("NormalStage"));
+            //pipeline.PipelineAddStage(forwardFB, Renderer.GetPipelineStage("TexturedMeshStage"));
+            //pipeline.PipelineAddStage(forwardFB, Renderer.GetPipelineStage("BlinnPhongTextured"));
+            //pipeline.PipelineAddStage(vectorFB, Renderer.GetPipelineStage("VectorGraphicsStage"));
 
             // Add draw stages to output framebuffer
 
@@ -65,24 +65,24 @@ namespace GameTest
             },
             Resolution.Type.FullScale);
 
-            // Create deferred gbuffer draw stage
-            PipelineDrawStage gBufferStage = Renderer.CreatePipelineDrawStage("GBufferStage", Renderer.GetShader("DeferredGBuffer"), Renderer.GetPipelineStageRenderer("MeshRenderer"));
+            //// Create deferred gbuffer draw stage
+            //PipelineDrawStage gBufferStage = Renderer.CreatePipelineDrawStage("GBufferStage", Renderer.GetShader("DeferredGBuffer"), Renderer.GetPipelineStageRenderer("MeshRenderer"));
             
-            //Get moebius shader
-            ShaderProgram moebiusShader = Renderer.GetShader("Moebius2");
+            ////Get moebius shader
+            //ShaderProgram moebiusShader = Renderer.GetShader("Moebius2");
 
-            // Create a screen quad renderer
-            PipelineStageRenderer screenQuadRenderer = Renderer.CreateScreenQuadRenderer();
+            //// Create a screen quad renderer
+            //PipelineStageRenderer screenQuadRenderer = Renderer.CreateScreenQuadRenderer();
 
-            // create moebius draw stage (moebius shader, quad renderer)
-            PipelineDrawStage moebiusStage = Renderer.CreatePipelineDrawStage("MoebiusStage", moebiusShader, screenQuadRenderer);
+            //// create moebius draw stage (moebius shader, quad renderer)
+            //PipelineDrawStage moebiusStage = Renderer.CreatePipelineDrawStage("MoebiusStage", moebiusShader, screenQuadRenderer);
 
 
-            // Create deferred data source
-            ShaderDataSource deferredDataSource = Renderer.CreateDeferredDataSource(gbufferFB);
+            //// Create deferred data source
+            //ShaderDataSource deferredDataSource = Renderer.CreateDeferredDataSource(gbufferFB);
 
-            // Create crosshatch texture data source;
-            ShaderDataSource crosshatchTextureSource = Renderer.CreateTextureAssetSource(5, "u_crossHatch", crossHatchTexture);
+            //// Create crosshatch texture data source;
+            //ShaderDataSource crosshatchTextureSource = Renderer.CreateTextureAssetSource(5, "u_crossHatch", crossHatchTexture);
 
             
             // add deferred, blinn phong and crosshatch sources to moebius stage
