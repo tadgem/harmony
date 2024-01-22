@@ -30,12 +30,17 @@ namespace Harmony
         }
     }
 
-    public interface IScriptComponent
+    public interface IComponent
     {
 
     }
 
-    public interface INativeComponent  {
+    public interface IScriptComponent : IComponent
+    {
+
+    }
+
+    public interface INativeComponent  : IComponent {
 
         IntPtr Handle { get; set; }
         // Pretend this is static, its not nice but we need it for now

@@ -15,7 +15,7 @@ namespace GameTest
         public override void Init()
         {
             _scene = SceneMethods.GetActiveScene();
-            _transform = _scene.GetNativeComponent<TransformComponent>(Self);
+            _transform = _scene.GetComponent<TransformComponent>(Self);
             Vector3 v = _transform.Position;
             Log.Info($"I am entity : {Self} : Pos : {v}");
             _circleColor.r = 192.0f / 255.0f;

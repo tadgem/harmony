@@ -17,10 +17,10 @@ namespace GameTest
         {
             _scene = SceneMethods.GetActiveScene();
             
-            _transform = _scene.GetNativeComponent<TransformComponent>(Self);
+            _transform = _scene.GetComponent<TransformComponent>(Self);
             
-            JoltBodyComponent joltBody = _scene.GetNativeComponent<JoltBodyComponent>(Self);
-            JoltTestBehaviour joltTestBehaviour = _scene.GetScriptComponent<JoltTestBehaviour>(Self);
+            JoltBodyComponent joltBody = _scene.GetComponent<JoltBodyComponent>(Self);
+            JoltTestBehaviour joltTestBehaviour = _scene.GetComponent<JoltTestBehaviour>(Self);
 
             _body = joltBody.Body;
 
@@ -35,7 +35,7 @@ namespace GameTest
             Entity e1 = a.GetEntity();
             Entity e2 = b.GetEntity();
 
-            JoltTestBehaviour joltBehaviour = _scene.GetScriptComponent<JoltTestBehaviour>(e2);
+            JoltTestBehaviour joltBehaviour = _scene.GetComponent<JoltTestBehaviour>(e2);
             if(joltBehaviour != null)
             {
                 Log.Info($"Entity : {e1} has jolt test behaviour");
