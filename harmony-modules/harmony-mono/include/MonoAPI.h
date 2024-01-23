@@ -391,7 +391,9 @@ extern "C"
     // if we create a ref in a method and return raw ptr object is make delete
     // have a temporary static vector we push them to as we process modules, then clear
     void                            harmony_mono_renderer_clear_cached_objects();
+    
     // ECS
+    // Transform
     harmony::TransformComponent* harmony_mono_get_transform(harmony::Scene* scene, entt_entity entity);
     void harmony_mono_set_transform_position(harmony::TransformComponent* t, glm_vec3 position);
     void harmony_mono_set_transform_euler(harmony::TransformComponent* t, glm_vec3 euler);
@@ -404,5 +406,18 @@ extern "C"
     glm_vec3 harmony_mono_get_transform_right       (harmony::TransformComponent* t);
     glm_vec3 harmony_mono_get_transform_up          (harmony::TransformComponent* t);
 
+    // Mesh
+
+    // Material
+
+    // Directional Light
+    
+    // Point Light
+
+    // Spot Light
+
+    // Sky
+
+    // Camera
 
 }
