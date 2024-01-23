@@ -813,22 +813,6 @@ harmony::TextureAsset* harmony_mono_assets_get_texture_asset(asset_handle handle
     return t.lock().get();
 }
 
-harmony::ShaderStage* harmony_mono_assets_get_shader_stage_asset(asset_handle handle)
-{
-    using namespace harmony;
-    String c_path = String(mono_string_to_utf8(handle.path));
-    AssetHandle h{ c_path, handle.index, HashString {handle.type_hash} };
-
-    WeakPtr<ShaderStage> t = Program::Get()->m_AssetManager.GetAsset<ShaderStage>(h);
-
-    if (t.expired())
-    {
-        return nullptr;
-    }
-
-    return t.lock().get();
-}
-
 harmony::ShaderProgram* harmony_mono_renderer_get_shader(MonoString* name)
 {
     auto shaderWr = harmony::Program::Get()->m_Renderer.GetShader(harmony::String(mono_string_to_utf8(name)));
@@ -839,30 +823,6 @@ harmony::ShaderProgram* harmony_mono_renderer_get_shader(MonoString* name)
     }
 
     return shaderWr.lock().get();
-}
-
-harmony::ShaderProgram* harmony_mono_renderer_build_shader(MonoString*  name, harmony::ShaderStage* vertStage,
-    harmony::ShaderStage* fragStage)
-{
-    using namespace harmony;
-    if(!vertStage || !fragStage)
-    {
-        return nullptr;
-    }
-
-    String shaderName = String(mono_string_to_utf8(name));
-
-    WeakPtr<ShaderStage> vert = Program::Get()->m_AssetManager.GetAsset<ShaderStage>(vertStage->m_Handle);
-    WeakPtr<ShaderStage> frag = Program::Get()->m_AssetManager.GetAsset<ShaderStage>(fragStage->m_Handle);
-
-    WeakPtr<ShaderProgram> prog = Program::Get()->m_Renderer.BuildShader(shaderName, vert, frag);
-
-    if(prog.expired())
-    {
-        return  nullptr;
-    }
-
-    return prog.lock().get();
 }
 
 harmony::View* harmony_mono_renderer_get_view(MonoString* name)
@@ -937,28 +897,6 @@ void harmony_mono_renderer_pipeline_set_output_framebuffer(harmony::PipelineV2* 
     pipeline->SetOutputFramebuffer(pipelineFB);
 }
 
-harmony::ShaderDataSource* harmony_mono_renderer_get_shader_data_source(MonoString* name)
-{
-    using namespace harmony;
-    RefCntPtr<ShaderDataSource> data_source = Program::Get()->m_Renderer.GetShaderDataSource(String(mono_string_to_utf8(name))).lock();
-    if(data_source)
-    {
-        return data_source.get();
-    }
-    return nullptr;
-}
-
-harmony::PipelineStage* harmony_mono_renderer_get_pipeline_stage(MonoString* name)
-{
-    using namespace harmony;
-    RefCntPtr<PipelineStage> stage = Program::Get()->m_Renderer.GetPipelineStage(String(mono_string_to_utf8(name))).lock();
-    if(stage)
-    {
-        return stage.get();
-    }
-    return nullptr;
-}
-
 harmony::PipelineStageRenderer* harmony_mono_renderer_get_pipeline_stage_renderer(MonoString* name)
 {
     using namespace harmony;
@@ -970,10 +908,10 @@ harmony::PipelineStageRenderer* harmony_mono_renderer_get_pipeline_stage_rendere
     return nullptr;
 }
 
-static harmony::Vector<harmony::RefCntPtr<harmony::PipelineStage>> s_PipelineStageCache;
-static harmony::Vector<harmony::RefCntPtr<harmony::PipelineStageRenderer>> s_PipelineStageRendererCache;
-static harmony::Vector<harmony::RefCntPtr<harmony::ShaderDataSource>> s_ShaderDataSourceCache;
-static harmony::Vector<harmony::RefCntPtr<harmony::ShaderProgram>> s_ShaderProgramCache;
+static harmony::Vector<harmony::RefCntPtr<harmony::PipelineStage>>          s_PipelineStageCache;
+static harmony::Vector<harmony::RefCntPtr<harmony::PipelineStageRenderer>>  s_PipelineStageRendererCache;
+static harmony::Vector<harmony::RefCntPtr<harmony::ShaderDataSource>>       s_ShaderDataSourceCache;
+static harmony::Vector<harmony::RefCntPtr<harmony::ShaderProgram>>          s_ShaderProgramCache;
 
 void harmony_mono_renderer_pipeline_add_stage(harmony::PipelineV2* pipeline, harmony::Framebuffer* fb, harmony::PipelineStage* stage)
 {

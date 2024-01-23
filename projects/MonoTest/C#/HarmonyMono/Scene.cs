@@ -56,8 +56,10 @@ namespace Harmony
         {
             T templateComponentStub = new T();
 
+            // TODO : Convert to static non-generic function which accepts type as parameter
+            // for native components. 
             if(templateComponentStub is INativeComponent nativeComponent)
-            {
+            { 
                 nativeComponent.Handle = nativeComponent.GetNativeHandle(scene, entity);
             }
             else

@@ -33,7 +33,9 @@ namespace GameTest
 
             // Create draw stage for each framebuffer...
 
-            //pipeline.PipelineAddStage(skyFB, Renderer.GetPipelineStage("SkyStage"));
+            NativePipelineStage skyStage = default;
+            PipelineStage stage = new PipelineStage();
+            stage.NativeHandle = skyStage;
 
             //pipeline.PipelineAddStage(forwardFB, Renderer.GetPipelineStage("DebugDrawStage"));
             //pipeline.PipelineAddStage(forwardFB, Renderer.GetPipelineStage("NormalStage"));

@@ -27,6 +27,25 @@ namespace Harmony.Support
             return _value == other._value;
         }
 
+        public override bool Equals(object obj)
+        {
+            if(obj is HashString h) 
+            {
+                return this == h;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return $"{_value}";
+        }
+
         public static bool operator == (HashString lhs, HashString rhs)
         {
             return lhs.Equals(rhs);

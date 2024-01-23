@@ -10,7 +10,7 @@ using static HarmonyJoltSharp.JoltApi;
 
 namespace HarmonyJoltSharp
 {
-
+#pragma warning disable CS0067
     public delegate ValidateResult ContactValidateHandler(PhysicsSystem system, in Body body1, in Body body2, Double3 baseOffset, IntPtr collisionResult);
     public delegate void ContactAddedHandler(PhysicsSystem system, in Body body1, in Body body2);
     public delegate void ContactPersistedHandler(PhysicsSystem system, in Body body1, in Body body2);
@@ -224,4 +224,5 @@ namespace HarmonyJoltSharp
             }
         }
     }
+#pragma warning restore CS0067
 }

@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Harmony
 {
+#pragma warning disable CS0169
     public static class VectorGraphics
     {
 
@@ -206,4 +207,5 @@ namespace Harmony
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static NVGpaint   ImagePattern(Layer layer, float ox, float oy, float ex, float ey, float angle, int image, float alpha);
     }
+#pragma warning restore CS0169
 }

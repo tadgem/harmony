@@ -3,12 +3,14 @@ using System.Runtime.CompilerServices;
 
 namespace Harmony
 {
+#pragma warning disable CS0169
     public struct AssetHandle
     {
         string  Path;
         uint    Index;
         ulong   TypeHash; 
     }
+#pragma warning restore CS0169
 
     public static class AssetMethods
     {
@@ -20,8 +22,5 @@ namespace Harmony
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static Mesh GetMeshAsset(AssetHandle handle);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static ShaderStage GetShaderStageAsset(AssetHandle handle);
     }
 }

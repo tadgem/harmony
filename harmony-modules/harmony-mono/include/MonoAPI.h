@@ -304,7 +304,7 @@ extern "C"
     void        harmony_mono_debug_draw_line_to(harmony_debug_draw_channel channel, glm_vec3 translate);
     void        harmony_mono_debug_draw_circle(harmony_debug_draw_channel channel, glm_vec3 normal, glm_vec3 center, float radius, float weight);
     void        harmony_mono_debug_draw_quad(harmony_debug_draw_channel channel, glm_vec3 normal, glm_vec3 center, float size);
-    void             harmony_mono_debug_draw_sphere(harmony_debug_draw_channel channel, glm_vec3 center, float radius);
+    void        harmony_mono_debug_draw_sphere(harmony_debug_draw_channel channel, glm_vec3 center, float radius);
     void        harmony_mono_debug_draw_cylinder(harmony_debug_draw_channel channel, glm_vec3 from, glm_vec3 to, float radius);
     void        harmony_mono_debug_draw_capsule(harmony_debug_draw_channel channel, glm_vec3 from, glm_vec3 to, float radius);
     void        harmony_mono_debug_draw_cone(harmony_debug_draw_channel channel, glm_vec3 from, glm_vec3 to, float radius);
@@ -369,15 +369,11 @@ extern "C"
     MonoArray*              harmony_mono_assets_get_assets_at_path(MonoString* path);
     harmony::Mesh*          harmony_mono_assets_get_mesh_asset(asset_handle handle);
     harmony::TextureAsset*  harmony_mono_assets_get_texture_asset(asset_handle handle);
-    harmony::ShaderStage*   harmony_mono_assets_get_shader_stage_asset(asset_handle handle);
 
     // Rendering
     harmony::View*                  harmony_mono_renderer_get_view(MonoString* name);
     harmony::PipelineV2*            harmony_mono_renderer_get_view_pipeline(harmony::View* view);
-    harmony::ShaderProgram*         harmony_mono_renderer_build_shader(MonoString* name, harmony::ShaderStage* vertStage, harmony::ShaderStage* fragStage);
     harmony::ShaderProgram*         harmony_mono_renderer_get_shader(MonoString* name);
-    harmony::ShaderDataSource*      harmony_mono_renderer_get_shader_data_source(MonoString* name);
-    harmony::PipelineStage*         harmony_mono_renderer_get_pipeline_stage(MonoString* name);
     harmony::PipelineStageRenderer* harmony_mono_renderer_get_pipeline_stage_renderer(MonoString* name);
 
     harmony::Framebuffer*           harmony_mono_renderer_pipeline_add_framebuffer(harmony::PipelineV2* pipeline, MonoString* name, MonoArray* attachments, harmony_resolution_type resolutionType);

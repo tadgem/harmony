@@ -266,10 +266,7 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     // Renderer
     mono_add_internal_call("Harmony.Renderer::GetView", harmony_mono_renderer_get_view);
     mono_add_internal_call("Harmony.Renderer::GetViewPipeline", harmony_mono_renderer_get_view_pipeline);
-    mono_add_internal_call("Harmony.Renderer::BuildShader", harmony_mono_renderer_build_shader);
     mono_add_internal_call("Harmony.Renderer::GetShader", harmony_mono_renderer_get_shader);
-    mono_add_internal_call("Harmony.Renderer::GetShaderDataSource", harmony_mono_renderer_get_shader_data_source);
-    mono_add_internal_call("Harmony.Renderer::GetPipelineStage", harmony_mono_renderer_get_pipeline_stage);
     mono_add_internal_call("Harmony.Renderer::GetPipelineStageRenderer", harmony_mono_renderer_get_pipeline_stage_renderer);
 
     mono_add_internal_call("Harmony.Renderer::PipelineAddFramebuffer", harmony_mono_renderer_pipeline_add_framebuffer);

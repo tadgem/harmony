@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Harmony
 {
+#pragma warning disable CS0169
     public struct Resolution
     {
         UInt16 Width;
@@ -47,11 +48,6 @@ namespace Harmony
     }
 
     public struct Framebuffer
-    {
-        public IntPtr Handle;
-    }
-
-    public struct ShaderStage
     {
         public IntPtr Handle;
     }
@@ -112,7 +108,7 @@ namespace Harmony
     public class ScreenQuadRenderer : PipelineStageRenderer
     {
     }
-
+    
     public struct Pipeline
     {
         public IntPtr Handle;
@@ -129,19 +125,10 @@ namespace Harmony
         public extern static View GetView(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static ShaderStage BuildShader(string name, ShaderStage vert, ShaderStage frag);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static Pipeline GetViewPipeline(View view);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static ShaderProgram GetShader(string name);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static NativeShaderDataSource GetShaderDataSource(string name);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static NativePipelineStage GetPipelineStage(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static NativePipelineStageRenderer GetPipelineStageRenderer(string name);
@@ -153,7 +140,7 @@ namespace Harmony
         public extern static Framebuffer PipelineSetOutputFramebuffer(this Pipeline pipeline, Framebuffer fb);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static void PipelineAddStage(this Pipeline pipeline, Framebuffer fb, PipelineStage stage);
+        public extern static void PipelineAddStage(this Pipeline pipeline, Framebuffer fb, NativePipelineStage stage);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static void PipelineStageAddDataSource(this NativePipelineStage pipeline, NativeShaderDataSource source);
@@ -173,4 +160,5 @@ namespace Harmony
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static NativePipelineStage CreateDrawScreenTextureStage(ShaderProgram shader, AttachmentType attachmentType, Framebuffer[] framebuffers);
     }
+#pragma warning restore CS0169
 }
