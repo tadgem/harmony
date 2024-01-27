@@ -96,6 +96,8 @@ namespace harmony {
 
         std::string GetWorkingDirectory();
 
+        SDL_Window* GetWindow() const;
+
     protected:
 
         virtual void LoadBuiltInAssets();

@@ -46,6 +46,7 @@ void harmony::DebugCamera::Update() {
     if (Focussed && Enabled) {
         if (Input::GetMouseButton(Mouse::Button::Right)) {
             if (ShowCursor) {
+                SDL_SetWindowMouseGrab(Program::Get()->GetWindow(), SDL_TRUE);
                 SDL_SetRelativeMouseMode(SDL_TRUE);
                 ShowCursor = false;
             }
@@ -79,6 +80,7 @@ void harmony::DebugCamera::Update() {
         } else {
             if (!ShowCursor) {
                 SDL_SetRelativeMouseMode(SDL_FALSE);
+                SDL_SetWindowMouseGrab(Program::Get()->GetWindow(), SDL_FALSE);
                 ShowCursor = true;
             }
         }
@@ -145,9 +147,9 @@ void harmony::EditorView::OnImGui() {
     const std::string editorViewTitle = std::string(ICON_FA_VIDEO_CAMERA) + " Editor";
     glm::mat4 mat = glm::mat4(1.0);
     auto pipeline = p_Renderer.GetViewPipelineFromName("Editor").lock();
+    
     if (ImGui::Begin(editorViewTitle.c_str(), (bool *) 0, ImGuiWindowFlags_NoScrollbar)) {
         View::OnImGui();
-        // Crashing here because pipelines have not been initialized...
         auto outputFramebuffer = pipeline->GetOutputFramebuffer().lock();
         if(!outputFramebuffer)
         {

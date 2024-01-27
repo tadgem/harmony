@@ -21,6 +21,10 @@
 #include "Rendering/Pipelines/PipelineStages/PipelineDrawStage.h"
 #include "Rendering/Pipelines/PipelineStageRenderers/ScreenQuadRenderer.h"
 #include "Rendering/Framebuffer.h"
+#include "Rendering/Pipelines/PipelineStages/SkyStage.h"
+#include "Rendering/Pipelines/BuiltIn/DebugDrawPipeline.h"
+#include "Rendering/Pipelines/BuiltIn/VectorPipeline.h"
+
 static MonoClass* s_AssetHandleClass = nullptr;
 static MonoClass* s_AttachmentTypeClass = nullptr;
 
@@ -921,8 +925,19 @@ void harmony_mono_renderer_pipeline_add_stage(harmony::PipelineV2* pipeline, har
     {
         return;
     }
-    RefCntPtr<PipelineStage> stageRefCntPtr(stage);
-    s_PipelineStageCache.emplace_back(stageRefCntPtr);
+    RefCntPtr<PipelineStage> stageRefCntPtr;
+    for (auto& ps : s_PipelineStageCache)
+    {
+        if (ps.get() == stage)
+        {
+            stageRefCntPtr = ps;
+        }
+    }
+
+    if (!stageRefCntPtr)
+    {
+        return;
+    }
 
     WeakPtr<Framebuffer> framebuffer = pipeline->GetFramebuffer(fb->m_Name);
     pipeline->AddPipelineStage(framebuffer, stageRefCntPtr);
@@ -937,9 +952,21 @@ void harmony_mono_renderer_pipeline_stage_add_data_source(harmony::PipelineStage
     {
         return;
     }
-    RefCntPtr<ShaderDataSource> sourceRefCntPtr(source);
-    s_ShaderDataSourceCache.emplace_back(sourceRefCntPtr);
+    RefCntPtr<ShaderDataSource> sourceRefCntPtr;
 
+	for (auto& sds : s_ShaderDataSourceCache)
+	{
+		if (sds.get() == source)
+		{
+            sourceRefCntPtr = sds;
+		}
+	}
+
+	if (!sourceRefCntPtr)
+	{
+		return;
+	}
+    
     stage->AddShaderDataSource(sourceRefCntPtr);
 }
 
@@ -958,8 +985,7 @@ harmony::PipelineDrawStage* harmony_mono_renderer_create_pipeline_draw_stage(Mon
 
     String stageName = String(mono_string_to_utf8(name));
 
-    RefCntPtr<ShaderProgram> s (shader);
-    s_ShaderProgramCache.emplace_back(s);
+    WeakPtr<ShaderProgram> s = Program::Get()->m_Renderer.GetShader(shader->m_Name);
 
     RefCntPtr<PipelineStageRenderer> r (renderer);
     s_PipelineStageRendererCache.emplace_back(r);
@@ -974,6 +1000,27 @@ harmony::PipelineDrawStage* harmony_mono_renderer_create_pipeline_draw_stage(Mon
     s_PipelineStageCache.emplace_back(stage);
 
     return stage.get();
+}
+
+harmony::DrawScreenTextureStage* harmony_mono_renderer_create_draw_screen_texture_stage(harmony::ShaderProgram* shader,
+    harmony_attachment_type attachmentType, MonoArray* framebufferArray)
+{
+    return nullptr;
+}
+
+harmony::SkyStage* harmony_mono_renderer_create_sky_stage()
+{
+    return nullptr;
+}
+
+harmony::VectorGraphicsStage* harmony_mono_renderer_create_vector_graphics_stage(harmony_vg_layer layer)
+{
+    return nullptr;
+}
+
+harmony::DebugDrawStage* harmony_mono_renderer_create_debug_draw_stage(harmony_debug_draw_channel channel)
+{
+    return nullptr;
 }
 
 harmony::ScreenQuadRenderer* harmony_mono_renderer_create_screen_quad_renderer()
@@ -997,8 +1044,8 @@ harmony::TextureAssetSource* harmony_mono_renderer_create_texture_asset_source(u
     return nullptr;
 }
 
-harmony::DrawScreenTextureStage* harmony_mono_renderer_create_draw_screen_texture_stage(harmony::ShaderProgram* shader,
-    harmony_attachment_type attachmentType, MonoArray* framebufferArray)
+
+harmony::BlinnPhongDataSource* harmony_mono_renderer_create_blinn_phong_data_source()
 {
     return nullptr;
 }

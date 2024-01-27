@@ -11,73 +11,40 @@
 #include "Rendering/Shaders/Shader.h"
 #include "Rendering/Shaders/ShaderDataSource.h"
 
+// Forward def
 namespace harmony {
     class DrawScreenTextureStage;
-}
-
-namespace harmony {
     class TextureAssetSource;
-}
-
-namespace harmony {
     class DeferredDataSource;
-}
-
-namespace harmony {
+	class BlinnPhongDataSource;
     class ScreenQuadRenderer;
-}
-
-namespace harmony {
     class PipelineDrawStage;
-}
-
-namespace harmony {
     class PipelineStageRenderer;
-}
-
-namespace harmony {
     class ShaderDataSource;
-}
-
-namespace harmony {
     class PipelineStage;
-}
-
-namespace harmony {
     class Framebuffer;
-}
-
-namespace harmony {
     class PipelineV2;
     class View;
-}
-
-namespace harmony {
     class ShaderProgram;
-}
-
-namespace harmony {
     struct TransformComponent;
     class ProgramComponent;
     class Mesh;
     class TextureAsset;
     class ShaderStage;
+    class SkyStage;
+    class VectorGraphicsStage;
+    class DebugDrawStage;
 }
 extern "C"
 {
-    // Forward defs
     struct NVGpaint;
     struct NVGcolor;
-
-
-    // Type Defs
 
     enum harmony_debug_draw_channel : char
     {
         Editor, 
         Game
     };
-
     enum harmony_gamepad_button {
         ButtonInvalid = -1,
         FaceNorth,
@@ -382,10 +349,14 @@ extern "C"
     void                            harmony_mono_renderer_pipeline_stage_add_data_source(harmony::PipelineStage* fb, harmony::ShaderDataSource* source);
 
     harmony::PipelineDrawStage*         harmony_mono_renderer_create_pipeline_draw_stage(MonoString* name, harmony::ShaderProgram* shader, harmony::PipelineStageRenderer* renderer);
+    harmony::DrawScreenTextureStage*    harmony_mono_renderer_create_draw_screen_texture_stage(harmony::ShaderProgram* shader, harmony_attachment_type attachmentType, MonoArray* framebufferArray);
+    harmony::SkyStage*                  harmony_mono_renderer_create_sky_stage();
+    harmony::VectorGraphicsStage*       harmony_mono_renderer_create_vector_graphics_stage(harmony_vg_layer layer);
+    harmony::DebugDrawStage*            harmony_mono_renderer_create_debug_draw_stage(harmony_debug_draw_channel channel);
     harmony::ScreenQuadRenderer*        harmony_mono_renderer_create_screen_quad_renderer();
     harmony::DeferredDataSource*        harmony_mono_renderer_create_deferred_data_source(harmony::Framebuffer* framebuffer);
     harmony::TextureAssetSource*        harmony_mono_renderer_create_texture_asset_source(uint16_t samplerIndex, MonoString* uniformName, harmony::TextureAsset* textureAsset);
-    harmony::DrawScreenTextureStage*    harmony_mono_renderer_create_draw_screen_texture_stage(harmony::ShaderProgram* shader, harmony_attachment_type attachmentType, MonoArray* framebufferArray);
+	harmony::BlinnPhongDataSource*      harmony_mono_renderer_create_blinn_phong_data_source();
     // Create / destroy built in stages...
     // Need to call this after modules are loaded
     // if we create a ref in a method and return raw ptr object is make delete

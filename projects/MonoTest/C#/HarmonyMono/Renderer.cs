@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using static Harmony.bgfx;
 
 namespace Harmony
 {
@@ -64,16 +66,37 @@ namespace Harmony
 
     public class ShaderDataSource
     {
-        public NativeShaderDataSource NativeHandle;
+        public readonly NativeShaderDataSource NativeHandle;
+
+        public ShaderDataSource(NativeShaderDataSource nativeHandle)
+        {
+            NativeHandle = nativeHandle;
+        }
+
+        public static implicit operator NativeShaderDataSource(ShaderDataSource s) => s.NativeHandle;
     }
 
     public class DeferredDataSource : ShaderDataSource
     {
-       
+        public DeferredDataSource(NativeShaderDataSource native) : base(native)
+        {
+        }
     }
 
     public class TextureAssetSource : ShaderDataSource
     {
+        public TextureAssetSource(NativeShaderDataSource native) : base(native)
+        {
+
+        }
+    }
+
+    public class BlinnPhongDataSource : ShaderDataSource
+    {
+        internal BlinnPhongDataSource(NativeShaderDataSource native) : base(native)
+        {
+
+        }
     }
 
     public struct NativePipelineStage
@@ -83,16 +106,55 @@ namespace Harmony
 
     public class PipelineStage
     {
-        public NativePipelineStage NativeHandle;
+        public readonly NativePipelineStage NativeHandle;
+
+        internal PipelineStage(NativePipelineStage nativeHandle)
+        {
+            NativeHandle = nativeHandle;
+        }
+
+        public static implicit operator NativePipelineStage(PipelineStage p) => p.NativeHandle;
+
+        public void AddShaderDataSource(NativeShaderDataSource nativeShaderDataSource)
+        {
+            NativeHandle.AddDataSource(nativeShaderDataSource);
+        }
+
     }
 
     public class PipelineDrawStage : PipelineStage
     {
+        internal PipelineDrawStage(NativePipelineStage native) : base(native)
+        {
+        }
     }
 
     public class DrawScreenTextureStage : PipelineStage
     {
-        
+        internal DrawScreenTextureStage(NativePipelineStage native) : base(native)
+        {
+        }
+    }
+
+    public class SkyStage : PipelineStage
+    {
+        internal SkyStage(NativePipelineStage native) : base(native)
+        {
+        }
+    }
+
+    public class DebugDrawStage : PipelineStage
+    {
+        internal DebugDrawStage(NativePipelineStage native) : base(native)
+        {
+        }
+    }
+
+    public class VectorGraphicsStage : PipelineStage
+    {
+        internal VectorGraphicsStage(NativePipelineStage native) : base(native)
+        {
+        }
     }
 
     public struct NativePipelineStageRenderer
@@ -102,13 +164,24 @@ namespace Harmony
 
     public class PipelineStageRenderer
     {
-        public NativePipelineStageRenderer NativeHandle;
+        public readonly NativePipelineStageRenderer NativeHandle;
+
+        public PipelineStageRenderer(NativePipelineStageRenderer native)
+        {
+            NativeHandle = native;
+        }
+
+        public static implicit operator NativePipelineStageRenderer(PipelineStageRenderer r) => r.NativeHandle;
+
     }
 
     public class ScreenQuadRenderer : PipelineStageRenderer
     {
+        public ScreenQuadRenderer(NativePipelineStageRenderer native) : base(native)
+        {
+        }
     }
-    
+
     public struct Pipeline
     {
         public IntPtr Handle;
@@ -131,34 +204,151 @@ namespace Harmony
         public extern static ShaderProgram GetShader(string name);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static NativePipelineStageRenderer GetPipelineStageRenderer(string name);
+        private extern static NativePipelineStageRenderer GetPipelineStageRendererInternal(string name);
+
+        public static PipelineStageRenderer GetPipelineStageRenderer(string name)
+        {
+            NativePipelineStageRenderer nativePipelineStageRenderer = GetPipelineStageRendererInternal(name);
+            if (nativePipelineStageRenderer.Handle == IntPtr.Zero)
+            {
+                return default;
+            }
+
+            return new PipelineStageRenderer(nativePipelineStageRenderer);
+        }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static Framebuffer PipelineAddFramebuffer(this Pipeline pipeline , string name, AttachmentType[] attachments, Resolution.Type resolutionType);
+        public extern static Framebuffer AddFramebuffer(this Pipeline pipeline, string name, AttachmentType[] attachments, Resolution.Type resolutionType);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static Framebuffer PipelineSetOutputFramebuffer(this Pipeline pipeline, Framebuffer fb);
+        public extern static Framebuffer SetOutputFramebuffer(this Pipeline pipeline, Framebuffer fb);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static void PipelineAddStage(this Pipeline pipeline, Framebuffer fb, NativePipelineStage stage);
+        public extern static void AddStage(this Pipeline pipeline, Framebuffer fb, NativePipelineStage stage);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static void PipelineStageAddDataSource(this NativePipelineStage pipeline, NativeShaderDataSource source);
+        internal extern static void AddDataSource(this NativePipelineStage pipeline, NativeShaderDataSource source);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static NativePipelineStage CreatePipelineDrawStage(string name, ShaderProgram shader, NativePipelineStageRenderer renderer);
+        private extern static NativePipelineStage CreatePipelineDrawStageInternal(string name, ShaderProgram shader, NativePipelineStageRenderer renderer);
+
+        public static PipelineDrawStage CreatePipelineDrawStage(string name, ShaderProgram shader, PipelineStageRenderer renderer)
+        {
+            NativePipelineStage stage = CreatePipelineDrawStageInternal(name, shader, renderer);
+            if (stage.Handle == IntPtr.Zero)
+            {
+                return default;
+            }
+            return new PipelineDrawStage(stage);
+        }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static NativePipelineStageRenderer CreateScreenQuadRenderer();
+        private extern static NativePipelineStage CreateDrawScreenTextureStageInternal(ShaderProgram shader, AttachmentType attachmentType, Framebuffer[] framebuffers);
+
+        public static DrawScreenTextureStage CreateDrawScreenTextureStage(ShaderProgram shader, AttachmentType attachmentType, Framebuffer[] framebuffers)
+        {
+            NativePipelineStage stage = CreateDrawScreenTextureStageInternal(shader, attachmentType, framebuffers);
+            if (stage.Handle == IntPtr.Zero)
+            {
+                return default;
+            }
+            return new DrawScreenTextureStage(stage);
+        }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static NativeShaderDataSource CreateDeferredDataSource(Framebuffer fb);
+        private extern static NativePipelineStage CreateSkyStageInternal();
+
+        public static SkyStage CreateSkyStage()
+        {
+            NativePipelineStage stage = CreateSkyStageInternal();
+            if(stage.Handle == IntPtr.Zero)
+            {
+                return default;
+            }
+            return new SkyStage(stage);
+        }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static NativeShaderDataSource CreateTextureAssetSource(ushort samplerIndex, string uniformName, TextureAsset texture);
+        internal extern static NativePipelineStage CreateDebugDrawStageInternal(DebugDrawChannel channel);
+
+        public static DebugDrawStage CreateDebugDrawStage(DebugDrawChannel channel)
+        {
+            NativePipelineStage stage = CreateDebugDrawStageInternal(channel);
+            if (stage.Handle == IntPtr.Zero)
+            {
+                return default;
+            }
+            return new DebugDrawStage(stage);
+        }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static NativePipelineStage CreateDrawScreenTextureStage(ShaderProgram shader, AttachmentType attachmentType, Framebuffer[] framebuffers);
+        private extern static NativePipelineStage CreateVectorStageInternal(VectorGraphics.Layer layer);
+
+        public static VectorGraphicsStage CreateVectorGraphicsStage(VectorGraphics.Layer layer)
+        {
+            NativePipelineStage stage = CreateVectorStageInternal(layer);
+            if (stage.Handle == IntPtr.Zero)
+            {
+                return default;
+            }
+            return new VectorGraphicsStage(stage);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern static NativePipelineStageRenderer CreateScreenQuadRendererInternal();
+
+        public static ScreenQuadRenderer CreateScreenQuadRenderer()
+        {
+            NativePipelineStageRenderer nativePipelineStageRenderer = CreateScreenQuadRenderer();
+            if (nativePipelineStageRenderer.Handle == IntPtr.Zero)
+            {
+                return default;
+            }
+
+            return new ScreenQuadRenderer(nativePipelineStageRenderer);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern static NativeShaderDataSource CreateDeferredDataSourceInternal(Framebuffer fb);
+
+        public static DeferredDataSource CreateDeferredDataSource(Framebuffer fb)
+        {
+            NativeShaderDataSource nativeShaderDataSource = CreateDeferredDataSourceInternal(fb);
+            if (nativeShaderDataSource.NativeHandle == IntPtr.Zero)
+            {
+                return default;
+            }
+
+            return new DeferredDataSource(nativeShaderDataSource);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern static NativeShaderDataSource CreateTextureAssetSourceInternal(ushort samplerIndex, string uniformName, TextureAsset texture);
+
+        public static TextureAssetSource CreateTextureAssetSource(ushort samplerIndex, string uniformName, TextureAsset texture)
+        {
+            NativeShaderDataSource nativeShaderDataSource = CreateTextureAssetSourceInternal(samplerIndex, uniformName, texture);
+            if (nativeShaderDataSource.NativeHandle == IntPtr.Zero)
+            {
+                return default;
+            }
+
+            return new TextureAssetSource(nativeShaderDataSource);
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private extern static NativeShaderDataSource CreateBlinnPhongDataSourceInternal();
+
+        public static BlinnPhongDataSource CreateBlinnPhongDataSource()
+        {
+            NativeShaderDataSource nativeShaderDataSource = CreateBlinnPhongDataSourceInternal();
+            if (nativeShaderDataSource.NativeHandle == IntPtr.Zero)
+            {
+                return default;
+            }
+
+            return new BlinnPhongDataSource(nativeShaderDataSource);
+        }
     }
 #pragma warning restore CS0169
 }

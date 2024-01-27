@@ -1078,3 +1078,8 @@ void harmony::Program::ProfilerBeginFrame() {
 void harmony::Program::Exit() {
     p_Run = false;
 }
+
+SDL_Window* harmony::Program::GetWindow() const
+{
+	return p_Window;
+}

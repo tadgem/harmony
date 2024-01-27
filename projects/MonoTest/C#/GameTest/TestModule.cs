@@ -18,40 +18,56 @@ namespace GameTest
             View runtimeView = Renderer.GetView("RuntimeView");
             Pipeline pipeline = Renderer.GetViewPipeline(runtimeView);
 
-            Framebuffer skyFB = pipeline.PipelineAddFramebuffer("Sky FB", new[] { AttachmentType.RGBA16F, AttachmentType.Depth32F }, Resolution.Type.FullScale);
-            Framebuffer forwardFB = pipeline.PipelineAddFramebuffer("Forward FB", new[] { AttachmentType.RGBA16F, AttachmentType.Depth32F }, Resolution.Type.FullScale);
-            Framebuffer vectorFB = pipeline.PipelineAddFramebuffer("Vector FB", new[] { AttachmentType.RGBA16F, AttachmentType.Depth32F }, Resolution.Type.FullScale);
+            Framebuffer skyFB = pipeline.AddFramebuffer("Sky FB", new[] { AttachmentType.RGBA16F, AttachmentType.Depth32F }, Resolution.Type.FullScale);
+            Framebuffer forwardFB = pipeline.AddFramebuffer("Forward FB", new[] { AttachmentType.RGBA16F, AttachmentType.Depth32F }, Resolution.Type.FullScale);
+            Framebuffer vectorFB = pipeline.AddFramebuffer("Vector FB", new[] { AttachmentType.RGBA16F, AttachmentType.Depth32F }, Resolution.Type.FullScale);
+            Framebuffer finalFB = pipeline.AddFramebuffer("Final FB", new[] { AttachmentType.RGBA16F, AttachmentType.Depth32F }, Resolution.Type.FullScale);
 
+            ShaderProgram presentProgram = Renderer.GetShader("Present");
             // Moebius
-
             AssetHandle[] handles = AssetMethods.GetAssetsAtPath("assets/crosshatch.png");
             TextureAsset crosshatchTexture = AssetMethods.GetTextureAsset(handles[0]);
 
-            Framebuffer finalFB = pipeline.PipelineAddFramebuffer("Final FB", new[] { AttachmentType.RGBA16F, AttachmentType.Depth32F }, Resolution.Type.FullScale);
+            AddMoebiusToPipeline(pipeline, crosshatchTexture);
 
-            ShaderProgram presentProgram = Renderer.GetShader("Present");
+            PipelineStageRenderer meshRenderer = Renderer.GetPipelineStageRenderer("MeshRenderer");
 
-            // Create draw stage for each framebuffer...
+            PipelineDrawStage normalStage = Renderer.CreatePipelineDrawStage("NormalStage", Renderer.GetShader("Normal"), meshRenderer);
+            PipelineDrawStage texturedMeshStage = Renderer.CreatePipelineDrawStage("TexturedMeshStage", Renderer.GetShader("TexturedMesh"), meshRenderer);
+            PipelineDrawStage blinnPhongStage = Renderer.CreatePipelineDrawStage("BlinnPhongTextured", Renderer.GetShader("TexturedMesh"), meshRenderer);
+            blinnPhongStage.AddShaderDataSource(Renderer.CreateBlinnPhongDataSource());
+            
+            SkyStage skyStage = Renderer.CreateSkyStage();
+            VectorGraphicsStage vectorGraphicsStage = Renderer.CreateVectorGraphicsStage(VectorGraphics.Layer.One);
+            DebugDrawStage debugDrawStage = Renderer.CreateDebugDrawStage(DebugDrawChannel.Game);
 
-            NativePipelineStage skyStage = default;
-            PipelineStage stage = new PipelineStage();
-            stage.NativeHandle = skyStage;
+            DrawScreenTextureStage drawSkyStage = Renderer.CreateDrawScreenTextureStage(presentProgram, AttachmentType.RGBA8, new[] { skyFB });
+            DrawScreenTextureStage drawForwardStage = Renderer.CreateDrawScreenTextureStage(presentProgram, AttachmentType.RGBA8, new[] { skyFB });
+            DrawScreenTextureStage drawVectorStage = Renderer.CreateDrawScreenTextureStage(presentProgram, AttachmentType.RGBA8, new[] { skyFB });
+            DrawScreenTextureStage drawMoebiusStage = Renderer.CreateDrawScreenTextureStage(presentProgram, AttachmentType.RGBA8, new[] { skyFB });
 
-            //pipeline.PipelineAddStage(forwardFB, Renderer.GetPipelineStage("DebugDrawStage"));
-            //pipeline.PipelineAddStage(forwardFB, Renderer.GetPipelineStage("NormalStage"));
-            //pipeline.PipelineAddStage(forwardFB, Renderer.GetPipelineStage("TexturedMeshStage"));
-            //pipeline.PipelineAddStage(forwardFB, Renderer.GetPipelineStage("BlinnPhongTextured"));
-            //pipeline.PipelineAddStage(vectorFB, Renderer.GetPipelineStage("VectorGraphicsStage"));
 
-            // Add draw stages to output framebuffer
+            pipeline.AddStage(skyFB, skyStage);
 
-            pipeline.PipelineSetOutputFramebuffer(finalFB);
+            pipeline.AddStage(forwardFB, debugDrawStage);
+            pipeline.AddStage(forwardFB, normalStage);
+            pipeline.AddStage(forwardFB, texturedMeshStage);
+            pipeline.AddStage(forwardFB, blinnPhongStage);
+
+            pipeline.AddStage(vectorFB, vectorGraphicsStage);
+
+            pipeline.AddStage(finalFB, drawSkyStage);
+            pipeline.AddStage(finalFB, drawForwardStage);
+            pipeline.AddStage(finalFB, drawMoebiusStage);
+            pipeline.AddStage(finalFB, drawVectorStage);
+
+            pipeline.SetOutputFramebuffer(finalFB);
         }
 
         private void AddMoebiusToPipeline(Pipeline pipeline, TextureAsset crossHatchTexture)
         {
             // Create GBuffer FB
-            Framebuffer gbufferFB = pipeline.PipelineAddFramebuffer("GBuffer", new[] 
+            Framebuffer gBufferFB = pipeline.AddFramebuffer("GBuffer", new[] 
                                               {
                                                 AttachmentType.RGBA32F, // 0: Position
                                                 AttachmentType.RGBA32F, // 1: Normal
@@ -61,35 +77,31 @@ namespace GameTest
                                               },
                                               Resolution.Type.FullScale);
             // Create Moebius Effect FB
-            Framebuffer moebiusFB = pipeline.PipelineAddFramebuffer("Moebius FB", new[]
+            Framebuffer moebiusFB = pipeline.AddFramebuffer("Moebius FB", new[]
             {
                 AttachmentType.RGBA8
             },
             Resolution.Type.FullScale);
 
             //// Create deferred gbuffer draw stage
-            //PipelineDrawStage gBufferStage = Renderer.CreatePipelineDrawStage("GBufferStage", Renderer.GetShader("DeferredGBuffer"), Renderer.GetPipelineStageRenderer("MeshRenderer"));
-            
-            ////Get moebius shader
-            //ShaderProgram moebiusShader = Renderer.GetShader("Moebius2");
-
+            PipelineDrawStage gBufferStage = Renderer.CreatePipelineDrawStage("GBufferStage", Renderer.GetShader("DeferredGBuffer"), Renderer.GetPipelineStageRenderer("MeshRenderer"));
             //// Create a screen quad renderer
-            //PipelineStageRenderer screenQuadRenderer = Renderer.CreateScreenQuadRenderer();
-
+            ScreenQuadRenderer screenQuadRenderer = Renderer.CreateScreenQuadRenderer();
             //// create moebius draw stage (moebius shader, quad renderer)
-            //PipelineDrawStage moebiusStage = Renderer.CreatePipelineDrawStage("MoebiusStage", moebiusShader, screenQuadRenderer);
-
-
+            PipelineDrawStage moebiusStage = Renderer.CreatePipelineDrawStage("MoebiusStage", Renderer.GetShader("Moebius2"), screenQuadRenderer);
             //// Create deferred data source
-            //ShaderDataSource deferredDataSource = Renderer.CreateDeferredDataSource(gbufferFB);
-
+            ShaderDataSource deferredDataSource = Renderer.CreateDeferredDataSource(gBufferFB);
+            // Blinn Phong lighting params
+            ShaderDataSource blinnPhongDataSource = Renderer.CreateBlinnPhongDataSource();
             //// Create crosshatch texture data source;
-            //ShaderDataSource crosshatchTextureSource = Renderer.CreateTextureAssetSource(5, "u_crossHatch", crossHatchTexture);
+            ShaderDataSource crosshatchTextureSource = Renderer.CreateTextureAssetSource(5, "u_crossHatch", crossHatchTexture);
 
-            
-            // add deferred, blinn phong and crosshatch sources to moebius stage
-            // Add gBuffer stage to gbuffer fb, moebius stage to moebius fb
+            moebiusStage.AddShaderDataSource(deferredDataSource);
+            moebiusStage.AddShaderDataSource(blinnPhongDataSource);
+            moebiusStage.AddShaderDataSource(crosshatchTextureSource);
 
+            pipeline.AddStage(gBufferFB, gBufferStage);
+            pipeline.AddStage(moebiusFB, moebiusStage);
 
         }
     }

@@ -267,18 +267,22 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.Renderer::GetView", harmony_mono_renderer_get_view);
     mono_add_internal_call("Harmony.Renderer::GetViewPipeline", harmony_mono_renderer_get_view_pipeline);
     mono_add_internal_call("Harmony.Renderer::GetShader", harmony_mono_renderer_get_shader);
-    mono_add_internal_call("Harmony.Renderer::GetPipelineStageRenderer", harmony_mono_renderer_get_pipeline_stage_renderer);
+    mono_add_internal_call("Harmony.Renderer::GetPipelineStageRendererInternal", harmony_mono_renderer_get_pipeline_stage_renderer);
 
-    mono_add_internal_call("Harmony.Renderer::PipelineAddFramebuffer", harmony_mono_renderer_pipeline_add_framebuffer);
-    mono_add_internal_call("Harmony.Renderer::PipelineSetOutputFramebuffer", harmony_mono_renderer_pipeline_set_output_framebuffer);
-    mono_add_internal_call("Harmony.Renderer::PipelineAddStage", harmony_mono_renderer_pipeline_add_stage);
-    mono_add_internal_call("Harmony.Renderer::PipelineStageAddDataSource", harmony_mono_renderer_pipeline_stage_add_data_source);
+    mono_add_internal_call("Harmony.Renderer::AddFramebuffer", harmony_mono_renderer_pipeline_add_framebuffer);
+    mono_add_internal_call("Harmony.Renderer::SetOutputFramebuffer", harmony_mono_renderer_pipeline_set_output_framebuffer);
+    mono_add_internal_call("Harmony.Renderer::AddStage", harmony_mono_renderer_pipeline_add_stage);
+    mono_add_internal_call("Harmony.Renderer::AddDataSource", harmony_mono_renderer_pipeline_stage_add_data_source);
 
-    mono_add_internal_call("Harmony.Renderer::CreatePipelineDrawStage", harmony_mono_renderer_create_pipeline_draw_stage);
-    mono_add_internal_call("Harmony.Renderer::CreateScreenQuadRenderer", harmony_mono_renderer_create_screen_quad_renderer);
-    mono_add_internal_call("Harmony.Renderer::CreateDeferredDataSource", harmony_mono_renderer_create_deferred_data_source);
-    mono_add_internal_call("Harmony.Renderer::CreateTextureAssetSource", harmony_mono_renderer_create_texture_asset_source);
-    mono_add_internal_call("Harmony.Renderer::CreateDrawScreenTextureStage", harmony_mono_renderer_create_draw_screen_texture_stage);
+    mono_add_internal_call("Harmony.Renderer::CreatePipelineDrawStageInternal", harmony_mono_renderer_create_pipeline_draw_stage);
+    mono_add_internal_call("Harmony.Renderer::CreateDrawScreenTextureStageInternal", harmony_mono_renderer_create_draw_screen_texture_stage);
+    mono_add_internal_call("Harmony.Renderer::CreateSkyStageInternal", harmony_mono_renderer_create_sky_stage);
+    mono_add_internal_call("Harmony.Renderer::CreateDebugDrawStageInternal", harmony_mono_renderer_create_debug_draw_stage);
+    mono_add_internal_call("Harmony.Renderer::CreateVectorGraphicsStage", harmony_mono_renderer_create_vector_graphics_stage);
+    mono_add_internal_call("Harmony.Renderer::CreateScreenQuadRendererInternal", harmony_mono_renderer_create_screen_quad_renderer);
+    mono_add_internal_call("Harmony.Renderer::CreateDeferredDataSourceInternal", harmony_mono_renderer_create_deferred_data_source);
+    mono_add_internal_call("Harmony.Renderer::CreateTextureAssetSourceInternal", harmony_mono_renderer_create_texture_asset_source);
+	mono_add_internal_call("Harmony.Renderer::CreateBlinnPhongDataSourceInternal", harmony_mono_renderer_create_draw_screen_texture_stage);
 
     // Program
     mono_add_internal_call("Harmony.ProgramMethods::GetProgram", harmony_mono_get_program);
