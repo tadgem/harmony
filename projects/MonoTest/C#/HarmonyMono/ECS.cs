@@ -22,6 +22,90 @@ namespace Harmony
         }
     }
 
+    public class MeshComponent : INativeComponent
+    {
+        private NativeMeshComponent _native;
+
+        IntPtr INativeComponent.Handle { get => _native.Handle; set => _native.Handle = value; }
+
+        public IntPtr GetNativeHandle(Scene scene, Entity entity)
+        {
+            return scene.GetEntityMesh(entity).Handle;
+        }
+    }
+
+    public class CameraComponent : INativeComponent
+    {
+        private NativeCameraComponent _native;
+
+        IntPtr INativeComponent.Handle { get => _native.Handle; set => _native.Handle = value; }
+
+        public IntPtr GetNativeHandle(Scene scene, Entity entity)
+        {
+            return scene.GetEntityCamera(entity).Handle;
+        }
+    }
+
+    public class MaterialComponent : INativeComponent
+    {
+        private NativeMaterialComponent _native;
+
+        IntPtr INativeComponent.Handle { get => _native.Handle; set => _native.Handle = value; }
+
+        public IntPtr GetNativeHandle(Scene scene, Entity entity)
+        {
+            return scene.GetEntityMaterial(entity).Handle;
+        }
+    }
+
+    public class DirectionalLightComponent : INativeComponent
+    {
+        private NativeDirectionalLightComponent _native;
+
+        IntPtr INativeComponent.Handle { get => _native.Handle; set => _native.Handle = value; }
+
+        public IntPtr GetNativeHandle(Scene scene, Entity entity)
+        {
+            return scene.GetEntityDirectionalLight(entity).Handle;
+        }
+    }
+
+    public class PointLightComponent : INativeComponent
+    {
+        private NativePointLightComponent _native;
+
+        IntPtr INativeComponent.Handle { get => _native.Handle; set => _native.Handle = value; }
+
+        public IntPtr GetNativeHandle(Scene scene, Entity entity)
+        {
+            return scene.GetEntityPointLight(entity).Handle;
+        }
+    }
+
+    public class SpotLightComponent : INativeComponent
+    {
+        private NativeSpotLightComponent _native;
+
+        IntPtr INativeComponent.Handle { get => _native.Handle; set => _native.Handle = value; }
+
+        public IntPtr GetNativeHandle(Scene scene, Entity entity)
+        {
+            return scene.GetEntitySpotLight(entity).Handle;
+        }
+    }
+
+    public class SkyComponent : INativeComponent
+    {
+        private NativeSkyComponent _native;
+
+        IntPtr INativeComponent.Handle { get => _native.Handle; set => _native.Handle = value; }
+
+        public IntPtr GetNativeHandle(Scene scene, Entity entity)
+        {
+            return scene.GetEntitySky(entity).Handle;
+        }
+    }
+
     public class TransformComponent : INativeComponent
     {
         private NativeTransformComponent _native;
@@ -73,8 +157,45 @@ namespace Harmony
         public IntPtr Handle;
     }
 
+    internal struct NativeMeshComponent
+    {
+        public IntPtr Handle;
+    }
+
+    internal struct NativeMaterialComponent
+    {
+        public IntPtr Handle;
+    }
+
+    internal struct NativeDirectionalLightComponent
+    {
+        public IntPtr Handle;
+    }
+
+    internal struct NativePointLightComponent
+    {
+        public IntPtr Handle;
+    }
+
+    internal struct NativeSpotLightComponent
+    {
+        public IntPtr Handle;
+    }
+
+    internal struct NativeSkyComponent
+    {
+        public IntPtr Handle;
+    }
+
+    internal struct NativeCameraComponent
+    {
+        public IntPtr Handle;
+    }
+
+
     internal static class ECSMethods
     {
+        #region Transform
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static NativeTransformComponent GetEntityTransform(this Scene scene, Entity entity);
 
@@ -104,5 +225,28 @@ namespace Harmony
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetTransformScale(this NativeTransformComponent t, Vector3 scale);
+        #endregion
+
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static NativeMeshComponent GetEntityMesh(this Scene scene, Entity entity);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static NativeMaterialComponent GetEntityMaterial(this Scene scene, Entity entity);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static NativeDirectionalLightComponent GetEntityDirectionalLight(this Scene scene, Entity entity);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static NativePointLightComponent GetEntityPointLight(this Scene scene, Entity entity);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static NativeSpotLightComponent GetEntitySpotLight(this Scene scene, Entity entity);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static NativeSkyComponent GetEntitySky(this Scene scene, Entity entity);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static NativeCameraComponent GetEntityCamera(this Scene scene, Entity entity);
     }
 }

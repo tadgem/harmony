@@ -8,6 +8,11 @@
 #include "Core/Alias.h"
 #include "Core/Input.h"
 #include "ECS/TransformComponent.h"
+#include "ECS/MeshComponent.h"
+#include "ECS/MaterialComponent.h"
+#include "ECS/SkyComponent.h"
+#include "ECS/CameraComponent.h"
+#include "ECS/LightComponents.h"
 #include "ThirdParty/entt.hpp"
 #include "Rendering/VectorGraphics/VectorGraphics.h"
 #include "MonoUtils.h"
@@ -28,6 +33,17 @@
 #include "Rendering/Shaders/ShaderDataSources/TextureAssetSource.h"
 #include "Rendering/Shaders/ShaderDataSources/DeferredDataSource.h"
 #include "Rendering/Shaders/ShaderDataSources/BlinnPhongDataSource.h"
+
+#define MONO_GET_COMPONENT_IMPL(T) if(!scene) return nullptr;\
+\
+entt::entity& entity = (entt::entity&)e;\
+\
+if (!scene->m_Registry.any_of<T>(entity))\
+{\
+	return nullptr;\
+}\
+\
+return &scene->m_Registry.get<T>(entity);\
 
 static MonoClass* s_AssetHandleClass = nullptr;
 static MonoClass* s_AttachmentTypeClass = nullptr;
@@ -368,17 +384,8 @@ glm_vec2    harmony_mono_get_gamepad_stick(int gamepad_index, harmony_gamepad_st
     return glm_vec2{v.x, v.y};
 }
 
-harmony::TransformComponent *harmony_mono_get_transform(harmony::Scene *scene, entt_entity entity) {
-    if(!scene) return nullptr;
-
-    entt::entity& e = (entt::entity&)entity;
-
-    if(!scene->m_Registry.any_of<harmony::TransformComponent>(e))
-    {
-        return nullptr;
-    }
-
-    return &scene->m_Registry.get<harmony::TransformComponent>(e);
+harmony::TransformComponent *harmony_mono_get_transform(harmony::Scene *scene, entt_entity e) {
+    MONO_GET_COMPONENT_IMPL(harmony::TransformComponent)
 }
 
 void harmony_mono_set_transform_position(harmony::TransformComponent *t, glm_vec3 position) {
@@ -437,6 +444,42 @@ glm_vec3 harmony_mono_get_transform_up(harmony::TransformComponent *t) {
     if(!t) return harmony_glm_vec3_default();
     return glm_vec3 {t->Up.x, t->Up.y, t->Up.z};
 }
+
+harmony::MeshComponent* harmony_mono_get_mesh(harmony::Scene* scene, entt::entity e)
+{
+    MONO_GET_COMPONENT_IMPL(harmony::MeshComponent)
+}
+
+harmony::MaterialComponent* harmony_mono_get_material(harmony::Scene* scene, entt::entity e)
+{
+    MONO_GET_COMPONENT_IMPL(harmony::MaterialComponent)
+}
+
+harmony::DirectionalLight* harmony_mono_get_directional_light(harmony::Scene* scene, entt::entity e)
+{
+    MONO_GET_COMPONENT_IMPL(harmony::DirectionalLight)
+}
+
+harmony::PointLight* harmony_mono_get_point_light(harmony::Scene* scene, entt::entity e)
+{
+    MONO_GET_COMPONENT_IMPL(harmony::PointLight)
+}
+
+harmony::SpotLight* harmony_mono_get_spot_light(harmony::Scene* scene, entt::entity e)
+{
+    MONO_GET_COMPONENT_IMPL(harmony::SpotLight)
+}
+
+harmony::SkyComponent* harmony_mono_get_sky(harmony::Scene* scene, entt::entity e)
+{
+    MONO_GET_COMPONENT_IMPL(harmony::SkyComponent)
+}
+
+harmony::CameraComponent* harmony_mono_get_camera(harmony::Scene* scene, entt::entity e)
+{
+    MONO_GET_COMPONENT_IMPL(harmony::CameraComponent)
+}
+
 
 void        harmony_mono_vg_font_face(harmony_vg_layer layer, MonoString *font)
 {

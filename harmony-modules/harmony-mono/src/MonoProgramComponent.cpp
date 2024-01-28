@@ -346,6 +346,7 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.SceneMethods::DeleteEntity", harmony_mono_delete_entity);
     mono_add_internal_call("Harmony.SceneMethods::GetEntityScriptBehaviours", harmony_mono_get_entity_script_behaviours);
 
+    // Transform
     mono_add_internal_call("Harmony.ECSMethods::GetEntityTransform", harmony_mono_get_transform);
     mono_add_internal_call("Harmony.ECSMethods::GetTransformPosition", harmony_mono_get_transform_position);
     mono_add_internal_call("Harmony.ECSMethods::GetTransformEuler", harmony_mono_get_transform_euler);
@@ -357,11 +358,28 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.ECSMethods::SetTransformEuler", harmony_mono_set_transform_euler);
     mono_add_internal_call("Harmony.ECSMethods::SetTransformScale", harmony_mono_set_transform_scale);
 
+	// Mesh
+    mono_add_internal_call("Harmony.ECSMethods::GetEntityMesh", harmony_mono_get_mesh);
+
+	// Material
+    mono_add_internal_call("Harmony.ECSMethods::GetEntityMaterial", harmony_mono_get_material);
+
+	// Directional Light
+    mono_add_internal_call("Harmony.ECSMethods::GetEntityDirectionalLight", harmony_mono_get_directional_light);
+
+	// Point Light
+    mono_add_internal_call("Harmony.ECSMethods::GetEntityPointLight", harmony_mono_get_point_light);
+
+	// Spot Light
+    mono_add_internal_call("Harmony.ECSMethods::GetEntitySpotLight", harmony_mono_get_spot_light);
+
+	// Sky
+    mono_add_internal_call("Harmony.ECSMethods::GetEntitySky", harmony_mono_get_sky);
+
+	// Camera
+    mono_add_internal_call("Harmony.ECSMethods::GetEntityCamera", harmony_mono_get_camera);
+
     // BGFX
-    // mono_add_internal_call("Harmony.bgfx::", bgfx_ );
-
-
-
     mono_add_internal_call("Harmony.bgfx::attachment_init", bgfx_attachment_init);
     mono_add_internal_call("Harmony.bgfx::vertex_layout_begin", bgfx_vertex_layout_begin);
     mono_add_internal_call("Harmony.bgfx::vertex_layout_add", bgfx_vertex_layout_add);
