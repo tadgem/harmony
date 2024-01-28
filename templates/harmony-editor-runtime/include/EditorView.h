@@ -38,6 +38,9 @@ namespace harmony {
 
         virtual void OnImGui() override;
 
+        void OnPresentImage(RefCntPtr<Scene>& scene, RefCntPtr<PipelineV2>& pipeline);
+        void OnTransformGizmo(RefCntPtr<Scene>& scene);
+
         virtual void OnImGuiOptions() override;
 
 #endif
