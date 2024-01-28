@@ -12,6 +12,9 @@
 #include "mono/metadata/threads.h"
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/reflection.h"
+#include "mono/metadata/image.h"
+#include "mono/metadata/blob.h"
+
 #include "bgfx/c99/bgfx.h"
 harmony::MonoProgramComponent::MonoProgramComponent(
     AssetManager& assetManager,
@@ -154,6 +157,53 @@ void harmony::MonoProgramComponent::FromJson(const nlohmann::json& json)
 
         AddMonoImplementedProgramComponent(monoAssembly, csTypeInfo);
     }
+    auto assemblyHandles = m_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
+
+    for (auto& handle : assemblyHandles)
+    {
+        auto assembly = m_AssetManager.GetAsset<MonoAssemblyAsset>(handle).lock();
+
+        if (!assembly)
+        {
+            continue;
+        }
+
+        // Do modules
+        for (auto& interfaceImplInfo : assembly->m_InterfaceImplInfos)
+        {
+            // if derivative of Module
+            if (interfaceImplInfo.m_InterfaceNamespace == p_MonoModuleNamespace)
+            {
+                if (interfaceImplInfo.m_InterfaceName == p_InitInterfaceName)
+                {
+                    MonoUtils::CsTypeInfo& typeInfo = assembly->m_TypeInfos[interfaceImplInfo.m_ClassIndex];
+                    MonoObject* classObject = MonoUtils::CreateMonoObject(p_AppDomain, typeInfo);
+
+                    // Grab interface methods to call
+                    MonoClass* instanceClass = mono_object_get_class(classObject);
+                    MonoMethod* initMethod = nullptr;
+
+                    initMethod = mono_class_get_method_from_name(instanceClass, p_InitMethodName.c_str(), 0);
+                    if (initMethod == nullptr) {
+                        log::error("MonoProgramComponent : Init : Module Type {} implements IOnInit but does not have an Init method.", typeInfo.m_TypeName);
+                        continue;
+                    }
+
+                    MonoObject* exception = nullptr;
+                    mono_runtime_invoke(initMethod, classObject, nullptr, &exception);
+                    if (exception != nullptr)
+                    {
+                        MonoClass* exceptionKlass = mono_object_get_class(exception);
+                        log::error("MonoProgramComponent : Init : Module : exception encountered during init for type {} : {}", typeInfo.m_TypeName, mono_class_get_name(exceptionKlass));
+                    }
+
+                }
+            }
+        }
+    }
+
+	// have to temporarily cache refcntptrs as they are passed over C# as raw ptrs
+	harmony_mono_renderer_clear_cached_objects();
 }
 
 
@@ -278,11 +328,11 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.Renderer::CreateDrawScreenTextureStageInternal", harmony_mono_renderer_create_draw_screen_texture_stage);
     mono_add_internal_call("Harmony.Renderer::CreateSkyStageInternal", harmony_mono_renderer_create_sky_stage);
     mono_add_internal_call("Harmony.Renderer::CreateDebugDrawStageInternal", harmony_mono_renderer_create_debug_draw_stage);
-    mono_add_internal_call("Harmony.Renderer::CreateVectorGraphicsStage", harmony_mono_renderer_create_vector_graphics_stage);
+    mono_add_internal_call("Harmony.Renderer::CreateVectorGraphicsStageInternal", harmony_mono_renderer_create_vector_graphics_stage);
     mono_add_internal_call("Harmony.Renderer::CreateScreenQuadRendererInternal", harmony_mono_renderer_create_screen_quad_renderer);
     mono_add_internal_call("Harmony.Renderer::CreateDeferredDataSourceInternal", harmony_mono_renderer_create_deferred_data_source);
     mono_add_internal_call("Harmony.Renderer::CreateTextureAssetSourceInternal", harmony_mono_renderer_create_texture_asset_source);
-	mono_add_internal_call("Harmony.Renderer::CreateBlinnPhongDataSourceInternal", harmony_mono_renderer_create_draw_screen_texture_stage);
+	mono_add_internal_call("Harmony.Renderer::CreateBlinnPhongDataSourceInternal", harmony_mono_renderer_create_blinn_phong_data_source);
 
     // Program
     mono_add_internal_call("Harmony.ProgramMethods::GetProgram", harmony_mono_get_program);
@@ -520,12 +570,29 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
 
 MonoType* harmony::MonoProgramComponent::GetType(String& name)
 {
+
+//	/* we start the count from 1 because we skip the special type <Module> */
+//	for (i = 1; i < rows; ++i) {
+//		klass = mono_class_get(image, (i + 1) | MONO_TOKEN_TYPE_DEF);
+//		printf("Class name: %s.%s\n", mono_class_get_namespace(klass),
+//			mono_class_get_name(klass));
+//	}
+//}
     auto monoAssemblies = m_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
 
     for (auto h : monoAssemblies)
     {
         RefCntPtr<MonoAssemblyAsset> assembly = m_AssetManager.GetAsset<MonoAssemblyAsset>(h).lock();
         MonoImage* img =  mono_assembly_get_image(assembly->p_MonoAssembly);
+
+        /*
+        int rows = mono_image_get_table_rows(img, MONO_TABLE_TYPEDEF);
+		for (int i = 1; i < rows; ++i) {
+            MonoClass* klass = mono_class_get(img, (i | MonoMetaTableEnum::MONO_TABLE_TYPEDEF));
+			log::info("Class name: %s.%s\n", mono_class_get_namespace(klass),
+			mono_class_get_name(klass));
+		}
+        */
         MonoType* t = mono_reflection_type_from_name(name.data(), img);
         if (t != nullptr)
         {

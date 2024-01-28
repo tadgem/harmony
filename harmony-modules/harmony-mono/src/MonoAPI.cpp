@@ -38,7 +38,7 @@ void GetTypesForArrays()
         GetProgramComponent<harmony::MonoProgramComponent>().lock();
 
     MonoType* rrt = mono->GetType(harmony::String("Harmony.AssetHandle"));
-
+    
     if (rrt == nullptr)
     {
         harmony::log::error("MonoAPI::GetTypesForArrays: failed to get asset handle type from image");
@@ -822,7 +822,8 @@ harmony::TextureAsset* harmony_mono_assets_get_texture_asset(asset_handle handle
 
 harmony::ShaderProgram* harmony_mono_renderer_get_shader(MonoString* name)
 {
-    auto shaderWr = harmony::Program::Get()->m_Renderer.GetShader(harmony::String(mono_string_to_utf8(name)));
+    harmony::String c_name = harmony::String(mono_string_to_utf8(name));
+    auto shaderWr = harmony::Program::Get()->m_Renderer.GetShader(c_name);
 
     if(shaderWr.expired())
     {
@@ -1000,6 +1001,11 @@ harmony::PipelineDrawStage* harmony_mono_renderer_create_pipeline_draw_stage(Mon
 		}
 	}
 
+    if (!rendererRef)
+    {
+        rendererRef = Program::Get()->m_Renderer.GetPipelineStageRenderer(renderer->m_Name).lock();
+    }
+
 	if (!rendererRef)
 	{
 		return nullptr;
@@ -1029,8 +1035,13 @@ harmony::DrawScreenTextureStage* harmony_mono_renderer_create_draw_screen_textur
 		Framebuffer* f = mono_array_get(framebufferArray, Framebuffer*, i);
         framebuffers.push_back(pipeline->TryGetFramebuffer(f->m_Name));
 	}
+    if (!shader)
+    {
+        return nullptr;
+    }
 
-    auto s = Program::Get()->m_Renderer.GetShader(shader->m_Name);
+    auto s = Program::Get()->m_Renderer.GetShader(shader->m_Name).lock();
+
 
     RefCntPtr<DrawScreenTextureStage> drawScreenTextureStage = CreateRef<DrawScreenTextureStage>(
         s,
@@ -1045,8 +1056,8 @@ harmony::DrawScreenTextureStage* harmony_mono_renderer_create_draw_screen_textur
 harmony::SkyStage* harmony_mono_renderer_create_sky_stage()
 {
     using namespace harmony;
-    auto skyShader = Program::Get()->m_Renderer.GetShader("Sky");
-    RefCntPtr<SkyStage> skyStage = CreateRef<SkyStage>(skyShader);
+	auto skyShader = Program::Get()->m_Renderer.GetShader("Sky");
+	RefCntPtr<SkyStage> skyStage = CreateRef<SkyStage>(skyShader);
     s_PipelineStageCache.emplace_back(skyStage);
     return skyStage.get();
 }

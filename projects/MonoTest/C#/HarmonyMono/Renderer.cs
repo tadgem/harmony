@@ -282,11 +282,11 @@ namespace Harmony
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern static NativePipelineStage CreateVectorStageInternal(VectorGraphics.Layer layer);
+        private extern static NativePipelineStage CreateVectorGraphicsStageInternal(VectorGraphics.Layer layer);
 
         public static VectorGraphicsStage CreateVectorGraphicsStage(VectorGraphics.Layer layer)
         {
-            NativePipelineStage stage = CreateVectorStageInternal(layer);
+            NativePipelineStage stage = CreateVectorGraphicsStageInternal(layer);
             if (stage.Handle == IntPtr.Zero)
             {
                 return default;

@@ -20,8 +20,7 @@
 harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this),
                             m_GraphScriptEditor(p_GraphScriptComponent->GetNodeRegistry()) {
     OPTICK_EVENT();
-    m_Logger.Init();
-    // m_Logger.Init();
+    //m_Logger.Init();
     Editor::AddAssetTypeNames();
     Editor::AddAssetFactories();
     Editor::AddProgramComponents();

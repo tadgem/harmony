@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 namespace Harmony
 {
 #pragma warning disable CS0169
-    public struct AssetHandle
+    public class AssetHandle
     {
         public string Path;
         public uint Index;
