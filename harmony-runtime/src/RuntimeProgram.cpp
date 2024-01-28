@@ -178,57 +178,61 @@ void harmony::RuntimeProgram::AddShaderDataSources() {
 void harmony::RuntimeProgram::InitializePipelines() {
     OPTICK_EVENT();
     log::info("RuntimeProgram : Initializing View Pipelines");
-    auto skyFB = p_RuntimePipeline->AddFramebuffer("Sky FB", {AttachmentType::RGBA16F, AttachmentType::Depth32F},
-                                                   Resolution::Type::FullScale);
-    auto forwardFB = p_RuntimePipeline->AddFramebuffer("Forward FB",
-                                                       {AttachmentType::RGBA16F, AttachmentType::Depth32F},
-                                                       Resolution::Type::FullScale);
-    auto vectorFB = p_RuntimePipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA16F, AttachmentType::Depth32F},
-                                                      Resolution::Type::FullScale);
+    if (false)
+    {
 
-    auto crosshatchTexture = m_AssetManager.GetAsset<TextureAsset>("assets\\crosshatch.png");
-    auto moebiusFB = Moebius::AddMoebiusToPipeline(m_Renderer, p_RuntimePipeline, crosshatchTexture.lock());
+        auto skyFB = p_RuntimePipeline->AddFramebuffer("Sky FB", { AttachmentType::RGBA16F, AttachmentType::Depth32F },
+            Resolution::Type::FullScale);
+        auto forwardFB = p_RuntimePipeline->AddFramebuffer("Forward FB",
+            { AttachmentType::RGBA16F, AttachmentType::Depth32F },
+            Resolution::Type::FullScale);
+        auto vectorFB = p_RuntimePipeline->AddFramebuffer("Vector FB", { AttachmentType::RGBA16F, AttachmentType::Depth32F },
+            Resolution::Type::FullScale);
 
-    auto finalFB = p_RuntimePipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA16F, AttachmentType::Depth32F},
-                                                     Resolution::Type::FullScale);
+        auto crosshatchTexture = m_AssetManager.GetAsset<TextureAsset>("assets\\crosshatch.png");
+        auto moebiusFB = Moebius::AddMoebiusToPipeline(m_Renderer, p_RuntimePipeline, crosshatchTexture.lock());
 
-    auto screenShaderWR = m_Renderer.p_PresentProgram;
+        auto finalFB = p_RuntimePipeline->AddFramebuffer("Final FB", { AttachmentType::RGBA16F, AttachmentType::Depth32F },
+            Resolution::Type::FullScale);
 
-    if (screenShaderWR.expired()) {
-        harmony::log::error(
+        auto screenShaderWR = m_Renderer.p_PresentProgram;
+
+        if (screenShaderWR.expired()) {
+            harmony::log::error(
                 "RuntimeProgram : Initialize Pipelines : Present Program is expired. This should never happen.");
-        return;
+            return;
+        }
+
+        RefCntPtr<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8,
+            Vector<WeakPtr<Framebuffer>>{skyFB});
+        RefCntPtr<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+            AttachmentType::RGBA8,
+            Vector<WeakPtr<Framebuffer>>{
+            forwardFB});
+        RefCntPtr<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+            AttachmentType::RGBA8,
+            Vector<WeakPtr<Framebuffer>>{
+            vectorFB});
+        RefCntPtr<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+            AttachmentType::RGBA8,
+            Vector<WeakPtr<Framebuffer>>{
+            moebiusFB});
+
+        p_RuntimePipeline->AddPipelineStage(skyFB, m_Renderer.GetPipelineStage("SkyStage").lock());
+        p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("DebugDrawStage").lock());
+        p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("NormalStage").lock());
+        p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("TexturedMeshStage").lock());
+        p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("BlinnPhongTextured").lock());
+
+        p_RuntimePipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());
+
+        p_RuntimePipeline->AddPipelineStage(finalFB, drawSkyStage);
+        p_RuntimePipeline->AddPipelineStage(finalFB, drawForwardStage);
+        p_RuntimePipeline->AddPipelineStage(finalFB, drawMoebiusStage);
+        p_RuntimePipeline->AddPipelineStage(finalFB, drawVectorStage);
+
+        p_RuntimePipeline->SetOutputFramebuffer(finalFB);
     }
-
-    RefCntPtr<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8,
-                                                                                 Vector<WeakPtr<Framebuffer>>{skyFB});
-    RefCntPtr<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
-                                                                                     AttachmentType::RGBA8,
-                                                                                     Vector<WeakPtr<Framebuffer>>{
-                                                                                             forwardFB});
-    RefCntPtr<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
-                                                                                    AttachmentType::RGBA8,
-                                                                                    Vector<WeakPtr<Framebuffer>>{
-                                                                                            vectorFB});
-    RefCntPtr<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
-                                                                                     AttachmentType::RGBA8,
-                                                                                     Vector<WeakPtr<Framebuffer>>{
-                                                                                             moebiusFB});
-
-    p_RuntimePipeline->AddPipelineStage(skyFB, m_Renderer.GetPipelineStage("SkyStage").lock());
-    p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("DebugDrawStage").lock());
-    p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("NormalStage").lock());
-    p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("TexturedMeshStage").lock());
-    p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("BlinnPhongTextured").lock());
-
-    p_RuntimePipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());
-
-    p_RuntimePipeline->AddPipelineStage(finalFB, drawSkyStage);
-    p_RuntimePipeline->AddPipelineStage(finalFB, drawForwardStage);
-    p_RuntimePipeline->AddPipelineStage(finalFB, drawMoebiusStage);
-    p_RuntimePipeline->AddPipelineStage(finalFB, drawVectorStage);
-
-    p_RuntimePipeline->SetOutputFramebuffer(finalFB);
 
 }
 

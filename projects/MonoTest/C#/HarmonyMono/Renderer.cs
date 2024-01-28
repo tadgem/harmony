@@ -243,11 +243,11 @@ namespace Harmony
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern static NativePipelineStage CreateDrawScreenTextureStageInternal(ShaderProgram shader, AttachmentType attachmentType, Framebuffer[] framebuffers);
+        private extern static NativePipelineStage CreateDrawScreenTextureStageInternal(this Pipeline pipeline, ShaderProgram shader, AttachmentType attachmentType, Framebuffer[] framebuffers);
 
-        public static DrawScreenTextureStage CreateDrawScreenTextureStage(ShaderProgram shader, AttachmentType attachmentType, Framebuffer[] framebuffers)
+        public static DrawScreenTextureStage CreateDrawScreenTextureStage(this Pipeline pipeline, ShaderProgram shader, AttachmentType attachmentType, Framebuffer[] framebuffers)
         {
-            NativePipelineStage stage = CreateDrawScreenTextureStageInternal(shader, attachmentType, framebuffers);
+            NativePipelineStage stage = CreateDrawScreenTextureStageInternal(pipeline, shader, attachmentType, framebuffers);
             if (stage.Handle == IntPtr.Zero)
             {
                 return default;
@@ -309,11 +309,11 @@ namespace Harmony
         }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        private extern static NativeShaderDataSource CreateDeferredDataSourceInternal(Framebuffer fb);
+        private extern static NativeShaderDataSource CreateDeferredDataSourceInternal(this Pipeline pipeline, Framebuffer fb);
 
-        public static DeferredDataSource CreateDeferredDataSource(Framebuffer fb)
+        public static DeferredDataSource CreateDeferredDataSource(this Pipeline pipeline, Framebuffer fb)
         {
-            NativeShaderDataSource nativeShaderDataSource = CreateDeferredDataSourceInternal(fb);
+            NativeShaderDataSource nativeShaderDataSource = CreateDeferredDataSourceInternal(pipeline, fb);
             if (nativeShaderDataSource.NativeHandle == IntPtr.Zero)
             {
                 return default;

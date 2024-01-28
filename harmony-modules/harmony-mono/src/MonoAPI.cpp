@@ -22,8 +22,12 @@
 #include "Rendering/Pipelines/PipelineStageRenderers/ScreenQuadRenderer.h"
 #include "Rendering/Framebuffer.h"
 #include "Rendering/Pipelines/PipelineStages/SkyStage.h"
+#include "Rendering/Pipelines/PipelineStages/DrawScreenTextureStage.h"
 #include "Rendering/Pipelines/BuiltIn/DebugDrawPipeline.h"
 #include "Rendering/Pipelines/BuiltIn/VectorPipeline.h"
+#include "Rendering/Shaders/ShaderDataSources/TextureAssetSource.h"
+#include "Rendering/Shaders/ShaderDataSources/DeferredDataSource.h"
+#include "Rendering/Shaders/ShaderDataSources/BlinnPhongDataSource.h"
 
 static MonoClass* s_AssetHandleClass = nullptr;
 static MonoClass* s_AttachmentTypeClass = nullptr;
@@ -38,8 +42,7 @@ void GetTypesForArrays()
     if (rrt == nullptr)
     {
         harmony::log::error("MonoAPI::GetTypesForArrays: failed to get asset handle type from image");
-    }
-    else
+    } else
     {
         s_AssetHandleClass = mono_type_get_class(rrt);
     }
@@ -987,14 +990,26 @@ harmony::PipelineDrawStage* harmony_mono_renderer_create_pipeline_draw_stage(Mon
 
     WeakPtr<ShaderProgram> s = Program::Get()->m_Renderer.GetShader(shader->m_Name);
 
-    RefCntPtr<PipelineStageRenderer> r (renderer);
-    s_PipelineStageRendererCache.emplace_back(r);
+	RefCntPtr<PipelineStageRenderer> rendererRef;
+
+	for (auto& r : s_PipelineStageRendererCache)
+	{
+		if (r.get() == renderer)
+		{
+			rendererRef = r;
+		}
+	}
+
+	if (!rendererRef)
+	{
+		return nullptr;
+	}
 
     RefCntPtr<PipelineDrawStage> stage = CreateRef<PipelineDrawStage>(
         stageName,
         PipelineDrawStage::Type::PrimaryDraw,
         s,
-        r
+        rendererRef
     );
 
     s_PipelineStageCache.emplace_back(stage);
@@ -1002,25 +1017,56 @@ harmony::PipelineDrawStage* harmony_mono_renderer_create_pipeline_draw_stage(Mon
     return stage.get();
 }
 
-harmony::DrawScreenTextureStage* harmony_mono_renderer_create_draw_screen_texture_stage(harmony::ShaderProgram* shader,
+harmony::DrawScreenTextureStage* harmony_mono_renderer_create_draw_screen_texture_stage(harmony::PipelineV2* pipeline, harmony::ShaderProgram* shader,
     harmony_attachment_type attachmentType, MonoArray* framebufferArray)
 {
-    return nullptr;
+    using namespace harmony;
+
+	uint32_t arrLength = mono_array_length(framebufferArray);
+    Vector<WeakPtr<Framebuffer>> framebuffers;
+	for (int i = 0; i < arrLength; i++)
+	{
+		Framebuffer* f = mono_array_get(framebufferArray, Framebuffer*, i);
+        framebuffers.push_back(pipeline->TryGetFramebuffer(f->m_Name));
+	}
+
+    auto s = Program::Get()->m_Renderer.GetShader(shader->m_Name);
+
+    RefCntPtr<DrawScreenTextureStage> drawScreenTextureStage = CreateRef<DrawScreenTextureStage>(
+        s,
+        (AttachmentType)attachmentType,
+        framebuffers
+    );
+
+    s_PipelineStageCache.push_back(drawScreenTextureStage);
+    return drawScreenTextureStage.get();
 }
 
 harmony::SkyStage* harmony_mono_renderer_create_sky_stage()
 {
-    return nullptr;
+    using namespace harmony;
+    auto skyShader = Program::Get()->m_Renderer.GetShader("Sky");
+    RefCntPtr<SkyStage> skyStage = CreateRef<SkyStage>(skyShader);
+    s_PipelineStageCache.emplace_back(skyStage);
+    return skyStage.get();
 }
 
 harmony::VectorGraphicsStage* harmony_mono_renderer_create_vector_graphics_stage(harmony_vg_layer layer)
 {
-    return nullptr;
+    using namespace harmony;
+    auto l = (VectorGraphics::Layer)layer;
+    RefCntPtr<VectorGraphicsStage> vectorStage = CreateRef<VectorGraphicsStage>(l);
+    s_PipelineStageCache.emplace_back(vectorStage);
+    return vectorStage.get();
 }
 
 harmony::DebugDrawStage* harmony_mono_renderer_create_debug_draw_stage(harmony_debug_draw_channel channel)
 {
-    return nullptr;
+	using namespace harmony;
+	auto c = (GfxDebug::Channel) channel;
+	RefCntPtr<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(c);
+	s_PipelineStageCache.emplace_back(debugDrawStage);
+	return debugDrawStage.get();
 }
 
 harmony::ScreenQuadRenderer* harmony_mono_renderer_create_screen_quad_renderer()
@@ -1031,21 +1077,32 @@ harmony::ScreenQuadRenderer* harmony_mono_renderer_create_screen_quad_renderer()
     return quad_renderer.get();
 }
 
-harmony::DeferredDataSource* harmony_mono_renderer_create_deferred_data_source(harmony::Framebuffer* framebuffer)
+harmony::DeferredDataSource* harmony_mono_renderer_create_deferred_data_source(harmony::PipelineV2* pipeline, harmony::Framebuffer* framebuffer)
 {
     using namespace harmony;
-    RefCntPtr<Framebuffer> fb (framebuffer);
-    return nullptr;
+    auto fb = pipeline->TryGetFramebuffer(framebuffer->m_Name).lock();
+    RefCntPtr<DeferredDataSource> deferredDataSource = CreateRef<DeferredDataSource>(fb);
+    s_ShaderDataSourceCache.emplace_back(deferredDataSource);
+    return deferredDataSource.get();
 }
 
 harmony::TextureAssetSource* harmony_mono_renderer_create_texture_asset_source(uint16_t samplerIndex,
     MonoString* uniformName, harmony::TextureAsset* textureAsset)
 {
-    return nullptr;
+    using namespace harmony;
+    String uname = harmony::MonoUtils::GetStringFromMonoString(uniformName);
+    WeakPtr<TextureAsset> asset = Program::Get()->m_AssetManager.GetAsset<TextureAsset>(textureAsset->m_Handle);
+    RefCntPtr<TextureAssetSource> textureSource = CreateRef<TextureAssetSource>(samplerIndex, uname, asset);
+    s_ShaderDataSourceCache.emplace_back(textureSource);
+    return textureSource.get();
 }
 
 
 harmony::BlinnPhongDataSource* harmony_mono_renderer_create_blinn_phong_data_source()
 {
-    return nullptr;
+    using namespace harmony;
+
+    RefCntPtr<BlinnPhongDataSource> blinnPhongDataSource = CreateRef<BlinnPhongDataSource>();
+    s_ShaderDataSourceCache.emplace_back(blinnPhongDataSource);
+    return blinnPhongDataSource.get();
 }

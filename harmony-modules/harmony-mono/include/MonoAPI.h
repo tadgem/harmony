@@ -349,12 +349,12 @@ extern "C"
     void                            harmony_mono_renderer_pipeline_stage_add_data_source(harmony::PipelineStage* fb, harmony::ShaderDataSource* source);
 
     harmony::PipelineDrawStage*         harmony_mono_renderer_create_pipeline_draw_stage(MonoString* name, harmony::ShaderProgram* shader, harmony::PipelineStageRenderer* renderer);
-    harmony::DrawScreenTextureStage*    harmony_mono_renderer_create_draw_screen_texture_stage(harmony::ShaderProgram* shader, harmony_attachment_type attachmentType, MonoArray* framebufferArray);
+    harmony::DrawScreenTextureStage*    harmony_mono_renderer_create_draw_screen_texture_stage(harmony::PipelineV2* pipeline, harmony::ShaderProgram* shader, harmony_attachment_type attachmentType, MonoArray* framebufferArray);
     harmony::SkyStage*                  harmony_mono_renderer_create_sky_stage();
     harmony::VectorGraphicsStage*       harmony_mono_renderer_create_vector_graphics_stage(harmony_vg_layer layer);
     harmony::DebugDrawStage*            harmony_mono_renderer_create_debug_draw_stage(harmony_debug_draw_channel channel);
     harmony::ScreenQuadRenderer*        harmony_mono_renderer_create_screen_quad_renderer();
-    harmony::DeferredDataSource*        harmony_mono_renderer_create_deferred_data_source(harmony::Framebuffer* framebuffer);
+    harmony::DeferredDataSource*        harmony_mono_renderer_create_deferred_data_source(harmony::PipelineV2* pipeline, harmony::Framebuffer* framebuffer);
     harmony::TextureAssetSource*        harmony_mono_renderer_create_texture_asset_source(uint16_t samplerIndex, MonoString* uniformName, harmony::TextureAsset* textureAsset);
 	harmony::BlinnPhongDataSource*      harmony_mono_renderer_create_blinn_phong_data_source();
     // Create / destroy built in stages...

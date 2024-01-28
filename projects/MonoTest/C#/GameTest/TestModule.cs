@@ -10,7 +10,7 @@ namespace GameTest
         {
             Log.Info("Hello from C# TestModule");
 
-            // InitRenderer();
+            InitRenderer();
         }
 
         private void InitRenderer()
@@ -41,10 +41,10 @@ namespace GameTest
             VectorGraphicsStage vectorGraphicsStage = Renderer.CreateVectorGraphicsStage(VectorGraphics.Layer.One);
             DebugDrawStage debugDrawStage = Renderer.CreateDebugDrawStage(DebugDrawChannel.Game);
 
-            DrawScreenTextureStage drawSkyStage = Renderer.CreateDrawScreenTextureStage(presentProgram, AttachmentType.RGBA8, new[] { skyFB });
-            DrawScreenTextureStage drawForwardStage = Renderer.CreateDrawScreenTextureStage(presentProgram, AttachmentType.RGBA8, new[] { skyFB });
-            DrawScreenTextureStage drawVectorStage = Renderer.CreateDrawScreenTextureStage(presentProgram, AttachmentType.RGBA8, new[] { skyFB });
-            DrawScreenTextureStage drawMoebiusStage = Renderer.CreateDrawScreenTextureStage(presentProgram, AttachmentType.RGBA8, new[] { skyFB });
+            DrawScreenTextureStage drawSkyStage = pipeline.CreateDrawScreenTextureStage(presentProgram, AttachmentType.RGBA8, new[] { skyFB });
+            DrawScreenTextureStage drawForwardStage = pipeline.CreateDrawScreenTextureStage(presentProgram, AttachmentType.RGBA8, new[] { skyFB });
+            DrawScreenTextureStage drawVectorStage = pipeline.CreateDrawScreenTextureStage(presentProgram, AttachmentType.RGBA8, new[] { skyFB });
+            DrawScreenTextureStage drawMoebiusStage = pipeline.CreateDrawScreenTextureStage(presentProgram, AttachmentType.RGBA8, new[] { skyFB });
 
 
             pipeline.AddStage(skyFB, skyStage);
@@ -90,7 +90,7 @@ namespace GameTest
             //// create moebius draw stage (moebius shader, quad renderer)
             PipelineDrawStage moebiusStage = Renderer.CreatePipelineDrawStage("MoebiusStage", Renderer.GetShader("Moebius2"), screenQuadRenderer);
             //// Create deferred data source
-            ShaderDataSource deferredDataSource = Renderer.CreateDeferredDataSource(gBufferFB);
+            ShaderDataSource deferredDataSource = Renderer.CreateDeferredDataSource(pipeline, gBufferFB);
             // Blinn Phong lighting params
             ShaderDataSource blinnPhongDataSource = Renderer.CreateBlinnPhongDataSource();
             //// Create crosshatch texture data source;

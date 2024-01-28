@@ -6,9 +6,9 @@ namespace Harmony
 #pragma warning disable CS0169
     public struct AssetHandle
     {
-        string  Path;
-        uint    Index;
-        ulong   TypeHash; 
+        public string Path;
+        public uint Index;
+        public ulong TypeHash; 
     }
 #pragma warning restore CS0169
 
