@@ -401,6 +401,17 @@ extern "C"
 
     // Sky
     harmony::SkyComponent* harmony_mono_get_sky(harmony::Scene* scene, entt::entity e);
+	void harmony_mono_set_sky_sun_size(harmony::SkyComponent* sky, float sun_size);
+	void harmony_mono_set_sky_sun_bloom(harmony::SkyComponent* sky, float bloom);
+	void harmony_mono_set_sky_exposition(harmony::SkyComponent* sky, float exposition);
+	void harmony_mono_set_sky_turbidity(harmony::SkyComponent* sky, float turbidity);
+	void harmony_mono_set_sky_luminance(harmony::SkyComponent* sky, glm_vec3 luminance);
+
+	float harmony_mono_get_sky_sun_size(harmony::SkyComponent* sky);
+	float harmony_mono_get_sky_sun_bloom(harmony::SkyComponent* sky);
+	float harmony_mono_get_sky_exposition(harmony::SkyComponent* sky);
+	float harmony_mono_get_sky_turbidity(harmony::SkyComponent* sky);
+	glm_vec3 harmony_mono_get_sky_luminance(harmony::SkyComponent* sky);
 
     // Camera
     harmony::CameraComponent* harmony_mono_get_camera(harmony::Scene* scene, entt::entity e);

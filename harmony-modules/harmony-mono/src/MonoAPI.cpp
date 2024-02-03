@@ -475,6 +475,82 @@ harmony::SkyComponent* harmony_mono_get_sky(harmony::Scene* scene, entt::entity 
     MONO_GET_COMPONENT_IMPL(harmony::SkyComponent)
 }
 
+void harmony_mono_set_sky_sun_size(harmony::SkyComponent* sky, float sun_size)
+{
+    if (!sky)
+    {
+        return;
+    }
+    sky->SunSize = sun_size;
+}
+
+void harmony_mono_set_sky_sun_bloom(harmony::SkyComponent* sky, float bloom)
+{
+	if (!sky)
+	{
+		return;
+	}
+    sky->SunBloom = bloom;
+}
+
+void harmony_mono_set_sky_exposition(harmony::SkyComponent* sky, float exposition)
+{
+	if (!sky)
+	{
+		return;
+	}
+
+    sky->Exposition = exposition;
+}
+
+void harmony_mono_set_sky_turbidity(harmony::SkyComponent* sky, float turbidity)
+{
+	if (!sky)
+	{
+		return;
+	}
+    sky->Turbidity = turbidity;
+}
+
+void harmony_mono_set_sky_luminance(harmony::SkyComponent* sky, glm_vec3 luminance)
+{
+	if (!sky)
+	{
+		return;
+	}
+    sky->SkyLuminance = glm::vec3(luminance.x, luminance.y, luminance.z);
+}
+
+float harmony_mono_get_sky_sun_size(harmony::SkyComponent* sky)
+{
+    if (!sky) return 0.0;
+    return sky->SunSize;
+}
+
+float harmony_mono_get_sky_sun_bloom(harmony::SkyComponent* sky)
+{
+    if (!sky) return 0.0;
+    return sky->SunBloom;
+}
+
+float harmony_mono_get_sky_exposition(harmony::SkyComponent* sky)
+{
+    if (!sky) return 0.0;
+    return sky->Exposition;
+}
+
+float harmony_mono_get_sky_turbidity(harmony::SkyComponent* sky)
+{
+    if (!sky) return 0.0;
+    return sky->Turbidity;
+}
+
+glm_vec3 harmony_mono_get_sky_luminance(harmony::SkyComponent* sky)
+{
+	if (!sky) return harmony_glm_vec3_default();
+	return glm_vec3{ sky->SkyLuminance.x, sky->SkyLuminance.y, sky->SkyLuminance.z };
+}
+
 harmony::CameraComponent* harmony_mono_get_camera(harmony::Scene* scene, entt::entity e)
 {
     MONO_GET_COMPONENT_IMPL(harmony::CameraComponent)
