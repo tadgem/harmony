@@ -123,6 +123,15 @@ harmony::Program *harmony_mono_get_program() {
     return harmony::Program::Get();
 }
 
+harmony::MonoProgramComponent* harmony_get_mono() {
+    return harmony::Program::Get()->GetProgramComponent<harmony::MonoProgramComponent>().lock().get();
+}
+
+entt_entity harmony_entity_default()
+{
+	return (entt_entity)UINT32_MAX;
+}
+
 harmony::ProgramComponent* harmony_mono_get_program_component(const uint64_t type_hash)
 {
     const harmony::WeakPtr<harmony::ProgramComponent> wr = harmony::Program::Get()->GetProgramComponent(harmony::HashString(type_hash));
@@ -167,6 +176,48 @@ entt_entity harmony_mono_create_entity(harmony::Scene* scene)
     }
 
     return ret;
+}
+
+entt_entity harmony_mono_get_entity_by_id(harmony::Scene* scene, uint32_t index)
+{
+    entt_entity e = harmony_entity_default();
+    if (!scene)
+    {
+        return e;
+
+    }
+
+    if (!scene->m_Registry.valid((entt::entity)e))
+    {
+        return e;
+    }
+
+	e = index;
+    return e;
+}
+
+entt_entity harmony_mono_get_entity_by_name(harmony::Scene* scene, MonoString* name)
+{
+    using namespace harmony;
+
+    if (!scene)
+    {
+        return harmony_entity_default();
+    }
+
+    String c_name = MonoUtils::GetStringFromMonoString(name);
+
+    auto data_view = scene->m_Registry.view<EntityData>();
+
+    for (auto [e, data] : data_view.each())
+    {
+        if (data.m_Name == c_name)
+        {
+            return (entt_entity)e;
+        }
+    }
+
+    return harmony_entity_default();
 }
 
 void harmony_mono_delete_entity(harmony::Scene* scene, entt_entity e)
@@ -422,12 +473,21 @@ glm_vec3 harmony_mono_get_transform_scale       (harmony::TransformComponent* t)
     return glm_vec3 {t->Scale.x, t->Scale.y, t->Scale.z};
 }
 
+asset_handle harmony_asset_handle_default() {
+    return asset_handle{ nullptr, UINT32_MAX, UINT64_MAX };
+}
+
+
 glm_vec2 harmony_glm_vec2_default() {
     return glm_vec2{0.0f, 0.0f};
 }
 
 glm_vec3 harmony_glm_vec3_default() {
     return glm_vec3{0.0f, 0.0f, 0.0f};
+}
+
+glm_vec4 harmony_glm_vec4_default() {
+	return glm_vec4{ 0.0f, 0.0f, 0.0f, 0.0f };
 }
 
 glm_vec3 harmony_mono_get_transform_forward(harmony::TransformComponent *t) {
@@ -450,6 +510,43 @@ harmony::MeshComponent* harmony_mono_get_mesh(harmony::Scene* scene, entt::entit
     MONO_GET_COMPONENT_IMPL(harmony::MeshComponent)
 }
 
+void harmony_mono_mesh_set_asset(harmony::MeshComponent* mesh, asset_handle asset)
+{
+    using namespace harmony;
+    if (!mesh)
+    {
+        return;
+    }
+
+    if (!asset.path)
+    {
+        return;
+    }
+
+    String assetPath = MonoUtils::GetStringFromMonoString(asset.path);
+    AssetHandle ah{ assetPath, asset.index, asset.type_hash };
+
+    RefCntPtr<Mesh> m = Program::Get()->m_AssetManager.GetAsset<Mesh>(ah).lock();
+
+    if (!m)
+    {
+        return;
+    }
+
+    mesh->MeshAsset = ah;
+    mesh->MeshHandle = m->m_Handle;
+}
+
+asset_handle harmony_mono_mesh_get_asset(harmony::MeshComponent* mesh)
+{
+    if (!mesh) return harmony_asset_handle_default();
+    return asset_handle{
+        mono_string_new(harmony_get_mono()->GetAppDomain(), mesh->MeshAsset.Path.c_str()),
+        mesh->MeshAsset.Index,
+        mesh->MeshAsset.TypeHash
+    };
+}
+
 harmony::MaterialComponent* harmony_mono_get_material(harmony::Scene* scene, entt::entity e)
 {
     MONO_GET_COMPONENT_IMPL(harmony::MaterialComponent)
@@ -460,14 +557,219 @@ harmony::DirectionalLight* harmony_mono_get_directional_light(harmony::Scene* sc
     MONO_GET_COMPONENT_IMPL(harmony::DirectionalLight)
 }
 
+void harmony_mono_directional_light_set_diffuse(harmony::DirectionalLight* l, glm_vec4 diffuse)
+{
+    if (!l)
+    {
+        return;
+    }
+
+    l->Diffuse = glm::vec4(diffuse.x, diffuse.y, diffuse.z, diffuse.w);
+}
+
+void harmony_mono_directional_light_set_ambient(harmony::DirectionalLight* l, glm_vec4 ambient)
+{
+	if (!l)
+	{
+		return;
+	}
+
+	l->Ambient = glm::vec4(ambient.x, ambient.y, ambient.z, ambient.w);
+}
+
+glm_vec4 harmony_mono_directional_light_get_diffuse(harmony::DirectionalLight* l)
+{
+    if (!l)
+    {
+        return harmony_glm_vec4_default();
+    }
+    return glm_vec4{ l->Diffuse.x,l->Diffuse.y, l->Diffuse.z, l->Diffuse.w };
+}
+
+glm_vec4 harmony_mono_directional_light_get_ambient(harmony::DirectionalLight* l)
+{
+	if (!l)
+	{
+		return harmony_glm_vec4_default();
+	}
+	return glm_vec4{ l->Ambient.x,l->Ambient.y, l->Ambient.z, l->Ambient.w };
+}
+
 harmony::PointLight* harmony_mono_get_point_light(harmony::Scene* scene, entt::entity e)
 {
-    MONO_GET_COMPONENT_IMPL(harmony::PointLight)
+	MONO_GET_COMPONENT_IMPL(harmony::PointLight)
+}
+
+void harmony_mono_point_light_set_diffuse(harmony::PointLight* l, glm_vec4 diffuse)
+{
+	if (!l)
+	{
+		return;
+	}
+
+	l->Diffuse = glm::vec4(diffuse.x, diffuse.y, diffuse.z, diffuse.w);
+}
+
+void harmony_mono_point_light_set_ambient(harmony::PointLight* l, glm_vec4 ambient)
+{
+	if (!l)
+	{
+		return;
+	}
+
+	l->Ambient = glm::vec4(ambient.x, ambient.y, ambient.z, ambient.w);
+}
+
+void harmony_mono_point_light_set_radius(harmony::PointLight* l, float radius)
+{
+    if (!l)
+    {
+        return;
+    }
+    l->Radius = radius;
+}
+
+void harmony_mono_point_light_set_intensity(harmony::PointLight* l, float intensity)
+{
+	if (!l)
+	{
+		return;
+	}
+	l->Intensity = intensity;
+}
+
+glm_vec4 harmony_mono_point_light_get_diffuse(harmony::PointLight* l)
+{
+	if (!l)
+	{
+		return harmony_glm_vec4_default();
+	}
+	return glm_vec4{ l->Diffuse.x,l->Diffuse.y, l->Diffuse.z, l->Diffuse.w };
+}
+
+glm_vec4 harmony_mono_point_light_get_ambient(harmony::PointLight* l)
+{
+	if (!l)
+	{
+		return harmony_glm_vec4_default();
+	}
+	return glm_vec4{ l->Ambient.x,l->Ambient.y, l->Ambient.z, l->Ambient.w };
+}
+
+float harmony_mono_point_light_get_radius(harmony::PointLight* l)
+{
+    if (!l)
+    {
+        return 0.0f;
+    }
+    return l->Radius;
+}
+
+float harmony_mono_point_light_get_intensity(harmony::PointLight* l)
+{
+	if (!l)
+	{
+		return 0.0f;
+	}
+	return l->Intensity;
 }
 
 harmony::SpotLight* harmony_mono_get_spot_light(harmony::Scene* scene, entt::entity e)
 {
     MONO_GET_COMPONENT_IMPL(harmony::SpotLight)
+}
+
+
+void harmony_mono_spot_light_set_diffuse(harmony::SpotLight* l, glm_vec4 diffuse)
+{
+	if (!l)
+	{
+		return;
+	}
+
+	l->Diffuse = glm::vec4(diffuse.x, diffuse.y, diffuse.z, diffuse.w);
+}
+
+void harmony_mono_spot_light_set_ambient(harmony::SpotLight* l, glm_vec4 ambient)
+{
+	if (!l)
+	{
+		return;
+	}
+
+	l->Ambient = glm::vec4(ambient.x, ambient.y, ambient.z, ambient.w);
+}
+
+void harmony_mono_spot_light_set_radius(harmony::SpotLight* l, float radius)
+{
+	if (!l)
+	{
+		return;
+	}
+	l->Radius = radius;
+}
+
+void harmony_mono_spot_light_set_intensity(harmony::SpotLight* l, float intensity)
+{
+	if (!l)
+	{
+		return;
+	}
+	l->Intensity = intensity;
+}
+
+void harmony_mono_spot_light_set_angle(harmony::SpotLight* l, float angle)
+{
+	if (!l)
+	{
+		return;
+	}
+	l->Angle = angle;
+}
+
+glm_vec4 harmony_mono_spot_light_get_diffuse(harmony::SpotLight* l)
+{
+	if (!l)
+	{
+		return harmony_glm_vec4_default();
+	}
+	return glm_vec4{ l->Diffuse.x,l->Diffuse.y, l->Diffuse.z, l->Diffuse.w };
+}
+
+glm_vec4 harmony_mono_spot_light_get_ambient(harmony::SpotLight* l)
+{
+	if (!l)
+	{
+		return harmony_glm_vec4_default();
+	}
+	return glm_vec4{ l->Ambient.x,l->Ambient.y, l->Ambient.z, l->Ambient.w };
+}
+
+float harmony_mono_spot_light_get_radius(harmony::SpotLight* l)
+{
+	if (!l)
+	{
+		return 0.0f;
+	}
+	return l->Radius;
+}
+
+float harmony_mono_spot_light_get_intensity(harmony::SpotLight* l)
+{
+	if (!l)
+	{
+		return 0.0f;
+	}
+	return l->Intensity;
+}
+
+float harmony_mono_spot_light_get_angle(harmony::SpotLight* l)
+{
+	if (!l)
+	{
+		return 0.0f;
+	}
+	return l->Angle;
 }
 
 harmony::SkyComponent* harmony_mono_get_sky(harmony::Scene* scene, entt::entity e)

@@ -216,6 +216,47 @@ extern "C"
         float z;
     };
 
+	struct glm_vec4
+	{
+		float x;
+		float y;
+		float z;
+        float w;
+	};
+
+	struct glm_mat3
+	{
+		float _00;
+		float _01;
+		float _02;
+		float _10;
+		float _11;
+		float _12;
+		float _20;
+		float _21;
+		float _22;
+	};
+
+    struct glm_mat4
+    {
+        float _00;
+        float _01;
+        float _02;
+        float _03;
+		float _10;
+		float _11;
+		float _12;
+		float _13;
+		float _20;
+		float _21;
+		float _22;
+		float _23;
+		float _30;
+		float _31;
+		float _32;
+		float _33;
+    };
+
     struct asset_handle
     {
         MonoString* path;
@@ -249,6 +290,8 @@ extern "C"
     void                harmony_mono_load_scene(MonoString* path);
     void                harmony_mono_save_scene(MonoString* path);
     entt_entity         harmony_mono_create_entity(harmony::Scene* scene);
+    entt_entity         harmony_mono_get_entity_by_id(harmony::Scene* scene, uint32_t index);
+    entt_entity         harmony_mono_get_entity_by_name(harmony::Scene* scene, MonoString* name);
     void                harmony_mono_delete_entity(harmony::Scene* scene, entt_entity e);
     MonoArray*          harmony_mono_get_entity_script_behaviours(harmony::Scene* scene, entt_entity e);
 
@@ -386,18 +429,47 @@ extern "C"
 
     // Mesh
     harmony::MeshComponent* harmony_mono_get_mesh(harmony::Scene* scene, entt::entity e);
+    void harmony_mono_mesh_set_asset(harmony::MeshComponent* mesh, asset_handle asset);
+
+    asset_handle harmony_mono_mesh_get_asset(harmony::MeshComponent* mesh);
     
     // Material
     harmony::MaterialComponent* harmony_mono_get_material(harmony::Scene* scene, entt::entity e);
 
     // Directional Light
     harmony::DirectionalLight* harmony_mono_get_directional_light(harmony::Scene* scene, entt::entity e);
+    void harmony_mono_directional_light_set_diffuse(harmony::DirectionalLight* l, glm_vec4 diffuse);
+	void harmony_mono_directional_light_set_ambient(harmony::DirectionalLight* l, glm_vec4 ambient);
+
+	glm_vec4 harmony_mono_directional_light_get_diffuse(harmony::DirectionalLight* l);
+	glm_vec4 harmony_mono_directional_light_get_ambient(harmony::DirectionalLight* l);
+
     
     // Point Light
     harmony::PointLight* harmony_mono_get_point_light(harmony::Scene* scene, entt::entity e);
+	void harmony_mono_point_light_set_diffuse(harmony::PointLight* l, glm_vec4 diffuse);
+	void harmony_mono_point_light_set_ambient(harmony::PointLight* l, glm_vec4 ambient);
+    void harmony_mono_point_light_set_radius(harmony::PointLight* l, float radius);
+    void harmony_mono_point_light_set_intensity(harmony::PointLight* l, float intensity);
+
+	glm_vec4 harmony_mono_point_light_get_diffuse(harmony::PointLight* l);
+	glm_vec4 harmony_mono_point_light_get_ambient(harmony::PointLight* l);
+	float harmony_mono_point_light_get_radius(harmony::PointLight* l);
+	float harmony_mono_point_light_get_intensity(harmony::PointLight* l);
 
     // Spot Light
     harmony::SpotLight* harmony_mono_get_spot_light(harmony::Scene* scene, entt::entity e);
+	void harmony_mono_spot_light_set_diffuse(harmony::SpotLight* l, glm_vec4 diffuse);
+	void harmony_mono_spot_light_set_ambient(harmony::SpotLight* l, glm_vec4 ambient);
+	void harmony_mono_spot_light_set_radius(harmony::SpotLight* l, float radius);
+	void harmony_mono_spot_light_set_intensity(harmony::SpotLight* l, float intensity);
+    void harmony_mono_spot_light_set_angle(harmony::SpotLight* l, float angle);
+
+	glm_vec4 harmony_mono_spot_light_get_diffuse(harmony::SpotLight* l);
+	glm_vec4 harmony_mono_spot_light_get_ambient(harmony::SpotLight* l);
+	float harmony_mono_spot_light_get_radius(harmony::SpotLight* l);
+	float harmony_mono_spot_light_get_intensity(harmony::SpotLight* l);
+    float harmony_mono_spot_light_get_angle(harmony::SpotLight* l);
 
     // Sky
     harmony::SkyComponent* harmony_mono_get_sky(harmony::Scene* scene, entt::entity e);

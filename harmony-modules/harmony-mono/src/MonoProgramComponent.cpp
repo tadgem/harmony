@@ -344,6 +344,8 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
     mono_add_internal_call("Harmony.SceneMethods::SaveScene", harmony_mono_save_scene);
     mono_add_internal_call("Harmony.SceneMethods::CreateEntity", harmony_mono_create_entity);
     mono_add_internal_call("Harmony.SceneMethods::DeleteEntity", harmony_mono_delete_entity);
+    mono_add_internal_call("Harmony.SceneMethods::GetEntityByID", harmony_mono_get_entity_by_id);
+    mono_add_internal_call("Harmony.SceneMethods::GetEntityByName", harmony_mono_get_entity_by_name);
     mono_add_internal_call("Harmony.SceneMethods::GetEntityScriptBehaviours", harmony_mono_get_entity_script_behaviours);
 
     // Transform
@@ -360,21 +362,56 @@ void harmony::MonoProgramComponent::BindScriptingAPI()
 
 	// Mesh
     mono_add_internal_call("Harmony.ECSMethods::GetEntityMesh", harmony_mono_get_mesh);
+    mono_add_internal_call("Harmony.ECSMethods::GetMeshAsset", harmony_mono_mesh_get_asset);
+    mono_add_internal_call("Harmony.ECSMethods::SetMeshAsset", harmony_mono_mesh_set_asset);
 
 	// Material
     mono_add_internal_call("Harmony.ECSMethods::GetEntityMaterial", harmony_mono_get_material);
 
 	// Directional Light
     mono_add_internal_call("Harmony.ECSMethods::GetEntityDirectionalLight", harmony_mono_get_directional_light);
-
-	// Point Light
+    mono_add_internal_call("Harmony.ECSMethods::GetDirectionalLightDiffuse", harmony_mono_directional_light_get_diffuse);
+    mono_add_internal_call("Harmony.ECSMethods::SetDirectionalLightDiffuse", harmony_mono_directional_light_set_diffuse);
+	mono_add_internal_call("Harmony.ECSMethods::GetDirectionalLightAmbient", harmony_mono_directional_light_get_ambient);
+	mono_add_internal_call("Harmony.ECSMethods::GetDirectionalLightAmbient", harmony_mono_directional_light_get_ambient);
+	
+    // Point Light
     mono_add_internal_call("Harmony.ECSMethods::GetEntityPointLight", harmony_mono_get_point_light);
+	mono_add_internal_call("Harmony.ECSMethods::GetPointLightDiffuse", harmony_mono_point_light_get_diffuse);
+	mono_add_internal_call("Harmony.ECSMethods::SetPointLightDiffuse", harmony_mono_point_light_set_diffuse);
+	mono_add_internal_call("Harmony.ECSMethods::GetPointLightAmbient", harmony_mono_point_light_get_ambient);
+	mono_add_internal_call("Harmony.ECSMethods::GetPointLightAmbient", harmony_mono_point_light_set_ambient);
+	mono_add_internal_call("Harmony.ECSMethods::GetPointLightIntensity", harmony_mono_point_light_get_intensity);
+	mono_add_internal_call("Harmony.ECSMethods::GetPointLightIntensity", harmony_mono_point_light_get_intensity);
+	mono_add_internal_call("Harmony.ECSMethods::GetPointLightRadius", harmony_mono_point_light_get_radius);
+	mono_add_internal_call("Harmony.ECSMethods::GetPointLightRadius", harmony_mono_point_light_set_radius);
+
 
 	// Spot Light
     mono_add_internal_call("Harmony.ECSMethods::GetEntitySpotLight", harmony_mono_get_spot_light);
+	mono_add_internal_call("Harmony.ECSMethods::GetSpotLightDiffuse", harmony_mono_spot_light_get_diffuse);
+	mono_add_internal_call("Harmony.ECSMethods::SetSpotLightDiffuse", harmony_mono_spot_light_set_diffuse);
+	mono_add_internal_call("Harmony.ECSMethods::GetSpotLightAmbient", harmony_mono_spot_light_get_ambient);
+	mono_add_internal_call("Harmony.ECSMethods::GetSpotLightAmbient", harmony_mono_spot_light_set_ambient);
+	mono_add_internal_call("Harmony.ECSMethods::GetSpotLightIntensity", harmony_mono_spot_light_get_intensity);
+	mono_add_internal_call("Harmony.ECSMethods::GetSpotLightIntensity", harmony_mono_spot_light_get_intensity);
+	mono_add_internal_call("Harmony.ECSMethods::GetSpotLightRadius", harmony_mono_spot_light_get_radius);
+	mono_add_internal_call("Harmony.ECSMethods::GetSpotLightRadius", harmony_mono_spot_light_set_radius);
+	mono_add_internal_call("Harmony.ECSMethods::GetSpotLightAngle", harmony_mono_spot_light_get_angle);
+	mono_add_internal_call("Harmony.ECSMethods::GetSpotLightAngle", harmony_mono_spot_light_set_angle);
 
 	// Sky
     mono_add_internal_call("Harmony.ECSMethods::GetEntitySky", harmony_mono_get_sky);
+    mono_add_internal_call("Harmony.ECSMethods::GetSkySunSize", harmony_mono_get_sky_sun_size);
+    mono_add_internal_call("Harmony.ECSMethods::GetSkySunBloom", harmony_mono_get_sky_sun_bloom);
+    mono_add_internal_call("Harmony.ECSMethods::GetSkyExposition", harmony_mono_get_sky_exposition);
+    mono_add_internal_call("Harmony.ECSMethods::GetSkyTurbidity", harmony_mono_get_sky_turbidity);
+    mono_add_internal_call("Harmony.ECSMethods::GetSkyLuminance", harmony_mono_get_sky_luminance);
+	mono_add_internal_call("Harmony.ECSMethods::SetSkySunSize", harmony_mono_set_sky_sun_size);
+	mono_add_internal_call("Harmony.ECSMethods::SetSkySunBloom", harmony_mono_set_sky_sun_bloom);
+	mono_add_internal_call("Harmony.ECSMethods::SetSkyExposition", harmony_mono_set_sky_exposition);
+	mono_add_internal_call("Harmony.ECSMethods::SetSkyTurbidity", harmony_mono_set_sky_turbidity);
+	mono_add_internal_call("Harmony.ECSMethods::SetSkyLuminance", harmony_mono_set_sky_luminance);
 
 	// Camera
     mono_add_internal_call("Harmony.ECSMethods::GetEntityCamera", harmony_mono_get_camera);

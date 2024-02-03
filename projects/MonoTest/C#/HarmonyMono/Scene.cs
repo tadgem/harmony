@@ -10,7 +10,7 @@ namespace Harmony
 
     public static class SceneMethods
     {
-        // N.B: This will all change when introducing async scene loading + foreground / background scenes.
+        // N.B: Active Scene concept change when introducing async scene loading + foreground / background scenes.
         [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static Scene GetActiveScene();
 
@@ -27,10 +27,16 @@ namespace Harmony
         public extern static Entity CreateEntity(this Scene scene);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static Entity GetEntityByID(this Scene scene, uint id);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public extern static Entity GetEntityByName(this Scene scene, string name);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public extern static void DestroyEntity(this Scene scene, Entity entity);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public extern static object[] GetEntityScriptBehaviours(this Scene scene, Entity entity);
+        internal extern static object[] GetEntityScriptBehaviours(this Scene scene, Entity entity);
 
         internal static T GetScriptComponent<T>(this Scene scene, Entity entity)
         {

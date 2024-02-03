@@ -24,6 +24,12 @@ namespace Harmony
 
     public class MeshComponent : INativeComponent
     {
+        public AssetHandle Asset
+        {
+            get => _native.GetMeshAsset();
+            set => _native.SetMeshAsset(value);
+        }
+
         private NativeMeshComponent _native;
 
         IntPtr INativeComponent.Handle { get => _native.Handle; set => _native.Handle = value; }
@@ -32,6 +38,8 @@ namespace Harmony
         {
             return scene.GetEntityMesh(entity).Handle;
         }
+
+
     }
 
     public class CameraComponent : INativeComponent
@@ -60,6 +68,18 @@ namespace Harmony
 
     public class DirectionalLightComponent : INativeComponent
     {
+        public Vector4 Diffuse
+        {
+            get => _native.GetDirectionalLightDiffuse();
+            set => _native.SetDirectionalLightDiffuse(value);
+        }
+
+        public Vector4 Ambient
+        {
+            get => _native.GetDirectionalLightAmbient();
+            set => _native.SetDirectionalLightAmbient(value);
+        }
+
         private NativeDirectionalLightComponent _native;
 
         IntPtr INativeComponent.Handle { get => _native.Handle; set => _native.Handle = value; }
@@ -72,6 +92,30 @@ namespace Harmony
 
     public class PointLightComponent : INativeComponent
     {
+        public Vector4 Diffuse
+        {
+            get => _native.GetPointLightDiffuse();
+            set => _native.SetPointLightDiffuse(value);
+        }
+
+        public Vector4 Ambient
+        {
+            get => _native.GetPointLightAmbient();
+            set => _native.SetPointLightAmbient(value);
+        }
+
+        public float Radius
+        {
+            get => _native.GetPointLightRadius();
+            set => _native.SetPointLightRadius(value);
+        }
+
+        public float Intensity
+        {
+            get => _native.GetPointLightIntensity();
+            set => _native.SetPointLightIntensity(value);
+        }
+
         private NativePointLightComponent _native;
 
         IntPtr INativeComponent.Handle { get => _native.Handle; set => _native.Handle = value; }
@@ -84,6 +128,36 @@ namespace Harmony
 
     public class SpotLightComponent : INativeComponent
     {
+        public Vector4 Diffuse
+        {
+            get => _native.GetSpotLightDiffuse();
+            set => _native.SetSpotLightDiffuse(value);
+        }
+
+        public Vector4 Ambient
+        {
+            get => _native.GetSpotLightAmbient();
+            set => _native.SetSpotLightAmbient(value);
+        }
+
+        public float Radius
+        {
+            get => _native.GetSpotLightRadius();
+            set => _native.SetSpotLightRadius(value);
+        }
+
+        public float Intensity
+        {
+            get => _native.GetSpotLightIntensity();
+            set => _native.SetSpotLightIntensity(value);
+        }
+
+        public float Angle
+        {
+            get => _native.GetSpotLightAngle();
+            set => _native.SetSpotLightAngle(value);
+        }
+
         private NativeSpotLightComponent _native;
 
         IntPtr INativeComponent.Handle { get => _native.Handle; set => _native.Handle = value; }
@@ -97,6 +171,36 @@ namespace Harmony
     public class SkyComponent : INativeComponent
     {
         private NativeSkyComponent _native;
+
+        public float SunSize
+        {
+            get => _native.GetSkySunSize();
+            set => _native.SetSkySunSize(value);
+        }
+
+        public float SunBloom
+        {
+            get => _native.GetSkySunBloom();
+            set => _native.SetSkySunBloom(value);
+        }
+
+        public float Exposition
+        {
+            get => _native.GetSkyExposition();
+            set => _native.SetSkyExposition(value);
+        }
+
+        public float Turbidity
+        {
+            get => _native.GetSkyTurbidity();
+            set => _native.SetSkyTurbidity(value);
+        }
+
+        public Vector3 Luminance
+        {
+            get => _native.GetSkyLuminance();
+            set => _native.SetSkyLuminance(value);
+        }
 
         IntPtr INativeComponent.Handle { get => _native.Handle; set => _native.Handle = value; }
 
@@ -227,26 +331,127 @@ namespace Harmony
         internal extern static void SetTransformScale(this NativeTransformComponent t, Vector3 scale);
         #endregion
 
-
+        #region Mesh
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static NativeMeshComponent GetEntityMesh(this Scene scene, Entity entity);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static NativeMaterialComponent GetEntityMaterial(this Scene scene, Entity entity);
+        internal extern static AssetHandle GetMeshAsset(this NativeMeshComponent mesh);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetMeshAsset(this NativeMeshComponent mesh, AssetHandle handle);
+        #endregion
+
+        #region Material
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static NativeMaterialComponent GetEntityMaterial(this Scene scene, Entity entity);
+        #endregion
+
+        #region Directional Light
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static NativeDirectionalLightComponent GetEntityDirectionalLight(this Scene scene, Entity entity);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static Vector4 GetDirectionalLightDiffuse(this NativeDirectionalLightComponent light);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static Vector4 GetDirectionalLightAmbient(this NativeDirectionalLightComponent light);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetDirectionalLightDiffuse(this NativeDirectionalLightComponent light, Vector4 v);
+        
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetDirectionalLightAmbient(this NativeDirectionalLightComponent light, Vector4 v);
+
+        #endregion
+
+        #region Point Light
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static NativePointLightComponent GetEntityPointLight(this Scene scene, Entity entity);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static Vector4 GetPointLightDiffuse(this NativePointLightComponent light);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static Vector4 GetPointLightAmbient(this NativePointLightComponent light);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float GetPointLightIntensity(this NativePointLightComponent light);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float GetPointLightRadius(this NativePointLightComponent light);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetPointLightDiffuse(this NativePointLightComponent light, Vector4 v);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetPointLightAmbient(this NativePointLightComponent light, Vector4 v);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetPointLightIntensity(this NativePointLightComponent light, float v);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetPointLightRadius(this NativePointLightComponent light, float v);
+
+        #endregion
+
+        #region Spot Lights
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static NativeSpotLightComponent GetEntitySpotLight(this Scene scene, Entity entity);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static Vector4 GetSpotLightDiffuse(this NativeSpotLightComponent light);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static Vector4 GetSpotLightAmbient(this NativeSpotLightComponent light);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float GetSpotLightIntensity(this NativeSpotLightComponent light);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float GetSpotLightRadius(this NativeSpotLightComponent light);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float GetSpotLightAngle(this NativeSpotLightComponent light);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetSpotLightDiffuse(this NativeSpotLightComponent light, Vector4 v);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetSpotLightAmbient(this NativeSpotLightComponent light, Vector4 v);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetSpotLightIntensity(this NativeSpotLightComponent light, float v);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetSpotLightRadius(this NativeSpotLightComponent light, float v);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetSpotLightAngle(this NativeSpotLightComponent light, float v);
+        #endregion
+
+        #region Sky
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static NativeSkyComponent GetEntitySky(this Scene scene, Entity entity);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float GetSkySunSize(this NativeSkyComponent sky);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float GetSkySunBloom(this NativeSkyComponent sky);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float GetSkyExposition(this NativeSkyComponent sky);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float GetSkyTurbidity(this NativeSkyComponent sky);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static Vector3 GetSkyLuminance(this NativeSkyComponent sky);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float SetSkySunSize(this NativeSkyComponent sky, float v);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float SetSkySunBloom(this NativeSkyComponent sky, float v);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float SetSkyExposition(this NativeSkyComponent sky, float v);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float SetSkyTurbidity(this NativeSkyComponent sky, float v);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static Vector3 SetSkyLuminance(this NativeSkyComponent sky, Vector3 v);
+
+        #endregion
+
+        #region Camera
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static NativeCameraComponent GetEntityCamera(this Scene scene, Entity entity);
+        #endregion
     }
 }
