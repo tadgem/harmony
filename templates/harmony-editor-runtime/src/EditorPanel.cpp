@@ -51,7 +51,7 @@ void harmony::ScenePanel::OnImGui() {
                 IM_ASSERT(payload->DataSize == sizeof(RefCntPtr<EntityTemplate>));
                 RefCntPtr<EntityTemplate> entityTemplate = *(RefCntPtr<EntityTemplate>*)payload->Data;
 
-                p_Prog.LoadEntityTemplate(activeSceneWr, entityTemplate);
+                EntityTemplate::LoadEntityTemplate(p_Prog.GetSystems(), activeScene, entityTemplate);
             }
             ImGui::EndDragDropTarget();
         }
@@ -271,7 +271,7 @@ void harmony::EntityInspectorPanel::OnImGui() {
             // action if OK
             if (ImGuiFileDialog::Instance()->IsOk()) {
                 std::string filepath = ImGuiFileDialog::Instance()->GetFilePathName();
-                p_Prog.SaveEntityTemplate(activeSceneWr, p_ScenePanel->m_SelectedEntity, filepath);
+                EntityTemplate::SaveEntityTemplate(p_Prog.GetSystems(), p_Prog.m_AssetManager, activeScene, p_ScenePanel->m_SelectedEntity, filepath);
             }
             ImGuiFileDialog::Instance()->Close();
         }

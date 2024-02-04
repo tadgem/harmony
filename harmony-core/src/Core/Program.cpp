@@ -889,60 +889,6 @@ harmony::WeakPtr<harmony::Scene> harmony::Program::GetActiveScene() {
     return GetWeakRef<Scene>(p_ActiveScene);
 }
 
-harmony::WeakPtr<harmony::EntityTemplate> harmony::Program::SaveEntityTemplate(WeakPtr<Scene> scene, entt::entity e, String name)
-{
-    EntityTemplate et = CreateEntityTemplate(scene, e);
-    nlohmann::json templateJson = et;
-    Utils::SaveJsonToPath(templateJson, name);
-
-    Vector<AssetHandle> assetHandles = m_AssetManager.LoadAsset<EntityTemplate>(name);
-    if (assetHandles.empty())
-    {
-        log::warn("Program : Failed to open entity template at path {}", name);
-        return {};
-    }
-   
-    return m_AssetManager.GetAsset<EntityTemplate>(assetHandles[0]);
-}
-
-void harmony::Program::LoadEntityTemplate(WeakPtr<Scene> scene, WeakPtr<EntityTemplate> entityTemplate)
-{
-    RefCntPtr<Scene> s = scene.lock();
-    RefCntPtr<EntityTemplate> et = entityTemplate.lock();
-
-    if (!s || !et)
-    {
-        return;
-    }
-
-    entt::entity e = s->m_Registry.create();
-
-    for (auto& sys : p_ECSSystems)
-    {
-        if (et->m_ComponentData.find(sys->m_TypeHash.m_Value) != et->m_ComponentData.end())
-        {
-            sys->DeserializeEntity(s->m_Registry, e, et->m_ComponentData[sys->m_TypeHash.m_Value]);
-        }
-    }
-}
-
-harmony::EntityTemplate harmony::Program::CreateEntityTemplate(WeakPtr<Scene> scene, entt::entity e)
-{
-    auto s = scene.lock();
-    if(!s)
-    {
-        return {};
-    }
-
-    EntityTemplate t;
-
-    for(auto& sys : p_ECSSystems)
-    {
-        t.AddComponentData(sys->m_TypeHash, sys->SerializeEntity(s->m_Registry, e));
-    }
-    return t;
-}
-
 void harmony::Program::RunProgramComponentInit() {
     OPTICK_EVENT();
     for (int i = 0; i < p_ProgramComponents.size(); i++) {
@@ -1068,7 +1014,12 @@ void harmony::Program::Frame() {
     OPTICK_EVENT();
 
     bgfx::frame();
-    // Instrumentor::Get().ClearResults();
+}
+
+const harmony::Vector<harmony::RefCntPtr<harmony::System>>& harmony::Program::GetSystems() {
+	OPTICK_EVENT();
+
+    return p_ECSSystems;
 }
 
 void harmony::Program::ProfilerBeginFrame() {

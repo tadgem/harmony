@@ -70,10 +70,6 @@ namespace harmony {
 
         WeakPtr<Scene> GetActiveScene();
 
-        WeakPtr<EntityTemplate> SaveEntityTemplate(WeakPtr<Scene> scene, entt::entity e, String name);
-
-        void                    LoadEntityTemplate(WeakPtr<Scene> scene, WeakPtr<EntityTemplate> entityTemplate);
-
         void RunProgramComponentInit();
 
         void RunProgramComponentUpdate();
@@ -98,6 +94,7 @@ namespace harmony {
 
         SDL_Window* GetWindow() const;
 
+        const Vector<RefCntPtr<System>>& GetSystems();
     protected:
 
         virtual void LoadBuiltInAssets();
@@ -145,7 +142,6 @@ namespace harmony {
 
         void Frame();
 
-        EntityTemplate CreateEntityTemplate(WeakPtr<Scene> scene, entt::entity e);
 
         std::string p_AppName;
         std::string p_LoadedProjectPath;
