@@ -26,6 +26,23 @@ void harmony::Scene::Deserialize(std::vector<RefCntPtr<System>> &systems) {
     }
 }
 
+harmony::Vector<entt::entity> harmony::Scene::GetChildEntities(entt::entity e)
+{
+    auto ret = Vector<entt::entity>();
+
+    auto view = m_Registry.view<EntityData>();
+
+    for (auto [entity, entity_data] : view.each())
+    {
+        if (entity_data.m_Parent == e)
+        {
+            ret.emplace_back(entity);
+        }
+    }
+
+    return ret;
+}
+
 void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<RefCntPtr<System>> &systems) {
     OPTICK_EVENT();
     p_SystemSerializationAttributes.clear();

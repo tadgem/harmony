@@ -32,6 +32,8 @@ namespace harmony {
             return nlohmann::json();
         }
 
+        Vector<entt::entity> GetChildEntities(entt::entity e);
+
     protected:
         friend class Program;
 
