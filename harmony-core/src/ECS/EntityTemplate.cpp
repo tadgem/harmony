@@ -5,20 +5,35 @@
 #include "Core/Scene.h"
 #include "ECS/System.h"
 
-void harmony::EntityTemplate::AddComponentData(HashString systemTypeHash, nlohmann::json entityJson)
+
+void RecurseEntityHierarchy(harmony::WeakPtr<harmony::Scene> scene, harmony::HashMap<uint32_t, uint32_t>& hierarchy, const uint32_t e)
 {
-	if(entityJson.empty())
+	using namespace harmony;
+	
+	
+	auto s = scene.lock();
+
+	if (!s)
 	{
+		// log an error?
 		return;
 	}
 
-	if(m_ComponentData.find(systemTypeHash) != m_ComponentData.end())
+	auto children = s->GetChildEntities((entt::entity)e);
+
+	for (entt::entity childEntity : children)
 	{
-		m_ComponentData[systemTypeHash] = entityJson;
-		return;
+		uint32_t child = (uint32_t)childEntity;
+		if (hierarchy.find(child) != hierarchy.end())
+		{
+			log::error("EntityTemplate :: RecurseEntityHierarchy :: hierarchy already contains an entry for entity {}, what is happening?", e);
+			continue;
+		}
+
+		hierarchy.emplace(child, e);
+		RecurseEntityHierarchy(scene, hierarchy, child);
 	}
 
-	m_ComponentData.emplace(systemTypeHash, entityJson);
 }
 
 harmony::EntityTemplate harmony::EntityTemplate::CreateEntityTemplate(Vector<RefCntPtr<System>> systems, WeakPtr<Scene> scene, entt::entity e)
@@ -29,11 +44,21 @@ harmony::EntityTemplate harmony::EntityTemplate::CreateEntityTemplate(Vector<Ref
 		return {};
 	}
 
+	HashMap<uint32_t, uint32_t> hierarchy = {};
+
+	RecurseEntityHierarchy(scene, hierarchy, (uint32_t)e);
+
+
+	// get all entities that are children
+	// create a mapping of entity to parent
+	// where no parent == UINT32_MAX
+	// do we need this encoding in the serialized data?
+
 	EntityTemplate t;
 
 	for (auto& sys : systems)
 	{
-		t.AddComponentData(sys->m_TypeHash, sys->SerializeEntity(s->m_Registry, e));
+		// t.AddComponentData(sys->m_TypeHash, sys->SerializeEntity(s->m_Registry, e));
 	}
 	return t;
 }
@@ -68,9 +93,9 @@ void harmony::EntityTemplate::LoadEntityTemplate(Vector<RefCntPtr<System>> syste
 
 	for (auto& sys : systems)
 	{
-		if (et->m_ComponentData.find(sys->m_TypeHash.m_Value) != et->m_ComponentData.end())
+		//if (et->m_ComponentData.find(sys->m_TypeHash.m_Value) != et->m_ComponentData.end())
 		{
-			sys->DeserializeEntity(s->m_Registry, e, et->m_ComponentData[sys->m_TypeHash.m_Value]);
+			//sys->DeserializeEntity(s->m_Registry, e, et->m_ComponentData[sys->m_TypeHash.m_Value]);
 		}
 	}
 }
