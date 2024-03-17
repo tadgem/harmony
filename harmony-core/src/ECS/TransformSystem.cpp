@@ -190,9 +190,9 @@ void harmony::TransformSystem::Cleanup(entt::registry &registry) {
     OPTICK_EVENT();
 }
 
-nlohmann::json harmony::TransformSystem::SerializeSystem(entt::registry &registry) {
+harmony::Json harmony::TransformSystem::SerializeSystem(entt::registry &registry) {
     OPTICK_EVENT();
-    nlohmann::json j;
+    Json j;
     auto view = registry.view<TransformComponent>();
 
     for (auto [e, t]: view.each()) {
@@ -202,11 +202,11 @@ nlohmann::json harmony::TransformSystem::SerializeSystem(entt::registry &registr
     return j;
 }
 
-void harmony::TransformSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+void harmony::TransformSystem::DeserializeSystem(entt::registry &registry, Json systemJson) {
     OPTICK_EVENT();
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
-        nlohmann::json transformJson = entry.value();
+        Json transformJson = entry.value();
         TransformComponent tc;
         transformJson.get_to<TransformComponent>(tc);
 
@@ -214,10 +214,10 @@ void harmony::TransformSystem::DeserializeSystem(entt::registry &registry, nlohm
     }
 }
 
-nlohmann::json harmony::TransformSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+harmony::Json harmony::TransformSystem::SerializeEntity(entt::registry& registry, entt::entity e)
 {
     OPTICK_EVENT();
-    nlohmann::json j;
+    Json j;
 
     if(registry.any_of<TransformComponent>(e))
     {
@@ -228,7 +228,7 @@ nlohmann::json harmony::TransformSystem::SerializeEntity(entt::registry& registr
     return j;
 }
 
-void harmony::TransformSystem::DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+void harmony::TransformSystem::DeserializeEntity(entt::registry& registry, entt::entity e, Json entityJson)
 {
     OPTICK_EVENT();
     TransformComponent tc;

@@ -514,11 +514,11 @@ bgfx::ViewId harmony::Renderer::GetPresentViewID() {
     return v;
 }
 
-nlohmann::json harmony::Renderer::Serialize() {
+harmony::Json harmony::Renderer::Serialize() {
     OPTICK_EVENT();
-    auto json = nlohmann::json();
+    auto json = Json();
 
-    json[sk_RendererName] = nlohmann::json();
+    json[sk_RendererName] = Json();
     json[sk_RendererName][sk_RendererShaderCollection] = SerializeShaders();
     json[sk_RendererName][sk_RendererDrawStageCollection] = SerializePipelineDrawStages();
     json[sk_RendererName][sk_RendererPostProcessStageCollection] = SerializePostProcessStages();
@@ -530,7 +530,7 @@ nlohmann::json harmony::Renderer::Serialize() {
     return json;
 }
 
-void harmony::Renderer::Deserialize(AssetManager &am, nlohmann::json &json) {
+void harmony::Renderer::Deserialize(AssetManager &am, Json &json) {
     OPTICK_EVENT();
     harmony::log::info("Renderer : De-serializing Project Renderer Data");
 
@@ -772,11 +772,11 @@ bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakPtr<Mesh> meshWeakRe
 
 }
 
-nlohmann::json harmony::Renderer::SerializeShaders() {
+harmony::Json harmony::Renderer::SerializeShaders() {
     OPTICK_EVENT();
-    auto json = nlohmann::json::array();
+    auto json = Json::array();
     for (auto &shader: p_Shaders) {
-        nlohmann::json shaderJson;
+        Json shaderJson;
 
         shaderJson[sk_ShaderProgram] = *shader;
 
@@ -785,22 +785,22 @@ nlohmann::json harmony::Renderer::SerializeShaders() {
     return json;
 }
 
-nlohmann::json harmony::Renderer::SerializePipelineDrawStages() {
+harmony::Json harmony::Renderer::SerializePipelineDrawStages() {
     OPTICK_EVENT();
-    auto json = nlohmann::json::array();
+    auto json = Json::array();
 
     return json;
 }
 
-nlohmann::json harmony::Renderer::SerializePostProcessStages() {
+harmony::Json harmony::Renderer::SerializePostProcessStages() {
     OPTICK_EVENT();
-    auto json = nlohmann::json::array();
+    auto json = Json::array();
     return json;
 }
 
-nlohmann::json harmony::Renderer::SerializePipelineStageRenderers() {
+harmony::Json harmony::Renderer::SerializePipelineStageRenderers() {
     OPTICK_EVENT();
-    auto json = nlohmann::json::array();
+    auto json = Json::array();
     for (auto &renderer: p_PipelineStageRenderers) {
         json.emplace_back(renderer);
     }
@@ -808,9 +808,9 @@ nlohmann::json harmony::Renderer::SerializePipelineStageRenderers() {
     return json;
 }
 
-nlohmann::json harmony::Renderer::SerializeShaderDataSources() {
+harmony::Json harmony::Renderer::SerializeShaderDataSources() {
     OPTICK_EVENT();
-    auto json = nlohmann::json::array();
+    auto json = Json::array();
     for (auto &source: p_ShaderDataSources) {
         json.emplace_back(source);
     }
@@ -818,11 +818,11 @@ nlohmann::json harmony::Renderer::SerializeShaderDataSources() {
     return json;
 }
 
-nlohmann::json harmony::Renderer::SerializeViews() {
+harmony::Json harmony::Renderer::SerializeViews() {
     OPTICK_EVENT();
-    auto json = nlohmann::json::array();
+    auto json = Json::array();
     for (auto &[view, stack]: p_Views) {
-        nlohmann::json viewJson;
+        Json viewJson;
         viewJson[sk_ViewData] = view->Serialize();
         json.emplace_back(viewJson);
 
@@ -831,9 +831,9 @@ nlohmann::json harmony::Renderer::SerializeViews() {
     return json;
 }
 
-nlohmann::json harmony::Renderer::SerializeActiveViews() {
+harmony::Json harmony::Renderer::SerializeActiveViews() {
     OPTICK_EVENT();
-    auto json = nlohmann::json::array();
+    auto json = Json::array();
     for (WeakPtr<View> viewWr: m_ActiveViews) {
         if (viewWr.expired()) {
             continue;
@@ -845,7 +845,7 @@ nlohmann::json harmony::Renderer::SerializeActiveViews() {
     return json;
 }
 
-void harmony::Renderer::DeserializeShaders(nlohmann::json &json, AssetManager &am) {
+void harmony::Renderer::DeserializeShaders(Json &json, AssetManager &am) {
     OPTICK_EVENT();
     harmony::log::info("Renderer : Deserializing Shaders");
     for (auto shaderJson: json[sk_RendererName][sk_RendererShaderCollection]) {
@@ -919,12 +919,12 @@ void harmony::Renderer::DeserializeShaders(nlohmann::json &json, AssetManager &a
     }
 }
 
-void harmony::Renderer::DeserializePipelineDrawStages(nlohmann::json &json, AssetManager &am) {
+void harmony::Renderer::DeserializePipelineDrawStages(Json &json, AssetManager &am) {
     OPTICK_EVENT();
     harmony::log::info("TODO : Deserialize pipeline draw stages.");
 }
 
-void harmony::Renderer::DeserializePostProcessStages(nlohmann::json &json, AssetManager &am) {
+void harmony::Renderer::DeserializePostProcessStages(Json &json, AssetManager &am) {
     OPTICK_EVENT();
     harmony::log::info("Renderer : Deserializing Post Process Stages");
     for (auto postProcessJson: json[sk_RendererName][sk_RendererPostProcessStageCollection]) {
@@ -952,16 +952,16 @@ void harmony::Renderer::DeserializePostProcessStages(nlohmann::json &json, Asset
 
 }
 
-void harmony::Renderer::DeserializePipelineStageRenderers(nlohmann::json &json, AssetManager &am) {
+void harmony::Renderer::DeserializePipelineStageRenderers(Json &json, AssetManager &am) {
     OPTICK_EVENT();
     harmony::log::info("TODO : Deserialize pipeline stage renderers.");
 }
 
-void harmony::Renderer::DeserializeShaderDataSources(nlohmann::json &json, AssetManager &am) {
+void harmony::Renderer::DeserializeShaderDataSources(Json &json, AssetManager &am) {
     OPTICK_EVENT();
 }
 
-void harmony::Renderer::DeserializeViews(nlohmann::json &json, AssetManager &am) {
+void harmony::Renderer::DeserializeViews(Json &json, AssetManager &am) {
     OPTICK_EVENT();
     auto viewsJson = json[sk_RendererName][sk_RendererViewCollection];
     harmony::log::info("Renderer : Deserializing Views");
@@ -987,7 +987,7 @@ void harmony::Renderer::DeserializeViews(nlohmann::json &json, AssetManager &am)
     }
 }
 
-void harmony::Renderer::DeserializeActiveViews(nlohmann::json &json, AssetManager &am) {
+void harmony::Renderer::DeserializeActiveViews(Json &json, AssetManager &am) {
     OPTICK_EVENT();
     harmony::log::info("Renderer : Deserializing Active Views");
 }

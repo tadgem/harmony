@@ -14,8 +14,8 @@ harmony::GraphScript::Ops harmony::GraphScript::PrintNode::Build() {
     return ops;
 }
 
-nlohmann::json harmony::GraphScript::PrintNode::Serialize() {
-    return nlohmann::json();
+harmony::Json harmony::GraphScript::PrintNode::Serialize() {
+    return Json();
 }
 
 void harmony::GraphScript::PrintNode::Deserialize() {
@@ -38,8 +38,8 @@ harmony::GraphScript::Ops harmony::GraphScript::EntryPointNode::Build() {
     return harmony::GraphScript::Ops();
 }
 
-nlohmann::json harmony::GraphScript::EntryPointNode::Serialize() {
-    return nlohmann::json();
+harmony::Json harmony::GraphScript::EntryPointNode::Serialize() {
+    return Json();
 }
 
 void harmony::GraphScript::EntryPointNode::Deserialize() {
@@ -118,7 +118,7 @@ harmony::UniquePtr<harmony::GraphScript::CompiledGraph> harmony::GraphScript::Gr
     return {};
 }
 
-nlohmann::json harmony::GraphScript::GraphBuilder::Serialize() {
+harmony::Json harmony::GraphScript::GraphBuilder::Serialize() {
     return {};
 }
 

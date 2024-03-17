@@ -11,6 +11,7 @@
 #include <optional>
 #include <stack>
 #include <thread>
+#include "ThirdParty/json.hpp"
 
 namespace harmony {
     using String = std::string;
@@ -42,4 +43,6 @@ namespace harmony {
     using Mutex = std::mutex;
 
     using MutexLock = std::lock_guard<Mutex>;
+
+    using Json = nlohmann::json;
 }

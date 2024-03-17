@@ -18,9 +18,9 @@ namespace harmony {
 
         virtual void Cleanup() = 0;
 
-        virtual nlohmann::json ToJson() = 0;
+        virtual Json ToJson() = 0;
 
-        virtual void FromJson(const nlohmann::json &json) = 0;
+        virtual void FromJson(const Json &json) = 0;
 
         HashString m_TypeHash;
     protected:

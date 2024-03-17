@@ -44,11 +44,11 @@ void harmony::SkyStage::AddShaderDataSource(harmony::WeakPtr<harmony::ShaderData
     PipelineStage::AddShaderDataSource(source);
 }
 
-nlohmann::json harmony::SkyStage::Serialize() {
+harmony::Json harmony::SkyStage::Serialize() {
     return PipelineStage::Serialize();
 }
 
-void harmony::SkyStage::Deserialize(nlohmann::json json) {
+void harmony::SkyStage::Deserialize(Json json) {
     PipelineStage::Deserialize(json);
 }
 

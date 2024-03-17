@@ -29,9 +29,9 @@ void harmony::MeshSystem::Cleanup(entt::registry &registry) {
     OPTICK_EVENT();
 }
 
-nlohmann::json harmony::MeshSystem::SerializeSystem(entt::registry &registry) {
+harmony::Json harmony::MeshSystem::SerializeSystem(entt::registry &registry) {
     OPTICK_EVENT();
-    nlohmann::json j;
+    Json j;
     auto view = registry.view<MeshComponent>();
 
     for (auto [e, mesh]: view.each()) {
@@ -41,7 +41,7 @@ nlohmann::json harmony::MeshSystem::SerializeSystem(entt::registry &registry) {
     return j;
 }
 
-void harmony::MeshSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+void harmony::MeshSystem::DeserializeSystem(entt::registry &registry, Json systemJson) {
     OPTICK_EVENT();
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
@@ -53,10 +53,10 @@ void harmony::MeshSystem::DeserializeSystem(entt::registry &registry, nlohmann::
     }
 }
 
-nlohmann::json harmony::MeshSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+harmony::Json harmony::MeshSystem::SerializeEntity(entt::registry& registry, entt::entity e)
 {
     OPTICK_EVENT();
-    nlohmann::json j;
+    Json j;
 
     if(registry.any_of<MeshComponent>(e))
     {
@@ -67,7 +67,7 @@ nlohmann::json harmony::MeshSystem::SerializeEntity(entt::registry& registry, en
     return j;
 }
 
-void harmony::MeshSystem::DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+void harmony::MeshSystem::DeserializeEntity(entt::registry& registry, entt::entity e, Json entityJson)
 {
     OPTICK_EVENT();
     MeshComponent tc;

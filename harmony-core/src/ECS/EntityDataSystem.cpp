@@ -32,9 +32,9 @@ void harmony::EntityDataSystem::Cleanup(entt::registry &registry) {
 
 }
 
-nlohmann::json harmony::EntityDataSystem::SerializeSystem(entt::registry &registry) {
+harmony::Json harmony::EntityDataSystem::SerializeSystem(entt::registry &registry) {
     OPTICK_EVENT()
-    nlohmann::json j;
+    Json j;
     auto view = registry.view<EntityData>();
 
     for (auto [e, d]: view.each()) {
@@ -43,11 +43,11 @@ nlohmann::json harmony::EntityDataSystem::SerializeSystem(entt::registry &regist
     return j;
 }
 
-void harmony::EntityDataSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+void harmony::EntityDataSystem::DeserializeSystem(entt::registry &registry, Json systemJson) {
     OPTICK_EVENT()
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
-        nlohmann::json dataJson = entry.value();
+        Json dataJson = entry.value();
         EntityData data;
         dataJson.get_to<EntityData>(data);
 
@@ -62,10 +62,10 @@ void harmony::EntityDataSystem::DeserializeSystem(entt::registry &registry, nloh
     }
 }
 
-nlohmann::json harmony::EntityDataSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+harmony::Json harmony::EntityDataSystem::SerializeEntity(entt::registry& registry, entt::entity e)
 {
     OPTICK_EVENT()
-    nlohmann::json j;
+    Json j;
 
     if(registry.any_of<EntityData>(e))
     {
@@ -76,7 +76,7 @@ nlohmann::json harmony::EntityDataSystem::SerializeEntity(entt::registry& regist
     return j;
 }
 
-void harmony::EntityDataSystem::DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+void harmony::EntityDataSystem::DeserializeEntity(entt::registry& registry, entt::entity e, Json entityJson)
 {
     OPTICK_EVENT()
     EntityData ed;

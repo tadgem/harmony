@@ -732,7 +732,7 @@ void harmony::Program::SaveProject() {
     m_Project->UpdateRendererSerializationAttributes(m_Renderer);
     m_Project->UpdateProjectAssetsSerializationAttributes(m_AssetManager);
 
-    nlohmann::json projectJson = *m_Project;
+    Json projectJson = *m_Project;
     Utils::SaveJsonToPath(projectJson, p_LoadedProjectPath);
 }
 
@@ -747,7 +747,7 @@ void harmony::Program::LoadProject(const std::string &path) {
 
     harmony::log::info("Program : Loading project from path : {}", path);
 
-    nlohmann::json projectJson = Utils::LoadJsonFromPath(path);
+    Json projectJson = Utils::LoadJsonFromPath(path);
     m_Project = CreateRef<Project>(projectJson);
 
     UpdateProjectDirectory(path);
@@ -818,7 +818,7 @@ void harmony::Program::SaveScene(const std::string &path) {
     }
 
     p_ActiveScene->UpdateSceneSystemSerializationAttributes(p_ECSSystems);
-    nlohmann::json sceneJson = *p_ActiveScene;
+    Json sceneJson = *p_ActiveScene;
     Utils::SaveJsonToPath(sceneJson, cleanPath);
 
     auto it = std::find(m_Project->m_SerializedScenes.begin(), m_Project->m_SerializedScenes.end(), cleanPath);
@@ -842,7 +842,7 @@ void harmony::Program::LoadScene(const std::string &path) {
     OPTICK_EVENT();
     CloseActiveScene();
     harmony::log::info("Program : Loading scene from path : {}", path);
-    nlohmann::json sceneJson = Utils::LoadJsonFromPath(path);
+    Json sceneJson = Utils::LoadJsonFromPath(path);
     p_ActiveScene = CreateRef<Scene>(sceneJson);
     p_ActiveScene->Deserialize(p_ECSSystems);
     // m_Renderer.RefreshViews();
@@ -855,7 +855,7 @@ void harmony::Program::OpenScene(uint32_t index) {
 
     harmony::log::info("Program : Loading scene from index : {} : path : {}", index, scenePath);
 
-    nlohmann::json sceneJson = Utils::LoadJsonFromPath(scenePath);
+    Json sceneJson = Utils::LoadJsonFromPath(scenePath);
     p_ActiveScene = CreateRef<Scene>(sceneJson);
     p_ActiveScene->Deserialize(p_ECSSystems);
 

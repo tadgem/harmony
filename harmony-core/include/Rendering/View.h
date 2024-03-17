@@ -2,7 +2,7 @@
 
 #include "Core/Memory.h"
 #include "ThirdParty/entt.hpp"
-#include "ThirdParty/json.hpp"
+#include "Core/TypeDef.h"
 #include "bgfx/bgfx.h"
 #include "glm/glm.hpp"
 
@@ -34,9 +34,9 @@ namespace harmony {
 
         virtual void OnResized(uint32_t w, uint32_t h);
 
-        virtual nlohmann::json Serialize();
+        virtual Json Serialize();
 
-        virtual void Deserialize(nlohmann::json &json);
+        virtual void Deserialize(Json &json);
 
 #if HARMONY_DEBUG
 

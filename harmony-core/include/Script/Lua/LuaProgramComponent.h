@@ -23,9 +23,9 @@ namespace harmony {
 
         virtual void Cleanup() override;
 
-        virtual nlohmann::json ToJson() override;
+        virtual Json ToJson() override;
 
-        virtual void FromJson(const nlohmann::json &json) override;
+        virtual void FromJson(const Json &json) override;
 
         Vector<AssetHandle> m_LuaProgramScripts;
     protected:

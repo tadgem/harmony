@@ -21,7 +21,7 @@ namespace harmony {
         entt::registry m_Registry;
 
         template<typename T>
-        nlohmann::json GetSystemJSON()
+        Json GetSystemJSON()
         {
             HashString typeHash = GetTypeHash<T>();
             if(p_SystemSerializationAttributes.find(typeHash.m_Value) != p_SystemSerializationAttributes.end())
@@ -29,7 +29,7 @@ namespace harmony {
                 return p_SystemSerializationAttributes[typeHash.m_Value];
             }
 
-            return nlohmann::json();
+            return Json();
         }
 
         Vector<entt::entity> GetChildEntities(entt::entity e);
@@ -41,7 +41,7 @@ namespace harmony {
 
         void Deserialize(std::vector<RefCntPtr<System>> &systems);
 
-        std::map<uint64_t, nlohmann::json> p_SystemSerializationAttributes;
+        std::map<uint64_t, Json> p_SystemSerializationAttributes;
         std::vector<Entity> p_Entities;
     public:
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(Scene, m_Name, m_NumEntities, p_Entities, p_SystemSerializationAttributes)

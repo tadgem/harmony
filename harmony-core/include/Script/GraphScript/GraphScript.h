@@ -106,7 +106,7 @@ namespace harmony {
 
             virtual Ops Build() = 0;
 
-            virtual nlohmann::json Serialize() = 0;
+            virtual Json Serialize() = 0;
 
             virtual void Deserialize() = 0;
 
@@ -123,7 +123,7 @@ namespace harmony {
 
             Ops Build() override;
 
-            nlohmann::json Serialize() override;
+            Json Serialize() override;
 
             void Deserialize() override;
 
@@ -140,7 +140,7 @@ namespace harmony {
 
             Ops Build() override;
 
-            nlohmann::json Serialize() override;
+            Json Serialize() override;
 
             void Deserialize() override;
 
@@ -184,7 +184,7 @@ namespace harmony {
 
             UniquePtr<CompiledGraph> Build();
 
-            nlohmann::json Serialize();
+            Json Serialize();
         };
     } // namespace GraphScript
 

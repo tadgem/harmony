@@ -116,9 +116,9 @@ namespace harmony {
 
         static bgfx::ViewId GetPresentViewID();
 
-        nlohmann::json Serialize();
+        Json Serialize();
 
-        void Deserialize(AssetManager &am, nlohmann::json &json);
+        void Deserialize(AssetManager &am, Json &json);
 
         std::vector<WeakPtr<View>> m_ActiveViews;
 
@@ -158,34 +158,34 @@ namespace harmony {
     protected:
         bgfx::VertexLayout BuildVertexLayout(WeakPtr<Mesh> meshWeakRef);
 
-        nlohmann::json SerializeShaders();
+        Json SerializeShaders();
 
-        nlohmann::json SerializePipelineDrawStages();
+        Json SerializePipelineDrawStages();
 
-        nlohmann::json SerializePostProcessStages();
+        Json SerializePostProcessStages();
 
-        nlohmann::json SerializePipelineStageRenderers();
+        Json SerializePipelineStageRenderers();
 
-        nlohmann::json SerializeShaderDataSources();
+        Json SerializeShaderDataSources();
 
-        nlohmann::json SerializeViews();
+        Json SerializeViews();
 
-        nlohmann::json SerializeActiveViews();
+        Json SerializeActiveViews();
 
-        void DeserializeShaders(nlohmann::json &json, AssetManager &am);
+        void DeserializeShaders(Json &json, AssetManager &am);
 
-        void DeserializePipelineDrawStages(nlohmann::json &json, AssetManager &am);
+        void DeserializePipelineDrawStages(Json &json, AssetManager &am);
 
-        void DeserializePostProcessStages(nlohmann::json &json, AssetManager &am);
+        void DeserializePostProcessStages(Json &json, AssetManager &am);
 
-        void DeserializePipelineStageRenderers(nlohmann::json &json,
+        void DeserializePipelineStageRenderers(Json &json,
                                                AssetManager &am);
 
-        void DeserializeShaderDataSources(nlohmann::json &json, AssetManager &am);
+        void DeserializeShaderDataSources(Json &json, AssetManager &am);
 
-        void DeserializeViews(nlohmann::json &json, AssetManager &am);
+        void DeserializeViews(Json &json, AssetManager &am);
 
-        void DeserializeActiveViews(nlohmann::json &json, AssetManager &am);
+        void DeserializeActiveViews(Json &json, AssetManager &am);
 
         static uint32_t p_PresentViewHandleCounter;
         static uint32_t p_ViewHandleCounter;

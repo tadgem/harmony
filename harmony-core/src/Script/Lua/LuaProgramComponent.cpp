@@ -93,9 +93,9 @@ void harmony::LuaProgramComponent::Cleanup() {
     OPTICK_EVENT();
 }
 
-nlohmann::json harmony::LuaProgramComponent::ToJson() {
+harmony::Json harmony::LuaProgramComponent::ToJson() {
     OPTICK_EVENT();
-    auto j = nlohmann::json();
+    auto j = Json();
 
     auto& scripts = j["program-scripts"];
 
@@ -107,7 +107,7 @@ nlohmann::json harmony::LuaProgramComponent::ToJson() {
     return j;
 }
 
-void harmony::LuaProgramComponent::FromJson(const nlohmann::json &json) {
+void harmony::LuaProgramComponent::FromJson(const Json &json) {
     OPTICK_EVENT();
     if(!json.contains("program-scripts"))
     {

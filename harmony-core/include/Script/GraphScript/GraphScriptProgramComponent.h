@@ -29,9 +29,9 @@ namespace harmony {
 
         GraphScript::NodeRegistry *GetNodeRegistry();
 
-        nlohmann::json ToJson() override;
+        Json ToJson() override;
 
-        void FromJson(const nlohmann::json &json) override;
+        void FromJson(const Json &json) override;
 
     protected:
         UniquePtr<GraphScript::NodeRegistry> p_NodeRegistry;

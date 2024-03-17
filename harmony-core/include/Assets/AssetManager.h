@@ -116,9 +116,9 @@ namespace harmony {
 
         void Clear();
 
-        nlohmann::json Serialize();
+        Json Serialize();
 
-        void Deserialize(nlohmann::json &json);
+        void Deserialize(Json &json);
 
         template<typename T>
         AssetHandle AddBuiltInAsset(const std::string &path, RefCntPtr<T> asset) {

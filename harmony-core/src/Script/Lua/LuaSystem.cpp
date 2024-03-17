@@ -89,10 +89,10 @@ void harmony::LuaSystem::Cleanup(entt::registry &registry) {
     }
 }
 
-nlohmann::json harmony::LuaSystem::SerializeSystem(entt::registry &registry) {
+harmony::Json harmony::LuaSystem::SerializeSystem(entt::registry &registry) {
     OPTICK_EVENT();
 
-    nlohmann::json j;
+    Json j;
     auto view = registry.view<LuaComponent>();
 
     for (auto [e, lua]: view.each()) {
@@ -102,19 +102,19 @@ nlohmann::json harmony::LuaSystem::SerializeSystem(entt::registry &registry) {
     return j;
 }
 
-void harmony::LuaSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+void harmony::LuaSystem::DeserializeSystem(entt::registry &registry, Json systemJson) {
     OPTICK_EVENT();
 
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
-        nlohmann::json luaJson = entry.value();
+        Json luaJson = entry.value();
         DeserializeEntity(registry, e, luaJson);
     }
 }
 
-nlohmann::json harmony::LuaSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+harmony::Json harmony::LuaSystem::SerializeEntity(entt::registry& registry, entt::entity e)
 {
-    nlohmann::json j;
+    Json j;
 
     if(registry.any_of<LuaComponent>(e))
     {
@@ -125,7 +125,7 @@ nlohmann::json harmony::LuaSystem::SerializeEntity(entt::registry& registry, ent
     return j;
 }
 
-void harmony::LuaSystem::DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+void harmony::LuaSystem::DeserializeEntity(entt::registry& registry, entt::entity e, Json entityJson)
 {
     LuaComponent lc;
     entityJson.get_to<LuaComponent>(lc);

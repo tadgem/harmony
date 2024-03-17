@@ -55,8 +55,8 @@ namespace harmony
         virtual void Update() override;
         virtual void Render() override;
         virtual void Cleanup() override;
-        virtual nlohmann::json ToJson() override;
-        virtual void FromJson(const nlohmann::json& json) override;
+        virtual Json ToJson() override;
+        virtual void FromJson(const Json& json) override;
 
         void BindScriptingAPI();
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "ThirdParty/json.hpp"
+#include "Core/TypeDef.h"
 #include "glm.hpp"
 #include "glm/gtc/quaternion.hpp"
 
@@ -14,11 +14,11 @@ namespace harmony {
 
         static std::string GetCleanPlatformPath(const std::string &path);
 
-        static nlohmann::json LoadJsonFromPath(const std::string &path);
+        static Json LoadJsonFromPath(const std::string &path);
 
         static void SaveStringToPath(const std::string &str, const std::string &path);
 
-        static void SaveJsonToPath(nlohmann::json &json, const std::string &path);
+        static void SaveJsonToPath(Json &json, const std::string &path);
 
         static std::vector<uint8_t> LoadBinaryFromPath(const std::string &path);
 

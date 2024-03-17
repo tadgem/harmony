@@ -54,11 +54,11 @@ void harmony::AssetHotReload::Render() {
 void harmony::AssetHotReload::Cleanup() {
 }
 
-nlohmann::json harmony::AssetHotReload::ToJson() {
-    return nlohmann::json();
+harmony::Json harmony::AssetHotReload::ToJson() {
+    return Json();
 }
 
-void harmony::AssetHotReload::FromJson(const nlohmann::json &json) {
+void harmony::AssetHotReload::FromJson(const Json &json) {
 }
 
 void harmony::AssetHotReload::AddHotReloadProvider(RefCntPtr<AssetHotReloadProvider> provider) {

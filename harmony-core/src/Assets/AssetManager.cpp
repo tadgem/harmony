@@ -96,12 +96,12 @@ void harmony::AssetManager::Clear() {
     p_AssetRegistry.clear();
 }
 
-nlohmann::json harmony::AssetManager::Serialize() {
+harmony::Json harmony::AssetManager::Serialize() {
     OPTICK_EVENT();
-    nlohmann::json json;
+    Json json;
     auto view = p_AssetRegistry.view<AssetHandle>();
 
-    json["assets"] = nlohmann::json::array();
+    json["assets"] = Json::array();
 
     for (auto [entity, handle]: view.each()) {
         json["assets"].emplace_back(handle);
@@ -110,7 +110,7 @@ nlohmann::json harmony::AssetManager::Serialize() {
     return json;
 }
 
-void harmony::AssetManager::Deserialize(nlohmann::json &json) {
+void harmony::AssetManager::Deserialize(Json &json) {
     OPTICK_EVENT();
     for (auto j: json["assets"]) {
         AssetHandle handle = j;

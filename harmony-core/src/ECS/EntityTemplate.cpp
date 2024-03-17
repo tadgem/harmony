@@ -5,7 +5,7 @@
 #include "Core/Scene.h"
 #include "ECS/System.h"
 
-void harmony::EntityTemplate::AddComponentData(HashString systemTypeHash, nlohmann::json entityJson)
+void harmony::EntityTemplate::AddComponentData(HashString systemTypeHash, Json entityJson)
 {
 	if(entityJson.empty())
 	{
@@ -41,7 +41,7 @@ harmony::EntityTemplate harmony::EntityTemplate::CreateEntityTemplate(Vector<Ref
 harmony::WeakPtr<harmony::EntityTemplate> harmony::EntityTemplate::SaveEntityTemplate(Vector<RefCntPtr<System>> systems, AssetManager& assetManager, WeakPtr<Scene> scene, entt::entity e, String name)
 {
 	EntityTemplate et = CreateEntityTemplate(systems, scene, e);
-	nlohmann::json templateJson = et;
+	Json templateJson = et;
 	Utils::SaveJsonToPath(templateJson, name);
 
 	Vector<AssetHandle> assetHandles = assetManager.LoadAsset<EntityTemplate>(name);
@@ -75,12 +75,12 @@ void harmony::EntityTemplate::LoadEntityTemplate(Vector<RefCntPtr<System>> syste
 	}
 }
 
-nlohmann::json harmony::EntityTemplate::ToJSON()
+harmony::Json harmony::EntityTemplate::ToJSON()
 {
 	return *this;
 }
 
-void harmony::EntityTemplate::FromJSON(const nlohmann::json& input)
+void harmony::EntityTemplate::FromJSON(const Json& input)
 {
 	*this = input;
 }

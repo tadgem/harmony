@@ -182,9 +182,9 @@ void harmony::JoltPhysicsSystem::Cleanup(entt::registry &registry) {
     p_Running = false;
 }
 
-nlohmann::json harmony::JoltPhysicsSystem::SerializeSystem(entt::registry &registry) {
+harmony::Json harmony::JoltPhysicsSystem::SerializeSystem(entt::registry &registry) {
     OPTICK_EVENT()
-    auto j = nlohmann::json();
+    auto j = Json();
 
     auto bodyView = registry.view<JoltBodyComponent>();
 
@@ -195,11 +195,11 @@ nlohmann::json harmony::JoltPhysicsSystem::SerializeSystem(entt::registry &regis
     return j;
 }
 
-void harmony::JoltPhysicsSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+void harmony::JoltPhysicsSystem::DeserializeSystem(entt::registry &registry, Json systemJson) {
     OPTICK_EVENT()
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
-        nlohmann::json transformJson = entry.value();
+        Json transformJson = entry.value();
         JoltBodyComponent b;
         transformJson.get_to<JoltBodyComponent>(b);
         b.RequiresUpdate = true;
@@ -207,10 +207,10 @@ void harmony::JoltPhysicsSystem::DeserializeSystem(entt::registry &registry, nlo
     }
 }
 
-nlohmann::json harmony::JoltPhysicsSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+harmony::Json harmony::JoltPhysicsSystem::SerializeEntity(entt::registry& registry, entt::entity e)
 {
     OPTICK_EVENT()
-    nlohmann::json j;
+    Json j;
 
     if(registry.any_of<JoltBodyComponent>(e))
     {
@@ -222,7 +222,7 @@ nlohmann::json harmony::JoltPhysicsSystem::SerializeEntity(entt::registry& regis
 }
 
 void harmony::JoltPhysicsSystem::
-DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+DeserializeEntity(entt::registry& registry, entt::entity e, Json entityJson)
 {
     OPTICK_EVENT()
     if(entityJson.contains(p_JoltBodyComponentKey))

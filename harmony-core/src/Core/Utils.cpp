@@ -28,10 +28,10 @@ std::string harmony::Utils::LoadStringFromPath(const std::string &path) {
     return content;
 }
 
-nlohmann::json harmony::Utils::LoadJsonFromPath(const std::string &path) {
+harmony::Json harmony::Utils::LoadJsonFromPath(const std::string &path) {
     OPTICK_EVENT();
     std::string str = LoadStringFromPath(path);
-    nlohmann::json json = nlohmann::json::parse(str);
+    Json json = Json::parse(str);
     return json;
 }
 
@@ -78,7 +78,7 @@ void harmony::Utils::SaveStringToPath(const std::string &str, const std::string 
     outputFile.close();
 }
 
-void harmony::Utils::SaveJsonToPath(nlohmann::json &json, const std::string &path) {
+void harmony::Utils::SaveJsonToPath(Json &json, const std::string &path) {
     OPTICK_EVENT();
     std::string jsonContent = json.dump();
     SaveStringToPath(jsonContent, path);

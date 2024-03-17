@@ -25,14 +25,14 @@ namespace harmony {
 
         virtual void Cleanup(entt::registry &registry) override;
 
-        virtual nlohmann::json SerializeSystem(entt::registry &registry) override;
+        virtual Json SerializeSystem(entt::registry &registry) override;
 
         virtual void DeserializeSystem(entt::registry &registry,
-                                       nlohmann::json systemJson) override;
+                                       Json systemJson) override;
 
-        virtual nlohmann::json SerializeEntity(entt::registry& registry, entt::entity e) override;
+        virtual Json SerializeEntity(entt::registry& registry, entt::entity e) override;
 
-        virtual void DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson) override;
+        virtual void DeserializeEntity(entt::registry& registry, entt::entity e, Json entityJson) override;
 
         virtual void Refresh() override;
 

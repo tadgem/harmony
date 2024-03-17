@@ -49,9 +49,9 @@ namespace harmony {
 
         virtual void AddShaderDataSource(WeakPtr<ShaderDataSource> source);
 
-        virtual nlohmann::json Serialize();
+        virtual Json Serialize();
 
-        virtual void Deserialize(nlohmann::json json);
+        virtual void Deserialize(Json json);
 
         bool m_HasHDRAttachment;
         bool m_HasDepthAttachment;

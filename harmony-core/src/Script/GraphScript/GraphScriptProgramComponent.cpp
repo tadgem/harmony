@@ -27,11 +27,11 @@ void harmony::GraphScriptProgramComponent::Cleanup() {
 
 }
 
-nlohmann::json harmony::GraphScriptProgramComponent::ToJson() {
-    return nlohmann::json();
+harmony::Json harmony::GraphScriptProgramComponent::ToJson() {
+    return Json();
 }
 
-void harmony::GraphScriptProgramComponent::FromJson(const nlohmann::json &json) {
+void harmony::GraphScriptProgramComponent::FromJson(const Json &json) {
 
 }
 

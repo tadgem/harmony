@@ -83,10 +83,10 @@ void harmony::MonoSystem::Cleanup(entt::registry& registry)
     }
 }
 
-nlohmann::json harmony::MonoSystem::SerializeSystem(entt::registry& registry)
+harmony::Json harmony::MonoSystem::SerializeSystem(entt::registry& registry)
 {
     OPTICK_EVENT()
-    auto j = nlohmann::json();
+    auto j = Json();
     auto view = registry.view<MonoBehaviourComponent>();
     for (auto [e, mono]: view.each())
     {
@@ -95,21 +95,21 @@ nlohmann::json harmony::MonoSystem::SerializeSystem(entt::registry& registry)
     return j;
 }
 
-void harmony::MonoSystem::DeserializeSystem(entt::registry& registry, nlohmann::json systemJson)
+void harmony::MonoSystem::DeserializeSystem(entt::registry& registry, Json systemJson)
 {
     OPTICK_EVENT()
     String jsonStr = systemJson.dump();
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
-        nlohmann::json monoJson = entry.value();
+        Json monoJson = entry.value();
         DeserializeEntity(registry, e, monoJson);
     }
 }
 
-nlohmann::json harmony::MonoSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+harmony::Json harmony::MonoSystem::SerializeEntity(entt::registry& registry, entt::entity e)
 {
     OPTICK_EVENT();
-    nlohmann::json j;
+    Json j;
 
     if(registry.any_of<MonoBehaviourComponent>(e))
     {
@@ -120,7 +120,7 @@ nlohmann::json harmony::MonoSystem::SerializeEntity(entt::registry& registry, en
     return j;
 }
 
-void harmony::MonoSystem::DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+void harmony::MonoSystem::DeserializeEntity(entt::registry& registry, entt::entity e, Json entityJson)
 {
     MonoBehaviourComponent mc;
     entityJson.get_to<MonoBehaviourComponent>(mc);

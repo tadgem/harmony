@@ -35,23 +35,23 @@ void harmony::PipelineStage::AddShaderDataSource(WeakPtr<ShaderDataSource> sourc
     p_DataSources.emplace_back(source);
 }
 
-nlohmann::json harmony::PipelineStage::Serialize() {
+harmony::Json harmony::PipelineStage::Serialize() {
     OPTICK_EVENT();
-    nlohmann::json j;
+    Json j;
     j[sk_PipelineStageName] = m_Name;
     j[sk_PipelineStageAttachments] = m_Attachments;
     j[sk_PipelineStageType] = m_StageType;
     j[sk_PipelineStageShader] = *p_Shader.lock();
 
     if (p_Renderer) {
-        j[sk_PipelineStageRenderer] = nlohmann::json();
+        j[sk_PipelineStageRenderer] = Json();
     } else {
         j[sk_PipelineStageRenderer] = *p_Renderer;
     }
     return j;
 }
 
-void harmony::PipelineStage::Deserialize(nlohmann::json j) {
+void harmony::PipelineStage::Deserialize(Json j) {
     OPTICK_EVENT();
     m_Name = j[sk_PipelineStageName];
     // m_Attachments = j[sk_PipelineStageAttachments];

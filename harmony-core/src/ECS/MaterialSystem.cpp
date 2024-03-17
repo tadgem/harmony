@@ -23,9 +23,9 @@ void harmony::MaterialSystem::Cleanup(entt::registry &registry) {
     OPTICK_EVENT();
 }
 
-nlohmann::json harmony::MaterialSystem::SerializeSystem(entt::registry &registry) {
+harmony::Json harmony::MaterialSystem::SerializeSystem(entt::registry &registry) {
     OPTICK_EVENT();
-    nlohmann::json j;
+    Json j;
     auto view = registry.view<MaterialComponent>();
 
     for (auto [e, mat]: view.each()) {
@@ -35,7 +35,7 @@ nlohmann::json harmony::MaterialSystem::SerializeSystem(entt::registry &registry
     return j;
 }
 
-void harmony::MaterialSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+void harmony::MaterialSystem::DeserializeSystem(entt::registry &registry, Json systemJson) {
     OPTICK_EVENT();
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
@@ -46,10 +46,10 @@ void harmony::MaterialSystem::DeserializeSystem(entt::registry &registry, nlohma
     }
 }
 
-nlohmann::json harmony::MaterialSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+harmony::Json harmony::MaterialSystem::SerializeEntity(entt::registry& registry, entt::entity e)
 {
     OPTICK_EVENT();
-    nlohmann::json j;
+    Json j;
 
     if(registry.any_of<MaterialComponent>(e))
     {
@@ -60,7 +60,7 @@ nlohmann::json harmony::MaterialSystem::SerializeEntity(entt::registry& registry
     return j;
 }
 
-void harmony::MaterialSystem::DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+void harmony::MaterialSystem::DeserializeEntity(entt::registry& registry, entt::entity e, Json entityJson)
 {
     MaterialComponent mc;
     entityJson.get_to<MaterialComponent>(mc);

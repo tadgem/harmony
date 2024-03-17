@@ -118,15 +118,15 @@ void harmony::MonoProgramComponent::Cleanup()
     mono_domain_unload(p_AppDomain);
 }
 
-nlohmann::json harmony::MonoProgramComponent::ToJson()
+harmony::Json harmony::MonoProgramComponent::ToJson()
 {
-    auto j = nlohmann::json();
+    auto j = Json();
 
     auto& scripts = j["program-components"];
 
     for(auto mpc : p_MonoProgramComponents)
     {
-        auto pcJson = nlohmann::json();
+        auto pcJson = Json();
         pcJson["asset"] = mpc.m_AseemblyAsset;
         pcJson["typeInfo"] = mpc.m_TypeInfo;
         scripts.emplace_back(pcJson);
@@ -135,7 +135,7 @@ nlohmann::json harmony::MonoProgramComponent::ToJson()
     return j;
 }
 
-void harmony::MonoProgramComponent::FromJson(const nlohmann::json& json)
+void harmony::MonoProgramComponent::FromJson(const Json& json)
 {
     if(!json.contains("program-components"))
     {

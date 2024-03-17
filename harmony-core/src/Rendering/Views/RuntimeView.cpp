@@ -125,14 +125,14 @@ void harmony::RuntimeView::OnImGuiOptions() {
     }
 }
 
-nlohmann::json harmony::RuntimeView::Serialize() {
+harmony::Json harmony::RuntimeView::Serialize() {
     OPTICK_EVENT();
-    nlohmann::json j = View::Serialize();
+    Json j = View::Serialize();
     j["entity"] = CameraEntity;
     return j;
 }
 
-void harmony::RuntimeView::Deserialize(nlohmann::json &json) {
+void harmony::RuntimeView::Deserialize(Json &json) {
     OPTICK_EVENT();
     View::Deserialize(json);
     CameraEntity = json["entity"];

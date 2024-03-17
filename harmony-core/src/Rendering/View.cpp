@@ -90,9 +90,9 @@ bool harmony::View::operator<(const View &other) {
     return false;
 }
 
-nlohmann::json harmony::View::Serialize() {
+harmony::Json harmony::View::Serialize() {
     OPTICK_EVENT();
-    auto j = nlohmann::json();
+    auto j = Json();
     j["name"] = m_Name;
     j["width"] = m_Width;
     j["height"] = m_Height;
@@ -102,7 +102,7 @@ nlohmann::json harmony::View::Serialize() {
     return j;
 }
 
-void harmony::View::Deserialize(nlohmann::json &json) {
+void harmony::View::Deserialize(Json &json) {
     OPTICK_EVENT();
     m_Name = json["name"];
     m_Width = json["width"];

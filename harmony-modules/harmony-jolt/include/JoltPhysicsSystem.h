@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS/System.h"
+#include "Core/TypeDef.h"
 #include "Core/Memory.h"
 #include "Jolt/Jolt.h"
 #include "Jolt/Physics/PhysicsSettings.h"
@@ -47,13 +48,13 @@ namespace harmony {
 
         void Cleanup(entt::registry &registry) override;
 
-        nlohmann::json SerializeSystem(entt::registry &registry) override;
+        Json SerializeSystem(entt::registry &registry) override;
 
-        void DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) override;
+        void DeserializeSystem(entt::registry &registry, Json systemJson) override;
 
-        nlohmann::json SerializeEntity(entt::registry& registry, entt::entity e) override;
+        Json SerializeEntity(entt::registry& registry, entt::entity e) override;
 
-        void DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson) override;
+        void DeserializeEntity(entt::registry& registry, entt::entity e, Json entityJson) override;
 
         void Refresh() override;
 

@@ -6,10 +6,10 @@
 namespace harmony::GraphScript {
     class GraphScriptAsset {
     public:
-        explicit GraphScriptAsset(nlohmann::json graphScriptJson)
+        explicit GraphScriptAsset(Json graphScriptJson)
                 : m_JSON(std::move(graphScriptJson)) {
         };
 
-        const nlohmann::json m_JSON;
+        const Json m_JSON;
     };
 }; // namespace harmony::GraphScript

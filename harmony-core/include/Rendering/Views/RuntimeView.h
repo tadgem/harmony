@@ -24,9 +24,9 @@ namespace harmony {
 
 #endif
 
-        virtual nlohmann::json Serialize() override;
+        virtual Json Serialize() override;
 
-        virtual void Deserialize(nlohmann::json &json) override;
+        virtual void Deserialize(Json &json) override;
 
         entt::entity CameraEntity;
 

@@ -17,21 +17,21 @@ namespace harmony
         virtual T FromString(const String& input) = 0;
     };
 
-    class JSONAsset : public SerializedTextAsset<nlohmann::json>
+    class JSONAsset : public SerializedTextAsset<Json>
     {
     public:
 
-        virtual nlohmann::json ToJSON() = 0;
-        virtual void FromJSON(const nlohmann::json& input) = 0;
+        virtual Json ToJSON() = 0;
+        virtual void FromJSON(const Json& input) = 0;
 
         virtual String ToString() override
         {
             return ToJSON().dump();
         };
 
-        virtual nlohmann::json FromString(const String& input) override
+        virtual Json FromString(const String& input) override
         {
-            nlohmann::json json = input;
+            Json json = input;
             FromJSON(json);
             return json;
         }
@@ -54,7 +54,7 @@ namespace harmony
         virtual void LoadAssetData(const std::string& path, entt::registry& registry) override
         {
             static_assert(std::is_base_of<JSONAsset, T>());
-            nlohmann::json inputJson = Utils::LoadJsonFromPath(path);
+            Json inputJson = Utils::LoadJsonFromPath(path);
             RefCntPtr<T> serializedTextAsset = CreateRef<T>();
 
             serializedTextAsset->FromJSON(inputJson);

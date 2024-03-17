@@ -26,9 +26,9 @@ namespace harmony {
 
         void AddShaderDataSource(WeakPtr<ShaderDataSource> source) override;
 
-        nlohmann::json Serialize() override;
+        Json Serialize() override;
 
-        void Deserialize(nlohmann::json json) override;
+        void Deserialize(Json json) override;
 
     protected:
         RefCntPtr<SkyDataSource> p_Src;

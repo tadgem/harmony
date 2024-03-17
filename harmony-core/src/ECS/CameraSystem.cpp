@@ -53,9 +53,9 @@ void harmony::CameraSystem::Cleanup(entt::registry &registry) {
     OPTICK_EVENT();
 }
 
-nlohmann::json harmony::CameraSystem::SerializeSystem(entt::registry &registry) {
+harmony::Json harmony::CameraSystem::SerializeSystem(entt::registry &registry) {
     OPTICK_EVENT();
-    nlohmann::json j;
+    Json j;
     auto view = registry.view<CameraComponent>();
 
     for (auto [e, c]: view.each()) {
@@ -65,11 +65,11 @@ nlohmann::json harmony::CameraSystem::SerializeSystem(entt::registry &registry) 
     return j;
 }
 
-void harmony::CameraSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+void harmony::CameraSystem::DeserializeSystem(entt::registry &registry, Json systemJson) {
     OPTICK_EVENT();
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
-        nlohmann::json transformJson = entry.value();
+        Json transformJson = entry.value();
         CameraComponent cc;
         transformJson.get_to<CameraComponent>(cc);
         if (registry.any_of<CameraComponent>(e)) {
@@ -79,10 +79,10 @@ void harmony::CameraSystem::DeserializeSystem(entt::registry &registry, nlohmann
     }
 }
 
-nlohmann::json harmony::CameraSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+harmony::Json harmony::CameraSystem::SerializeEntity(entt::registry& registry, entt::entity e)
 {
     OPTICK_EVENT()
-    nlohmann::json j;
+    Json j;
 
     if(registry.any_of<CameraComponent>(e))
     {
@@ -93,7 +93,7 @@ nlohmann::json harmony::CameraSystem::SerializeEntity(entt::registry& registry, 
     return j;
 }
 
-void harmony::CameraSystem::DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+void harmony::CameraSystem::DeserializeEntity(entt::registry& registry, entt::entity e, Json entityJson)
 {
     OPTICK_EVENT()
     CameraComponent cc;

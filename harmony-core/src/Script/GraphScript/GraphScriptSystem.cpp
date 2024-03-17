@@ -25,21 +25,21 @@ void harmony::GraphScriptSystem::Cleanup(entt::registry &registry) {
 
 }
 
-nlohmann::json harmony::GraphScriptSystem::SerializeSystem(entt::registry &registry) {
+harmony::Json harmony::GraphScriptSystem::SerializeSystem(entt::registry &registry) {
     return {};
 }
 
-void harmony::GraphScriptSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+void harmony::GraphScriptSystem::DeserializeSystem(entt::registry &registry, Json systemJson) {
 
 }
 
-nlohmann::json harmony::GraphScriptSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+harmony::Json harmony::GraphScriptSystem::SerializeEntity(entt::registry& registry, entt::entity e)
 {
 	return {};
 }
 
 void harmony::GraphScriptSystem::
-DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+DeserializeEntity(entt::registry& registry, entt::entity e, Json entityJson)
 {
 
 }
