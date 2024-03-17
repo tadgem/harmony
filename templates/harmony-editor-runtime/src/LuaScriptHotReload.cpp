@@ -6,7 +6,7 @@
 #include "Script/Lua/LuaSystem.h"
 
 
-harmony::LuaScriptHotReload::LuaScriptHotReload(Program &prog, Ref<LuaSystem> luaSystem) : AssetHotReloadProvider(
+harmony::LuaScriptHotReload::LuaScriptHotReload(Program &prog, RefCntPtr<LuaSystem> luaSystem) : AssetHotReloadProvider(
         "LuaScript"), p_Program(prog), p_LuaSystem(luaSystem) {
 }
 

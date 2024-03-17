@@ -9,7 +9,7 @@ harmony::BlinnPhongDataSource::BlinnPhongDataSource() : ShaderDataSource("BlinnP
     OPTICK_EVENT();
 }
 
-void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry &registry, Ref<ShaderProgram> shader) {
+void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry &registry, RefCntPtr<ShaderProgram> shader) {
     OPTICK_EVENT();
 
     if (!shader) {
@@ -98,11 +98,11 @@ void harmony::BlinnPhongDataSource::OnPreUpdate(entt::registry &registry, Ref<Sh
     }
 }
 
-void harmony::BlinnPhongDataSource::OnPostUpdate(entt::registry &registry, Ref<ShaderProgram> shader) {
+void harmony::BlinnPhongDataSource::OnPostUpdate(entt::registry &registry, RefCntPtr<ShaderProgram> shader) {
     OPTICK_EVENT();
 }
 
-void harmony::BlinnPhongDataSource::GetShaderUniforms(Ref<ShaderProgram> shader) {
+void harmony::BlinnPhongDataSource::GetShaderUniforms(RefCntPtr<ShaderProgram> shader) {
     OPTICK_EVENT();
     for (ShaderUniform &uniform: shader->m_Uniforms) {
         // Light Params

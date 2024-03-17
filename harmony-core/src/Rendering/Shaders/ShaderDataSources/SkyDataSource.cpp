@@ -39,7 +39,7 @@ harmony::SkyDataSource::SkyDataSource() : ShaderDataSource("Sky") {
     p_Parameters[3] = 0.0f;
 }
 
-void harmony::SkyDataSource::OnPreUpdate(entt::registry &registry, harmony::Ref<harmony::ShaderProgram> shader) {
+void harmony::SkyDataSource::OnPreUpdate(entt::registry &registry, harmony::RefCntPtr<harmony::ShaderProgram> shader) {
     OPTICK_EVENT()
     if (!p_UniformsCollected) {
         CollectUniforms(shader);
@@ -77,11 +77,11 @@ void harmony::SkyDataSource::OnPreUpdate(entt::registry &registry, harmony::Ref<
                      m_PerezCoeffUniform.ArraySize);
 }
 
-void harmony::SkyDataSource::OnPostUpdate(entt::registry &registry, harmony::Ref<harmony::ShaderProgram> shader) {
+void harmony::SkyDataSource::OnPostUpdate(entt::registry &registry, harmony::RefCntPtr<harmony::ShaderProgram> shader) {
     OPTICK_EVENT()
 }
 
-void harmony::SkyDataSource::CollectUniforms(Ref<ShaderProgram> prog) {
+void harmony::SkyDataSource::CollectUniforms(RefCntPtr<ShaderProgram> prog) {
     OPTICK_EVENT()
     for (ShaderUniform &uniform: prog->m_Uniforms) {
         if (uniform.Name == g_ParametersUniformName) {

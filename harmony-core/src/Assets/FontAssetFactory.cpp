@@ -16,7 +16,7 @@ void harmony::FontAssetFactory::LoadAssetData(const std::string &path, entt::reg
     OPTICK_EVENT();
     std::string cleanPath = Utils::GetCleanPlatformPath(path);
     AssetHandle assetHandle(cleanPath, 0, GetTypeHash<FontAsset>());
-    Ref<FontAsset> font = CreateRef<FontAsset>(assetHandle);
+    RefCntPtr<FontAsset> font = CreateRef<FontAsset>(assetHandle);
     std::vector<uint8_t> fontData = Utils::LoadBinaryFromPath(cleanPath);
     std::string cleanFontName = GetFontNameFromPath(cleanPath);
     font->m_CleanName = cleanFontName;

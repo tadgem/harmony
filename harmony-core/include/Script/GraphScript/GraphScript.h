@@ -80,7 +80,7 @@ namespace harmony {
             }
 
         protected:
-            Unique<T> p_Value;
+            UniquePtr<T> p_Value;
         };
 
         template<typename T>
@@ -113,8 +113,8 @@ namespace harmony {
             virtual IGraphNode *Clone() = 0;
 
             const String m_Name;
-            Vector<Unique<IGraphNodeIO>> m_Inputs;
-            Vector<Unique<IGraphNodeIO>> m_Outputs;
+            Vector<UniquePtr<IGraphNodeIO>> m_Inputs;
+            Vector<UniquePtr<IGraphNodeIO>> m_Outputs;
         };
 
         class PrintNode : public IGraphNode {
@@ -129,7 +129,7 @@ namespace harmony {
 
             IGraphNode *Clone() override;
 
-            Unique<IGraphNodeIOT<String>> m_StringInput;
+            UniquePtr<IGraphNodeIOT<String>> m_StringInput;
 
         public:
         };
@@ -155,7 +155,7 @@ namespace harmony {
 
         protected:
             HashMap<uint64_t, Ops> p_Entries;
-            Vector<Unique<IVariable>> p_Variables;
+            Vector<UniquePtr<IVariable>> p_Variables;
         };
 
         class SerializedGraph {
@@ -177,12 +177,12 @@ namespace harmony {
         class GraphBuilder {
         public:
             String m_Name;
-            Vector<Unique<IGraphNode>> m_GraphNodes;
-            Vector<Unique<IVariable>> m_Variables;
-            Vector<Unique<IConnection>> m_Connections;
-            Vector<Unique<EntryPointNode>> m_EntryPoints;
+            Vector<UniquePtr<IGraphNode>> m_GraphNodes;
+            Vector<UniquePtr<IVariable>> m_Variables;
+            Vector<UniquePtr<IConnection>> m_Connections;
+            Vector<UniquePtr<EntryPointNode>> m_EntryPoints;
 
-            Unique<CompiledGraph> Build();
+            UniquePtr<CompiledGraph> Build();
 
             nlohmann::json Serialize();
         };

@@ -1,4 +1,5 @@
 #include "JoltPhysicsSystem.h"
+#include "optick.h"
 #include "Core/Memory.h"
 #include "Core/Time.h"
 #include <Jolt/Physics/Collision/CollideShape.h>
@@ -45,6 +46,7 @@
 #include "HarmonyBodyActivationListener.h"
 #include "HarmonyDebugRenderer.h"
 #include "JoltComponents.h"
+#include "Jolt/Core/JobSystemSingleThreaded.h"
 
 // Trace to TTY
 void TraceImpl(const char *inFMT, ...) {
@@ -58,6 +60,7 @@ void FatalError [[noreturn]](const char *inFMT, ...) {
 
 harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GetTypeHash<JoltPhysicsSystem>()),
                                                   m_NumJobs(JPH::thread::hardware_concurrency() - 1) {
+    OPTICK_EVENT()
     JPH::Trace = TraceImpl;
 
     JPH::RegisterDefaultAllocator();
@@ -70,7 +73,7 @@ harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GetTypeHash<JoltPhysics
     m_TempAllocator = CreateUnique<JPH::TempAllocatorImpl>(s_TempAllocatorSizeMb * MB_MULTIPLIER);
     m_JobSystem = CreateUnique<JPH::JobSystemThreadPool>(s_MaxPhysicsJobs, s_MaxPhysicsBarriers, m_NumJobs);
     m_JobSystemValidating = CreateUnique<JPH::JobSystemThreadPool>(s_MaxPhysicsJobs, s_MaxPhysicsBarriers,
-                                                                   s_ValidatingJobSystemNumThreads);
+                                                                  s_ValidatingJobSystemNumThreads);
 
     m_BroadPhaseLayerInterface = CreateUnique<HarmonyBroadPhaseLayerInterface>();
     m_ObjectVsBroadphaseFilter = CreateUnique<HarmonyObjectVsBroadPhaseLayerFilter>();
@@ -78,14 +81,19 @@ harmony::JoltPhysicsSystem::JoltPhysicsSystem() : System(GetTypeHash<JoltPhysics
     m_ObjectLayerPairFilter = CreateUnique<HarmonyObjectLayerPairFilter>();
     m_DebugRenderer = CreateUnique<HarmonyDebugRenderer>();
 
+
 }
 
 harmony::JoltPhysicsSystem::~JoltPhysicsSystem() {
+    OPTICK_EVENT()
 
 }
 
 void harmony::JoltPhysicsSystem::Init(entt::registry &registry) {
+    OPTICK_EVENT()
     m_PhysicsSystem = CreateUnique<JPH::PhysicsSystem>();
+
+    m_ContactListener = CreateUnique<HarmonyContactListener>(m_PhysicsSystem.get());
 
     m_PhysicsSystem->Init(s_NumBodies, s_NumBodyMutexes, s_MaxBodyPairs, s_MaxContactConstraints,
                           *m_BroadPhaseLayerInterface, *m_ObjectVsBroadphaseFilter, *m_ObjectLayerPairFilter);
@@ -93,8 +101,11 @@ void harmony::JoltPhysicsSystem::Init(entt::registry &registry) {
     m_PhysicsSystem->SetGravity(s_DefaultGravity);
 
     if (s_UseContactListener) {
-        m_ContactListener = CreateUnique<HarmonyContactListener>();
         m_PhysicsSystem->SetContactListener(m_ContactListener.get());
+    }
+
+    for(auto callbackProvider : p_PendingCallbacks) {
+        m_ContactListener->AddContactCallback(callbackProvider);
     }
 
     m_PhysicsSystem->SetBodyActivationListener(m_BodyActivationListener.get());
@@ -115,9 +126,10 @@ void harmony::JoltPhysicsSystem::Init(entt::registry &registry) {
 }
 
 void harmony::JoltPhysicsSystem::Update(entt::registry &registry) {
+    OPTICK_EVENT()
     p_Running = true;
-    float deltaTime = static_cast<float>(Time::GetFrameTime());
-    m_PhysicsSystem->Update(deltaTime, s_CollisionSteps, s_IntegrationSubSteps, m_TempAllocator.get(),
+    float deltaTime = std::min(static_cast<float>(Time::GetFrameTime()), 0.0333f);
+    auto result = m_PhysicsSystem->Update(deltaTime, s_CollisionSteps,  m_TempAllocator.get(),
                             m_JobSystem.get());
 
     auto bodyView = registry.view<TransformComponent, JoltBodyComponent>();
@@ -139,11 +151,13 @@ void harmony::JoltPhysicsSystem::Update(entt::registry &registry) {
 
             m_BodyInterface->SetPositionAndRotation(b.Body->GetID(), pos, rot, JPH::EActivation::Activate);
         }
-
     }
+
+
 }
 
 void harmony::JoltPhysicsSystem::Render(entt::registry &registry) {
+    OPTICK_EVENT()
 
     if (!p_Running) {
         auto bodyView = registry.view<TransformComponent, JoltBodyComponent>();
@@ -155,7 +169,7 @@ void harmony::JoltPhysicsSystem::Render(entt::registry &registry) {
     }
 #ifdef HARMONY_DEBUG
     JPH::BodyManager::DrawSettings settings;
-    if (m_DrawDebug) {
+    if (m_DrawDebug && p_Running) {
         JPH::DebugRenderer *dr = m_DebugRenderer.get();
         m_PhysicsSystem->DrawBodies(settings, dr);
         m_PhysicsSystem->DrawConstraints(dr);
@@ -164,10 +178,12 @@ void harmony::JoltPhysicsSystem::Render(entt::registry &registry) {
 }
 
 void harmony::JoltPhysicsSystem::Cleanup(entt::registry &registry) {
+    OPTICK_EVENT()
     p_Running = false;
 }
 
 nlohmann::json harmony::JoltPhysicsSystem::SerializeSystem(entt::registry &registry) {
+    OPTICK_EVENT()
     auto j = nlohmann::json();
 
     auto bodyView = registry.view<JoltBodyComponent>();
@@ -180,6 +196,7 @@ nlohmann::json harmony::JoltPhysicsSystem::SerializeSystem(entt::registry &regis
 }
 
 void harmony::JoltPhysicsSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+    OPTICK_EVENT()
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
         nlohmann::json transformJson = entry.value();
@@ -190,12 +207,40 @@ void harmony::JoltPhysicsSystem::DeserializeSystem(entt::registry &registry, nlo
     }
 }
 
-void harmony::JoltPhysicsSystem::Refresh() {
+nlohmann::json harmony::JoltPhysicsSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+{
+    OPTICK_EVENT()
+    nlohmann::json j;
 
+    if(registry.any_of<JoltBodyComponent>(e))
+    {
+        JoltBodyComponent& bc = registry.get<JoltBodyComponent>(e);
+        j[p_JoltBodyComponentKey] = bc;
+    }
+
+    return j;
+}
+
+void harmony::JoltPhysicsSystem::
+DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+{
+    OPTICK_EVENT()
+    if(entityJson.contains(p_JoltBodyComponentKey))
+    {
+        JoltBodyComponent bc;
+        entityJson[p_JoltBodyComponentKey].get_to<JoltBodyComponent>(bc);
+        registry.emplace<JoltBodyComponent>(e, bc);
+    }
+
+}
+
+void harmony::JoltPhysicsSystem::Refresh() {
+    OPTICK_EVENT()
 }
 
 harmony::JoltBodyComponent &
 harmony::JoltPhysicsSystem::CreateBodyComponent(entt::registry registry, entt::entity e, JoltBodyShape shape) {
+    OPTICK_EVENT()
     if (registry.any_of<JoltBodyComponent>(e)) {
         harmony::log::warn("JoltPhysicsSystem : Entity {} already has a Body Component.", (uint32_t) e);
         return registry.get<JoltBodyComponent>(e);
@@ -209,6 +254,7 @@ harmony::JoltPhysicsSystem::CreateBodyComponent(entt::registry registry, entt::e
 }
 
 void harmony::JoltPhysicsSystem::DestroyBody(JoltBodyComponent &body) {
+    OPTICK_EVENT()
     if (body.Body == nullptr) {
         harmony::log::warn("JoltPhysicsSystem : No jolt body with supplied component");
         return;
@@ -218,6 +264,7 @@ void harmony::JoltPhysicsSystem::DestroyBody(JoltBodyComponent &body) {
 }
 
 void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent &t, JoltBodyComponent &b) {
+    OPTICK_EVENT()
     if (b.Body != nullptr) {
         if (b.Body->IsActive() || b.Body->IsInBroadPhase()) {
             m_BodyInterface->RemoveBody(b.Body->GetID());
@@ -268,12 +315,13 @@ void harmony::JoltPhysicsSystem::InitBody(entt::entity e, TransformComponent &t,
     b.Body = m_BodyInterface->CreateBody(bodyCreationSettings);
 
     m_BodyInterface->AddBody(b.Body->GetID(), JPH::EActivation::Activate);
-
+    b.Body->SetUserData((JPH::uint64) e);
     b.RequiresUpdate = false;
 }
 
 
 void harmony::JoltPhysicsSystem::UpdateBody(entt::entity e, TransformComponent &t, JoltBodyComponent &b) {
+    OPTICK_EVENT()
     if (b.Body != nullptr) {
         if (b.Body->IsActive() || b.Body->IsInBroadPhase()) {
             b.Body->SetPositionAndRotationInternal(JPH::Vec3(t.Position.x, t.Position.y, t.Position.z),
@@ -281,4 +329,15 @@ void harmony::JoltPhysicsSystem::UpdateBody(entt::entity e, TransformComponent &
         }
         return;
     }
+}
+
+harmony::HarmonyContactListener *harmony::JoltPhysicsSystem::GetContactListener() {
+    OPTICK_EVENT()
+    return m_ContactListener.get();
+}
+
+void harmony::JoltPhysicsSystem::AddContactCallback(RefCntPtr<HarmonyContactListenerCallback> callback)
+{
+    OPTICK_EVENT()
+    p_PendingCallbacks.emplace_back(callback);
 }

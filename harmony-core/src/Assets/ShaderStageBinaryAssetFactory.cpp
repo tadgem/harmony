@@ -38,7 +38,7 @@ void harmony::ShaderStageBinaryAssetFactory::LoadAssetData(const std::string &pa
 
     harmony::log::info("ShaderStageBinaryAssetFactory : Attempting to load shader stage binary at path : {}", path);
 
-    Ref<ShaderStage> shaderStage = CreateRef<ShaderStage>(path, type);
+    RefCntPtr<ShaderStage> shaderStage = CreateRef<ShaderStage>(path, type);
     shaderStage->LoadShaderBinary();
 
     if (shaderStage->m_ProgramHandle.idx == UINT16_MAX) {

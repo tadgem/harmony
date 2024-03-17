@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.20.0)
 project(harmony-dojo VERSION 0.1.0)
 
 
@@ -7,7 +7,7 @@ add_executable(harmony-dojo main.cpp)
 set_property(TARGET harmony-dojo PROPERTY CXX_STANDARD 17)
 
 if (WIN32)
-    # set stuff for windows
+    add_definitions(-D_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)    
 else ()
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error")
@@ -21,3 +21,8 @@ add_subdirectory(${ROOT_DIR}/templates/harmony-editor-runtime ${CMAKE_CURRENT_BI
 target_include_directories(harmony-dojo PRIVATE ${HARMONY_EDITOR_INCLUDES})
 
 target_link_libraries(harmony-dojo harmony-editor-runtime)
+
+if(MSVC)
+    target_compile_options(harmony-dojo PRIVATE "/MP" "/Zi")
+    target_link_options(harmony-dojo PRIVATE "/DEBUG" "/INCREMENTAL:NO")
+endif()

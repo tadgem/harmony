@@ -38,15 +38,15 @@ namespace harmony {
 
         static void RemoveViewLayer(Layer layer, NVGcontext *renderer);
 
-        static void AddFont(const std::string &name, std::vector<uint8_t> data);
+        static void AddFont(const String &name, Vector<uint8_t> data);
 
-        static void RemoveFont(const std::string &name);
+        static void RemoveFont(const String &name);
 
         static void FontFace(Layer layer, const char *font);
 
         static void FontSize(Layer layer, float size);
 
-        static void FontBlur(Layer layer, int blur);
+        static void FontBlur(Layer layer, float blur);
 
         static void Text(Layer layer, float x, float y, const char *str);
 

@@ -1,3 +1,4 @@
+#include <ImGui/imgui_internal.h>
 #include "EditorPanel.h"
 #include "EditorUtils.h"
 #include "ECS/TransformComponent.h"
@@ -16,8 +17,14 @@
 #include "Core/Input.h"
 #include "ECS/SkyComponent.h"
 #include "Script/Lua/LuaProgramComponent.h"
-
-harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program) {
+#include "MonoAssembly.h"
+#include "MonoProgramComponent.h"
+#include "MonoSystem.h"
+#include "mono/metadata/mono-debug.h"
+#include "Assets/ModelAsset.h"
+#include "ECS/EntityTemplate.h"
+harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program), p_AssetManager(program.m_AssetManager)
+{
 }
 
 void harmony::ScenePanel::OnImGui() {
@@ -30,7 +37,7 @@ void harmony::ScenePanel::OnImGui() {
             ImGui::End();
             return;
         }
-        Ref<Scene> activeScene = activeSceneWr.lock();
+        RefCntPtr<Scene> activeScene = activeSceneWr.lock();
         if (ImGui::BeginDragDropTarget()) {
             if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("ENTITY")) {
                 IM_ASSERT(payload->DataSize == sizeof(entt::entity));
@@ -38,6 +45,13 @@ void harmony::ScenePanel::OnImGui() {
 
                 EntityData &payloadData = activeScene->m_Registry.get<EntityData>(payloadEntity);
                 payloadData.m_Parent = (entt::entity) UINT32_MAX;
+            }
+
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ENTITY_TEMPLATE")) {
+                IM_ASSERT(payload->DataSize == sizeof(RefCntPtr<EntityTemplate>));
+                RefCntPtr<EntityTemplate> entityTemplate = *(RefCntPtr<EntityTemplate>*)payload->Data;
+
+                EntityTemplate::LoadEntityTemplate(p_Prog.GetSystems(), activeScene, entityTemplate);
             }
             ImGui::EndDragDropTarget();
         }
@@ -47,10 +61,35 @@ void harmony::ScenePanel::OnImGui() {
         if (ImGui::Button("Add Entity")) {
             activeScene->AddEntity();
         }
+        ImGui::SameLine();
+        if(ImGui::ButtonEx("Add Model Entity", ImVec2(0,0), ImGuiButtonFlags_FlattenChildren))
+        {
+            // do the thing.
+            p_ImportModelDialog = true;
+        }
         ImGui::Separator();
         activeScene->m_Registry.each([&](entt::entity e) { EntityImGui(e, activeScene->m_Registry, true); });
         ImGui::EndChild();
 
+    }
+    ImGui::End();
+
+    if(!p_ImportModelDialog)
+    {
+        return;
+    }
+
+    ImGui::SetNextWindowSize(ImVec2(600, 400), ImGuiCond_FirstUseEver);
+    if(ImGui::Begin("Choose Model to Import"))
+    {
+        // Combo box for available model assets
+        // if(p_AssetManager.AssetTypeSelector<>())
+        // Combo box for shader to use for materia
+
+        if(ImGui::Button("Close"))
+        {
+            p_ImportModelDialog = false;
+        }
     }
     ImGui::End();
 }
@@ -80,12 +119,11 @@ void harmony::ScenePanel::EntityImGui(entt::entity e, entt::registry &reg, bool 
             EntityNameRename(e, data);
             EntityDragDrop(e, reg);
             reg.each([&](entt::entity compare) {
-                         auto data = reg.get<EntityData>(compare);
-                         if (data.m_Parent == e) {
-                             EntityImGui(compare, reg, false);
-                         }
-                     }
-            );
+                auto data = reg.get<EntityData>(compare);
+                if (data.m_Parent == e) {
+                    EntityImGui(compare, reg, false);
+                }
+            });
             ImGui::TreePop();
         } else {
             reg.each([&](entt::entity compare) {
@@ -105,6 +143,10 @@ void harmony::ScenePanel::EntityImGui(entt::entity e, entt::registry &reg, bool 
 }
 
 void harmony::ScenePanel::EntityNameRename(entt::entity e, harmony::EntityData &data) {
+    if (data.m_Name.empty())
+    {
+        data.m_Name = "Entity_" + std::to_string((uint32_t)e);
+    }
     if (ImGui::Selectable(data.m_Name.c_str(), false, ImGuiSelectableFlags_AllowItemOverlap)) {
         m_SelectedEntity = e;
     }
@@ -118,7 +160,7 @@ void harmony::ScenePanel::EntityDragDrop(entt::entity e, entt::registry &reg) {
     EntityData &data = reg.get<EntityData>(e);
     if (ImGui::BeginDragDropSource()) {
         ImGui::SetDragDropPayload("ENTITY", &e, sizeof(entt::entity));
-        ImGui::Text(data.m_Name.c_str());
+        ImGui::TextWrapped(data.m_Name.c_str());
         ImGui::EndDragDropSource();
     }
     if (ImGui::BeginDragDropTarget()) {
@@ -140,9 +182,8 @@ void harmony::ScenePanel::EntityDragDrop(entt::entity e, entt::registry &reg) {
 
 }
 
-harmony::EntityInspectorPanel::EntityInspectorPanel(Program &prog, Ref<ScenePanel> scenePanel) : p_Prog(prog),
-                                                                                                 p_ScenePanel(
-                                                                                                         scenePanel) {
+harmony::EntityInspectorPanel::EntityInspectorPanel(Program &prog, RefCntPtr<ScenePanel> scenePanel) : p_Prog(prog), p_ScenePanel(scenePanel) 
+{
 }
 
 void harmony::EntityInspectorPanel::OnImGui() {
@@ -155,7 +196,7 @@ void harmony::EntityInspectorPanel::OnImGui() {
             return;
         }
 
-        Ref<Scene> activeScene = activeSceneWr.lock();
+        RefCntPtr<Scene> activeScene = activeSceneWr.lock();
 
         if (activeScene->m_Registry.valid(p_ScenePanel->m_SelectedEntity) == false) {
             ImGui::End();
@@ -215,6 +256,24 @@ void harmony::EntityInspectorPanel::OnImGui() {
                     p_ComponentUIProviders[i]->Duplicate(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity, dupe);
                 }
             }
+        }
+
+        if (ImGui::Button("Save as Prefab"))
+        {
+            ImGuiFileDialog::Instance()->OpenDialog("HarmonySaveEntityTemplate", "Save Entity Template", ".entitytemplate", ".");
+        }
+
+        auto io = ImGui::GetIO();
+        ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f), ImGuiCond_Always,
+            ImVec2(0.5f, 0.5f));
+        if (ImGuiFileDialog::Instance()->Display("HarmonySaveEntityTemplate")) {
+            // action if OK
+            if (ImGuiFileDialog::Instance()->IsOk()) {
+                std::string filepath = ImGuiFileDialog::Instance()->GetFilePathName();
+                EntityTemplate::SaveEntityTemplate(p_Prog.GetSystems(), p_Prog.m_AssetManager, activeScene, p_ScenePanel->m_SelectedEntity, filepath);
+            }
+            ImGuiFileDialog::Instance()->Close();
         }
         ImGui::PopID();
 
@@ -281,7 +340,7 @@ void harmony::MeshComponentUI::OnComponentImGui(entt::registry &registry, entt::
     AssetHandle ah;
     MeshComponent &mc = registry.get<MeshComponent>(entity);
     std::string meshPath = "Mesh Asset: " + mc.MeshAsset.Path;
-    ImGui::Text(meshPath.c_str());
+    ImGui::TextWrapped(meshPath.c_str());
     if (p_AssetManager.AssetTypeSelector<Mesh>("Mesh", ah)) {
         mc.MeshAsset = ah;
         harmony::log::info("Entity {} updated mesh to handle at path : {}", static_cast<uint32_t>(entity),
@@ -326,24 +385,24 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry &registry, en
         return;
     }
     MaterialComponent &mc = registry.get<MaterialComponent>(entity);
-    WeakRef<ShaderProgram> shaderWr = p_Renderer.GetShader(mc.Data.m_ShaderName);
+    WeakPtr<ShaderProgram> shaderWr = p_Renderer.GetShader(mc.Data.m_ShaderName);
     std::string sn = "Shader Name : ";
 
     if (shaderWr.expired() == false) {
-        Ref<ShaderProgram> shader = shaderWr.lock();
+        RefCntPtr<ShaderProgram> shader = shaderWr.lock();
         sn += shader->m_Name;
     }
 
-    ImGui::Text(sn.c_str());
+    ImGui::TextWrapped(sn.c_str());
     ImGui::Separator();
     if (p_Renderer.ShaderSelector("Select Shader", shaderWr)) {
         mc.Data.UpdateOverrides(shaderWr, p_AssetManager);
     }
-    ImGui::Text("Shader Variables");
+    ImGui::TextWrapped("Shader Variables");
     if (ImGui::TreeNode("Data")) {
         if (ImGui::TreeNode("Available Overrides")) {
             for (ShaderUniform &uniform: mc.Data.m_AvailableOverrides) {
-                ImGui::Text(uniform.Name.c_str());
+                ImGui::TextWrapped(uniform.Name.c_str());
                 ImGui::SameLine();
                 std::string overrideText = "Override" + std::string("##") + std::to_string(uniform.BgfxHandle.idx);
                 if (ImGui::Button(overrideText.c_str())) {
@@ -368,15 +427,15 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry &registry, en
 
         }
 
-        ImGui::Text("Vec4");
+        ImGui::TextWrapped("Vec4");
         for (auto &[key, v]: mc.Data.m_Vec4Overrides) {
             ImGui::DragFloat4(key.Name.c_str(), &v[0]);
         }
         ImGui::Separator();
-        ImGui::Text("Textures");
+        ImGui::TextWrapped("Textures");
         for (auto &[key, handle]: mc.Data.m_TextureOverrides) {
             std::string textureName = "Tex : " + handle.Handle.Path;
-            ImGui::Text(textureName.c_str());
+            ImGui::TextWrapped(textureName.c_str());
             if (p_AssetManager.AssetTypeSelector<TextureAsset>(key.Name, handle.Handle)) {
                 auto texWr = p_AssetManager.GetAsset<TextureAsset>(handle.Handle);
                 auto tex = texWr.lock();
@@ -387,14 +446,14 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry &registry, en
             }
         }
         ImGui::Separator();
-        ImGui::Text("Mat3");
+        ImGui::TextWrapped("Mat3");
         for (auto &[key, v]: mc.Data.m_Mat3Overrides) {
-            ImGui::Text(key.Name.c_str());
+            ImGui::TextWrapped(key.Name.c_str());
         }
         ImGui::Separator();
-        ImGui::Text("Mat4");
+        ImGui::TextWrapped("Mat4");
         for (auto &[key, v]: mc.Data.m_Mat4Overrides) {
-            ImGui::Text(key.Name.c_str());
+            ImGui::TextWrapped(key.Name.c_str());
         }
         ImGui::Separator();
 
@@ -433,11 +492,11 @@ void harmony::AssetManagerPanel::OnImGui() {
     if (ImGui::Begin(assetPanelTitle.c_str())) {
         ImGui::Indent();
         const std::string textureAssetTitle = std::string(ICON_FA_FILE_IMAGE_O) + " Textures";
-        ImGui::Text(textureAssetTitle.c_str());
+        ImGui::TextWrapped(textureAssetTitle.c_str());
         std::vector<AssetHandle> texHandles = p_AssetManager.GetLoadedAssets<TextureAsset>();
         if (ImGui::TreeNode("Textures")) {
             for (int i = 0; i < texHandles.size(); i++) {
-                ImGui::Text(texHandles[i].Path.c_str());
+                ImGui::TextWrapped(texHandles[i].Path.c_str());
             }
             ImGui::TreePop();
 
@@ -449,11 +508,11 @@ void harmony::AssetManagerPanel::OnImGui() {
 
         ImGui::Separator();
         const std::string meshAssetTitle = std::string(ICON_FA_CUBE) + " Meshes";
-        ImGui::Text(meshAssetTitle.c_str());
+        ImGui::TextWrapped(meshAssetTitle.c_str());
         std::vector<AssetHandle> meshHandles = p_AssetManager.GetLoadedAssets<Mesh>();
         if (ImGui::TreeNode("Meshes")) {
             for (int i = 0; i < meshHandles.size(); i++) {
-                ImGui::Text(meshHandles[i].Path.c_str());
+                ImGui::TextWrapped(meshHandles[i].Path.c_str());
             }
             ImGui::TreePop();
             if (ImGui::Button("Load Mesh/Model")) {
@@ -465,11 +524,11 @@ void harmony::AssetManagerPanel::OnImGui() {
 
         ImGui::Separator();
         const std::string shaderSouceAssetTitle = std::string(ICON_FA_FILE_TEXT_O) + " Shader Source";
-        ImGui::Text(shaderSouceAssetTitle.c_str());
+        ImGui::TextWrapped(shaderSouceAssetTitle.c_str());
         std::vector<AssetHandle> sourceHandles = p_AssetManager.GetLoadedAssets<ShaderSourceAsset>();
         if (ImGui::TreeNode("Shader Sources")) {
             for (int i = 0; i < sourceHandles.size(); i++) {
-                ImGui::Text(sourceHandles[i].Path.c_str());
+                ImGui::TextWrapped(sourceHandles[i].Path.c_str());
             }
             ImGui::TreePop();
             if (ImGui::Button("Load Shader Source")) {
@@ -480,22 +539,22 @@ void harmony::AssetManagerPanel::OnImGui() {
 
         ImGui::Separator();
         const std::string shaderBinariesAssetTitle = std::string(ICON_FA_FILE_ARCHIVE_O) + " Shader Binaries";
-        ImGui::Text(shaderBinariesAssetTitle.c_str());
+        ImGui::TextWrapped(shaderBinariesAssetTitle.c_str());
         std::vector<AssetHandle> stageHandles = p_AssetManager.GetLoadedAssets<ShaderStage>();
         if (ImGui::TreeNode("Shader Binaries")) {
             for (int i = 0; i < stageHandles.size(); i++) {
-                ImGui::Text(stageHandles[i].Path.c_str());
+                ImGui::TextWrapped(stageHandles[i].Path.c_str());
             }
             ImGui::TreePop();
         }
 
         ImGui::Separator();
         const std::string fontAssetTitle = std::string(ICON_FA_FONT) + " Fonts";
-        ImGui::Text(fontAssetTitle.c_str());
+        ImGui::TextWrapped(fontAssetTitle.c_str());
         std::vector<AssetHandle> fontHandles = p_AssetManager.GetLoadedAssets<FontAsset>();
         if (ImGui::TreeNode("Fonts")) {
             for (int i = 0; i < fontHandles.size(); i++) {
-                ImGui::Text(fontHandles[i].Path.c_str());
+                ImGui::TextWrapped(fontHandles[i].Path.c_str());
             }
             ImGui::TreePop();
             if (ImGui::Button("Load Font")) {
@@ -506,16 +565,56 @@ void harmony::AssetManagerPanel::OnImGui() {
 
         ImGui::Separator();
         const std::string luaScriptAssetTitle = std::string(ICON_FA_FILE_TEXT_O) + " Lua Scripts";
-        ImGui::Text(luaScriptAssetTitle.c_str());
+        ImGui::TextWrapped(luaScriptAssetTitle.c_str());
         std::vector<AssetHandle> luaHandles = p_AssetManager.GetLoadedAssets<LuaScriptAsset>();
         if (ImGui::TreeNode("Lua Scripts")) {
             for (int i = 0; i < luaHandles.size(); i++) {
-                ImGui::Text(luaHandles[i].Path.c_str());
+                ImGui::TextWrapped(luaHandles[i].Path.c_str());
             }
             ImGui::TreePop();
             if (ImGui::Button("Load Script")) {
                 ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Script", ".lua", ".");
                 p_SelectedTypeHash = GetTypeHash<LuaScriptAsset>();
+            }
+        }
+
+        ImGui::Separator();
+        const std::string monoAssemblyAssetTitle = std::string(ICON_FA_FILE_ARCHIVE_O) + " Mono Assemblies";
+        ImGui::TextWrapped(monoAssemblyAssetTitle.c_str());
+        std::vector<AssetHandle> assemblyHandles = p_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
+        if (ImGui::TreeNode("Mono Assemblies")) {
+            for (int i = 0; i < assemblyHandles.size(); i++) {
+                ImGui::TextWrapped(assemblyHandles[i].Path.c_str());
+            }
+            ImGui::TreePop();
+            if (ImGui::Button("Load Assembly")) {
+                ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Script", ".dll", ".");
+                p_SelectedTypeHash = GetTypeHash<MonoAssemblyAsset>();
+            }
+        }
+
+        ImGui::Separator();
+        const std::string entityTemplateAssetTitle = std::string(ICON_FA_FILE_CODE_O) + " Entity Templates";
+        std::vector<AssetHandle> templateHandles = p_AssetManager.GetLoadedAssets<EntityTemplate>();
+        ImGui::TextWrapped(entityTemplateAssetTitle.c_str());
+        if (ImGui::CollapsingHeader("Entity Templates")) {
+            for (int i = 0; i < templateHandles.size(); i++) {
+                AssetHandle ah = templateHandles[i];
+                ImGui::PushID(HashString(ah.Path).m_Value);
+                ImGui::Button(ah.Path.c_str());
+                // Prefab drag drop
+                if (ImGui::BeginDragDropSource()) {
+                    RefCntPtr<EntityTemplate> entityTemplate = p_AssetManager.GetAsset<EntityTemplate>(ah).lock();
+                    ImGui::SetDragDropPayload("ENTITY_TEMPLATE", &entityTemplate, sizeof(RefCntPtr<EntityTemplate>));
+                    ImGui::Text(ah.Path.c_str());
+                    ImGui::EndDragDropSource();
+                }
+                ImGui::PopID();
+            }
+            ImGui::Separator();
+            if (ImGui::Button("Load Entity Template")) {
+                ImGuiFileDialog::Instance()->OpenDialog("HarmonyOpenAsset", "Choose Script", ".entitytemplate", ".");
+                p_SelectedTypeHash = GetTypeHash<EntityTemplate>();
             }
         }
         ImGui::Unindent();
@@ -536,6 +635,7 @@ harmony::LuaScriptPanel::LuaScriptPanel(Program &prog) : p_Program(prog), p_Asse
                                                          p_Lua(prog.GetProgramComponent<LuaProgramComponent>()) {
 }
 
+
 void harmony::LuaScriptPanel::OnImGui() {
     auto lua = p_Lua.lock();
     if (ImGui::Begin("LuaScript")) {
@@ -555,11 +655,10 @@ void harmony::LuaScriptPanel::OnImGui() {
             }
         }
 
-
-        ImGui::Text("Running Program Scripts");
+        ImGui::TextWrapped("Running Program Scripts");
         ImGui::Indent();
         for (int i = 0; i < lua->m_LuaProgramScripts.size(); i++) {
-            ImGui::Text(lua->m_LuaProgramScripts[i].Path.c_str());
+            ImGui::TextWrapped(lua->m_LuaProgramScripts[i].Path.c_str());
         }
         ImGui::Unindent();
 
@@ -567,6 +666,158 @@ void harmony::LuaScriptPanel::OnImGui() {
     ImGui::End();
 }
 
+
+harmony::MonoPanel::MonoPanel(harmony::Program &prog) : p_Program(prog), p_AssetManager(prog.m_AssetManager),
+                                                        p_Mono(prog.GetProgramComponent<MonoProgramComponent>()),
+                                                        p_System(prog.GetSystem<MonoSystem>()){
+
+}
+
+void harmony::MonoPanel::OnImGui() {
+    auto mono = p_Mono.lock();
+    RefCntPtr<MonoSystem> sys = p_System.lock();
+    if (ImGui::Begin("Mono")) {
+
+        if (!mono || !sys) {
+            p_Mono = p_Program.GetProgramComponent<MonoProgramComponent>();
+            ImGui::End();
+            return;
+        }
+
+        ImGui::TextWrapped("Debugger Connected? : %s", mono_is_debugger_attached() ? "true" : "false");
+        if(ImGui::Button("Reload Mono Assemblies"))
+        {
+            auto scene = p_Program.GetActiveScene().lock();
+            sys->Cleanup(scene->m_Registry);
+            mono->Cleanup();
+            mono->Init();
+            p_AssetManager.ReloadAllAssetsOfType<MonoAssemblyAsset>();
+            mono->FromJson(p_Program.m_Project->p_ProgramComponentSerializationAttributes[GetTypeHash<MonoProgramComponent>().m_Value]);
+            sys->DeserializeSystem(scene->m_Registry, scene->GetSystemJSON<MonoSystem>());
+        }
+
+        auto assemblyHandles = p_Program.m_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
+        if(ImGui::TreeNode("Assemblies")) {
+            for (AssetHandle h: assemblyHandles) {
+                RefCntPtr<MonoAssemblyAsset> a = p_Program.m_AssetManager.GetAsset<MonoAssemblyAsset>(h).lock();
+                if (!a) continue;
+
+                if (ImGui::TreeNode(h.Path.c_str())) {
+                    if(ImGui::TreeNode("Assembly Info")) {
+                        if (ImGui::TreeNode("Type Infos")) {
+                            for (auto typeInfo: a->m_TypeInfos) {
+                                ImGui::TextWrapped("%s.%s", typeInfo.m_TypeNamespace.c_str(),
+                                                   typeInfo.m_TypeName.c_str());
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+
+                        if (ImGui::TreeNode("Derived Type Infos")) {
+                            for (auto typeInfo: a->m_DerivedTypeInfos) {
+                                ImGui::TextWrapped("%s.%s : %s.%s",
+                                                   typeInfo.m_ChildTypeNamespace.c_str(),
+                                                   typeInfo.m_ChildTypeName.c_str(),
+                                                   typeInfo.m_ParentTypeNamespace.c_str(),
+                                                   typeInfo.m_ParentTypeName.c_str());
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+
+                        if (ImGui::TreeNode("Type Spec Infos")) {
+                            for (auto typeSpecInfo: a->m_TypeSpecInfos) {
+                                ImGui::TextWrapped("%s", typeSpecInfo.m_Signature.c_str());
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+
+                        if (ImGui::TreeNode("Interface Impl Infos")) {
+                            for (auto info: a->m_InterfaceImplInfos) {
+                                ImGui::TextWrapped("%s.%s [%d] : %s.%s [%d] : Type : %d", info.m_ClassNamespace.c_str(),
+                                                   info.m_ClassName.c_str(), info.m_ClassIndex,
+                                                   info.m_InterfaceNamespace.c_str(), info.m_InterfaceName.c_str(),
+                                                   info.m_InterfaceIndex, info.m_ParentType);
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+
+                        if (ImGui::TreeNode("Method Impl Infos")) {
+                            for (auto info: a->m_MethodImplInfos) {
+                                ImGui::TextWrapped("%s : %s : %s", info.m_ClassName.c_str(), info.m_Declaration.c_str(),
+                                                   info.m_Body.c_str());
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+
+                        if (ImGui::TreeNode("Type RefCntPtr Infos")) {
+                            for (auto info: a->m_TypeRefInfos) {
+                                ImGui::TextWrapped("%s : %s : Scope = %s", info.m_Namespace.c_str(),
+                                                   info.m_Name.c_str(),
+                                                   info.m_Scope.c_str());
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+
+                        if (ImGui::TreeNode("Assembly RefCntPtr Infos")) {
+                            for (auto info: a->m_AssemblyRefInfos) {
+                                ImGui::TextWrapped("%s : %d.%d", info.m_Name.c_str(), info.m_Major, info.m_Minor);
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+                        ImGui::TreePop();
+                    }
+                    if(ImGui::TreeNode("Program Components"))
+                    {
+                        if(ImGui::TreeNode("Add ProgramComponents")) {
+                            Vector<MonoUtils::CsTypeInfo> typeInfos;
+                            for (MonoUtils::CsInterfaceImplInfo info: a->m_InterfaceImplInfos) {
+                                if (std::find(typeInfos.begin(), typeInfos.end(), a->m_TypeInfos[info.m_ClassIndex]) !=
+                                    typeInfos.end()) {
+                                    continue;
+                                }
+                                if (info.m_InterfaceNamespace == "Harmony.ProgramComponent") {
+                                    ImGui::PushID(info.m_InterfaceIndex & info.m_ClassIndex);
+                                    ImGui::TextWrapped(info.m_ClassName.c_str());
+                                    ImGui::SameLine();
+                                    if (ImGui::Button("Add Program Component")) {
+                                        mono->AddMonoImplementedProgramComponent(a, a->m_TypeInfos[info.m_ClassIndex]);
+                                    }
+                                    typeInfos.emplace_back(a->m_TypeInfos[info.m_ClassIndex]);
+                                    ImGui::PopID();
+                                }
+                            }
+                            ImGui::TreePop();
+                        }
+
+                        if(ImGui::TreeNode("Running ProgramComponents"))
+                        {
+                            for(auto mpc : mono->p_MonoProgramComponents)
+                            {
+                                ImGui::TextWrapped("%s.%s", mpc.m_TypeInfo.m_TypeNamespace.c_str(),
+                                                                  mpc.m_TypeInfo.m_TypeName.c_str());
+                                ImGui::Separator();
+                            }
+                            ImGui::TreePop();
+                        }
+
+                        ImGui::TreePop();
+                    }
+                    ImGui::TreePop();
+                }
+
+            }
+            ImGui::TreePop();
+        }
+        ImGui::Separator();
+    }
+    ImGui::End();
+}
 harmony::CameraComponentUI::CameraComponentUI(Renderer &r) : ComponentUI("Camera"), p_Renderer(r) {
 }
 
@@ -744,7 +995,7 @@ void harmony::LuaScriptComponentUI::OnComponentImGui(entt::registry &registry, e
     LuaComponent &lc = registry.get<LuaComponent>(entity);
 
     std::string luaPath = "Lua Script Asset: " + lc.m_LuaScriptAsset.m_Handle.Path;
-    ImGui::Text(luaPath.c_str());
+    ImGui::TextWrapped(luaPath.c_str());
     if (p_AssetManager.AssetTypeSelector<LuaScriptAsset>("Lua Script", ah)) {
         // oh lord please help me no
         lc.m_LuaScriptAsset = *p_AssetManager.GetAsset<LuaScriptAsset>(ah).lock();
@@ -835,14 +1086,14 @@ void harmony::EntityDataComponentUI::OnComponentImGui(entt::registry &registry, 
     }
     EntityData &data = registry.get<EntityData>(entity);
     ImGui::PushID((uint32_t) entity);
-    ImGui::Text(data.m_Name.c_str());
+    ImGui::TextWrapped(data.m_Name.c_str());
     ImGui::SameLine();
     ImGui::Checkbox("Enabled", &data.m_Enabled);
     ImGui::SameLine();
     ImGui::Checkbox("Static", &data.m_Static);
-    ImGui::Text("ID : %u", entity);
+    ImGui::TextWrapped("ID : %u", entity);
     ImGui::SameLine();
-    ImGui::Text("Parent : %u", (uint32_t) data.m_Parent);
+    ImGui::TextWrapped("Parent : %u", (uint32_t) data.m_Parent);
 
     ImGui::PopID();
 
@@ -865,6 +1116,10 @@ void harmony::EntityDataComponentUI::Duplicate(entt::registry &registry, entt::e
         EntityData t = registry.get<EntityData>(original);
         registry.emplace<EntityData>(newCopy, t);
     }
+}
+
+harmony::SkyComponentUI::SkyComponentUI() : ComponentUI("Sky") {
+
 }
 
 void harmony::SkyComponentUI::OnComponentImGui(entt::registry &registry, entt::entity entity) {
@@ -905,6 +1160,82 @@ void harmony::SkyComponentUI::Duplicate(entt::registry &registry, entt::entity o
     }
 }
 
-harmony::SkyComponentUI::SkyComponentUI() : ComponentUI("Sky") {
+
+
+harmony::MonoBehaviourComponentUI::MonoBehaviourComponentUI(harmony::WeakPtr<harmony::MonoSystem> monoSystem, harmony::AssetManager &am) : ComponentUI("Mono Behaviour",
+                                                                                                                                                       ComponentUI::ImGuiParentType::TreeNode), p_AssetManager(am) , p_MonoSystem(monoSystem){
+
+}
+
+void harmony::MonoBehaviourComponentUI::OnComponentImGui(entt::registry &registry, entt::entity entity)
+{
+    if (registry.valid(entity) == false) {
+        return;
+    }
+    if (!HasComponent(registry, entity)) {
+        return;
+    }
+
+    auto mono = p_MonoSystem.lock();
+    if(!mono)
+    {
+        return;
+    }
+    ImGui::PushID((uint32_t) entity);
+    MonoBehaviourComponent &serializedBehaviourComponent = registry.get<MonoBehaviourComponent>(entity);
+    ImGui::Indent();
+    for(auto& b : serializedBehaviourComponent.m_Behaviours)
+    {
+        ImGui::TextWrapped(b.m_TypeInfo.m_TypeName.c_str());
+        ImGui::Separator();
+    }
+
+    auto assemblyHandles= p_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
+    if(ImGui::BeginCombo("Add Mono Behaviour", "Choose Mono Behaviour")) {
+        for (AssetHandle ah: assemblyHandles) {
+            auto assembly = p_AssetManager.GetAsset<MonoAssemblyAsset>(ah).lock();
+            if (!assembly) {
+                continue;
+            }
+            // for each derived type in assembly
+            for (auto derived: assembly->m_DerivedTypeInfos) {
+                // if type is derived from Behaviour,
+                if (derived.m_ParentTypeName == "Behaviour" && derived.m_ParentTypeNamespace == "Harmony") {
+                    String qualified = derived.m_ChildTypeNamespace + "." + derived.m_ChildTypeName;
+                    if (ImGui::Selectable(qualified.c_str())) {
+                        // add mono behaviour
+                        MonoUtils::CsTypeInfo typeInfo
+                                {
+                                        derived.m_ChildTypeName,
+                                        derived.m_ChildTypeNamespace,
+                                        derived.m_ChildClass
+                                };
+                        p_MonoSystem.lock()->AddMonoBehaviour(registry, entity, typeInfo, assembly);
+                    }
+                }
+            }
+        }
+        ImGui::EndCombo();
+    }
+    ImGui::Unindent();
+    ImGui::PopID();
+}
+void harmony::MonoBehaviourComponentUI::AddComponent(entt::registry &registry, entt::entity entity)
+{
+    registry.emplace<MonoBehaviourComponent>(entity);
+}
+void harmony::MonoBehaviourComponentUI::RemoveComponent(entt::registry &registry, entt::entity entity)
+{
+    if (HasComponent(registry, entity)) {
+        // TODO: Likely leaking memory here, GC wont collect objects weve allocated
+        registry.remove<MonoBehaviourComponent>(entity);
+    }
+}
+bool harmony::MonoBehaviourComponentUI::HasComponent(entt::registry &registry, entt::entity entity)
+{
+    return registry.any_of<MonoBehaviourComponent>(entity);
+}
+void harmony::MonoBehaviourComponentUI::Duplicate(entt::registry &registry, entt::entity original, entt::entity newCopy)
+{
 
 }

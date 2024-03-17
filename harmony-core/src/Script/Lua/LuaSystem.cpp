@@ -10,9 +10,9 @@
 #include <string>
 #include <optick.h>
 
-harmony::LuaSystem::LuaSystem(AssetManager &am, Ref<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaSystem>()),
-                                                                                  p_LuaProgramComponent(luaPc),
-                                                                                  p_AssetManager(am) {
+harmony::LuaSystem::LuaSystem(AssetManager &am, RefCntPtr<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaSystem>()),
+                                                                                        p_LuaProgramComponent(luaPc),
+                                                                                        p_AssetManager(am) {
 }
 
 void harmony::LuaSystem::Init(entt::registry &registry) {
@@ -108,20 +108,38 @@ void harmony::LuaSystem::DeserializeSystem(entt::registry &registry, nlohmann::j
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
         nlohmann::json luaJson = entry.value();
-        LuaComponent lc;
-        luaJson.get_to<LuaComponent>(lc);
-        AssetHandle ah = lc.m_LuaScriptAsset.m_Handle;
-        auto luaWr = p_AssetManager.GetAsset<LuaScriptAsset>(lc.m_LuaScriptAsset.m_Handle);
-        if (luaWr.expired()) {
-            harmony::log::warn("LuaSystem : Could not find asset with handle : {}", ah.Path);
-            continue;
-        }
-
-        lc.m_LuaScriptAsset = *luaWr.lock();
-
-        lc.m_LuaScriptAsset.m_Handle = ah;
-        registry.emplace<LuaComponent>(e, lc);
+        DeserializeEntity(registry, e, luaJson);
     }
+}
+
+nlohmann::json harmony::LuaSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+{
+    nlohmann::json j;
+
+    if(registry.any_of<LuaComponent>(e))
+    {
+        LuaComponent& lc = registry.get<LuaComponent>(e);
+        j = lc;
+    }
+
+    return j;
+}
+
+void harmony::LuaSystem::DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+{
+    LuaComponent lc;
+    entityJson.get_to<LuaComponent>(lc);
+    AssetHandle ah = lc.m_LuaScriptAsset.m_Handle;
+    auto luaWr = p_AssetManager.GetAsset<LuaScriptAsset>(lc.m_LuaScriptAsset.m_Handle);
+    if (luaWr.expired()) {
+        harmony::log::warn("LuaSystem : Could not find asset with handle : {}", ah.Path);
+        return;
+    }
+
+    lc.m_LuaScriptAsset = *luaWr.lock();
+
+    lc.m_LuaScriptAsset.m_Handle = ah;
+    registry.emplace<LuaComponent>(e, lc);
 }
 
 void harmony::LuaSystem::Refresh() {
@@ -133,7 +151,7 @@ entt::entity harmony::LuaSystem::GetCurrentEntity() {
     return p_CurrentEntity;
 }
 
-void harmony::LuaSystem::UpdateScripts(WeakRef<Scene> scene) {
+void harmony::LuaSystem::UpdateScripts(WeakPtr<Scene> scene) {
     OPTICK_EVENT();
     if (scene.expired()) {
         harmony::log::error("LuaSystem : Cannot update scripts, scene is expired!");

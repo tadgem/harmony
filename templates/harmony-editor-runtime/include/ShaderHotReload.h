@@ -33,8 +33,8 @@ namespace harmony {
 
         void OnChange(const std::string &filename, const std::string &directory, efsw::Action action);
 
-        std::map<std::string, Ref<ShaderSourceAsset>> p_LoadedShaderSources;
-        std::map<std::string, Ref<ShaderStage>> p_LoadedShaderBinaries;
+        std::map<std::string, RefCntPtr<ShaderSourceAsset>> p_LoadedShaderSources;
+        std::map<std::string, RefCntPtr<ShaderStage>> p_LoadedShaderBinaries;
         std::map<std::string, std::string> p_RendererProfileMapping;
 
         efsw::FileWatcher *p_FileWatcher;

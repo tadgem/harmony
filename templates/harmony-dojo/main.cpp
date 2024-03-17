@@ -1,6 +1,7 @@
 #include "Core/Memory.h"
 #include "EditorApplication.h"
 #include <filesystem>
+#include "MiniGuis/LoadProjectGui.h"
 
 void *operator new(size_t size) {
     harmony::Memory::AddAllocatedMemory(size);
@@ -14,10 +15,13 @@ void operator delete(void *memory, size_t size) {
 
 
 int main() {
-    harmony::Editor app;
+    using namespace harmony;
+    Editor app;
+
+    app.AddMiniGuiApp(CreateRef<LoadProjectGui>(app));
 
     std::cout << std::filesystem::current_path() << std::endl;
-    app.Run("../../../../projects/TestTypeHash/TestTypeHash.harmonyproj", NULL);
+    app.Run("../../../../projects/MonoTest/MonoTest.harmonyproj", NULL);
 
     return 0;
 }

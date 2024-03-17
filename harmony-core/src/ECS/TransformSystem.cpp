@@ -214,6 +214,28 @@ void harmony::TransformSystem::DeserializeSystem(entt::registry &registry, nlohm
     }
 }
 
+nlohmann::json harmony::TransformSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+{
+    OPTICK_EVENT();
+    nlohmann::json j;
+
+    if(registry.any_of<TransformComponent>(e))
+    {
+        TransformComponent& t = registry.get<TransformComponent>(e);
+        j = t;
+    }
+
+    return j;
+}
+
+void harmony::TransformSystem::DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+{
+    OPTICK_EVENT();
+    TransformComponent tc;
+    entityJson.get_to<TransformComponent>(tc);
+    registry.emplace<TransformComponent>(e, tc);
+}
+
 void harmony::TransformSystem::Refresh() {
     OPTICK_EVENT();
 }

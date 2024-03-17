@@ -9,16 +9,16 @@ harmony::Scene::Scene(const std::string &name) : m_Name(name) {
     OPTICK_EVENT();
 }
 
-void harmony::Scene::Deserialize(std::vector<Ref<System>> &systems) {
+void harmony::Scene::Deserialize(std::vector<RefCntPtr<System>> &systems) {
     OPTICK_EVENT();
     m_Registry.clear();
     for (int i = 0; i < p_Entities.size(); i++) {
-        m_Registry.create(p_Entities[i].m_Handle);
+        entt::entity e = m_Registry.create(p_Entities[i].m_Handle);
     }
 
     for (auto &[systemTypeHash, json]: p_SystemSerializationAttributes) {
         for (int i = 0; i < systems.size(); i++) {
-            if (systems[i]->m_TypeHash == systemTypeHash) {
+            if (systems[i]->m_TypeHash == HashString(systemTypeHash)) {
                 systems[i]->DeserializeSystem(m_Registry, json);
                 break;
             }
@@ -26,12 +26,29 @@ void harmony::Scene::Deserialize(std::vector<Ref<System>> &systems) {
     }
 }
 
-void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<Ref<System>> &systems) {
+harmony::Vector<entt::entity> harmony::Scene::GetChildEntities(entt::entity e)
+{
+    auto ret = Vector<entt::entity>();
+
+    auto view = m_Registry.view<EntityData>();
+
+    for (auto [entity, entity_data] : view.each())
+    {
+        if (entity_data.m_Parent == e)
+        {
+            ret.emplace_back(entity);
+        }
+    }
+
+    return ret;
+}
+
+void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<RefCntPtr<System>> &systems) {
     OPTICK_EVENT();
     p_SystemSerializationAttributes.clear();
 
     for (int i = 0; i < systems.size(); i++) {
-        Ref<System> system = systems[i];
+        RefCntPtr<System> system = systems[i];
         nlohmann::json sceneSystemJson = system->SerializeSystem(m_Registry);
         p_SystemSerializationAttributes.emplace(system->m_TypeHash, sceneSystemJson);
     }

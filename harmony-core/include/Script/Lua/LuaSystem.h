@@ -15,7 +15,7 @@ namespace harmony {
 
     class LuaSystem : public System {
     public:
-        LuaSystem(AssetManager &am, Ref<LuaProgramComponent> luaPc);
+        LuaSystem(AssetManager &am, RefCntPtr<LuaProgramComponent> luaPc);
 
         virtual void Init(entt::registry &registry) override;
 
@@ -30,17 +30,21 @@ namespace harmony {
         virtual void DeserializeSystem(entt::registry &registry,
                                        nlohmann::json systemJson) override;
 
+        virtual nlohmann::json SerializeEntity(entt::registry& registry, entt::entity e) override;
+
+        virtual void DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson) override;
+
         virtual void Refresh() override;
 
         entt::entity GetCurrentEntity();
 
-        void UpdateScripts(WeakRef<Scene> scene);
+        void UpdateScripts(WeakPtr<Scene> scene);
 
         void InitEntityScript(entt::entity e, entt::registry &r, sol::state &state,
                               LuaComponent &lua);
 
     protected:
-        Ref<LuaProgramComponent> p_LuaProgramComponent;
+        RefCntPtr<LuaProgramComponent> p_LuaProgramComponent;
         AssetManager &p_AssetManager;
         entt::entity p_CurrentEntity;
     };

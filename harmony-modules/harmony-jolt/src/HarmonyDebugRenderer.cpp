@@ -16,7 +16,7 @@ void harmony::HarmonyDebugRenderer::DrawLine(JPH::RVec3Arg inFrom, JPH::RVec3Arg
 }
 
 void harmony::HarmonyDebugRenderer::DrawTriangle(JPH::RVec3Arg inV1, JPH::RVec3Arg inV2, JPH::RVec3Arg inV3,
-                                                 JPH::ColorArg inColor) {
+                                                 JPH::ColorArg inColor, ECastShadow inCastShadow) {
     harmony::log::info("JoltDebugRenderer : Implement : Draw Triangle");
 }
 

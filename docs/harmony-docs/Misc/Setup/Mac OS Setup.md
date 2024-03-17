@@ -1,9 +1,10 @@
 - Install Obsidian
 - Install Xcode from App Store
 - Install brew : https://brew.sh : Copy command, open Terminal, paste + run command
-- Install CMake + Python :
+- Install CMake + Python  :
 	  `brew install cmake`
 	  `brew install python`
+- Install Mono : https://www.mono-project.com/docs/getting-started/install/mac/
 - from Terminal run `python3 -m pip install dearpygui`
 - Download and install GitHub Desktop : https://desktop.github.com
 - Sign in to your GitHub account in GitHub Desktop

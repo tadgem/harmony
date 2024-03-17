@@ -25,11 +25,13 @@ namespace harmony {
 
     class HarmonyContactListener;
 
+    class HarmonyContactListenerCallback;
+
     class HarmonyBodyActivationListener;
 
     class HarmonyDebugRenderer;
 
-    class TransformComponent;
+    struct TransformComponent;
 
     class JoltPhysicsSystem : public System {
     public:
@@ -49,11 +51,19 @@ namespace harmony {
 
         void DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) override;
 
+        nlohmann::json SerializeEntity(entt::registry& registry, entt::entity e) override;
+
+        void DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson) override;
+
         void Refresh() override;
 
         JoltBodyComponent &CreateBodyComponent(entt::registry registry, entt::entity e, JoltBodyShape shape);
 
         void DestroyBody(JoltBodyComponent &body);
+
+        HarmonyContactListener* GetContactListener();
+
+        void AddContactCallback(RefCntPtr<HarmonyContactListenerCallback> callback);
 
     protected:
 
@@ -81,21 +91,26 @@ namespace harmony {
         static constexpr float s_CapsuleProjectionSlop = 0.02f;
         const JPH::Vec3 s_DefaultGravity = JPH::Vec3(0.0f, -9.81f, 0.0f);
 
+        const String p_JoltBodyComponentKey = "JoltBodyComponent";
+
         const uint32_t m_NumJobs;
         float m_UpdateFrequency = 60.0f;    // Physics update frequency
-
+    public:
         JPH::PhysicsSettings m_PhysicsSettings;
-        Unique<JPH::TempAllocator> m_TempAllocator;            // Allocator for temporary allocations
-        Unique<JPH::JobSystem> m_JobSystem;                // The job system that runs physics jobs
-        Unique<JPH::JobSystem> m_JobSystemValidating;        // The job system to use when validating determinism
-        Unique<JPH::PhysicsSystem> m_PhysicsSystem;            // The physics system that simulates the world
-        Unique<JPH::BroadPhaseLayerInterface> m_BroadPhaseLayerInterface;
-        Unique<JPH::ObjectVsBroadPhaseLayerFilter> m_ObjectVsBroadphaseFilter;
-        Unique<JPH::ObjectLayerPairFilter> m_ObjectLayerPairFilter;
-        Unique<HarmonyBodyActivationListener> m_BodyActivationListener;
-        Unique<HarmonyContactListener> m_ContactListener;          // Contact listener implementation
-        Unique<HarmonyDebugRenderer> m_DebugRenderer;
+        UniquePtr<JPH::TempAllocator> m_TempAllocator;            // Allocator for temporary allocations
+        UniquePtr<JPH::JobSystem> m_JobSystem;                // The job system that runs physics jobs
+        UniquePtr<JPH::JobSystem> m_JobSystemValidating;        // The job system to use when validating determinism
+        UniquePtr<JPH::PhysicsSystem> m_PhysicsSystem;            // The physics system that simulates the world
+        UniquePtr<JPH::BroadPhaseLayerInterface> m_BroadPhaseLayerInterface;
+        UniquePtr<JPH::ObjectVsBroadPhaseLayerFilter> m_ObjectVsBroadphaseFilter;
+        UniquePtr<JPH::ObjectLayerPairFilter> m_ObjectLayerPairFilter;
+        UniquePtr<HarmonyBodyActivationListener> m_BodyActivationListener;
+        UniquePtr<HarmonyContactListener> m_ContactListener;          // Contact listener implementation
+        UniquePtr<HarmonyDebugRenderer> m_DebugRenderer;
         JPH::BodyInterface *m_BodyInterface;
+
+    protected:
+        Vector<RefCntPtr<HarmonyContactListenerCallback>> p_PendingCallbacks;
 
         friend class JoltDebugRendererComponent;
     };

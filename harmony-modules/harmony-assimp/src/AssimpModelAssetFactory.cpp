@@ -36,7 +36,16 @@ void harmony::AssimpModelAssetFactory::ProcessNode(const String &path, aiNode *n
             unsigned int sceneIndex = node->mMeshes[i];
             aiMesh *mesh = scene->mMeshes[sceneIndex];
             ProcessMesh(path, mesh, node, scene);
+            if(mesh->mMaterialIndex < 0 || mesh->mMaterialIndex > scene->mNumMaterials - 1) return;
+            auto m = scene->mMaterials[mesh->mMaterialIndex];
+            for(int j = 0 ; j < m->mNumProperties; j++)
+            {
+                auto prop = m->mProperties[j];
+                int k = 1;
+            }
         }
+
+
     }
 
     if (node->mNumChildren == 0) {
@@ -51,7 +60,7 @@ void harmony::AssimpModelAssetFactory::ProcessNode(const String &path, aiNode *n
 void
 harmony::AssimpModelAssetFactory::ProcessMesh(const String &path, aiMesh *mesh, aiNode *node, const aiScene *scene) {
 
-    Ref<Mesh> meshAsset = CreateRef<Mesh>(path, p_MeshCounter);
+    RefCntPtr<Mesh> meshAsset = CreateRef<Mesh>(path, p_MeshCounter);
     bool hasPositions = mesh->HasPositions();
     bool hasIndices = mesh->HasFaces();
     bool hasNormals = mesh->HasNormals();
@@ -171,11 +180,11 @@ void harmony::AssimpModelAssetFactory::LoadAssetData(const String &path, entt::r
     //
     ProcessNode(cleanPath, scene->mRootNode, scene);
     String modelName = String(scene->mName.C_Str());
-    Ref<Model> model = CreateRef<Model>(modelName);
+    RefCntPtr<Model> model = CreateRef<Model>(modelName);
     AssetHandle handle(cleanPath, 0, GetTypeHash<Model>());
 
     for (int i = 0; i < p_Meshes.size(); i++) {
-        Ref<Mesh> meshAsset = std::static_pointer_cast<Mesh, Asset>(p_Meshes[i]);
+        RefCntPtr<Mesh> meshAsset = std::static_pointer_cast<Mesh, Asset>(p_Meshes[i]);
 
         p_Renderer.SubmitMeshToGPU(meshAsset);
 

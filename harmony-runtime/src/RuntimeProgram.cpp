@@ -2,6 +2,7 @@
 #include "RuntimeProgram.h"
 #include "AssimpModelAssetFactory.h"
 #include "Assets/FontAssetFactory.h"
+#include "ECS/EntityTemplate.h"
 #include "Rendering/Views/RuntimeView.h"
 #include "Rendering/Shaders/ShaderDataSources/BlinnPhongDataSource.h"
 #include "Rendering/Pipelines/PipelineStages/DrawScreenTextureStage.h"
@@ -17,12 +18,16 @@
 #include "Script/GraphScript/GraphScriptSystem.h"
 #include "Rendering/Pipelines/PipelineStages/SkyStage.h"
 #include "Rendering/Modules/Moebius/MoebiusModule.h"
+#include "MonoProgramComponent.h"
+#include "MonoAssemblyAssetFactory.h"
+#include "MonoSystem.h"
+#include "JoltMonoBind.h"
 
 harmony::RuntimeProgram::RuntimeProgram(const std::string &name) : Program(name) {
     OPTICK_EVENT();
     AddAssetTypeNames();
-    AddAssetFactories();
     AddProgramComponents();
+    AddAssetFactories();
     AddSystems();
     AddPipelineStageRenderers();
     AddShaderDataSources();
@@ -74,6 +79,8 @@ void harmony::RuntimeProgram::AddAssetFactories() {
     m_AssetManager.AddAssetFactory(CreateRef<AssimpModelAssetFactory>(m_Renderer));
     m_AssetManager.AddAssetFactory(CreateRef<FontAssetFactory>());
     m_AssetManager.AddAssetFactory(CreateRef<LuaScriptAssetFactory>());
+    m_AssetManager.AddAssetFactory(CreateRef<MonoAssemblyAssetFactory>(p_MonoProgramComponent));
+    m_AssetManager.AddAssetFactory(CreateRef<JSONTextAssetFactory<EntityTemplate>>());
 
 }
 
@@ -81,6 +88,13 @@ void harmony::RuntimeProgram::AddProgramComponents() {
     OPTICK_EVENT();
     p_LuaProgramComponent = AddProgramComponent<LuaProgramComponent>(m_AssetManager).lock();
     p_GraphScriptComponent = AddProgramComponent<GraphScriptProgramComponent>().lock();
+
+    auto monoMethodProviders = Vector<RefCntPtr<MonoInternalMethodProvider>>();
+    monoMethodProviders.emplace_back(CreateRef<JoltMonoInternalMethodProvider>());
+
+    auto monoProgramDelegateProviders = Vector<RefCntPtr<MonoDelegateInvokeProvider>>();
+    p_MonoProgramComponent = AddProgramComponent<MonoProgramComponent>(
+        m_AssetManager, monoMethodProviders, monoProgramDelegateProviders).lock();
 } 
 
 void harmony::RuntimeProgram::AddSystems() {
@@ -90,11 +104,20 @@ void harmony::RuntimeProgram::AddSystems() {
     AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
     AddSystem<MeshSystem>(m_AssetManager);
     AddSystem<LightSystem>();
-    p_LuaSystem = AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent).lock();
     p_GraphScriptSystem = AddSystem<GraphScriptSystem>(p_GraphScriptComponent).lock();
     p_JoltPhysicsSystem = AddSystem<JoltPhysicsSystem>().lock();
+    auto joltMonoCallback = CreateRef<JoltMonoContactListenerCallback>(
+        p_JoltPhysicsSystem);
+    p_JoltPhysicsSystem->AddContactCallback(joltMonoCallback);
     p_EntityDataSystem = AddSystem<EntityDataSystem>().lock();
+    p_LuaSystem = AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent).lock();
 
+    auto monoSystemDelegateProviders = Vector<RefCntPtr<MonoDelegateInvokeProvider>>
+    {
+        joltMonoCallback
+    };
+
+    p_MonoSystem = AddSystem<MonoSystem>(p_MonoProgramComponent, monoSystemDelegateProviders).lock();
 }
 
 void harmony::RuntimeProgram::AddPipelineStageRenderers() {
@@ -104,33 +127,33 @@ void harmony::RuntimeProgram::AddPipelineStageRenderers() {
 
 void harmony::RuntimeProgram::AddPipelineDrawStages() {
     OPTICK_EVENT();
-    Ref<PipelineDrawStage> normalStage = CreateRef<PipelineDrawStage>(
+    RefCntPtr<PipelineDrawStage> normalStage = CreateRef<PipelineDrawStage>(
             "NormalStage",
             PipelineDrawStage::Type::PrimaryDraw,
             m_Renderer.GetShader("Normal"),
             m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
 
-    Ref<PipelineDrawStage> texturedMeshStage = CreateRef<PipelineDrawStage>(
+    RefCntPtr<PipelineDrawStage> texturedMeshStage = CreateRef<PipelineDrawStage>(
             "TexturedMeshStage",
             PipelineDrawStage::Type::PrimaryDraw,
             m_Renderer.GetShader("TexturedMesh"),
             m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
 
-    Ref<PipelineDrawStage> blinnPhongStage = CreateRef<PipelineDrawStage>(
+    RefCntPtr<PipelineDrawStage> blinnPhongStage = CreateRef<PipelineDrawStage>(
             "BlinnPhongTextured",
             PipelineDrawStage::Type::PrimaryDraw,
             m_Renderer.GetShader("BlinnPhongTextured"),
             m_Renderer.GetPipelineStageRenderer("MeshRenderer")
     );
 
-    Ref<SkyStage> skyStage = CreateRef<SkyStage>(
+    RefCntPtr<SkyStage> skyStage = CreateRef<SkyStage>(
             m_Renderer.GetShader("Sky")
     );
 
-    Ref<VectorGraphicsStage> vectorGraphicsStage = CreateRef<VectorGraphicsStage>(VectorGraphics::Layer::One);
-    Ref<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Game);
+    RefCntPtr<VectorGraphicsStage> vectorGraphicsStage = CreateRef<VectorGraphicsStage>(VectorGraphics::Layer::One);
+    RefCntPtr<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Game);
 
     blinnPhongStage->AddShaderDataSource(m_Renderer.GetShaderDataSource("BlinnPhong"));
 
@@ -148,69 +171,74 @@ void harmony::RuntimeProgram::AddPostProcessStages() {
 
 void harmony::RuntimeProgram::AddShaderDataSources() {
     OPTICK_EVENT();
-    Ref<BlinnPhongDataSource> blinnPhong = CreateRef<BlinnPhongDataSource>();
+    RefCntPtr<BlinnPhongDataSource> blinnPhong = CreateRef<BlinnPhongDataSource>();
     m_Renderer.AddShaderDataSource(blinnPhong);
 }
 
 void harmony::RuntimeProgram::InitializePipelines() {
     OPTICK_EVENT();
+    log::info("RuntimeProgram : Initializing View Pipelines");
+    if (false)
+    {
 
-    auto skyFB = p_RuntimePipeline->AddFramebuffer("Sky FB", {AttachmentType::RGBA16F, AttachmentType::Depth32F},
-                                                   Resolution::Type::FullScale);
-    auto forwardFB = p_RuntimePipeline->AddFramebuffer("Forward FB",
-                                                       {AttachmentType::RGBA16F, AttachmentType::Depth32F},
-                                                       Resolution::Type::FullScale);
-    auto vectorFB = p_RuntimePipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA16F, AttachmentType::Depth32F},
-                                                      Resolution::Type::FullScale);
+        auto skyFB = p_RuntimePipeline->AddFramebuffer("Sky FB", { AttachmentType::RGBA16F, AttachmentType::Depth32F },
+            Resolution::Type::FullScale);
+        auto forwardFB = p_RuntimePipeline->AddFramebuffer("Forward FB",
+            { AttachmentType::RGBA16F, AttachmentType::Depth32F },
+            Resolution::Type::FullScale);
+        auto vectorFB = p_RuntimePipeline->AddFramebuffer("Vector FB", { AttachmentType::RGBA16F, AttachmentType::Depth32F },
+            Resolution::Type::FullScale);
 
-    auto crosshatchTexture = m_AssetManager.GetAsset<TextureAsset>("assets\\crosshatch.png");
-    auto moebiusFB = Moebius::AddMoebiusToPipeline(m_Renderer, p_RuntimePipeline, crosshatchTexture.lock());
+        auto crosshatchTexture = m_AssetManager.GetAsset<TextureAsset>("assets\\crosshatch.png");
+        auto moebiusFB = Moebius::AddMoebiusToPipeline(m_Renderer, p_RuntimePipeline, crosshatchTexture.lock());
 
-    auto finalFB = p_RuntimePipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA16F, AttachmentType::Depth32F},
-                                                     Resolution::Type::FullScale);
+        auto finalFB = p_RuntimePipeline->AddFramebuffer("Final FB", { AttachmentType::RGBA16F, AttachmentType::Depth32F },
+            Resolution::Type::FullScale);
 
-    auto screenShaderWR = m_Renderer.p_PresentProgram;
+        auto screenShaderWR = m_Renderer.p_PresentProgram;
 
-    if (screenShaderWR.expired()) {
-        harmony::log::error(
+        if (screenShaderWR.expired()) {
+            harmony::log::error(
                 "RuntimeProgram : Initialize Pipelines : Present Program is expired. This should never happen.");
-        return;
+            return;
+        }
+
+        RefCntPtr<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8,
+            Vector<WeakPtr<Framebuffer>>{skyFB});
+        RefCntPtr<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+            AttachmentType::RGBA8,
+            Vector<WeakPtr<Framebuffer>>{
+            forwardFB});
+        RefCntPtr<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+            AttachmentType::RGBA8,
+            Vector<WeakPtr<Framebuffer>>{
+            vectorFB});
+        RefCntPtr<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+            AttachmentType::RGBA8,
+            Vector<WeakPtr<Framebuffer>>{
+            moebiusFB});
+
+        p_RuntimePipeline->AddPipelineStage(skyFB, m_Renderer.GetPipelineStage("SkyStage").lock());
+        p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("DebugDrawStage").lock());
+        p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("NormalStage").lock());
+        p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("TexturedMeshStage").lock());
+        p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("BlinnPhongTextured").lock());
+
+        p_RuntimePipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());
+
+        p_RuntimePipeline->AddPipelineStage(finalFB, drawSkyStage);
+        p_RuntimePipeline->AddPipelineStage(finalFB, drawForwardStage);
+        p_RuntimePipeline->AddPipelineStage(finalFB, drawMoebiusStage);
+        p_RuntimePipeline->AddPipelineStage(finalFB, drawVectorStage);
+
+        p_RuntimePipeline->SetOutputFramebuffer(finalFB);
     }
-
-    Ref<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8,
-                                                                                 Vector<WeakRef<Framebuffer>>{skyFB});
-    Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
-                                                                                     AttachmentType::RGBA8,
-                                                                                     Vector<WeakRef<Framebuffer>>{
-                                                                                             forwardFB});
-    Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
-                                                                                    AttachmentType::RGBA8,
-                                                                                    Vector<WeakRef<Framebuffer>>{
-                                                                                            vectorFB});
-    Ref<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
-                                                                                     AttachmentType::RGBA8,
-                                                                                     Vector<WeakRef<Framebuffer>>{
-                                                                                             moebiusFB});
-
-    p_RuntimePipeline->AddPipelineStage(skyFB, m_Renderer.GetPipelineStage("SkyStage").lock());
-    p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("DebugDrawStage").lock());
-    p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("NormalStage").lock());
-    p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("TexturedMeshStage").lock());
-    p_RuntimePipeline->AddPipelineStage(forwardFB, m_Renderer.GetPipelineStage("BlinnPhongTextured").lock());
-
-    p_RuntimePipeline->AddPipelineStage(vectorFB, m_Renderer.GetPipelineStage("VectorGraphicsStage").lock());
-
-    p_RuntimePipeline->AddPipelineStage(finalFB, drawSkyStage);
-    p_RuntimePipeline->AddPipelineStage(finalFB, drawForwardStage);
-    p_RuntimePipeline->AddPipelineStage(finalFB, drawMoebiusStage);
-    p_RuntimePipeline->AddPipelineStage(finalFB, drawVectorStage);
-
-    p_RuntimePipeline->SetOutputFramebuffer(finalFB);
 
 }
 
 void harmony::RuntimeProgram::InitializeViews() {
     OPTICK_EVENT();
+    log::info("RuntimeProgram : Initializing Views");
     auto runtimeViewWr = m_Renderer.CreateView<RuntimeView>(*this);
 
     m_Renderer.SetViewActive(runtimeViewWr, true);
@@ -228,14 +256,16 @@ void harmony::RuntimeProgram::InitializeViews() {
 
 void harmony::RuntimeProgram::LoadScene(const std::string &path) {
     OPTICK_EVENT();
+    log::info("RuntimeProgram : Load Scene at path : {}", path);
     Program::LoadScene(path);
-    RunSystemInit();
+    //RunSystemInit();
 }
 
 void harmony::RuntimeProgram::OpenScene(uint32_t index) {
     OPTICK_EVENT();
     Program::OpenScene(index);
-    RunSystemInit();
+    log::info("RuntimeProgram : Open Scene at index : {}", index);
+    //RunSystemInit();
 }
 
 int harmony::RuntimeProgram::OnRuntimeUpdate() {
@@ -267,17 +297,18 @@ int harmony::RuntimeProgram::OnRuntimeUpdate() {
 
 void harmony::RuntimeProgram::LoadBuiltInAssets() {
     OPTICK_EVENT();
+    log::info("RuntimeProgram : Loading built in assets");
     AssetHandle cubeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Cube", CreateRef<Cube>(1.0f));
-    Ref<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
+    RefCntPtr<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
     m_Renderer.SubmitMeshToGPU(cube);
     AssetHandle planeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Plane", CreateRef<Plane>(1.0f));
-    Ref<Mesh> plane = m_AssetManager.GetAsset<Mesh>(planeHandle).lock();
+    RefCntPtr<Mesh> plane = m_AssetManager.GetAsset<Mesh>(planeHandle).lock();
     m_Renderer.SubmitMeshToGPU(plane);
 }
 
 void harmony::RuntimeProgram::ResizeApplicationWindow(int w, int h) {
     OPTICK_EVENT();
-
+    log::info("RuntimeProgram : App window resized, new size : w {} h {}", w,h);
     Program::ResizeApplicationWindow(w, h);
     bgfx::setViewRect(p_PresentViewId, 0, 0, p_WindowWidth, p_WindowHeight);
 

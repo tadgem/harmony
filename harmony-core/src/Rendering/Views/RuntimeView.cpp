@@ -44,7 +44,7 @@ void harmony::RuntimeView::OnResized(uint32_t w, uint32_t h) {
     }
 
     View::OnResized(w, h);
-    Ref<Scene> scene = p_Program.GetActiveScene().lock();
+    RefCntPtr<Scene> scene = p_Program.GetActiveScene().lock();
     if (!scene->m_Registry.valid(CameraEntity)) {
         harmony::log::warn("RuntimeView : Cannot find camera on entity {}", static_cast<uint32_t>(CameraEntity));
         return;
@@ -63,6 +63,7 @@ void harmony::RuntimeView::OnResized(uint32_t w, uint32_t h) {
 }
 
 #if HARMONY_DEBUG
+static const std::string s_RuntimeViewTitle = std::string(ICON_FA_PLAY_CIRCLE) + " Runtime";
 
 void harmony::RuntimeView::OnImGui() {
     OPTICK_EVENT();
@@ -70,11 +71,10 @@ void harmony::RuntimeView::OnImGui() {
         return;
     }
 
-    Ref<Scene> scene = p_Program.GetActiveScene().lock();
-    const std::string runtimeViewTitle = std::string(ICON_FA_PLAY_CIRCLE) + " Runtime";
+    RefCntPtr<Scene> scene = p_Program.GetActiveScene().lock();
     glm::mat4 mat = glm::mat4(1.0);
     auto pipeline = p_Renderer.GetViewPipelineFromName("RuntimeView").lock();
-    if (ImGui::Begin(runtimeViewTitle.c_str(), (bool *) 0, ImGuiWindowFlags_NoScrollbar)) {
+    if (ImGui::Begin(s_RuntimeViewTitle.c_str(), (bool *) 0, ImGuiWindowFlags_NoScrollbar)) {
         View::OnImGui();
 
         if (!pipeline->HasOutputFramebuffer()) {
@@ -109,7 +109,7 @@ void harmony::RuntimeView::OnImGuiOptions() {
         return;
     }
 
-    Ref<Scene> scene = p_Program.GetActiveScene().lock();
+    RefCntPtr<Scene> scene = p_Program.GetActiveScene().lock();
     std::string currentName = "Entity " + std::to_string(static_cast<uint32_t>(CameraEntity));
     if (ImGui::BeginCombo("Camera Entity", currentName.c_str())) {
         auto view = scene->m_Registry.view<CameraComponent>();

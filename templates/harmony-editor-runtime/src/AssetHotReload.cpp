@@ -61,7 +61,7 @@ nlohmann::json harmony::AssetHotReload::ToJson() {
 void harmony::AssetHotReload::FromJson(const nlohmann::json &json) {
 }
 
-void harmony::AssetHotReload::AddHotReloadProvider(Ref<AssetHotReloadProvider> provider) {
+void harmony::AssetHotReload::AddHotReloadProvider(RefCntPtr<AssetHotReloadProvider> provider) {
     for (auto p: p_HotReloadProviders) {
         if (provider->m_Name == p->m_Name) {
             harmony::log::warn("AssetHotReload : Provider with name : {} : already in provider collection, skipping.",

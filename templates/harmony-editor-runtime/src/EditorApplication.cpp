@@ -14,18 +14,19 @@
 #include "Assets/ShaderSourceAssetFactory.h"
 #include "AssimpModelAssetFactory.h"
 #include "EditorView.h"
+#include "JoltMonoBind.h"
 #include "Script/GraphScript/GraphScriptProgramComponent.h"
 
 harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this),
                             m_GraphScriptEditor(p_GraphScriptComponent->GetNodeRegistry()) {
     OPTICK_EVENT();
-    m_Logger.Init();
-    AddAssetTypeNames();
-    AddAssetFactories();
-    AddProgramComponents();
-    AddSystems();
-    AddPipelineStageRenderers();
-
+    //m_Logger.Init();
+    Editor::AddAssetTypeNames();
+    Editor::AddAssetFactories();
+    Editor::AddProgramComponents();
+    Editor::AddSystems();
+    log::info("Editor : Add PipelineStageRenderers");
+    Editor::AddPipelineStageRenderers();
     AddEditorPanels();
 }
 
@@ -60,6 +61,7 @@ void harmony::Editor::AddSystems() {
 
 void harmony::Editor::AddPipelineStageRenderers() {
     OPTICK_EVENT();
+    RuntimeProgram::AddPipelineStageRenderers();
 }
 
 void harmony::Editor::AddEditorPanels() {
@@ -67,13 +69,15 @@ void harmony::Editor::AddEditorPanels() {
     p_ScenePanel = CreateRef<ScenePanel>(*this);
     p_Panels.emplace_back(p_ScenePanel);
 
-    Ref<AssetManagerPanel> assetManagerPanel = CreateRef<AssetManagerPanel>(*this);
-    Ref<LuaScriptPanel> luaScriptPanel = CreateRef<LuaScriptPanel>(*this);
+    RefCntPtr<AssetManagerPanel> assetManagerPanel = CreateRef<AssetManagerPanel>(*this);
+    RefCntPtr<LuaScriptPanel> luaScriptPanel = CreateRef<LuaScriptPanel>(*this);
+    RefCntPtr<MonoPanel> monoPanel = CreateRef<MonoPanel>(*this);
 
     p_Panels.emplace_back(assetManagerPanel);
     p_Panels.emplace_back(luaScriptPanel);
+    p_Panels.emplace_back(monoPanel);
 
-    Ref<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, p_ScenePanel);
+    RefCntPtr<EntityInspectorPanel> inspector = CreateRef<EntityInspectorPanel>(*this, p_ScenePanel);
     inspector->AddComponentUI<EntityDataComponentUI>();
     inspector->AddComponentUI<TransformComponentUI>();
     inspector->AddComponentUI<MeshComponentUI>(m_AssetManager);
@@ -85,6 +89,7 @@ void harmony::Editor::AddEditorPanels() {
     inspector->AddComponentUI<SkyComponentUI>();
     inspector->AddComponentUI<LuaScriptComponentUI>(m_AssetManager);
     inspector->AddComponentUI<JoltBodyComponentUI>();
+    inspector->AddComponentUI<MonoBehaviourComponentUI>(p_MonoSystem, m_AssetManager);
 
     p_Panels.emplace_back(inspector);
 }
@@ -109,20 +114,20 @@ void harmony::Editor::InitializePipelines() {
         return;
     }
 
-    Ref<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8,
-                                                                                 Vector<WeakRef<Framebuffer>>{skyFB});
-    Ref<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+    RefCntPtr<DrawScreenTextureStage> drawSkyStage = CreateRef<DrawScreenTextureStage>(screenShaderWR, AttachmentType::RGBA8,
+                                                                                 Vector<WeakPtr<Framebuffer>>{skyFB});
+    RefCntPtr<DrawScreenTextureStage> drawForwardStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
                                                                                      AttachmentType::RGBA8,
-                                                                                     Vector<WeakRef<Framebuffer>>{
+                                                                                     Vector<WeakPtr<Framebuffer>>{
                                                                                              mainFB});
-    Ref<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+    RefCntPtr<DrawScreenTextureStage> drawVectorStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
                                                                                     AttachmentType::RGBA8,
-                                                                                    Vector<WeakRef<Framebuffer>>{
+                                                                                    Vector<WeakPtr<Framebuffer>>{
                                                                                             vectorFB});
-    Ref<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Editor);
-    Ref<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
+    RefCntPtr<DebugDrawStage> debugDrawStage = CreateRef<DebugDrawStage>(GfxDebug::Channel::Editor);
+    RefCntPtr<DrawScreenTextureStage> drawMoebiusStage = CreateRef<DrawScreenTextureStage>(screenShaderWR,
                                                                                      AttachmentType::RGBA8,
-                                                                                     Vector<WeakRef<Framebuffer>>{
+                                                                                     Vector<WeakPtr<Framebuffer>>{
                                                                                              moebiusFB});
 
     p_EditorPipeline->AddPipelineStage(skyFB, m_Renderer.GetPipelineStage("SkyStage").lock());
@@ -217,15 +222,56 @@ void harmony::Editor::OnEditExit() {
     SaveScene(p_LoadedScenePath);
 }
 
-int harmony::Editor::OnRuntimeUpdate() {
+int harmony::Editor::OnMiniGuisUpdate() {
     OPTICK_EVENT();
     UpdateTimeVariables();
 
     HandleSDLEvent();
 
+    ImGuiPreUpdate();
+
+    // RunRendererPreUpdate();
+    if(!p_MiniGuiApps.empty())
+    {
+        bool finished = p_MiniGuiApps.top()->OnImGui();
+        if(finished)
+        {
+            p_MiniGuiApps.top().reset();
+            p_MiniGuiApps.pop();
+        }
+    }
+
+    Input::PostFrame();
+
+    UpdateEditor();
+
+    ImGuiPostUpdate();
+    Frame();
+
+    if(p_MiniGuiApps.empty())
+    {
+        m_EditorFSM.Trigger(Trigger::MiniGuisFinished);
+    }
+
+    return FSM::NO_TRIGGER;
+}
+
+void harmony::Editor::OnMiniGuisExit() {
+    OPTICK_EVENT();
+    log::info("Program : All MiniGuis processed.");
+}
+
+int harmony::Editor::OnRuntimeUpdate() {
+    OPTICK_EVENT();
+
     if (Input::GetKey(Key::Escape)) {
         m_EditorFSM.Trigger(Trigger::Stop);
+        return FSM::NO_TRIGGER;
     }
+
+    UpdateTimeVariables();
+
+    HandleSDLEvent();
 
     RunRendererPreUpdate();
 
@@ -272,7 +318,7 @@ void harmony::Editor::OnRuntimeExit() {
 
 void harmony::Editor::Init() {
     OPTICK_EVENT();
-    Program::Init();
+    RuntimeProgram::Init();
 
     m_EditorFSM.AddState(Mode::Edit, [this]() { return OnEditUpdate(); });
     m_EditorFSM.AddStateExit(Mode::Edit, [this]() { OnEditExit(); });
@@ -281,10 +327,15 @@ void harmony::Editor::Init() {
     m_EditorFSM.AddStateExit(Mode::Debug, [this]() { OnRuntimeExit(); });
     m_EditorFSM.AddStateEntry(Mode::Debug, [this]() { OnRuntimeEntry(); });
 
+    m_EditorFSM.AddState(Mode::MiniGuis, [this]() { return OnMiniGuisUpdate();});
+    m_EditorFSM.AddStateExit(Mode::MiniGuis, [this]() { OnMiniGuisExit();});
+
+
     m_EditorFSM.AddTrigger(Trigger::Play, Mode::Edit, Mode::Debug);
     m_EditorFSM.AddTrigger(Trigger::Stop, Mode::Debug, Mode::Edit);
+    m_EditorFSM.AddTrigger(Trigger::MiniGuisFinished, Mode::MiniGuis, Mode::Edit);
 
-    m_EditorFSM.SetStartingState(Mode::Edit);
+    m_EditorFSM.SetStartingState(Mode::MiniGuis);
 }
 
 void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure proc) {
@@ -298,18 +349,9 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
 
     InitializeViews();
 
-    LoadProject(projectPath);
-
-
     PreRunInit();
 
     SetRunningStyle();
-
-    if (m_Project) {
-        if (m_Project->m_SerializedScenes.size() > 0) {
-            LoadScene(m_Project->m_SerializedScenes[0]);
-        }
-    }
 
     while (p_Run) {
         ProfilerBeginFrame();
@@ -349,82 +391,97 @@ void harmony::Editor::UpdateEditor() {
     if (!p_ActiveScene) {
         return;
     }
-
-    //GfxDebug::Get()->setColor(GfxDebug::Channel::Editor, 0xfffffff);
-    //GfxDebug::Get()->drawGrid(GfxDebug::Channel::Editor, Axis::Enum::Y, bx::Vec3(0.0f, 0.0f, 0.0f), 1000);
-
 }
 
 void harmony::Editor::SetRunningStyle() {
     OPTICK_EVENT();
-    // Photoshop style by Derydoca from ImThemes
-    ImGuiStyle &style = ImGui::GetStyle();
+    // Deep Dark style by janekb04 from ImThemes
+    ImGuiStyle& style = ImGui::GetStyle();
 
-    style.DisplaySafeAreaPadding = ImVec2(0.0f, 0.0f);
-    style.WindowPadding = ImVec2(1.0f, 1.0f);
-    style.FramePadding = ImVec2(1.0f, 1.0f);
-    style.DisplayWindowPadding = ImVec2(0.0f, 0.0f);
+    style.Alpha = 1.0f;
+    style.DisabledAlpha = 0.6000000238418579f;
+    style.WindowPadding = ImVec2(4.0f, 4.0f);
+    style.WindowRounding = 7.0f;
+    style.WindowBorderSize = 1.0f;
+    style.WindowMinSize = ImVec2(32.0f, 32.0f);
+    style.WindowTitleAlign = ImVec2(0.0f, 0.5f);
+    style.WindowMenuButtonPosition = ImGuiDir_Left;
+    style.ChildRounding = 4.0f;
+    style.ChildBorderSize = 1.0f;
+    style.PopupRounding = 4.0f;
+    style.PopupBorderSize = 1.0f;
+    style.FramePadding = ImVec2(1.0f, 0.4f);
+    style.FrameRounding = 3.0f;
+    style.FrameBorderSize = 1.0f;
+    style.ItemSpacing = ImVec2(4.0f, 4.0f);
+    style.ItemInnerSpacing = ImVec2(4.0f, 4.0f);
+    style.CellPadding = ImVec2(4.0f, 4.0f);
+    style.IndentSpacing = 7.5f;
+    style.ColumnsMinSpacing = 4.0f;
+    style.ScrollbarSize = 7.5f;
+    style.ScrollbarRounding = 9.0f;
+    style.GrabMinSize = 10.0f;
+    style.GrabRounding = 3.0f;
+    style.TabRounding = 4.0f;
+    style.TabBorderSize = 1.0f;
+    style.TabMinWidthForCloseButton = 0.0f;
+    style.ColorButtonPosition = ImGuiDir_Right;
+    style.ButtonTextAlign = ImVec2(0.5f, 0.5f);
+    style.SelectableTextAlign = ImVec2(0.0f, 0.0f);
 
     style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
     style.Colors[ImGuiCol_TextDisabled] = ImVec4(0.4980392158031464f, 0.4980392158031464f, 0.4980392158031464f, 1.0f);
-    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.1764705926179886f, 0.1764705926179886f, 0.1764705926179886f, 1.0f);
-    style.Colors[ImGuiCol_ChildBg] = ImVec4(0.2784313857555389f, 0.2784313857555389f, 0.2784313857555389f, 0.0f);
-    style.Colors[ImGuiCol_PopupBg] = ImVec4(0.3098039329051971f, 0.3098039329051971f, 0.3098039329051971f, 1.0f);
-    style.Colors[ImGuiCol_Border] = ImVec4(0.2627451121807098f, 0.2627451121807098f, 0.2627451121807098f, 1.0f);
-    style.Colors[ImGuiCol_BorderShadow] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
-    style.Colors[ImGuiCol_FrameBg] = ImVec4(0.1568627506494522f, 0.1568627506494522f, 0.1568627506494522f, 1.0f);
-    style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.2000000029802322f, 0.2000000029802322f, 0.2000000029802322f, 1.0f);
-    style.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.2784313857555389f, 0.2784313857555389f, 0.2784313857555389f, 1.0f);
-    style.Colors[ImGuiCol_TitleBg] = ImVec4(0.1450980454683304f, 0.1450980454683304f, 0.1450980454683304f, 1.0f);
-    style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.1450980454683304f, 0.1450980454683304f, 0.1450980454683304f, 1.0f);
-    style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.1450980454683304f, 0.1450980454683304f, 0.1450980454683304f,
-                                                     1.0f);
-    style.Colors[ImGuiCol_MenuBarBg] = ImVec4(0.1921568661928177f, 0.1921568661928177f, 0.1921568661928177f, 1.0f);
-    style.Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.1568627506494522f, 0.1568627506494522f, 0.1568627506494522f, 1.0f);
-    style.Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.2745098173618317f, 0.2745098173618317f, 0.2745098173618317f, 1.0f);
-    style.Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.2980392277240753f, 0.2980392277240753f, 0.2980392277240753f,
-                                                         1.0f);
-    style.Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(1.0f, 0.3882353007793427f, 0.0f, 1.0f);
-    style.Colors[ImGuiCol_CheckMark] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-    style.Colors[ImGuiCol_SliderGrab] = ImVec4(0.3882353007793427f, 0.3882353007793427f, 0.3882353007793427f, 1.0f);
-    style.Colors[ImGuiCol_SliderGrabActive] = ImVec4(1.0f, 0.3882353007793427f, 0.0f, 1.0f);
-    style.Colors[ImGuiCol_Button] = ImVec4(1.0f, 1.0f, 1.0f, 0.13f);
-    style.Colors[ImGuiCol_ButtonHovered] = ImVec4(1.0f, 1.0f, 1.0f, 0.2560000032186508f);
-    style.Colors[ImGuiCol_ButtonActive] = ImVec4(1.0f, 1.0f, 1.0f, 0.3910000026226044f);
-    style.Colors[ImGuiCol_Header] = ImVec4(0.3098039329051971f, 0.3098039329051971f, 0.3098039329051971f, 1.0f);
-    style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.4666666686534882f, 0.4666666686534882f, 0.4666666686534882f, 1.0f);
-    style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.4666666686534882f, 0.4666666686534882f, 0.4666666686534882f, 1.0f);
-    style.Colors[ImGuiCol_Separator] = ImVec4(0.2627451121807098f, 0.2627451121807098f, 0.2627451121807098f, 1.0f);
-    style.Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.3882353007793427f, 0.3882353007793427f, 0.3882353007793427f,
-                                                     1.0f);
-    style.Colors[ImGuiCol_SeparatorActive] = ImVec4(1.0f, 0.3882353007793427f, 0.0f, 1.0f);
-    style.Colors[ImGuiCol_ResizeGrip] = ImVec4(1.0f, 1.0f, 1.0f, 0.25f);
-    style.Colors[ImGuiCol_ResizeGripHovered] = ImVec4(1.0f, 1.0f, 1.0f, 0.6700000166893005f);
-    style.Colors[ImGuiCol_ResizeGripActive] = ImVec4(1.0f, 0.3882353007793427f, 0.0f, 1.0f);
-    style.Colors[ImGuiCol_Tab] = ImVec4(0.09411764889955521f, 0.09411764889955521f, 0.09411764889955521f, 1.0f);
-    style.Colors[ImGuiCol_TabHovered] = ImVec4(0.3490196168422699f, 0.3490196168422699f, 0.3490196168422699f, 1.0f);
-    style.Colors[ImGuiCol_TabActive] = ImVec4(0.1921568661928177f, 0.1921568661928177f, 0.1921568661928177f, 1.0f);
-    style.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.09411764889955521f, 0.09411764889955521f, 0.09411764889955521f,
-                                                 1.0f);
-    style.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.1921568661928177f, 0.1921568661928177f, 0.1921568661928177f,
-                                                       1.0f);
-    style.Colors[ImGuiCol_PlotLines] = ImVec4(0.4666666686534882f, 0.4666666686534882f, 0.4666666686534882f, 1.0f);
-    style.Colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.0f, 0.3882353007793427f, 0.0f, 1.0f);
-    style.Colors[ImGuiCol_PlotHistogram] = ImVec4(0.5843137502670288f, 0.5843137502670288f, 0.5843137502670288f, 1.0f);
-    style.Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.0f, 0.3882353007793427f, 0.0f, 1.0f);
-    style.Colors[ImGuiCol_TableHeaderBg] = ImVec4(0.1882352977991104f, 0.1882352977991104f, 0.2000000029802322f, 1.0f);
-    style.Colors[ImGuiCol_TableBorderStrong] = ImVec4(0.3098039329051971f, 0.3098039329051971f, 0.3490196168422699f,
-                                                      1.0f);
-    style.Colors[ImGuiCol_TableBorderLight] = ImVec4(0.2274509817361832f, 0.2274509817361832f, 0.2470588237047195f,
-                                                     1.0f);
+    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.09803921729326248f, 0.09803921729326248f, 0.09803921729326248f, 1.0f);
+    style.Colors[ImGuiCol_ChildBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+    style.Colors[ImGuiCol_PopupBg] = ImVec4(0.1882352977991104f, 0.1882352977991104f, 0.1882352977991104f, 0.9200000166893005f);
+    style.Colors[ImGuiCol_Border] = ImVec4(0.1882352977991104f, 0.1882352977991104f, 0.1882352977991104f, 0.2899999916553497f);
+    style.Colors[ImGuiCol_BorderShadow] = ImVec4(0.0f, 0.0f, 0.0f, 0.239999994635582f);
+    style.Colors[ImGuiCol_FrameBg] = ImVec4(0.0470588244497776f, 0.0470588244497776f, 0.0470588244497776f, 0.5400000214576721f);
+    style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.1882352977991104f, 0.1882352977991104f, 0.1882352977991104f, 0.5400000214576721f);
+    style.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.2000000029802322f, 0.2196078449487686f, 0.2274509817361832f, 1.0f);
+    style.Colors[ImGuiCol_TitleBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+    style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.05882352963089943f, 0.05882352963089943f, 0.05882352963089943f, 1.0f);
+    style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+    style.Colors[ImGuiCol_MenuBarBg] = ImVec4(0.1372549086809158f, 0.1372549086809158f, 0.1372549086809158f, 1.0f);
+    style.Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.0470588244497776f, 0.0470588244497776f, 0.0470588244497776f, 0.5400000214576721f);
+    style.Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.3372549116611481f, 0.3372549116611481f, 0.3372549116611481f, 0.5400000214576721f);
+    style.Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.4000000059604645f, 0.4000000059604645f, 0.4000000059604645f, 0.5400000214576721f);
+    style.Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.5568627715110779f, 0.5568627715110779f, 0.5568627715110779f, 0.5400000214576721f);
+    style.Colors[ImGuiCol_CheckMark] = ImVec4(0.3294117748737335f, 0.6666666865348816f, 0.8588235378265381f, 1.0f);
+    style.Colors[ImGuiCol_SliderGrab] = ImVec4(0.3372549116611481f, 0.3372549116611481f, 0.3372549116611481f, 0.5400000214576721f);
+    style.Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.5568627715110779f, 0.5568627715110779f, 0.5568627715110779f, 0.5400000214576721f);
+    style.Colors[ImGuiCol_Button] = ImVec4(0.0470588244497776f, 0.0470588244497776f, 0.0470588244497776f, 0.5400000214576721f);
+    style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.1882352977991104f, 0.1882352977991104f, 0.1882352977991104f, 0.5400000214576721f);
+    style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.2000000029802322f, 0.2196078449487686f, 0.2274509817361832f, 1.0f);
+    style.Colors[ImGuiCol_Header] = ImVec4(0.0f, 0.0f, 0.0f, 0.5199999809265137f);
+    style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.0f, 0.0f, 0.0f, 0.3600000143051147f);
+    style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.2000000029802322f, 0.2196078449487686f, 0.2274509817361832f, 0.3300000131130219f);
+    style.Colors[ImGuiCol_Separator] = ImVec4(0.2784313857555389f, 0.2784313857555389f, 0.2784313857555389f, 0.2899999916553497f);
+    style.Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.4392156898975372f, 0.4392156898975372f, 0.4392156898975372f, 0.2899999916553497f);
+    style.Colors[ImGuiCol_SeparatorActive] = ImVec4(0.4000000059604645f, 0.4392156898975372f, 0.4666666686534882f, 1.0f);
+    style.Colors[ImGuiCol_ResizeGrip] = ImVec4(0.2784313857555389f, 0.2784313857555389f, 0.2784313857555389f, 0.2899999916553497f);
+    style.Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.4392156898975372f, 0.4392156898975372f, 0.4392156898975372f, 0.2899999916553497f);
+    style.Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.4000000059604645f, 0.4392156898975372f, 0.4666666686534882f, 1.0f);
+    style.Colors[ImGuiCol_Tab] = ImVec4(0.0f, 0.0f, 0.0f, 0.5199999809265137f);
+    style.Colors[ImGuiCol_TabHovered] = ImVec4(0.1372549086809158f, 0.1372549086809158f, 0.1372549086809158f, 1.0f);
+    style.Colors[ImGuiCol_TabActive] = ImVec4(0.2000000029802322f, 0.2000000029802322f, 0.2000000029802322f, 0.3600000143051147f);
+    style.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.0f, 0.0f, 0.0f, 0.5199999809265137f);
+    style.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.1372549086809158f, 0.1372549086809158f, 0.1372549086809158f, 1.0f);
+    style.Colors[ImGuiCol_PlotLines] = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+    style.Colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+    style.Colors[ImGuiCol_PlotHistogram] = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+    style.Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+    style.Colors[ImGuiCol_TableHeaderBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.5199999809265137f);
+    style.Colors[ImGuiCol_TableBorderStrong] = ImVec4(0.0f, 0.0f, 0.0f, 0.5199999809265137f);
+    style.Colors[ImGuiCol_TableBorderLight] = ImVec4(0.2784313857555389f, 0.2784313857555389f, 0.2784313857555389f, 0.2899999916553497f);
     style.Colors[ImGuiCol_TableRowBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
     style.Colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.0f, 1.0f, 1.0f, 0.05999999865889549f);
-    style.Colors[ImGuiCol_TextSelectedBg] = ImVec4(1.0f, 1.0f, 1.0f, 0.1560000032186508f);
-    style.Colors[ImGuiCol_DragDropTarget] = ImVec4(1.0f, 0.3882353007793427f, 0.0f, 1.0f);
-    style.Colors[ImGuiCol_NavHighlight] = ImVec4(1.0f, 0.3882353007793427f, 0.0f, 1.0f);
-    style.Colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.0f, 0.3882353007793427f, 0.0f, 1.0f);
-    style.Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.5860000252723694f);
-    style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.5860000252723694f);
+    style.Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.2000000029802322f, 0.2196078449487686f, 0.2274509817361832f, 1.0f);
+    style.Colors[ImGuiCol_DragDropTarget] = ImVec4(0.3294117748737335f, 0.6666666865348816f, 0.8588235378265381f, 1.0f);
+    style.Colors[ImGuiCol_NavHighlight] = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+    style.Colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.0f, 0.0f, 0.0f, 0.699999988079071f);
+    style.Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(1.0f, 0.0f, 0.0f, 0.2000000029802322f);
+    style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.0f, 0.0f, 0.0f, 0.3499999940395355f);
 }
 
 void harmony::Editor::GlobalDockspace() {
@@ -464,9 +521,14 @@ void harmony::Editor::GlobalDockspace() {
 void harmony::Editor::LoadBuiltInAssets() {
     OPTICK_EVENT();
     AssetHandle cubeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Cube", CreateRef<Cube>(1.0f));
-    Ref<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
+    RefCntPtr<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
     m_Renderer.SubmitMeshToGPU(cube);
     AssetHandle planeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Plane", CreateRef<Plane>(1.0f));
-    Ref<Mesh> plane = m_AssetManager.GetAsset<Mesh>(planeHandle).lock();
+    RefCntPtr<Mesh> plane = m_AssetManager.GetAsset<Mesh>(planeHandle).lock();
     m_Renderer.SubmitMeshToGPU(plane);
+}
+
+void harmony::Editor::AddMiniGuiApp(harmony::RefCntPtr<harmony::MiniGuiApp> app)
+{
+    p_MiniGuiApps.push(app);
 }

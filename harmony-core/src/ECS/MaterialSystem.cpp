@@ -40,11 +40,35 @@ void harmony::MaterialSystem::DeserializeSystem(entt::registry &registry, nlohma
     for (auto entry = systemJson.begin(); entry != systemJson.end(); entry++) {
         entt::entity e = GetEntityFromKey(entry.key());
         MaterialComponent mc = entry.value();
-        WeakRef<ShaderProgram> shader = p_Renderer.GetShader(mc.Data.m_ShaderName);
+        WeakPtr<ShaderProgram> shader = p_Renderer.GetShader(mc.Data.m_ShaderName);
         mc.Data.UpdateOverrides(shader, p_AssetManager);
         registry.emplace<MaterialComponent>(e, mc);
     }
 }
+
+nlohmann::json harmony::MaterialSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+{
+    OPTICK_EVENT();
+    nlohmann::json j;
+
+    if(registry.any_of<MaterialComponent>(e))
+    {
+        MaterialComponent& mc = registry.get<MaterialComponent>(e);
+        j = mc;
+    }
+
+    return j;
+}
+
+void harmony::MaterialSystem::DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+{
+    MaterialComponent mc;
+    entityJson.get_to<MaterialComponent>(mc);
+    WeakPtr<ShaderProgram> shader = p_Renderer.GetShader(mc.Data.m_ShaderName);
+    mc.Data.UpdateOverrides(shader, p_AssetManager);
+    registry.emplace<MaterialComponent>(e, mc);
+}
+
 
 void harmony::MaterialSystem::Refresh() {
     OPTICK_EVENT();

@@ -34,7 +34,7 @@ namespace harmony {
         void FromJson(const nlohmann::json &json) override;
 
     protected:
-        Unique<GraphScript::NodeRegistry> p_NodeRegistry;
+        UniquePtr<GraphScript::NodeRegistry> p_NodeRegistry;
     };
 } // namespace harmony
 

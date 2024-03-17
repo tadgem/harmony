@@ -46,6 +46,7 @@ void harmony::DebugCamera::Update() {
     if (Focussed && Enabled) {
         if (Input::GetMouseButton(Mouse::Button::Right)) {
             if (ShowCursor) {
+                SDL_SetWindowMouseGrab(Program::Get()->GetWindow(), SDL_TRUE);
                 SDL_SetRelativeMouseMode(SDL_TRUE);
                 ShowCursor = false;
             }
@@ -79,6 +80,7 @@ void harmony::DebugCamera::Update() {
         } else {
             if (!ShowCursor) {
                 SDL_SetRelativeMouseMode(SDL_FALSE);
+                SDL_SetWindowMouseGrab(Program::Get()->GetWindow(), SDL_FALSE);
                 ShowCursor = true;
             }
         }
@@ -108,9 +110,9 @@ void harmony::DebugCamera::Update() {
     View = rotate * translate;
 }
 
-harmony::EditorView::EditorView(Program &program, Ref<ScenePanel> scenePanel) : View("Editor"), p_Program(program),
-                                                                                p_Renderer(program.m_Renderer),
-                                                                                p_ScenePanel(scenePanel) {
+harmony::EditorView::EditorView(Program &program, RefCntPtr<ScenePanel> scenePanel) : View("Editor"), p_Program(program),
+                                                                                      p_Renderer(program.m_Renderer),
+                                                                                      p_ScenePanel(scenePanel) {
     OPTICK_EVENT();
     p_Op = ImGuizmo::OPERATION::TRANSLATE;
 }
@@ -140,109 +142,117 @@ void harmony::EditorView::OnImGui() {
         return;
     }
 
-    Ref<Scene> scene = p_Program.GetActiveScene().lock();
+    RefCntPtr<Scene> scene = p_Program.GetActiveScene().lock();
 
     const std::string editorViewTitle = std::string(ICON_FA_VIDEO_CAMERA) + " Editor";
     glm::mat4 mat = glm::mat4(1.0);
     auto pipeline = p_Renderer.GetViewPipelineFromName("Editor").lock();
+    
     if (ImGui::Begin(editorViewTitle.c_str(), (bool *) 0, ImGuiWindowFlags_NoScrollbar)) {
         View::OnImGui();
-        // Crashing here because pipelines have not been initialized...
-        auto outputFramebuffer = pipeline->GetOutputFramebuffer().lock();
-        if(!outputFramebuffer)
-        {
-            ImGui::End();
-            return;
-        }
-        bgfx::TextureHandle finalImageHandle = pipeline->GetOutputFramebuffer().lock()->m_Attachments[0].m_Handle;
-        if (!bgfx::isValid(finalImageHandle)) {
-            ImGui::End();
-            return;
-        }
+        OnPresentImage(scene, pipeline);
 
-        ImVec2 texUvs{(float) m_Width / (float) GPUResourceManager::GetMaxFramebufferWidth(),
-                      (float) m_Height / (float) GPUResourceManager::GetMaxFramebufferHeight()};
-
-        ImGui::Image(
-                finalImageHandle,
-                ImGui::GetContentRegionAvail(),
-                ImVec2{0.0f, 0.0f},
-                texUvs
-        );
-
-        if (ImGui::IsWindowFocused()) {
-            Camera.Focussed = true;
-        } else {
-            Camera.Focussed = false;
-        }
-
-        ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
-        ImGuizmo::AllowAxisFlip(false);
-        float windowWidth = (float) ImGui::GetWindowWidth();
-        float windowHeight = (float) ImGui::GetWindowHeight();
-
-        if (!scene->m_Registry.valid(p_ScenePanel->m_SelectedEntity)) {
-            ImGui::End();
-            return;
-        }
-
-        if (!scene->m_Registry.any_of<TransformComponent>(p_ScenePanel->m_SelectedEntity)) {
-            ImGui::End();
-            return;
-        }
-
-        TransformComponent &tc = scene->m_Registry.get<TransformComponent>(p_ScenePanel->m_SelectedEntity);
-        glm::mat4 diffMatrix = glm::mat4(1.0);
-        ImGuizmo::SetOrthographic(false);
-        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-        if (ImGuizmo::Manipulate(
-                &m_View[0][0],
-                &m_Projection[0][0],
-                p_Op,
-                ImGuizmo::MODE::WORLD,
-                &tc.Model[0][0],
-                &diffMatrix[0][0]
-        )) {
-            float matrixTranslation[3], matrixRotation[3], matrixScale[3];
-            ImGuizmo::DecomposeMatrixToComponents(&diffMatrix[0][0], matrixTranslation, matrixRotation, matrixScale);
-
-            if (p_Op == ImGuizmo::OPERATION::TRANSLATE) {
-                tc.Position.x += matrixTranslation[0];
-                tc.Position.y += matrixTranslation[1];
-                tc.Position.z += matrixTranslation[2];
-            }
-
-            if (p_Op == ImGuizmo::OPERATION::ROTATE) {
-                tc.Euler.x += matrixRotation[0];
-                tc.Euler.y += matrixRotation[1];
-                tc.Euler.z += matrixRotation[2];
-            }
-
-            if (p_Op == ImGuizmo::OPERATION::SCALE) {
-                tc.Scale.x += matrixScale[0];
-                tc.Scale.y += matrixScale[1];
-                tc.Scale.z += matrixScale[2];
-            }
-
-        }
-        if (Input::GetMouseButton(Mouse::Button::Right)) {
-            ImGui::End();
-            return;
-        }
-        if (Input::GetKey(Key::W)) {
-            p_Op = ImGuizmo::OPERATION::TRANSLATE;
-        }
-
-        if (Input::GetKey(Key::R)) {
-            p_Op = ImGuizmo::OPERATION::ROTATE;
-        }
-
-        if (Input::GetKey(Key::S)) {
-            p_Op = ImGuizmo::OPERATION::SCALE;
-        }
-
+        OnTransformGizmo(scene);
+        // 3D Picking
     }
+
     ImGui::End();
+}
+
+void harmony::EditorView::OnPresentImage(RefCntPtr<Scene>& scene, RefCntPtr<PipelineV2>& pipeline)
+{
+	auto outputFramebuffer = pipeline->GetOutputFramebuffer().lock();
+	if (!outputFramebuffer)
+	{
+		return;
+	}
+	bgfx::TextureHandle finalImageHandle = pipeline->GetOutputFramebuffer().lock()->m_Attachments[0].m_Handle;
+	if (!bgfx::isValid(finalImageHandle)) {
+		return;
+	}
+
+	ImVec2 texUvs{ (float)m_Width / (float)GPUResourceManager::GetMaxFramebufferWidth(),
+				  (float)m_Height / (float)GPUResourceManager::GetMaxFramebufferHeight() };
+
+	ImGui::Image(
+		finalImageHandle,
+		ImGui::GetContentRegionAvail(),
+		ImVec2{ 0.0f, 0.0f },
+		texUvs
+	);
+}
+
+void harmony::EditorView::OnTransformGizmo(RefCntPtr<Scene>& scene)
+{
+
+    Camera.Focussed = ImGui::IsWindowFocused();
+
+	ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
+	ImGuizmo::AllowAxisFlip(false);
+
+    float windowWidth  =    (float)ImGui::GetWindowWidth();
+	float windowHeight =    (float)ImGui::GetWindowHeight();
+
+	if (!scene->m_Registry.valid(p_ScenePanel->m_SelectedEntity)) {
+		return;
+	}
+
+	if (!scene->m_Registry.any_of<TransformComponent>(p_ScenePanel->m_SelectedEntity)) {
+		return;
+	}
+
+	TransformComponent& tc = scene->m_Registry.get<TransformComponent>(p_ScenePanel->m_SelectedEntity);
+	glm::mat4 diffMatrix = glm::mat4(1.0);
+	ImGuizmo::SetOrthographic(false);
+	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+	if (ImGuizmo::Manipulate(
+		&m_View[0][0],
+		&m_Projection[0][0],
+		p_Op,
+		ImGuizmo::MODE::WORLD,
+		&tc.Model[0][0],
+		&diffMatrix[0][0]
+	)) {
+		float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+		ImGuizmo::DecomposeMatrixToComponents(&diffMatrix[0][0], matrixTranslation, matrixRotation, matrixScale);
+
+		if (p_Op == ImGuizmo::OPERATION::TRANSLATE) {
+			tc.Position.x += matrixTranslation[0];
+			tc.Position.y += matrixTranslation[1];
+			tc.Position.z += matrixTranslation[2];
+		}
+
+		if (p_Op == ImGuizmo::OPERATION::ROTATE) {
+			tc.Euler.x += matrixRotation[0];
+			tc.Euler.y += matrixRotation[1];
+			tc.Euler.z += matrixRotation[2];
+		}
+
+		if (p_Op == ImGuizmo::OPERATION::SCALE) {
+			tc.Scale.x *= matrixScale[0];
+			tc.Scale.y *= matrixScale[1];
+			tc.Scale.z *= matrixScale[2];
+		}
+
+	}
+	if (Input::GetMouseButton(Mouse::Button::Right)) {
+		return;
+	}
+    if(!Camera.Focussed)
+    {
+        return;
+    }
+	if (Input::GetKey(Key::W)) {
+		p_Op = ImGuizmo::OPERATION::TRANSLATE;
+	}
+
+	if (Input::GetKey(Key::R)) {
+		p_Op = ImGuizmo::OPERATION::ROTATE;
+	}
+
+	if (Input::GetKey(Key::S)) {
+		p_Op = ImGuizmo::OPERATION::SCALE;
+	}
 }
 
 void harmony::EditorView::OnImGuiOptions() {

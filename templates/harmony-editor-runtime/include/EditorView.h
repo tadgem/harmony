@@ -28,7 +28,7 @@ namespace harmony {
     class EditorView : public View {
     public:
 
-        EditorView(Program &program, Ref<ScenePanel> scenePanel);
+        EditorView(Program &program, RefCntPtr<ScenePanel> scenePanel);
 
         virtual void OnPreUpdate(entt::registry &registry) override;
 
@@ -37,6 +37,9 @@ namespace harmony {
 #if HARMONY_DEBUG
 
         virtual void OnImGui() override;
+
+        void OnPresentImage(RefCntPtr<Scene>& scene, RefCntPtr<PipelineV2>& pipeline);
+        void OnTransformGizmo(RefCntPtr<Scene>& scene);
 
         virtual void OnImGuiOptions() override;
 
@@ -47,7 +50,7 @@ namespace harmony {
         ImGuizmo::OPERATION p_Op;
         Program &p_Program;
         Renderer &p_Renderer;
-        Ref<ScenePanel> p_ScenePanel;
+        RefCntPtr<ScenePanel> p_ScenePanel;
 
     };
 }

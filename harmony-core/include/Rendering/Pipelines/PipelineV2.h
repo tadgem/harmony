@@ -18,49 +18,51 @@ namespace harmony {
         explicit PipelineV2(const String &name);
 
         template<typename T, typename... Args>
-        WeakRef<T> AddPipelineStage(WeakRef<Framebuffer> fb, Args &&...args) {
+        WeakPtr<T> AddPipelineStage(WeakPtr<Framebuffer> fb, Args &&...args) {
             static_assert(std::is_base_of<PipelineStage, T>());
 
-            Ref<T> stage = CreateRef<T>(std::forward<Args>(args)...);
+            RefCntPtr<T> stage = CreateRef<T>(std::forward<Args>(args)...);
             if (AddPipelineStage(fb, stage)) {
                 return GetWeakRef<T>(stage);
             }
-            return WeakRef<T>();
+            return WeakPtr<T>();
         }
 
-        bool AddPipelineStage(WeakRef<Framebuffer> fb, Ref<PipelineStage> stage);
+        bool AddPipelineStage(WeakPtr<Framebuffer> fb, RefCntPtr<PipelineStage> stage);
 
-        WeakRef<Framebuffer> AddFramebuffer(const String &name,
+        WeakPtr<Framebuffer> AddFramebuffer(const String &name,
                                             Vector<AttachmentType> attachments,
                                             Resolution::Type resolutionType);
 
-        virtual void PreUpdate(entt::registry &registry, WeakRef<View> view);
+        WeakPtr<Framebuffer> GetFramebuffer(const String& name);
 
-        virtual void PostUpdate(entt::registry &registry, WeakRef<View> view);
+        virtual void PreUpdate(entt::registry &registry, WeakPtr<View> view);
 
-        virtual void Resize(entt::registry &registry, WeakRef<View> view);
+        virtual void PostUpdate(entt::registry &registry, WeakPtr<View> view);
 
-        virtual WeakRef<Framebuffer> TryGetFramebuffer(const String &name);
+        virtual void Resize(entt::registry &registry, WeakPtr<View> view);
+
+        virtual WeakPtr<Framebuffer> TryGetFramebuffer(const String &name);
 
         virtual bool HasOutputFramebuffer();
 
-        virtual WeakRef<Framebuffer> GetOutputFramebuffer();
+        virtual WeakPtr<Framebuffer> GetOutputFramebuffer();
 
-        virtual void SetOutputFramebuffer(WeakRef<Framebuffer> framebuffer);
+        virtual void SetOutputFramebuffer(WeakPtr<Framebuffer> framebuffer);
 
         const String m_Name;
 
     protected:
         friend class Renderer;
 
-        Ref<Framebuffer> CreateFrambufferInternal(const String &name,
-                                                  Vector<AttachmentType> attachments,
-                                                  Resolution::Type resolutionType);
+        RefCntPtr<Framebuffer> CreateFrambufferInternal(const String &name,
+                                                        Vector<AttachmentType> attachments,
+                                                        Resolution::Type resolutionType);
 
-        bool IsViewValid(WeakRef<View> view);
+        bool IsViewValid(WeakPtr<View> view);
 
-        Map<Ref<Framebuffer>, Vector<Ref<PipelineStage>>> p_Stages;
-        WeakRef<Framebuffer> p_OutputFramebuffer;
+        Map<RefCntPtr<Framebuffer>, Vector<RefCntPtr<PipelineStage>>> p_Stages;
+        WeakPtr<Framebuffer> p_OutputFramebuffer;
     };
 } // namespace harmony
 

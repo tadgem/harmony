@@ -1,9 +1,8 @@
 #pragma once
 
+#include "glm/glm.hpp"
 #include "Core/Alias.h"
 #include "Assets/AssetFactory.h"
-#include "glm/glm.hpp"
-
 #include "Rendering/Model.h"
 #include "Rendering/Renderer.h"
 
@@ -24,8 +23,8 @@ namespace harmony {
 
         void ProcessMesh(const String &path, aiMesh *mesh, aiNode *node, const aiScene *scene);
 
-        Vector<Ref<Asset>> p_Meshes;
-
+        Vector<RefCntPtr<Asset>> p_Meshes;
+        Vector<ModelEntry> p_ModelEntries;
         Vector<String> p_MeshNames;
 
         uint32_t p_MeshCounter = 0;

@@ -10,7 +10,7 @@ harmony::Project::Project(std::string name) : m_ProjectName(name) {
 }
 
 void
-harmony::Project::UpdateProjectComponentSerializationAttributes(std::vector<Ref<ProgramComponent>> &programComponents) {
+harmony::Project::UpdateProjectComponentSerializationAttributes(std::vector<RefCntPtr<ProgramComponent>> &programComponents) {
     OPTICK_EVENT();
     p_ProgramComponentSerializationAttributes.clear();
 

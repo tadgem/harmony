@@ -13,7 +13,7 @@ namespace harmony {
 
     class GraphScriptSystem : public System {
     public:
-        GraphScriptSystem(Ref<GraphScriptProgramComponent> gspc);
+        GraphScriptSystem(RefCntPtr<GraphScriptProgramComponent> gspc);
 
         void Init(entt::registry &registry) override;
 
@@ -28,11 +28,15 @@ namespace harmony {
         void DeserializeSystem(entt::registry &registry,
                                nlohmann::json systemJson) override;
 
+        nlohmann::json SerializeEntity(entt::registry& registry, entt::entity e) override;
+
+        void DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson) override;
+
     protected:
         void Refresh() override;
 
     protected:
-        Ref<GraphScriptProgramComponent> p_ProgramComponent;
+        RefCntPtr<GraphScriptProgramComponent> p_ProgramComponent;
     };
 } // namespace harmony
 

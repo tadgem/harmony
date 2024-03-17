@@ -53,6 +53,28 @@ void harmony::MeshSystem::DeserializeSystem(entt::registry &registry, nlohmann::
     }
 }
 
+nlohmann::json harmony::MeshSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+{
+    OPTICK_EVENT();
+    nlohmann::json j;
+
+    if(registry.any_of<MeshComponent>(e))
+    {
+        MeshComponent& t = registry.get<MeshComponent>(e);
+        j = t;
+    }
+
+    return j;
+}
+
+void harmony::MeshSystem::DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+{
+    OPTICK_EVENT();
+    MeshComponent tc;
+    entityJson.get_to<MeshComponent>(tc);
+    registry.emplace<MeshComponent>(e, tc);
+}
+
 void harmony::MeshSystem::Refresh() {
     OPTICK_EVENT();
 }
@@ -62,12 +84,12 @@ void harmony::MeshSystem::UpdateMeshComponent(MeshComponent &mc) {
 
     bool meshValid = mc.MeshHandle.m_Layout.m_stride > 0;
     if (!meshValid) {
-        WeakRef<Mesh> meshAssetWr = p_AssetManager.GetAsset<Mesh>(mc.MeshAsset);
+        WeakPtr<Mesh> meshAssetWr = p_AssetManager.GetAsset<Mesh>(mc.MeshAsset);
         if (meshAssetWr.expired()) {
             harmony::log::warn("Asset not loaded at path : {}", mc.MeshAsset.Path);
             return;
         }
-        Ref<Mesh> meshAsset = meshAssetWr.lock();
+        RefCntPtr<Mesh> meshAsset = meshAssetWr.lock();
         mc.MeshHandle = meshAsset->m_Handle;
     }
 }

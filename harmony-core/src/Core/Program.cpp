@@ -5,6 +5,7 @@
 #include "Core/Input.h"
 #include "Rendering/GPUResourceManager.h"
 #include "Rendering/VectorGraphics/VectorGraphics.h"
+#include "ECS/EntityTemplate.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
 #include "bx/timer.h"
@@ -23,9 +24,8 @@
 #endif
 
 #if BX_PLATFORM_WINDOWS
-
 #include "windows.h"
-
+#include <dwmapi.h>
 #endif
 
 harmony::Program::Program(const std::string &name) : p_AppName(name), m_Renderer(m_AssetManager) {
@@ -162,7 +162,26 @@ void harmony::Program::InitSDL() {
         harmony::log::error("Window could not be created. SDL_Error: ", SDL_GetError());
         return;
     }
+#if BX_PLATFORM_WINDOWS
+    SDL_SysWMinfo wmi;
+    SDL_VERSION(&wmi.version);
+    if (!SDL_GetWindowWMInfo(p_Window, &wmi)) {
+        printf(
+                "SDL_SysWMinfo could not be retrieved. SDL_Error: %s\n",
+                SDL_GetError());
+    }
+    HWND hwnd = wmi.info.win.window;
+    COLORREF titlebar_color = 0x000C0B0B;
+    DwmSetWindowAttribute(
+            hwnd, DWMWINDOWATTRIBUTE::DWMWA_BORDER_COLOR,
+            &titlebar_color, sizeof(titlebar_color)
+    );
 
+    DwmSetWindowAttribute(
+            hwnd, DWMWINDOWATTRIBUTE::DWMWA_CAPTION_COLOR,
+            &titlebar_color, sizeof(titlebar_color));
+
+#endif
     harmony::log::info("SDL Initialized successfully");
 }
 
@@ -176,6 +195,7 @@ void harmony::Program::InitBGFX() {
         printf(
                 "SDL_SysWMinfo could not be retrieved. SDL_Error: %s\n",
                 SDL_GetError());
+        return;
     }
 
     bgfx::renderFrame(); // single threaded mode
@@ -262,7 +282,7 @@ void harmony::Program::InitImGui() {
     p_ImGuiAllocator = new bx::DefaultAllocator();
 
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     int ww, wh;
     SDL_GetWindowSize(p_Window, &ww, &wh);
     int displayIndex = SDL_GetWindowDisplayIndex(p_Window);
@@ -270,7 +290,7 @@ void harmony::Program::InitImGui() {
     SDL_GetWindowDisplayMode(p_Window, &displayMode);
     SDL_SysWMinfo info;
     SDL_GetWindowWMInfo(p_Window, &info);
-    imguiCreate(20.0f * p_DPIScale, p_ImGuiAllocator);
+    imguiCreate(18.0f * p_DPIScale, p_ImGuiAllocator);
 
 #if BX_PLATFORM_WINDOWS
     ImGui_ImplSDL2_InitForD3D(p_Window);
@@ -732,6 +752,8 @@ void harmony::Program::LoadProject(const std::string &path) {
 
     UpdateProjectDirectory(path);
 
+    RunProgramComponentInit();
+
     m_AssetManager.Deserialize(m_Project->m_AssetManagerSerializationAttributes);
     m_Renderer.Deserialize(m_AssetManager, m_Project->m_RendererSerializationAttributes);
 
@@ -744,8 +766,6 @@ void harmony::Program::LoadProject(const std::string &path) {
     }
 
     p_LoadedProjectPath = m_Project->m_ProjectDirectory + "/" + m_Project->m_ProjectName + ".harmonyproj";
-
-    RunProgramComponentInit();
 }
 
 void harmony::Program::CloseActiveProject() {
@@ -861,10 +881,10 @@ void harmony::Program::CloseActiveScene() {
     // m_Renderer.RefreshViews();
 }
 
-harmony::WeakRef<harmony::Scene> harmony::Program::GetActiveScene() {
+harmony::WeakPtr<harmony::Scene> harmony::Program::GetActiveScene() {
     OPTICK_EVENT();
     if (p_ActiveScene == nullptr) {
-        return WeakRef<Scene>();
+        return WeakPtr<Scene>();
     }
     return GetWeakRef<Scene>(p_ActiveScene);
 }
@@ -994,7 +1014,12 @@ void harmony::Program::Frame() {
     OPTICK_EVENT();
 
     bgfx::frame();
-    // Instrumentor::Get().ClearResults();
+}
+
+const harmony::Vector<harmony::RefCntPtr<harmony::System>>& harmony::Program::GetSystems() {
+	OPTICK_EVENT();
+
+    return p_ECSSystems;
 }
 
 void harmony::Program::ProfilerBeginFrame() {
@@ -1003,4 +1028,9 @@ void harmony::Program::ProfilerBeginFrame() {
 
 void harmony::Program::Exit() {
     p_Run = false;
+}
+
+SDL_Window* harmony::Program::GetWindow() const
+{
+	return p_Window;
 }

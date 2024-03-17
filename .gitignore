@@ -60,7 +60,6 @@ imgui.ini
 *\obj
 */obj
 *.deps.json
-*CMakeSettings.json
 .vs/VSWorkspaceState.json
 .vs/slnx.sqlite
 .vs/ProjectSettings.json
@@ -71,3 +70,9 @@ imgui.ini
 *cmake-build-debug
 *xcode
 CppProperties.json
+*.log
+templates/harmony-dojo/vs22/ALL_BUILD.vcxproj
+templates/harmony-dojo/vs22/
+templates/harmony-dojo/cmake-build-debug-vs/
+templates/harmony-dojo/cmake-build-release-vs/
+templates/harmony-dojo/cmake-build-relwithdebinfo-mingw/

@@ -7,11 +7,11 @@
 #include "Rendering/GPUResourceManager.h"
 
 harmony::PipelineV2::PipelineV2(const String &name) : m_Name(name) {
-    p_OutputFramebuffer = WeakRef<Framebuffer>();
+    p_OutputFramebuffer = WeakPtr<Framebuffer>();
 }
 
 bool
-harmony::PipelineV2::AddPipelineStage(harmony::WeakRef<Framebuffer> fb, harmony::Ref<harmony::PipelineStage> stage) {
+harmony::PipelineV2::AddPipelineStage(harmony::WeakPtr<Framebuffer> fb, harmony::RefCntPtr<harmony::PipelineStage> stage) {
     auto framebuffer = fb.lock();
     if (!framebuffer) {
         harmony::log::error("Pipeline : {} : Cannot add PipelineStage to Pipeline : passed Framebuffer is expired.",
@@ -30,16 +30,29 @@ harmony::PipelineV2::AddPipelineStage(harmony::WeakRef<Framebuffer> fb, harmony:
     return true;
 }
 
-harmony::WeakRef<harmony::Framebuffer>
+harmony::WeakPtr<harmony::Framebuffer>
 harmony::PipelineV2::AddFramebuffer(const String &name, harmony::Vector<harmony::AttachmentType> attachments,
                                     harmony::Resolution::Type resolutionType) {
     String fbName = m_Name + "_" + name;
     auto fb = CreateFrambufferInternal(fbName, attachments, resolutionType);
-    p_Stages.emplace(fb, Vector<Ref<PipelineStage>>());
+    p_Stages.emplace(fb, Vector<RefCntPtr<PipelineStage>>());
     return fb;
 }
 
-void harmony::PipelineV2::PreUpdate(entt::registry &registry, harmony::WeakRef<harmony::View> view) {
+harmony::WeakPtr<harmony::Framebuffer> harmony::PipelineV2::GetFramebuffer(const String& name)
+{
+    for(auto& [fb, stage] : p_Stages)
+    {
+        if(fb->m_Name == name)
+        {
+            return fb;
+        }
+    }
+
+    return WeakPtr<Framebuffer>();
+}
+
+void harmony::PipelineV2::PreUpdate(entt::registry &registry, harmony::WeakPtr<harmony::View> view) {
     if (!IsViewValid(view)) {
         harmony::log::error("Pipeline : {} : Cannot Pre-Update, view is expired!", m_Name);
         return;
@@ -58,7 +71,7 @@ void harmony::PipelineV2::PreUpdate(entt::registry &registry, harmony::WeakRef<h
     }
 }
 
-void harmony::PipelineV2::PostUpdate(entt::registry &registry, harmony::WeakRef<harmony::View> view) {
+void harmony::PipelineV2::PostUpdate(entt::registry &registry, harmony::WeakPtr<harmony::View> view) {
     if (!IsViewValid(view)) {
         harmony::log::error("Pipeline : {} : Cannot Post-Update, view is expired!", m_Name);
         return;
@@ -74,7 +87,7 @@ void harmony::PipelineV2::PostUpdate(entt::registry &registry, harmony::WeakRef<
     }
 }
 
-harmony::Ref<harmony::Framebuffer>
+harmony::RefCntPtr<harmony::Framebuffer>
 harmony::PipelineV2::CreateFrambufferInternal(const String &name, harmony::Vector<harmony::AttachmentType> attachments,
                                               harmony::Resolution::Type resolutionType) {
     Resolution res{GPUResourceManager::GetMaxFramebufferWidth(), GPUResourceManager::GetMaxFramebufferHeight()};
@@ -86,7 +99,7 @@ harmony::PipelineV2::CreateFrambufferInternal(const String &name, harmony::Vecto
     return fb;
 }
 
-bool harmony::PipelineV2::IsViewValid(harmony::WeakRef<harmony::View> view) {
+bool harmony::PipelineV2::IsViewValid(harmony::WeakPtr<harmony::View> view) {
     if (view.lock()) {
         return true;
     }
@@ -97,17 +110,17 @@ bool harmony::PipelineV2::HasOutputFramebuffer() {
     return !GetOutputFramebuffer().expired();
 }
 
-harmony::WeakRef<harmony::Framebuffer> harmony::PipelineV2::GetOutputFramebuffer() {
+harmony::WeakPtr<harmony::Framebuffer> harmony::PipelineV2::GetOutputFramebuffer() {
     return p_OutputFramebuffer;
 }
 
-void harmony::PipelineV2::SetOutputFramebuffer(harmony::WeakRef<harmony::Framebuffer> framebuffer) {
+void harmony::PipelineV2::SetOutputFramebuffer(harmony::WeakPtr<harmony::Framebuffer> framebuffer) {
     if (framebuffer.expired()) {
         harmony::log::error("Pipeline : {} : Attempting to set output framebuffer which is expired", m_Name);
         return;
     }
 
-    Ref<Framebuffer> fb = framebuffer.lock();
+    RefCntPtr<Framebuffer> fb = framebuffer.lock();
 
     if (p_Stages.find(fb) == p_Stages.end()) {
         harmony::log::error(
@@ -119,16 +132,16 @@ void harmony::PipelineV2::SetOutputFramebuffer(harmony::WeakRef<harmony::Framebu
     p_OutputFramebuffer = framebuffer;
 }
 
-harmony::WeakRef<harmony::Framebuffer> harmony::PipelineV2::TryGetFramebuffer(const harmony::String &name) {
+harmony::WeakPtr<harmony::Framebuffer> harmony::PipelineV2::TryGetFramebuffer(const harmony::String &name) {
     for (auto &[fb, stages]: p_Stages) {
         if (fb->m_Name == name) {
             return fb;
         }
     }
-    return harmony::WeakRef<harmony::Framebuffer>();
+    return harmony::WeakPtr<harmony::Framebuffer>();
 }
 
-void harmony::PipelineV2::Resize(entt::registry &registry, harmony::WeakRef<harmony::View> view) {
+void harmony::PipelineV2::Resize(entt::registry &registry, harmony::WeakPtr<harmony::View> view) {
     auto v = view.lock();
     if (!v) {
         harmony::log::error("PipelineV2 : Cannot resize view, expired.");

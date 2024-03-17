@@ -38,16 +38,16 @@ harmony::Renderer::Renderer(AssetManager &assetManager) : p_AssetManager(assetMa
 #endif
 }
 
-harmony::WeakRef<harmony::ShaderProgram>
+harmony::WeakPtr<harmony::ShaderProgram>
 harmony::Renderer::AddBuiltInShader(const std::string &progName, const std::string &vsName, const std::string &fsName,
                                     uint32_t vsIndex, uint32_t fsIndex) {
     OPTICK_EVENT();
-    Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(progName);
-    Ref<BuiltInShaderStage> vs = CreateRef<BuiltInShaderStage>(vsName, ShaderStage::Type::Vertex,
-                                                               s_BuiltInShader[vsIndex]);
+    RefCntPtr<ShaderProgram> prog = CreateRef<ShaderProgram>(progName);
+    RefCntPtr<BuiltInShaderStage> vs = CreateRef<BuiltInShaderStage>(vsName, ShaderStage::Type::Vertex,
+                                                                     s_BuiltInShader[vsIndex]);
     vs->LoadShaderBinary();
-    Ref<BuiltInShaderStage> fs = CreateRef<BuiltInShaderStage>(fsName, ShaderStage::Type::Fragment,
-                                                               s_BuiltInShader[fsIndex]);
+    RefCntPtr<BuiltInShaderStage> fs = CreateRef<BuiltInShaderStage>(fsName, ShaderStage::Type::Fragment,
+                                                                     s_BuiltInShader[fsIndex]);
     fs->LoadShaderBinary();
     prog->AddStage(ShaderStage::Type::Vertex, vs);
     prog->AddStage(ShaderStage::Type::Fragment, fs);
@@ -60,12 +60,12 @@ harmony::Renderer::AddBuiltInShader(const std::string &progName, const std::stri
     return prog;
 }
 
-harmony::WeakRef<harmony::ShaderProgram>
+harmony::WeakPtr<harmony::ShaderProgram>
 harmony::Renderer::AddBuiltInShader(const std::string &progName, const std::string &csName, uint32_t csIndex) {
     OPTICK_EVENT();
-    Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(progName);
-    Ref<BuiltInShaderStage> cs = CreateRef<BuiltInShaderStage>(csName, ShaderStage::Type::Compute,
-                                                               s_BuiltInShader[csIndex]);
+    RefCntPtr<ShaderProgram> prog = CreateRef<ShaderProgram>(progName);
+    RefCntPtr<BuiltInShaderStage> cs = CreateRef<BuiltInShaderStage>(csName, ShaderStage::Type::Compute,
+                                                                     s_BuiltInShader[csIndex]);
     cs->LoadShaderBinary();
     prog->AddStage(ShaderStage::Type::Compute, cs);
 
@@ -90,12 +90,12 @@ void harmony::Renderer::AddBuiltInShaders() {
     AddBuiltInShader("Moebius", "vs_simple_textured", "fs_moebius", 0, 13);
 }
 
-harmony::WeakRef<harmony::ShaderProgram>
-harmony::Renderer::BuildShader(const std::string name, WeakRef<ShaderStage> vertStage, WeakRef<ShaderStage> fragStage) {
+harmony::WeakPtr<harmony::ShaderProgram>
+harmony::Renderer::BuildShader(const std::string name, WeakPtr<ShaderStage> vertStage, WeakPtr<ShaderStage> fragStage) {
     OPTICK_EVENT();
-    Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
-    Ref<ShaderStage> vs = vertStage.lock();
-    Ref<ShaderStage> fs = fragStage.lock();
+    RefCntPtr<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
+    RefCntPtr<ShaderStage> vs = vertStage.lock();
+    RefCntPtr<ShaderStage> fs = fragStage.lock();
     vs->LoadShaderBinary();
     fs->LoadShaderBinary();
     prog->AddStage(ShaderStage::Type::Vertex, vs);
@@ -108,11 +108,11 @@ harmony::Renderer::BuildShader(const std::string name, WeakRef<ShaderStage> vert
     return GetWeakRef<ShaderProgram>(prog);
 }
 
-harmony::WeakRef<harmony::ShaderProgram>
-harmony::Renderer::BuildShader(const std::string name, WeakRef<ShaderStage> computeStage) {
+harmony::WeakPtr<harmony::ShaderProgram>
+harmony::Renderer::BuildShader(const std::string name, WeakPtr<ShaderStage> computeStage) {
     OPTICK_EVENT();
-    Ref<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
-    Ref<ShaderStage> cs = computeStage.lock();
+    RefCntPtr<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
+    RefCntPtr<ShaderStage> cs = computeStage.lock();
 
     cs->LoadShaderBinary();
 
@@ -129,47 +129,47 @@ uint32_t harmony::Renderer::p_ViewHandleCounter = 2;
 
 uint32_t harmony::Renderer::p_PresentViewHandleCounter = 1;
 
-harmony::WeakRef<harmony::View> harmony::Renderer::GetView(const std::string &name) {
+harmony::WeakPtr<harmony::View> harmony::Renderer::GetView(const std::string &name) {
     OPTICK_EVENT();
     for (auto &[view, stack]: p_Views) {
         if (view->m_Name == name) {
             return view;
         }
     }
-    return WeakRef<View>();
+    return WeakPtr<View>();
 }
 
-harmony::WeakRef<harmony::PipelineV2> harmony::Renderer::GetViewPipeline(WeakRef<View> view) {
+harmony::WeakPtr<harmony::PipelineV2> harmony::Renderer::GetViewPipeline(WeakPtr<View> view) {
     OPTICK_EVENT();
 
     if (view.expired()) {
         harmony::log::error("Renderer : Cannot get view pipeline, passed view is expired.");
-        WeakRef<PipelineV2>();
+        WeakPtr<PipelineV2>();
     }
     auto v = view.lock();
     if (p_Views.find(v) != p_Views.end()) {
         return p_Views[v];
     }
 
-    return WeakRef<PipelineV2>();
+    return WeakPtr<PipelineV2>();
 }
 
-void harmony::Renderer::RemoveView(WeakRef<View> view) {
+void harmony::Renderer::RemoveView(WeakPtr<View> view) {
     OPTICK_EVENT();
     if (view.expired()) {
         harmony::log::error("Renderer : Removing expired view weak ref!");
         return;
     }
     {
-        Ref<View> _view = view.lock();
+        RefCntPtr<View> _view = view.lock();
         p_Views.erase(_view);
     }
 }
 
-void harmony::Renderer::SetViewActive(WeakRef<View> viewWeakRef, bool active) {
+void harmony::Renderer::SetViewActive(WeakPtr<View> viewWeakRef, bool active) {
     OPTICK_EVENT();
     if (viewWeakRef.expired()) {
-        harmony::log::warn("Passed Weak Ref to view which is not managed by view manager!");
+        harmony::log::warn("Passed Weak RefCntPtr to view which is not managed by view manager!");
         return;
     }
 
@@ -210,8 +210,8 @@ void harmony::Renderer::OnPreUpdate(entt::registry &registry) {
             continue;
         }
 
-        Ref<View> view = m_ActiveViews[i].lock();
-        Ref<PipelineV2> pipeline = p_Views[view];
+        RefCntPtr<View> view = m_ActiveViews[i].lock();
+        RefCntPtr<PipelineV2> pipeline = p_Views[view];
 
         if (view->p_Resized) {
             pipeline->Resize(registry, view);
@@ -232,17 +232,14 @@ void harmony::Renderer::OnPostUpdate(entt::registry &registry) {
             continue;
         }
 
-        Ref<View> view = m_ActiveViews[i].lock();
-        Ref<PipelineV2> pipeline = p_Views[view];
-        Ref<ShaderProgram> prog = p_PresentProgram.lock();
+        RefCntPtr<View> view = m_ActiveViews[i].lock();
+        RefCntPtr<PipelineV2> pipeline = p_Views[view];
+        RefCntPtr<ShaderProgram> prog = p_PresentProgram.lock();
         pipeline->PostUpdate(registry, view);
-        // compositor PipelineStack &stack = p_Views[view];
-        // compositor HandleStackPipelineAccumulation(view, stack, prog, registry);
-        // compositor HandleStackPostProcess(view, stack, prog, registry);
     }
 }
 
-harmony::WeakRef<harmony::PipelineV2> harmony::Renderer::GetViewPipelineFromName(const std::string &viewName) {
+harmony::WeakPtr<harmony::PipelineV2> harmony::Renderer::GetViewPipelineFromName(const std::string &viewName) {
     OPTICK_EVENT();
     for (auto &[view, p]: p_Views) {
         if (view->m_Name == viewName) {
@@ -250,14 +247,13 @@ harmony::WeakRef<harmony::PipelineV2> harmony::Renderer::GetViewPipelineFromName
         }
     }
     harmony::log::error("No pipeline stack with name : {}", viewName);
-    return WeakRef<PipelineV2>();
+    return WeakPtr<PipelineV2>();
 }
 
 void harmony::Renderer::RefreshViews() {
     OPTICK_EVENT();
     for (auto &[view, stack]: p_Views) {
         view->OnResized(view->m_Width, view->m_Height);
-        // stack.OnViewResized(view);
     }
 }
 
@@ -287,10 +283,6 @@ void harmony::Renderer::OnImGui() {
         ImGui::Separator();
         if (ImGui::CollapsingHeader("[DrawStages]", ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Framed)) {
             ImGui::Indent();
-            // compositor
-//            for (auto &stage: p_PipelineDrawStages) {
-//                ImGui::Text(stage->m_Name.c_str());
-//            }
             ImGui::Unindent();
             ImGui::Separator();
             if (ImGui::Button("Create Draw Stage")) {
@@ -301,125 +293,14 @@ void harmony::Renderer::OnImGui() {
         if (ImGui::CollapsingHeader("[PostProcessStages]",
                                     ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Framed)) {
             ImGui::Indent();
-            // compositor
-//            for (auto &stage: p_PostProcessStages) {
-//                ImGui::Text(stage->m_Name.c_str());
-//            }
             ImGui::Unindent();
             ImGui::Separator();
             if (ImGui::Button("Create Post Process Stage")) {
                 p_CreatePostProcessStageWindow = true;
             }
         }
+        
         ImGui::Separator();
-
-        // compositor
-//        if (ImGui::CollapsingHeader("[Pipelines]")) {
-//            for (auto &pipeline: p_Pipelines) {
-//                ImGui::Text(pipeline->m_Name.c_str());
-//                ImGui::Indent();
-//                for (int i = 0; i < pipeline->NumPipelineStages(); i++) {
-//                    ImGui::Text(pipeline->p_Stages[i]->m_Name.c_str());
-//                }
-//                ImGui::Unindent();
-//            }
-//            if (ImGui::Button("Create Pipeline")) {
-//                p_CreatePipelineWindow = true;
-//            }
-//        }
-        ImGui::Separator();
-//        if (ImGui::CollapsingHeader("[Views]")) {
-//            int count = 0;
-//            ImGui::Indent();
-//            for (auto &[view, stack]: p_Views) {
-//                if (ImGui::CollapsingHeader(view->m_Name.c_str())) {
-//                    ImGui::Indent();
-//                    auto addPipelineNameHash = "##combo" + std::to_string(count);
-//                    count++;
-//                    ImGui::Text("Add Pipeline");
-//                    ImGui::SameLine();
-//                    if (ImGui::BeginCombo(addPipelineNameHash.c_str(), "")) {
-//                        for (int i = 0; i < p_Pipelines.size(); i++) {
-//                            if (ImGui::Selectable(p_Pipelines[i]->m_Name.c_str(), false)) {
-//                                AddViewPipeline(view, p_Pipelines[i]);
-//                            }
-//                        }
-//                        ImGui::EndCombo();
-//                    }
-//
-//                    auto addPostProcessNameHash = "##combo" + std::to_string(count);
-//                    count++;
-//                    ImGui::Text("Add Post Process Stage");
-//                    ImGui::SameLine();
-//                    if (ImGui::BeginCombo(addPostProcessNameHash.c_str(), "")) {
-//                        for (int i = 0; i < p_PostProcessStages.size(); i++) {
-//                            if (ImGui::Selectable(p_PostProcessStages[i]->m_Name.c_str(), false)) {
-//                                AddViewPostProcessStage(view, p_PostProcessStages[i]);
-//                            }
-//                        }
-//                        ImGui::EndCombo();
-//                    }
-//                    if (ImGui::CollapsingHeader("Stack")) {
-//                        ImGui::Indent();
-//                        ImGui::Text("Draw Pipelines");
-//                        ImGui::Indent();
-//                        int lastIndex = -1;
-//                        for (int i = 0; i < stack.m_PipelineStack.size(); i++) {
-//                            std::string indexString = std::to_string(i);
-//                            std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + indexString;
-//                            std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + indexString;
-//                            if (ImGui::Button(downArrowText.c_str())) {
-//                                stack.MovePipelineUp(stack.m_PipelineStack[i].lock()->m_Handle);
-//                            }
-//                            ImGui::SameLine();
-//                            if (ImGui::Button(upArrowText.c_str())) {
-//                                stack.MovePipelineDown(stack.m_PipelineStack[i].lock()->m_Handle);
-//                            }
-//                            ImGui::SameLine();
-//                            std::string pipelineName = stack.m_PipelineStack[i].lock()->m_Name + " : " + indexString;
-//                            ImGui::Text(pipelineName.c_str());
-//                            lastIndex = i;
-//                        }
-//                        lastIndex += 1;
-//                        ImGui::Unindent();
-//                        ImGui::Text("Post Process Stages");
-//                        ImGui::Indent();
-//                        int indexToRemove = -1;
-//                        for (int i = 0; i < stack.m_PostProcessPipelineStack.size(); i++) {
-//                            std::string indexString = std::to_string(lastIndex + i);
-//                            std::string upArrowText = std::string(ICON_FA_ARROW_UP) + "##" + indexString;
-//                            std::string downArrowText = std::string(ICON_FA_ARROW_DOWN) + "##" + indexString;
-//                            if (ImGui::Button(downArrowText.c_str())) {
-//                                stack.MovePostProcessStageUp(stack.m_PostProcessPipelineStack[i].lock()->m_Name);
-//                            }
-//                            ImGui::SameLine();
-//                            if (ImGui::Button(upArrowText.c_str())) {
-//                                stack.MovePostProcessStageDown(stack.m_PostProcessPipelineStack[i].lock()->m_Name);
-//                            }
-//                            ImGui::SameLine();
-//                            std::string pipelineName =
-//                                    stack.m_PostProcessPipelineStack[i].lock()->m_Name + " : " + std::to_string(i);
-//                            ImGui::Text(pipelineName.c_str());
-//                            std::string binText = std::string(ICON_FA_TRASH) + "##" + indexString;
-//                            ImGui::SameLine();
-//                            if (ImGui::Button(binText.c_str())) {
-//                                indexToRemove = i;
-//                            }
-//                        }
-//                        if (indexToRemove >= 0) {
-//                            stack.RemovePostProcessStage(stack.m_PostProcessPipelineStack[indexToRemove], view);
-//                        }
-//                        ImGui::Unindent();
-//                        ImGui::Unindent();
-//                    }
-//                    ImGui::Separator();
-//
-//                    view->OnImGuiOptions();
-//                    ImGui::Unindent();
-//                }
-//            }
-//            ImGui::Unindent();
-//        }
     }
     ImGui::End();
 
@@ -437,8 +318,8 @@ void harmony::Renderer::OnImGui() {
 
             if (ImGui::Button("Build")) {
                 bool canBuild = true;
-                WeakRef<ShaderStage> vStage = p_AssetManager.GetAsset<ShaderStage>(p_SelectedVertexAsset);
-                WeakRef<ShaderStage> fStage = p_AssetManager.GetAsset<ShaderStage>(p_SelectedFragmentAsset);
+                WeakPtr<ShaderStage> vStage = p_AssetManager.GetAsset<ShaderStage>(p_SelectedVertexAsset);
+                WeakPtr<ShaderStage> fStage = p_AssetManager.GetAsset<ShaderStage>(p_SelectedFragmentAsset);
 
                 if (vStage.expired()) {
                     harmony::log::error("Cannot build shader, invalid vertex stage provided");
@@ -463,9 +344,6 @@ void harmony::Renderer::OnImGui() {
                 }
 
             }
-
-            // or
-            // CS Selector
         }
         ImGui::End();
     }
@@ -501,13 +379,6 @@ void harmony::Renderer::OnImGui() {
                 }
 
                 if (canCreate) {
-//                    Ref<Pipeline> pipeline = CreateRef<Pipeline>(PipelineHandle(pipelineName), Pipeline::Type::Surface);
-//                    pipeline->AddPipelineStage<PipelineDrawStage>(pipelineName + ".surface",
-//                                                                  PipelineDrawStage::Type::PrimaryDraw,
-//                                                                  p_SelectedShaderProgram,
-//                                                                  GetPipelineStageRenderer("MeshRenderer"));
-//                    AddPipeline(pipeline);
-//                    p_CreatePipelineWindow = false;
                 }
 
             }
@@ -524,13 +395,12 @@ void harmony::Renderer::OnImGui() {
             if (ImGui::Button("Build")) {
                 std::string name = std::string(p_PipelineDrawStageNameInput);
                 Utils::TrimString(name);
-                Ref<PipelineDrawStage> stage = CreateRef<PipelineDrawStage>(
+                RefCntPtr<PipelineDrawStage> stage = CreateRef<PipelineDrawStage>(
                         name,
                         PipelineStage::Type::PrimaryDraw, // TODO: Make selectable
                         p_SelectedShaderProgram,
                         p_SelectedRenderer
                 );
-                // AddPipelineDrawStage(stage);
                 p_CreateDrawStageWindow = false;
             }
             ImGui::SameLine();
@@ -550,11 +420,11 @@ void harmony::Renderer::OnImGui() {
                 std::string name = std::string(p_PipelinePostProcessStageNameInput);
                 Utils::TrimString(name);
                 Vector<AttachmentType> attachments{AttachmentType::RGBA8};
-                Ref<PostProcessStage> stage = CreateRef<PostProcessStage>(
+                RefCntPtr<PostProcessStage> stage = CreateRef<PostProcessStage>(
                         name,
                         PipelineStage::Type::PostProcess, // TODO: Make selectable
                         p_SelectedShaderProgram,
-                        WeakRef<PipelineStageRenderer>(),
+                        WeakPtr<PipelineStageRenderer>(),
                         attachments
                 );
                 // AddPostProcessStage(stage);
@@ -574,7 +444,7 @@ void harmony::Renderer::OnImGui() {
 }
 
 bool
-harmony::Renderer::ShaderSelector(const std::string &selectorName, harmony::WeakRef<harmony::ShaderProgram> &prog) {
+harmony::Renderer::ShaderSelector(const std::string &selectorName, harmony::WeakPtr<harmony::ShaderProgram> &prog) {
     OPTICK_EVENT();
     bool selectedAsset = false;
     std::vector<std::string> shaders = GetShaderNames();
@@ -594,7 +464,7 @@ harmony::Renderer::ShaderSelector(const std::string &selectorName, harmony::Weak
 }
 
 bool harmony::Renderer::PipelineStageRendererSelector(const std::string &selectorName,
-                                                      harmony::WeakRef<harmony::PipelineStageRenderer> renderer) {
+                                                      harmony::WeakPtr<harmony::PipelineStageRenderer> renderer) {
     OPTICK_EVENT();
     bool selectedAsset = false;
 
@@ -616,7 +486,7 @@ bool harmony::Renderer::PipelineStageRendererSelector(const std::string &selecto
 bool harmony::Renderer::IsBuiltInShaderName(const std::string &name) {
     OPTICK_EVENT();
     for (int i = 0; i < p_BuiltInShaders.size(); i++) {
-        Ref<ShaderProgram> shader = p_BuiltInShaders[i].lock();
+        RefCntPtr<ShaderProgram> shader = p_BuiltInShaders[i].lock();
 
         if (!shader) {
             harmony::log::error("Renderer : Invalid built in shader. This should never happen");
@@ -662,7 +532,7 @@ nlohmann::json harmony::Renderer::Serialize() {
 
 void harmony::Renderer::Deserialize(AssetManager &am, nlohmann::json &json) {
     OPTICK_EVENT();
-    harmony::log::info("Renderer : Deserializing Project Renderer Data");
+    harmony::log::info("Renderer : De-serializing Project Renderer Data");
 
     DeserializeShaders(json, am);
     DeserializePipelineDrawStages(json, am);
@@ -673,7 +543,7 @@ void harmony::Renderer::Deserialize(AssetManager &am, nlohmann::json &json) {
     DeserializeActiveViews(json, am);
 }
 
-void harmony::Renderer::AddPipelineStageRenderer(Ref<PipelineStageRenderer> renderer) {
+void harmony::Renderer::AddPipelineStageRenderer(RefCntPtr<PipelineStageRenderer> renderer) {
     OPTICK_EVENT();
     auto it = std::find(p_PipelineStageRenderers.begin(), p_PipelineStageRenderers.end(), renderer);
 
@@ -683,24 +553,24 @@ void harmony::Renderer::AddPipelineStageRenderer(Ref<PipelineStageRenderer> rend
     }
 }
 
-harmony::WeakRef<harmony::PipelineStageRenderer> harmony::Renderer::GetPipelineStageRenderer(const std::string &name) {
+harmony::WeakPtr<harmony::PipelineStageRenderer> harmony::Renderer::GetPipelineStageRenderer(const std::string &name) {
     OPTICK_EVENT();
     for (int i = 0; i < p_PipelineStageRenderers.size(); i++) {
         if (p_PipelineStageRenderers[i]->m_Name == name) {
             return p_PipelineStageRenderers[i];
         }
     }
-    return WeakRef<PipelineStageRenderer>();
+    return WeakPtr<PipelineStageRenderer>();
 }
 
-void harmony::Renderer::ReloadShader(WeakRef<ShaderProgram> shader) {
+void harmony::Renderer::ReloadShader(WeakPtr<ShaderProgram> shader) {
     OPTICK_EVENT();
     if (shader.expired()) {
         harmony::log::error("Trying to reload an invalid shader.");
         return;
     }
 
-    Ref<ShaderProgram> prog = shader.lock();
+    RefCntPtr<ShaderProgram> prog = shader.lock();
 
     for (int i = 0; i < p_BuiltInShaders.size(); i++) {
         if (p_BuiltInShaders[i].expired()) {
@@ -721,7 +591,7 @@ void harmony::Renderer::ReloadShader(WeakRef<ShaderProgram> shader) {
             return;
         }
 
-        Ref<ShaderStage> stage = stageWr.lock();
+        RefCntPtr<ShaderStage> stage = stageWr.lock();
         stage->LoadShaderBinary();
     }
 
@@ -746,14 +616,14 @@ bool harmony::Renderer::IsShaderLoaded(const std::string &name) {
     return false;
 }
 
-harmony::WeakRef<harmony::ShaderProgram> harmony::Renderer::GetShader(const std::string &name) {
+harmony::WeakPtr<harmony::ShaderProgram> harmony::Renderer::GetShader(const std::string &name) {
     OPTICK_EVENT();
     for (auto &shader: p_Shaders) {
         if (shader->m_Name == name) {
             return GetWeakRef<ShaderProgram>(shader);
         }
     }
-    return WeakRef<ShaderProgram>();
+    return WeakPtr<ShaderProgram>();
 }
 
 std::vector<std::string> harmony::Renderer::GetShaderNames() {
@@ -765,7 +635,8 @@ std::vector<std::string> harmony::Renderer::GetShaderNames() {
     return shaders;
 }
 
-void harmony::Renderer::AddPipelineStage(Ref<PipelineStage> pipelineStage) {
+void harmony::Renderer::AddPipelineStage(RefCntPtr<PipelineStage> pipelineStage) {
+    OPTICK_EVENT();
     if (!pipelineStage) {
         harmony::log::warn("Renderer : Invalid PipelineStage supplied, doing nothing.");
         return;
@@ -779,17 +650,18 @@ void harmony::Renderer::AddPipelineStage(Ref<PipelineStage> pipelineStage) {
     p_PipelineStages.emplace_back(pipelineStage);
 }
 
-harmony::WeakRef<harmony::PipelineStage> harmony::Renderer::GetPipelineStage(const std::string &name) {
+harmony::WeakPtr<harmony::PipelineStage> harmony::Renderer::GetPipelineStage(const std::string &name) {
+    OPTICK_EVENT();
     for (auto p: p_PipelineStages) {
         if (p->m_Name == name) {
             return p;
         }
     }
     harmony::log::warn("Renderer : GetPipelineStage : Cannot find PipelineStage : {}", name);
-    return WeakRef<PipelineStage>();
+    return WeakPtr<PipelineStage>();
 }
 
-void harmony::Renderer::AddShaderDataSource(Ref<ShaderDataSource> dataSource) {
+void harmony::Renderer::AddShaderDataSource(RefCntPtr<ShaderDataSource> dataSource) {
     OPTICK_EVENT();
     if (std::find(p_ShaderDataSources.begin(), p_ShaderDataSources.end(), dataSource) != p_ShaderDataSources.end()) {
         harmony::log::warn(
@@ -799,37 +671,37 @@ void harmony::Renderer::AddShaderDataSource(Ref<ShaderDataSource> dataSource) {
     p_ShaderDataSources.emplace_back(dataSource);
 }
 
-harmony::WeakRef<harmony::ShaderDataSource> harmony::Renderer::GetShaderDataSource(const std::string &name) {
+harmony::WeakPtr<harmony::ShaderDataSource> harmony::Renderer::GetShaderDataSource(const std::string &name) {
     OPTICK_EVENT();
     for (int i = 0; i < p_ShaderDataSources.size(); i++) {
         if (p_ShaderDataSources[i]->m_Name == name) {
             return p_ShaderDataSources[i];
         }
     }
-    return WeakRef<ShaderDataSource>();
+    return WeakPtr<ShaderDataSource>();
 }
 
-harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(WeakRef<Mesh> mesh) {
+harmony::BGFXMeshHandle harmony::Renderer::SubmitMeshToGPU(WeakPtr<Mesh> mesh) {
     OPTICK_EVENT();
 
     auto meshRef = mesh.lock();
     BGFXMeshHandle m = BGFXMeshHandle();
     m.m_Layout = BuildVertexLayout(mesh);
     meshRef->BuildBGFXData();
-    uint32_t indexBufferSize = static_cast<uint32_t>(meshRef->m_Indices.size() * sizeof(unsigned int));
-    uint32_t vertexBufferSize = static_cast<uint32_t>(meshRef->m_BGFXData.size() * sizeof(float));
+    uint32_t indexBufferSize    = static_cast<uint32_t>(meshRef->m_Indices.size() * sizeof(unsigned int));
+    uint32_t vertexBufferSize   = static_cast<uint32_t>(meshRef->m_BGFXData.size() * sizeof(float));
     m.m_VBH = bgfx::createVertexBuffer(bgfx::makeRef(meshRef->m_BGFXData.data(), vertexBufferSize), m.m_Layout);
-    m.m_IBH = bgfx::createIndexBuffer(bgfx::makeRef(meshRef->m_Indices.data(), indexBufferSize), BGFX_BUFFER_INDEX32);
+    m.m_IBH = bgfx::createIndexBuffer( bgfx::makeRef(meshRef->m_Indices.data(), indexBufferSize), BGFX_BUFFER_INDEX32);
     meshRef->m_SubmittedToGpu = true;
     meshRef->m_Handle = m;
     return m;
 }
 
-harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<TextureAsset> textureWeakRef) {
+harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakPtr<TextureAsset> textureWeakRef) {
     OPTICK_EVENT();
     uint64_t flags = 0;
     BGFXTextureHandle handle;
-    Ref<TextureAsset> texture = textureWeakRef.lock();
+    RefCntPtr<TextureAsset> texture = textureWeakRef.lock();
     handle.Handle = texture->m_Handle;
     bimg::ImageContainer *imageContainer = texture->p_ImageContainer;
 
@@ -870,7 +742,7 @@ harmony::BGFXTextureHandle harmony::Renderer::SubmitTextureToGPU(WeakRef<Texture
     return handle;
 }
 
-bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRef) {
+bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakPtr<Mesh> meshWeakRef) {
     OPTICK_EVENT();
     auto mesh = meshWeakRef.lock();
     bgfx::VertexLayout vl = bgfx::VertexLayout();
@@ -895,7 +767,6 @@ bgfx::VertexLayout harmony::Renderer::BuildVertexLayout(WeakRef<Mesh> meshWeakRe
         vl.add(bgfx::Attrib::Bitangent, 3, bgfx::AttribType::Float);
     }
 
-    // TODO add support for skeletal meshes.
     vl.end();
     return vl;
 
@@ -917,10 +788,6 @@ nlohmann::json harmony::Renderer::SerializeShaders() {
 nlohmann::json harmony::Renderer::SerializePipelineDrawStages() {
     OPTICK_EVENT();
     auto json = nlohmann::json::array();
-    // compositor
-//    for (auto &drawStage: p_PipelineDrawStages) {
-//        json.emplace_back(drawStage->Serialize());
-//    }
 
     return json;
 }
@@ -928,11 +795,6 @@ nlohmann::json harmony::Renderer::SerializePipelineDrawStages() {
 nlohmann::json harmony::Renderer::SerializePostProcessStages() {
     OPTICK_EVENT();
     auto json = nlohmann::json::array();
-    // compositor
-//    for (auto &ppStage: p_PostProcessStages) {
-//        json.emplace_back(ppStage->Serialize());
-//    }
-
     return json;
 }
 
@@ -962,8 +824,6 @@ nlohmann::json harmony::Renderer::SerializeViews() {
     for (auto &[view, stack]: p_Views) {
         nlohmann::json viewJson;
         viewJson[sk_ViewData] = view->Serialize();
-        // compositor
-        //viewJson[sk_PipelineStack] = stack.Serialize();
         json.emplace_back(viewJson);
 
     }
@@ -974,12 +834,12 @@ nlohmann::json harmony::Renderer::SerializeViews() {
 nlohmann::json harmony::Renderer::SerializeActiveViews() {
     OPTICK_EVENT();
     auto json = nlohmann::json::array();
-    for (WeakRef<View> viewWr: m_ActiveViews) {
+    for (WeakPtr<View> viewWr: m_ActiveViews) {
         if (viewWr.expired()) {
             continue;
         }
 
-        Ref<View> view = viewWr.lock();
+        RefCntPtr<View> view = viewWr.lock();
         json.emplace_back(view->Serialize());
     }
     return json;
@@ -1003,7 +863,7 @@ void harmony::Renderer::DeserializeShaders(nlohmann::json &json, AssetManager &a
             continue;
         }
 
-        std::map<ShaderStage::Type, Ref<ShaderStage>> stages = std::map<ShaderStage::Type, Ref<ShaderStage>>();
+        std::map<ShaderStage::Type, RefCntPtr<ShaderStage>> stages = std::map<ShaderStage::Type, RefCntPtr<ShaderStage>>();
 
         for (auto stageJson: programJson[sk_ShaderProgramStages]) {
             const int StageTypeIndex = 0;
@@ -1070,7 +930,7 @@ void harmony::Renderer::DeserializePostProcessStages(nlohmann::json &json, Asset
     for (auto postProcessJson: json[sk_RendererName][sk_RendererPostProcessStageCollection]) {
         std::string name = postProcessJson[sk_PipelineStageName];
         std::string shaderName = postProcessJson[sk_PipelineStageShader][sk_ShaderProgramName];
-        WeakRef<ShaderProgram> shader = GetShader(shaderName);
+        WeakPtr<ShaderProgram> shader = GetShader(shaderName);
 
         if (shader.expired()) {
             harmony::log::warn(
@@ -1080,17 +940,14 @@ void harmony::Renderer::DeserializePostProcessStages(nlohmann::json &json, Asset
         }
 
         PipelineStage::Type type = postProcessJson[sk_PipelineStageType];
-        // AttachmentType attachments = postProcessJson[sk_PipelineStageAttachments];
         Vector<AttachmentType> attachments{AttachmentType::RGBA8};
-        Ref<PostProcessStage> stage = CreateRef<PostProcessStage>(
+        RefCntPtr<PostProcessStage> stage = CreateRef<PostProcessStage>(
                 name,
                 type,
                 shader,
-                WeakRef<PipelineStageRenderer>(),
+                WeakPtr<PipelineStageRenderer>(),
                 attachments
         );
-        // compositor
-        // AddPostProcessStage(stage);
     }
 
 }
@@ -1119,32 +976,10 @@ void harmony::Renderer::DeserializeViews(nlohmann::json &json, AssetManager &am)
                 int stackIndex = 0;
                 for (auto pipelineHandleJson: pipelineStackJson[sk_PipelineStackPipelines]) {
                     PipelineHandle handle = pipelineHandleJson;
-                    // compositor
-//                    WeakRef<Pipeline> pipeline = GetPipeline(handle);
-//
-//                    if (pipeline.expired()) {
-//                        harmony::log::warn(
-//                                "Renderer : Failed to add pipeline with handle {} to view {}, pipeline was not found!",
-//                                handle.Name, viewName);
-//                        continue;
-//                    }
-//
-//                    stack.AddPipelineAtIndex(pipeline, view, stackIndex);
                     stackIndex++;
                 }
                 for (auto postProcess: pipelineStackJson[sk_PipelineStackPostProcessStages]) {
                     std::string name = postProcess[sk_PipelineStageName];
-                    // compositor  WeakRef<PostProcessStage> pipeline = GetPostProcessStage(name);
-
-//                    if (pipeline.expired()) {
-//                        harmony::log::warn(
-//                                "Renderer : Failed to add post process stage with name {} to view {}, pipeline was not found!",
-//                                name, viewName);
-//                        continue;
-//                    }
-//
-//                    stack.AddPostProcessStageAtIndex(pipeline, view, stackIndex);
-//                    stackIndex++;
                 }
                 stackIndex = 0;
             }

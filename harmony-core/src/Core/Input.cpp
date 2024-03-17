@@ -9,10 +9,19 @@ void harmony::Input::UpdateMouseScroll(float val) {
     p_MouseState.CurrentFrameScroll = val;
 }
 
+glm::vec2 clamp_to_zero(glm::vec2& v)
+{
+    return glm::vec2
+    {
+        v.x < 0.0f ? 0.0f : v.x,
+        v.y < 0.0f ? 0.0f : v.y,
+    };
+}
+
 void harmony::Input::UpdateMousePosition(glm::vec2 mousePosition) {
     OPTICK_EVENT();
     p_MouseState.PreviousFrameMouseLocation = p_MouseState.CurrentFrameMouseLocation;
-    p_MouseState.CurrentFrameMouseLocation = mousePosition;
+    p_MouseState.CurrentFrameMouseLocation = clamp_to_zero(mousePosition);
 
     glm::vec2 currentVelocity = p_MouseState.CurrentFrameMouseLocation - p_MouseState.PreviousFrameMouseLocation;
     currentVelocity.x /= Program::p_WindowWidth;

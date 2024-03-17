@@ -24,12 +24,12 @@ namespace harmony {
 
         static uint16_t GetNumActiveAttachments();
 
-        static Ref<Framebuffer> CreateFramebuffer(const std::string &name,
-                                                  Resolution resolution,
-                                                  Resolution::Type resolutionType);
+        static RefCntPtr<Framebuffer> CreateFramebuffer(const std::string &name,
+                                                        Resolution resolution,
+                                                        Resolution::Type resolutionType);
 
-        static Ref<Attachment> CreateAttachment(Resolution resolution,
-                                                AttachmentType type);
+        static RefCntPtr<Attachment> CreateAttachment(Resolution resolution,
+                                                      AttachmentType type);
 
     protected:
         static uint16_t MAX_FRAMEBUFFER_RESOLUTION_X;

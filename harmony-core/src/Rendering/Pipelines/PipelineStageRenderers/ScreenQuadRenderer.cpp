@@ -7,13 +7,13 @@
 #include "Rendering/GPUResourceManager.h"
 
 void
-harmony::ScreenQuadRenderer::Draw(entt::registry &scene, harmony::Ref<harmony::ShaderProgram> shader, Ref<View> view,
+harmony::ScreenQuadRenderer::Draw(entt::registry &scene, harmony::RefCntPtr<harmony::ShaderProgram> shader, RefCntPtr<View> view,
                                   bgfx::ViewId viewId) {
     if (!shader) {
         return;
     }
     ScreenSpaceQuad(GPUResourceManager::GetMaxFramebufferWidth(), GPUResourceManager::GetMaxFramebufferHeight(),
-                    view->m_Width, view->m_Height);
+                    static_cast<float>(view->m_Width), static_cast<float>(view->m_Height));
     bgfx::setViewTransform(viewId, NULL, NULL);
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A);
     bgfx::submit(viewId, shader->m_Handle);

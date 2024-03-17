@@ -43596,7 +43596,7 @@ namespace entt
      * @sa meta_func::invoke
      *
      * @tparam Args Types of arguments to use to invoke the function.
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @param args Parameters to use to invoke the function.
      * @return A wrapper containing the returned value, if any.
      */
@@ -43612,7 +43612,7 @@ namespace entt
      * the variable is possible. Otherwise, invoking the setter does nothing.
      *
      * @tparam Type Type of value to assign.
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @param value Parameter to use to set the underlying variable.
      * @return True in case of success, false otherwise.
      */
@@ -43620,7 +43620,7 @@ namespace entt
 		bool set(const id_type id, Type &&value);
 		/**
      * @brief Gets the value of a given variable.
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @return A wrapper containing the value of the underlying variable.
      */
 		[[nodiscard]] meta_any get(const id_type id) const;
@@ -44504,7 +44504,7 @@ namespace entt
 
 		/**
      * @brief Lookup function for registered base meta types.
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @return The registered base meta type for the given identifier, if any.
      */
 		[[nodiscard]] meta_type base(const id_type id) const
@@ -44525,7 +44525,7 @@ namespace entt
      *
      * Registered meta data of base classes will also be visited.
      *
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @return The registered meta data for the given identifier, if any.
      */
 		[[nodiscard]] meta_data data(const id_type id) const
@@ -44548,7 +44548,7 @@ namespace entt
      * In case of overloaded functions, the first one with the required
      * identifier will be returned.
      *
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @return The registered meta function for the given identifier, if any.
      */
 		[[nodiscard]] meta_func func(const id_type id) const
@@ -44599,7 +44599,7 @@ namespace entt
      *
      * @sa meta_func::invoke
      *
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @param instance An opaque instance of the underlying type.
      * @param args Parameters to use to invoke the function.
      * @param sz Number of parameters to use to invoke the function.
@@ -44625,7 +44625,7 @@ namespace entt
      *
      * @sa invoke
      *
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @tparam Args Types of arguments to use to invoke the function.
      * @param instance An opaque instance of the underlying type.
      * @param args Parameters to use to invoke the function.
@@ -44647,7 +44647,7 @@ namespace entt
      * the variable is possible. Otherwise, invoking the setter does nothing.
      *
      * @tparam Type Type of value to assign.
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @param instance An opaque instance of the underlying type.
      * @param value Parameter to use to set the underlying variable.
      * @return True in case of success, false otherwise.
@@ -44665,7 +44665,7 @@ namespace entt
      * It must be possible to cast the instance to the parent type of the data
      * member.
      *
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @param instance An opaque instance of the underlying type.
      * @return A wrapper containing the value of the underlying variable.
      */
@@ -46565,7 +46565,7 @@ namespace entt
      *
      * @tparam Data The actual variable to attach to the meta type.
      * @tparam Policy Optional policy (no policy set by default).
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @return An extended meta factory for the parent type.
      */
 		template<auto Data, typename Policy = as_is_t>
@@ -46634,7 +46634,7 @@ namespace entt
      * @tparam Setter The actual function to use as a setter.
      * @tparam Getter The actual function to use as a getter.
      * @tparam Policy Optional policy (no policy set by default).
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @return An extended meta factory for the parent type.
      */
 		template<auto Setter, auto Getter, typename Policy = as_is_t>
@@ -46701,7 +46701,7 @@ namespace entt
      * @tparam Setter The actual functions to use as setters.
      * @tparam Getter The actual getter function.
      * @tparam Policy Optional policy (no policy set by default).
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @return An extended meta factory for the parent type.
      */
 		template<typename Setter, auto Getter, typename Policy = as_is_t>
@@ -46720,7 +46720,7 @@ namespace entt
      *
      * @tparam Candidate The actual function to attach to the meta type.
      * @tparam Policy Optional policy (no policy set by default).
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @return An extended meta factory for the parent type.
      */
 		template<auto Candidate, typename Policy = as_is_t>
@@ -46779,7 +46779,7 @@ namespace entt
  *
  * The type is also removed from the list of searchable types.
  *
- * @param id Unique identifier.
+ * @param id UniquePtr identifier.
  */
 	inline void meta_reset(const id_type id) ENTT_NOEXCEPT {
 		auto clear_chain = [](auto **curr, auto... member)
@@ -47162,7 +47162,7 @@ public:
      * @sa meta_func::invoke
      *
      * @tparam Args Types of arguments to use to invoke the function.
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @param args Parameters to use to invoke the function.
      * @return A wrapper containing the returned value, if any.
      */
@@ -47180,7 +47180,7 @@ public:
      * the variable is possible. Otherwise, invoking the setter does nothing.
      *
      * @tparam Type Type of value to assign.
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @param value Parameter to use to set the underlying variable.
      * @return True in case of success, false otherwise.
      */
@@ -47189,7 +47189,7 @@ public:
 
     /**
      * @brief Gets the value of a given variable.
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @return A wrapper containing the value of the underlying variable.
      */
     [[nodiscard]] meta_any get(const id_type id) const;
@@ -48004,7 +48004,7 @@ public:
 
     /**
      * @brief Lookup function for registered base meta types.
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @return The registered base meta type for the given identifier, if any.
      */
     [[nodiscard]] meta_type base(const id_type id) const {
@@ -48024,7 +48024,7 @@ public:
      *
      * Registered meta data of base classes will also be visited.
      *
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @return The registered meta data for the given identifier, if any.
      */
     [[nodiscard]] meta_data data(const id_type id) const {
@@ -48046,7 +48046,7 @@ public:
      * In case of overloaded functions, the first one with the required
      * identifier will be returned.
      *
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @return The registered meta function for the given identifier, if any.
      */
     [[nodiscard]] meta_func func(const id_type id) const {
@@ -48092,7 +48092,7 @@ public:
      *
      * @sa meta_func::invoke
      *
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @param instance An opaque instance of the underlying type.
      * @param args Parameters to use to invoke the function.
      * @param sz Number of parameters to use to invoke the function.
@@ -48113,7 +48113,7 @@ public:
      *
      * @sa invoke
      *
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @tparam Args Types of arguments to use to invoke the function.
      * @param instance An opaque instance of the underlying type.
      * @param args Parameters to use to invoke the function.
@@ -48134,7 +48134,7 @@ public:
      * the variable is possible. Otherwise, invoking the setter does nothing.
      *
      * @tparam Type Type of value to assign.
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @param instance An opaque instance of the underlying type.
      * @param value Parameter to use to set the underlying variable.
      * @return True in case of success, false otherwise.
@@ -48151,7 +48151,7 @@ public:
      * It must be possible to cast the instance to the parent type of the data
      * member.
      *
-     * @param id Unique identifier.
+     * @param id UniquePtr identifier.
      * @param instance An opaque instance of the underlying type.
      * @return A wrapper containing the value of the underlying variable.
      */
@@ -49175,7 +49175,7 @@ namespace entt
 
 /**
  * @brief Returns the meta type associated with a given identifier, if any.
- * @param id Unique identifier.
+ * @param id UniquePtr identifier.
  * @return The meta type associated with the given identifier, if any.
  */
 	[[nodiscard]] inline meta_type resolve(const id_type id) ENTT_NOEXCEPT {
@@ -59651,7 +59651,7 @@ namespace entt
      * invalid and any use of it will result in undefined behavior.
      *
      * @tparam Args Types of arguments to use to load the resource if required.
-     * @param id Unique resource identifier.
+     * @param id UniquePtr resource identifier.
      * @param args Arguments to use to load the resource if required.
      * @return A pair consisting of an iterator to the inserted element (or to
      * the element that prevented the insertion) and a bool denoting whether the
@@ -59685,7 +59685,7 @@ namespace entt
      * There is no guarantee that the returned handle is valid.<br/>
      * If it is not, any use will result in indefinite behavior.
      *
-     * @param id Unique resource identifier.
+     * @param id UniquePtr resource identifier.
      * @return A handle for the given resource.
      */
 		[[nodiscard]] resource<const value_type> operator[](const id_type id) const
@@ -59711,7 +59711,7 @@ namespace entt
 
 		/**
      * @brief Checks if a cache contains a given identifier.
-     * @param id Unique resource identifier.
+     * @param id UniquePtr resource identifier.
      * @return True if the cache contains the resource, false otherwise.
      */
 		[[nodiscard]] bool contains(const id_type id) const
@@ -59744,7 +59744,7 @@ namespace entt
 
 		/**
      * @brief Removes the given elements from a cache.
-     * @param id Unique resource identifier.
+     * @param id UniquePtr resource identifier.
      * @return Number of resources erased (either 0 or 1).
      */
 		size_type erase(const id_type id)

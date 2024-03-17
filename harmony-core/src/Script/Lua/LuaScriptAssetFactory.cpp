@@ -19,7 +19,7 @@ void harmony::LuaScriptAssetFactory::LoadAssetData(const std::string &path, entt
         harmony::log::error("Unable to load Lua Script at path {}", path);
         return;
     }
-    Ref<LuaScriptAsset> script = CreateRef<LuaScriptAsset>(path, source);
+    RefCntPtr<LuaScriptAsset> script = CreateRef<LuaScriptAsset>(path, source);
     AssetHandle scriptHandle{path, 0, GetTypeHash<LuaScriptAsset>()};
     AssetComponent<LuaScriptAsset> scriptComponent{script, scriptHandle};
     entt::entity e = registry.create();

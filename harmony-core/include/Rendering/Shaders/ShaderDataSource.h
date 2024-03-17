@@ -12,10 +12,10 @@ namespace harmony {
     public:
         ShaderDataSource(const std::string &name);
 
-        virtual void OnPreUpdate(entt::registry &registry, Ref<ShaderProgram> shader);
+        virtual void OnPreUpdate(entt::registry &registry, RefCntPtr<ShaderProgram> shader);
 
         virtual void OnPostUpdate(entt::registry &registry,
-                                  Ref<ShaderProgram> shader);
+                                  RefCntPtr<ShaderProgram> shader);
 
         std::string m_Name;
 

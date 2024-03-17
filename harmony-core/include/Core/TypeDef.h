@@ -25,6 +25,7 @@ namespace harmony {
         HashString() { m_Value = 0; }
 
         HashString(const String &input);
+        HashString(uint64_t value);
 
         uint64_t m_Value;
 

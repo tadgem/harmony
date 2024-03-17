@@ -27,6 +27,10 @@
 namespace harmony {
     typedef std::function<void()> Callback;
 
+
+    // Forward defs
+    class EntityTemplate;
+
     /// <summary>
     /// Top level container for program
     /// </summary>
@@ -37,6 +41,8 @@ namespace harmony {
         ~Program();
 
         virtual void Init();
+
+        void PreRunInit();
 
         virtual void Run();
 
@@ -62,7 +68,7 @@ namespace harmony {
 
         virtual void CloseActiveScene();
 
-        WeakRef<Scene> GetActiveScene();
+        WeakPtr<Scene> GetActiveScene();
 
         void RunProgramComponentInit();
 
@@ -86,6 +92,9 @@ namespace harmony {
 
         std::string GetWorkingDirectory();
 
+        SDL_Window* GetWindow() const;
+
+        const Vector<RefCntPtr<System>>& GetSystems();
     protected:
 
         virtual void LoadBuiltInAssets();
@@ -104,7 +113,6 @@ namespace harmony {
 
         void InitImGui();
 
-        void PreRunInit();
 
         void UpdateTimeVariables();
 
@@ -134,11 +142,12 @@ namespace harmony {
 
         void Frame();
 
+
         std::string p_AppName;
         std::string p_LoadedProjectPath;
-        std::vector<Ref<ProgramComponent>> p_ProgramComponents;
-        std::vector<Ref<System>> p_ECSSystems;
-        Ref<Scene> p_ActiveScene;
+        std::vector<RefCntPtr<ProgramComponent>> p_ProgramComponents;
+        std::vector<RefCntPtr<System>> p_ECSSystems;
+        RefCntPtr<Scene> p_ActiveScene;
         bool p_Run;
         bool p_ResizedThisFrame;
         float p_DPIScale;
@@ -151,31 +160,41 @@ namespace harmony {
         inline static uint16_t p_WindowHeight;
 
         template<typename T, typename ... Args>
-        WeakRef<T> AddProgramComponent(Args &&... args) {
+        WeakPtr<T> AddProgramComponent(Args &&... args) {
 
             static_assert(std::is_base_of<ProgramComponent, T>());
-            Ref<T> pc = CreateRef<T>(std::forward<Args>(args)...);
+            RefCntPtr<T> pc = CreateRef<T>(std::forward<Args>(args)...);
             p_ProgramComponents.emplace_back(pc);
             return GetWeakRef<T>(pc);
         }
 
         template<typename T, typename ... Args>
-        WeakRef<T> AddSystem(Args &&... args) {
+        WeakPtr<T> AddSystem(Args &&... args) {
 
             static_assert(std::is_base_of<System, T>());
-            Ref<T> sys = CreateRef<T>(std::forward<Args>(args)...);
+            HashString typeHash = GetTypeHash<T>();
+            log::info("Program : Adding System : {}", GetTypeName<T>());
+            for(int i = 0; i < p_ECSSystems.size(); i++)
+            {
+                if(p_ECSSystems[i]->m_TypeHash == typeHash)
+                {
+                    log::warn("Program : Already have a system with type hash : {}", typeHash.m_Value);
+                    return WeakPtr<T>();
+                }
+            }
+            RefCntPtr<T> sys = CreateRef<T>(std::forward<Args>(args)...);
             p_ECSSystems.emplace_back(sys);
             return GetWeakRef<T>(sys);
         }
 
         template<typename T>
-        WeakRef<T> GetProgramComponent() {
+        WeakPtr<T> GetProgramComponent() {
 
             static_assert(std::is_base_of<ProgramComponent, T>(), "Not a program component");
             int index = -1;
             for (int i = 0; i < p_ProgramComponents.size(); i++) {
                 HashString typeHash = GetTypeHash<T>();
-                if (typeHash == p_ProgramComponents[i]->m_TypeHash);
+                if (typeHash == p_ProgramComponents[i]->m_TypeHash)
                 {
                     index = i;
                     break;
@@ -185,17 +204,35 @@ namespace harmony {
             if (index >= 0) {
                 return std::static_pointer_cast<T, ProgramComponent>(p_ProgramComponents[index]);
             } else {
-                return WeakRef<T>();
+                return WeakPtr<T>();
+            }
+        }
+
+        WeakPtr<ProgramComponent> GetProgramComponent(HashString typeHash)
+        {
+            int index = -1;
+            for (int i = 0; i < p_ProgramComponents.size(); i++) {
+                if (typeHash == p_ProgramComponents[i]->m_TypeHash)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index >= 0) {
+                return p_ProgramComponents[index];
+            } else {
+                return WeakPtr<ProgramComponent>();
             }
         }
 
         template<typename T>
-        WeakRef<T> GetSystem() {
+        WeakPtr<T> GetSystem() {
 
             static_assert(std::is_base_of<System, T>(), "Not a system");
             int index = -1;
+            HashString t_type_hash = GetTypeHash<T>();
             for (int i = 0; i < p_ECSSystems.size(); i++) {
-                HashString t_type_hash = GetTypeHash<T>();
                 HashString s_type_hash = p_ECSSystems[i]->m_TypeHash;
                 if (t_type_hash == s_type_hash) {
                     index = i;
@@ -206,7 +243,7 @@ namespace harmony {
             if (index >= 0) {
                 return std::static_pointer_cast<T, System>(p_ECSSystems[index]);
             } else {
-                return WeakRef<T>();
+                return WeakPtr<T>();
             }
         }
 
@@ -220,6 +257,6 @@ namespace harmony {
         AssetManager m_AssetManager;
         Renderer m_Renderer;
         bgfx::Caps *m_Capabilities;
-        Ref<Project> m_Project;
+        RefCntPtr<Project> m_Project;
     };
 };

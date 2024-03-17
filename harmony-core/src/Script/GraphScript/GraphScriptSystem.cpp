@@ -4,7 +4,7 @@
 #include "Script/GraphScript/GraphScriptProgramComponent.h"
 #include "Script/GraphScript/GraphScriptSystem.h"
 
-harmony::GraphScriptSystem::GraphScriptSystem(harmony::Ref<harmony::GraphScriptProgramComponent> gspc)
+harmony::GraphScriptSystem::GraphScriptSystem(harmony::RefCntPtr<harmony::GraphScriptProgramComponent> gspc)
         : System(GetTypeHash<GraphScriptSystem>()), p_ProgramComponent(gspc) {
 
 }
@@ -26,10 +26,21 @@ void harmony::GraphScriptSystem::Cleanup(entt::registry &registry) {
 }
 
 nlohmann::json harmony::GraphScriptSystem::SerializeSystem(entt::registry &registry) {
-    return nlohmann::json();
+    return {};
 }
 
 void harmony::GraphScriptSystem::DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) {
+
+}
+
+nlohmann::json harmony::GraphScriptSystem::SerializeEntity(entt::registry& registry, entt::entity e)
+{
+	return {};
+}
+
+void harmony::GraphScriptSystem::
+DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson)
+{
 
 }
 

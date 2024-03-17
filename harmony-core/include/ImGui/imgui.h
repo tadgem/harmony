@@ -3394,8 +3394,8 @@ struct ImGuiStorage {
     IMGUI_API void *GetVoidPtr(ImGuiID key) const; // default_val is NULL
     IMGUI_API void SetVoidPtr(ImGuiID key, void *val);
 
-    // - Get***Ref() functions finds pair, insert on demand if missing, return pointer. Useful if you intend to do Get+Set.
-    // - References are only valid until a new value is added to the storage. Calling a Set***() function or a Get***Ref() function invalidates the pointer.
+    // - Get***RefCntPtr() functions finds pair, insert on demand if missing, return pointer. Useful if you intend to do Get+Set.
+    // - References are only valid until a new value is added to the storage. Calling a Set***() function or a Get***RefCntPtr() function invalidates the pointer.
     // - A typical use case where this is convenient for quick hacking (e.g. add storage during a live Edit&Continue session if you can't modify existing struct)
     //      float* pvar = ImGui::GetFloatRef(key); ImGui::SliderFloat("var", pvar, 0, 100.0f); some_var += *pvar;
     IMGUI_API int *GetIntRef(ImGuiID key, int default_val = 0);
@@ -4351,7 +4351,7 @@ enum ImGuiViewportFlags_ {
 //   - Work Area = entire viewport minus sections used by main menu bars (for platform windows), or by task bar (for platform monitor).
 //   - Windows are generally trying to stay within the Work Area of their host viewport.
 struct ImGuiViewport {
-    ImGuiID ID;                     // Unique identifier for the viewport
+    ImGuiID ID;                     // UniquePtr identifier for the viewport
     ImGuiViewportFlags Flags;                  // See ImGuiViewportFlags_
     ImVec2 Pos;                    // Main Area: Position of the viewport (Dear ImGui coordinates are the same as OS desktop/native coordinates)
     ImVec2 Size;                   // Main Area: Size of the viewport.

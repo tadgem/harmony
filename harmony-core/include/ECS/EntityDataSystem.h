@@ -24,10 +24,12 @@ namespace harmony {
 
         void DeserializeSystem(entt::registry &registry, nlohmann::json systemJson) override;
 
+        nlohmann::json SerializeEntity(entt::registry& registry, entt::entity e) override;
+
+        void DeserializeEntity(entt::registry& registry, entt::entity e, nlohmann::json entityJson) override;
+
     protected:
         void Refresh() override;
-
-    public:
     };
 }
 

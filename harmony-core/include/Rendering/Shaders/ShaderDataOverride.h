@@ -25,7 +25,7 @@ namespace harmony {
 
         void AddTextureOverride(ShaderUniform uniform, BGFXTextureHandle value);
 
-        void UpdateOverrides(WeakRef<ShaderProgram> shaderWr, AssetManager &am);
+        void UpdateOverrides(WeakPtr<ShaderProgram> shaderWr, AssetManager &am);
 
         void SetOverrides();
 

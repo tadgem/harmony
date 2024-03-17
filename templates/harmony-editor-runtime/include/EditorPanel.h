@@ -31,7 +31,9 @@ namespace harmony {
         void EntityDragDrop(entt::entity e, entt::registry &reg);
 
         Program &p_Prog;
+        AssetManager& p_AssetManager;
         bool p_RenamingSelectedEntity = false;
+        bool p_ImportModelDialog = false;
         Vector<entt::entity> p_FrameHandledEntities;
     };
 
@@ -57,7 +59,22 @@ namespace harmony {
         virtual void OnImGui() override;
 
     protected:
-        WeakRef<LuaProgramComponent> p_Lua;
+        WeakPtr<LuaProgramComponent> p_Lua;
+        Program &p_Program;
+        AssetManager &p_AssetManager;
+    };
+
+    class MonoProgramComponent;
+    class MonoSystem;
+    class MonoPanel : public Panel {
+    public:
+        MonoPanel(Program &prog);
+
+        virtual void OnImGui() override;
+
+    protected:
+        WeakPtr<MonoProgramComponent> p_Mono;
+        WeakPtr<MonoSystem> p_System;
         Program &p_Program;
         AssetManager &p_AssetManager;
     };
@@ -243,6 +260,26 @@ namespace harmony {
         AssetManager &p_AssetManager;
     };
 
+    class MonoSystem;
+    class MonoBehaviourComponentUI : public ComponentUI {
+    public:
+        MonoBehaviourComponentUI(WeakPtr<MonoSystem> monoSystem, AssetManager &am);
+
+        virtual void OnComponentImGui(entt::registry &registry, entt::entity entity) override;
+
+        virtual void AddComponent(entt::registry &registry, entt::entity entity) override;
+
+        virtual void RemoveComponent(entt::registry &registry, entt::entity entity) override;
+
+        virtual bool HasComponent(entt::registry &registry, entt::entity entity) override;
+
+        virtual void Duplicate(entt::registry &registry, entt::entity original, entt::entity newCopy) override;
+
+    protected:
+        AssetManager &p_AssetManager;
+        WeakPtr<MonoSystem> p_MonoSystem;
+    };
+
     class AABBComponentUI : public ComponentUI {
     public:
         AABBComponentUI(AssetManager &am);
@@ -313,12 +350,12 @@ namespace harmony {
 
     class EntityInspectorPanel : public Panel {
     public:
-        EntityInspectorPanel(Program &prog, Ref<ScenePanel> scenePanel);
+        EntityInspectorPanel(Program &prog, RefCntPtr<ScenePanel> scenePanel);
 
         template<typename T, typename ... Args>
-        WeakRef<T> AddComponentUI(Args &&... args) {
+        WeakPtr<T> AddComponentUI(Args &&... args) {
             static_assert(std::is_base_of<ComponentUI, T>());
-            Ref<T> ui = CreateRef<T>(std::forward<Args>(args)...);
+            RefCntPtr<T> ui = CreateRef<T>(std::forward<Args>(args)...);
             p_ComponentUIProviders.emplace_back(ui);
             return GetWeakRef<T>(ui);
         }
@@ -327,7 +364,7 @@ namespace harmony {
 
     protected:
         Program &p_Prog;
-        Ref<ScenePanel> p_ScenePanel;
-        std::vector<Ref<ComponentUI>> p_ComponentUIProviders;
+        RefCntPtr<ScenePanel> p_ScenePanel;
+        std::vector<RefCntPtr<ComponentUI>> p_ComponentUIProviders;
     };
 }

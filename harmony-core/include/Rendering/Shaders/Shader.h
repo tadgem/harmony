@@ -71,7 +71,7 @@ namespace harmony {
 
         ShaderProgram();
 
-        bool AddStage(ShaderStage::Type stageType, WeakRef<ShaderStage> shader);
+        bool AddStage(ShaderStage::Type stageType, WeakPtr<ShaderStage> shader);
 
         bool RemoveStage(ShaderStage::Type stageType);
 
@@ -97,7 +97,7 @@ namespace harmony {
         std::map<ShaderUniform, glm::mat3> m_Mat3Values;
         std::map<ShaderUniform, glm::mat4> m_Mat4Values;
         std::map<ShaderUniform, BGFXTextureHandle> m_TextureValues;
-        std::unordered_map<ShaderStage::Type, WeakRef<ShaderStage>> m_Stages;
+        std::unordered_map<ShaderStage::Type, WeakPtr<ShaderStage>> m_Stages;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderProgram, m_Name, m_Stages)
 
