@@ -6,7 +6,7 @@ harmony::ShaderStageBinaryAssetFactory::ShaderStageBinaryAssetFactory(Renderer &
     m_Capabilities.AssetTypeHashes.push_back(GetTypeHash<ShaderStage>());
 }
 
-void harmony::ShaderStageBinaryAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry) {
+void harmony::ShaderStageBinaryAssetFactory::LoadAssetData(const String &path, entt::registry &registry) {
     OPTICK_EVENT();
     auto view = registry.view<AssetComponent<ShaderStage>, AssetHandle>();
 
@@ -57,7 +57,7 @@ void harmony::ShaderStageBinaryAssetFactory::LoadAssetData(const std::string &pa
     registry.emplace<AssetHandle>(e, handle);
 }
 
-void harmony::ShaderStageBinaryAssetFactory::UnloadAssetData(const std::string &path, entt::registry &registry) {
+void harmony::ShaderStageBinaryAssetFactory::UnloadAssetData(const String &path, entt::registry &registry) {
     OPTICK_EVENT();
 }
 

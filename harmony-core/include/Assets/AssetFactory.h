@@ -8,7 +8,7 @@
 namespace harmony {
 
     struct AssetFactoryCapabilities {
-        std::vector<HashString> AssetTypeHashes;
+        Vector<HashString> AssetTypeHashes;
 
         bool Contains(HashString typeHash) {
             bool found = false;
@@ -26,14 +26,14 @@ namespace harmony {
         AssetFactory() {
         }
 
-        virtual void LoadAssetData(const std::string &path, entt::registry &registry) = 0;
+        virtual void LoadAssetData(const String &path, entt::registry &registry) = 0;
 
-        virtual void UnloadAssetData(const std::string &path, entt::registry &registry) = 0;
+        virtual void UnloadAssetData(const String &path, entt::registry &registry) = 0;
 
         virtual void ClearLoadedData();
 
         AssetFactoryCapabilities m_Capabilities;
     protected:
-        std::vector<RefCntPtr<Asset>> p_Assets;
+        Vector<RefCntPtr<Asset>> p_Assets;
     };
 }

@@ -38,6 +38,9 @@ namespace harmony {
     template<typename T>
     using Lambda = std::function<T>;
 
+    template<typename A, typename B>
+    using IsBaseOf = std::is_base_of<A, B>;
+
     using Procedure = std::function<void()>;
 
     using Mutex = std::mutex;

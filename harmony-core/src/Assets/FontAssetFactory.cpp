@@ -12,13 +12,13 @@ harmony::FontAssetFactory::FontAssetFactory() {
     m_Capabilities.AssetTypeHashes.push_back(fontTypeHash);
 }
 
-void harmony::FontAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry) {
+void harmony::FontAssetFactory::LoadAssetData(const String &path, entt::registry &registry) {
     OPTICK_EVENT();
-    std::string cleanPath = Utils::GetCleanPlatformPath(path);
+    String cleanPath = Utils::GetCleanPlatformPath(path);
     AssetHandle assetHandle(cleanPath, 0, GetTypeHash<FontAsset>());
     RefCntPtr<FontAsset> font = CreateRef<FontAsset>(assetHandle);
-    std::vector<uint8_t> fontData = Utils::LoadBinaryFromPath(cleanPath);
-    std::string cleanFontName = GetFontNameFromPath(cleanPath);
+    Vector<uint8_t> fontData = Utils::LoadBinaryFromPath(cleanPath);
+    String cleanFontName = GetFontNameFromPath(cleanPath);
     font->m_CleanName = cleanFontName;
     // make available to vg renderer
     VectorGraphics::AddFont(cleanFontName, fontData);
@@ -29,7 +29,7 @@ void harmony::FontAssetFactory::LoadAssetData(const std::string &path, entt::reg
     registry.emplace<AssetHandle>(e, assetHandle);
 }
 
-void harmony::FontAssetFactory::UnloadAssetData(const std::string &path, entt::registry &registry) {
+void harmony::FontAssetFactory::UnloadAssetData(const String &path, entt::registry &registry) {
     OPTICK_EVENT();
     auto view = registry.view<AssetComponent<FontAsset>, AssetHandle>();
     entt::entity e;
@@ -46,21 +46,21 @@ void harmony::FontAssetFactory::UnloadAssetData(const std::string &path, entt::r
     }
 }
 
-std::string harmony::FontAssetFactory::GetFontNameFromPath(const std::string &path) {
+harmony::String harmony::FontAssetFactory::GetFontNameFromPath(const String &path) {
     OPTICK_EVENT();
-    std::string::size_type fsPos = path.find_last_of('/');
-    std::string::size_type bsPos = path.find_last_of('\\');
-    std::string temp;
+    String::size_type fsPos = path.find_last_of('/');
+    String::size_type bsPos = path.find_last_of('\\');
+    String temp;
 
-    if (fsPos != std::string::npos) {
+    if (fsPos != String::npos) {
         temp = path.substr(fsPos + 1);
-    } else if (bsPos != std::string::npos) {
+    } else if (bsPos != String::npos) {
         temp = path.substr(bsPos + 1);
     }
 
-    std::string::size_type dotPos = temp.find('.');
+    String::size_type dotPos = temp.find('.');
 
-    if (dotPos != std::string::npos) {
+    if (dotPos != String::npos) {
         return temp.substr(0, dotPos);
     } else {
         return temp;

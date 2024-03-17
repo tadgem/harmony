@@ -1,7 +1,6 @@
 #pragma once
 
-#include <functional>
-#include <vector>
+#include "Alias.h"
 
 namespace harmony {
     class FSM {
@@ -10,15 +9,15 @@ namespace harmony {
 
         class State {
         public:
-            State(int state, std::function<int()> action, std::function<void()> entry = NULL,
-                  std::function<void()> exit = NULL);
+            State(int state, Lambda<int()> action, Lambda<void()> entry = NULL,
+                  Lambda<void()> exit = NULL);
 
             bool HasEntry;
             bool HasExit;
         protected:
-            std::function<void()> m_EntryProcedure;
-            std::function<void()> m_ExitProcedure;
-            std::function<int()> m_Action;
+            Lambda<void()> m_EntryProcedure;
+            Lambda<void()> m_ExitProcedure;
+            Lambda<int()> m_Action;
             const int m_State;
 
             friend class FSM;
@@ -37,11 +36,11 @@ namespace harmony {
 
         void Process();
 
-        void AddState(int state, std::function<int()> action);
+        void AddState(int state, Lambda<int()> action);
 
-        void AddStateEntry(int state, std::function<void()> entry);
+        void AddStateEntry(int state, Lambda<void()> entry);
 
-        void AddStateExit(int state, std::function<void()> exit);
+        void AddStateExit(int state, Lambda<void()> exit);
 
         void AddTrigger(int trigger, int srcState, int dstState);
 
@@ -56,7 +55,7 @@ namespace harmony {
 
         void TransitionState(int newState);
 
-        std::vector<State> p_States;
-        std::vector<StateTransition> p_Transitions;
+        Vector<State> p_States;
+        Vector<StateTransition> p_Transitions;
     };
 }

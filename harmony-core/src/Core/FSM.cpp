@@ -2,8 +2,8 @@
 #include "Core/FSM.h"
 #include "Core/Log.hpp"
 
-harmony::FSM::State::State(int state, std::function<int()> action, std::function<void()> entry,
-                           std::function<void()> exit) : m_State(state), m_Action(action) {
+harmony::FSM::State::State(int state, Lambda<int()> action, Lambda<void()> entry,
+                           Lambda<void()> exit) : m_State(state), m_Action(action) {
     OPTICK_EVENT();
     HasEntry = false;
     HasExit = false;
@@ -95,7 +95,7 @@ void harmony::FSM::Trigger(int trigger) {
     }
 }
 
-void harmony::FSM::AddState(int state, std::function<int()> action) {
+void harmony::FSM::AddState(int state, Lambda<int()> action) {
     OPTICK_EVENT();
     for (int i = 0; i < p_States.size(); i++) {
         if (p_States[i].m_State == state) {
@@ -109,7 +109,7 @@ void harmony::FSM::AddState(int state, std::function<int()> action) {
 
 }
 
-void harmony::FSM::AddStateEntry(int state, std::function<void()> entry) {
+void harmony::FSM::AddStateEntry(int state, Lambda<void()> entry) {
     OPTICK_EVENT();
     for (int i = 0; i < p_States.size(); i++) {
         if (p_States[i].m_State == state) {
@@ -119,7 +119,7 @@ void harmony::FSM::AddStateEntry(int state, std::function<void()> entry) {
     }
 }
 
-void harmony::FSM::AddStateExit(int state, std::function<void()> exit) {
+void harmony::FSM::AddStateExit(int state, Lambda<void()> exit) {
     OPTICK_EVENT();
     for (int i = 0; i < p_States.size(); i++) {
         if (p_States[i].m_State == state) {

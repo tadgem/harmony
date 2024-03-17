@@ -7,9 +7,9 @@ harmony::ShaderSourceAssetFactory::ShaderSourceAssetFactory() : AssetFactory() {
     m_Capabilities.AssetTypeHashes.push_back(GetTypeHash<ShaderSourceAsset>());
 }
 
-void harmony::ShaderSourceAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry) {
+void harmony::ShaderSourceAssetFactory::LoadAssetData(const String &path, entt::registry &registry) {
     OPTICK_EVENT();
-    std::string shaderName = path.substr(path.find_last_of("\\") + 1);
+    String shaderName = path.substr(path.find_last_of("\\") + 1);
     ShaderStage::Type type = ShaderStage::Type::Unknown;
     auto foundVs = shaderName.find("vs");
     auto foundFs = shaderName.find("fs");
@@ -25,7 +25,7 @@ void harmony::ShaderSourceAssetFactory::LoadAssetData(const std::string &path, e
     }
     auto cleanIndex1 = path.find_last_of("\\");
     auto cleanIndex2 = path.find_last_of("/");
-    std::string cleanPath;
+    String cleanPath;
     if (cleanIndex1 <= path.size()) {
         auto size = path.size() - cleanIndex1;
         cleanPath = path.substr(cleanIndex1 + 1, size);
@@ -45,7 +45,7 @@ void harmony::ShaderSourceAssetFactory::LoadAssetData(const std::string &path, e
     harmony::log::info("ShaderSourceAssetFactory : Loaded shader source asset from path : {}", path);
 }
 
-void harmony::ShaderSourceAssetFactory::UnloadAssetData(const std::string &path, entt::registry &registry) {
+void harmony::ShaderSourceAssetFactory::UnloadAssetData(const String &path, entt::registry &registry) {
     OPTICK_EVENT();
 }
 

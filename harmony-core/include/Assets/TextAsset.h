@@ -45,15 +45,15 @@ namespace harmony
 
         JSONTextAssetFactory()
         {
-            static_assert(std::is_base_of<JSONAsset, T>());
+            static_assert(IsBaseOf<JSONAsset, T>());
             HashString templateTypeHash = GetTypeHash<T>();
             m_Capabilities.AssetTypeHashes.push_back(templateTypeHash);
         }
 
 
-        virtual void LoadAssetData(const std::string& path, entt::registry& registry) override
+        virtual void LoadAssetData(const String& path, entt::registry& registry) override
         {
-            static_assert(std::is_base_of<JSONAsset, T>());
+            static_assert(IsBaseOf<JSONAsset, T>());
             Json inputJson = Utils::LoadJsonFromPath(path);
             RefCntPtr<T> serializedTextAsset = CreateRef<T>();
 
@@ -67,9 +67,9 @@ namespace harmony
             registry.emplace<AssetHandle>(e, handle);
         }
 
-        virtual void UnloadAssetData(const std::string& path, entt::registry& registry) override
+        virtual void UnloadAssetData(const String& path, entt::registry& registry) override
         {
-            static_assert(std::is_base_of<JSONAsset, T>());
+            static_assert(IsBaseOf<JSONAsset, T>());
             auto view = registry.view<AssetComponent<T>, AssetHandle>();
             entt::entity e;
             bool found = false;

@@ -1,7 +1,7 @@
 #pragma once
 // TODO when need arises, revisit input, potentially as a program component
-// Singletons are not great.
-#include <map>
+// Singletons are not great
+#include "Core/Alias.h"
 #include <vector>
 #include "glm/glm.hpp"
 #include "SDL.h"
@@ -132,16 +132,16 @@ namespace harmony {
 
     };
     struct GamepadState {
-        std::map<Gamepad::Button, bool> CurrentFrameButtonState;
-        std::map<Gamepad::Button, bool> PreviousFrameButtonState;
-        std::map<Gamepad::Trigger, float> CurrentFrameTriggerState;
-        std::map<Gamepad::Trigger, float> PreviousFrameTriggerState;
-        std::map<Gamepad::Stick, glm::vec2> CurrentFrameStickState;
-        std::map<Gamepad::Stick, glm::vec2> PreviousFrameStickState;
+        HashMap<Gamepad::Button, bool> CurrentFrameButtonState;
+        HashMap<Gamepad::Button, bool> PreviousFrameButtonState;
+        HashMap<Gamepad::Trigger, float> CurrentFrameTriggerState;
+        HashMap<Gamepad::Trigger, float> PreviousFrameTriggerState;
+        HashMap<Gamepad::Stick, glm::vec2> CurrentFrameStickState;
+        HashMap<Gamepad::Stick, glm::vec2> PreviousFrameStickState;
     };
     struct MouseState {
-        std::map<Mouse::Button, bool> CurrentFrameButtonState;
-        std::map<Mouse::Button, bool> PreviousFrameButtonState;
+        HashMap<Mouse::Button, bool> CurrentFrameButtonState;
+        HashMap<Mouse::Button, bool> PreviousFrameButtonState;
         float CurrentFrameScroll;
         float PreviousFrameScroll;
         glm::vec2 CurrentFrameMouseLocation;
@@ -150,8 +150,8 @@ namespace harmony {
         glm::vec2 PreviousFrameMouseVelocity;
     };
     struct KeyboardState {
-        std::map<Key, bool> CurrentFrameKeyState;
-        std::map<Key, bool> PreviousFrameKeyState;
+        HashMap<Key, bool> CurrentFrameKeyState;
+        HashMap<Key, bool> PreviousFrameKeyState;
     };
 
     class Input {
@@ -217,6 +217,6 @@ namespace harmony {
 
         inline static KeyboardState p_KeyboardState;
         inline static MouseState p_MouseState;
-        inline static std::vector<GamepadState> p_GamepadStates;
+        inline static Vector<GamepadState> p_GamepadStates;
     };
 };

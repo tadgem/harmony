@@ -11,7 +11,7 @@ harmony::AssetHandle::AssetHandle() {
     TypeHash = GetTypeHash<AssetHandle>();
 }
 
-harmony::AssetHandle::AssetHandle(std::string path, uint32_t index, HashString typeHash) {
+harmony::AssetHandle::AssetHandle(String path, uint32_t index, HashString typeHash) {
     OPTICK_EVENT();
     Path = path;
     Index = index;

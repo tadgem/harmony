@@ -9,10 +9,10 @@ namespace harmony {
     public:
         ShaderStageBinaryAssetFactory(Renderer &renderer);
 
-        virtual void LoadAssetData(const std::string &path,
+        virtual void LoadAssetData(const String &path,
                                    entt::registry &registry) override;
 
-        virtual void UnloadAssetData(const std::string &path,
+        virtual void UnloadAssetData(const String &path,
                                      entt::registry &registry) override;
 
         virtual void ClearLoadedData() override;

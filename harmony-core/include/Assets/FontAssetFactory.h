@@ -7,11 +7,11 @@ namespace harmony {
     public:
         FontAssetFactory();
 
-        virtual void LoadAssetData(const std::string &path, entt::registry &registry) override;
+        virtual void LoadAssetData(const String &path, entt::registry &registry) override;
 
-        virtual void UnloadAssetData(const std::string &path, entt::registry &registry) override;
+        virtual void UnloadAssetData(const String &path, entt::registry &registry) override;
 
     protected:
-        std::string GetFontNameFromPath(const std::string &path);
+        String GetFontNameFromPath(const String &path);
     };
 }

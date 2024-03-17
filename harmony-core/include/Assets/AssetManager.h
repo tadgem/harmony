@@ -29,17 +29,17 @@ namespace harmony {
             HashString typeHash = GetTypeHash<T>();
 
             if (p_AssetTypeNames.find(typeHash) == p_AssetTypeNames.end()) {
-                std::string typeName = typeid(T).name();
+                String typeName = typeid(T).name();
                 p_AssetTypeNames.emplace(typeHash.m_Value, typeName);
                 return true;
             }
             return false;
         }
 
-        std::vector<AssetHandle> LoadAsset(const std::string &path, HashString typeHash);
+        Vector<AssetHandle> LoadAsset(const String &path, HashString typeHash);
 
         template<typename T>
-        std::vector<AssetHandle> LoadAsset(const std::string &path) {
+        Vector<AssetHandle> LoadAsset(const String &path) {
             HashString typeHash = GetTypeHash<T>();
 
             return LoadAsset(path, typeHash);
@@ -53,12 +53,12 @@ namespace harmony {
             UnloadAsset(handle, typeHash);
         }
 
-        bool IsPathLoaded(const std::string path);
+        bool IsPathLoaded(const String path);
 
         template <typename T>
         void ReloadAllAssetsOfType()
         {
-            std::vector<AssetHandle> assets;
+            Vector<AssetHandle> assets;
             {
                 auto view = p_AssetRegistry.view<AssetComponent<T>>();
                 for (auto [entity, asset]: view.each()) {
@@ -78,8 +78,8 @@ namespace harmony {
         }
 
         template<typename T>
-        std::vector<AssetHandle> GetLoadedAssets() {
-            std::vector<AssetHandle> assets;
+        Vector<AssetHandle> GetLoadedAssets() {
+            Vector<AssetHandle> assets;
             auto view = p_AssetRegistry.view<AssetComponent<T>>();
             for (auto [entity, asset]: view.each()) {
                 assets.emplace_back(asset.Handle);
@@ -87,11 +87,11 @@ namespace harmony {
             return assets;
         }
 
-        std::vector<AssetHandle> GetAssetsAtPath(const std::string &path);
+        Vector<AssetHandle> GetAssetsAtPath(const String &path);
 
         template<typename T>
         WeakPtr<T> GetAsset(const AssetHandle &assetHandle) {
-            std::string cleanAssetPath = Utils::GetCleanPlatformPath(assetHandle.Path);
+            String cleanAssetPath = Utils::GetCleanPlatformPath(assetHandle.Path);
             AssetHandle temp{cleanAssetPath, assetHandle.Index, assetHandle.TypeHash};
             if (!assetHandle.Path.find("builtin")) {
                 temp.Path = assetHandle.Path;
@@ -109,7 +109,7 @@ namespace harmony {
         }
 
         template<typename T>
-        WeakPtr<T> GetAsset(const std::string &assetHandle) {
+        WeakPtr<T> GetAsset(const String &assetHandle) {
             AssetHandle h = {assetHandle, 0, GetTypeHash<T>()};
             return GetAsset<T>(h);
         }
@@ -121,8 +121,8 @@ namespace harmony {
         void Deserialize(Json &json);
 
         template<typename T>
-        AssetHandle AddBuiltInAsset(const std::string &path, RefCntPtr<T> asset) {
-            static_assert(std::is_base_of<Asset, T>());
+        AssetHandle AddBuiltInAsset(const String &path, RefCntPtr<T> asset) {
+            static_assert(IsBaseOf<Asset, T>());
             AssetHandle handle;
             handle.Path = path;
             handle.Index = 0;
@@ -144,11 +144,11 @@ namespace harmony {
         void OnImGui();
 
         template<typename T>
-        bool AssetTypeSelector(const std::string &selectorName, harmony::AssetHandle &handle,
-                               const std::string &preview = "") {
-            static_assert(std::is_base_of<Asset, T>());
+        bool AssetTypeSelector(const String &selectorName, harmony::AssetHandle &handle,
+                               const String &preview = "") {
+            static_assert(IsBaseOf<Asset, T>());
             bool selectedAsset = false;
-            std::vector<harmony::AssetHandle> assets = GetLoadedAssets<T>();
+            Vector<harmony::AssetHandle> assets = GetLoadedAssets<T>();
             if (ImGui::BeginCombo(selectorName.c_str(), preview.c_str())) {
                 for (int i = 0; i < assets.size(); i++) {
                     if (ImGui::Selectable(assets[i].Path.c_str())) {
@@ -166,9 +166,9 @@ namespace harmony {
     protected:
         RefCntPtr<AssetFactory> GetAssetFactory(HashString typeHash);
 
-        std::vector<RefCntPtr<AssetFactory>> p_AssetFactories;
-        std::unordered_map<uint64_t, std::string> p_AssetTypeNames;
-        std::vector<std::string> p_LoadedPaths;
+        Vector<RefCntPtr<AssetFactory>> p_AssetFactories;
+        HashMap<uint64_t, String> p_AssetTypeNames;
+        Vector<String> p_LoadedPaths;
         entt::registry p_AssetRegistry;
     };
 }

@@ -9,6 +9,6 @@ namespace harmony {
 
         FontAsset();
 
-        std::string m_CleanName;
+        String m_CleanName;
     };
 }
