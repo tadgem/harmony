@@ -101,7 +101,7 @@ namespace glm {
 namespace harmony {
     struct ShaderUniform {
         bgfx::UniformHandle BgfxHandle{UINT16_MAX};
-        std::string Name;
+        String Name;
         bgfx::UniformType::Enum Type;
         uint16_t ArraySize;
 

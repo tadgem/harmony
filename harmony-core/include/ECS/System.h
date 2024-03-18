@@ -28,9 +28,9 @@ namespace harmony {
 
         const HashString m_TypeHash;
 
-        static std::string GetEntityKey(entt::entity &entity);
+        static String GetEntityKey(entt::entity &entity);
 
-        static entt::entity GetEntityFromKey(const std::string &key);
+        static entt::entity GetEntityFromKey(const String &key);
 
     protected:
         friend class Program;

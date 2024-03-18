@@ -35,20 +35,20 @@ harmony::Json harmony::Utils::LoadJsonFromPath(const String &path) {
     return json;
 }
 
-std::vector<uint8_t> harmony::Utils::LoadBinaryFromPath(const String &path) {
+harmony::Vector<uint8_t> harmony::Utils::LoadBinaryFromPath(const String &path) {
     OPTICK_EVENT();
 
     std::ifstream binary_input_stream = std::ifstream(path, std::ios::binary);
-    std::vector<uint8_t> data(std::istreambuf_iterator<char>(binary_input_stream), {});
+    Vector<uint8_t> data(std::istreambuf_iterator<char>(binary_input_stream), {});
 
     return data;
 }
 
-std::vector<uint8_t> *harmony::Utils::LoadBinaryFromPathHeap(const String &path) {
+harmony::Vector<uint8_t> *harmony::Utils::LoadBinaryFromPathHeap(const String &path) {
     OPTICK_EVENT();
 
     std::ifstream binary_input_stream = std::ifstream(path, std::ios::binary);
-    auto data = new std::vector<uint8_t>(std::istreambuf_iterator<char>(binary_input_stream), {});
+    auto data = new Vector<uint8_t>(std::istreambuf_iterator<char>(binary_input_stream), {});
 
     return data;
 }

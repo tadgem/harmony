@@ -17,8 +17,7 @@
 #include "JoltMonoBind.h"
 #include "Script/GraphScript/GraphScriptProgramComponent.h"
 
-harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this),
-                            m_GraphScriptEditor(p_GraphScriptComponent->GetNodeRegistry()) {
+harmony::Editor::Editor() : harmony::RuntimeProgram("Editor"), p_MainMenuBar(*this) {
     OPTICK_EVENT();
     //m_Logger.Init();
     Editor::AddAssetTypeNames();
@@ -379,7 +378,6 @@ void harmony::Editor::UpdateEditor() {
     GlobalDockspace();
 
     m_Logger.Render();
-    m_GraphScriptEditor.Render();
 #if HARMONY_DEBUG
     m_Renderer.OnImGui();
     m_AssetManager.OnImGui();

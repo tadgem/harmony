@@ -46,27 +46,27 @@ namespace harmony {
         // Light Params (vec4)
         // X = Dir Light Active ( > 0), Y = Num Active Point Lights, Z = Num Active
         // Spot Lights
-        const std::string g_LightParamsUniform = "Light_Params";
+        const String g_LightParamsUniform = "Light_Params";
         // Directional Light
-        const std::string g_DirectionalLightDirectionUniformName =
+        const String g_DirectionalLightDirectionUniformName =
                 "DirectionalLight_Direction";
-        const std::string g_DirectionalLightDiffuseUniformName =
+        const String g_DirectionalLightDiffuseUniformName =
                 "DirectionalLight_Diffuse";
-        const std::string g_DirectionalLightAmbientUniformName =
+        const String g_DirectionalLightAmbientUniformName =
                 "DirectionalLight_Ambient";
         // Point Lights
-        const std::string g_PointLightPositionUniformName = "PointLights_Position";
-        const std::string g_PointLightDiffuseUniformName = "PointLights_Diffuse";
-        const std::string g_PointLightAmbientUniformName = "PointLights_Ambient";
+        const String g_PointLightPositionUniformName = "PointLights_Position";
+        const String g_PointLightDiffuseUniformName = "PointLights_Diffuse";
+        const String g_PointLightAmbientUniformName = "PointLights_Ambient";
         // X = Radius, Y = EMPTY, Z = EMPTY, W = EMPTY
-        const std::string g_PointLightParamsUniformName = "PointLights_Params";
+        const String g_PointLightParamsUniformName = "PointLights_Params";
         // Spot Lights
-        const std::string g_SpotLightPositionUniformName = "SpotLights_Position";
-        const std::string g_SpotLightDirectionUniformName = "SpotLights_Direction";
-        const std::string g_SpotLightDiffuseUniformName = "SpotLights_Diffuse";
-        const std::string g_SpotLightAmbientUniformName = "SpotLights_Ambient";
+        const String g_SpotLightPositionUniformName = "SpotLights_Position";
+        const String g_SpotLightDirectionUniformName = "SpotLights_Direction";
+        const String g_SpotLightDiffuseUniformName = "SpotLights_Diffuse";
+        const String g_SpotLightAmbientUniformName = "SpotLights_Ambient";
         // X = Radius, Y = Angle, Z = EMPTY, W = EMPTY
-        const std::string g_SpotLightParamsUniformName = "SpotLights_Params";
+        const String g_SpotLightParamsUniformName = "SpotLights_Params";
 
     protected:
         void GetShaderUniforms(RefCntPtr<ShaderProgram> shader);

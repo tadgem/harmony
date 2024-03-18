@@ -19,9 +19,9 @@ namespace harmony {
 
         template<typename T, typename... Args>
         WeakPtr<T> AddPipelineStage(WeakPtr<Framebuffer> fb, Args &&...args) {
-            static_assert(std::is_base_of<PipelineStage, T>());
+            static_assert(IsBaseOf<PipelineStage, T>());
 
-            RefCntPtr<T> stage = CreateRef<T>(std::forward<Args>(args)...);
+            RefCntPtr<T> stage = CreateRef<T>(Forward<Args>(args)...);
             if (AddPipelineStage(fb, stage)) {
                 return GetWeakRef<T>(stage);
             }

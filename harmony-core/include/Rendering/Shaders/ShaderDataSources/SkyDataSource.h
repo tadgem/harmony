@@ -25,10 +25,10 @@ namespace harmony {
 
         void ComputePerezCoeff(float _turbidity);
 
-        const std::string g_ParametersUniformName = "u_parameters";
-        const std::string g_SunDirectionUniformName = "u_sunDirection";
-        const std::string g_SkyLuminanceXYZUniformName = "u_skyLuminanceXYZ";
-        const std::string g_PerezCoeffUniformName = "u_perezCoeff";
+        const String g_ParametersUniformName = "u_parameters";
+        const String g_SunDirectionUniformName = "u_sunDirection";
+        const String g_SkyLuminanceXYZUniformName = "u_skyLuminanceXYZ";
+        const String g_PerezCoeffUniformName = "u_perezCoeff";
         glm::vec4 p_SunDirection;
         glm::vec4 p_SkyLuminanceXYZ;
         // x - sun size, y - sun bloom, z - exposition

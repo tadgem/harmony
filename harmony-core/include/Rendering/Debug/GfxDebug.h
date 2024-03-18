@@ -140,7 +140,7 @@ namespace harmony {
                      Axis::Enum _highlight = Axis::Count);
 
     protected:
-        HashMap<Channel, std::vector<DebugDrawEncoder *>> p_DebugRenderers;
+        HashMap<Channel, Vector<DebugDrawEncoder *>> p_DebugRenderers;
         bx::DefaultAllocator p_Allocator;
     };
 } // namespace harmony

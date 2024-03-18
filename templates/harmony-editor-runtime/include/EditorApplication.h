@@ -5,7 +5,6 @@
 #include "EditorPanel.h"
 #include "EditorMenu.h"
 #include "Core/Alias.h"
-#include "ImGui/GraphScript/GraphScriptImGui.h"
 #include "ImGui/Logger.h"
 #include "MiniGuiApp.h"
 
@@ -85,7 +84,6 @@ namespace harmony {
 
         FSM m_EditorFSM;
 
-        harmony::GraphScriptImGuiEditor m_GraphScriptEditor;
         harmony::ImGuiLogger m_Logger;
 
     protected:

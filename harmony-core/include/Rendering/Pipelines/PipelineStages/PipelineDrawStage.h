@@ -6,7 +6,7 @@ namespace harmony {
 
     class PipelineDrawStage : public PipelineStage {
     public:
-        PipelineDrawStage(const std::string &name, Type stageType,
+        PipelineDrawStage(const String &name, Type stageType,
                           WeakPtr<ShaderProgram> shader,
                           WeakPtr<PipelineStageRenderer> stageRenderer,
                           Vector<AttachmentType> attachments = {

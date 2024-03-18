@@ -25,6 +25,6 @@ namespace harmony {
                                        m_Channel)
 
     protected:
-        std::map<std::string, DebugDrawEncoder *> p_DebugRenderers;
+        Map<String, DebugDrawEncoder *> p_DebugRenderers;
     };
 }; // namespace harmony

@@ -27,7 +27,7 @@ namespace harmony {
             { Unknown, "unknown" }
         })
 
-        ShaderStage(const std::string &name, const Type &shaderType);
+        ShaderStage(const String &name, const Type &shaderType);
 
         ShaderStage();
 
@@ -35,19 +35,19 @@ namespace harmony {
 
         virtual void LoadShaderBinary();
 
-        static std::string GetShaderStageNameFromEnum(Type type);
+        static String GetShaderStageNameFromEnum(Type type);
 
-        static std::string GetShaderRendererDirectory();
+        static String GetShaderRendererDirectory();
 
-        static std::string GetShaderRendererName();
+        static String GetShaderRendererName();
 
         Type m_Type;
-        std::string m_Name;
-        std::string m_BinaryPath;
+        String m_Name;
+        String m_BinaryPath;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderStage, m_Name, m_Type, m_Handle)
 
-        std::vector<bgfx::UniformInfo> m_UniformInfos;
+        Vector<bgfx::UniformInfo> m_UniformInfos;
         bgfx::ShaderHandle m_ProgramHandle;
 
     private:
@@ -56,7 +56,7 @@ namespace harmony {
 
     class BuiltInShaderStage : public ShaderStage {
     public:
-        BuiltInShaderStage(const std::string &name, const Type &shaderType,
+        BuiltInShaderStage(const String &name, const Type &shaderType,
                            bgfx::EmbeddedShader embeddedShader);
 
         virtual void LoadShaderBinary() override;
@@ -67,7 +67,7 @@ namespace harmony {
 
     class ShaderProgram {
     public:
-        ShaderProgram(const std::string &name);
+        ShaderProgram(const String &name);
 
         ShaderProgram();
 
@@ -90,14 +90,14 @@ namespace harmony {
         void RemoveUniformOverride(ShaderUniform &uniform);
 
         bgfx::ProgramHandle m_Handle;
-        std::string m_Name;
-        std::vector<ShaderUniform> m_Uniforms;
-        std::vector<ShaderUniform> m_ActiveUniformOverrides;
-        std::map<ShaderUniform, glm::vec4> m_Vec4Values;
-        std::map<ShaderUniform, glm::mat3> m_Mat3Values;
-        std::map<ShaderUniform, glm::mat4> m_Mat4Values;
-        std::map<ShaderUniform, BGFXTextureHandle> m_TextureValues;
-        std::unordered_map<ShaderStage::Type, WeakPtr<ShaderStage>> m_Stages;
+        String m_Name;
+        Vector<ShaderUniform> m_Uniforms;
+        Vector<ShaderUniform> m_ActiveUniformOverrides;
+        Map<ShaderUniform, glm::vec4> m_Vec4Values;
+        Map<ShaderUniform, glm::mat3> m_Mat3Values;
+        Map<ShaderUniform, glm::mat4> m_Mat4Values;
+        Map<ShaderUniform, BGFXTextureHandle> m_TextureValues;
+        HashMap<ShaderStage::Type, WeakPtr<ShaderStage>> m_Stages;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderProgram, m_Name, m_Stages)
 

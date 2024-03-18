@@ -10,12 +10,12 @@ namespace harmony {
     public:
         ShaderDataOverride();
 
-        std::string m_ShaderName;
-        std::vector<ShaderUniform> m_AvailableOverrides;
-        std::map<ShaderUniform, glm::vec4> m_Vec4Overrides;
-        std::map<ShaderUniform, glm::mat3> m_Mat3Overrides;
-        std::map<ShaderUniform, glm::mat4> m_Mat4Overrides;
-        std::map<ShaderUniform, BGFXTextureHandle> m_TextureOverrides;
+        String m_ShaderName;
+        Vector<ShaderUniform> m_AvailableOverrides;
+        Map<ShaderUniform, glm::vec4> m_Vec4Overrides;
+        Map<ShaderUniform, glm::mat3> m_Mat3Overrides;
+        Map<ShaderUniform, glm::mat4> m_Mat4Overrides;
+        Map<ShaderUniform, BGFXTextureHandle> m_TextureOverrides;
 
         void AddVec4Override(ShaderUniform uniform, glm::vec4 value);
 

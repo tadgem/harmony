@@ -10,14 +10,14 @@ namespace harmony {
 
     class ShaderDataSource {
     public:
-        ShaderDataSource(const std::string &name);
+        ShaderDataSource(const String &name);
 
         virtual void OnPreUpdate(entt::registry &registry, RefCntPtr<ShaderProgram> shader);
 
         virtual void OnPostUpdate(entt::registry &registry,
                                   RefCntPtr<ShaderProgram> shader);
 
-        std::string m_Name;
+        String m_Name;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ShaderDataSource, m_Name);
     };

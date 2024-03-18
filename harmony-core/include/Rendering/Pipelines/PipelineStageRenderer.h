@@ -12,7 +12,7 @@ namespace harmony {
 
     class PipelineStageRenderer {
     public:
-        PipelineStageRenderer(const std::string &name);
+        PipelineStageRenderer(const String &name);
 
         // need to think of a way to type constrain this to
         // the correct derivative of drawable.
@@ -20,7 +20,7 @@ namespace harmony {
                           bgfx::ViewId viewId) {
         }
 
-        std::string m_Name;
+        String m_Name;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineStageRenderer, m_Name);
     };

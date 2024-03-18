@@ -1,37 +1,39 @@
 #pragma once
 
-#include "ThirdParty/json.hpp"
-#include <string>
+#include "Core/Alias.h"
 
-struct PipelineHandle {
-public:
-    PipelineHandle(std::string name) : Name(name), Index(s_InstanceCounter) {
-        s_InstanceCounter++;
-    }
+namespace harmony {
 
-    PipelineHandle() : Index(s_InstanceCounter) {
-        s_InstanceCounter++;
-    }
+    struct PipelineHandle {
+    public:
+        PipelineHandle(String name) : Name(name), Index(s_InstanceCounter) {
+            s_InstanceCounter++;
+        }
 
-    std::string Name;
-    uint32_t Index;
+        PipelineHandle() : Index(s_InstanceCounter) {
+            s_InstanceCounter++;
+        }
 
-    bool operator==(const PipelineHandle &other) const {
-        return other.Name == Name;
-    }
+        String Name;
+        uint32_t Index;
 
-    bool operator!=(const PipelineHandle &other) const {
-        return other.Name != Name;
-    }
+        bool operator==(const PipelineHandle& other) const {
+            return other.Name == Name;
+        }
 
-    bool operator<(const PipelineHandle &other) const {
-        return Index < other.Index;
-    }
+        bool operator!=(const PipelineHandle& other) const {
+            return other.Name != Name;
+        }
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineHandle, Name)
+        bool operator<(const PipelineHandle& other) const {
+            return Index < other.Index;
+        }
 
-private:
-    inline static uint32_t s_InstanceCounter = 0;
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(PipelineHandle, Name)
 
-    friend class Pipeline;
-};
+    private:
+        inline static uint32_t s_InstanceCounter = 0;
+
+        friend class Pipeline;
+    };
+}

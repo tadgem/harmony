@@ -26,7 +26,7 @@ namespace harmony {
 
     class View {
     public:
-        View(const std::string &name);
+        View(const String &name);
 
         virtual void OnPreUpdate(entt::registry &registry);
 
@@ -54,7 +54,7 @@ namespace harmony {
 
         bool operator<(const View &other);
 
-        std::string m_Name;
+        String m_Name;
         uint32_t m_Width;
         uint32_t m_Height;
         glm::mat4 m_View;

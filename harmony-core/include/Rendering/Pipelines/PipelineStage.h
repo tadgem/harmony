@@ -26,7 +26,7 @@ namespace harmony {
             Compute
         };
 
-        PipelineStage(const std::string &name, Type pipelineStageType,
+        PipelineStage(const String &name, Type pipelineStageType,
                       Vector<AttachmentType> requiredAttachments,
                       WeakPtr<ShaderProgram> shader,
                       WeakPtr<PipelineStageRenderer> stageRenderer);
@@ -62,6 +62,6 @@ namespace harmony {
         RefCntPtr<PipelineStageRenderer> p_Renderer;
 
     protected:
-        std::vector<WeakPtr<ShaderDataSource>> p_DataSources;
+        Vector<WeakPtr<ShaderDataSource>> p_DataSources;
     };
 } // namespace harmony

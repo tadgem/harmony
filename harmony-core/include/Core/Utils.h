@@ -20,9 +20,9 @@ namespace harmony {
 
         static void SaveJsonToPath(Json &json, const String &path);
 
-        static std::vector<uint8_t> LoadBinaryFromPath(const String &path);
+        static Vector<uint8_t> LoadBinaryFromPath(const String &path);
 
-        static std::vector<uint8_t> *LoadBinaryFromPathHeap(const String &path);
+        static Vector<uint8_t> *LoadBinaryFromPathHeap(const String &path);
 
         static String GetFilePathDirectory(const String &path);
 
