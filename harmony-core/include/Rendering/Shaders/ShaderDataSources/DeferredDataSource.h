@@ -25,11 +25,11 @@ namespace harmony {
 
         void CollectUniforms(RefCntPtr<ShaderProgram> prog);
 
-        const std::string g_Position = "u_pos";
-        const std::string g_Normal = "u_normal";
-        const std::string g_Color = "u_color";
-        const std::string g_UV = "u_uv";
-        const std::string g_Depth = "u_depth";
+        const String g_Position = "u_pos";
+        const String g_Normal = "u_normal";
+        const String g_Color = "u_color";
+        const String g_UV = "u_uv";
+        const String g_Depth = "u_depth";
 
 
         ShaderUniform m_PositionTextureUniform;

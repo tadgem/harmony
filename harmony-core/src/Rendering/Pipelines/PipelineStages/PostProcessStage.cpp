@@ -6,7 +6,7 @@
 
 harmony::AttachmentType harmony::PostProcessStage::s_AttachmentType = harmony::AttachmentType::RGBA8;
 
-harmony::PostProcessStage::PostProcessStage(const std::string &name, Type stageType, WeakPtr<ShaderProgram> shader,
+harmony::PostProcessStage::PostProcessStage(const String &name, Type stageType, WeakPtr<ShaderProgram> shader,
                                             WeakPtr<PipelineStageRenderer> stageRenderer,
                                             Vector<AttachmentType> attachments)
         : PipelineStage(name, stageType, attachments, shader, stageRenderer) {

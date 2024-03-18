@@ -1,4 +1,5 @@
-#pragma once
+#ifndef HARMONY_CORE_ALIAS_H
+#define HARMONY_CORE_ALIAS_H
 
 #include <map>
 #include <memory>
@@ -7,6 +8,7 @@
 #include <string>
 #include <future>
 #include <utility>
+#include <fstream>
 #include <sstream>
 #include <ostream>
 #include <functional>
@@ -18,17 +20,22 @@
 #include <regex>
 #include <stdio.h>
 #include <ctype.h>
-#include <string>
+#include <filesystem>
 namespace harmony { 
     using String = std::string;
 
     template <typename... Args>
-    auto stoi(Args&&... args) -> decltype(f(std::forward<Args>(args)...)) {
+    inline auto stoi(Args&&... args) -> decltype(f(std::forward<Args>(args)...)) {
         return std::stoi(std::forward<Args>(args)...);
     }
 
+    inline static float FAbs(float f) {
+        return std::abs(f);
+    }
+
+
     template <typename A, typename B>
-    auto SmartPointerCast(const std::shared_ptr<B>& ptr)
+    inline auto SmartPointerCast(const std::shared_ptr<B>& ptr)
     {
         return std::static_pointer_cast<A>(ptr);
     }
@@ -37,6 +44,12 @@ namespace harmony {
     using StringStream = std::stringstream;
 
     using OStream = std::ostream;
+    using IStream = std::istream;
+    using OfStream = std::ofstream;
+    using IfStream = std::ifstream;
+    
+    template<typename T>
+    using IStreamBufIterator = std::istreambuf_iterator<T>;
 
     template<typename T>
     using Optional  = std::optional<T>;
@@ -62,6 +75,7 @@ namespace harmony {
     template<typename A, typename B>
     using IsBaseOf = std::is_base_of<A, B>;
 
+    namespace FileSystem = std::filesystem;
 
     template< class T >
     constexpr T&& Forward(std::remove_reference_t<T>& t) noexcept
@@ -75,6 +89,11 @@ namespace harmony {
         return std::forward<T>(t);
     }
 
+    template <class _InIt, class _Ty>
+    _InIt Find(_InIt _First, const _InIt _Last, const _Ty& _Val) {
+        return std::find(_First, _Last, _Val);
+    }
+
     using Procedure = std::function<void()>;
 
     using Mutex = std::mutex;
@@ -83,3 +102,5 @@ namespace harmony {
 
     using Json = nlohmann::json;
 }
+
+#endif

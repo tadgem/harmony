@@ -1,5 +1,5 @@
 #include "Core/Utils.h"
-#include <fstream>
+
 #include <filesystem>
 #include <optick.h>
 
@@ -10,17 +10,17 @@ harmony::String harmony::Utils::LoadStringFromPath(const String &path) {
     OPTICK_EVENT();
     String finalPath = GetCleanPlatformPath(path);
 
-    std::ifstream inputFile = std::ifstream(finalPath, std::ios::in | std::ios::binary);
+    IfStream inputFile = IfStream(finalPath, std::ios::in | std::ios::binary);
 
     if (!inputFile.is_open()) {
         return String();
     }
 
-    if (!std::filesystem::exists(finalPath)) {
+    if (!FileSystem::exists(finalPath)) {
         return String();
     }
 
-    size_t fileSize = std::filesystem::file_size(finalPath);
+    size_t fileSize = FileSystem::file_size(finalPath);
     String content(fileSize, '\0');
     inputFile.read(content.data(), fileSize);
 
@@ -38,8 +38,8 @@ harmony::Json harmony::Utils::LoadJsonFromPath(const String &path) {
 harmony::Vector<uint8_t> harmony::Utils::LoadBinaryFromPath(const String &path) {
     OPTICK_EVENT();
 
-    std::ifstream binary_input_stream = std::ifstream(path, std::ios::binary);
-    Vector<uint8_t> data(std::istreambuf_iterator<char>(binary_input_stream), {});
+    IfStream binary_input_stream = IfStream(path, std::ios::binary);
+    Vector<uint8_t> data(IStreamBufIterator<char>(binary_input_stream), {});
 
     return data;
 }
@@ -47,8 +47,8 @@ harmony::Vector<uint8_t> harmony::Utils::LoadBinaryFromPath(const String &path) 
 harmony::Vector<uint8_t> *harmony::Utils::LoadBinaryFromPathHeap(const String &path) {
     OPTICK_EVENT();
 
-    std::ifstream binary_input_stream = std::ifstream(path, std::ios::binary);
-    auto data = new Vector<uint8_t>(std::istreambuf_iterator<char>(binary_input_stream), {});
+    IfStream binary_input_stream = IfStream(path, std::ios::binary);
+    auto data = new Vector<uint8_t>(IStreamBufIterator<char>(binary_input_stream), {});
 
     return data;
 }
@@ -73,7 +73,7 @@ void harmony::Utils::TrimString(String &str) {
 
 void harmony::Utils::SaveStringToPath(const String &str, const String &path) {
     OPTICK_EVENT();
-    std::ofstream outputFile = std::ofstream(path);
+    OfStream outputFile = OfStream(path);
     outputFile << str;
     outputFile.close();
 }
@@ -123,7 +123,7 @@ glm::quat harmony::Utils::CalculateRotationQuat(glm::vec3 eulerDegrees) {
 
 bool harmony::Utils::FileExists(const String &filepath) {
     OPTICK_EVENT();
-    return std::filesystem::exists(filepath);
+    return FileSystem::exists(filepath);
 }
 
 harmony::String harmony::Utils::GetCleanPlatformPath(const String &path) {

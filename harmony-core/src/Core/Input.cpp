@@ -294,7 +294,7 @@ void harmony::Input::PostFrame() {
         for (int pad = 0; pad < g_NumGamepads; pad++) {
             float valueCurrentFrame = p_GamepadStates[pad].CurrentFrameTriggerState[padButton];
             float valuePreviousFrame = p_GamepadStates[pad].PreviousFrameTriggerState[padButton];
-            float diff = std::abs(valueCurrentFrame - valuePreviousFrame);
+            float diff = FAbs(valueCurrentFrame - valuePreviousFrame);
             if (diff > 0.001f) {
                 p_GamepadStates[pad].PreviousFrameTriggerState[padButton] = valueCurrentFrame;
             }

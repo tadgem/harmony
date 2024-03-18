@@ -5,6 +5,6 @@
 
 namespace harmony {
     struct ModelComponent {
-        std::vector<BGFXMeshHandle> MeshHandles;
+        Vector<BGFXMeshHandle> MeshHandles;
     };
 };

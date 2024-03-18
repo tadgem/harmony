@@ -13,9 +13,9 @@ harmony::TextureAssetFactory::TextureAssetFactory(Renderer &renderer) : p_Render
     m_Capabilities.AssetTypeHashes.push_back(textureTypeHash);
 }
 
-void harmony::TextureAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry) {
+void harmony::TextureAssetFactory::LoadAssetData(const String &path, entt::registry &registry) {
     OPTICK_EVENT();
-    std::string cleanPath = Utils::GetCleanPlatformPath(path);
+    String cleanPath = Utils::GetCleanPlatformPath(path);
     auto data = Utils::LoadBinaryFromPath(cleanPath);
     uint32_t dataSize = static_cast<uint32_t>(data.size());
 
@@ -44,7 +44,7 @@ void harmony::TextureAssetFactory::LoadAssetData(const std::string &path, entt::
     data.clear();
 }
 
-void harmony::TextureAssetFactory::UnloadAssetData(const std::string &path, entt::registry &registry) {
+void harmony::TextureAssetFactory::UnloadAssetData(const String &path, entt::registry &registry) {
     OPTICK_EVENT();
     auto view = registry.view<AssetComponent<TextureAsset>, AssetHandle>();
     entt::entity e;

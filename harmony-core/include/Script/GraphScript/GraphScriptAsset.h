@@ -7,9 +7,9 @@ namespace harmony::GraphScript {
     class GraphScriptAsset {
     public:
         explicit GraphScriptAsset(Json graphScriptJson)
-                : m_JSON(std::move(graphScriptJson)) {
+                : m_JSON(graphScriptJson) {
         };
 
         const Json m_JSON;
     };
-}; // namespace harmony::GraphScript
+}; // namespace harmony::GraphScripts

@@ -28,7 +28,7 @@ void harmony::AssetManager::OnImGui() {
 
 #endif
 
-bool harmony::AssetManager::IsPathLoaded(const std::string path) {
+bool harmony::AssetManager::IsPathLoaded(const String path) {
     OPTICK_EVENT();
     auto it = std::find(p_LoadedPaths.begin(), p_LoadedPaths.end(), path);
     if (it != p_LoadedPaths.end()) {
@@ -38,14 +38,14 @@ bool harmony::AssetManager::IsPathLoaded(const std::string path) {
     return false;
 }
 
-std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::string &path, HashString typeHash) {
+harmony::Vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const String &path, HashString typeHash) {
     OPTICK_EVENT();
-    std::string cleanPath = path;
+    String cleanPath = path;
     auto project = Program::Get()->m_Project;
     if (project) {
-        std::string projectDir = project->m_ProjectDirectory;
+        String projectDir = project->m_ProjectDirectory;
         size_t pos = cleanPath.find(projectDir);
-        if (pos != std::string::npos) {
+        if (pos != String::npos) {
             cleanPath.erase(pos, projectDir.length() + 1);
         }
     }
@@ -57,7 +57,7 @@ std::vector<harmony::AssetHandle> harmony::AssetManager::LoadAsset(const std::st
     RefCntPtr<AssetFactory> factory = GetAssetFactory(typeHash);
     if (!factory) {
         harmony::log::error("AssetManager : No factory for asset with type hash {}, skipping.", typeHash);
-        return std::vector<AssetHandle>();
+        return Vector<AssetHandle>();
     }
     factory->LoadAssetData(cleanPath, p_AssetRegistry);
     p_LoadedPaths.emplace_back(cleanPath);
@@ -76,9 +76,9 @@ void harmony::AssetManager::UnloadAsset(AssetHandle &handle, HashString typeHash
     factory->UnloadAssetData(handle.Path, p_AssetRegistry);
 }
 
-std::vector<harmony::AssetHandle> harmony::AssetManager::GetAssetsAtPath(const std::string &path) {
+harmony::Vector<harmony::AssetHandle> harmony::AssetManager::GetAssetsAtPath(const String &path) {
     OPTICK_EVENT();
-    auto handles = std::vector<AssetHandle>();
+    auto handles = Vector<AssetHandle>();
     auto view = p_AssetRegistry.view<AssetHandle>();
 
     for (auto [e, handle]: view.each()) {
@@ -148,7 +148,7 @@ harmony::RefCntPtr<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory
 
 bool harmony::AssetManager::AddAssetFactory(RefCntPtr<AssetFactory> assetFactory) {
     OPTICK_EVENT();
-    if (std::find(p_AssetFactories.begin(), p_AssetFactories.end(), assetFactory) == p_AssetFactories.end()) {
+    if (Find(p_AssetFactories.begin(), p_AssetFactories.end(), assetFactory) == p_AssetFactories.end()) {
         p_AssetFactories.emplace_back(assetFactory);
         return true;
     }

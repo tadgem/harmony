@@ -6,7 +6,7 @@ namespace harmony {
 
     class PostProcessStage : public PipelineStage {
     public:
-        PostProcessStage(const std::string &name, Type stageType,
+        PostProcessStage(const String &name, Type stageType,
                          WeakPtr<ShaderProgram> shader,
                          WeakPtr<PipelineStageRenderer> stageRenderer,
                          Vector<AttachmentType> attachments);

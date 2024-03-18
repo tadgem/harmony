@@ -28,7 +28,7 @@
 #include <dwmapi.h>
 #endif
 
-harmony::Program::Program(const std::string &name) : p_AppName(name), m_Renderer(m_AssetManager) {
+harmony::Program::Program(const String &name) : p_AppName(name), m_Renderer(m_AssetManager) {
     OPTICK_EVENT();
     if (s_Instance != nullptr) {
         harmony::log::error("Trying to create new application instance but an application already exists!");
@@ -59,9 +59,9 @@ void harmony::Program::Init() {
 
     harmony::log::info("Harmony Engine");
 
-    using std::filesystem::current_path;
+    using FileSystem::current_path;
 
-    std::filesystem::path path = std::filesystem::current_path();
+    FileSystem::path path = std::filesystem::current_path();
     harmony::log::info("Current Working Directory : {}", path.string());
 
     InitSDL();
@@ -86,7 +86,7 @@ void harmony::Program::SetupBGFXCapabilities(bgfx::Init &init) {
     init.capabilities = caps;
 }
 
-std::string harmony::Program::GetVendorName(uint16_t vendorId) {
+harmony::String harmony::Program::GetVendorName(uint16_t vendorId) {
     OPTICK_EVENT();
     switch (vendorId) {
         case BGFX_PCI_ID_AMD:
@@ -106,7 +106,7 @@ std::string harmony::Program::GetVendorName(uint16_t vendorId) {
     }
 }
 
-void harmony::Program::ChangeWorkingDirectory(const std::string &directory) {
+void harmony::Program::ChangeWorkingDirectory(const String &directory) {
     OPTICK_EVENT();
     std::filesystem::current_path(std::filesystem::path(directory));
 }
@@ -704,14 +704,14 @@ void harmony::Program::Run() {
 
 }
 
-void harmony::Program::Run(const std::string &projectPath) {
+void harmony::Program::Run(const String &projectPath) {
     OPTICK_EVENT();
 
     PreRunInit();
     RunProgramLoop();
 }
 
-void harmony::Program::CreateProject(const std::string &name, const std::string &path) {
+void harmony::Program::CreateProject(const String &name, const String &path) {
     OPTICK_EVENT();
     CloseActiveProject();
     m_Project = CreateRef<Project>(name);
@@ -736,7 +736,7 @@ void harmony::Program::SaveProject() {
     Utils::SaveJsonToPath(projectJson, p_LoadedProjectPath);
 }
 
-void harmony::Program::LoadProject(const std::string &path) {
+void harmony::Program::LoadProject(const String &path) {
     OPTICK_EVENT();
     CloseActiveProject();
 
@@ -786,7 +786,7 @@ void harmony::Program::CloseActiveProject() {
     m_Project = nullptr;
 }
 
-void harmony::Program::CreateScene(const std::string &name) {
+void harmony::Program::CreateScene(const String &name) {
     OPTICK_EVENT();
     if (m_Project == nullptr) {
         harmony::log::warn("Program : No project loaded, cannot create scene");
@@ -798,18 +798,18 @@ void harmony::Program::CreateScene(const std::string &name) {
     p_ActiveScene = CreateRef<Scene>(name);
 }
 
-void harmony::Program::SaveScene(const std::string &path) {
+void harmony::Program::SaveScene(const String &path) {
     OPTICK_EVENT();
     if (p_ActiveScene == nullptr) {
         harmony::log::warn("Program::SaveScene : cannot save scene, as there is no active scene.");
         return;
     }
     harmony::log::info("Program : Saving open scene to path {}", path);
-    std::string cleanPath = path;
+    String cleanPath = path;
     if (m_Project) {
-        std::string projectDir = m_Project->m_ProjectDirectory;
+        String projectDir = m_Project->m_ProjectDirectory;
         size_t pos = cleanPath.find(projectDir);
-        if (pos != std::string::npos && projectDir.length() > 0) {
+        if (pos != String::npos && projectDir.length() > 0) {
             cleanPath.erase(pos, projectDir.length() + 1);
         }
     } else {
@@ -821,7 +821,7 @@ void harmony::Program::SaveScene(const std::string &path) {
     Json sceneJson = *p_ActiveScene;
     Utils::SaveJsonToPath(sceneJson, cleanPath);
 
-    auto it = std::find(m_Project->m_SerializedScenes.begin(), m_Project->m_SerializedScenes.end(), cleanPath);
+    auto it = Find(m_Project->m_SerializedScenes.begin(), m_Project->m_SerializedScenes.end(), cleanPath);
     int findIndex = -1;
     int removeIndex = -1;
     for (int i = 0; i < m_Project->m_SerializedScenes.size(); i++) {
@@ -838,7 +838,7 @@ void harmony::Program::SaveScene(const std::string &path) {
     }
 }
 
-void harmony::Program::LoadScene(const std::string &path) {
+void harmony::Program::LoadScene(const String &path) {
     OPTICK_EVENT();
     CloseActiveScene();
     harmony::log::info("Program : Loading scene from path : {}", path);
@@ -851,7 +851,7 @@ void harmony::Program::LoadScene(const std::string &path) {
 void harmony::Program::OpenScene(uint32_t index) {
     OPTICK_EVENT();
     CloseActiveScene();
-    std::string scenePath = m_Project->m_SerializedScenes[index];
+    String scenePath = m_Project->m_SerializedScenes[index];
 
     harmony::log::info("Program : Loading scene from index : {} : path : {}", index, scenePath);
 
@@ -978,9 +978,9 @@ void harmony::Program::RunRendererPostUpdate() {
     m_Renderer.OnPostUpdate(p_ActiveScene->m_Registry);
 }
 
-std::string harmony::Program::GetWorkingDirectory() {
+harmony::String harmony::Program::GetWorkingDirectory() {
     OPTICK_EVENT();
-    return std::filesystem::current_path().string();
+    return FileSystem::current_path().string();
 }
 
 void harmony::Program::SaveImGuiSettings() {
@@ -995,14 +995,14 @@ void harmony::Program::LoadImGuiSettings() {
         return;
     }
     m_Project->m_ImGuiIniPath = m_Project->m_ProjectName + "_ImGui.ini";
-    if (std::filesystem::exists(m_Project->m_ImGuiIniPath)) {
+    if (FileSystem::exists(m_Project->m_ImGuiIniPath)) {
         ImGui::LoadIniSettingsFromDisk(m_Project->m_ImGuiIniPath.c_str());
     }
 }
 
-void harmony::Program::UpdateProjectDirectory(const std::string &path) {
+void harmony::Program::UpdateProjectDirectory(const String &path) {
     OPTICK_EVENT();
-    std::string directory = Utils::GetFilePathDirectory(path);
+    String directory = Utils::GetFilePathDirectory(path);
     ChangeWorkingDirectory(directory);
     directory = GetWorkingDirectory();
     harmony::log::info("Current working directory : {}", directory);
