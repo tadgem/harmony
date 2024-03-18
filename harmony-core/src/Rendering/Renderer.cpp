@@ -39,7 +39,7 @@ harmony::Renderer::Renderer(AssetManager &assetManager) : p_AssetManager(assetMa
 }
 
 harmony::WeakPtr<harmony::ShaderProgram>
-harmony::Renderer::AddBuiltInShader(const std::string &progName, const std::string &vsName, const std::string &fsName,
+harmony::Renderer::AddBuiltInShader(const String &progName, const String &vsName, const String &fsName,
                                     uint32_t vsIndex, uint32_t fsIndex) {
     OPTICK_EVENT();
     RefCntPtr<ShaderProgram> prog = CreateRef<ShaderProgram>(progName);
@@ -61,7 +61,7 @@ harmony::Renderer::AddBuiltInShader(const std::string &progName, const std::stri
 }
 
 harmony::WeakPtr<harmony::ShaderProgram>
-harmony::Renderer::AddBuiltInShader(const std::string &progName, const std::string &csName, uint32_t csIndex) {
+harmony::Renderer::AddBuiltInShader(const String &progName, const String &csName, uint32_t csIndex) {
     OPTICK_EVENT();
     RefCntPtr<ShaderProgram> prog = CreateRef<ShaderProgram>(progName);
     RefCntPtr<BuiltInShaderStage> cs = CreateRef<BuiltInShaderStage>(csName, ShaderStage::Type::Compute,
@@ -91,7 +91,7 @@ void harmony::Renderer::AddBuiltInShaders() {
 }
 
 harmony::WeakPtr<harmony::ShaderProgram>
-harmony::Renderer::BuildShader(const std::string name, WeakPtr<ShaderStage> vertStage, WeakPtr<ShaderStage> fragStage) {
+harmony::Renderer::BuildShader(const String name, WeakPtr<ShaderStage> vertStage, WeakPtr<ShaderStage> fragStage) {
     OPTICK_EVENT();
     RefCntPtr<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
     RefCntPtr<ShaderStage> vs = vertStage.lock();
@@ -109,7 +109,7 @@ harmony::Renderer::BuildShader(const std::string name, WeakPtr<ShaderStage> vert
 }
 
 harmony::WeakPtr<harmony::ShaderProgram>
-harmony::Renderer::BuildShader(const std::string name, WeakPtr<ShaderStage> computeStage) {
+harmony::Renderer::BuildShader(const String name, WeakPtr<ShaderStage> computeStage) {
     OPTICK_EVENT();
     RefCntPtr<ShaderProgram> prog = CreateRef<ShaderProgram>(name);
     RefCntPtr<ShaderStage> cs = computeStage.lock();
@@ -129,7 +129,7 @@ uint32_t harmony::Renderer::p_ViewHandleCounter = 2;
 
 uint32_t harmony::Renderer::p_PresentViewHandleCounter = 1;
 
-harmony::WeakPtr<harmony::View> harmony::Renderer::GetView(const std::string &name) {
+harmony::WeakPtr<harmony::View> harmony::Renderer::GetView(const String &name) {
     OPTICK_EVENT();
     for (auto &[view, stack]: p_Views) {
         if (view->m_Name == name) {
@@ -239,7 +239,7 @@ void harmony::Renderer::OnPostUpdate(entt::registry &registry) {
     }
 }
 
-harmony::WeakPtr<harmony::PipelineV2> harmony::Renderer::GetViewPipelineFromName(const std::string &viewName) {
+harmony::WeakPtr<harmony::PipelineV2> harmony::Renderer::GetViewPipelineFromName(const String &viewName) {
     OPTICK_EVENT();
     for (auto &[view, p]: p_Views) {
         if (view->m_Name == viewName) {
@@ -261,7 +261,7 @@ void harmony::Renderer::RefreshViews() {
 
 void harmony::Renderer::OnImGui() {
     OPTICK_EVENT();
-    const std::string rendererTitle = std::string(ICON_FA_SLIDERS) + " Renderer";
+    const String rendererTitle = String(ICON_FA_SLIDERS) + " Renderer";
 
     ImGui::SetNextWindowSizeConstraints(ImVec2(300, 300), ImVec2(300, 300));
     if (ImGui::Begin(rendererTitle.c_str())) {
@@ -331,7 +331,7 @@ void harmony::Renderer::OnImGui() {
                     canBuild = false;
                 }
 
-                std::string shaderName = std::string(p_ShaderNameInput);
+                String shaderName = String(p_ShaderNameInput);
                 Utils::TrimString(shaderName);
 
                 if (shaderName.size() == 0) {
@@ -351,7 +351,7 @@ void harmony::Renderer::OnImGui() {
     if (p_CreatePipelineWindow) {
         ImGui::SetNextWindowSize(ImVec2(320, 180));
         if (ImGui::Begin("New Pipeline")) {
-            static std::string pipelineTypes[] = {"Compute", "ScreenSpace", "Surface", "PostProcess"};
+            static String pipelineTypes[] = {"Compute", "ScreenSpace", "Surface", "PostProcess"};
             ImGui::Text("Basic Surface Pipeline");
             ImGui::InputText("Pipeline Name", p_PipelineNameInput, 64);
             if (ImGui::BeginCombo("Pipeline Type", pipelineTypes[p_SelectedPipelineType].c_str())) {
@@ -371,7 +371,7 @@ void harmony::Renderer::OnImGui() {
                     canCreate = false;
                 }
 
-                std::string pipelineName = std::string(p_PipelineNameInput);
+                String pipelineName = String(p_PipelineNameInput);
                 Utils::TrimString(pipelineName);
 
                 if (pipelineName.size() == 0) {
@@ -393,7 +393,7 @@ void harmony::Renderer::OnImGui() {
             PipelineStageRendererSelector("Stage Renderer", p_SelectedRenderer);
             ShaderSelector("Stage Shader", p_SelectedShaderProgram);
             if (ImGui::Button("Build")) {
-                std::string name = std::string(p_PipelineDrawStageNameInput);
+                String name = String(p_PipelineDrawStageNameInput);
                 Utils::TrimString(name);
                 RefCntPtr<PipelineDrawStage> stage = CreateRef<PipelineDrawStage>(
                         name,
@@ -417,7 +417,7 @@ void harmony::Renderer::OnImGui() {
             ImGui::InputText("Name", &p_PipelinePostProcessStageNameInput[0], 64);
             ShaderSelector("Stage Shader", p_SelectedShaderProgram);
             if (ImGui::Button("Build")) {
-                std::string name = std::string(p_PipelinePostProcessStageNameInput);
+                String name = String(p_PipelinePostProcessStageNameInput);
                 Utils::TrimString(name);
                 Vector<AttachmentType> attachments{AttachmentType::RGBA8};
                 RefCntPtr<PostProcessStage> stage = CreateRef<PostProcessStage>(
@@ -444,10 +444,10 @@ void harmony::Renderer::OnImGui() {
 }
 
 bool
-harmony::Renderer::ShaderSelector(const std::string &selectorName, harmony::WeakPtr<harmony::ShaderProgram> &prog) {
+harmony::Renderer::ShaderSelector(const String &selectorName, harmony::WeakPtr<harmony::ShaderProgram> &prog) {
     OPTICK_EVENT();
     bool selectedAsset = false;
-    std::vector<std::string> shaders = GetShaderNames();
+    Vector<String> shaders = GetShaderNames();
 
     if (ImGui::BeginCombo(selectorName.c_str(), "")) {
         for (int i = 0; i < shaders.size(); i++) {
@@ -463,7 +463,7 @@ harmony::Renderer::ShaderSelector(const std::string &selectorName, harmony::Weak
 
 }
 
-bool harmony::Renderer::PipelineStageRendererSelector(const std::string &selectorName,
+bool harmony::Renderer::PipelineStageRendererSelector(const String &selectorName,
                                                       harmony::WeakPtr<harmony::PipelineStageRenderer> renderer) {
     OPTICK_EVENT();
     bool selectedAsset = false;
@@ -483,7 +483,7 @@ bool harmony::Renderer::PipelineStageRendererSelector(const std::string &selecto
 
 #endif
 
-bool harmony::Renderer::IsBuiltInShaderName(const std::string &name) {
+bool harmony::Renderer::IsBuiltInShaderName(const String &name) {
     OPTICK_EVENT();
     for (int i = 0; i < p_BuiltInShaders.size(); i++) {
         RefCntPtr<ShaderProgram> shader = p_BuiltInShaders[i].lock();
@@ -545,7 +545,7 @@ void harmony::Renderer::Deserialize(AssetManager &am, Json &json) {
 
 void harmony::Renderer::AddPipelineStageRenderer(RefCntPtr<PipelineStageRenderer> renderer) {
     OPTICK_EVENT();
-    auto it = std::find(p_PipelineStageRenderers.begin(), p_PipelineStageRenderers.end(), renderer);
+    auto it = Find(p_PipelineStageRenderers.begin(), p_PipelineStageRenderers.end(), renderer);
 
     if (it == p_PipelineStageRenderers.end()) {
         p_PipelineStageRenderers.push_back(renderer);
@@ -553,7 +553,7 @@ void harmony::Renderer::AddPipelineStageRenderer(RefCntPtr<PipelineStageRenderer
     }
 }
 
-harmony::WeakPtr<harmony::PipelineStageRenderer> harmony::Renderer::GetPipelineStageRenderer(const std::string &name) {
+harmony::WeakPtr<harmony::PipelineStageRenderer> harmony::Renderer::GetPipelineStageRenderer(const String &name) {
     OPTICK_EVENT();
     for (int i = 0; i < p_PipelineStageRenderers.size(); i++) {
         if (p_PipelineStageRenderers[i]->m_Name == name) {
@@ -606,7 +606,7 @@ void harmony::Renderer::ReloadAllShaders() {
     }
 }
 
-bool harmony::Renderer::IsShaderLoaded(const std::string &name) {
+bool harmony::Renderer::IsShaderLoaded(const String &name) {
     OPTICK_EVENT();
     for (auto &shader: p_Shaders) {
         if (shader->m_Name == name) {
@@ -616,7 +616,7 @@ bool harmony::Renderer::IsShaderLoaded(const std::string &name) {
     return false;
 }
 
-harmony::WeakPtr<harmony::ShaderProgram> harmony::Renderer::GetShader(const std::string &name) {
+harmony::WeakPtr<harmony::ShaderProgram> harmony::Renderer::GetShader(const String &name) {
     OPTICK_EVENT();
     for (auto &shader: p_Shaders) {
         if (shader->m_Name == name) {
@@ -626,9 +626,9 @@ harmony::WeakPtr<harmony::ShaderProgram> harmony::Renderer::GetShader(const std:
     return WeakPtr<ShaderProgram>();
 }
 
-std::vector<std::string> harmony::Renderer::GetShaderNames() {
+harmony::Vector<harmony::String> harmony::Renderer::GetShaderNames() {
     OPTICK_EVENT();
-    std::vector<std::string> shaders = std::vector<std::string>();
+    Vector<String> shaders = Vector<String>();
     for (auto &shader: p_Shaders) {
         shaders.push_back(shader->m_Name);
     }
@@ -642,7 +642,7 @@ void harmony::Renderer::AddPipelineStage(RefCntPtr<PipelineStage> pipelineStage)
         return;
     }
 
-    if (std::find(p_PipelineStages.begin(), p_PipelineStages.end(), pipelineStage) != p_PipelineStages.end()) {
+    if (Find(p_PipelineStages.begin(), p_PipelineStages.end(), pipelineStage) != p_PipelineStages.end()) {
         harmony::log::warn("Renderer : PipelineStage : {} : Already managed by renderer.", pipelineStage->m_Name);
         return;
     }
@@ -650,7 +650,7 @@ void harmony::Renderer::AddPipelineStage(RefCntPtr<PipelineStage> pipelineStage)
     p_PipelineStages.emplace_back(pipelineStage);
 }
 
-harmony::WeakPtr<harmony::PipelineStage> harmony::Renderer::GetPipelineStage(const std::string &name) {
+harmony::WeakPtr<harmony::PipelineStage> harmony::Renderer::GetPipelineStage(const String &name) {
     OPTICK_EVENT();
     for (auto p: p_PipelineStages) {
         if (p->m_Name == name) {
@@ -663,7 +663,7 @@ harmony::WeakPtr<harmony::PipelineStage> harmony::Renderer::GetPipelineStage(con
 
 void harmony::Renderer::AddShaderDataSource(RefCntPtr<ShaderDataSource> dataSource) {
     OPTICK_EVENT();
-    if (std::find(p_ShaderDataSources.begin(), p_ShaderDataSources.end(), dataSource) != p_ShaderDataSources.end()) {
+    if (Find(p_ShaderDataSources.begin(), p_ShaderDataSources.end(), dataSource) != p_ShaderDataSources.end()) {
         harmony::log::warn(
                 "Renderer : Trying to add a shader data source that the renderer has already been provided.");
         return;
@@ -671,7 +671,7 @@ void harmony::Renderer::AddShaderDataSource(RefCntPtr<ShaderDataSource> dataSour
     p_ShaderDataSources.emplace_back(dataSource);
 }
 
-harmony::WeakPtr<harmony::ShaderDataSource> harmony::Renderer::GetShaderDataSource(const std::string &name) {
+harmony::WeakPtr<harmony::ShaderDataSource> harmony::Renderer::GetShaderDataSource(const String &name) {
     OPTICK_EVENT();
     for (int i = 0; i < p_ShaderDataSources.size(); i++) {
         if (p_ShaderDataSources[i]->m_Name == name) {
@@ -858,19 +858,19 @@ void harmony::Renderer::DeserializeShaders(Json &json, AssetManager &am) {
 
         harmony::log::info("Renderer : Deserializing shader {}", programJson[sk_ShaderProgramName]);
 
-        std::string shaderName = programJson[sk_ShaderProgramName];
+        String shaderName = programJson[sk_ShaderProgramName];
         if (IsShaderLoaded(shaderName)) {
             continue;
         }
 
-        std::map<ShaderStage::Type, RefCntPtr<ShaderStage>> stages = std::map<ShaderStage::Type, RefCntPtr<ShaderStage>>();
+        Map<ShaderStage::Type, RefCntPtr<ShaderStage>> stages = Map<ShaderStage::Type, RefCntPtr<ShaderStage>>();
 
         for (auto stageJson: programJson[sk_ShaderProgramStages]) {
             const int StageTypeIndex = 0;
             const int StageDataIndex = 1;
             auto stageDataJson = stageJson[StageDataIndex];
             AssetHandle assetHandle = stageDataJson[sk_AssetHandle];
-            std::string stageName = stageDataJson[sk_ShaderStageName];
+            String stageName = stageDataJson[sk_ShaderStageName];
             ShaderStage::Type stageType = stageDataJson[sk_ShaderStageType];
 
             if (am.IsPathLoaded(assetHandle.Path)) {
@@ -928,8 +928,8 @@ void harmony::Renderer::DeserializePostProcessStages(Json &json, AssetManager &a
     OPTICK_EVENT();
     harmony::log::info("Renderer : Deserializing Post Process Stages");
     for (auto postProcessJson: json[sk_RendererName][sk_RendererPostProcessStageCollection]) {
-        std::string name = postProcessJson[sk_PipelineStageName];
-        std::string shaderName = postProcessJson[sk_PipelineStageShader][sk_ShaderProgramName];
+        String name = postProcessJson[sk_PipelineStageName];
+        String shaderName = postProcessJson[sk_PipelineStageShader][sk_ShaderProgramName];
         WeakPtr<ShaderProgram> shader = GetShader(shaderName);
 
         if (shader.expired()) {
@@ -969,7 +969,7 @@ void harmony::Renderer::DeserializeViews(Json &json, AssetManager &am) {
     for (auto viewJson: viewsJson) {
         auto viewDataJson = viewJson[sk_ViewData];
         auto pipelineStackJson = viewJson[sk_PipelineStack];
-        std::string viewName = viewDataJson[sk_ViewName];
+        String viewName = viewDataJson[sk_ViewName];
         for (auto &[view, stack]: p_Views) {
             if (view->m_Name == viewName) {
                 view->Deserialize(viewDataJson);
@@ -979,7 +979,7 @@ void harmony::Renderer::DeserializeViews(Json &json, AssetManager &am) {
                     stackIndex++;
                 }
                 for (auto postProcess: pipelineStackJson[sk_PipelineStackPostProcessStages]) {
-                    std::string name = postProcess[sk_PipelineStageName];
+                    String name = postProcess[sk_PipelineStageName];
                 }
                 stackIndex = 0;
             }

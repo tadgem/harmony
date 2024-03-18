@@ -4,7 +4,7 @@
 harmony::Cube::Cube(float size) : Mesh("builtin://cube", 0) {
     OPTICK_EVENT();
     float side2 = size / 2.0f;
-    std::vector<glm::vec3> positions = {
+    Vector<glm::vec3> positions = {
             // Front
             glm::vec3(-side2, -side2, side2), glm::vec3(side2, -side2, side2), glm::vec3(side2, side2, side2),
             glm::vec3(-side2, side2, side2),
@@ -24,7 +24,7 @@ harmony::Cube::Cube(float size) : Mesh("builtin://cube", 0) {
             glm::vec3(-side2, side2, side2), glm::vec3(side2, side2, side2), glm::vec3(side2, side2, -side2),
             glm::vec3(-side2, side2, -side2)
     };
-    std::vector<glm::vec3> normals = {
+    Vector<glm::vec3> normals = {
             // Front
             glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 1.0f),
             glm::vec3(0.0f, 0.0f, 1.0f),
@@ -44,7 +44,7 @@ harmony::Cube::Cube(float size) : Mesh("builtin://cube", 0) {
             glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f),
             glm::vec3(0.0f, 1.0f, 0.0f)
     };
-    std::vector<glm::vec2> uvs = {
+    Vector<glm::vec2> uvs = {
             // Front
             glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f),
             // Right
@@ -58,7 +58,7 @@ harmony::Cube::Cube(float size) : Mesh("builtin://cube", 0) {
             // Top
             glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f)
     };
-    std::vector<unsigned int> indices = {
+    Vector<unsigned int> indices = {
             0, 1, 2, 0, 2, 3,
             4, 5, 6, 4, 6, 7,
             8, 9, 10, 8, 10, 11,
@@ -73,29 +73,29 @@ harmony::Cube::Cube(float size) : Mesh("builtin://cube", 0) {
 harmony::Plane::Plane(float size) : Mesh("builtin://plane", 0) {
     OPTICK_EVENT();
     float side2 = size / 2.0f;
-    std::vector<glm::vec3> positions = {
+    Vector<glm::vec3> positions = {
             glm::vec3(-side2, -side2, 0.0f), glm::vec3(-side2, side2, 0.0f),
             glm::vec3(side2, side2, 0.0f), glm::vec3(side2, -side2, 0.0f),
     };
-    std::vector<glm::vec2> uvs = {
+    Vector<glm::vec2> uvs = {
             glm::vec2(0.0f, 1.0f), glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 0.0f)
     };
-    std::vector<glm::vec3> normals = {
+    Vector<glm::vec3> normals = {
             glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, -1.0f),
             glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, -1.0f),
     };
 
-    /*std::vector<glm::vec3> tangents = {
+    /*Vector<glm::vec3> tangents = {
         glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f),
         glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f),
     };
 
-    std::vector<glm::vec3> bitangents = {
+    Vector<glm::vec3> bitangents = {
         glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f),
         glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f),
     };*/
 
-    std::vector<unsigned int> indices = {
+    Vector<unsigned int> indices = {
             0, 1, 2, 2, 3, 0
     };
     InitializeMesh(positions, indices, normals, uvs);

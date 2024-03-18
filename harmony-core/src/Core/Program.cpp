@@ -61,7 +61,7 @@ void harmony::Program::Init() {
 
     using FileSystem::current_path;
 
-    FileSystem::path path = std::filesystem::current_path();
+    FileSystem::path path = FileSystem::current_path();
     harmony::log::info("Current Working Directory : {}", path.string());
 
     InitSDL();
@@ -108,7 +108,7 @@ harmony::String harmony::Program::GetVendorName(uint16_t vendorId) {
 
 void harmony::Program::ChangeWorkingDirectory(const String &directory) {
     OPTICK_EVENT();
-    std::filesystem::current_path(std::filesystem::path(directory));
+    FileSystem::current_path(FileSystem::path(directory));
 }
 
 void harmony::Program::Cleanup() {

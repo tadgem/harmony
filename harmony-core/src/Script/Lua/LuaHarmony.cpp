@@ -118,7 +118,7 @@ harmony::LuaScriptEntity lua_GetEntity() {
     return harmony::LuaScriptEntity(lua_GetActiveScene(), lwr.lock()->GetCurrentEntity());
 }
 
-void lua_LoadScene(const std::string &path) {
+void lua_LoadScene(const harmony::String &path) {
     harmony::Program::Get()->LoadScene(path);
 }
 
@@ -126,7 +126,7 @@ void lua_OpenScene(uint32_t index) {
     harmony::Program::Get()->OpenScene(index);
 }
 
-harmony::ShaderProgram *lua_GetShader(const std::string &name) {
+harmony::ShaderProgram *lua_GetShader(const harmony::String &name) {
     auto r = lua_GetRenderer();
     if (r) {
         auto swr = r->GetShader(name);
@@ -138,7 +138,7 @@ harmony::ShaderProgram *lua_GetShader(const std::string &name) {
     return nullptr;
 }
 
-harmony::View *lua_GetView(const std::string &viewName) {
+harmony::View *lua_GetView(const harmony::String &viewName) {
     auto r = lua_GetRenderer();
     if (r) {
         auto vwr = r->GetView(viewName);

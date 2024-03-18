@@ -6,7 +6,7 @@
 #include "Rendering/Framebuffer.h"
 #include "Rendering/GPUResourceManager.h"
 
-harmony::PipelineStage::PipelineStage(const std::string &name, Type pipelineStageType,
+harmony::PipelineStage::PipelineStage(const String &name, Type pipelineStageType,
                                       Vector<AttachmentType> requiredAttachments,
                                       WeakPtr<ShaderProgram> shader, WeakPtr<PipelineStageRenderer> stageRenderer)
         : m_Name(name), m_StageType(pipelineStageType), m_Attachments(requiredAttachments), p_Shader(shader),

@@ -3,8 +3,8 @@
 
 harmony::GfxDebug::GfxDebug() {
     OPTICK_EVENT();
-    p_DebugRenderers.emplace(Channel::Editor, std::vector<DebugDrawEncoder *>());
-    p_DebugRenderers.emplace(Channel::Game, std::vector<DebugDrawEncoder *>());
+    p_DebugRenderers.emplace(Channel::Editor, Vector<DebugDrawEncoder *>());
+    p_DebugRenderers.emplace(Channel::Game, Vector<DebugDrawEncoder *>());
 
     ddInit(&p_Allocator);
 }

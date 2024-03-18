@@ -29,6 +29,11 @@ namespace harmony {
         return std::stoi(std::forward<Args>(args)...);
     }
 
+    template <typename... Args>
+    inline auto stoul(Args&&... args) -> decltype(f(std::forward<Args>(args)...)) {
+        return std::stoul(std::forward<Args>(args)...);
+    }
+
     inline static float FAbs(float f) {
         return std::abs(f);
     }
@@ -42,7 +47,7 @@ namespace harmony {
 
 
     using StringStream = std::stringstream;
-
+    
     using OStream = std::ostream;
     using IStream = std::istream;
     using OfStream = std::ofstream;
@@ -71,11 +76,14 @@ namespace harmony {
 
     template<typename T>
     using Future = std::future<T>;
+    using FutureStatus = std::future_status;
 
     template<typename A, typename B>
     using IsBaseOf = std::is_base_of<A, B>;
 
     namespace FileSystem = std::filesystem;
+
+    namespace Chrono = std::chrono;
 
     template< class T >
     constexpr T&& Forward(std::remove_reference_t<T>& t) noexcept
@@ -92,6 +100,12 @@ namespace harmony {
     template <class _InIt, class _Ty>
     _InIt Find(_InIt _First, const _InIt _Last, const _Ty& _Val) {
         return std::find(_First, _Last, _Val);
+    }
+
+    template <class _InIt, class _Pr>
+    _InIt FindIf(_InIt _First, const _InIt _Last, _Pr _Pred)
+    {
+        return std::find_if(_First, _Last, _Pred);
     }
 
     using Procedure = std::function<void()>;

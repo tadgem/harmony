@@ -9,7 +9,7 @@
 #include <bx/commandline.h>
 #include <optick.h>
 
-harmony::ShaderProgram::ShaderProgram(const std::string &name) : m_Name(name), m_Handle(BGFX_INVALID_HANDLE) {
+harmony::ShaderProgram::ShaderProgram(const String &name) : m_Name(name), m_Handle(BGFX_INVALID_HANDLE) {
     OPTICK_EVENT();
 }
 
@@ -81,7 +81,7 @@ void harmony::ShaderProgram::GetUniforms() {
             uniform.Type = info.type;
             uniform.ArraySize = info.num;
 
-            if (std::find(m_Uniforms.begin(), m_Uniforms.end(), uniform) == m_Uniforms.end()) {
+            if (Find(m_Uniforms.begin(), m_Uniforms.end(), uniform) == m_Uniforms.end()) {
                 m_Uniforms.emplace_back(uniform);
             }
 
@@ -114,10 +114,10 @@ void harmony::ShaderProgram::GetUniforms() {
 
 void harmony::ShaderProgram::UpdateUniforms(AssetManager &am) {
     OPTICK_EVENT();
-    std::map<std::string, glm::vec4> vec4s;
-    std::map<std::string, glm::mat3> mat3s;
-    std::map<std::string, glm::mat4> mat4s;
-    std::map<std::string, BGFXTextureHandle> textures;
+    Map<String, glm::vec4> vec4s;
+    Map<String, glm::mat3> mat3s;
+    Map<String, glm::mat4> mat4s;
+    Map<String, BGFXTextureHandle> textures;
 
     if (m_Vec4Values.size() > 0) {
         for (auto &[handle, value]: m_Vec4Values) {
@@ -189,7 +189,7 @@ void harmony::ShaderProgram::UpdateUniforms(AssetManager &am) {
 
 void harmony::ShaderProgram::AddUniformOverride(ShaderUniform &uniform) {
     OPTICK_EVENT();
-    if (std::find(m_ActiveUniformOverrides.begin(), m_ActiveUniformOverrides.end(), uniform) ==
+    if (Find(m_ActiveUniformOverrides.begin(), m_ActiveUniformOverrides.end(), uniform) ==
         m_ActiveUniformOverrides.end()) {
         m_ActiveUniformOverrides.emplace_back(uniform);
         return;
@@ -199,7 +199,7 @@ void harmony::ShaderProgram::AddUniformOverride(ShaderUniform &uniform) {
 
 void harmony::ShaderProgram::RemoveUniformOverride(ShaderUniform &uniform) {
     OPTICK_EVENT();
-    auto it = std::find(m_ActiveUniformOverrides.begin(), m_ActiveUniformOverrides.end(), uniform);
+    auto it = Find(m_ActiveUniformOverrides.begin(), m_ActiveUniformOverrides.end(), uniform);
     if (it == m_ActiveUniformOverrides.end()) {
         log::warn("ShaderProgram : {} : Uniform {} not marked as overriden for this shader.", m_Name, uniform.Name);
         return;
@@ -274,7 +274,7 @@ void harmony::ShaderProgram::UpdateUniform(ShaderUniform &uniform) {
 
 bool harmony::ShaderProgram::IsOverridenUniform(const ShaderUniform &uniform) {
     OPTICK_EVENT();
-    return std::find
+    return Find
                    (
                            m_ActiveUniformOverrides.begin(),
                            m_ActiveUniformOverrides.end(),
@@ -282,7 +282,7 @@ bool harmony::ShaderProgram::IsOverridenUniform(const ShaderUniform &uniform) {
                    ) != m_ActiveUniformOverrides.end();
 }
 
-harmony::ShaderStage::ShaderStage(const std::string &name, const Type &shaderType)
+harmony::ShaderStage::ShaderStage(const String &name, const Type &shaderType)
         : Asset(AssetHandle{name, 0, GetTypeHash<ShaderStage>()}), m_Type(shaderType),
           m_ProgramHandle(BGFX_INVALID_HANDLE), m_Name(name) {
     OPTICK_EVENT();
@@ -312,9 +312,9 @@ void harmony::ShaderStage::LoadShaderBinary() {
     }
 }
 
-std::string harmony::ShaderStage::GetShaderStageNameFromEnum(Type type) {
+harmony::String harmony::ShaderStage::GetShaderStageNameFromEnum(Type type) {
     OPTICK_EVENT();
-    std::string typeName = "";
+    String typeName = "";
 
     switch (type) {
         case Type::Vertex:
@@ -331,15 +331,15 @@ std::string harmony::ShaderStage::GetShaderStageNameFromEnum(Type type) {
     return typeName;
 }
 
-std::string harmony::ShaderStage::GetShaderRendererDirectory() {
+harmony::String harmony::ShaderStage::GetShaderRendererDirectory() {
     OPTICK_EVENT();
-    std::string shaderPath = "shaders/bin/" + GetShaderRendererName() + "/";
+    String shaderPath = "shaders/bin/" + GetShaderRendererName() + "/";
     return shaderPath;
 }
 
-std::string harmony::ShaderStage::GetShaderRendererName() {
+harmony::String harmony::ShaderStage::GetShaderRendererName() {
     OPTICK_EVENT();
-    std::string shaderPath = "";
+    String shaderPath = "";
 
     switch (bgfx::getRendererType()) {
         case bgfx::RendererType::Noop:
@@ -379,7 +379,7 @@ std::string harmony::ShaderStage::GetShaderRendererName() {
 }
 
 harmony::BuiltInShaderStage::BuiltInShaderStage(
-        const std::string &name,
+        const String &name,
         const Type &shaderType,
         bgfx::EmbeddedShader embeddedShader) : ShaderStage(name, shaderType), p_EmbeddedShader(embeddedShader) {
     OPTICK_EVENT();

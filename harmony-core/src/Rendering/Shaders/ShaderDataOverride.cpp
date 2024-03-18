@@ -46,10 +46,10 @@ void harmony::ShaderDataOverride::AddTextureOverride(ShaderUniform uniform, BGFX
 
 void harmony::ShaderDataOverride::UpdateOverrides(WeakPtr<ShaderProgram> shaderWr, AssetManager &am) {
     OPTICK_EVENT();
-    std::map<std::string, glm::vec4> vec4s;
-    std::map<std::string, glm::mat3> mat3s;
-    std::map<std::string, glm::mat4> mat4s;
-    std::map<std::string, BGFXTextureHandle> textures;
+    Map<String, glm::vec4> vec4s;
+    Map<String, glm::mat3> mat3s;
+    Map<String, glm::mat4> mat4s;
+    Map<String, BGFXTextureHandle> textures;
     RefCntPtr<ShaderProgram> shader = shaderWr.lock();
 
     m_ShaderName = shader->m_Name;

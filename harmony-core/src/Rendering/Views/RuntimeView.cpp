@@ -63,7 +63,7 @@ void harmony::RuntimeView::OnResized(uint32_t w, uint32_t h) {
 }
 
 #if HARMONY_DEBUG
-static const std::string s_RuntimeViewTitle = std::string(ICON_FA_PLAY_CIRCLE) + " Runtime";
+static const harmony::String s_RuntimeViewTitle = harmony::String(ICON_FA_PLAY_CIRCLE) + " Runtime";
 
 void harmony::RuntimeView::OnImGui() {
     OPTICK_EVENT();
@@ -110,12 +110,12 @@ void harmony::RuntimeView::OnImGuiOptions() {
     }
 
     RefCntPtr<Scene> scene = p_Program.GetActiveScene().lock();
-    std::string currentName = "Entity " + std::to_string(static_cast<uint32_t>(CameraEntity));
+    String currentName = "Entity " + std::to_string(static_cast<uint32_t>(CameraEntity));
     if (ImGui::BeginCombo("Camera Entity", currentName.c_str())) {
         auto view = scene->m_Registry.view<CameraComponent>();
 
         for (auto [entity, camera]: view.each()) {
-            std::string name = "Entity " + std::to_string(static_cast<uint32_t>(entity));
+            String name = "Entity " + std::to_string(static_cast<uint32_t>(entity));
             if (ImGui::Selectable(name.c_str())) {
                 CameraEntity = entity;
             }

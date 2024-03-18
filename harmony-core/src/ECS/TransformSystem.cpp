@@ -55,7 +55,7 @@ void harmony::TransformSystem::Init(entt::registry &registry) {
     }
 }
 
-static std::mutex s_TransformMutex;
+static harmony::Mutex s_TransformMutex;
 
 void harmony::TransformSystem::Update(entt::registry &registry) {
 
@@ -68,7 +68,7 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
     auto transformView = registry.view<EntityData, TransformComponent>();
     OPTICK_EVENT("Build group transform vectors");
     static const uint8_t NUM_GROUPS = 4;
-    std::vector<TransformComponent *> transformGroups[NUM_GROUPS];
+    Vector<TransformComponent *> transformGroups[NUM_GROUPS];
     size_t numTransforms = transformView.size_hint();
     uint32_t groupSize = numTransforms / NUM_GROUPS;
 
@@ -123,9 +123,9 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
     if (useMT) {
         OPTICK_EVENT("Build group lambdas")
         int emptyGroups = NUM_GROUPS - (groupIndex + 1);
-        std::vector<Future<void>> futures;
+        Vector<Future<void>> futures;
         for (int i = 0; i < NUM_GROUPS - emptyGroups; i++) {
-            std::vector<TransformComponent *> tVec = transformGroups[i];
+            Vector<TransformComponent *> tVec = transformGroups[i];
             futures.emplace_back(ThreadPool.submit(
                     [tVec]() {
                         for (int t = 0; t < tVec.size(); t++) {

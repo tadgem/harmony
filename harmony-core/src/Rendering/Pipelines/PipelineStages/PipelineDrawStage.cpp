@@ -5,7 +5,7 @@
 #include "Rendering/View.h"
 #include "Core/Log.hpp"
 
-harmony::PipelineDrawStage::PipelineDrawStage(const std::string &name, Type stageType, WeakPtr<ShaderProgram> shader,
+harmony::PipelineDrawStage::PipelineDrawStage(const String &name, Type stageType, WeakPtr<ShaderProgram> shader,
                                               WeakPtr<PipelineStageRenderer> stageRenderer,
                                               Vector<AttachmentType> attachments) : PipelineStage(name, stageType,
                                                                                                   attachments, shader,

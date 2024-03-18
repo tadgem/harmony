@@ -1,14 +1,14 @@
 #include <optick.h>
 #include "ECS/System.h"
 
-std::string harmony::System::GetEntityKey(entt::entity &entity) {
+harmony::String harmony::System::GetEntityKey(entt::entity &entity) {
     OPTICK_EVENT();
     uint32_t handle = static_cast<uint32_t>(entity);
     return std::to_string(handle);
 }
 
-entt::entity harmony::System::GetEntityFromKey(const std::string &key) {
+entt::entity harmony::System::GetEntityFromKey(const String &key) {
     OPTICK_EVENT();
-    uint32_t handle = std::stoul(key);
+    uint32_t handle = stoul(key);
     return entt::entity(handle);
 }

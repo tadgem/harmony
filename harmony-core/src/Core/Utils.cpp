@@ -55,7 +55,7 @@ harmony::Vector<uint8_t> *harmony::Utils::LoadBinaryFromPathHeap(const String &p
 
 harmony::String harmony::Utils::GetFilePathDirectory(const String &path) {
     OPTICK_EVENT();
-    std::size_t found = path.find_last_of("/\\");
+    size_t found = path.find_last_of("/\\");
     return path.substr(0, found);
 }
 
@@ -66,8 +66,8 @@ int harmony::Utils::EncodeRGBA(char r, char g, char b, char a) {
 
 void harmony::Utils::TrimString(String &str) {
     OPTICK_EVENT();
-    str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](unsigned char ch) {
-        return !std::isspace(ch);
+    str.erase(str.begin(), FindIf(str.begin(), str.end(), [](unsigned char ch) {
+        return !(ch == ' ');
     }));
 }
 

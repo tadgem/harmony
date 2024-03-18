@@ -19,7 +19,7 @@ harmony::LuaComponent harmony::LuaComponent::Create(sol::state &state, LuaScript
 
     if (!compilationResult.valid()) {
         sol::error err = compilationResult;
-        std::string what = err.what();
+        String what = err.what();
         harmony::log::error(
                 "LuaComponent : CreateLuaComponent : {} : in compiling script {}", what, scriptAsset.m_Name);
     }

@@ -59,7 +59,7 @@ namespace harmony {
                 }
 
                 String finalSizeString = String(numericAccumulator.begin(), numericAccumulator.end());
-                nameSize = std::stoi(finalSizeString);
+                nameSize = stoi(finalSizeString);
                 numericAccumulator.clear();
                 if(nameSize > 0)
                 {

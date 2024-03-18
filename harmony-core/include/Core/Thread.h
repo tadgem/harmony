@@ -8,6 +8,6 @@ namespace harmony {
 
     template<typename R>
     bool is_ready(Future<R> const &f) {
-        return f.wait_for(std::chrono::seconds(0)) == std::future_status::ready;
+        return f.wait_for(Chrono::seconds(0)) == FutureStatus::ready;
     }
 }

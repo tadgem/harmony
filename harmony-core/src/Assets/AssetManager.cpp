@@ -30,7 +30,7 @@ void harmony::AssetManager::OnImGui() {
 
 bool harmony::AssetManager::IsPathLoaded(const String path) {
     OPTICK_EVENT();
-    auto it = std::find(p_LoadedPaths.begin(), p_LoadedPaths.end(), path);
+    auto it = Find(p_LoadedPaths.begin(), p_LoadedPaths.end(), path);
     if (it != p_LoadedPaths.end()) {
         return true;
     }

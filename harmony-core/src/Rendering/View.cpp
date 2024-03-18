@@ -10,7 +10,7 @@
 
 #endif
 
-harmony::View::View(const std::string &name) :
+harmony::View::View(const String &name) :
         m_View(glm::mat4(1.0)),
         m_Projection(glm::mat4(1.0)),
         m_Width(g_InitialWidth),

@@ -35,7 +35,7 @@ void harmony::LuaProgramComponent::Init() {
             auto result = lc.m_Start();
             if (!result.valid()) {
                 sol::error err = result;
-                std::string what = err.what();
+                String what = err.what();
                 harmony::log::error("LuaSystem : Error : {} : in executing start() for : Script : {}",
                                     what, ah.Path);
             }
@@ -57,7 +57,7 @@ void harmony::LuaProgramComponent::Update() {
             auto result = lc.m_Update();
             if (!result.valid()) {
                 sol::error err = result;
-                std::string what = err.what();
+                String what = err.what();
                 harmony::log::error("LuaSystem : Error : {} : in executing update() for : Script : {}",
                                     what, lc.m_LuaScriptAsset.m_Name);
             }
@@ -81,7 +81,7 @@ void harmony::LuaProgramComponent::Cleanup() {
             auto result = lc.m_Cleanup();
             if (!result.valid()) {
                 sol::error err = result;
-                std::string what = err.what();
+                String what = err.what();
                 harmony::log::error("LuaSystem : Error : {} : in executing cleanup() for : Script : {}",
                                     what, lc.m_LuaScriptAsset.m_Name);
             }

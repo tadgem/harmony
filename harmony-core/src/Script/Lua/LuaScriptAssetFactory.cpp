@@ -11,9 +11,9 @@ harmony::LuaScriptAssetFactory::LuaScriptAssetFactory() {
     m_Capabilities.AssetTypeHashes.push_back(luaScriptTypeHash);
 }
 
-void harmony::LuaScriptAssetFactory::LoadAssetData(const std::string &path, entt::registry &registry) {
+void harmony::LuaScriptAssetFactory::LoadAssetData(const String &path, entt::registry &registry) {
     OPTICK_EVENT();
-    std::string source = Utils::LoadStringFromPath(path);
+    String source = Utils::LoadStringFromPath(path);
 
     if (source.empty()) {
         harmony::log::error("Unable to load Lua Script at path {}", path);
@@ -27,9 +27,9 @@ void harmony::LuaScriptAssetFactory::LoadAssetData(const std::string &path, entt
     registry.emplace<AssetHandle>(e, scriptHandle);
 }
 
-void harmony::LuaScriptAssetFactory::UnloadAssetData(const std::string &path, entt::registry &registry) {
+void harmony::LuaScriptAssetFactory::UnloadAssetData(const String &path, entt::registry &registry) {
     OPTICK_EVENT();
-    std::vector<entt::entity> entitiesToDestroy;
+    Vector<entt::entity> entitiesToDestroy;
     auto scriptView = registry.view<AssetComponent<LuaScriptAsset>, AssetHandle>();
 
     for (auto [e, script, handle]: scriptView.each()) {

@@ -35,14 +35,14 @@ harmony::Map<harmony::String, harmony::Vector<uint8_t>> harmony::VectorGraphics:
 
 void harmony::VectorGraphics::Init() {
     OPTICK_EVENT();
-    p_VectorRenderers.emplace(Layer::One, std::vector<NVGcontext *>());
-    p_VectorRenderers.emplace(Layer::Two, std::vector<NVGcontext *>());
-    p_VectorRenderers.emplace(Layer::Three, std::vector<NVGcontext *>());
-    p_VectorRenderers.emplace(Layer::Four, std::vector<NVGcontext *>());
-    p_VectorRenderers.emplace(Layer::Five, std::vector<NVGcontext *>());
-    p_VectorRenderers.emplace(Layer::Six, std::vector<NVGcontext *>());
-    p_VectorRenderers.emplace(Layer::Seven, std::vector<NVGcontext *>());
-    p_VectorRenderers.emplace(Layer::Eight, std::vector<NVGcontext *>());
+    p_VectorRenderers.emplace(Layer::One, Vector<NVGcontext *>());
+    p_VectorRenderers.emplace(Layer::Two, Vector<NVGcontext *>());
+    p_VectorRenderers.emplace(Layer::Three, Vector<NVGcontext *>());
+    p_VectorRenderers.emplace(Layer::Four, Vector<NVGcontext *>());
+    p_VectorRenderers.emplace(Layer::Five, Vector<NVGcontext *>());
+    p_VectorRenderers.emplace(Layer::Six, Vector<NVGcontext *>());
+    p_VectorRenderers.emplace(Layer::Seven, Vector<NVGcontext *>());
+    p_VectorRenderers.emplace(Layer::Eight, Vector<NVGcontext *>());
 }
 
 NVGcontext *harmony::VectorGraphics::AddViewLayer(Layer layer, bgfx::ViewId viewId) {
@@ -73,7 +73,7 @@ void harmony::VectorGraphics::RemoveViewLayer(Layer layer, NVGcontext *renderer)
     }
 }
 
-void harmony::VectorGraphics::AddFont(const std::string &name, std::vector<uint8_t> data) {
+void harmony::VectorGraphics::AddFont(const String &name, Vector<uint8_t> data) {
     OPTICK_EVENT();
     if (p_FontDatas.find(name) != p_FontDatas.end()) {
         harmony::log::warn("VectorGraphics : Already loaded a font with name {}", name);
@@ -82,7 +82,7 @@ void harmony::VectorGraphics::AddFont(const std::string &name, std::vector<uint8
     p_FontDatas.emplace(name, data);
 }
 
-void harmony::VectorGraphics::RemoveFont(const std::string &name) {
+void harmony::VectorGraphics::RemoveFont(const String &name) {
     OPTICK_EVENT();
     if (p_FontDatas.find(name) == p_FontDatas.end()) {
         harmony::log::warn("VectorGraphics : No font loaded with name {}", name);

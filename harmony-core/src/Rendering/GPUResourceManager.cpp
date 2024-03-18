@@ -14,7 +14,7 @@ uint16_t harmony::GPUResourceManager::GetMaxFramebufferHeight() {
 }
 
 harmony::RefCntPtr<harmony::Framebuffer>
-harmony::GPUResourceManager::CreateFramebuffer(const std::string &name, harmony::Resolution resolution,
+harmony::GPUResourceManager::CreateFramebuffer(const String &name, harmony::Resolution resolution,
                                                harmony::Resolution::Type resolutionType) {
     return CreateRef<harmony::Framebuffer>(name, resolution, resolutionType);
 }

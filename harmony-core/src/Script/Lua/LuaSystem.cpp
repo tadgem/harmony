@@ -28,8 +28,8 @@ void harmony::LuaSystem::Init(entt::registry &registry) {
             sol::protected_function_result result = lua.m_Start();
             if (!result.valid()) {
                 sol::error err = result;
-                std::string what = err.what();
-                std::string entityStr = std::to_string((uint32_t) entity);
+                String what = err.what();
+                String entityStr = std::to_string((uint32_t) entity);
                 harmony::log::error(
                         "LuaSystem : InitEntityScript : Error : {} : in executing start() for Entity : {} : Script : {}",
                         what, entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
@@ -50,8 +50,8 @@ void harmony::LuaSystem::Update(entt::registry &registry) {
                 auto result = lua.m_Update();
                 if (!result.valid()) {
                     sol::error err = result;
-                    std::string what = err.what();
-                    std::string entityStr = std::to_string((uint32_t) entity);
+                    String what = err.what();
+                    String entityStr = std::to_string((uint32_t) entity);
                     harmony::log::error("LuaSystem : Error : {} : in executing update() for Entity : {} : Script : {}",
                                         what, entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
                 }
@@ -80,8 +80,8 @@ void harmony::LuaSystem::Cleanup(entt::registry &registry) {
             auto result = lua.m_Cleanup();
             if (!result.valid()) {
                 sol::error err = result;
-                std::string what = err.what();
-                std::string entityStr = std::to_string((uint32_t) entity);
+                String what = err.what();
+                String entityStr = std::to_string((uint32_t) entity);
                 harmony::log::error("LuaSystem : Error : {} : in executing cleanup() for Entity : {} : Script : {}",
                                     what, entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
             }
@@ -197,8 +197,8 @@ void harmony::LuaSystem::InitEntityScript(entt::entity e, entt::registry &r, sol
 
     if (!compilationResult.valid()) {
         sol::error err = compilationResult;
-        std::string what = err.what();
-        std::string entityStr = std::to_string((uint32_t) e);
+        String what = err.what();
+        String entityStr = std::to_string((uint32_t) e);
         harmony::log::error(
                 "LuaSystem : InitEntityScript : Error : {} : in compiling file for Entity : {} : Script : {}", what,
                 entityStr, lua.m_LuaScriptAsset.m_Handle.Path);
