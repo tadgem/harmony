@@ -47,7 +47,7 @@ namespace harmony {
 
         virtual void SaveProject() override;
 
-        virtual void LoadProject(const std::string &path) override;
+        virtual void LoadProject(const String &path) override;
 
         void AddEditorPanels();
 
@@ -69,9 +69,9 @@ namespace harmony {
 
         virtual void Init() override;
 
-        void Run(const std::string &projectPath, harmony::Procedure proc = NULL);
+        void Run(const String &projectPath, harmony::Procedure proc = NULL);
 
-        virtual void LoadScene(const std::string &path) override;
+        virtual void LoadScene(const String &path) override;
 
         virtual void OpenScene(uint32_t index) override;
 
@@ -97,7 +97,7 @@ namespace harmony {
         RefCntPtr<PipelineV2> p_EditorPipeline;
         Stack<RefCntPtr<MiniGuiApp>> p_MiniGuiApps;
     private:
-        std::string p_LoadedScenePath;
+        String p_LoadedScenePath;
     };
 
 };

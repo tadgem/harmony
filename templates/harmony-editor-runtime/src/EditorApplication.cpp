@@ -167,7 +167,7 @@ void harmony::Editor::SaveProject() {
     SaveImGuiSettings();
 }
 
-void harmony::Editor::LoadProject(const std::string &path) {
+void harmony::Editor::LoadProject(const String &path) {
     OPTICK_EVENT();
     Program::LoadProject(path);
     LoadImGuiSettings();
@@ -338,7 +338,7 @@ void harmony::Editor::Init() {
     m_EditorFSM.SetStartingState(Mode::MiniGuis);
 }
 
-void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure proc) {
+void harmony::Editor::Run(const String &projectPath, harmony::Procedure proc) {
     OPTICK_EVENT();
 
     Init();
@@ -361,7 +361,7 @@ void harmony::Editor::Run(const std::string &projectPath, harmony::Procedure pro
     }
 }
 
-void harmony::Editor::LoadScene(const std::string &path) {
+void harmony::Editor::LoadScene(const String &path) {
     OPTICK_EVENT();
     RuntimeProgram::LoadScene(path);
     p_LoadedScenePath = path;

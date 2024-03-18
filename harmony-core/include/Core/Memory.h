@@ -1,13 +1,6 @@
 #pragma once
 
-#include <vector>
-#include <memory>
-#include <functional>
-#include <regex>
-#include <stdio.h>
-#include <ctype.h>
-#include <string>
-#include "ThirdParty/json.hpp"
+#include "Core/Alias.h"
 
 namespace harmony {
 
@@ -35,13 +28,13 @@ namespace harmony {
 
 #if defined(__APPLE__) || defined(__unix__) || defined(__unix)
 
-    static std::string ParseUnixTypeName(const std::string& typeName)
+    static String ParseUnixTypeName(const String& typeName)
     {
         bool    parseNs = false;
         int     nameSize = -1;
-        std::vector<std::string>    separatedNames      = std::vector<std::string>();
-        std::vector<char>           numericAccumulator  = std::vector<char>();
-        std::vector<char>           typeNameAccumulator = std::vector<char>();
+        Vector<String>    separatedNames      = Vector<String>();
+        Vector<char>           numericAccumulator  = Vector<char>();
+        Vector<char>           typeNameAccumulator = Vector<char>();
 
         for(int i = 0; i < typeName.size(); i++)
         {
@@ -65,7 +58,7 @@ namespace harmony {
                     continue;
                 }
 
-                std::string finalSizeString = std::string(numericAccumulator.begin(), numericAccumulator.end());
+                String finalSizeString = String(numericAccumulator.begin(), numericAccumulator.end());
                 nameSize = std::stoi(finalSizeString);
                 numericAccumulator.clear();
                 if(nameSize > 0)
@@ -82,7 +75,7 @@ namespace harmony {
             }
             else
             {
-                std::string name = std::string(typeNameAccumulator.begin(), typeNameAccumulator.end());
+                String name = String(typeNameAccumulator.begin(), typeNameAccumulator.end());
                 separatedNames.emplace_back(name);
                 typeNameAccumulator.clear();
                 nameSize = -1;
@@ -92,7 +85,7 @@ namespace harmony {
             }
 
         }
-        std::string finalTypeName = std::string();
+        String finalTypeName = String();
 
         for(int i = 0; i < separatedNames.size(); i++)
         {

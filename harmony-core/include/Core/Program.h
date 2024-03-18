@@ -25,8 +25,6 @@
 #include "ImGui/imgui.h"
 
 namespace harmony {
-    typedef std::function<void()> Callback;
-
 
     // Forward defs
     class EntityTemplate;
@@ -36,7 +34,7 @@ namespace harmony {
     /// </summary>
     class Program {
     public:
-        Program(const std::string &name);
+        Program(const String &name);
 
         ~Program();
 
@@ -46,23 +44,23 @@ namespace harmony {
 
         virtual void Run();
 
-        virtual void Run(const std::string &projectPath);
+        virtual void Run(const String &projectPath);
 
         virtual void Exit();
 
-        virtual void CreateProject(const std::string &name, const std::string &path);
+        virtual void CreateProject(const String &name, const String &path);
 
         virtual void SaveProject();
 
-        virtual void LoadProject(const std::string &path);
+        virtual void LoadProject(const String &path);
 
         virtual void CloseActiveProject();
 
-        virtual void CreateScene(const std::string &name);
+        virtual void CreateScene(const String &name);
 
-        virtual void SaveScene(const std::string &path);
+        virtual void SaveScene(const String &path);
 
-        virtual void LoadScene(const std::string &path);
+        virtual void LoadScene(const String &path);
 
         virtual void OpenScene(uint32_t index);
 
@@ -90,7 +88,7 @@ namespace harmony {
 
         void RunRendererPostUpdate();
 
-        std::string GetWorkingDirectory();
+        String GetWorkingDirectory();
 
         SDL_Window* GetWindow() const;
 
@@ -101,9 +99,9 @@ namespace harmony {
 
         virtual void SetupBGFXCapabilities(bgfx::Init &init);
 
-        std::string GetVendorName(uint16_t vendorId);
+        String GetVendorName(uint16_t vendorId);
 
-        void ChangeWorkingDirectory(const std::string &directory);
+        void ChangeWorkingDirectory(const String &directory);
 
         void Cleanup();
 
@@ -138,15 +136,15 @@ namespace harmony {
 
         void LoadImGuiSettings();
 
-        void UpdateProjectDirectory(const std::string &path);
+        void UpdateProjectDirectory(const String &path);
 
         void Frame();
 
 
-        std::string p_AppName;
-        std::string p_LoadedProjectPath;
-        std::vector<RefCntPtr<ProgramComponent>> p_ProgramComponents;
-        std::vector<RefCntPtr<System>> p_ECSSystems;
+        String p_AppName;
+        String p_LoadedProjectPath;
+        Vector<RefCntPtr<ProgramComponent>> p_ProgramComponents;
+        Vector<RefCntPtr<System>> p_ECSSystems;
         RefCntPtr<Scene> p_ActiveScene;
         bool p_Run;
         bool p_ResizedThisFrame;
@@ -162,8 +160,8 @@ namespace harmony {
         template<typename T, typename ... Args>
         WeakPtr<T> AddProgramComponent(Args &&... args) {
 
-            static_assert(std::is_base_of<ProgramComponent, T>());
-            RefCntPtr<T> pc = CreateRef<T>(std::forward<Args>(args)...);
+            static_assert(IsBaseOf<ProgramComponent, T>());
+            RefCntPtr<T> pc = CreateRef<T>(Forward<Args>(args)...);
             p_ProgramComponents.emplace_back(pc);
             return GetWeakRef<T>(pc);
         }
@@ -171,7 +169,7 @@ namespace harmony {
         template<typename T, typename ... Args>
         WeakPtr<T> AddSystem(Args &&... args) {
 
-            static_assert(std::is_base_of<System, T>());
+            static_assert(IsBaseOf<System, T>());
             HashString typeHash = GetTypeHash<T>();
             log::info("Program : Adding System : {}", GetTypeName<T>());
             for(int i = 0; i < p_ECSSystems.size(); i++)
@@ -182,7 +180,7 @@ namespace harmony {
                     return WeakPtr<T>();
                 }
             }
-            RefCntPtr<T> sys = CreateRef<T>(std::forward<Args>(args)...);
+            RefCntPtr<T> sys = CreateRef<T>(Forward<Args>(args)...);
             p_ECSSystems.emplace_back(sys);
             return GetWeakRef<T>(sys);
         }
@@ -190,7 +188,7 @@ namespace harmony {
         template<typename T>
         WeakPtr<T> GetProgramComponent() {
 
-            static_assert(std::is_base_of<ProgramComponent, T>(), "Not a program component");
+            static_assert(IsBaseOf<ProgramComponent, T>(), "Not a program component");
             int index = -1;
             for (int i = 0; i < p_ProgramComponents.size(); i++) {
                 HashString typeHash = GetTypeHash<T>();
@@ -229,7 +227,7 @@ namespace harmony {
         template<typename T>
         WeakPtr<T> GetSystem() {
 
-            static_assert(std::is_base_of<System, T>(), "Not a system");
+            static_assert(IsBaseOf<System, T>(), "Not a system");
             int index = -1;
             HashString t_type_hash = GetTypeHash<T>();
             for (int i = 0; i < p_ECSSystems.size(); i++) {
