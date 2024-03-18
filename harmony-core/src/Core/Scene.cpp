@@ -5,11 +5,11 @@ harmony::Scene::Scene() {
     OPTICK_EVENT();
 }
 
-harmony::Scene::Scene(const std::string &name) : m_Name(name) {
+harmony::Scene::Scene(const String &name) : m_Name(name) {
     OPTICK_EVENT();
 }
 
-void harmony::Scene::Deserialize(std::vector<RefCntPtr<System>> &systems) {
+void harmony::Scene::Deserialize(Vector<RefCntPtr<System>> &systems) {
     OPTICK_EVENT();
     m_Registry.clear();
     for (int i = 0; i < p_Entities.size(); i++) {
@@ -43,7 +43,7 @@ harmony::Vector<entt::entity> harmony::Scene::GetChildEntities(entt::entity e)
     return ret;
 }
 
-void harmony::Scene::UpdateSceneSystemSerializationAttributes(std::vector<RefCntPtr<System>> &systems) {
+void harmony::Scene::UpdateSceneSystemSerializationAttributes(Vector<RefCntPtr<System>> &systems) {
     OPTICK_EVENT();
     p_SystemSerializationAttributes.clear();
 

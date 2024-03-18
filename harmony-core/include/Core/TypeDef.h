@@ -11,9 +11,9 @@ namespace typehash_internal
 
     template <typename T>
     struct GetTypeNameHelper {
-        static std::string GetTypeName(void) {
+        static harmony::String GetTypeName(void) {
             static const size_t size = sizeof(__FUNCTION__) - FRONT_SIZE - BACK_SIZE;
-            std::string typeString = std::string(__FUNCTION__ + FRONT_SIZE, size - 1u);
+            harmony::String typeString = harmony::String(__FUNCTION__ + FRONT_SIZE, size - 1u);
             return typeString;
         }
     };
@@ -40,7 +40,7 @@ namespace harmony {
     };
 
     template <typename T>
-    const std::string GetTypeName(void) {
+    const String GetTypeName(void) {
         return typehash_internal::GetTypeNameHelper<T>::GetTypeName();
     }
 

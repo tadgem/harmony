@@ -5,12 +5,12 @@
 
 #include "Rendering/Renderer.h"
 
-harmony::Project::Project(std::string name) : m_ProjectName(name) {
+harmony::Project::Project(String name) : m_ProjectName(name) {
     OPTICK_EVENT();
 }
 
 void
-harmony::Project::UpdateProjectComponentSerializationAttributes(std::vector<RefCntPtr<ProgramComponent>> &programComponents) {
+harmony::Project::UpdateProjectComponentSerializationAttributes(Vector<RefCntPtr<ProgramComponent>> &programComponents) {
     OPTICK_EVENT();
     p_ProgramComponentSerializationAttributes.clear();
 

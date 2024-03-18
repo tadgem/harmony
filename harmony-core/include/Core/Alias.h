@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 #include <string>
+#include <future>
 #include <utility>
 #include <sstream>
 #include <ostream>
@@ -27,9 +28,9 @@ namespace harmony {
     }
 
     template <typename A, typename B>
-    auto SmartPointerCast(const std::shared_ptr<A>& ptr)
+    auto SmartPointerCast(const std::shared_ptr<B>& ptr)
     {
-        return std::static_pointer_cast<B>(ptr);
+        return std::static_pointer_cast<A>(ptr);
     }
 
 
@@ -54,6 +55,9 @@ namespace harmony {
 
     template<typename T>
     using Lambda = std::function<T>;
+
+    template<typename T>
+    using Future = std::future<T>;
 
     template<typename A, typename B>
     using IsBaseOf = std::is_base_of<A, B>;

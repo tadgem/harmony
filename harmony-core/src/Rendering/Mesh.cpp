@@ -1,7 +1,7 @@
 #include <optick.h>
 #include "Rendering/Mesh.h"
 
-harmony::Mesh::Mesh(const std::string &path, uint32_t index) : Asset(AssetHandle{path, index, GetTypeHash<Mesh>()}) {
+harmony::Mesh::Mesh(const String &path, uint32_t index) : Asset(AssetHandle{path, index, GetTypeHash<Mesh>()}) {
     OPTICK_EVENT();
     m_SubmittedToGpu = false;
 
@@ -18,7 +18,7 @@ void harmony::Mesh::Release() {
     m_UVs.clear();
 }
 
-void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices) {
+void harmony::Mesh::InitializeMesh(Vector<glm::vec3> positions, Vector<unsigned int> indices) {
     OPTICK_EVENT();
 
     m_Positions = positions;
@@ -31,8 +31,8 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
     m_NumVerts = static_cast<uint32_t>(positions.size());
 }
 
-void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,
-                                   std::vector<glm::vec3> normals) {
+void harmony::Mesh::InitializeMesh(Vector<glm::vec3> positions, Vector<unsigned int> indices,
+                                   Vector<glm::vec3> normals) {
     OPTICK_EVENT();
 
     m_Positions = positions;
@@ -46,8 +46,8 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
     m_NumVerts = static_cast<uint32_t>(positions.size());
 }
 
-void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,
-                                   std::vector<glm::vec3> normals, std::vector<glm::vec2> uvs) {
+void harmony::Mesh::InitializeMesh(Vector<glm::vec3> positions, Vector<unsigned int> indices,
+                                   Vector<glm::vec3> normals, Vector<glm::vec2> uvs) {
     OPTICK_EVENT();
 
     m_Positions = positions;
@@ -62,9 +62,9 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
     m_NumVerts = static_cast<uint32_t>(positions.size());
 }
 
-void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,
-                                   std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents,
-                                   std::vector<glm::vec2> uvs) {
+void harmony::Mesh::InitializeMesh(Vector<glm::vec3> positions, Vector<unsigned int> indices,
+                                   Vector<glm::vec3> normals, Vector<glm::vec3> tangents,
+                                   Vector<glm::vec2> uvs) {
     OPTICK_EVENT();
 
     m_Positions = positions;
@@ -80,9 +80,9 @@ void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector
     m_NumVerts = static_cast<uint32_t>(positions.size());
 }
 
-void harmony::Mesh::InitializeMesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices,
-                                   std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents,
-                                   std::vector<glm::vec3> bitangents, std::vector<glm::vec2> uvs) {
+void harmony::Mesh::InitializeMesh(Vector<glm::vec3> positions, Vector<unsigned int> indices,
+                                   Vector<glm::vec3> normals, Vector<glm::vec3> tangents,
+                                   Vector<glm::vec3> bitangents, Vector<glm::vec2> uvs) {
     OPTICK_EVENT();
 
     m_Positions = positions;

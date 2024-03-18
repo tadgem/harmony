@@ -123,7 +123,7 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
     if (useMT) {
         OPTICK_EVENT("Build group lambdas")
         int emptyGroups = NUM_GROUPS - (groupIndex + 1);
-        std::vector<std::future<void>> futures;
+        std::vector<Future<void>> futures;
         for (int i = 0; i < NUM_GROUPS - emptyGroups; i++) {
             std::vector<TransformComponent *> tVec = transformGroups[i];
             futures.emplace_back(ThreadPool.submit(

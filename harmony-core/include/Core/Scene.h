@@ -1,7 +1,5 @@
 #pragma once
 
-#include "ThirdParty/entt.hpp"
-#include "ThirdParty/json.hpp"
 #include "ECS/Entity.h"
 #include "ECS/System.h"
 #include "Core/Memory.h"
@@ -12,11 +10,11 @@ namespace harmony {
     public:
         Scene();
 
-        Scene(const std::string &name);
+        Scene(const String &name);
 
         Entity AddEntity(uint32_t index = UINT32_MAX);
 
-        std::string m_Name;
+        String m_Name;
         uint32_t m_NumEntities;
         entt::registry m_Registry;
 
@@ -37,12 +35,12 @@ namespace harmony {
     protected:
         friend class Program;
 
-        void UpdateSceneSystemSerializationAttributes(std::vector<RefCntPtr<System>> &systems);
+        void UpdateSceneSystemSerializationAttributes(Vector<RefCntPtr<System>> &systems);
 
-        void Deserialize(std::vector<RefCntPtr<System>> &systems);
+        void Deserialize(Vector<RefCntPtr<System>> &systems);
 
-        std::map<uint64_t, Json> p_SystemSerializationAttributes;
-        std::vector<Entity> p_Entities;
+        Map<uint64_t, Json> p_SystemSerializationAttributes;
+        Vector<Entity> p_Entities;
     public:
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(Scene, m_Name, m_NumEntities, p_Entities, p_SystemSerializationAttributes)
     };

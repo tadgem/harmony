@@ -6,36 +6,36 @@
 #include "bx/platform.h"
 
 
-std::string harmony::Utils::LoadStringFromPath(const std::string &path) {
+harmony::String harmony::Utils::LoadStringFromPath(const String &path) {
     OPTICK_EVENT();
-    std::string finalPath = GetCleanPlatformPath(path);
+    String finalPath = GetCleanPlatformPath(path);
 
     std::ifstream inputFile = std::ifstream(finalPath, std::ios::in | std::ios::binary);
 
     if (!inputFile.is_open()) {
-        return std::string();
+        return String();
     }
 
     if (!std::filesystem::exists(finalPath)) {
-        return std::string();
+        return String();
     }
 
     size_t fileSize = std::filesystem::file_size(finalPath);
-    std::string content(fileSize, '\0');
+    String content(fileSize, '\0');
     inputFile.read(content.data(), fileSize);
 
     inputFile.close();
     return content;
 }
 
-harmony::Json harmony::Utils::LoadJsonFromPath(const std::string &path) {
+harmony::Json harmony::Utils::LoadJsonFromPath(const String &path) {
     OPTICK_EVENT();
-    std::string str = LoadStringFromPath(path);
+    String str = LoadStringFromPath(path);
     Json json = Json::parse(str);
     return json;
 }
 
-std::vector<uint8_t> harmony::Utils::LoadBinaryFromPath(const std::string &path) {
+std::vector<uint8_t> harmony::Utils::LoadBinaryFromPath(const String &path) {
     OPTICK_EVENT();
 
     std::ifstream binary_input_stream = std::ifstream(path, std::ios::binary);
@@ -44,7 +44,7 @@ std::vector<uint8_t> harmony::Utils::LoadBinaryFromPath(const std::string &path)
     return data;
 }
 
-std::vector<uint8_t> *harmony::Utils::LoadBinaryFromPathHeap(const std::string &path) {
+std::vector<uint8_t> *harmony::Utils::LoadBinaryFromPathHeap(const String &path) {
     OPTICK_EVENT();
 
     std::ifstream binary_input_stream = std::ifstream(path, std::ios::binary);
@@ -53,7 +53,7 @@ std::vector<uint8_t> *harmony::Utils::LoadBinaryFromPathHeap(const std::string &
     return data;
 }
 
-std::string harmony::Utils::GetFilePathDirectory(const std::string &path) {
+harmony::String harmony::Utils::GetFilePathDirectory(const String &path) {
     OPTICK_EVENT();
     std::size_t found = path.find_last_of("/\\");
     return path.substr(0, found);
@@ -64,23 +64,23 @@ int harmony::Utils::EncodeRGBA(char r, char g, char b, char a) {
     return ((r << 24) | ((g & 255) << 16) | ((b & 255) << 8) | (a & 255));
 }
 
-void harmony::Utils::TrimString(std::string &str) {
+void harmony::Utils::TrimString(String &str) {
     OPTICK_EVENT();
     str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](unsigned char ch) {
         return !std::isspace(ch);
     }));
 }
 
-void harmony::Utils::SaveStringToPath(const std::string &str, const std::string &path) {
+void harmony::Utils::SaveStringToPath(const String &str, const String &path) {
     OPTICK_EVENT();
     std::ofstream outputFile = std::ofstream(path);
     outputFile << str;
     outputFile.close();
 }
 
-void harmony::Utils::SaveJsonToPath(Json &json, const std::string &path) {
+void harmony::Utils::SaveJsonToPath(Json &json, const String &path) {
     OPTICK_EVENT();
-    std::string jsonContent = json.dump();
+    String jsonContent = json.dump();
     SaveStringToPath(jsonContent, path);
 
 }
@@ -121,20 +121,20 @@ glm::quat harmony::Utils::CalculateRotationQuat(glm::vec3 eulerDegrees) {
     return zRotation * yRotation * xRotation;
 }
 
-bool harmony::Utils::FileExists(const std::string &filepath) {
+bool harmony::Utils::FileExists(const String &filepath) {
     OPTICK_EVENT();
     return std::filesystem::exists(filepath);
 }
 
-std::string harmony::Utils::GetCleanPlatformPath(const std::string &path) {
-    std::string finalPath = path;
+harmony::String harmony::Utils::GetCleanPlatformPath(const String &path) {
+    String finalPath = path;
 #if !(BX_PLATFORM_WINDOWS)
     finalPath = "./" + path;
-    const std::string find = "\\";
-    const std::string replace = "/";
+    const String find = "\\";
+    const String replace = "/";
 
-    std::string::size_type n = 0;
-    while ( ( n = finalPath.find( find) ) != std::string::npos )
+    String::size_type n = 0;
+    while ( ( n = finalPath.find( find) ) != String::npos )
     {
         finalPath.replace( n, find.size(), replace );
         n += replace.size();

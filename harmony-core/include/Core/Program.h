@@ -200,7 +200,7 @@ namespace harmony {
             }
 
             if (index >= 0) {
-                return std::static_pointer_cast<T, ProgramComponent>(p_ProgramComponents[index]);
+                return SmartPointerCast<T, ProgramComponent>(p_ProgramComponents[index]);
             } else {
                 return WeakPtr<T>();
             }
@@ -239,7 +239,7 @@ namespace harmony {
             }
 
             if (index >= 0) {
-                return std::static_pointer_cast<T, System>(p_ECSSystems[index]);
+                return SmartPointerCast<T, System>(p_ECSSystems[index]);
             } else {
                 return WeakPtr<T>();
             }

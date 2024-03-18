@@ -8,27 +8,27 @@
 namespace harmony {
     class Utils {
     public:
-        static bool FileExists(const std::string &filepath);
+        static bool FileExists(const String &filepath);
 
-        static std::string LoadStringFromPath(const std::string &path);
+        static String LoadStringFromPath(const String &path);
 
-        static std::string GetCleanPlatformPath(const std::string &path);
+        static String GetCleanPlatformPath(const String &path);
 
-        static Json LoadJsonFromPath(const std::string &path);
+        static Json LoadJsonFromPath(const String &path);
 
-        static void SaveStringToPath(const std::string &str, const std::string &path);
+        static void SaveStringToPath(const String &str, const String &path);
 
-        static void SaveJsonToPath(Json &json, const std::string &path);
+        static void SaveJsonToPath(Json &json, const String &path);
 
-        static std::vector<uint8_t> LoadBinaryFromPath(const std::string &path);
+        static std::vector<uint8_t> LoadBinaryFromPath(const String &path);
 
-        static std::vector<uint8_t> *LoadBinaryFromPathHeap(const std::string &path);
+        static std::vector<uint8_t> *LoadBinaryFromPathHeap(const String &path);
 
-        static std::string GetFilePathDirectory(const std::string &path);
+        static String GetFilePathDirectory(const String &path);
 
         static int EncodeRGBA(char r, char g, char b, char a);
 
-        static void TrimString(std::string &str);
+        static void TrimString(String &str);
 
         static float GetIntAsFloat(int i);
 
@@ -40,6 +40,6 @@ namespace harmony {
 
         static glm::quat CalculateRotationQuat(glm::vec3 eulerDegrees);
 
-        static std::string GetBgfxRendererName();
+        static String GetBgfxRendererName();
     };
 };

@@ -19,39 +19,39 @@ namespace harmony {
 
     class Mesh : public Asset {
     public:
-        Mesh(const std::string &path, uint32_t index);
+        Mesh(const String &path, uint32_t index);
 
         ~Mesh() override {
         }
 
-        void InitializeMesh(std::vector<glm::vec3> positions,
-                            std::vector<unsigned int> indices);
+        void InitializeMesh(Vector<glm::vec3> positions,
+                            Vector<unsigned int> indices);
 
-        void InitializeMesh(std::vector<glm::vec3> positions,
-                            std::vector<unsigned int> indices,
-                            std::vector<glm::vec3> normals);
+        void InitializeMesh(Vector<glm::vec3> positions,
+                            Vector<unsigned int> indices,
+                            Vector<glm::vec3> normals);
 
-        void InitializeMesh(std::vector<glm::vec3> positions,
-                            std::vector<unsigned int> indices,
-                            std::vector<glm::vec2> uvs);
+        void InitializeMesh(Vector<glm::vec3> positions,
+                            Vector<unsigned int> indices,
+                            Vector<glm::vec2> uvs);
 
-        void InitializeMesh(std::vector<glm::vec3> positions,
-                            std::vector<unsigned int> indices,
-                            std::vector<glm::vec3> normals,
-                            std::vector<glm::vec2> uvs);
+        void InitializeMesh(Vector<glm::vec3> positions,
+                            Vector<unsigned int> indices,
+                            Vector<glm::vec3> normals,
+                            Vector<glm::vec2> uvs);
 
-        void InitializeMesh(std::vector<glm::vec3> positions,
-                            std::vector<unsigned int> indices,
-                            std::vector<glm::vec3> normals,
-                            std::vector<glm::vec3> tangents,
-                            std::vector<glm::vec2> uvs);
+        void InitializeMesh(Vector<glm::vec3> positions,
+                            Vector<unsigned int> indices,
+                            Vector<glm::vec3> normals,
+                            Vector<glm::vec3> tangents,
+                            Vector<glm::vec2> uvs);
 
-        void InitializeMesh(std::vector<glm::vec3> positions,
-                            std::vector<unsigned int> indices,
-                            std::vector<glm::vec3> normals,
-                            std::vector<glm::vec3> tangents,
-                            std::vector<glm::vec3> bitangents,
-                            std::vector<glm::vec2> uvs);
+        void InitializeMesh(Vector<glm::vec3> positions,
+                            Vector<unsigned int> indices,
+                            Vector<glm::vec3> normals,
+                            Vector<glm::vec3> tangents,
+                            Vector<glm::vec3> bitangents,
+                            Vector<glm::vec2> uvs);
 
         // build float array to submit mesh to GPU
         void BuildBGFXData();
@@ -67,13 +67,13 @@ namespace harmony {
         bool m_SubmittedToGpu;
         BGFXMeshHandle m_Handle;
         AABB m_AABB;
-        std::vector<unsigned int> m_Indices;
-        std::vector<glm::vec3> m_Positions;
-        std::vector<glm::vec3> m_Normals;
-        std::vector<glm::vec3> m_Tangents;
-        std::vector<glm::vec3> m_Bitangents;
-        std::vector<glm::vec2> m_UVs;
-        std::vector<float> m_BGFXData;
+        Vector<unsigned int> m_Indices;
+        Vector<glm::vec3> m_Positions;
+        Vector<glm::vec3> m_Normals;
+        Vector<glm::vec3> m_Tangents;
+        Vector<glm::vec3> m_Bitangents;
+        Vector<glm::vec2> m_UVs;
+        Vector<float> m_BGFXData;
         uint64_t m_Id;
 
     private:

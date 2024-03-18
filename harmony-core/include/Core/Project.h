@@ -1,8 +1,6 @@
 #pragma once
 
-#include "ThirdParty/json.hpp"
-#include <string>
-#include <map>
+#include "Core/Alias.h"
 #include <filesystem>
 #include "Assets/AssetManager.h"
 #include "Core/ProgramComponent.h"
@@ -17,19 +15,19 @@ namespace harmony {
         Project() {
         }
 
-        Project(std::string name);
+        Project(String name);
 
         ~Project() {
         }
 
-        std::string m_ProjectName;
-        std::string m_ProjectDirectory;
-        std::string m_ImGuiIniPath;
+        String m_ProjectName;
+        String m_ProjectDirectory;
+        String m_ImGuiIniPath;
         // TODO the key to this really should be a hashstring...
-        std::map<uint64_t, Json> p_ProgramComponentSerializationAttributes;
+        Map<uint64_t, Json> p_ProgramComponentSerializationAttributes;
         Json m_AssetManagerSerializationAttributes;
         Json m_RendererSerializationAttributes;
-        std::vector<std::string> m_SerializedScenes;
+        Vector<String> m_SerializedScenes;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(
                 Project,
@@ -41,7 +39,7 @@ namespace harmony {
                 m_SerializedScenes)
 
     private:
-        void UpdateProjectComponentSerializationAttributes(std::vector<RefCntPtr<ProgramComponent>> &programComponents);
+        void UpdateProjectComponentSerializationAttributes(Vector<RefCntPtr<ProgramComponent>> &programComponents);
 
         void UpdateProjectAssetsSerializationAttributes(AssetManager &assetManager);
 
