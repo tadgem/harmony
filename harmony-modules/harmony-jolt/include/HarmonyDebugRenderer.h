@@ -48,7 +48,7 @@ namespace harmony {
                           JPH::ColorArg inModelColor, const GeometryRef &inGeometry, ECullMode inCullMode,
                           ECastShadow inCastShadow, EDrawMode inDrawMode) override;
 
-        void DrawText3D(JPH::RVec3Arg inPosition, const std::string_view &inString, JPH::ColorArg inColor,
+        void DrawText3D(JPH::RVec3Arg inPosition, const StringView &inString, JPH::ColorArg inColor,
                         float inHeight) override;
 
     public:

@@ -27,7 +27,7 @@ bool harmony::LoadProjectGui::OnImGui() {
     if (ImGuiFileDialog::Instance()->Display("HarmonyOpenProject")) {
         // action if OK
         if (ImGuiFileDialog::Instance()->IsOk()) {
-            std::string filepath = ImGuiFileDialog::Instance()->GetFilePathName();
+            String filepath = ImGuiFileDialog::Instance()->GetFilePathName();
             p_Program.LoadProject(filepath);
             p_Program.PreRunInit();
             loaded = true;

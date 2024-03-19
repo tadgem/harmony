@@ -29,7 +29,7 @@ harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program), p_AssetMana
 
 void harmony::ScenePanel::OnImGui() {
     p_FrameHandledEntities.clear();
-    const std::string scenePanelTitle = std::string(ICON_FA_GLOBE) + " Scene";
+    const String scenePanelTitle = String(ICON_FA_GLOBE) + " Scene";
     if (ImGui::Begin(scenePanelTitle.c_str())) {
         auto activeSceneWr = p_Prog.GetActiveScene();
 
@@ -95,7 +95,7 @@ void harmony::ScenePanel::OnImGui() {
 }
 
 void harmony::ScenePanel::EntityImGui(entt::entity e, entt::registry &reg, bool topLevel) {
-    if (std::find(p_FrameHandledEntities.begin(), p_FrameHandledEntities.end(), e) != p_FrameHandledEntities.end()) {
+    if (Find(p_FrameHandledEntities.begin(), p_FrameHandledEntities.end(), e) != p_FrameHandledEntities.end()) {
         return;
     }
 
@@ -145,7 +145,7 @@ void harmony::ScenePanel::EntityImGui(entt::entity e, entt::registry &reg, bool 
 void harmony::ScenePanel::EntityNameRename(entt::entity e, harmony::EntityData &data) {
     if (data.m_Name.empty())
     {
-        data.m_Name = "Entity_" + std::to_string((uint32_t)e);
+        data.m_Name = "Entity_" + ToString((uint32_t)e);
     }
     if (ImGui::Selectable(data.m_Name.c_str(), false, ImGuiSelectableFlags_AllowItemOverlap)) {
         m_SelectedEntity = e;
@@ -187,7 +187,7 @@ harmony::EntityInspectorPanel::EntityInspectorPanel(Program &prog, RefCntPtr<Sce
 }
 
 void harmony::EntityInspectorPanel::OnImGui() {
-    const std::string entityInspectorTitle = std::string(ICON_FA_INFO_CIRCLE) + " Inspector";
+    const String entityInspectorTitle = String(ICON_FA_INFO_CIRCLE) + " Inspector";
     if (ImGui::Begin(entityInspectorTitle.c_str())) {
         auto activeSceneWr = p_Prog.GetActiveScene();
 
@@ -219,7 +219,7 @@ void harmony::EntityInspectorPanel::OnImGui() {
             }
             if (ImGui::TreeNode(p_ComponentUIProviders[i]->GetComponentName().c_str())) {
                 ImGui::SameLine();
-                std::string buttonText = std::string(ICON_FA_BOMB) + "##" + std::to_string(i);
+                String buttonText = String(ICON_FA_BOMB) + "##" + ToString(i);
 
                 if (ImGui::Button(buttonText.c_str())) {
                     p_ComponentUIProviders[i]->RemoveComponent(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity);
@@ -270,7 +270,7 @@ void harmony::EntityInspectorPanel::OnImGui() {
         if (ImGuiFileDialog::Instance()->Display("HarmonySaveEntityTemplate")) {
             // action if OK
             if (ImGuiFileDialog::Instance()->IsOk()) {
-                std::string filepath = ImGuiFileDialog::Instance()->GetFilePathName();
+                String filepath = ImGuiFileDialog::Instance()->GetFilePathName();
                 EntityTemplate::SaveEntityTemplate(p_Prog.GetSystems(), p_Prog.m_AssetManager, activeScene, p_ScenePanel->m_SelectedEntity, filepath);
             }
             ImGuiFileDialog::Instance()->Close();
@@ -319,11 +319,11 @@ void harmony::TransformComponentUI::Duplicate(entt::registry &registry, entt::en
     }
 }
 
-harmony::ComponentUI::ComponentUI(const std::string name, const ImGuiParentType uiType) : p_ComponentName(name),
+harmony::ComponentUI::ComponentUI(const String name, const ImGuiParentType uiType) : p_ComponentName(name),
                                                                                           m_UiType(uiType) {
 }
 
-const std::string &harmony::ComponentUI::GetComponentName() {
+const harmony::String &harmony::ComponentUI::GetComponentName() {
     return p_ComponentName;
 }
 
@@ -339,7 +339,7 @@ void harmony::MeshComponentUI::OnComponentImGui(entt::registry &registry, entt::
     }
     AssetHandle ah;
     MeshComponent &mc = registry.get<MeshComponent>(entity);
-    std::string meshPath = "Mesh Asset: " + mc.MeshAsset.Path;
+    String meshPath = "Mesh Asset: " + mc.MeshAsset.Path;
     ImGui::TextWrapped(meshPath.c_str());
     if (p_AssetManager.AssetTypeSelector<Mesh>("Mesh", ah)) {
         mc.MeshAsset = ah;
@@ -386,7 +386,7 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry &registry, en
     }
     MaterialComponent &mc = registry.get<MaterialComponent>(entity);
     WeakPtr<ShaderProgram> shaderWr = p_Renderer.GetShader(mc.Data.m_ShaderName);
-    std::string sn = "Shader Name : ";
+    String sn = "Shader Name : ";
 
     if (shaderWr.expired() == false) {
         RefCntPtr<ShaderProgram> shader = shaderWr.lock();
@@ -404,7 +404,7 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry &registry, en
             for (ShaderUniform &uniform: mc.Data.m_AvailableOverrides) {
                 ImGui::TextWrapped(uniform.Name.c_str());
                 ImGui::SameLine();
-                std::string overrideText = "Override" + std::string("##") + std::to_string(uniform.BgfxHandle.idx);
+                String overrideText = "Override" + String("##") + ToString(uniform.BgfxHandle.idx);
                 if (ImGui::Button(overrideText.c_str())) {
                     if (uniform.Type == bgfx::UniformType::Vec4) {
                         mc.Data.AddVec4Override(uniform, glm::vec4(0.0));
@@ -434,7 +434,7 @@ void harmony::MaterialComponentUI::OnComponentImGui(entt::registry &registry, en
         ImGui::Separator();
         ImGui::TextWrapped("Textures");
         for (auto &[key, handle]: mc.Data.m_TextureOverrides) {
-            std::string textureName = "Tex : " + handle.Handle.Path;
+            String textureName = "Tex : " + handle.Handle.Path;
             ImGui::TextWrapped(textureName.c_str());
             if (p_AssetManager.AssetTypeSelector<TextureAsset>(key.Name, handle.Handle)) {
                 auto texWr = p_AssetManager.GetAsset<TextureAsset>(handle.Handle);
@@ -487,13 +487,13 @@ harmony::AssetManagerPanel::AssetManagerPanel(Program &program) : p_Prog(program
 }
 
 void harmony::AssetManagerPanel::OnImGui() {
-    const std::string assetPanelTitle = std::string(ICON_FA_FOLDER) + " Assets";
+    const String assetPanelTitle = String(ICON_FA_FOLDER) + " Assets";
 
     if (ImGui::Begin(assetPanelTitle.c_str())) {
         ImGui::Indent();
-        const std::string textureAssetTitle = std::string(ICON_FA_FILE_IMAGE_O) + " Textures";
+        const String textureAssetTitle = String(ICON_FA_FILE_IMAGE_O) + " Textures";
         ImGui::TextWrapped(textureAssetTitle.c_str());
-        std::vector<AssetHandle> texHandles = p_AssetManager.GetLoadedAssets<TextureAsset>();
+        Vector<AssetHandle> texHandles = p_AssetManager.GetLoadedAssets<TextureAsset>();
         if (ImGui::TreeNode("Textures")) {
             for (int i = 0; i < texHandles.size(); i++) {
                 ImGui::TextWrapped(texHandles[i].Path.c_str());
@@ -507,9 +507,9 @@ void harmony::AssetManagerPanel::OnImGui() {
         }
 
         ImGui::Separator();
-        const std::string meshAssetTitle = std::string(ICON_FA_CUBE) + " Meshes";
+        const String meshAssetTitle = String(ICON_FA_CUBE) + " Meshes";
         ImGui::TextWrapped(meshAssetTitle.c_str());
-        std::vector<AssetHandle> meshHandles = p_AssetManager.GetLoadedAssets<Mesh>();
+        Vector<AssetHandle> meshHandles = p_AssetManager.GetLoadedAssets<Mesh>();
         if (ImGui::TreeNode("Meshes")) {
             for (int i = 0; i < meshHandles.size(); i++) {
                 ImGui::TextWrapped(meshHandles[i].Path.c_str());
@@ -523,9 +523,9 @@ void harmony::AssetManagerPanel::OnImGui() {
         }
 
         ImGui::Separator();
-        const std::string shaderSouceAssetTitle = std::string(ICON_FA_FILE_TEXT_O) + " Shader Source";
+        const String shaderSouceAssetTitle = String(ICON_FA_FILE_TEXT_O) + " Shader Source";
         ImGui::TextWrapped(shaderSouceAssetTitle.c_str());
-        std::vector<AssetHandle> sourceHandles = p_AssetManager.GetLoadedAssets<ShaderSourceAsset>();
+        Vector<AssetHandle> sourceHandles = p_AssetManager.GetLoadedAssets<ShaderSourceAsset>();
         if (ImGui::TreeNode("Shader Sources")) {
             for (int i = 0; i < sourceHandles.size(); i++) {
                 ImGui::TextWrapped(sourceHandles[i].Path.c_str());
@@ -538,9 +538,9 @@ void harmony::AssetManagerPanel::OnImGui() {
         }
 
         ImGui::Separator();
-        const std::string shaderBinariesAssetTitle = std::string(ICON_FA_FILE_ARCHIVE_O) + " Shader Binaries";
+        const String shaderBinariesAssetTitle = String(ICON_FA_FILE_ARCHIVE_O) + " Shader Binaries";
         ImGui::TextWrapped(shaderBinariesAssetTitle.c_str());
-        std::vector<AssetHandle> stageHandles = p_AssetManager.GetLoadedAssets<ShaderStage>();
+        Vector<AssetHandle> stageHandles = p_AssetManager.GetLoadedAssets<ShaderStage>();
         if (ImGui::TreeNode("Shader Binaries")) {
             for (int i = 0; i < stageHandles.size(); i++) {
                 ImGui::TextWrapped(stageHandles[i].Path.c_str());
@@ -549,9 +549,9 @@ void harmony::AssetManagerPanel::OnImGui() {
         }
 
         ImGui::Separator();
-        const std::string fontAssetTitle = std::string(ICON_FA_FONT) + " Fonts";
+        const String fontAssetTitle = String(ICON_FA_FONT) + " Fonts";
         ImGui::TextWrapped(fontAssetTitle.c_str());
-        std::vector<AssetHandle> fontHandles = p_AssetManager.GetLoadedAssets<FontAsset>();
+        Vector<AssetHandle> fontHandles = p_AssetManager.GetLoadedAssets<FontAsset>();
         if (ImGui::TreeNode("Fonts")) {
             for (int i = 0; i < fontHandles.size(); i++) {
                 ImGui::TextWrapped(fontHandles[i].Path.c_str());
@@ -564,9 +564,9 @@ void harmony::AssetManagerPanel::OnImGui() {
         }
 
         ImGui::Separator();
-        const std::string luaScriptAssetTitle = std::string(ICON_FA_FILE_TEXT_O) + " Lua Scripts";
+        const String luaScriptAssetTitle = String(ICON_FA_FILE_TEXT_O) + " Lua Scripts";
         ImGui::TextWrapped(luaScriptAssetTitle.c_str());
-        std::vector<AssetHandle> luaHandles = p_AssetManager.GetLoadedAssets<LuaScriptAsset>();
+        Vector<AssetHandle> luaHandles = p_AssetManager.GetLoadedAssets<LuaScriptAsset>();
         if (ImGui::TreeNode("Lua Scripts")) {
             for (int i = 0; i < luaHandles.size(); i++) {
                 ImGui::TextWrapped(luaHandles[i].Path.c_str());
@@ -579,9 +579,9 @@ void harmony::AssetManagerPanel::OnImGui() {
         }
 
         ImGui::Separator();
-        const std::string monoAssemblyAssetTitle = std::string(ICON_FA_FILE_ARCHIVE_O) + " Mono Assemblies";
+        const String monoAssemblyAssetTitle = String(ICON_FA_FILE_ARCHIVE_O) + " Mono Assemblies";
         ImGui::TextWrapped(monoAssemblyAssetTitle.c_str());
-        std::vector<AssetHandle> assemblyHandles = p_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
+        Vector<AssetHandle> assemblyHandles = p_AssetManager.GetLoadedAssets<MonoAssemblyAsset>();
         if (ImGui::TreeNode("Mono Assemblies")) {
             for (int i = 0; i < assemblyHandles.size(); i++) {
                 ImGui::TextWrapped(assemblyHandles[i].Path.c_str());
@@ -594,8 +594,8 @@ void harmony::AssetManagerPanel::OnImGui() {
         }
 
         ImGui::Separator();
-        const std::string entityTemplateAssetTitle = std::string(ICON_FA_FILE_CODE_O) + " Entity Templates";
-        std::vector<AssetHandle> templateHandles = p_AssetManager.GetLoadedAssets<EntityTemplate>();
+        const String entityTemplateAssetTitle = String(ICON_FA_FILE_CODE_O) + " Entity Templates";
+        Vector<AssetHandle> templateHandles = p_AssetManager.GetLoadedAssets<EntityTemplate>();
         ImGui::TextWrapped(entityTemplateAssetTitle.c_str());
         if (ImGui::CollapsingHeader("Entity Templates")) {
             for (int i = 0; i < templateHandles.size(); i++) {
@@ -624,7 +624,7 @@ void harmony::AssetManagerPanel::OnImGui() {
     if (ImGuiFileDialog::Instance()->Display("HarmonyOpenAsset")) {
         // action if OK
         if (ImGuiFileDialog::Instance()->IsOk()) {
-            std::string filepath = ImGuiFileDialog::Instance()->GetFilePathName();
+            String filepath = ImGuiFileDialog::Instance()->GetFilePathName();
             p_AssetManager.LoadAsset(filepath, p_SelectedTypeHash);
         }
         ImGuiFileDialog::Instance()->Close();
@@ -647,7 +647,7 @@ void harmony::LuaScriptPanel::OnImGui() {
         }
         AssetHandle ah;
         if (p_AssetManager.AssetTypeSelector<LuaScriptAsset>("Add Progam Script", ah)) {
-            if (std::find(lua->m_LuaProgramScripts.begin(), lua->m_LuaProgramScripts.end(), ah) !=
+            if (Find(lua->m_LuaProgramScripts.begin(), lua->m_LuaProgramScripts.end(), ah) !=
                 lua->m_LuaProgramScripts.end()) {
                 harmony::log::warn("LuaScript : Script : {} is already a program script", ah.Path);
             } else {
@@ -777,7 +777,7 @@ void harmony::MonoPanel::OnImGui() {
                         if(ImGui::TreeNode("Add ProgramComponents")) {
                             Vector<MonoUtils::CsTypeInfo> typeInfos;
                             for (MonoUtils::CsInterfaceImplInfo info: a->m_InterfaceImplInfos) {
-                                if (std::find(typeInfos.begin(), typeInfos.end(), a->m_TypeInfos[info.m_ClassIndex]) !=
+                                if (Find(typeInfos.begin(), typeInfos.end(), a->m_TypeInfos[info.m_ClassIndex]) !=
                                     typeInfos.end()) {
                                     continue;
                                 }
@@ -994,7 +994,7 @@ void harmony::LuaScriptComponentUI::OnComponentImGui(entt::registry &registry, e
     AssetHandle ah;
     LuaComponent &lc = registry.get<LuaComponent>(entity);
 
-    std::string luaPath = "Lua Script Asset: " + lc.m_LuaScriptAsset.m_Handle.Path;
+    String luaPath = "Lua Script Asset: " + lc.m_LuaScriptAsset.m_Handle.Path;
     ImGui::TextWrapped(luaPath.c_str());
     if (p_AssetManager.AssetTypeSelector<LuaScriptAsset>("Lua Script", ah)) {
         // oh lord please help me no

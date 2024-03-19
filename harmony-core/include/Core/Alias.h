@@ -2,8 +2,10 @@
 #define HARMONY_CORE_ALIAS_H
 
 #include <map>
+#include <algorithm>
 #include <memory>
 #include <unordered_map>
+#include <array>
 #include <vector>
 #include <string>
 #include <future>
@@ -24,6 +26,8 @@
 namespace harmony { 
     using String = std::string;
 
+    using StringView = std::string_view;
+
     template <typename... Args>
     inline auto stoi(Args&&... args) -> decltype(f(std::forward<Args>(args)...)) {
         return std::stoi(std::forward<Args>(args)...);
@@ -38,6 +42,33 @@ namespace harmony {
         return std::abs(f);
     }
 
+    inline static float FMin(float a, float b) {
+        return std::min(a, b);
+    }
+
+   inline String ToString(int _Val) {
+        return std::to_string(_Val);
+    }
+
+   inline String ToString(unsigned int _Val) {
+        return std::to_string(_Val);
+    }
+
+   inline String ToString(long _Val) {
+        return std::to_string(_Val);
+    }
+
+   inline String ToString(unsigned long _Val) {
+        return std::to_string(_Val);
+    }
+
+   inline String ToString(long long _Val) {
+        return std::to_string(_Val);
+    }
+
+   inline String ToString(unsigned long long _Val) {
+        return std::to_string(_Val);
+    }
 
     template <typename A, typename B>
     inline auto SmartPointerCast(const std::shared_ptr<B>& ptr)
@@ -65,6 +96,9 @@ namespace harmony {
     template<typename T1, typename T2>
     using HashMap = std::unordered_map<T1, T2>;
 
+    template<typename T, size_t N>
+    using Array = std::array<T, N>;
+
     template<typename T>
     using Vector = std::vector<T>;
 
@@ -84,6 +118,8 @@ namespace harmony {
     namespace FileSystem = std::filesystem;
 
     namespace Chrono = std::chrono;
+
+    namespace ThisThread = std::this_thread;
 
     template< class T >
     constexpr T&& Forward(std::remove_reference_t<T>& t) noexcept
@@ -114,7 +150,10 @@ namespace harmony {
 
     using MutexLock = std::lock_guard<Mutex>;
 
+    using Ios = std::ios;
+
     using Json = nlohmann::json;
+
 }
 
 #endif

@@ -23,19 +23,19 @@ namespace harmony {
     protected:
         Program &p_Program;
         Renderer &p_Renderer;
-        std::string p_ShaderCompilerLocation;
+        String p_ShaderCompilerLocation;
 
-        int CompileShader(const std::string &shaderName);
+        int CompileShader(const String &shaderName);
 
         String Exec(const char *command);
 
         void ReloadTrackedShaders();
 
-        void OnChange(const std::string &filename, const std::string &directory, efsw::Action action);
+        void OnChange(const String &filename, const String &directory, efsw::Action action);
 
-        std::map<std::string, RefCntPtr<ShaderSourceAsset>> p_LoadedShaderSources;
-        std::map<std::string, RefCntPtr<ShaderStage>> p_LoadedShaderBinaries;
-        std::map<std::string, std::string> p_RendererProfileMapping;
+        Map<String, RefCntPtr<ShaderSourceAsset>> p_LoadedShaderSources;
+        Map<String, RefCntPtr<ShaderStage>> p_LoadedShaderBinaries;
+        Map<String, String> p_RendererProfileMapping;
 
         efsw::FileWatcher *p_FileWatcher;
         efsw::WatchID p_DirectoryWatchID;
@@ -43,11 +43,11 @@ namespace harmony {
         bool p_Initialized;
 
 #if BX_PLATFORM_WINDOWS
-        const std::string PLATFORM_SHADER_COMPILER_EXECUTABLE = "-win.exe";
+        const String PLATFORM_SHADER_COMPILER_EXECUTABLE = "-win.exe";
 #elif BX_PLATFORM_OSX
-        const std::string PLATFORM_SHADER_COMPILER_EXECUTABLE = "-osx";
+        const String PLATFORM_SHADER_COMPILER_EXECUTABLE = "-osx";
 #elif BX_PLATFORM_LINUX
-        const std::string PLATFORM_SHADER_COMPILER_EXECUTABLE = "-osx";
+        const String PLATFORM_SHADER_COMPILER_EXECUTABLE = "-osx";
 #endif
 
 

@@ -34,7 +34,7 @@ __pragma(warning(push, 0))
 #include <Jolt/Physics/Collision/RayCast.h>
 #include <Jolt/Physics/Collision/NarrowPhaseQuery.h>
 #include <Jolt/Physics/Constraints/PointConstraint.h>
-
+#include "Core/Log.hpp"
 #ifdef _MSC_VER
 __pragma(warning(pop))
 #endif
@@ -58,10 +58,9 @@ static void TraceImpl(const char* inFMT, ...)
     va_list list;
             va_start(list, inFMT);
     char buffer[1024];
-    vsnprintf(buffer, sizeof(buffer), inFMT, list);
 
-    // Print to the TTY
-    std::cout << buffer << std::endl;
+    harmony::log::info("Jolt : Trace : {}", &buffer[0]);
+    
 }
 
 #ifdef JPH_ENABLE_ASSERTS
@@ -75,7 +74,7 @@ static bool AssertFailedImpl(const char* inExpression, const char* inMessage, co
     }
 
     // Print to the TTY
-    std::cout << inFile << ":" << inLine << ": (" << inExpression << ") " << (inMessage != nullptr ? inMessage : "") << std::endl;
+    harmony::log::info("Jolt : Assertion Failed : {} : {} : {} : {}", inFIle, inLine, inExpression, inMessage);
 
     // Breakpoint
     return true;

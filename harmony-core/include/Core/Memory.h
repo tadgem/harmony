@@ -101,10 +101,13 @@ namespace harmony {
 #endif
 
     template<typename T>
-    using UniquePtr = std::unique_ptr<T>;
+    using UPtr = std::unique_ptr<T>;
+
+    template<typename T, typename D>
+    using CustomUPtr = std::unique_ptr<T, D>;
 
     template<typename T, typename ... Args>
-    constexpr UniquePtr<T> CreateUnique(Args &&... args) {
+    constexpr UPtr<T> CreateUnique(Args &&... args) {
         return std::make_unique<T>(std::forward<Args>(args)...);
     }
 

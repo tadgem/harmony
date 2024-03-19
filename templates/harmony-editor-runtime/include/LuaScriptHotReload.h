@@ -22,14 +22,14 @@ namespace harmony {
     protected:
         void ReloadLuaScripts();
 
-        void OnChange(const std::string &filename, const std::string &directory, efsw::Action action);
+        void OnChange(const String &filename, const String &directory, efsw::Action action);
 
-        std::string GetCleanFileName(const std::string &filename, const std::string &directory);
+        String GetCleanFileName(const String &filename, const String &directory);
 
         Program &p_Program;
         RefCntPtr<LuaSystem> p_LuaSystem;
 
-        std::map<std::string, RefCntPtr<LuaScriptAsset>> p_LoadedScriptSources;
+        Map<String, RefCntPtr<LuaScriptAsset>> p_LoadedScriptSources;
 
     };
 }

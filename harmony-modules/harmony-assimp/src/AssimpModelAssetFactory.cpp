@@ -68,14 +68,14 @@ harmony::AssimpModelAssetFactory::ProcessMesh(const String &path, aiMesh *mesh, 
     bool hasTangentsAndBitangents = false;
     p_MeshCounter++;
 
-    std::vector<glm::vec3> positions;
+    Vector<glm::vec3> positions;
     if (hasPositions) {
         for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
             positions.push_back(AssimpToGLM(mesh->mVertices[i]));
         }
 
     }
-    std::vector<unsigned int> indices;
+    Vector<unsigned int> indices;
     if (hasIndices) {
         for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
             aiFace currentFace = mesh->mFaces[i];
@@ -90,14 +90,14 @@ harmony::AssimpModelAssetFactory::ProcessMesh(const String &path, aiMesh *mesh, 
         }
     }
 
-    std::vector<glm::vec3> normals;
+    Vector<glm::vec3> normals;
     if (hasNormals) {
         for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
             normals.push_back(AssimpToGLM(mesh->mNormals[i]));
         }
     }
 
-    std::vector<glm::vec2> uvs;
+    Vector<glm::vec2> uvs;
     // TODO: Support additional sets of texture coords.
     if (hasUVs) {
         for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
@@ -105,8 +105,8 @@ harmony::AssimpModelAssetFactory::ProcessMesh(const String &path, aiMesh *mesh, 
         }
     }
 
-    /*std::vector<glm::vec3> tangents;
-    std::vector<glm::vec3> bitangents;
+    /*Vector<glm::vec3> tangents;
+    Vector<glm::vec3> bitangents;
 
     if (hasTangentsAndBitangents)
     {
@@ -137,7 +137,7 @@ harmony::AssimpModelAssetFactory::ProcessMesh(const String &path, aiMesh *mesh, 
 }
 
 void harmony::AssimpModelAssetFactory::UnloadAssetData(const String &path, entt::registry &registry) {
-    std::vector<entt::entity> entitiesToDestroy;
+    Vector<entt::entity> entitiesToDestroy;
 
     auto meshView = registry.view<AssetComponent<Mesh>, AssetHandle>();
 
@@ -162,7 +162,7 @@ void harmony::AssimpModelAssetFactory::UnloadAssetData(const String &path, entt:
 void harmony::AssimpModelAssetFactory::LoadAssetData(const String &path, entt::registry &registry) {
 
     p_Meshes.clear();
-    std::string cleanPath = Utils::GetCleanPlatformPath(path);
+    String cleanPath = Utils::GetCleanPlatformPath(path);
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(cleanPath,
                                              aiProcess_Triangulate |
@@ -184,7 +184,7 @@ void harmony::AssimpModelAssetFactory::LoadAssetData(const String &path, entt::r
     AssetHandle handle(cleanPath, 0, GetTypeHash<Model>());
 
     for (int i = 0; i < p_Meshes.size(); i++) {
-        RefCntPtr<Mesh> meshAsset = std::static_pointer_cast<Mesh, Asset>(p_Meshes[i]);
+        RefCntPtr<Mesh> meshAsset = SmartPointerCast<Mesh, Asset>(p_Meshes[i]);
 
         p_Renderer.SubmitMeshToGPU(meshAsset);
 

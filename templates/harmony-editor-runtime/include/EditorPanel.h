@@ -87,11 +87,11 @@ namespace harmony {
             Custom,
         };
 
-        ComponentUI(const std::string name, const ImGuiParentType uiType = ImGuiParentType::TreeNode);
+        ComponentUI(const String name, const ImGuiParentType uiType = ImGuiParentType::TreeNode);
 
         virtual void OnComponentImGui(entt::registry &registry, entt::entity entity) = 0;
 
-        const std::string &GetComponentName();
+        const String &GetComponentName();
 
         virtual void AddComponent(entt::registry &registry, entt::entity entity) = 0;
 
@@ -108,7 +108,7 @@ namespace harmony {
 
         const ImGuiParentType m_UiType;
     protected:
-        const std::string p_ComponentName;
+        const String p_ComponentName;
 
     };
 
@@ -354,8 +354,8 @@ namespace harmony {
 
         template<typename T, typename ... Args>
         WeakPtr<T> AddComponentUI(Args &&... args) {
-            static_assert(std::is_base_of<ComponentUI, T>());
-            RefCntPtr<T> ui = CreateRef<T>(std::forward<Args>(args)...);
+            static_assert(IsBaseOf<ComponentUI, T>());
+            RefCntPtr<T> ui = CreateRef<T>(Forward<Args>(args)...);
             p_ComponentUIProviders.emplace_back(ui);
             return GetWeakRef<T>(ui);
         }
@@ -365,6 +365,6 @@ namespace harmony {
     protected:
         Program &p_Prog;
         RefCntPtr<ScenePanel> p_ScenePanel;
-        std::vector<RefCntPtr<ComponentUI>> p_ComponentUIProviders;
+        Vector<RefCntPtr<ComponentUI>> p_ComponentUIProviders;
     };
 }

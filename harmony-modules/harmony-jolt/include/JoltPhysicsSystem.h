@@ -98,16 +98,16 @@ namespace harmony {
         float m_UpdateFrequency = 60.0f;    // Physics update frequency
     public:
         JPH::PhysicsSettings m_PhysicsSettings;
-        UniquePtr<JPH::TempAllocator> m_TempAllocator;            // Allocator for temporary allocations
-        UniquePtr<JPH::JobSystem> m_JobSystem;                // The job system that runs physics jobs
-        UniquePtr<JPH::JobSystem> m_JobSystemValidating;        // The job system to use when validating determinism
-        UniquePtr<JPH::PhysicsSystem> m_PhysicsSystem;            // The physics system that simulates the world
-        UniquePtr<JPH::BroadPhaseLayerInterface> m_BroadPhaseLayerInterface;
-        UniquePtr<JPH::ObjectVsBroadPhaseLayerFilter> m_ObjectVsBroadphaseFilter;
-        UniquePtr<JPH::ObjectLayerPairFilter> m_ObjectLayerPairFilter;
-        UniquePtr<HarmonyBodyActivationListener> m_BodyActivationListener;
-        UniquePtr<HarmonyContactListener> m_ContactListener;          // Contact listener implementation
-        UniquePtr<HarmonyDebugRenderer> m_DebugRenderer;
+        UPtr<JPH::TempAllocator> m_TempAllocator;            // Allocator for temporary allocations
+        UPtr<JPH::JobSystem> m_JobSystem;                // The job system that runs physics jobs
+        UPtr<JPH::JobSystem> m_JobSystemValidating;        // The job system to use when validating determinism
+        UPtr<JPH::PhysicsSystem> m_PhysicsSystem;            // The physics system that simulates the world
+        UPtr<JPH::BroadPhaseLayerInterface> m_BroadPhaseLayerInterface;
+        UPtr<JPH::ObjectVsBroadPhaseLayerFilter> m_ObjectVsBroadphaseFilter;
+        UPtr<JPH::ObjectLayerPairFilter> m_ObjectLayerPairFilter;
+        UPtr<HarmonyBodyActivationListener> m_BodyActivationListener;
+        UPtr<HarmonyContactListener> m_ContactListener;          // Contact listener implementation
+        UPtr<HarmonyDebugRenderer> m_DebugRenderer;
         JPH::BodyInterface *m_BodyInterface;
 
     protected:

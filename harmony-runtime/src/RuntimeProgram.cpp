@@ -23,7 +23,7 @@
 #include "MonoSystem.h"
 #include "JoltMonoBind.h"
 
-harmony::RuntimeProgram::RuntimeProgram(const std::string &name) : Program(name) {
+harmony::RuntimeProgram::RuntimeProgram(const String &name) : Program(name) {
     OPTICK_EVENT();
     AddAssetTypeNames();
     AddProgramComponents();
@@ -38,7 +38,7 @@ harmony::RuntimeProgram::RuntimeProgram(const std::string &name) : Program(name)
 }
 
 
-void harmony::RuntimeProgram::Run(const std::string &projectPath) {
+void harmony::RuntimeProgram::Run(const String &projectPath) {
     OPTICK_EVENT();
     Init();
     m_Renderer.Init();
@@ -254,7 +254,7 @@ void harmony::RuntimeProgram::InitializeViews() {
 }
 
 
-void harmony::RuntimeProgram::LoadScene(const std::string &path) {
+void harmony::RuntimeProgram::LoadScene(const String &path) {
     OPTICK_EVENT();
     log::info("RuntimeProgram : Load Scene at path : {}", path);
     Program::LoadScene(path);

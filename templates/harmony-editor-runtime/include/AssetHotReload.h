@@ -9,13 +9,13 @@ namespace harmony {
 
     class AssetHotReloadProvider {
     public:
-        AssetHotReloadProvider(const std::string &name);
+        AssetHotReloadProvider(const String &name);
 
         virtual void Init() = 0;
 
-        virtual void OnChange(const std::string &filename, const std::string &directory, efsw::Action action) = 0;
+        virtual void OnChange(const String &filename, const String &directory, efsw::Action action) = 0;
 
-        const std::string &m_Name;
+        const String &m_Name;
 
         String GetActionName(efsw::Action action);
     };
@@ -43,7 +43,7 @@ namespace harmony {
         void AddHotReloadProvider(RefCntPtr<AssetHotReloadProvider> provider);
 
     protected:
-        std::vector<RefCntPtr<AssetHotReloadProvider>> p_HotReloadProviders;
+        Vector<RefCntPtr<AssetHotReloadProvider>> p_HotReloadProviders;
 
         Program &p_Program;
 
@@ -51,7 +51,7 @@ namespace harmony {
         efsw::WatchID p_DirectoryWatchID;
 
         // Inherited via FileWatchListener
-        virtual void handleFileAction(efsw::WatchID watchid, const std::string &dir, const std::string &filename,
-                                      efsw::Action action, std::string oldFilename) override;
+        virtual void handleFileAction(efsw::WatchID watchid, const String &dir, const String &filename,
+                                      efsw::Action action, String oldFilename) override;
     };
 }

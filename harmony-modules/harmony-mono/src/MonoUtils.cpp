@@ -115,7 +115,7 @@ harmony::MonoUtils::Accessibility harmony::MonoUtils::GetPropertyAccessbility(Mo
     return (Accessibility)accessibility;
 }
 
-MonoAssembly* harmony::MonoUtils::LoadCSharpAssembly(const std::string& assemblyPath, char* fileData, uint32_t fileSize)
+MonoAssembly* harmony::MonoUtils::LoadCSharpAssembly(const String& assemblyPath, char* fileData, uint32_t fileSize)
 {
     MonoImageOpenStatus status;
     MonoImage* image = mono_image_open_from_data_full(fileData, fileSize, 1, &status, 0);
@@ -127,10 +127,10 @@ MonoAssembly* harmony::MonoUtils::LoadCSharpAssembly(const std::string& assembly
         return nullptr;
     }
 
-    std::filesystem::path pdbPath = assemblyPath;
+    FileSystem::path pdbPath = assemblyPath;
     pdbPath.replace_extension(".pdb");
 
-    if (std::filesystem::exists(pdbPath))
+    if (FileSystem::exists(pdbPath))
     {
         Vector<unsigned char> pdbFileData = Utils::LoadBinaryFromPath(pdbPath.string());
         mono_debug_open_image_from_memory(image, (mono_byte*)pdbFileData.data(), pdbFileData.size());

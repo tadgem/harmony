@@ -144,7 +144,7 @@ void harmony::EditorView::OnImGui() {
 
     RefCntPtr<Scene> scene = p_Program.GetActiveScene().lock();
 
-    const std::string editorViewTitle = std::string(ICON_FA_VIDEO_CAMERA) + " Editor";
+    const String editorViewTitle = String(ICON_FA_VIDEO_CAMERA) + " Editor";
     glm::mat4 mat = glm::mat4(1.0);
     auto pipeline = p_Renderer.GetViewPipelineFromName("Editor").lock();
     

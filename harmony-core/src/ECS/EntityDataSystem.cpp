@@ -12,7 +12,7 @@ void harmony::EntityDataSystem::Init(entt::registry &registry) {
         }
         auto &data = registry.get<EntityData>(e);
         if (data.m_Name.empty()) {
-            data.m_Name = "Entity " + std::to_string(index);
+            data.m_Name = "Entity " + ToString(index);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace harmony
     class MonoAssemblyAsset : public Asset
     {
     public:
-        MonoAssemblyAsset(std::vector<uint8_t> assemblyBinary, const std::string& assemblyPath);
+        MonoAssemblyAsset(Vector<uint8_t> assemblyBinary, const String& assemblyPath);
         ~MonoAssemblyAsset();
         const String m_AssemblyPath;
 

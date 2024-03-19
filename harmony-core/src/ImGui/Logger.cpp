@@ -67,9 +67,9 @@ void harmony::ImGuiLogger::Render() {
                 ImVec4 col = p_LevelInfos[msg.m_MsgLevel].m_LevelColour;
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
-                ImGui::Text(std::to_string(msg.m_ThreadID).c_str());
+                ImGui::Text(ToString(msg.m_ThreadID).c_str());
                 ImGui::TableSetColumnIndex(1);
-                ImGui::Text(std::to_string(msg.m_Time).c_str());
+                ImGui::Text(ToString(msg.m_Time).c_str());
                 ImGui::TableSetColumnIndex(2);
                 ImGui::TextColored(col, p_LevelInfos[msg.m_MsgLevel].m_LevelName.c_str());
                 ImGui::TableSetColumnIndex(3);

@@ -10,7 +10,7 @@ harmony::String harmony::Utils::LoadStringFromPath(const String &path) {
     OPTICK_EVENT();
     String finalPath = GetCleanPlatformPath(path);
 
-    IfStream inputFile = IfStream(finalPath, std::ios::in | std::ios::binary);
+    IfStream inputFile = IfStream(finalPath, Ios::in | Ios::binary);
 
     if (!inputFile.is_open()) {
         return String();
@@ -38,7 +38,7 @@ harmony::Json harmony::Utils::LoadJsonFromPath(const String &path) {
 harmony::Vector<uint8_t> harmony::Utils::LoadBinaryFromPath(const String &path) {
     OPTICK_EVENT();
 
-    IfStream binary_input_stream = IfStream(path, std::ios::binary);
+    IfStream binary_input_stream = IfStream(path, Ios::binary);
     Vector<uint8_t> data(IStreamBufIterator<char>(binary_input_stream), {});
 
     return data;
@@ -47,7 +47,7 @@ harmony::Vector<uint8_t> harmony::Utils::LoadBinaryFromPath(const String &path) 
 harmony::Vector<uint8_t> *harmony::Utils::LoadBinaryFromPathHeap(const String &path) {
     OPTICK_EVENT();
 
-    IfStream binary_input_stream = IfStream(path, std::ios::binary);
+    IfStream binary_input_stream = IfStream(path, Ios::binary);
     auto data = new Vector<uint8_t>(IStreamBufIterator<char>(binary_input_stream), {});
 
     return data;

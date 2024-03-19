@@ -50,7 +50,7 @@ void harmony::HarmonyDebugRenderer::DrawGeometry(const JPH::Mat44 &inModelMatrix
                                  batch->m_Indices);
 }
 
-void harmony::HarmonyDebugRenderer::DrawText3D(JPH::RVec3Arg inPosition, const std::string_view &inString,
+void harmony::HarmonyDebugRenderer::DrawText3D(JPH::RVec3Arg inPosition, const StringView &inString,
                                                JPH::ColorArg inColor, float inHeight) {
     harmony::log::info("JoltDebugRenderer : Implement : Draw Text");
 }

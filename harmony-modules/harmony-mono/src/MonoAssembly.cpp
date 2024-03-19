@@ -9,7 +9,7 @@
 #include "mono/metadata/object.h"
 #include "mono/metadata/mono-debug.h"
 #include "mono/metadata/threads.h"
-harmony::MonoAssemblyAsset::MonoAssemblyAsset(std::vector<uint8_t> assemblyBinary, const String& assemblyPath) :
+harmony::MonoAssemblyAsset::MonoAssemblyAsset(Vector<uint8_t> assemblyBinary, const String& assemblyPath) :
 	Asset(),
 	p_AssemblyBinary(assemblyBinary), 
 	m_AssemblyPath(assemblyPath),

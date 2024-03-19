@@ -36,7 +36,7 @@ void harmony::EditorMainMenuBar::MenuBar() {
             if (ImGui::BeginMenu("Open Scene")) {
                 if (p_Prog.m_Project) {
                     for (int i = 0; i < p_Prog.m_Project->m_SerializedScenes.size(); i++) {
-                        std::string sceneName = p_Prog.m_Project->m_SerializedScenes[i].c_str();
+                        String sceneName = p_Prog.m_Project->m_SerializedScenes[i].c_str();
                         if (ImGui::MenuItem(sceneName.c_str())) {
                             p_Prog.LoadScene(sceneName);
                             break;
@@ -91,7 +91,7 @@ void harmony::EditorMainMenuBar::Dialogs() {
     if (ImGuiFileDialog::Instance()->Display("HarmonyOpenProject")) {
         // action if OK
         if (ImGuiFileDialog::Instance()->IsOk()) {
-            std::string filepath = ImGuiFileDialog::Instance()->GetFilePathName();
+            String filepath = ImGuiFileDialog::Instance()->GetFilePathName();
             p_Prog.LoadProject(filepath);
         }
         ImGuiFileDialog::Instance()->Close();
@@ -103,7 +103,7 @@ void harmony::EditorMainMenuBar::Dialogs() {
     if (ImGuiFileDialog::Instance()->Display("HarmonySaveScene")) {
         // action if OK
         if (ImGuiFileDialog::Instance()->IsOk()) {
-            std::string filepath = ImGuiFileDialog::Instance()->GetFilePathName();
+            String filepath = ImGuiFileDialog::Instance()->GetFilePathName();
             p_Prog.SaveScene(filepath);
         }
         ImGuiFileDialog::Instance()->Close();
@@ -117,8 +117,8 @@ void harmony::EditorMainMenuBar::Popups() {
             ImGui::InputText("Project Path", &p_ProjectPathInput[0], 256);
             ImGui::Separator();
             if (ImGui::Button("Create Project")) {
-                std::string projectName = std::string(p_ProjectNameInput);
-                std::string projectPath = std::string(p_ProjectPathInput);
+                String projectName = String(p_ProjectNameInput);
+                String projectPath = String(p_ProjectPathInput);
                 p_Prog.CreateProject(projectName, projectPath);
                 p_Prog.SaveProject();
                 p_CreateProjectMenu = false;
@@ -139,7 +139,7 @@ void harmony::EditorMainMenuBar::Popups() {
         if (ImGui::Begin("Create Scene")) {
             ImGui::InputText("Scene Name", &p_SceneNameInput[0], 256);
             if (ImGui::Button("Create")) {
-                p_Prog.CreateScene(std::string(p_SceneNameInput));
+                p_Prog.CreateScene(String(p_SceneNameInput));
                 p_CreateSceneMenu = false;
             }
             ImGui::SameLine();

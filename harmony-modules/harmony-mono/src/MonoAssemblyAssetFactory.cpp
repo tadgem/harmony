@@ -10,9 +10,9 @@ harmony::MonoAssemblyAssetFactory::MonoAssemblyAssetFactory(WeakPtr<MonoProgramC
 	m_Capabilities.AssetTypeHashes.push_back(p_AssemblyTypeHash);
 }
 
-void harmony::MonoAssemblyAssetFactory::LoadAssetData(const std::string& path, entt::registry& registry)
+void harmony::MonoAssemblyAssetFactory::LoadAssetData(const String& path, entt::registry& registry)
 {
-	std::vector<uint8_t> assemblyBytes = Utils::LoadBinaryFromPath(path);
+	Vector<uint8_t> assemblyBytes = Utils::LoadBinaryFromPath(path);
 	if (assemblyBytes.empty())
 	{
 		harmony::log::error("MonoAssemblyAssetFactory : Unable to load Assembly at path {}", path);
@@ -32,9 +32,9 @@ void harmony::MonoAssemblyAssetFactory::LoadAssetData(const std::string& path, e
 
 }
 
-void harmony::MonoAssemblyAssetFactory::UnloadAssetData(const std::string& path, entt::registry& registry)
+void harmony::MonoAssemblyAssetFactory::UnloadAssetData(const String& path, entt::registry& registry)
 {
-	std::vector<entt::entity> entitiesToDestroy;
+	Vector<entt::entity> entitiesToDestroy;
 
 	auto assemblyView = registry.view<AssetComponent<MonoAssemblyAsset>, AssetHandle>();
 

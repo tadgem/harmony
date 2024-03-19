@@ -2,7 +2,7 @@
 #include "Core/Log.hpp"
 #include "Core/Program.h"
 
-harmony::AssetHotReloadProvider::AssetHotReloadProvider(const std::string &name) : m_Name(name) {
+harmony::AssetHotReloadProvider::AssetHotReloadProvider(const String &name) : m_Name(name) {
 }
 
 harmony::String harmony::AssetHotReloadProvider::GetActionName(efsw::Action action) {
@@ -30,8 +30,8 @@ harmony::AssetHotReload::~AssetHotReload() {
 
 void harmony::AssetHotReload::Init() {
     if (p_Program.m_Project) {
-        std::string projDirectory = p_Program.m_Project->m_ProjectDirectory;
-        std::string shadersDirectory = projDirectory + "\\assets";
+        String projDirectory = p_Program.m_Project->m_ProjectDirectory;
+        String shadersDirectory = projDirectory + "\\assets";
 
         efsw::FileWatchListener *listener = this;
 
@@ -74,8 +74,8 @@ void harmony::AssetHotReload::AddHotReloadProvider(RefCntPtr<AssetHotReloadProvi
 }
 
 void
-harmony::AssetHotReload::handleFileAction(efsw::WatchID watchid, const std::string &dir, const std::string &filename,
-                                          efsw::Action action, std::string oldFilename) {
+harmony::AssetHotReload::handleFileAction(efsw::WatchID watchid, const String &dir, const String &filename,
+                                          efsw::Action action, String oldFilename) {
     for (int i = 0; i < p_HotReloadProviders.size(); i++) {
         p_HotReloadProviders[i]->OnChange(filename, dir, action);
     }

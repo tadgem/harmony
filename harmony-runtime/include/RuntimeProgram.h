@@ -26,9 +26,9 @@ namespace harmony {
 
     class RuntimeProgram : public Program {
     public:
-        RuntimeProgram(const std::string &name = "Runtime App");
+        RuntimeProgram(const String &name = "Runtime App");
 
-        virtual void Run(const std::string &projectPath);
+        virtual void Run(const String &projectPath);
 
         virtual void AddAssetTypeNames();
 
@@ -50,7 +50,7 @@ namespace harmony {
 
         virtual void InitializeViews();
 
-        virtual void LoadScene(const std::string &path) override;
+        virtual void LoadScene(const String &path) override;
 
         virtual void OpenScene(uint32_t index) override;
 

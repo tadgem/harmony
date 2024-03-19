@@ -34,7 +34,7 @@ void harmony::LuaScriptHotReload::ReloadLuaScripts() {
 
 
 void
-harmony::LuaScriptHotReload::OnChange(const std::string &filename, const std::string &directory, efsw::Action action) {
+harmony::LuaScriptHotReload::OnChange(const String &filename, const String &directory, efsw::Action action) {
     //harmony::log::info("LuaScriptHotReload : Path : {}, Change Type : TODO", filename);
 
     if (action == efsw::Actions::Add) {
@@ -48,9 +48,9 @@ harmony::LuaScriptHotReload::OnChange(const std::string &filename, const std::st
                 return;
             }
 
-            std::string cleanPath = GetCleanFileName(filename, directory);
+            String cleanPath = GetCleanFileName(filename, directory);
             // Update shader text...
-            std::string newText = Utils::LoadStringFromPath(directory + std::string("/") + filename);
+            String newText = Utils::LoadStringFromPath(directory + String("/") + filename);
 
             if (p_LoadedScriptSources.find(cleanPath) == p_LoadedScriptSources.end()) {
                 harmony::log::warn("LuaScriptHotRelaod : script not being tracked by hot reload. {}", filename);
@@ -71,9 +71,9 @@ harmony::LuaScriptHotReload::OnChange(const std::string &filename, const std::st
     }
 }
 
-std::string harmony::LuaScriptHotReload::GetCleanFileName(const std::string &filename, const std::string &directory) {
-    std::string projDirectory = p_Program.m_Project->m_ProjectDirectory;
-    std::string fullFileDirectory = directory;
+harmony::String harmony::LuaScriptHotReload::GetCleanFileName(const String &filename, const String &directory) {
+    String projDirectory = p_Program.m_Project->m_ProjectDirectory;
+    String fullFileDirectory = directory;
 
     if (projDirectory.find("\\") < projDirectory.size()) {
         fullFileDirectory += "\\" + filename;

@@ -110,12 +110,12 @@ void harmony::RuntimeView::OnImGuiOptions() {
     }
 
     RefCntPtr<Scene> scene = p_Program.GetActiveScene().lock();
-    String currentName = "Entity " + std::to_string(static_cast<uint32_t>(CameraEntity));
+    String currentName = "Entity " + ToString(static_cast<uint32_t>(CameraEntity));
     if (ImGui::BeginCombo("Camera Entity", currentName.c_str())) {
         auto view = scene->m_Registry.view<CameraComponent>();
 
         for (auto [entity, camera]: view.each()) {
-            String name = "Entity " + std::to_string(static_cast<uint32_t>(entity));
+            String name = "Entity " + ToString(static_cast<uint32_t>(entity));
             if (ImGui::Selectable(name.c_str())) {
                 CameraEntity = entity;
             }

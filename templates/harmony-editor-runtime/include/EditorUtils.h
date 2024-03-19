@@ -8,4 +8,4 @@
 void ProjectDetailsImGui(harmony::Program &program);
 
 
-void Vec4Input(const std::string &name, glm::vec4 &v);
+void Vec4Input(const harmony::String &name, glm::vec4 &v);

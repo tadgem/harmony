@@ -1505,7 +1505,7 @@ harmony::ScreenQuadRenderer* harmony_mono_renderer_create_screen_quad_renderer()
 {
     using namespace harmony;
     RefCntPtr<ScreenQuadRenderer> quad_renderer = CreateRef<ScreenQuadRenderer>();
-    s_PipelineStageRendererCache.emplace_back(std::static_pointer_cast<PipelineStageRenderer, ScreenQuadRenderer>(quad_renderer));
+    s_PipelineStageRendererCache.emplace_back(SmartPointerCast<PipelineStageRenderer, ScreenQuadRenderer>(quad_renderer));
     return quad_renderer.get();
 }
 

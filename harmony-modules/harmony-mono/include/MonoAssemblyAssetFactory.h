@@ -10,8 +10,8 @@ namespace harmony
     public:
         MonoAssemblyAssetFactory(WeakPtr<MonoProgramComponent> mono);
 
-        virtual void LoadAssetData(const std::string& path, entt::registry& registry) override;
-        virtual void UnloadAssetData(const std::string& path, entt::registry& registry) override;
+        virtual void LoadAssetData(const    String& path, entt::registry& registry) override;
+        virtual void UnloadAssetData(const  String& path, entt::registry& registry) override;
 
     protected:
         WeakPtr<MonoProgramComponent> p_Mono;

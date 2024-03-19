@@ -33,8 +33,8 @@ void harmony::MonoProgramComponent::Init()
 {
     log::info("MonoProgramComponent : Initializing");
     // TODO: Change to the project directory
-    std::string root(std::getenv("MONO_PATH"));
-    std::string assemblyDir = root + "/lib";
+    String root(getenv("MONO_PATH"));
+    String assemblyDir = root + "/lib";
     mono_set_assemblies_path(assemblyDir.c_str());
 
     if(p_RootDomain == nullptr)

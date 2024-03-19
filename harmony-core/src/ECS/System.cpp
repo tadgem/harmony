@@ -4,7 +4,7 @@
 harmony::String harmony::System::GetEntityKey(entt::entity &entity) {
     OPTICK_EVENT();
     uint32_t handle = static_cast<uint32_t>(entity);
-    return std::to_string(handle);
+    return ToString(handle);
 }
 
 entt::entity harmony::System::GetEntityFromKey(const String &key) {
