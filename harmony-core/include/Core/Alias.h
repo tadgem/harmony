@@ -1,13 +1,18 @@
 #ifndef HARMONY_CORE_ALIAS_H
 #define HARMONY_CORE_ALIAS_H
 
-#include <map>
-#include <algorithm>
-#include <memory>
-#include <unordered_map>
-#include <array>
-#include <vector>
-#include <string>
+#include "STL/Algorithm.h"
+#include "STL/Array.h"
+#include "STL/FileSystem.h"
+#include "STL/HashMap.h"
+#include "STL/Map.h"
+#include "STL/Memory.h"
+#include "STL/Optional.h"
+#include "STL/String.h"
+#include "STL/Vector.h"
+
+
+
 #include <future>
 #include <utility>
 #include <fstream>
@@ -15,18 +20,14 @@
 #include <ostream>
 #include <functional>
 #include <mutex>
-#include <optional>
 #include <stack>
 #include <thread>
 #include "ThirdParty/json.hpp"
 #include <regex>
 #include <stdio.h>
 #include <ctype.h>
-#include <filesystem>
-namespace harmony { 
-    using String = std::string;
 
-    using StringView = std::string_view;
+namespace harmony { 
 
     template <typename... Args>
     inline auto stoi(Args&&... args) -> decltype(f(std::forward<Args>(args)...)) {
@@ -87,20 +88,6 @@ namespace harmony {
     template<typename T>
     using IStreamBufIterator = std::istreambuf_iterator<T>;
 
-    template<typename T>
-    using Optional  = std::optional<T>;
-
-    template<typename T1, typename T2>
-    using Map = std::map<T1, T2>;
-
-    template<typename T1, typename T2>
-    using HashMap = std::unordered_map<T1, T2>;
-
-    template<typename T, size_t N>
-    using Array = std::array<T, N>;
-
-    template<typename T>
-    using Vector = std::vector<T>;
 
     template<typename T>
     using Stack = std::stack<T>;
