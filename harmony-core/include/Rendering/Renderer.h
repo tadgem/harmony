@@ -11,11 +11,12 @@
 #include "Rendering/Pipelines/PipelineV2.h"
 #include "Rendering/Shaders/Shader.h"
 #include "Rendering/View.h"
-#include "ThirdParty/json.hpp"
+#include "STL/Json.hpp"
 #include "bgfx/bgfx.h"
 #include "glm/glm.hpp"
 #include <Rendering/Pipelines/PipelineStages/PostProcessStage.h>
-#include <string>
+#include "STL/HashMap.h"
+#include "STL/String.h"
 
 namespace harmony {
 

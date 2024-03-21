@@ -5,7 +5,7 @@
 #ifndef HARMONY_DOJO_TYPEDEF_H
 #define HARMONY_DOJO_TYPEDEF_H
 
-#include "ThirdParty/json.hpp"
+#include "STL/Json.hpp"
 #include "bgfx/bgfx.h"
 
 namespace harmony {

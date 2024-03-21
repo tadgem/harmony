@@ -1,6 +1,5 @@
-#include <algorithm>
+#include "STL/Algorithm.h"
 #include "Rendering/Shaders/Shader.h"
-
 #include "Core/Log.hpp"
 #include "Core/Utils.h"
 #include "bgfx/platform.h"

@@ -3,7 +3,9 @@
 //
 
 #pragma once
-#include "Core/Alias.h"
+#include "STL/HashMap.h"
+#include "STL/Json.hpp"
+#include "STL/Memory.h"
 #include "Assets/TextAsset.h"
 #include "Assets/AssetManager.h"
 

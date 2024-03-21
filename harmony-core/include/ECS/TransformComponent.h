@@ -2,7 +2,7 @@
 
 #include "glm/glm.hpp"
 #include "glm/gtc/quaternion.hpp"
-#include "ThirdParty/json.hpp"
+#include "STL/Json.hpp"
 
 #include "Rendering/Shaders/ShaderUniform.h"
 

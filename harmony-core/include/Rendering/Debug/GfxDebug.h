@@ -2,7 +2,8 @@
 
 #include "Rendering/Debug/debugdraw/debugdraw.h"
 #include "Rendering/View.h"
-#include "ThirdParty/json.hpp"
+#include "STL/HashMap.h"
+#include "STL/Json.hpp"
 
 namespace harmony {
     class GfxDebug {

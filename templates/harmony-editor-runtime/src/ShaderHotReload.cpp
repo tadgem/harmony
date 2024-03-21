@@ -4,15 +4,12 @@
 #include "Core/Log.hpp"
 #include "Rendering/Shaders/Shader.h"
 #include "Assets/ShaderSourceAsset.h"
-#include <filesystem>
-#include <chrono>
-#include <thread>
-#include <cstdio>
-#include <iostream>
-#include <memory>
-#include <stdexcept>
-#include <string>
-#include <array>
+#include "STL/Array.h"
+#include "STL/FileSystem.h"
+#include "STL/String.h"
+#include "STL/Memory.h"
+#include "STL/Thread.h"
+#include "STL/Chrono.h"
 
 
 harmony::ShaderHotReload::ShaderHotReload(Program &prog) : AssetHotReloadProvider("Shader"), p_Program(prog),

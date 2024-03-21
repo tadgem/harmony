@@ -4,7 +4,7 @@
 #include "ECS/EntityTemplate.h"
 #include "Core/Scene.h"
 #include "ECS/System.h"
-
+#include "STL/HashMap.h"
 void harmony::EntityTemplate::AddComponentData(HashString systemTypeHash, Json entityJson)
 {
 	if(entityJson.empty())

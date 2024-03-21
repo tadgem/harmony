@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Memory.h"
+#include "STL/Json.hpp"
 #include "ThirdParty/entt.hpp"
 #include "Core/TypeDef.h"
 #include "bgfx/bgfx.h"

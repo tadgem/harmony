@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Memory.h"
-#include "ThirdParty/json.hpp"
+#include "STL/Json.hpp"
 #include "glm/glm.hpp"
 
 namespace harmony {

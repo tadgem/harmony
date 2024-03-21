@@ -5,7 +5,7 @@
 #include "MonoAPI.h"
 #include "MonoProgramComponent.h"
 #include "HarmonyContactListener.h"
-
+#include "STL/HashMap.h"
 extern "C"
 {
     struct jolt_contact_manifold_simple

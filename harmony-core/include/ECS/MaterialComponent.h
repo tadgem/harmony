@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Rendering/Renderer.h"
-#include "ThirdParty/json.hpp"
+#include "STL/Json.hpp"
 #include "Rendering/Shaders/ShaderDataOverride.h"
 
 namespace harmony {

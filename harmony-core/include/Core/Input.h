@@ -1,8 +1,8 @@
 #pragma once
 // TODO when need arises, revisit input, potentially as a program component
 // Singletons are not great
-#include "Core/Alias.h"
-#include <vector>
+#include "STL/HashMap.h"
+#include "STL/Vector.h"
 #include "glm/glm.hpp"
 #include "SDL.h"
 

@@ -2,6 +2,7 @@
 
 #include "Core/Memory.h"
 #include "Core/TypeDef.h"
+#include "ThirdParty/json.hpp"
 
 namespace harmony {
     struct AssetHandle {

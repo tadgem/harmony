@@ -3,10 +3,10 @@
 #include "Core/Memory.h"
 #include "Assets/Asset.h"
 #include "Assets/AssetFactory.h"
-#include <map>
-#include <vector>
-#include <memory>
-#include <string>
+#include "STL/HashMap.h"
+#include "STL/Vector.h"
+#include "STL/Memory.h"
+#include "STL/String.h"
 #include "Core/Utils.h"
 #include "Core/Memory.h"
 #include "Core/Log.hpp"

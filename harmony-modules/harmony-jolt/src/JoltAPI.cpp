@@ -74,7 +74,7 @@ static bool AssertFailedImpl(const char* inExpression, const char* inMessage, co
     }
 
     // Print to the TTY
-    harmony::log::info("Jolt : Assertion Failed : {} : {} : {} : {}", inFIle, inLine, inExpression, inMessage);
+    harmony::log::info("Jolt : Assertion Failed : {} : {} : {} : {}", inFile, inLine, inExpression, inMessage);
 
     // Breakpoint
     return true;

@@ -1,8 +1,8 @@
 #ifndef HARMONY_CORE_TYPEDEF_H
 #define HARMONY_CORE_TYPEDEF_H
 
-#include "Core/Alias.h"
-#include "ThirdParty/json.hpp"
+#include "STL/Json.hpp"
+#include "STL/String.h"
 
 namespace typehash_internal
 {

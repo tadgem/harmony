@@ -4,6 +4,7 @@
 #include "Assets/AssetManager.h"
 #include "Assets/TextureAsset.h"
 #include "Core/Memory.h"
+#include "STL/HashMap.h"
 #include "ShaderUniform.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/embedded_shader.h"

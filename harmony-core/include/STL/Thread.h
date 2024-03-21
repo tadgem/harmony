@@ -12,5 +12,6 @@ namespace harmony
     using Mutex = std::mutex;
     using MutexLock = std::lock_guard<Mutex>;
 
+    namespace ThisThread = std::this_thread;
 }
 #endif

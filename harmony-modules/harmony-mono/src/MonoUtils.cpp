@@ -2,6 +2,7 @@
 #include "MonoUtils.h"
 #include "Core/Log.hpp"
 #include "mono/metadata/mono-debug.h"
+#include "STL/FileSystem.h"
 
 
 harmony::MonoUtils::Accessibility harmony::MonoUtils::GetFieldAccessibility(MonoClassField *field)

@@ -1,6 +1,8 @@
 #include "Core/Utils.h"
 
-#include <filesystem>
+#include "STL/IO.h"
+#include "STL/FileSystem.h"
+#include "STL/Algorithm.h"
 #include <optick.h>
 
 #include "bx/platform.h"

@@ -3,7 +3,7 @@
 #include "Core/Memory.h"
 #include "ShaderUniform.h"
 #include "ThirdParty/entt.hpp"
-#include "ThirdParty/json.hpp"
+#include "STL/Json.hpp"
 
 namespace harmony {
     class ShaderProgram;

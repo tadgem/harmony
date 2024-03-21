@@ -9,7 +9,7 @@
 #include "ImGui/imgui_bgfx.h"
 #include "Core/Program.h"
 #include "Assets/TextureAsset.h"
-
+#include "STL/Algorithm.h"
 #endif
 
 harmony::AssetManager::AssetManager() {

@@ -5,7 +5,7 @@
 #ifndef HARMONY_DOJO_SKYCOMPONENT_H
 #define HARMONY_DOJO_SKYCOMPONENT_H
 
-#include "ThirdParty/json.hpp"
+#include "STL/Json.hpp"
 #include "glm/glm.hpp"
 
 

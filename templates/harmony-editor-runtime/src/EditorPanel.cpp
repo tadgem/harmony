@@ -23,6 +23,8 @@
 #include "mono/metadata/mono-debug.h"
 #include "Assets/ModelAsset.h"
 #include "ECS/EntityTemplate.h"
+#include "STL/Algorithm.h"
+
 harmony::ScenePanel::ScenePanel(Program &program) : p_Prog(program), p_AssetManager(program.m_AssetManager)
 {
 }
