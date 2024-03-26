@@ -5,7 +5,7 @@ option(HARMONY_DEBUG "Build harmony with debug functionality enabled." ON)
 option(HARMONY_USE_LUAJIT "Use LuaJIT instead of regular Lua" ON)
 
 if (MSVC)
-    add_definitions(-D_CRT_SECURE_NO_WARNINGS /W2)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS /W3)
 endif ()
 
 file(GLOB_RECURSE CORE_SRC_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" src/*.cpp)

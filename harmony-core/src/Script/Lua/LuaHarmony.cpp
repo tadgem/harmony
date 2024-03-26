@@ -9,7 +9,6 @@
 #include "Rendering/Views/RuntimeView.h"
 #include "glm.hpp"
 #include "glm/detail/type_mat3x3.hpp"
-#include "Collision/CollisionShapes.h"
 #include "Rendering/Debug/GfxDebug.h"
 #include "Rendering/Pipelines/PipelineStages/PipelineDrawStage.h"
 

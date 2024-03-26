@@ -12,10 +12,10 @@ namespace harmony {
     public:
 
         struct Message {
-            String m_Msg;
-            log::level::level_enum m_MsgLevel;
-            size_t m_ThreadID;
-            long long m_Time;
+            String m_Msg = {};
+            log::level::level_enum m_MsgLevel = {};
+            size_t m_ThreadID = {};
+            long long m_Time = 0;
         };
         struct LevelInfo {
             String m_LevelName;

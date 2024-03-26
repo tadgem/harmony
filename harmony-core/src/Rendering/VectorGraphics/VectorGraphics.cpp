@@ -50,7 +50,7 @@ NVGcontext *harmony::VectorGraphics::AddViewLayer(Layer layer, bgfx::ViewId view
     NVGcontext *renderer = nvgCreate(s_UseEdgeAA, viewId);
 
     for (auto &[name, data]: p_FontDatas) {
-        nvgCreateFontMem(renderer, name.c_str(), data.data(), data.size(), 0);
+        nvgCreateFontMem(renderer, name.c_str(), data.data(), static_cast<int>(data.size()), 0);
     }
     p_VectorRenderers[layer].emplace_back(renderer);
 

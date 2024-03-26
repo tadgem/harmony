@@ -35,6 +35,9 @@ glm::vec3 xyzToRgb(const glm::vec3 &xyz) {
 harmony::SkyDataSource::SkyDataSource() : ShaderDataSource("Sky") {
     OPTICK_EVENT()
     p_UniformsCollected = false;
+    p_SunDirection = {};
+    p_SkyLuminanceXYZ = {};
+    p_PerezCoefficients = {};
     // reset time.
     p_Parameters[3] = 0.0f;
 }
@@ -64,7 +67,7 @@ void harmony::SkyDataSource::OnPreUpdate(entt::registry &registry, harmony::RefC
         p_Parameters[0] = sky.SunSize;
         p_Parameters[1] = sky.SunBloom;
         p_Parameters[2] = sky.Exposition;
-        p_Parameters[3] += Time::GetFrameTime();
+        p_Parameters[3] += static_cast<float>(Time::GetFrameTime());
 
         ComputePerezCoeff(sky.Turbidity);
     }

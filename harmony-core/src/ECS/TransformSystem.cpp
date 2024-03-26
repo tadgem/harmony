@@ -69,7 +69,7 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
     OPTICK_EVENT("Build group transform vectors");
     static const uint8_t NUM_GROUPS = 4;
     Vector<TransformComponent *> transformGroups[NUM_GROUPS];
-    size_t numTransforms = transformView.size_hint();
+    uint32_t numTransforms = static_cast<uint32_t>(transformView.size_hint());
     uint32_t groupSize = numTransforms / NUM_GROUPS;
 
     if (transformView.size_hint() % NUM_GROUPS != 0) {
@@ -136,7 +136,8 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
             ));
         }
         OPTICK_EVENT("Wait for futures to complete");
-        for (int i = futures.size() - 1; i >= 0; i--) {
+#pragma warning(suppress:6295)
+        for (auto i = futures.size() - 1; i >= 0; i--) {
             futures[i].wait();
         }
     } else {
@@ -176,8 +177,8 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
         }
 
         glm::mat4 m = matrices[matrices.size() - 1];
-
-        for (int i = matrices.size() - 2; i >= 0; i--) {
+#pragma warning(suppress:6295)
+        for (auto i = matrices.size() - 2; i >= 0; i--) {
             m *= matrices[i];
         }
 

@@ -21,7 +21,7 @@ void harmony::TextureAssetSource::OnPreUpdate(entt::registry &registry, harmony:
     }
 
     if (p_Uniform.BgfxHandle.idx != UINT16_MAX) {
-        bgfx::setTexture(p_SamplerIndex, p_Uniform.BgfxHandle, t->m_TextureHandle.BgfxHandle);
+        bgfx::setTexture(static_cast<uint8_t>(p_SamplerIndex), p_Uniform.BgfxHandle, t->m_TextureHandle.BgfxHandle);
     }
 }
 

@@ -101,7 +101,7 @@ void harmony::ShaderProgram::GetUniforms() {
 
             if (uniform.Type == bgfx::UniformType::Sampler) {
                 auto textureHandle = BGFXTextureHandle();
-                textureHandle.SamplerSlot = samplerCount;
+                textureHandle.SamplerSlot = static_cast<uint8_t>(samplerCount);
                 samplerCount++;
 
                 m_TextureValues.emplace(uniform, textureHandle);
@@ -290,6 +290,8 @@ harmony::ShaderStage::ShaderStage(const String &name, const Type &shaderType)
 }
 
 harmony::ShaderStage::ShaderStage() : Asset() {
+    m_ProgramHandle = { bgfx::kInvalidHandle };
+    m_Type = {};
     OPTICK_EVENT();
 }
 

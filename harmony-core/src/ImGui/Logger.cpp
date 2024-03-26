@@ -55,7 +55,7 @@ void harmony::ImGuiLogger::Render() {
             ImGui::TableHeadersRow();
 
             static const int LOG_ENTRY_LIMIT = 200;
-            int streamSize = p_Stream.size();
+            int streamSize = static_cast<int>(p_Stream.size());
             int startIndex = streamSize - LOG_ENTRY_LIMIT;
             if (startIndex < 0) {
                 startIndex = 0;

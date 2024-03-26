@@ -134,10 +134,10 @@ harmony::RefCntPtr<harmony::AssetFactory> harmony::AssetManager::GetAssetFactory
         int currentCapabilities = 0;
 
         if (factory != nullptr) {
-            currentCapabilities = factory->m_Capabilities.AssetTypeHashes.size();
+            currentCapabilities = static_cast<int>(factory->m_Capabilities.AssetTypeHashes.size());
         }
 
-        int newCapabilities = p_AssetFactories[i]->m_Capabilities.AssetTypeHashes.size();
+        int newCapabilities = static_cast<int>(p_AssetFactories[i]->m_Capabilities.AssetTypeHashes.size());
 
         if (newCapabilities > currentCapabilities) {
             factory = p_AssetFactories[i];

@@ -3,10 +3,12 @@
 
 harmony::Scene::Scene() {
     OPTICK_EVENT();
+    m_NumEntities = 0;
 }
 
 harmony::Scene::Scene(const String &name) : m_Name(name) {
     OPTICK_EVENT();
+    m_NumEntities = 0;
 }
 
 void harmony::Scene::Deserialize(Vector<RefCntPtr<System>> &systems) {
@@ -52,7 +54,7 @@ void harmony::Scene::UpdateSceneSystemSerializationAttributes(Vector<RefCntPtr<S
         Json sceneSystemJson = system->SerializeSystem(m_Registry);
         p_SystemSerializationAttributes.emplace(system->m_TypeHash, sceneSystemJson);
     }
-    m_NumEntities = m_Registry.size();
+    m_NumEntities = static_cast<uint32_t>(m_Registry.size());
 }
 
 harmony::Entity harmony::Scene::AddEntity(uint32_t index) {

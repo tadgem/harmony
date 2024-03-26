@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Assets/Asset.h"
-#include "Collision/CollisionShapes.h"
 #include "STL/Vector.h"
 
 #define GLM_FORCE_PURE
@@ -13,9 +12,9 @@
 namespace harmony {
 
     struct BGFXMeshHandle {
-        bgfx::VertexBufferHandle m_VBH;
-        bgfx::IndexBufferHandle m_IBH;
-        bgfx::VertexLayout m_Layout;
+        bgfx::VertexBufferHandle m_VBH = {};
+        bgfx::IndexBufferHandle m_IBH = {};
+        bgfx::VertexLayout m_Layout = {};
     };
 
     class Mesh : public Asset {
@@ -67,7 +66,6 @@ namespace harmony {
         uint32_t m_NumVerts = 0;
         bool m_SubmittedToGpu;
         BGFXMeshHandle m_Handle;
-        AABB m_AABB;
         Vector<unsigned int> m_Indices;
         Vector<glm::vec3> m_Positions;
         Vector<glm::vec3> m_Normals;

@@ -3,7 +3,14 @@
 
 harmony::Mesh::Mesh(const String &path, uint32_t index) : Asset(AssetHandle{path, index, GetTypeHash<Mesh>()}) {
     OPTICK_EVENT();
+    m_Id = {};
     m_SubmittedToGpu = false;
+    m_HasNormals = false;
+    m_HasUVs = false;
+    m_HasTangents = false;
+    m_HasBitangents = false;
+    m_HasNormals = false;
+    m_IsSkeletal = false;
 
 }
 
@@ -20,7 +27,7 @@ void harmony::Mesh::Release() {
 
 void harmony::Mesh::InitializeMesh(Vector<glm::vec3> positions, Vector<unsigned int> indices) {
     OPTICK_EVENT();
-
+    m_Id = {};
     m_Positions = positions;
     m_Indices = indices;
     m_HasNormals = false;
@@ -158,8 +165,6 @@ void harmony::Mesh::BuildBGFXData() {
     }
 
     glm::vec3 center = (min + max) / 2.0f;
-
-    m_AABB = AABB{min, max};
 
     m_Positions.clear();
     m_Normals.clear();

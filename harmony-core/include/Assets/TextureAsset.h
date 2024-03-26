@@ -8,9 +8,9 @@
 namespace harmony {
     struct BGFXTextureHandle {
         bgfx::TextureHandle BgfxHandle = BGFX_INVALID_HANDLE;
-        bgfx::TextureInfo Info;
-        AssetHandle Handle;
-        uint8_t SamplerSlot;
+        bgfx::TextureInfo Info = {};
+        AssetHandle Handle = {};
+        uint8_t SamplerSlot = 0;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(BGFXTextureHandle, Handle)
     };

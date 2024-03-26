@@ -5,8 +5,8 @@
 #ifndef HARMONY_DOJO_SKYDATASOURCE_H
 #define HARMONY_DOJO_SKYDATASOURCE_H
 
+#include "STL/Array.h"
 #include "Rendering/Shaders/ShaderDataSource.h"
-
 namespace harmony {
     class SkyDataSource : public ShaderDataSource {
     public:
@@ -33,7 +33,7 @@ namespace harmony {
         glm::vec4 p_SkyLuminanceXYZ;
         // x - sun size, y - sun bloom, z - exposition
         glm::vec4 p_Parameters;
-        glm::vec4 p_PerezCoefficients[5];
+        Array<glm::vec4, 5> p_PerezCoefficients;
         ShaderUniform m_ParametersUniform;
         ShaderUniform m_SunDirectionUniform;
         ShaderUniform m_SkyLuminanceXYZUniform;

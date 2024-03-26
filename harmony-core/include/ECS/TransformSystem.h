@@ -31,7 +31,7 @@ namespace harmony {
 
     protected:
 
-        const int MINIMUM_GROUP_SIZE = 64;
+        const uint32_t MINIMUM_GROUP_SIZE = 64;
 
         static void UpdateTransformComponent(TransformComponent *transform);
 

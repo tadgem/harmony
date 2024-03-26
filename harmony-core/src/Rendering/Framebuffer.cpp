@@ -22,7 +22,7 @@ bool harmony::Framebuffer::Build() {
     for (Attachment &a: m_Attachments) {
         textureAttachments.emplace_back(a.m_Handle);
     }
-    m_FBH = bgfx::createFrameBuffer(textureAttachments.size(), textureAttachments.data());
+    m_FBH = bgfx::createFrameBuffer(static_cast<uint8_t>(textureAttachments.size()), textureAttachments.data());
     bgfx::setViewMode(m_ViewID, bgfx::ViewMode::Sequential);
     bgfx::setViewFrameBuffer(m_ViewID, m_FBH);
     bgfx::setViewName(m_ViewID, m_Name.c_str());
