@@ -2,8 +2,6 @@
 #include "Script/Lua/LuaProgramComponent.h"
 #include "Script/Lua/LuaComponent.h"
 #include "Script/Lua/LuaScriptAsset.h"
-#include "Script/Lua/LuaNanoVG.hpp"
-#include "Script/Lua/LuaHarmony.hpp"
 #include "Core/Log.hpp"
 #include "Assets/AssetManager.h"
 harmony::LuaProgramComponent::LuaProgramComponent(AssetManager &am) : ProgramComponent(
@@ -14,8 +12,7 @@ harmony::LuaProgramComponent::LuaProgramComponent(AssetManager &am) : ProgramCom
 void harmony::LuaProgramComponent::Init() {
     OPTICK_EVENT();
     p_State.open_libraries(sol::lib::base, sol::lib::package, sol::lib::jit, sol::lib::ffi);
-    harmony::InitNanoVG(p_State);
-    harmony::InitHarmony(p_State);
+    // harmony::InitHarmony(p_State);
     RedirectPrintOutput();
 
     p_LuaProgramScripts.clear();

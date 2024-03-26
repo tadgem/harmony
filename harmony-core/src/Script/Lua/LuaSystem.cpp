@@ -7,7 +7,7 @@
 #include "Core/Scene.h"
 #include "STL/Thread.h"
 #include "Core/Program.h"
-#include <string>
+#include "STL/String.h"
 #include <optick.h>
 
 harmony::LuaSystem::LuaSystem(AssetManager &am, RefCntPtr<LuaProgramComponent> luaPc) : System(GetTypeHash<LuaSystem>()),

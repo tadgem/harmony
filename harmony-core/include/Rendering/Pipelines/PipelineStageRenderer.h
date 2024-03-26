@@ -5,7 +5,6 @@
 #include "ThirdParty/entt.hpp"
 #include "STL/Json.hpp"
 #include "bgfx/bgfx.h"
-#include <string>
 
 namespace harmony {
     class View;

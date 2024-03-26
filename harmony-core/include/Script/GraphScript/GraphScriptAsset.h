@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Assets/Asset.h"
-#include <utility>
 
 namespace harmony::GraphScript {
     class GraphScriptAsset {
