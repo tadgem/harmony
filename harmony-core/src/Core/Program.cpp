@@ -234,7 +234,6 @@ void harmony::Program::InitBGFX() {
     bgfx_init.platformData = pd;
     bgfx_init.debug = true;
     bgfx_init.callback = &p_DebugCallback;
-
 #if BX_PLATFORM_WINRT
     bgfx_init.type = bgfx::RendererType::Direct3D11;
 #endif
