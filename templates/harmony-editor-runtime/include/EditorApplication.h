@@ -4,7 +4,7 @@
 #include "Core/FSM.h"
 #include "EditorPanel.h"
 #include "EditorMenu.h"
-#include "Core/Alias.h"
+#include "STL/Thread.h"
 #include "ImGui/Logger.h"
 #include "MiniGuiApp.h"
 #include "STL/Functional.h"

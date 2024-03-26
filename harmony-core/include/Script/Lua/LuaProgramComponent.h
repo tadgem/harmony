@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/ProgramComponent.h"
-#include "Core/Alias.h"
+#include "STL/Thread.h"
 #include "Assets/Asset.h"
 #include "sol.hpp"
 #include "STL/Vector.h"

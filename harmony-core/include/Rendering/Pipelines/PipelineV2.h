@@ -1,7 +1,7 @@
 #ifndef HARMONY_CORE_RENDERING_PIPELINES_PIPELINEV2_H
 #define HARMONY_CORE_RENDERING_PIPELINES_PIPELINEV2_H
 
-#include "Core/Alias.h"
+#include "STL/Thread.h"
 #include "Core/Memory.h"
 #include "Rendering/TypeDef.h"
 #include "ThirdParty/entt.hpp"

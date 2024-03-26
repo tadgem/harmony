@@ -2,7 +2,7 @@
 
 #include "Jolt/Jolt.h"
 #include <Jolt/Physics/Collision/ContactListener.h>
-#include "Core/Alias.h"
+#include "STL/Thread.h"
 #include "Core/Memory.h"
 #include "Core/TypeDef.h"
 #include "Jolt/Physics/PhysicsSystem.h"

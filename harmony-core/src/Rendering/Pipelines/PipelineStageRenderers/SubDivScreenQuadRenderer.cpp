@@ -2,7 +2,7 @@
 // Created by liam_ on 6/24/2023.
 //
 #include "Rendering/Pipelines/PipelineStageRenderers/SubDivScreenQuadRenderer.h"
-#include "Core/Alias.h"
+#include "STL/Thread.h"
 
 void harmony::SubDivScreenQuadRenderer::Draw(entt::registry &scene, harmony::RefCntPtr<harmony::ShaderProgram> shader,
                                              RefCntPtr<View> view,

@@ -5,7 +5,7 @@
 #ifndef HARMONY_DOJO_MODELASSET_H
 #define HARMONY_DOJO_MODELASSET_H
 
-#include "Core/Alias.h"
+#include "STL/Thread.h"
 
 namespace harmony {
     struct ModelAsset {

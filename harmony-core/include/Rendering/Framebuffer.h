@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Alias.h"
+#include "STL/Thread.h"
 #include "Rendering/Attachment.h"
 #include "STL/Vector.h"
 #include "STL/String.h"

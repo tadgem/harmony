@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/BS_thread_pool.hpp"
-#include "Core/Alias.h"
+#include "STL/Thread.h"
 
 namespace harmony {
     static BS::thread_pool ThreadPool;

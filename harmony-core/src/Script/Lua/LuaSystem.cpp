@@ -5,7 +5,7 @@
 #include "Script/Lua/LuaComponent.h"
 #include "Assets/AssetManager.h"
 #include "Core/Scene.h"
-#include "Core/Alias.h"
+#include "STL/Thread.h"
 #include "Core/Program.h"
 #include <string>
 #include <optick.h>

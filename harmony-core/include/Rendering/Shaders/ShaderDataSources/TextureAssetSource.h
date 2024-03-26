@@ -6,7 +6,7 @@
 
 #include "Rendering/Shaders/ShaderDataSource.h"
 #include "Core/Memory.h"
-#include "Core/Alias.h"
+#include "STL/Thread.h"
 #include "Rendering/Shaders/Shader.h"
 
 namespace harmony {

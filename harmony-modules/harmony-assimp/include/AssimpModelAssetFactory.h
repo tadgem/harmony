@@ -1,7 +1,7 @@
 #pragma once
 
 #include "glm/glm.hpp"
-#include "Core/Alias.h"
+#include "STL/Thread.h"
 #include "Assets/AssetFactory.h"
 #include "Rendering/Model.h"
 #include "Rendering/Renderer.h"

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Assets/Asset.h"
-#include "Core/Alias.h"
+#include "STL/Thread.h"
 #include "Rendering/Mesh.h"
 
 namespace harmony {

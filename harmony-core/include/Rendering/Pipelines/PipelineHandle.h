@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Alias.h"
+#include "STL/Thread.h"
 #include "STL/String.h"
 #include "STL/Memory.h"
 

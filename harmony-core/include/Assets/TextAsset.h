@@ -2,7 +2,7 @@
 
 #include "Assets/Asset.h"
 #include "Assets/AssetFactory.h"
-#include "Core/Alias.h"
+#include "STL/Thread.h"
 #include "Core/Utils.h"
 #include "STL/TypeTraits.h"
 namespace harmony

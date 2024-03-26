@@ -4,6 +4,6 @@
 
 namespace harmony
 {
-    using Json = nlohmann::json;
+    typedef nlohmann::json Json;
 
 }
