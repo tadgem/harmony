@@ -11,6 +11,8 @@ harmony::PipelineStage::PipelineStage(const String &name, Type pipelineStageType
                                       WeakPtr<ShaderProgram> shader, WeakPtr<PipelineStageRenderer> stageRenderer)
         : m_Name(name), m_StageType(pipelineStageType), m_Attachments(requiredAttachments), p_Shader(shader),
           p_Renderer(stageRenderer.lock()) {
+    m_HasDepthAttachment = false;
+    m_HasHDRAttachment = false;
     OPTICK_EVENT();
 }
 

@@ -15,7 +15,7 @@
 #define HARMONY_VG_IMPL_WITH_RETURN(FUNC_NAME, T, nanoVgFuncImpl, ...) T harmony::VectorGraphics::FUNC_NAME(Layer layer, __VA_ARGS__) \
 {\
     OPTICK_EVENT();\
-    T empty;\
+    T empty = {};\
     for (NVGcontext *context: p_VectorRenderers[layer]) {\
         empty = nvg##FUNC_NAME(context, nanoVgFuncImpl);\
     }\

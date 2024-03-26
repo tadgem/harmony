@@ -35,10 +35,13 @@ harmony::Program::Program(const String &name) : p_AppName(name), m_Renderer(m_As
         return;
     }
     Input::Init();
+    m_Capabilities = {};
+    p_DPIScale = 1.0f;
     s_Instance = this;
     p_Run = true;
     p_ResizedThisFrame = false;
     m_Project = nullptr;
+    p_Window = nullptr;
 }
 
 harmony::Program::~Program() {
@@ -77,7 +80,7 @@ void harmony::Program::LoadBuiltInAssets() {
 
 void harmony::Program::SetupBGFXCapabilities(bgfx::Init &init) {
     OPTICK_EVENT();
-    uint64_t caps;
+    uint64_t caps = 0;
 
     if (m_Capabilities->supported && BGFX_CAPS_BLEND_INDEPENDENT) {
         caps |= BGFX_CAPS_BLEND_INDEPENDENT;

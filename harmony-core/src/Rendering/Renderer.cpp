@@ -144,7 +144,7 @@ harmony::WeakPtr<harmony::PipelineV2> harmony::Renderer::GetViewPipeline(WeakPtr
 
     if (view.expired()) {
         harmony::log::error("Renderer : Cannot get view pipeline, passed view is expired.");
-        WeakPtr<PipelineV2>();
+        return WeakPtr<PipelineV2>();
     }
     auto v = view.lock();
     if (p_Views.find(v) != p_Views.end()) {

@@ -32,9 +32,9 @@ void harmony::PostProcessStage::PostUpdate(entt::registry &registry, WeakPtr<Vie
     bool hasDepth = false;
     bool hasParams = false;
     int numSamplers = 0;
-    bgfx::UniformHandle colourAttachmentUniform;
-    bgfx::UniformHandle depthAttachmentUniform;
-    bgfx::UniformHandle postProcessParamsUniform;
+    bgfx::UniformHandle colourAttachmentUniform{ bgfx::kInvalidHandle };
+    bgfx::UniformHandle depthAttachmentUniform{ bgfx::kInvalidHandle };
+    bgfx::UniformHandle postProcessParamsUniform{ bgfx::kInvalidHandle };
 
     for (int i = 0; i < s->m_Uniforms.size(); i++) {
         if (s->m_Uniforms[i].Type == bgfx::UniformType::Vec4) {
