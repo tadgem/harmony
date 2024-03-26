@@ -2,6 +2,7 @@
 
 #include "Assets/Asset.h"
 #include "Collision/CollisionShapes.h"
+#include "STL/Vector.h"
 
 #define GLM_FORCE_PURE
 #define GLM_ENABLE_EXPERIMENTAL

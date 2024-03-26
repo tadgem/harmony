@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "STL/String.h"
 #include "Core/Alias.h"
 #include <bx/allocator.h>
 #include "SDL.h"

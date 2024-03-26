@@ -8,6 +8,7 @@
 #include "ECS/System.h"
 #include "MonoUtils.h"
 #include "Assets/Asset.h"
+#include "STL/Vector.h"
 
 namespace harmony {
     class MonoProgramComponent;

@@ -8,6 +8,7 @@
 #include "ImGui/Logger.h"
 #include "MiniGuiApp.h"
 #include "STL/Functional.h"
+#include "STL/Stack.h"
 
 namespace harmony {
     class CameraSystem;

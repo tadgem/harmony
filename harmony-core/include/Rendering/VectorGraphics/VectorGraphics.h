@@ -1,10 +1,11 @@
 #pragma once
 
+#include "STL/Vector.h"
 #include "Core/Alias.h"
 #include "Rendering/VectorGraphics/nanovg/nanovg.h"
 #include "STL/Json.hpp"
 #include "bgfx/bgfx.h"
-
+#include "STL/String.h"
 // #define MACRO(s, ...) printf(s, __VA_ARGS__)
 
 namespace harmony {

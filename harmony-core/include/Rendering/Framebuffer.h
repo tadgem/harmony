@@ -2,6 +2,8 @@
 
 #include "Core/Alias.h"
 #include "Rendering/Attachment.h"
+#include "STL/Vector.h"
+#include "STL/String.h"
 
 namespace harmony {
 

@@ -9,6 +9,7 @@
 #include "Rendering/TypeDef.h"
 #include <cstdint>
 
+#include "STL/String.h"
 namespace harmony {
     class Framebuffer;
 

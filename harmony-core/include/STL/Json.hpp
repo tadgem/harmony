@@ -1,5 +1,4 @@
-#ifndef HARMONY_CORE_STL_JSON_H
-#define HARMONY_CORE_STL_JSON_H
+#pragma once
 
 #include "ThirdParty/json.hpp"
 
@@ -8,5 +7,3 @@ namespace harmony
     using Json = nlohmann::json;
 
 }
-
-#endif

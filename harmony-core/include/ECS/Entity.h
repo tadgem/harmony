@@ -3,7 +3,8 @@
 #include "Core/Alias.h"
 #include "ThirdParty/entt.hpp"
 #include "STL/Json.hpp"
-#include <optional>
+#include "STL/Optional.h"
+#include "STL/String.h"
 
 namespace harmony {
 

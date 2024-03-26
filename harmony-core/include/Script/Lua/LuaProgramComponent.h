@@ -4,6 +4,7 @@
 #include "Core/Alias.h"
 #include "Assets/Asset.h"
 #include "sol.hpp"
+#include "STL/Vector.h"
 
 namespace harmony {
     class AssetManager;

@@ -4,6 +4,7 @@
 #include "Core/Memory.h"
 #include "Core/ProgramComponent.h"
 #include "efsw/efsw.hpp"
+#include "STL/Vector.h"
 
 namespace harmony {
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <map>
 #include "ThirdParty/entt.hpp"
 #include "Core/Memory.h"
 #include "Assets/Asset.h"
+#include "STL/Vector.h"
 
 namespace harmony {
 

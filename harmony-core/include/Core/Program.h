@@ -1,8 +1,8 @@
 #pragma once
-
-#include <string>
-#include <vector>
-#include <functional>
+#include "STL/TypeTraits.h"
+#include "STL/String.h"
+#include "STL/Vector.h"
+#include "STL/Functional.h"
 #include "bx/platform.h"
 
 #	if BX_PLATFORM_LINUX || BX_PLATFORM_BSD

@@ -4,6 +4,7 @@
 #include "Core/Scene.h"
 #include "Core/Program.h"
 #include "ThirdParty/entt.hpp"
+#include "STL/TypeTraits.h"
 
 namespace harmony {
 

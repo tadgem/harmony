@@ -1,5 +1,4 @@
-#ifndef HARMONY_CORE_TYPEDEF_H
-#define HARMONY_CORE_TYPEDEF_H
+#pragma once
 
 #include "STL/Json.hpp"
 #include "STL/String.h"
@@ -50,4 +49,3 @@ namespace harmony {
     }
 
 }
-#endif

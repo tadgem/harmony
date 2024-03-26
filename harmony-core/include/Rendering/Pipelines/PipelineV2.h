@@ -5,6 +5,8 @@
 #include "Core/Memory.h"
 #include "Rendering/TypeDef.h"
 #include "ThirdParty/entt.hpp"
+#include "STL/Vector.h"
+#include "STL/String.h"
 
 namespace harmony {
     class Framebuffer;

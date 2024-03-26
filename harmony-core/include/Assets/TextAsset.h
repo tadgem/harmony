@@ -4,7 +4,7 @@
 #include "Assets/AssetFactory.h"
 #include "Core/Alias.h"
 #include "Core/Utils.h"
-
+#include "STL/TypeTraits.h"
 namespace harmony
 {
     template<typename T>

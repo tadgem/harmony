@@ -3,6 +3,7 @@
 #include "Rendering/Debug/debugdraw/debugdraw.h"
 #include "Rendering/View.h"
 #include "STL/HashMap.h"
+#include "STL/Vector.h"
 #include "STL/Json.hpp"
 
 namespace harmony {

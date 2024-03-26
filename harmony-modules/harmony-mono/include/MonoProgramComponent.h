@@ -5,6 +5,7 @@
 #include <mono/metadata/appdomain.h>
 #include "MonoAssembly.h"
 #include "MonoUtils.h"
+#include "STL/Vector.h"
 namespace harmony
 {
     class AssetManager;

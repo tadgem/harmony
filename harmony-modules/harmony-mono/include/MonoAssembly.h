@@ -2,7 +2,7 @@
 
 #include "Assets/Asset.h"
 #include "MonoUtils.h"
-
+#include "STL/Vector.h"
 namespace harmony
 {
     enum class MonoAssemblyConfiguration

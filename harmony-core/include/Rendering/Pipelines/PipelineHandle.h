@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Alias.h"
-
+#include "STL/String.h"
 namespace harmony {
 
     struct PipelineHandle {

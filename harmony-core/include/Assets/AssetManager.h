@@ -1,5 +1,6 @@
 #pragma once
 
+#include "STL/TypeTraits.h"
 #include "Core/Memory.h"
 #include "Assets/Asset.h"
 #include "Assets/AssetFactory.h"

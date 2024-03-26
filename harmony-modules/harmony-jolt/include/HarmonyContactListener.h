@@ -6,6 +6,7 @@
 #include "Core/Memory.h"
 #include "Core/TypeDef.h"
 #include "Jolt/Physics/PhysicsSystem.h"
+#include "STL/Vector.h"
 
 namespace harmony {
     class HarmonyContactListenerCallback
