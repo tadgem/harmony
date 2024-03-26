@@ -38,9 +38,9 @@ namespace GameTest
             JoltTestBehaviour joltBehaviour = _scene.GetComponent<JoltTestBehaviour>(e2);
             if(joltBehaviour != null)
             {
-                Log.Info($"Entity : {e1} has jolt test behaviour");
+                // Log.Info($"Entity : {e1} has jolt test behaviour");
             }
-            Log.Info($"Entity : {e1} entered collision with {e2}");
+           //  Log.Info($"Entity : {e1} entered collision with {e2}");
         }
 
         public void OnContactPersisted(Body a, Body b, ContactManifoldData manifold, ContactSettings settings)
@@ -54,7 +54,7 @@ namespace GameTest
         {
             Entity e1 = a.GetEntity();
             Entity e2 = b.GetEntity();
-            Log.Info($"Entity : {e1} removed collision with {e2}");
+            // Log.Info($"Entity : {e1} removed collision with {e2}");
         }
 
         public override void Update()

@@ -12,7 +12,6 @@
 #include "bx/timer.h"
 #include "SDL_syswm.h"
 #include "SDL_video.h"
-
 #if HARMONY_DEBUG
 
 #include "optick.h"
@@ -198,8 +197,6 @@ void harmony::Program::InitBGFX() {
                 SDL_GetError());
         return;
     }
-
-    bgfx::renderFrame(); // single threaded mode
 #endif
 
     bgfx::PlatformData pd{};
@@ -223,17 +220,13 @@ void harmony::Program::InitBGFX() {
 #endif
 
     bgfx::Init bgfx_init;
-#if !BX_PLATFORM_WINDOWS
-    bgfx_init.type = bgfx::RendererType::Vulkan; // auto choose renderer
-#else
     bgfx_init.type = bgfx::RendererType::Count; // auto choose renderer
-#endif
-    bgfx_init.resolution.width = p_WindowWidth;
+    bgfx_init.resolution.width  = p_WindowWidth;
     bgfx_init.resolution.height = p_WindowHeight;
-    bgfx_init.resolution.reset = BGFX_RESET_VSYNC;
-    bgfx_init.platformData = pd;
-    bgfx_init.debug = true;
-    bgfx_init.callback = &p_DebugCallback;
+    bgfx_init.resolution.reset  = BGFX_RESET_NONE;
+    bgfx_init.platformData      = pd;
+    bgfx_init.debug             = true;
+    bgfx_init.callback          = &p_DebugCallback;
 #if BX_PLATFORM_WINRT
     bgfx_init.type = bgfx::RendererType::Direct3D11;
 #endif
@@ -282,7 +275,6 @@ void harmony::Program::InitImGui() {
     p_ImGuiAllocator = new bx::DefaultAllocator();
 
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     int ww, wh;
     SDL_GetWindowSize(p_Window, &ww, &wh);
     int displayIndex = SDL_GetWindowDisplayIndex(p_Window);
