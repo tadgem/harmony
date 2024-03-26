@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Alias.h"
+#include "STL/Memory.h"
 
 namespace harmony {
 

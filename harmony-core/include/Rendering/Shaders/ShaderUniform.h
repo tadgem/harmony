@@ -4,8 +4,8 @@
 #include "bgfx/bgfx.h"
 #include "glm.hpp"
 #include "glm/gtc/quaternion.hpp"
-#include <string>
-
+#include "STL/String.h"
+#include "STL/Memory.h"
 namespace glm {
     inline void to_json(harmony::Json &j, const glm::vec2 &v) {
         j = harmony::Json{{"x", v.x},

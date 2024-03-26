@@ -5,6 +5,7 @@
 #include "ECS/System.h"
 #include "Core/Memory.h"
 #include "Core/TypeDef.h"
+#include "STL/Map.h"
 
 namespace harmony {
     class Scene {

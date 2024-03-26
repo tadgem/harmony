@@ -2,6 +2,7 @@
 
 #include "STL/Json.hpp"
 #include "STL/String.h"
+#include "STL/Memory.h"
 
 namespace typehash_internal
 {

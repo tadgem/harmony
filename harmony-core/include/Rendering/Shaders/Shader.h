@@ -10,6 +10,7 @@
 #include "bgfx/embedded_shader.h"
 #include "bx/file.h"
 #include "bx/readerwriter.h"
+#include "STL/Map.h"
 
 namespace harmony {
     class ShaderStage : public Asset {

@@ -7,6 +7,7 @@
 #include "ThirdParty/entt.hpp"
 #include "STL/Vector.h"
 #include "STL/String.h"
+#include "STL/Map.h"
 
 namespace harmony {
     class Framebuffer;

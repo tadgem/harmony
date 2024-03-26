@@ -1,5 +1,6 @@
 #pragma once
 
+#include "STL/Map.h"
 #include "AssetHotReload.h"
 #include "Assets/Asset.h"
 #include "bx/platform.h"

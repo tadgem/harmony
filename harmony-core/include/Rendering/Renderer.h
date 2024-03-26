@@ -17,6 +17,7 @@
 #include <Rendering/Pipelines/PipelineStages/PostProcessStage.h>
 #include "STL/HashMap.h"
 #include "STL/String.h"
+#include "STL/Map.h"
 
 namespace harmony {
 
