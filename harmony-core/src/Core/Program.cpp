@@ -227,6 +227,7 @@ void harmony::Program::InitBGFX() {
     bgfx_init.platformData      = pd;
     bgfx_init.debug             = true;
     bgfx_init.callback          = &p_DebugCallback;
+
 #if BX_PLATFORM_WINRT
     bgfx_init.type = bgfx::RendererType::Direct3D11;
 #endif
@@ -288,7 +289,9 @@ void harmony::Program::InitImGui() {
     ImGui_ImplSDL2_InitForD3D(p_Window);
 #elif BX_PLATFORM_OSX
     ImGui_ImplSDL2_InitForMetal(p_Window);
-#elif BX_PLATFORM_LINUX || BX_PLATFORM_EMSCRIPTEN
+#elif BX_PLATFORM_LINUX 
+    ImGui_ImplSDL2_InitForVulkan(p_Window);
+#elif BX_PLATFORM_EMSCRIPTEN
     ImGui_ImplSDL2_InitForOpenGL(p_Window, nullptr);
 #endif
     harmony::log::info("Successfully initialized ImGui");
