@@ -41,6 +41,7 @@ namespace harmony
     public:
         virtual void ProcessDelegates() = 0;
         virtual void ClearDelegates() = 0;
+        virtual uint32_t NumCallbacks() = 0;
     };
 
     class Program;

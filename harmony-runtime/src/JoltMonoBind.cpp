@@ -1006,6 +1006,11 @@ void harmony::JoltMonoContactListenerCallback::ClearDelegates()
     p_ContactRemovedDelegateBuffer.clear();
 }
 
+uint32_t harmony::JoltMonoContactListenerCallback::NumCallbacks()
+{
+    return p_ContactAddedDelegateBuffer.size();
+}
+
 harmony::JoltMonoContactListenerCallback::JoltMonoContactListenerCallback(RefCntPtr<JoltPhysicsSystem> physicsSystem) :
 HarmonyContactListenerCallback(GetTypeHash<JoltMonoContactListenerCallback>()),
 p_PhysicsSystem(physicsSystem)

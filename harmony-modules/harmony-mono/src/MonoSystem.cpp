@@ -41,6 +41,7 @@ void harmony::MonoSystem::Update(entt::registry& registry)
     OPTICK_EVENT()
     auto view = registry.view<MonoBehaviourComponent>();
 
+    uint32_t processedBehaviours = 0;
     for (auto [e, mono]: view.each())
     {
         for(auto behaviour : mono.m_Behaviours)
@@ -49,6 +50,7 @@ void harmony::MonoSystem::Update(entt::registry& registry)
             {
                 MonoObject * exception = nullptr;
                 mono_runtime_invoke(behaviour.p_Update, behaviour.m_Object, nullptr, &exception);
+                processedBehaviours++;
                 if(exception != nullptr)
                 {
                     log::error("MonoSystem : AddMonoBehaviour : exception encountered during update for type {} on entity {}", behaviour.m_TypeInfo.m_TypeName, (uint32_t)e);
@@ -60,7 +62,10 @@ void harmony::MonoSystem::Update(entt::registry& registry)
     for(auto& d : p_DelegateInvokers)
     {
         d->ProcessDelegates();
+        processedBehaviours += d->NumCallbacks();
     }
+
+    OPTICK_TAG("Num Callbacks", processedBehaviours);
 }
 
 void harmony::MonoSystem::Render(entt::registry& registry)

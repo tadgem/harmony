@@ -89,6 +89,8 @@ namespace harmony {
 
         virtual void ProcessDelegates() override;
         virtual void ClearDelegates() override;
+        uint32_t NumCallbacks() override;
+        
     protected:
 
         struct ManagedMonoObjectCallback
