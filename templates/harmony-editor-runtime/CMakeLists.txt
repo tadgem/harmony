@@ -35,10 +35,6 @@ endforeach()
 get_filename_component(TEMP_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 get_filename_component(ROOT_DIR ${TEMP_DIR} DIRECTORY)
 
-add_subdirectory(${ROOT_DIR}/harmony-runtime ${CMAKE_CURRENT_BINARY_DIR}/harmony-runtime)
-add_subdirectory(${ROOT_DIR}/submodules/efsw ${CMAKE_CURRENT_BINARY_DIR}/efsw)
-set_target_properties(efsw PROPERTIES FOLDER "ThirdParty")
-
 set(HARMONY_EDITOR_INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${ROOT_DIR}/submodules/efsw/include

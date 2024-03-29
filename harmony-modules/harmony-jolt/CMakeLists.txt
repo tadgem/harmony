@@ -38,16 +38,6 @@ foreach(source IN LISTS C_SRC_FILES)
     source_group("${source_path_msvc}" FILES "${source}")
 endforeach()
 
-set(TARGET_UNIT_TESTS OFF)
-set(TARGET_HELLO_WORLD OFF)
-set(TARGET_PERFORMANCE_TEST OFF)
-set(TARGET_SAMPLES OFF)
-set(TARGET_VIEWER OFF)
-
-add_subdirectory(${ROOT_DIR}/submodules/jolt/Build ${CMAKE_CURRENT_BINARY_DIR}/jolt)
-
-set_target_properties(Jolt PROPERTIES FOLDER "ThirdParty")
-
 set(HARMONY_JOLT_INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${HARMONY_CORE_INCLUDES}
@@ -60,6 +50,7 @@ target_link_libraries(harmony-jolt Jolt harmony-core)
 if(MSVC)
     target_compile_options(harmony-jolt PRIVATE "/MP" "/Zi")
     set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,Release>:ProgramDatabase>")
+    # should this be in root? 
     set_property(TARGET Jolt PROPERTY
     MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 endif()

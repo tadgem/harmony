@@ -31,15 +31,7 @@ foreach(source IN LISTS SRC_FILES)
     source_group("${source_path_msvc}" FILES "${source}")
 endforeach()
 
-# Set Options
-SET(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "Dont build assimp tools")
-SET(ASSIMP_BUILD_TESTS OFF CACHE BOOL "Dont build assimp tests")
-SET(ASSIMP_INSTALL OFF CACHE BOOL "Dont install assimp")
 
-add_subdirectory(${ROOT_DIR}/submodules/assimp ${CMAKE_CURRENT_BINARY_DIR}/assimp)
-
-set_target_properties(assimp PROPERTIES FOLDER "ThirdParty")
-set_target_properties(zlibstatic PROPERTIES FOLDER "ThirdParty")
 
 
 set(HARMONY_ASSIMP_INCLUDES

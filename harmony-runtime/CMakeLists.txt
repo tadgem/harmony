@@ -33,11 +33,6 @@ endforeach()
 
 get_filename_component(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
-add_subdirectory(${ROOT_DIR}/harmony-core ${CMAKE_CURRENT_BINARY_DIR}/harmony)
-add_subdirectory(${ROOT_DIR}/harmony-modules/harmony-assimp ${CMAKE_CURRENT_BINARY_DIR}/harmony-assimp)
-add_subdirectory(${ROOT_DIR}/harmony-modules/harmony-jolt ${CMAKE_CURRENT_BINARY_DIR}/harmony-jolt)
-add_subdirectory(${ROOT_DIR}/harmony-modules/harmony-mono ${CMAKE_CURRENT_BINARY_DIR}/harmony-mono)
-
 set(HARMONY_CORE_RUNTIME_INCLUDES
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${ROOT_DIR}/submodules/assimp/include

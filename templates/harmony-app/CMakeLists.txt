@@ -15,8 +15,6 @@ endif ()
 get_filename_component(TEMP_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 get_filename_component(ROOT_DIR ${TEMP_DIR} DIRECTORY)
 
-add_subdirectory(${ROOT_DIR}/harmony-runtime ${CMAKE_CURRENT_BINARY_DIR}/harmony-runtime)
-
 target_include_directories(harmony-app PRIVATE ${HARMONY_CORE_RUNTIME_INCLUDES})
 
 target_link_libraries(harmony-app harmony-runtime)
