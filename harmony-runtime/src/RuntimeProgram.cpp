@@ -26,8 +26,8 @@
 harmony::RuntimeProgram::RuntimeProgram(const String &name) : Program(name) {
     OPTICK_EVENT();
     AddAssetTypeNames();
-    AddProgramComponents();
     AddAssetFactories();
+    AddProgramComponents();
     AddSystems();
     AddPipelineStageRenderers();
     AddShaderDataSources();
@@ -44,18 +44,13 @@ void harmony::RuntimeProgram::Run(const String &projectPath) {
     m_Renderer.Init();
 
     AddPipelineDrawStages();
-
+    AddPostProcessStages();
     InitializeViews();
-
-    PreRunInit();
-
     SDL_SetRelativeMouseMode(SDL_TRUE);
-
+    LoadBuiltInAssets();
     LoadProject(projectPath);
     OpenScene(0);
-
-    InitializePipelines();
-
+    RunSystemInit();
     ResizeApplicationWindow(p_WindowWidth, p_WindowHeight);
 
     while (p_Run) {
@@ -280,13 +275,11 @@ int harmony::RuntimeProgram::OnRuntimeUpdate() {
 
     RunSystemUpdate();
 
-    RunSystemRender();
-
-    RunRendererPostUpdate();
-
     RunProgramComponentRender();
 
     RunSystemRender();
+
+    RunRendererPostUpdate();
 
     PresentRuntimeImage();
 

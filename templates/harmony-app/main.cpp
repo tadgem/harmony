@@ -20,7 +20,7 @@ int main()
 int main() {
     harmony::RuntimeProgram app;
     std::cout << "Current Path : " << std::filesystem::current_path() << "\n";
-    app.Run("../../../../../../projects/JoltTest/JoltTest.harmonyproj");
+    app.Run("../../../../projects/MonoTest/MonoTest.harmonyproj");
 }
 
 #endif

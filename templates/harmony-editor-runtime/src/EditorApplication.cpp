@@ -2,7 +2,7 @@
 #include <Rendering/Pipelines/PipelineStages/DrawScreenTextureStage.h>
 #include <Rendering/Modules/Moebius/MoebiusModule.h>
 #include "EditorApplication.h"
-#include "Rendering/Shapes.h"
+
 #include "ECS/MaterialSystem.h"
 #include "ECS/CameraSystem.h"
 #include "Core/Time.h"
@@ -345,13 +345,9 @@ void harmony::Editor::Run(const String &projectPath, harmony::Procedure proc) {
 
     AddPipelineDrawStages();
     AddPostProcessStages();
-
     InitializeViews();
-
     PreRunInit();
-
     SetRunningStyle();
-
     while (p_Run) {
         ProfilerBeginFrame();
         m_EditorFSM.Process();
@@ -518,12 +514,7 @@ void harmony::Editor::GlobalDockspace() {
 
 void harmony::Editor::LoadBuiltInAssets() {
     OPTICK_EVENT();
-    AssetHandle cubeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Cube", CreateRef<Cube>(1.0f));
-    RefCntPtr<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
-    m_Renderer.SubmitMeshToGPU(cube);
-    AssetHandle planeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Plane", CreateRef<Plane>(1.0f));
-    RefCntPtr<Mesh> plane = m_AssetManager.GetAsset<Mesh>(planeHandle).lock();
-    m_Renderer.SubmitMeshToGPU(plane);
+    RuntimeProgram::LoadBuiltInAssets();
 }
 
 void harmony::Editor::AddMiniGuiApp(harmony::RefCntPtr<harmony::MiniGuiApp> app)

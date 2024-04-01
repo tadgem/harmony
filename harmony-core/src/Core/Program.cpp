@@ -6,6 +6,7 @@
 #include "Core/Input.h"
 #include "Rendering/GPUResourceManager.h"
 #include "Rendering/VectorGraphics/VectorGraphics.h"
+#include "Rendering/Shapes.h"
 #include "ECS/EntityTemplate.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
@@ -76,6 +77,12 @@ void harmony::Program::Init() {
 
 void harmony::Program::LoadBuiltInAssets() {
     OPTICK_EVENT();
+    AssetHandle cubeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Cube", CreateRef<Cube>(1.0f));
+    RefCntPtr<Mesh> cube = m_AssetManager.GetAsset<Mesh>(cubeHandle).lock();
+    m_Renderer.SubmitMeshToGPU(cube);
+    AssetHandle planeHandle = m_AssetManager.AddBuiltInAsset<Mesh>("builtin/Plane", CreateRef<Plane>(1.0f));
+    RefCntPtr<Mesh> plane = m_AssetManager.GetAsset<Mesh>(planeHandle).lock();
+    m_Renderer.SubmitMeshToGPU(plane);
 }
 
 void harmony::Program::SetupBGFXCapabilities(bgfx::Init &init) {
