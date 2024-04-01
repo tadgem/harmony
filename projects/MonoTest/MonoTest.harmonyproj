@@ -17,49 +17,49 @@
             },
             {
                 "Index": 0,
-                "Path": "Assemblies\\Release\\System.Numerics.Vectors.dll",
+                "Path": "Assemblies\\Debug\\System.Numerics.Vectors.dll",
                 "TypeHash": {
                     "m_Value": 18161
                 }
             },
             {
                 "Index": 0,
-                "Path": "Assemblies\\Release\\System.Runtime.CompilerServices.Unsafe.dll",
+                "Path": "Assemblies\\Debug\\System.Runtime.CompilerServices.Unsafe.dll",
                 "TypeHash": {
                     "m_Value": 18161
                 }
             },
             {
                 "Index": 0,
-                "Path": "Assemblies\\Release\\System.Memory.dll",
+                "Path": "Assemblies\\Debug\\System.Memory.dll",
                 "TypeHash": {
                     "m_Value": 18161
                 }
             },
             {
                 "Index": 0,
-                "Path": "Assemblies\\Release\\System.Buffers.dll",
+                "Path": "Assemblies\\Debug\\System.Buffers.dll",
                 "TypeHash": {
                     "m_Value": 18161
                 }
             },
             {
                 "Index": 0,
-                "Path": "Assemblies\\Release\\GameTest.dll",
+                "Path": "Assemblies\\Debug\\GameTest.dll",
                 "TypeHash": {
                     "m_Value": 18161
                 }
             },
             {
                 "Index": 0,
-                "Path": "Assemblies\\Release\\HarmonyJoltSharp.dll",
+                "Path": "Assemblies\\Debug\\HarmonyJoltSharp.dll",
                 "TypeHash": {
                     "m_Value": 18161
                 }
             },
             {
                 "Index": 0,
-                "Path": "Assemblies\\Release\\HarmonyMono.dll",
+                "Path": "Assemblies\\Debug\\HarmonyMono.dll",
                 "TypeHash": {
                     "m_Value": 18161
                 }
