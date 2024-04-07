@@ -36,7 +36,7 @@ harmony::Vector<entt::entity> harmony::Scene::GetChildEntities(entt::entity e)
 
     for (auto [entity, entity_data] : view.each())
     {
-        if (entity_data.m_Parent == e)
+        if (entity_data.m_Parent == static_cast<uint32_t>(e))
         {
             ret.emplace_back(entity);
         }

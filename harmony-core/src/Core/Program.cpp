@@ -1021,7 +1021,7 @@ void harmony::Program::Frame() {
     bgfx::frame();
 }
 
-const harmony::Vector<harmony::RefCntPtr<harmony::System>>& harmony::Program::GetSystems() {
+harmony::Vector<harmony::RefCntPtr<harmony::System>>& harmony::Program::GetSystems() {
 	OPTICK_EVENT();
 
     return p_ECSSystems;

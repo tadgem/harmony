@@ -92,7 +92,7 @@ namespace harmony {
 
         SDL_Window* GetWindow() const;
 
-        const Vector<RefCntPtr<System>>& GetSystems();
+        Vector<RefCntPtr<System>>& GetSystems();
     protected:
 
         virtual void LoadBuiltInAssets();

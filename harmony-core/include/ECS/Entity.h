@@ -13,7 +13,7 @@ namespace harmony {
 
         String m_Name;
         uint64_t m_LayerMask = 0; // TODO: do something with this.
-        entt::entity m_Parent{UINT32_MAX};
+        uint32_t m_Parent;
         bool m_Static = false;
         bool m_Enabled = true;
 

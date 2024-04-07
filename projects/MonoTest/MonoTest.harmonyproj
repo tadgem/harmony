@@ -94,13 +94,6 @@
             },
             {
                 "Index": 0,
-                "Path": "Templates\\JoltMono.entitytemplate",
-                "TypeHash": {
-                    "m_Value": 54831
-                }
-            },
-            {
-                "Index": 0,
                 "Path": "builtin/Plane",
                 "TypeHash": {
                     "m_Value": 61975

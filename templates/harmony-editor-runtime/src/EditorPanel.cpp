@@ -46,14 +46,14 @@ void harmony::ScenePanel::OnImGui() {
                 entt::entity payloadEntity = *(entt::entity *) payload->Data;
 
                 EntityData &payloadData = activeScene->m_Registry.get<EntityData>(payloadEntity);
-                payloadData.m_Parent = (entt::entity) UINT32_MAX;
+                payloadData.m_Parent = UINT32_MAX;
             }
 
             if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ENTITY_TEMPLATE")) {
                 IM_ASSERT(payload->DataSize == sizeof(RefCntPtr<EntityTemplate>));
                 RefCntPtr<EntityTemplate> entityTemplate = *(RefCntPtr<EntityTemplate>*)payload->Data;
 
-                EntityTemplate::LoadEntityTemplate(p_Prog.GetSystems(), activeScene, entityTemplate);
+                EntityTemplate::LoadEntityTemplate(activeScene, entityTemplate);
             }
             ImGui::EndDragDropTarget();
         }
@@ -122,7 +122,7 @@ void harmony::ScenePanel::EntityImGui(entt::entity e, entt::registry &reg, bool 
             EntityDragDrop(e, reg);
             reg.each([&](entt::entity compare) {
                 auto data = reg.get<EntityData>(compare);
-                if (data.m_Parent == e) {
+                if (data.m_Parent == static_cast<uint32_t>(e)) {
                     EntityImGui(compare, reg, false);
                 }
             });
@@ -130,7 +130,7 @@ void harmony::ScenePanel::EntityImGui(entt::entity e, entt::registry &reg, bool 
         } else {
             reg.each([&](entt::entity compare) {
                 auto data = reg.get<EntityData>(compare);
-                if (data.m_Parent == e) {
+                if (data.m_Parent == static_cast<uint32_t>(e)) {
                     p_FrameHandledEntities.emplace_back(compare);
                 }
             });
@@ -172,7 +172,7 @@ void harmony::ScenePanel::EntityDragDrop(entt::entity e, entt::registry &reg) {
 
             if ((uint32_t) *payloadEntity != UINT32_MAX) {
                 auto &payloadData = reg.get<EntityData>(*payloadEntity);
-                payloadData.m_Parent = e;
+                payloadData.m_Parent = static_cast<uint32_t>(e);
 
                 *payloadEntity = (entt::entity) UINT32_MAX;
 
@@ -273,7 +273,7 @@ void harmony::EntityInspectorPanel::OnImGui() {
             // action if OK
             if (ImGuiFileDialog::Instance()->IsOk()) {
                 String filepath = ImGuiFileDialog::Instance()->GetFilePathName();
-                EntityTemplate::SaveEntityTemplate(p_Prog.GetSystems(), p_Prog.m_AssetManager, activeScene, p_ScenePanel->m_SelectedEntity, filepath);
+                EntityTemplate::SaveEntityTemplate(activeScene, p_ScenePanel->m_SelectedEntity, filepath);
             }
             ImGuiFileDialog::Instance()->Close();
         }

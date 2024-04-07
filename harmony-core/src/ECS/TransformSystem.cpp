@@ -162,7 +162,7 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
                 break;
             }
             if (!registry.any_of<TransformComponent>((entt::entity) parent)) {
-                data.m_Parent = (entt::entity) UINT32_MAX;
+                data.m_Parent = UINT32_MAX;
                 parent = (uint32_t) data.m_Parent;
                 continue;
             }
@@ -178,7 +178,7 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
 
         glm::mat4 m = matrices[matrices.size() - 1];
 #pragma warning(suppress:6295)
-        for (auto i = matrices.size() - 2; i >= 0; i--) {
+        for (auto i = matrices.size() - 2; i >= 0 && i < matrices.size(); i--) {
             m *= matrices[i];
         }
 

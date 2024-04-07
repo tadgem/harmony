@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.10.0)
 project(harmony-all VERSION 0.1.0)
 
+# remove ZERO_CHECK
+set(CMAKE_SUPPRESS_REGENERATION true)
+
+# remove INSTALL 
+set(CMAKE_SKIP_INSTALL_RULES true)
+
 # harmony build options
 option(HARMONY_DEBUG "Build harmony with debug functionality enabled." ON)
 option(HARMONY_USE_LUAJIT "Use LuaJIT instead of regular Lua" ON)
@@ -49,6 +55,7 @@ else ()
 add_subdirectory(submodules/lua-cmake)
 endif ()
 
+
 # organize for VS
 set_target_properties(SDL2 PROPERTIES FOLDER "ThirdParty/SDL")
 set_target_properties(SDL2_test PROPERTIES FOLDER "ThirdParty/SDL")
@@ -70,3 +77,13 @@ add_subdirectory(templates/harmony-editor-runtime)
 add_subdirectory(templates/game-core-runtime)
 add_subdirectory(templates/harmony-app)
 add_subdirectory(templates/harmony-dojo)
+
+set_target_properties(game-core-runtime PROPERTIES FOLDER "Harmony")
+set_target_properties(harmony-app PROPERTIES FOLDER "Harmony")
+set_target_properties(harmony-assimp PROPERTIES FOLDER "Harmony")
+set_target_properties(harmony-core PROPERTIES FOLDER "Harmony")
+set_target_properties(harmony-dojo PROPERTIES FOLDER "Harmony")
+set_target_properties(harmony-editor-runtime PROPERTIES FOLDER "Harmony")
+set_target_properties(harmony-jolt PROPERTIES FOLDER "Harmony")
+set_target_properties(harmony-mono PROPERTIES FOLDER "Harmony")
+set_target_properties(harmony-runtime PROPERTIES FOLDER "Harmony")

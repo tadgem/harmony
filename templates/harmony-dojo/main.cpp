@@ -21,7 +21,7 @@ int main() {
     app.AddMiniGuiApp(CreateRef<LoadProjectGui>(app));
 
     std::cout << std::filesystem::current_path() << std::endl;
-    app.Run("../../../../projects/MonoTest/MonoTest.harmonyproj", NULL);
+    app.Run("../../projects/MonoTest/MonoTest.harmonyproj", NULL);
 
     return 0;
 }

@@ -19,17 +19,17 @@ namespace harmony
 	class EntityTemplate : public JSONAsset
 	{
 	public:
-		void AddComponentData(HashString systemTypeHash, Json entityJson);
+		void AddComponentData(uint32_t entity, HashString systemTypeHash, Json entityJson);
 
-		static EntityTemplate CreateEntityTemplate(Vector<RefCntPtr<System>> systems, WeakPtr<Scene> scene, entt::entity e);
-		static WeakPtr<EntityTemplate> SaveEntityTemplate(Vector<RefCntPtr<System>> systems, AssetManager& assetManager, WeakPtr<Scene> scene, entt::entity e, String name);
-		static void LoadEntityTemplate(Vector<RefCntPtr<System>> systems, WeakPtr<Scene> scene, WeakPtr<EntityTemplate> entityTemplate);
+		static EntityTemplate			CreateEntityTemplate(WeakPtr<Scene> scene, entt::entity e);
+		static WeakPtr<EntityTemplate>	SaveEntityTemplate(WeakPtr<Scene> scene, entt::entity e, String name);
+		static void						LoadEntityTemplate(WeakPtr<Scene> scene, WeakPtr<EntityTemplate> entityTemplate);
 
-		SingleEntityTemplateData m_ComponentData;
+		HashMap<uint32_t, SingleEntityTemplateData> m_TemplateData;
 
 		virtual Json ToJSON() override;
 		virtual void FromJSON(const Json& input) override;
 
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(EntityTemplate, m_ComponentData)
+		NLOHMANN_DEFINE_TYPE_INTRUSIVE(EntityTemplate, m_TemplateData)
 	};
 }

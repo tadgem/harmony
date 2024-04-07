@@ -5,23 +5,49 @@
 #include "Core/Scene.h"
 #include "ECS/System.h"
 #include "STL/HashMap.h"
-void harmony::EntityTemplate::AddComponentData(HashString systemTypeHash, Json entityJson)
+#include "STL/Algorithm.h"
+#include "Core/Program.h"
+
+
+
+void harmony::EntityTemplate::AddComponentData(uint32_t entity, HashString systemTypeHash, Json entityJson)
 {
-	if(entityJson.empty())
+	if (entityJson.empty())
 	{
 		return;
 	}
 
-	if(m_ComponentData.find(systemTypeHash) != m_ComponentData.end())
+	if (m_TemplateData.find(entity) == m_TemplateData.end())
 	{
-		m_ComponentData[systemTypeHash] = entityJson;
+		m_TemplateData.emplace(entity, SingleEntityTemplateData {});
+	}
+
+	if (m_TemplateData[entity].find(systemTypeHash) != m_TemplateData[entity].end())
+	{
+		m_TemplateData[entity][systemTypeHash] = entityJson;
 		return;
 	}
 
-	m_ComponentData.emplace(systemTypeHash, entityJson);
+	m_TemplateData[entity].emplace(systemTypeHash, entityJson);
 }
 
-harmony::EntityTemplate harmony::EntityTemplate::CreateEntityTemplate(Vector<RefCntPtr<System>> systems, WeakPtr<Scene> scene, entt::entity e)
+
+void RecurseEntityTemplateDataCollect(harmony::Scene* scene, harmony::Vector<entt::entity>& templateEntities, entt::entity e)
+{
+	if (harmony::Find(templateEntities.begin(), templateEntities.end(), e) == templateEntities.end())
+	{
+		templateEntities.push_back(e);
+	}
+
+	auto children = scene->GetChildEntities(e);
+
+	for (entt::entity& e : children)
+	{
+		RecurseEntityTemplateDataCollect(scene, templateEntities, e);
+	}
+}
+
+harmony::EntityTemplate harmony::EntityTemplate::CreateEntityTemplate(WeakPtr<Scene> scene, entt::entity e)
 {
 	auto s = scene.lock();
 	if (!s)
@@ -30,19 +56,29 @@ harmony::EntityTemplate harmony::EntityTemplate::CreateEntityTemplate(Vector<Ref
 	}
 
 	EntityTemplate t;
+	Vector<entt::entity> templateEntities;
 
-	for (auto& sys : systems)
+	// get all entities
+	RecurseEntityTemplateDataCollect(s.get(), templateEntities, e);
+
+	// serialize each entity see ^^
+	for (auto& sys : Program::Get()->GetSystems())
 	{
-		t.AddComponentData(sys->m_TypeHash, sys->SerializeEntity(s->m_Registry, e));
+		for (entt::entity templateEntity : templateEntities)
+		{
+			t.AddComponentData(static_cast<uint32_t>(templateEntity), sys->m_TypeHash, sys->SerializeEntity(s->m_Registry, e));
+		}
 	}
 	return t;
 }
 
-harmony::WeakPtr<harmony::EntityTemplate> harmony::EntityTemplate::SaveEntityTemplate(Vector<RefCntPtr<System>> systems, AssetManager& assetManager, WeakPtr<Scene> scene, entt::entity e, String name)
+harmony::WeakPtr<harmony::EntityTemplate> harmony::EntityTemplate::SaveEntityTemplate(WeakPtr<Scene> scene, entt::entity e, String name)
 {
-	EntityTemplate et = CreateEntityTemplate(systems, scene, e);
+	EntityTemplate et = CreateEntityTemplate(scene, e);
 	Json templateJson = et;
 	Utils::SaveJsonToPath(templateJson, name);
+
+	AssetManager& assetManager = Program::Get()->m_AssetManager;
 
 	Vector<AssetHandle> assetHandles = assetManager.LoadAsset<EntityTemplate>(name);
 	if (assetHandles.empty())
@@ -51,10 +87,10 @@ harmony::WeakPtr<harmony::EntityTemplate> harmony::EntityTemplate::SaveEntityTem
 		return {};
 	}
 
-	return assetManager.GetAsset<EntityTemplate>(assetHandles[0]);
+	return assetManager.GetAsset<EntityTemplate>(assetHandles.front());
 }
 
-void harmony::EntityTemplate::LoadEntityTemplate(Vector<RefCntPtr<System>> systems, WeakPtr<Scene> scene, WeakPtr<EntityTemplate> entityTemplate)
+void harmony::EntityTemplate::LoadEntityTemplate( WeakPtr<Scene> scene, WeakPtr<EntityTemplate> entityTemplate)
 {
 	RefCntPtr<Scene> s = scene.lock();
 	RefCntPtr<EntityTemplate> et = entityTemplate.lock();
@@ -64,14 +100,34 @@ void harmony::EntityTemplate::LoadEntityTemplate(Vector<RefCntPtr<System>> syste
 		return;
 	}
 
-	entt::entity e = s->m_Registry.create();
+	HashMap<uint32_t, entt::entity> idMapping;
 
-	for (auto& sys : systems)
-	{
-		if (et->m_ComponentData.find(sys->m_TypeHash.m_Value) != et->m_ComponentData.end())
+		// for each entity in the data
+		for (auto& [entityId, entityTemplateData] : et->m_TemplateData)
 		{
-			sys->DeserializeEntity(s->m_Registry, e, et->m_ComponentData[sys->m_TypeHash.m_Value]);
+			entt::entity e = s->m_Registry.create();
+			idMapping.emplace(entityId, e);
+			for (auto& sys : Program::Get()->GetSystems())
+			{
+				// if entity data has system data, deserialize
+				if (entityTemplateData.find(sys->m_TypeHash.m_Value) != entityTemplateData.end())
+				{
+					sys->DeserializeEntity(s->m_Registry, e, entityTemplateData[sys->m_TypeHash.m_Value]);
+				}
+			}
 		}
+
+	// update child entities
+	for (auto& [oldIndex, newEntity] : idMapping)
+	{
+		EntityData& data = s->m_Registry.get<EntityData>(newEntity);
+		uint32_t parentIndex = static_cast<uint32_t>(data.m_Parent);
+
+		if (idMapping.find(parentIndex) != idMapping.end())
+		{
+			data.m_Parent = static_cast<uint32_t>(idMapping[parentIndex]);
+		}
+			
 	}
 }
 
