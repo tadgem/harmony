@@ -98,8 +98,7 @@ void harmony::Editor::InitializePipelines() {
     RuntimeProgram::InitializePipelines();
     // return;
     auto skyFB = p_EditorPipeline->AddFramebuffer("Sky FB", {AttachmentType::RGBA16F}, Resolution::Type::FullScale);
-    auto mainFB = p_EditorPipeline->AddFramebuffer("Forward FB", {AttachmentType::RGBA16F, AttachmentType::Depth32F},
-                                                   Resolution::Type::FullScale);
+    auto mainFB = p_EditorPipeline->AddFramebuffer("Forward FB", {AttachmentType::RGBA16F, AttachmentType::Depth16F}, Resolution::Type::FullScale);
     auto vectorFB = p_EditorPipeline->AddFramebuffer("Vector FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
     auto finalFB = p_EditorPipeline->AddFramebuffer("Final FB", {AttachmentType::RGBA8}, Resolution::Type::FullScale);
 
