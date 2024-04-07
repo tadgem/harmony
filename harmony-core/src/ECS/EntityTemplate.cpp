@@ -66,7 +66,7 @@ harmony::EntityTemplate harmony::EntityTemplate::CreateEntityTemplate(WeakPtr<Sc
 	{
 		for (entt::entity templateEntity : templateEntities)
 		{
-			t.AddComponentData(static_cast<uint32_t>(templateEntity), sys->m_TypeHash, sys->SerializeEntity(s->m_Registry, e));
+			t.AddComponentData(static_cast<uint32_t>(templateEntity), sys->m_TypeHash, sys->SerializeEntity(s->m_Registry, templateEntity));
 		}
 	}
 	return t;

@@ -2,6 +2,7 @@
 #include "ECS/MeshSystem.h"
 #include "ECS/MeshComponent.h"
 #include "Core/Memory.h"
+#include "Core/Program.h"
 
 harmony::MeshSystem::MeshSystem(AssetManager &am) : System(GetTypeHash<MeshSystem>()), p_AssetManager(am) {
     OPTICK_EVENT();
@@ -70,9 +71,18 @@ harmony::Json harmony::MeshSystem::SerializeEntity(entt::registry& registry, ent
 void harmony::MeshSystem::DeserializeEntity(entt::registry& registry, entt::entity e, Json entityJson)
 {
     OPTICK_EVENT();
-    MeshComponent tc;
-    entityJson.get_to<MeshComponent>(tc);
-    registry.emplace<MeshComponent>(e, tc);
+    MeshComponent mc;
+    entityJson.get_to<MeshComponent>(mc);
+
+    WeakPtr<Mesh> meshAsset = Program::Get()->m_AssetManager.GetAsset<Mesh>(mc.MeshAsset);
+    if (meshAsset.expired())
+    {
+        harmony::log::error("MeshSystem : Failed to find mesh at path {}", mc.MeshAsset.Path);
+        return;
+    }
+
+    mc.MeshHandle = meshAsset.lock()->m_Handle;
+    registry.emplace<MeshComponent>(e, mc);
 }
 
 void harmony::MeshSystem::Refresh() {
@@ -82,7 +92,7 @@ void harmony::MeshSystem::Refresh() {
 void harmony::MeshSystem::UpdateMeshComponent(MeshComponent &mc) {
     OPTICK_EVENT();
 
-    bool meshValid = mc.MeshHandle.m_Layout.m_stride > 0;
+    bool meshValid = mc.MeshHandle.m_Layout.m_stride > 0 && mc.MeshHandle.m_IBH.idx < 65535 && mc.MeshHandle.m_VBH.idx < 65535;
     if (!meshValid) {
         WeakPtr<Mesh> meshAssetWr = p_AssetManager.GetAsset<Mesh>(mc.MeshAsset);
         if (meshAssetWr.expired()) {

@@ -1,5 +1,6 @@
 #include <optick.h>
 #include "Core/Scene.h"
+#include "STL/Algorithm.h"
 
 harmony::Scene::Scene() {
     OPTICK_EVENT();
@@ -69,4 +70,31 @@ harmony::Entity harmony::Scene::AddEntity(uint32_t index) {
     entity.m_Handle = e;
     p_Entities.emplace_back(entity);
     return entity;
+}
+
+void harmony::Scene::RecurseGetChildEntities(Vector<entt::entity>& entities, entt::entity e)
+{
+    if (harmony::Find(entities.begin(), entities.end(), e) == entities.end())
+    {
+        entities.push_back(e);
+    }
+
+    harmony::Vector<entt::entity> children = GetChildEntities(e);
+    for (entt::entity& c : children)
+    {
+        RecurseGetChildEntities(entities, c);
+    }
+}
+
+void harmony::Scene::DestroyEntity(entt::entity entity) {
+    OPTICK_EVENT();
+
+    Vector<entt::entity> entities;
+
+    RecurseGetChildEntities(entities, entity);
+
+    for (auto e : entities)
+    {
+        m_Registry.destroy(e);
+    }
 }

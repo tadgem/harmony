@@ -14,7 +14,8 @@ namespace harmony {
 
         Scene(const String &name);
 
-        Entity AddEntity(uint32_t index = UINT32_MAX);
+        Entity  AddEntity(uint32_t index = UINT32_MAX);
+        void    DestroyEntity(entt::entity e);
 
         String m_Name;
         uint32_t m_NumEntities;
@@ -38,7 +39,7 @@ namespace harmony {
         friend class Program;
 
         void UpdateSceneSystemSerializationAttributes(Vector<RefCntPtr<System>> &systems);
-
+        void RecurseGetChildEntities(Vector<entt::entity>& entities, entt::entity e);
         void Deserialize(Vector<RefCntPtr<System>> &systems);
 
         Map<uint64_t, Json> p_SystemSerializationAttributes;

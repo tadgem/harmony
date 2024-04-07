@@ -241,7 +241,7 @@ void harmony::EntityInspectorPanel::OnImGui() {
             for (int i = 0; i < p_ComponentUIProviders.size(); i++) {
                 //p_ComponentUIProviders[i]->OnComponentImGui(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity);
                 if (p_ComponentUIProviders[i]->HasComponent(activeScene->m_Registry,
-                                                            p_ScenePanel->m_SelectedEntity))
+                    p_ScenePanel->m_SelectedEntity))
                     continue;
                 if (ImGui::Selectable(p_ComponentUIProviders[i]->GetComponentName().c_str())) {
                     p_ComponentUIProviders[i]->AddComponent(activeScene->m_Registry, p_ScenePanel->m_SelectedEntity);
@@ -250,7 +250,7 @@ void harmony::EntityInspectorPanel::OnImGui() {
             ImGui::EndCombo();
         }
         ImGui::Separator();
-        ImGui::PushID((uint32_t) p_ScenePanel->m_SelectedEntity);
+        ImGui::PushID((uint32_t)p_ScenePanel->m_SelectedEntity);
         if (ImGui::Button("Duplicate")) {
             entt::entity dupe = activeScene->AddEntity().m_Handle;
             for (int i = 0; i < p_ComponentUIProviders.size(); i++) {
@@ -263,6 +263,11 @@ void harmony::EntityInspectorPanel::OnImGui() {
         if (ImGui::Button("Save as Prefab"))
         {
             ImGuiFileDialog::Instance()->OpenDialog("HarmonySaveEntityTemplate", "Save Entity Template", ".entitytemplate", ".");
+        }
+
+        if (ImGui::Button("Delete"))
+        {
+            activeScene->DestroyEntity(p_ScenePanel->m_SelectedEntity);
         }
 
         auto io = ImGui::GetIO();

@@ -161,13 +161,21 @@ void harmony::TransformSystem::Render(entt::registry &registry) {
             if (parent == UINT32_MAX) {
                 break;
             }
-            if (!registry.any_of<TransformComponent>((entt::entity) parent)) {
+            entt::entity e = static_cast<entt::entity>(parent);
+            if (!registry.valid(e))
+            {
+                data.m_Parent = UINT32_MAX;
+                parent = UINT32_MAX;
+                continue;
+            }
+
+            if (!registry.any_of<TransformComponent>(e)) {
                 data.m_Parent = UINT32_MAX;
                 parent = (uint32_t) data.m_Parent;
                 continue;
             }
-            auto &t = registry.get<TransformComponent>((entt::entity) parent);
-            auto &data = registry.get<EntityData>((entt::entity) parent);
+            auto &t = registry.get<TransformComponent>(e);
+            auto &data = registry.get<EntityData>(e);
             matrices.emplace_back(t.LocalModel);
             parent = (uint32_t) data.m_Parent;
         }
