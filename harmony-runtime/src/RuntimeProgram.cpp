@@ -1,26 +1,27 @@
-#include <optick.h>
 #include "RuntimeProgram.h"
+#include <optick.h>
+#include "Core/FSM.h"
+#include "Core/Input.h"
 #include "AssimpModelAssetFactory.h"
 #include "Assets/FontAssetFactory.h"
-#include "ECS/EntityTemplate.h"
-#include "Rendering/Views/RuntimeView.h"
-#include "Rendering/Shaders/ShaderDataSources/BlinnPhongDataSource.h"
-#include "Rendering/Pipelines/PipelineStages/DrawScreenTextureStage.h"
 #include "Rendering/Shapes.h"
-#include "Core/FSM.h"
+#include "Rendering/Modules/Moebius/MoebiusModule.h"
+#include "Rendering/Pipelines/PipelineStages/DrawScreenTextureStage.h"
+#include "Rendering/Pipelines/PipelineStages/SkyStage.h"
+#include "Rendering/Shaders/ShaderDataSources/BlinnPhongDataSource.h"
+#include "Rendering/Views/RuntimeView.h"
+#include "ECS/EntityTemplate.h"
 #include "ECS/EntityDataSystem.h"
 #include "ECS/LightSystem.h"
 #include "Script/Lua/LuaProgramComponent.h"
 #include "Script/Lua/LuaSystem.h"
 #include "Script/Lua/LuaScriptAssetFactory.h"
-#include "JoltPhysicsSystem.h"
 #include "Script/GraphScript/GraphScriptProgramComponent.h"
 #include "Script/GraphScript/GraphScriptSystem.h"
-#include "Rendering/Pipelines/PipelineStages/SkyStage.h"
-#include "Rendering/Modules/Moebius/MoebiusModule.h"
 #include "MonoProgramComponent.h"
 #include "MonoAssemblyAssetFactory.h"
 #include "MonoSystem.h"
+#include "JoltPhysicsSystem.h"
 #include "JoltMonoBind.h"
 
 harmony::RuntimeProgram::RuntimeProgram(const String &name) : Program(name) {
@@ -50,7 +51,7 @@ void harmony::RuntimeProgram::Run(const String &projectPath) {
     LoadBuiltInAssets();
     LoadProject(projectPath);
     OpenScene(0);
-    RunSystemInit();
+    PreRunInit();
     ResizeApplicationWindow(p_WindowWidth, p_WindowHeight);
 
     while (p_Run) {
@@ -99,13 +100,13 @@ void harmony::RuntimeProgram::AddSystems() {
     AddSystem<MaterialSystem>(m_Renderer, m_AssetManager);
     AddSystem<MeshSystem>(m_AssetManager);
     AddSystem<LightSystem>();
-    p_GraphScriptSystem = AddSystem<GraphScriptSystem>(p_GraphScriptComponent).lock();
-    p_JoltPhysicsSystem = AddSystem<JoltPhysicsSystem>().lock();
-    auto joltMonoCallback = CreateRef<JoltMonoContactListenerCallback>(
+    p_EntityDataSystem      = AddSystem<EntityDataSystem>().lock();
+    p_LuaSystem             = AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent).lock();
+    p_GraphScriptSystem     = AddSystem<GraphScriptSystem>(p_GraphScriptComponent).lock();
+    p_JoltPhysicsSystem     = AddSystem<JoltPhysicsSystem>().lock();
+    auto joltMonoCallback   = CreateRef<JoltMonoContactListenerCallback>(
         p_JoltPhysicsSystem);
     p_JoltPhysicsSystem->AddContactCallback(joltMonoCallback);
-    p_EntityDataSystem = AddSystem<EntityDataSystem>().lock();
-    p_LuaSystem = AddSystem<LuaSystem>(m_AssetManager, p_LuaProgramComponent).lock();
 
     auto monoSystemDelegateProviders = Vector<RefCntPtr<MonoDelegateInvokeProvider>>
     {
@@ -280,6 +281,8 @@ int harmony::RuntimeProgram::OnRuntimeUpdate() {
     RunSystemRender();
 
     RunRendererPostUpdate();
+
+    Input::PostFrame();
 
     PresentRuntimeImage();
 

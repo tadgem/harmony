@@ -11,6 +11,8 @@ namespace GameTest
             Log.Info("Hello from C# TestModule");
 
             InitRenderer();
+
+            Log.Info($"Goodbye from C# TestModule");
         }
 
         private void InitRenderer()
