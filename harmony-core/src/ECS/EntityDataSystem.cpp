@@ -7,6 +7,10 @@ void harmony::EntityDataSystem::Init(entt::registry &registry) {
     uint32_t index = 0;
     for (uint32_t index = 0; index < registry.size(); index++) {
         entt::entity e = (entt::entity) index;
+        if (!registry.valid(e))
+        {
+            return;
+        }
         if (!registry.try_get<EntityData>(e)) {
             registry.emplace<EntityData>(e);
         }

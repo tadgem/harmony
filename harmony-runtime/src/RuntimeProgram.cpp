@@ -253,14 +253,14 @@ void harmony::RuntimeProgram::LoadScene(const String &path) {
     OPTICK_EVENT();
     log::info("RuntimeProgram : Load Scene at path : {}", path);
     Program::LoadScene(path);
-    //RunSystemInit();
+
 }
 
 void harmony::RuntimeProgram::OpenScene(uint32_t index) {
     OPTICK_EVENT();
     Program::OpenScene(index);
     log::info("RuntimeProgram : Open Scene at index : {}", index);
-    //RunSystemInit();
+
 }
 
 int harmony::RuntimeProgram::OnRuntimeUpdate() {
