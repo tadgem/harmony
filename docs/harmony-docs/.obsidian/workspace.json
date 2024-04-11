@@ -85,7 +85,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Rendering/Notes & Links/BGFX Multithreaded renderer.md",
+                "file": "Meta/Planning/Animation.md",
                 "mode": "source",
                 "source": false
               }
@@ -158,7 +158,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Rendering/Notes & Links/BGFX Multithreaded renderer.md",
+                "file": "Meta/Planning/Animation.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -175,7 +175,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Rendering/Notes & Links/BGFX Multithreaded renderer.md",
+                "file": "Meta/Planning/Animation.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -198,7 +198,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Rendering/Notes & Links/BGFX Multithreaded renderer.md"
+                "file": "Meta/Planning/Animation.md"
               }
             }
           },
@@ -234,8 +234,21 @@
   },
   "active": "9a6412f7fef3ddd5",
   "lastOpenFiles": [
-    "images/Pasted image 20240326190253.png",
+    "Meta/Planning/Immediate TODO (11.04.24).md",
+    "Meta/Planning/Animation.md",
+    "Core/Scene.md",
+    "Meta/Planning",
+    "Meta",
+    "Core/Project.md",
+    "Core/ProgramComponent.md",
+    "Core/Component.md",
+    "Debugging/Release Disassembly.md",
+    "Debugging/Old Type Hash.md",
+    "Debugging/New Type Hash.md",
+    "Debugging/Debug Disassembly.md",
+    "Script/Mono/Pass Array to Mono.md",
     "Rendering/Notes & Links/BGFX Multithreaded renderer.md",
+    "images/Pasted image 20240326190253.png",
     "Rendering/Notes & Links",
     "Misc/Notes/Release debug symbols msvc.md",
     "images/Pasted image 20231119203256.png",
@@ -254,26 +267,15 @@
     "Script/Mono/Minimal Render Pipeline Setup.md",
     "Script/Mono/InterfaceImpl.md",
     "Misc/Notes/TODO.md",
-    "Core/Component.md",
-    "Misc/Setup/Mac OS Setup.md",
-    "Misc/Setup/Windows Setup.md",
+    "Meta/Setup/Mac OS Setup.md",
+    "Meta/Setup/Windows Setup.md",
     "images/Pasted image 20230918200948.png",
     "images/Pasted image 20230918200905.png",
-    "Rendering/Vertex.md",
-    "Rendering/Mesh.md",
-    "Rendering/Pipeline.md",
-    "Rendering/Framebuffer.md",
-    "Rendering/Attachment.md",
-    "Rendering/Faces and Index Buffers.md",
-    "Script/Lua Script API.md",
     "images/Pasted image 20230918183442.png",
     "images/Pasted image 20230918183427.png",
-    "images/Pasted image 20230918183406.png",
     "Script/Mono",
     "Misc/Notes",
-    "Rendering/PipelineStageRenderer.md",
-    "Rendering/Texture.md",
-    "Misc/Setup",
+    "Meta/Setup",
     "Misc",
     "Core",
     "Rendering",

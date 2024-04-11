@@ -28,12 +28,15 @@ set(TARGET_VIEWER OFF)
 
 
 
-# add core dependencies
+# add core dependencies (submodules)
 add_subdirectory(submodules/glm)
 add_subdirectory(submodules/bgfx)
-add_subdirectory(submodules/sdl)
 add_subdirectory(submodules/spdlog)
 add_subdirectory(submodules/optick)
+
+# add core dependencies (clones)
+add_subdirectory(third-party/sdl)
+add_subdirectory(third-party/sdl-mixer)
 
 # add module dependencies (swap out / remove if not needed)
 add_subdirectory(submodules/assimp)

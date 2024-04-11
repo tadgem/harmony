@@ -13,9 +13,6 @@
 [submodule "submodules/efsw"]
 	path = submodules/efsw
 	url = https://github.com/SpartanJ/efsw.git
-[submodule "submodules/sdl"]
-	path = submodules/sdl
-	url = https://github.com/libsdl-org/SDL.git
 [submodule "submodules/luajit-cmake"]
 	path = submodules/luajit-cmake
 	url = https://github.com/WohlSoft/LuaJIT.git

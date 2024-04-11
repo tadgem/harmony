@@ -1,0 +1,5 @@
+- Update Runtime app to have parity with editor runtime view
+- update SDL2 -> SDL3
+- incorporate SDL_Mixer into build pipeline
+- move Jolt physics in to core
+- replace GLM -> jolt primitives
