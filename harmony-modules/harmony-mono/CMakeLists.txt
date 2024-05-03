@@ -43,7 +43,7 @@ endforeach()
 
 # Stop Cmake complaining about MONO_ROOT env variable
 cmake_policy(SET CMP0074 NEW)
-set(MONO_ROOT $ENV{MONO_PATH})
+set(MONO_ROOT $ENV{MONO_PATH} CACHE INTERNAL "")
 find_package(mono REQUIRED)
 
 set(HARMONY_MONO_INCLUDES 
@@ -54,7 +54,7 @@ CACHE INTERNAL "")
 
 target_include_directories(harmony-mono PUBLIC ${HARMONY_MONO_INCLUDES})
 target_link_directories(harmony-mono PUBLIC ${MONO_LIBRARY_DIRS})
-target_link_libraries(harmony-mono ${MONO_LIBRARIES} harmony-core)
+target_link_libraries(harmony-mono PUBLIC ${MONO_LIBRARIES} harmony-core)
 
 if(MSVC)
     target_compile_options(harmony-mono PRIVATE "/MP" "/Zi")
