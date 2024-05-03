@@ -18,6 +18,16 @@
 - Download and install GitHub Desktop : https://desktop.github.com
 - Sign in to your GitHub account in GitHub Desktop
 - Clone harmony repo through GitHub desktop
+- make a new directory (say vs22) `cd` into it and then`cmake ..`
+- Ignore below its outdated
+
+
+
+
+
+
+-- IGNORE --
+-- TODO: Rewrite this --
 - Open harmony repo in Visual Studio 2022 (as a folder)
       - May ask you to select a project to start with, in which case default should be "harmony/templates/harmony-dojo" (the editor)
       - You can add additional projects to build but the process is a pain, once you have done this once you shouldnt need to do it again.
