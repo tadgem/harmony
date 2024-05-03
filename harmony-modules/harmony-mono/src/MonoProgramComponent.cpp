@@ -32,11 +32,11 @@ harmony::MonoProgramComponent::MonoProgramComponent(
 void harmony::MonoProgramComponent::Init()
 {
     log::info("MonoProgramComponent : Initializing");
-    // TODO: Change to the project directory
+
     String root(getenv("MONO_PATH"));
     String assemblyDir = root + "/lib";
-    mono_set_assemblies_path(assemblyDir.c_str());
-
+    String configDir = root + "/etc";
+    mono_set_dirs(assemblyDir.c_str(), configDir.c_str());
     if(p_RootDomain == nullptr)
     {
         const char* argv[2] = {
