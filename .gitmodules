@@ -3,7 +3,7 @@
 	url = https://github.com/gabime/spdlog.git
 [submodule "submodules/assimp"]
 	path = submodules/assimp
-	url = https://github.com/tadgem/assimp.git
+	url = https://github.com/assimp/assimp.git
 [submodule "submodules/lua-cmake"]
 	path = submodules/lua-cmake
 	url = https://github.com/lubgr/lua-cmake.git
@@ -21,7 +21,7 @@
 	url = https://github.com/WohlSoft/LuaJIT.git
 [submodule "submodules/optick"]
 	path = submodules/optick
-	url = https://github.com/tadgem/optick.git
+	url = https://github.com/bombomby/optick.git
 [submodule "submodules/bgfx"]
 	path = submodules/bgfx
 	url = https://github.com/bkaradzic/bgfx.cmake
