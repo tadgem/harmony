@@ -4,7 +4,7 @@
 namespace harmony
 {
   template<typename _Type>
-  class TVector
+  class Vector
   {
   public:
 

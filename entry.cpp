@@ -7,9 +7,9 @@ using namespace harmony;
 
 int main(int argc, char *argv[])
 {
-  TVector<int> ints {};
-  THashMap<int, float> floats {};
-  THashMap<String, int> namesAndAges{};
+  Vector<int> ints {};
+  HashMap<int, float> floats {};
+  HashMap<String, int> namesAndAges{};
   String s = "Hello";
   ints.push(2);
   ints.push(2);

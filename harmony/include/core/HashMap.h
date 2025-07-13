@@ -5,7 +5,7 @@
 namespace harmony
 {
 template<typename _KeyType, typename _ValueType>
-class THashMap
+class HashMap
 {
 public:
 
