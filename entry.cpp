@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
   TVector<int> ints {};
   THashMap<int, float> floats {};
-  THashMap<String, int> nameAndAges{};
+  THashMap<String, int> namesAndAges{};
   String s = "Hello";
   ints.push(2);
   ints.push(2);
@@ -19,7 +19,10 @@ int main(int argc, char *argv[])
   floats.emplace(5, 2.0f);
   floats.emplace(10,4.0f);
 
-  nameAndAges.emplace("john", 20);
+  namesAndAges.emplace("john", 20);
+  namesAndAges.emplace("joe", 30);
+  namesAndAges.emplace("jordan", 40);
+
   for(auto i : ints)
   {
     std::cout << i << "\n";
@@ -28,6 +31,11 @@ int main(int argc, char *argv[])
   for(auto[key, value] : floats)
   {
     std::cout << key << " : " << value << "\n";
+  }
+
+  for(auto& [key, value] : namesAndAges)
+  {
+    std::cout << key.c_str() << " : " << value << "\n";
   }
 
   std::cout << "Hello world\n";
