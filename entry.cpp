@@ -1,9 +1,15 @@
 #include <iostream>
-#include "core/Vector.h"
-#include "core/HashMap.h"
-#include "core/String.h"
+#include "stl/Vector.h"
+#include "stl/HashMap.h"
+#include "stl/String.h"
+#include "stl/Memory.h"
 
 using namespace harmony;
+
+struct something
+{
+  HashMap<String, int> Names;
+};
 
 int main(int argc, char *argv[])
 {
@@ -11,6 +17,9 @@ int main(int argc, char *argv[])
   HashMap<int, float> floats {};
   HashMap<String, int> namesAndAges{};
   String s = "Hello";
+
+  Unique<something> uptr = MakeUnique<something>();
+
   ints.push(2);
   ints.push(2);
   ints.set(0, 1);
