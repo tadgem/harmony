@@ -15,8 +15,8 @@ set(DAWN_FETCH_DEPENDENCIES ON CACHE INTERNAL "")
 # Enable this to remove the examples + their dependencies (glm, assimp)
 # set(BUILD_LVK_EXAMPLES OFF CACHE INTERNAL "Disable LVK Examples")
 add_subdirectory(submodules/sdl)
-add_subdirectory(submodules/dawn)
 add_subdirectory(submodules/flecs)
+add_subdirectory(third_party/dawn)
 add_subdirectory(third_party/mimalloc)
 
 set(harmonyc_libs
@@ -37,10 +37,10 @@ file(GLOB_RECURSE harmonyc_srcs RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" harmony/s
 set(harmonyc_includes
   ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mimalloc/include
   ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mimalloc/src
+  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/dawn/include
   ${CMAKE_CURRENT_SOURCE_DIR}/third_party
   ${CMAKE_CURRENT_SOURCE_DIR}/submodules/sdl/include
   ${CMAKE_CURRENT_SOURCE_DIR}/submodules/flecs/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/submodules/dawn/include
   ${CMAKE_CURRENT_SOURCE_DIR}/harmony/include
   ${LVK_INCLUDES}
   ${LVK_SDL_INCLUDES}
@@ -53,7 +53,7 @@ function(add_harmony_exe exe_name entry_file)
 	target_include_directories(${exe_name} PRIVATE ${harmonyc_includes})
 endfunction()
 
-add_harmony_exe(harmonyc harmony/src/Entry.cpp)
+add_harmony_exe(harmonyc_entry tests/Entry.cpp)
 add_harmony_exe(harmonyc_core_tests tests/EngineTests.cpp)
 add_harmony_exe(harmonyc_maths_tests tests/MathsTests.cpp)
 

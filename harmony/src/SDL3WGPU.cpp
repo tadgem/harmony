@@ -21,7 +21,7 @@ namespace harmony
 
       WGPUSurfaceDescriptor surfaceDescriptor;
       surfaceDescriptor.nextInChain = &fromWindowsHWND.chain;
-      surfaceDescriptor.label = (WGPUStringView){ NULL, WGPU_STRLEN };
+      surfaceDescriptor.label =  WGPUStringView { NULL, WGPU_STRLEN };
 
       return wgpuInstanceCreateSurface(instance, &surfaceDescriptor);
     }

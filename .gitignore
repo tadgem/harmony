@@ -9,3 +9,4 @@ CMakeCache.txt
 compile_commands.json
 /.idea
 /docs/logseq/bak/logseq/config
+/third_party/dawn

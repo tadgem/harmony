@@ -143,7 +143,10 @@ TestResult CanIterateOverComponentData(Engine *e) {
 
 TEST_APP_BEGIN_SUITE("Engine", MEGABYTES(512))
 
-ADD_TEST(AssetManagerProvidedFunctionsUsed)
+{
+    printf("\x1B[34m" "[harmony][info ] " "\x1B[0m" "Running Test : %s\n", "AssetManagerProvidedFunctionsUsed"); harmony::Engine e = harmony::Engine::Init(1280, 720, false, TEST_HEAP_SIZE, false); harmony::Timer timer_AssetManagerProvidedFunctionsUsed; auto result_AssetManagerProvidedFunctionsUsed = AssetManagerProvidedFunctionsUsed(&e); result_AssetManagerProvidedFunctionsUsed.mName = "AssetManagerProvidedFunctionsUsed"; f64 time_taken_AssetManagerProvidedFunctionsUsed = timer_AssetManagerProvidedFunctionsUsed.ElapsedMillisecondsF(); result_AssetManagerProvidedFunctionsUsed.mElapsedMs = time_taken_AssetManagerProvidedFunctionsUsed; sResults.push_back(result_AssetManagerProvidedFunctionsUsed);
+}
+
 ADD_TEST(AssetManagerTestDataLoaded)
 ADD_TEST(CanCreateAndDestroyEntity)
 ADD_TEST(CanMutateComponentData)

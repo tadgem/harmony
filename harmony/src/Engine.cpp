@@ -47,7 +47,7 @@ void Engine::Shutdown() {
   mAssetManager.reset();
 
   // Free all engine memory
-  mMemory.Free();
+  // mMemory.Free();
 }
 Engine::Prototype Engine::InternalInit(uint64 upfrontMemory ) {
   Memory mem = Memory::Create(upfrontMemory);

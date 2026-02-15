@@ -4,6 +4,7 @@
 #include "Macros.h"
 #include "Primitives.h"
 #include "Backend.h"
+#include "WGPUBackend.h"
 
 namespace harmony {
 class Engine {
@@ -22,7 +23,7 @@ public:
   Unique<Backend>       mBackend;
   bool mEnableMSAA = false;
 
-  template<typename _Backend, typename ... Args>
+  template<typename _Backend = WGPUBackend, typename ... Args>
   static Engine Init(uint32 swapchainWidth = 1920,
                      uint32 swapchainHeight = 1080, bool enableMSAA = false,
                      uint64 upfrontMemory = GIGABYTES(4),

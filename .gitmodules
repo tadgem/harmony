@@ -1,0 +1,6 @@
+[submodule "submodules/flecs"]
+	path = submodules/flecs
+	url = https://github.com/SanderMertens/flecs
+[submodule "submodules/sdl"]
+	path = submodules/sdl
+	url = https://github.com/libsdl-org/SDL.git

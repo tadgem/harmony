@@ -15,11 +15,11 @@ public:
 
   template <typename _Ty, typename... Args> _Ty &AddComponent(Args &&...args) {
     mFlecsHandle.add<_Ty>(std::forward<Args>(args)...);
-    return *mFlecsHandle.get_mut<_Ty>();
+    return mFlecsHandle.get_mut<_Ty>();
   }
 
   template <typename _Ty> _Ty &GetComponent() {
-    return *mFlecsHandle.get_mut<_Ty>();
+    return mFlecsHandle.get_mut<_Ty>();
   }
 };
 

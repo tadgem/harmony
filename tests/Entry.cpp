@@ -20,7 +20,7 @@ HARMONY_OVERRIDE_GLOBAL_NEW(true)
 //  }
 //  ImGui::End();
 //}
-
+#if FALSE
 int main() {
   using namespace harmony;
   bool enableSwapchainMSAA = false;
@@ -60,3 +60,4 @@ int main() {
   }
   return 0;
 }
+#endif

@@ -11,10 +11,8 @@
 #include "STL.h"
 #include "Timer.h"
 #include "Utils.h"
-#include "VkTech.h"
 #include "flecs.h"
 #include "flecs/addons/cpp/flecs.hpp"
-#include "lvk/lvk.h"
 
 namespace harmony {
 enum class TestResultEnum { Fail = -1, Pass = 0, DNF = 1 };
