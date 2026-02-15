@@ -8,50 +8,50 @@
 namespace harmony {
 class Entity {
 public:
-  flecs::entity mFlecsHandle;
-  Entity(const flecs::entity &e) : mFlecsHandle(e) {}
+  flecs::entity handle;
+  Entity(const flecs::entity &e) : handle(e) {}
 
-  void Destroy() { mFlecsHandle.destruct(); }
+  void destroy() { handle.destruct(); }
 
-  template <typename _Ty, typename... Args> _Ty &AddComponent(Args &&...args) {
-    mFlecsHandle.add<_Ty>(std::forward<Args>(args)...);
-    return mFlecsHandle.get_mut<_Ty>();
+  template <typename _Ty, typename... Args> _Ty &add_component(Args &&...args) {
+    handle.add<_Ty>(std::forward<Args>(args)...);
+    return handle.get_mut<_Ty>();
   }
 
-  template <typename _Ty> _Ty &GetComponent() {
-    return mFlecsHandle.get_mut<_Ty>();
+  template <typename _Ty> _Ty &get_component() {
+    return handle.get_mut<_Ty>();
   }
 };
 
 class Scene {
 public:
-  flecs::world mWorld;
-  String mName;
+  flecs::world world;
+  String name;
 
-  Scene() : mName("Default Scene Name") {};
-  Scene(const String &sceneName) : mName(sceneName) {}
+  Scene() : name("Default Scene Name") {};
+  Scene(const String &sceneName) : name(sceneName) {}
 
-  Entity CreateEntity();
+  Entity create_entity();
 };
 
 class System {
 public:
-  const str_hash mSystemHash;
-  System(const str_hash &systemHash) : mSystemHash(systemHash) {}
-  System(const String &systemName) : mSystemHash(HashString(systemName)) {}
+  const str_hash sys_hash;
+  System(const str_hash &systemHash) : sys_hash(systemHash) {}
+  System(const String &systemName) : sys_hash(HashString(systemName)) {}
 
   /// <summary>
   /// Initialize callbacks and operations
   /// for component data which interacts with this sytem
   /// </summary>
   /// <param name="s"></param>
-  virtual void Init(Scene &s) = 0;
+  virtual void init(Scene &s) = 0;
 
   /// <summary>
   /// Remove callbacks
   /// </summary>
   /// <param name="s"></param>
-  virtual void Cleanup(Scene &s) = 0;
+  virtual void cleanup(Scene &s) = 0;
 
   /// <summary>
   /// Return JSON representing the system state
@@ -59,7 +59,7 @@ public:
   /// <param name="s">Scene to serialize</param>
   /// <returns>JSON representing the systems serializable state for all
   /// entities</returns>
-  virtual Json Serialize(Scene &s) = 0;
+  virtual JSON serialize(Scene &s) = 0;
 
   /// <summary>
   /// Given some json, deserialize and create appropriate components for a
@@ -67,7 +67,7 @@ public:
   /// </summary>
   /// <param name="s"></param>
   /// <param name="sceneJson"></param>
-  virtual void Deserialize(Scene &s, Json sceneJson) = 0;
+  virtual void deserialize(Scene &s, JSON sceneJson) = 0;
 
   /// <summary>
   /// Serialize all components on a given entity for this systems
@@ -76,7 +76,7 @@ public:
   /// <param name="s"></param>
   /// <param name="e"></param>
   /// <returns></returns>
-  virtual Json SerializeEntity(Scene &s, Entity &e) = 0;
+  virtual JSON serialize_entity(Scene &s, Entity &e) = 0;
 
   /// <summary>
   /// Given some json, deserialize and create appropriate components for a
@@ -85,10 +85,10 @@ public:
   /// <param name="s">Scene to deserialize into</param>
   /// <param name="e">Entity to deserialize into</param>
   /// <param name="sceneJson">JSON to be deserialized</param>
-  virtual void DeserializeEntity(Scene &s, Entity &e, Json sceneJson) = 0;
+  virtual void deserialize_entity(Scene &s, Entity &e, JSON sceneJson) = 0;
 
-  static String GetEntityIdAsString(Entity &e);
-  static uint64 GetEntityIdFromString(const String &entity);
+  static String get_entity_id_as_string(Entity &e);
+  static uint64 get_entity_id_from_string(const String &entity);
 };
 
 } // namespace harmony

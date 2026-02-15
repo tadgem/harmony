@@ -8,14 +8,14 @@ namespace harmony
   {
   public:
 
-    void Init()       override;
-    void PreFrame()   override;
-    void EndFrame()   override;
-    void Cleanup()    override;
-    bool ShouldRun()  override;
+    void init()         override;
+    void pre_frame()    override;
+    void end_frame()    override;
+    void cleanup()      override;
+    bool should_run()   override;
 
   protected:
-    SDL_Window* mWindow = nullptr;
+    SDL_Window* window = nullptr;
 
 
   };

@@ -9,18 +9,18 @@
 namespace harmony {
 class Engine {
 private:
-  struct Prototype
+  struct Prelude
   {
-    Memory        mMemory;
-    AssetManager* mAssetManager;
+    Memory        engine_memory;
+    AssetManager* asset_manager;
   };
 
-  static Prototype InternalInit(uint64 upfrontMemory);
+  static Prelude _internal_init(uint64 upfrontMemory);
 
 public:
-  Memory mMemory;
-  Unique<AssetManager>  mAssetManager;
-  Unique<Backend>       mBackend;
+  Memory engine_memory;
+  Unique<AssetManager>  asset_manager;
+  Unique<Backend>       backend;
   bool mEnableMSAA = false;
 
   template<typename _Backend = WGPUBackend, typename ... Args>
@@ -31,25 +31,25 @@ public:
   {
     static_assert(std::is_base_of<Backend, _Backend>());
 
-    Prototype p = InternalInit(upfrontMemory);
+    Prelude p = _internal_init(upfrontMemory);
 
     _Backend* b = HNY_NEW(_Backend, std::forward<Args>(args) ...);
 
     return Engine {
-        p.mMemory,
-        Unique<AssetManager>(p.mAssetManager),
+        p.engine_memory,
+        Unique<AssetManager>(p.asset_manager),
         Unique<Backend>(static_cast<Backend*>(b)),
         enableMSAA
     };
   }
 
   [[nodiscard]]
-  bool ShouldRun() const;
-  void PreFrame() const;
-  void EndFrame() const;
-  void Shutdown();
+  bool should_run() const;
+  void pre_frame() const;
+  void end_frame() const;
+  void shutdown();
 
-  ~Engine() { Shutdown(); }
+  ~Engine() { shutdown(); }
 
 
 };

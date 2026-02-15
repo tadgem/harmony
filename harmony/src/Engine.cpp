@@ -33,24 +33,24 @@ void InitFlecsCustomAllocator() {
   ecs_os_set_api(&api);
 }
 
-bool Engine::ShouldRun() const { return mBackend->ShouldRun(); }
+bool Engine::should_run() const { return backend->should_run(); }
 
-void Engine::PreFrame() const {
-  mBackend->PreFrame();
+void Engine::pre_frame() const {
+  backend->pre_frame();
 }
 
-void Engine::EndFrame() const {
-  mBackend->EndFrame();
+void Engine::end_frame() const {
+  backend->end_frame();
 }
-void Engine::Shutdown() {
-  mBackend->Cleanup();
-  mAssetManager.reset();
+void Engine::shutdown() {
+  backend->cleanup();
+  asset_manager.reset();
 
   // Free all engine memory
   // mMemory.Free();
 }
-Engine::Prototype Engine::InternalInit(uint64 upfrontMemory ) {
-  Memory mem = Memory::Create(upfrontMemory);
+Engine::Prelude Engine::_internal_init(uint64 upfrontMemory ) {
+  Memory mem = Memory::create();
 
   // pass mimalloc functions so SDL uses the same memory space.
   SDL_SetMemoryFunctions(mi_malloc, mi_calloc, mi_realloc, mi_free);

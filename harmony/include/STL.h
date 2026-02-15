@@ -27,7 +27,7 @@ using HashMap =
                        mi_stl_allocator<std::pair<const _Key, _Value>>>;
 
 template <typename _Ty, typename... Args>
-Unique<_Ty> MakeUnique(Args &&...args) {
+Unique<_Ty> make_unique_ptr(Args &&...args) {
   void *memory_loc = mi_malloc(sizeof(_Ty));
   Unique<_Ty> ptr =
       Unique<_Ty>(new (memory_loc) _Ty(std::forward<Args>(args)...));
@@ -37,7 +37,7 @@ Unique<_Ty> MakeUnique(Args &&...args) {
 template <typename _Ty> using Future = std::future<_Ty>;
 
 // template utils
-template <typename _Ty> static bool IsFutureReady(Future<_Ty> const &o) {
+template <typename _Ty> static bool is_future_ready(Future<_Ty> const &o) {
   return o.wait_for(std::chrono::seconds(0)) == std::future_status::ready;
 }
 

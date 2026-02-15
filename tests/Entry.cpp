@@ -20,7 +20,6 @@ HARMONY_OVERRIDE_GLOBAL_NEW(true)
 //  }
 //  ImGui::End();
 //}
-#if FALSE
 int main() {
   using namespace harmony;
   bool enableSwapchainMSAA = false;
@@ -33,7 +32,7 @@ int main() {
   SerializableAssetHandle handle(someString, AssetType::Audio);
   Timer t;
 
-  printf("Handle Str : %s\n", handle.mPath.c_str());
+  printf("Handle Str : %s\n", handle.path.c_str());
 //  {
 //    lvk::Vector3 someUniqueData = {10, 20, 30};
 //    AssetT<lvk::Vector3, AssetType::Audio> asset(someString, someUniqueData);
@@ -46,18 +45,17 @@ int main() {
   flecs::world ecs{};
   flecs::entity e = ecs.entity();
 
-  Json someJson;
+  JSON someJson;
   someJson["dad"] = 3;
   int64 val = someJson["dad"];
 
   auto ms = t.ElapsedMillisecondsF();
   auto ns = t.ElapsedNanosecondsF();
 
-  while (engine.ShouldRun()) {
-    engine.PreFrame();
+  while (engine.should_run()) {
+    engine.pre_frame();
 
-    engine.EndFrame();
+    engine.end_frame();
   }
   return 0;
 }
-#endif

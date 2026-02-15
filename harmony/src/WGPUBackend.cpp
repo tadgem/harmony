@@ -1,21 +1,21 @@
 #include "WGPUBackend.h"
 
-void harmony::WGPUBackend::Init() {
-  mWindow = SDL_CreateWindow("HARMONY", 1600, 900, SDL_WINDOW_RESIZABLE);
+void harmony::WGPUBackend::init() {
+  window = SDL_CreateWindow("HARMONY", 1600, 900, SDL_WINDOW_RESIZABLE);
 }
 
-void harmony::WGPUBackend::PreFrame() {
-
-}
-
-void harmony::WGPUBackend::EndFrame() {
+void harmony::WGPUBackend::pre_frame() {
 
 }
 
-void harmony::WGPUBackend::Cleanup() {
+void harmony::WGPUBackend::end_frame() {
 
 }
 
-bool harmony::WGPUBackend::ShouldRun() {
+void harmony::WGPUBackend::cleanup() {
+
+}
+
+bool harmony::WGPUBackend::should_run() {
   return true;
 }

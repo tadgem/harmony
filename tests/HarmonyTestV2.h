@@ -6,15 +6,12 @@
 #include "Engine.h"
 #include "Json.h"
 #include "Macros.h"
-#include "Maths.h"
 #include "Memory.h"
 #include "STL.h"
 #include "Timer.h"
 #include "Utils.h"
-#include "VkTech.h"
 #include "flecs.h"
 #include "flecs/addons/cpp/flecs.hpp"
-#include "lvk/lvk.h"
 
 namespace harmony {
 enum class TestResultEnum { Fail = -1, Pass = 0, DNF = 1 };
@@ -42,44 +39,6 @@ struct TestCandidate {
 };
 
 } // namespace harmony
-
-static void TestGUI(harmony::TestVector<harmony::TestCandidate> &tests,
-                    harmony::TestVector<harmony::TestResult> &results) {
-
-  harmony::Engine e =
-      harmony::Engine::Init(1600, 900, false, MEGABYTES(512), false);
-
-  while (e.ShouldRun()) {
-    e.PreFrame();
-
-    // do test imgui
-    if (ImGui::Begin("Test Explorer")) {
-      for (auto &test : tests) {
-        if (ImGui::Button(test.mName.c_str())) {
-          // enqueue test and shutdown test explorer app
-          HNY_LOG_ERROR("Running Test : %s\n", test.mName.c_str());
-        }
-      }
-    }
-    ImGui::End();
-
-    lvk::commands::RecordGraphicsCommands(
-        *e.mVK, [&](VkCommandBuffer &cmd, uint32 frame) {
-          lvk::Array<VkClearValue, 2> clearValues{};
-          clearValues[0].color = {{0.0f, 0.0f, 0.0f, 1.0f}};
-          clearValues[1].depthStencil = {1.0f, 0};
-          harmony::VkTech::ClearRenderPass(
-              *e.mVK, cmd, frame, e.mVK->m_SwapchainImageRenderPass,
-              e.mVK->m_SwapChainFramebuffers[frame],
-              e.mVK->m_SwapChainImageExtent, clearValues);
-        });
-
-    e.EndFrame();
-  }
-  // spin up imgui instance,
-  // allow user to pick one test or run all (custom config TODO)
-  //
-}
 
 #define STRINGIZE_DETAIL(x) #x
 #define STRINGIZE(x) STRINGIZE_DETAIL(x)

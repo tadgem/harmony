@@ -5,11 +5,11 @@ namespace harmony
   class Backend
   {
   public:
-    virtual void Init() = 0;
-    virtual void PreFrame() = 0;
-    virtual void EndFrame() = 0;
-    virtual void Cleanup() = 0;
-    virtual bool ShouldRun() = 0;
+    virtual void init() = 0;
+    virtual void pre_frame() = 0;
+    virtual void end_frame() = 0;
+    virtual void cleanup() = 0;
+    virtual bool should_run() = 0;
 
   };
 }

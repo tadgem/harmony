@@ -60,23 +60,27 @@ public:
 /// allowing creation of sub allocators for specific use cases
 /// </summary>
 struct Memory {
-  inline static uint64 sAllocatedBytes = 0;
-  inline static void *sMemory = nullptr;
-  mi_arena_id_t mArenaId;
-  mi_heap_t *mHeap;
-  mi_heap_t *mPreviousHeap;
+  inline static uint64 g_allocated_bytes = 0;
+  inline static void *g_memory = nullptr;
+  mi_arena_id_t arena_id;
+  mi_heap_t *heap;
+  mi_heap_t *prev_heap;
 
-  void Free() {
-    mi_heap_set_default(mPreviousHeap);
+  void free() {
+    if (heap == nullptr)
+    {
+      return;
+    }
+    mi_heap_set_default(prev_heap);
     mi_collect(true);
-    _aligned_free(sMemory);
-    sMemory = nullptr;
+    _aligned_free(g_memory);
+    g_memory = nullptr;
   }
 
-  static void InitGlobal(uint64 upfrontMemory) {
-    sMemory = _aligned_malloc(upfrontMemory, KILOBYTES(64));
-    sAllocatedBytes = upfrontMemory;
-    memset(sMemory, 0, sAllocatedBytes);
+  static void init_global(uint64 upfrontMemory) {
+    g_memory = _aligned_malloc(upfrontMemory, KILOBYTES(64));
+    g_allocated_bytes = upfrontMemory;
+    memset(g_memory, 0, g_allocated_bytes);
     mi_option_set(mi_option_show_errors, 1);
     mi_option_set(mi_option_verbose, 0);
     mi_option_set(mi_option_arena_eager_commit, 1);
@@ -85,10 +89,10 @@ struct Memory {
     mi_option_set(mi_option_allow_large_os_pages, 1);
   }
 
-  static Memory Create(uint64 upfrontMemory) {
+  static Memory create_contiguous(uint64 upfrontMemory) {
 
-    if (sMemory == nullptr) {
-      InitGlobal(upfrontMemory);
+    if (g_memory == nullptr) {
+      init_global(upfrontMemory);
     }
 
     mi_arena_id_t arenaId;
@@ -97,7 +101,7 @@ struct Memory {
     constexpr bool is_exclusive = true;
     constexpr bool is_zeroed = true;
     constexpr int numa_mode = -1;
-    mi_manage_os_memory_ex(sMemory, upfrontMemory, is_committed, is_large,
+    mi_manage_os_memory_ex(g_memory, upfrontMemory, is_committed, is_large,
                            is_zeroed, numa_mode, is_exclusive, &arenaId);
 
     mi_heap_t *engineHeap = mi_heap_new_in_arena(arenaId);
@@ -105,6 +109,13 @@ struct Memory {
     mi_heap_set_default(engineHeap);
 
     return Memory{arenaId, engineHeap, previousHeap};
+  }
+
+  static Memory create()
+  {
+    mi_arena_id_t arenaId = {};
+
+    return Memory {arenaId, nullptr, nullptr};
   }
 };
 } // namespace harmony

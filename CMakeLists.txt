@@ -55,7 +55,6 @@ endfunction()
 
 add_harmony_exe(harmonyc_entry tests/Entry.cpp)
 add_harmony_exe(harmonyc_core_tests tests/EngineTests.cpp)
-add_harmony_exe(harmonyc_maths_tests tests/MathsTests.cpp)
 
 add_custom_command(
         TARGET harmonyc_core_tests POST_BUILD

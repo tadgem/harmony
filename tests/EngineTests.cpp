@@ -3,7 +3,7 @@
 using namespace harmony;
 using TestBinaryAsset = AssetT<Vector<char>, AssetType::Binary>;
 using TestBinaryIntermediate =
-    AssetIntermediateT<Vector<char>, char, AssetType::Binary>;
+    AssetTransientT<Vector<char>, char, AssetType::Binary>;
 
 struct TestComponent {
   int x;
@@ -28,19 +28,19 @@ TestResult AssetManagerProvidedFunctionsUsed(Engine *e) {
 
   auto test_unload_func = [](Asset *a) { unload_called = true; };
 
-  e->mAssetManager->ProvideAssetTypeLoadFunction(
+  e->asset_manager->provide_asset_factory(
       AssetType::Binary, test_load_func, test_unload_func);
 
-  auto handle = e->mAssetManager->LoadAsset("test.bin", AssetType::Binary);
+  auto handle = e->asset_manager->load_asset("test.bin", AssetType::Binary);
 
-  while (e->mAssetManager->AnyAssetsLoading()) {
-    e->mAssetManager->Update();
+  while (e->asset_manager->any_assets_loading()) {
+    e->asset_manager->update();
   }
 
-  e->mAssetManager->UnloadAsset(handle);
+  e->asset_manager->unload_asset(handle);
 
-  while (e->mAssetManager->AnyAssetsUnloading()) {
-    e->mAssetManager->Update();
+  while (e->asset_manager->any_assets_unloading()) {
+    e->asset_manager->update();
   }
 
   TEST_ASSERT(load_called && unload_called,
@@ -61,18 +61,18 @@ TestResult AssetManagerTestDataLoaded(Engine *e) {
 
   auto test_unload_func = [](Asset *a) {};
 
-  e->mAssetManager->ProvideAssetTypeLoadFunction(
+  e->asset_manager->provide_asset_factory(
       AssetType::Binary, test_load_func, test_unload_func);
 
-  auto handle = e->mAssetManager->LoadAsset("test.bin", AssetType::Binary);
+  auto handle = e->asset_manager->load_asset("test.bin", AssetType::Binary);
 
-  while (e->mAssetManager->AnyAssetsLoading()) {
-    e->mAssetManager->Update();
+  while (e->asset_manager->any_assets_loading()) {
+    e->asset_manager->update();
   }
 
-  auto *bin_asset = e->mAssetManager->GetAsset<TestBinaryAsset>(handle);
+  auto *bin_asset = e->asset_manager->get_asset<TestBinaryAsset>(handle);
 
-  auto bin_size = bin_asset->mData.size();
+  auto bin_size = bin_asset->data.size();
 
   TEST_ASSERT(bin_size == 16, "Data loaded was not the correct size");
   return TestResult::Pass();
@@ -84,15 +84,15 @@ TestResult CanCreateAndDestroyEntity(Engine *e) {
   // for a component-less entity.
   Scene s = Scene("Test");
 
-  auto entity = s.CreateEntity();
-  entity.AddComponent<TestComponent>();
+  auto entity = s.create_entity();
+  entity.add_component<TestComponent>();
 
-  int entityCount = s.mWorld.count<TestComponent>();
+  int entityCount = s.world.count<TestComponent>();
   TEST_ASSERT(entityCount == 1, "Expected an entity to have been created");
 
-  entity.Destroy();
+  entity.destroy();
 
-  TEST_ASSERT(s.mWorld.count<TestComponent>() == 0,
+  TEST_ASSERT(s.world.count<TestComponent>() == 0,
               "Expected an entity to have been destroyed");
 
   return TestResult::Pass();
@@ -105,14 +105,14 @@ TestResult CanMutateComponentData(Engine *e) {
   Scene s = Scene("Test");
   constexpr int EXPECTED_RESULT = 12345;
 
-  auto entity = s.CreateEntity();
+  auto entity = s.create_entity();
 
   {
-    TestComponent &tc = entity.AddComponent<TestComponent>();
+    TestComponent &tc = entity.add_component<TestComponent>();
     tc.x = EXPECTED_RESULT;
   }
 
-  TestComponent &tc = entity.GetComponent<TestComponent>();
+  TestComponent &tc = entity.get_component<TestComponent>();
 
   TEST_ASSERT(tc.x = EXPECTED_RESULT, "Component was not mutated as expected");
 
@@ -121,17 +121,17 @@ TestResult CanMutateComponentData(Engine *e) {
 
 TestResult CanIterateOverComponentData(Engine *e) {
   Scene s = Scene("Test");
-  auto entity1 = s.CreateEntity();
-  auto entity2 = s.CreateEntity();
-  TestComponent &tc1 = entity1.AddComponent<TestComponent>();
-  TestComponent &tc2 = entity2.AddComponent<TestComponent>();
+  auto entity1 = s.create_entity();
+  auto entity2 = s.create_entity();
+  TestComponent &tc1 = entity1.add_component<TestComponent>();
+  TestComponent &tc2 = entity2.add_component<TestComponent>();
 
   int callcount = 0;
 
   auto testComponentFunction = [&callcount](flecs::iter &it, size_t,
                                             TestComponent &tc) { callcount++; };
 
-  auto sys = s.mWorld.system<TestComponent>().each(testComponentFunction);
+  auto sys = s.world.system<TestComponent>().each(testComponentFunction);
 
   sys.run();
 

@@ -3,14 +3,14 @@
 namespace harmony {
 SerializableAssetHandle::SerializableAssetHandle(const String &p,
                                                  const AssetType &type)
-    : mPath(p), mHandle(p, type) {}
+    : path(p), handle(p, type) {}
 
-AssetHandle::AssetHandle() : mType(AssetType::Unknown), mPathHash(INT64_MAX) {}
+AssetHandle::AssetHandle() : type(AssetType::Unknown), path_hash(INT64_MAX) {}
 
 AssetHandle::AssetHandle(const String &p, const AssetType &type)
-    : mPathHash(HashString(p)), mType(type) {}
+    : path_hash(HashString(p)), type(type) {}
 
 Asset::Asset(const String &path, const AssetType &type)
-    : mPath(path), mHandle(path, type) {}
+    : path(path), handle(path, type) {}
 
 } // namespace harmony

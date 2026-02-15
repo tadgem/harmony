@@ -18,18 +18,18 @@ enum class AssetType : uint8 {
 /// use in collections for fast look up
 /// </summary>
 struct AssetHandle {
-  AssetType mType;
-  str_hash mPathHash;
+  AssetType type;
+  str_hash path_hash;
 
   AssetHandle();
   AssetHandle(const String &p, const AssetType &type);
 
   bool operator==(const AssetHandle &o) const {
-    return mType == o.mType && mPathHash == o.mPathHash;
+    return type == o.type && path_hash == o.path_hash;
   }
 
   bool operator<(const AssetHandle &o) const {
-    return mType < o.mType && mPathHash < o.mPathHash;
+    return type < o.type && path_hash < o.path_hash;
   }
 };
 
@@ -38,8 +38,8 @@ struct AssetHandle {
 /// Giving concrete path and type of asset
 /// </summary>
 struct SerializableAssetHandle {
-  AssetHandle mHandle;
-  String mPath;
+  AssetHandle handle;
+  String      path;
 
   SerializableAssetHandle(const String &p, const AssetType &type);
 };
@@ -49,16 +49,16 @@ public:
   Asset(const String &path, const AssetType &type);
   virtual ~Asset() {};
 
-  const String mPath;
-  const AssetHandle mHandle;
+  const String      path;
+  const AssetHandle handle;
 };
 
 template <typename _Ty, AssetType _AssetTypeEnum> class AssetT : public Asset {
 public:
-  _Ty mData;
+  _Ty data;
 
   AssetT(const String &path, const _Ty &data)
-      : Asset(path, _AssetTypeEnum), mData(data) {};
+      : Asset(path, _AssetTypeEnum), data(data) {};
 
   ~AssetT() {};
 };
@@ -68,25 +68,25 @@ public:
 /// phases e.g. load texture from disk to ram -> transfer from ram to GPU Once
 /// AssetIntermediate has finished, the asset is moved to the ready state.
 /// </summary>
-class AssetIntermediate {
+class AssetTransientData {
 public:
-  Asset *mAssetData;
-  AssetIntermediate(Asset *asset) : mAssetData(asset) {}
+  Asset *asset_data_ptr;
+  AssetTransientData(Asset *asset) : asset_data_ptr(asset) {}
 
-  virtual ~AssetIntermediate() {}
+  virtual ~AssetTransientData() {}
 };
 
 template <typename _AssetTy, typename _IntermediateType,
           AssetType _AssetTypeEnum>
-class AssetIntermediateT : public AssetIntermediate {
+class AssetTransientT : public AssetTransientData {
 public:
-  _IntermediateType mIntermediate;
+  _IntermediateType intermediate_data;
 
-  AssetIntermediateT(Asset *data, const _IntermediateType &inter)
-      : AssetIntermediate(data), mIntermediate(inter) {}
+  AssetTransientT(Asset *data, const _IntermediateType &inter)
+      : AssetTransientData(data), intermediate_data(inter) {}
 
-  AssetT<_AssetTy, _AssetTypeEnum> GetConcreteAsset() {
-    return static_cast<AssetT<_AssetTy, _AssetTypeEnum>>(mAssetData);
+  AssetT<_AssetTy, _AssetTypeEnum> get_concrete_asset() {
+    return static_cast<AssetT<_AssetTy, _AssetTypeEnum>>(asset_data_ptr);
   }
 };
 
@@ -97,7 +97,7 @@ public:
 /// </summary>
 template <> struct std::hash<harmony::AssetHandle> {
   size_t operator()(const harmony::AssetHandle &ah) const {
-    return std::hash<int64>()(ah.mPathHash) ^
-           std::hash<uint8>()(static_cast<uint8>(ah.mType));
+    return std::hash<int64>()(ah.path_hash) ^
+           std::hash<uint8>()(static_cast<uint8>(ah.type));
   }
 };
