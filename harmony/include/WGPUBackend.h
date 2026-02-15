@@ -1,6 +1,6 @@
 #pragma once
 #include "Backend.h"
-#include "SDL3WGPU.h"
+#include "sdl3webgpu.h"
 
 namespace harmony
 {
@@ -15,7 +15,12 @@ namespace harmony
     bool should_run()   override;
 
   protected:
-    SDL_Window* window = nullptr;
+    SDL_Window*   window = nullptr;
+    WGPUInstance  wgpu_instance = nullptr;
+    WGPUSurface   wgpu_surface = nullptr;
+
+    bool          _should_run = true;
+
 
 
   };

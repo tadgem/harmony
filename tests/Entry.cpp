@@ -21,41 +21,37 @@ HARMONY_OVERRIDE_GLOBAL_NEW(true)
 //  ImGui::End();
 //}
 int main() {
-  using namespace harmony;
-  bool enableSwapchainMSAA = false;
-  bool enableVulkanValidation = false;
-  Engine engine = Engine::Init<WGPUBackend>(1920, 1080, enableSwapchainMSAA, GIGABYTES(4),
-                               enableVulkanValidation);
+	using namespace harmony;
+	bool enableSwapchainMSAA = false;
+	bool enableVulkanValidation = false;
+	Engine engine = Engine::Init<WGPUBackend>(
+		1920, 1080,
+		enableSwapchainMSAA, GIGABYTES(4), enableVulkanValidation);
 
-  AssetHandle sh{};
-  String someString = "Hello";
-  SerializableAssetHandle handle(someString, AssetType::Audio);
-  Timer t;
+	AssetHandle sh{};
+	String someString = "Hello";
+	SerializableAssetHandle handle(someString, AssetType::Audio);
+	Vector<String> strings ;
 
-  printf("Handle Str : %s\n", handle.path.c_str());
-//  {
-//    lvk::Vector3 someUniqueData = {10, 20, 30};
-//    AssetT<lvk::Vector3, AssetType::Audio> asset(someString, someUniqueData);
-//    AssetIntermediateT<lvk::Vector3, lvk::Vector3, AssetType::Audio> inter(
-//        static_cast<Asset *>(&asset), lvk::Vector3{0.0f, 0.0f, 0.0f});
-//
-//    lvk::Vector3 result = asset.mData;
-//  }
+	strings.push_back("DAD");
+	Timer t;
 
-  flecs::world ecs{};
-  flecs::entity e = ecs.entity();
 
-  JSON someJson;
-  someJson["dad"] = 3;
-  int64 val = someJson["dad"];
+	printf("Handle Str : %s\n", handle.path.c_str());
 
-  auto ms = t.ElapsedMillisecondsF();
-  auto ns = t.ElapsedNanosecondsF();
+	flecs::world ecs{};
+	flecs::entity e = ecs.entity();
 
-  while (engine.should_run()) {
-    engine.pre_frame();
+	JSON someJson;
+	someJson["dad"] = 3;
+	int64 val = someJson["dad"];
 
-    engine.end_frame();
+	auto ms = t.ElapsedMillisecondsF();
+	auto ns = t.ElapsedNanosecondsF();
+
+	while (engine.should_run()) {
+		engine.pre_frame();
+		engine.end_frame();
   }
   return 0;
 }

@@ -4,7 +4,7 @@ project(harmonyc)
 set (CMAKE_CXX_STANDARD 17)
 
 # Add clang compile_commands.json for nvim
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
+# set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 set(MI_BUILD_SHARED OFF CACHE INTERNAL "")
 set(MI_BUILD_TESTS OFF CACHE INTERNAL "")
 set(SDL_SHARED OFF CACHE INTERNAL "")
@@ -13,7 +13,6 @@ set(SDL_TEST_LIBRARY OFF CACHE INTERNAL "")
 set(DAWN_FETCH_DEPENDENCIES ON CACHE INTERNAL "")
 
 # Enable this to remove the examples + their dependencies (glm, assimp)
-# set(BUILD_LVK_EXAMPLES OFF CACHE INTERNAL "Disable LVK Examples")
 add_subdirectory(submodules/sdl)
 add_subdirectory(submodules/flecs)
 add_subdirectory(third_party/dawn)
@@ -24,14 +23,10 @@ set(harmonyc_libs
 		flecs_static
 		mimalloc-static
 		dawncpp
-		dawn_proc
-		dawn_common
-		dawn_platform
-		dawn_native
-		dawn_internal_config
+		webgpu_dawn
 )
 
-set(harmonyc_definitions "EASTL_EABASE_DISABLED")
+set(harmonyc_definitions "")
 file(GLOB_RECURSE harmonyc_srcs RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" harmony/src/*.cpp)
 
 set(harmonyc_includes
@@ -40,14 +35,15 @@ set(harmonyc_includes
   ${CMAKE_CURRENT_SOURCE_DIR}/third_party/dawn/include
   ${CMAKE_CURRENT_SOURCE_DIR}/third_party
   ${CMAKE_CURRENT_SOURCE_DIR}/submodules/sdl/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/submodules/sdl3webgpu
   ${CMAKE_CURRENT_SOURCE_DIR}/submodules/flecs/include
   ${CMAKE_CURRENT_SOURCE_DIR}/harmony/include
-  ${LVK_INCLUDES}
-  ${LVK_SDL_INCLUDES}
+  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm
 )
 
 function(add_harmony_exe exe_name entry_file)
-	add_executable(${exe_name} ${harmonyc_srcs} ${entry_file})
+	add_executable(${exe_name} ${harmonyc_srcs} ${entry_file}
+			${CMAKE_CURRENT_SOURCE_DIR}/submodules/sdl3webgpu/sdl3webgpu.c)
 	target_compile_definitions(${exe_name} PRIVATE ${harmonyc_definitions} )
 	target_link_libraries(${exe_name} ${harmonyc_libs})
 	target_include_directories(${exe_name} PRIVATE ${harmonyc_includes})

@@ -35,6 +35,9 @@ public:
 
     _Backend* b = HNY_NEW(_Backend, std::forward<Args>(args) ...);
 
+    // spin up backend
+    b->init();
+
     return Engine {
         p.engine_memory,
         Unique<AssetManager>(p.asset_manager),
