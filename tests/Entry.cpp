@@ -11,6 +11,7 @@
 #include "WGPUBackend.h"
 #define FLECS_USE_OS_ALLOC
 #include "flecs.h"
+#include "Maths.h"
 #include "flecs/addons/cpp/flecs.hpp"
 
 HARMONY_OVERRIDE_GLOBAL_NEW(true)
@@ -36,13 +37,13 @@ int main() {
 	strings.push_back("DAD");
 	Timer t;
 
-
+	vec3 v = {0.0, 1.0, 2.0};
 	printf("Handle Str : %s\n", handle.path.c_str());
 
 	flecs::world ecs{};
 	flecs::entity e = ecs.entity();
 
-	JSON someJson;
+	json someJson;
 	someJson["dad"] = 3;
 	int64 val = someJson["dad"];
 

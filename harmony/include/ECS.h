@@ -59,7 +59,7 @@ public:
   /// <param name="s">Scene to serialize</param>
   /// <returns>JSON representing the systems serializable state for all
   /// entities</returns>
-  virtual JSON serialize(Scene &s) = 0;
+  virtual json serialize(Scene &s) = 0;
 
   /// <summary>
   /// Given some json, deserialize and create appropriate components for a
@@ -67,7 +67,7 @@ public:
   /// </summary>
   /// <param name="s"></param>
   /// <param name="sceneJson"></param>
-  virtual void deserialize(Scene &s, JSON sceneJson) = 0;
+  virtual void deserialize(Scene &s, json sceneJson) = 0;
 
   /// <summary>
   /// Serialize all components on a given entity for this systems
@@ -76,7 +76,7 @@ public:
   /// <param name="s"></param>
   /// <param name="e"></param>
   /// <returns></returns>
-  virtual JSON serialize_entity(Scene &s, Entity &e) = 0;
+  virtual json serialize_entity(Scene &s, Entity &e) = 0;
 
   /// <summary>
   /// Given some json, deserialize and create appropriate components for a
@@ -85,7 +85,7 @@ public:
   /// <param name="s">Scene to deserialize into</param>
   /// <param name="e">Entity to deserialize into</param>
   /// <param name="sceneJson">JSON to be deserialized</param>
-  virtual void deserialize_entity(Scene &s, Entity &e, JSON sceneJson) = 0;
+  virtual void deserialize_entity(Scene &s, Entity &e, json sceneJson) = 0;
 
   static String get_entity_id_as_string(Entity &e);
   static uint64 get_entity_id_from_string(const String &entity);

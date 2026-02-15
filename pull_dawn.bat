@@ -1,2 +1,1 @@
-git clone https://github.com/ArthurSonzogni/dawn.git third_party/dawn
-python third_party/dawn/tools/fetch_dawn_dependencies.py
+wget https://github.com/google/dawn/releases/download/v20260214.164635/dawn-headers-1a3afc99a7ef7dacaab73b71d44575c4f1bf2dd7.tar.gz third_party/dawn/

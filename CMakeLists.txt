@@ -22,23 +22,38 @@ set(harmonyc_libs
 		SDL3-static
 		flecs_static
 		mimalloc-static
-		dawncpp
+		webgpu_cpp
+		dawn_internal_config
+		dawn::dawn_common
+		dawn::dawn_system_utils
+		dawn::dawn_wgpu_utils
+		dawn::dawn_proc
+		dawn::dawn_native
 		webgpu_dawn
 )
 
-set(harmonyc_definitions "")
+set(harmonyc_definitions "IMGUI_IMPL_WEBGPU_BACKEND_DAWN")
 file(GLOB_RECURSE harmonyc_srcs RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" harmony/src/*.cpp)
+set(harmonyc_srcs ${harmonyc_srcs}
+	${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui_draw.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui_tables.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/imgui_widgets.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_sdl3.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui/backends/imgui_impl_wgpu.cpp
+)
 
 set(harmonyc_includes
-  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mimalloc/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mimalloc/src
-  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/dawn/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/third_party
-  ${CMAKE_CURRENT_SOURCE_DIR}/submodules/sdl/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/submodules/sdl3webgpu
-  ${CMAKE_CURRENT_SOURCE_DIR}/submodules/flecs/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/harmony/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm
+  	${CMAKE_CURRENT_SOURCE_DIR}/third_party/mimalloc/include
+  	${CMAKE_CURRENT_SOURCE_DIR}/third_party/mimalloc/src
+  	${CMAKE_CURRENT_SOURCE_DIR}/third_party/dawn/include
+  	${CMAKE_CURRENT_SOURCE_DIR}/third_party
+  	${CMAKE_CURRENT_SOURCE_DIR}/submodules/sdl/include
+  	${CMAKE_CURRENT_SOURCE_DIR}/submodules/sdl3webgpu
+  	${CMAKE_CURRENT_SOURCE_DIR}/submodules/flecs/include
+  	${CMAKE_CURRENT_SOURCE_DIR}/harmony/include
+	${CMAKE_CURRENT_SOURCE_DIR}/third_party/glm
+	${CMAKE_CURRENT_SOURCE_DIR}/third_party/imgui
 )
 
 function(add_harmony_exe exe_name entry_file)

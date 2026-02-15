@@ -13,7 +13,7 @@ namespace harmony {
 // _should_ mostly be fine sans speed
 // as we are using the mimalloc allocator, so will be within our
 // pre-allocated memory space.
-using JSON =
+using json =
     nlohmann::basic_json<std::map, std::vector, String, bool, int64, uint64,
                          f64, STLMimallocAllocator, nlohmann::adl_serializer,
                          std::vector<uint8>, void>;
